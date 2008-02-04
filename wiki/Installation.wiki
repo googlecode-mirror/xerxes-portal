@@ -39,7 +39,7 @@ The main configuration file is located at 'demo/config/config.xml'.  The file in
 Apache and IIS will, by default, serve-up the config.xml file over the web, exposing your sensitive information to anyone.
 
 The .htaccess file that comes in the source includes `FileMatch` directives to prevent this, but you must first grant your 'demo' directory sufficient privilege to enable these directives.  You can do this in httpd.conf by creating a `Directory` entry for your demo directory and giving it an `AllowOverride All` setting.  You may also with to place this directive in the `Directory` entry itself.
- 
+
 As an alternative to the config.xml file, you may put the config entries as a series of PHP `const` definitions in the 'config.php' file, which will definitely not show any data over the web.
 
 
