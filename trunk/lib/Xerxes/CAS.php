@@ -69,9 +69,16 @@
 				
 				if ( $objUser != null )
 				{
-					$bolValid = true;
+					if ( $objUser->nodeValue != "" )
+					{
+						$bolValid = true;
 					
-					$this->strUsername = $objUser->nodeValue;
+						$this->strUsername = $objUser->nodeValue;
+					}
+					else
+					{
+						throw new Exception("CAS validation response missing username value");
+					}
 				}
 				elseif ( $objFailure != null )
 				{

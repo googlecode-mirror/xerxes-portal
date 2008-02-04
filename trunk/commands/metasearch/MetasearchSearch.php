@@ -41,17 +41,31 @@
 		 	$strSpell = $objRequest->getProperty("spell");
 		 	$strContext = $objRequest->getProperty("context");
 		 	$strContextUrl = $objRequest->getProperty("context_url");
-		 	
-		 	// ensure a query and field
-		 	
-		 	if ( $strQuery == "" ) throw new Exception("Please enter search terms");
-		 	if ( $strField == "" ) $strField = "WRD";
 
 		 	// configuration options
 		 	
 		 	$configNormalize = $objRegistry->getConfig("NORMALIZE_QUERY", false, false);
 		 	$configBaseUrl = $objRegistry->getConfig("BASE_URL", true);
 		 	$configYahooID = $objRegistry->getConfig("YAHOO_ID", false, "calstate" );
+		 	$configSearchLimit = $objRegistry->getConfig("SEARCH_LIMIT", true);
+		 	
+		 	
+		 	// ensure a query and field
+		 	
+		 	if ( $strQuery == "" ) throw new Exception("Please enter search terms");
+		 	if ( $strField == "" ) $strField = "WRD";
+		 	
+		 	// ensure correct number of databases selected
+		 	
+		 	if ( count($arrDatabases) < 1 )
+		 	{
+		 		throw new Exception("Please choose one or more databases to search");
+		 	}
+		 	if ( count($arrDatabases) > $configSearchLimit )
+		 	{
+		 		throw new Exception("You can only search up to $configSearchLimit databases at a time");
+		 	}
+
 		 	
 		 	$strSpellCorrect = "";			// spelling correction
 			$strSpellUrl = "";				// return url for spelling change
@@ -74,6 +88,10 @@
 			// initiate search with Metalib
 
 			$strGroup = $objSearch->search($strNormalizedQuery, $arrDatabases);
+			
+			// something went wrong, yo!
+			
+			if ( $strGroup == "" ) throw new Exception("Could not initiate search with Metalib server");
 			
 			// check spelling unless this is a return submission from a previous spell correction
 			
