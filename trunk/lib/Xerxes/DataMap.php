@@ -154,6 +154,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		// xerxes_databases and xerxes_subcategories will
 		// cascade delete to join tables
 		
+		$this->delete("DELETE FROM xerxes_subcategory_databases");
 		$this->delete("DELETE FROM xerxes_databases");
 		$this->delete("DELETE FROM xerxes_subcategories");
 		$this->delete("DELETE FROM xerxes_categories");
