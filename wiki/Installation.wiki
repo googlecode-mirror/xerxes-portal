@@ -16,40 +16,31 @@ The .zip and svn should contain the following directories:
  
  * sql – scripts to create the necessary local database tables.
  
-You will need to place the 'demo' directory in a directory accessible to the web, but 
-the other directories can live anywhere on your server.  In the 'demo/index.php' file, 
-you can construct the path to where these other directories are located.
+'You will need to place the 'demo' directory in a directory accessible to the web, but the other directories can live anywhere on your server.  In the 'demo/index.php' file, you can construct the path to where these other directories are located.
 
 
 ==3. Create the database tables==
  
-The first thing you should do is create the database tables that the application 
-will use.  I would normally create a new database, or schema, when setting this up, 
-and the SQL scripts will by default create a new database called 'xerxes' if one does
-not already exist.  But the table names should be unique enough to live in an existing 
-schema, if necessary.  If you want to host multiple instances of Xerxes, you will need 
-a separate schema for each instance.
+The first thing you should do is create the database tables that the application will use.  I would normally create a new database, or schema, when setting this up, and the SQL scripts will by default create a new database called 'xerxes' if one does not already exist.  But the table names should be unique enough to live in an existing schema, if necessary.  If you want to host multiple instances of Xerxes, you will need a separate schema for each instance.
 
-Run the 'sql/create-kb.sql' and 'sql/create-serv.sql' scripts to create all the necessary 
-tables.
+Run the 'sql/create-kb.sql' and 'sql/create-serv.sql' scripts to create all the necessary tables.
  
-Xerxes will need to select, delete, update, and insert records into these tables, so if 
-you don't already have a user account with these permissions that Xerxes can use, you 
-will need to create one.  Xerxes will have no need to create or drop tables, and the 
-account it uses should never have access to other databases or tables.  The 
-'sql/web-user.sql' script has an example of such an account.
+Xerxes will need to select, delete, update, and insert records into these tables, so if you don't already have a user account with these permissions that Xerxes can use, you will need to create one.  Xerxes will have no need to create or drop tables, and the account it uses should never have access to other databases or tables.  The 'sql/web-user.sql' script has an example of such an account.
 
 
 ==4. Edit the main config file==
  
-The next step is to edit the configuration files to include information specific to your 
-implementation, including the address of Metalib, the address of your link resolver, 
-proxy server, and other information related to authentication and application behavior.  
-Many of these include empty or dummy values, so check them all out.
+The next step is to edit the configuration files to include information specific to your implementation, including the address of Metalib, the address of your link resolver, proxy server, and other information related to authentication and application behavior.  Many of these include empty or dummy values, so check them all out.
  
-The main configuration file is located at 'demo/config/config.xml'.  The file includes some 
-comments and examples that should guide you in how to enter the information.  Make sure to 
-enter the database name and user account information you created in the previous section.
+The main configuration file is located at 'demo/config/config.xml'.  The file includes some comments and examples that should guide you in how to enter the information.  Make sure to enter the database name and user account information you created in the previous section.
+
+===4b. Security issues with config.xml===
+
+Apache and IIS will, by default, serve-up the config.xml file over the web, exposing your sensitive information to anyone.
+
+The .htaccess file that comes in the source includes <FileMatch> directives to prevent this, but you must first grant your 'demo' directory sufficient privilege to enable these directives.  You can do this in httpd.conf by creating a <Directory> entry for your demo directory and giving it an 'AllowOverride All' setting.  You may also with to place this directive in the <Directory> entry itself.
+ 
+As an alternative to the config.xml file, you may put the config entries as a series of PHP `const` definitions in the 'config.php' file, which will definitely not show any data over the web.
 
 
 ==5. Populate the local knowledgebase==
@@ -64,14 +55,11 @@ change the path accordingly.
 
 You should now be able to visit your.server.edu/xerxes/demo to see a functioning implementation.  
 
-If you kept the mod_rewrite scheme setting, and are using Apache, make sure to edit the 
-accompanying 'demo/.htaccess' file to reflect the name and location of the 'demo' directory.
+If you kept the mod_rewrite scheme setting, and are using Apache, make sure to edit the accompanying 'demo/.htaccess' file to reflect the name and location of the 'demo' directory.
 
 ==7. Optional: Load the peer-review titles==
 
-Assuming you have a subscription to Ulrich, you can ask David for an SQL file for creating
-a local dataset of peer reviewed journal titles.  Xerxes will use this to flag 
-articles from peer reviewed journals in the interface.
+Assuming you have a subscription to Ulrich, you can ask David for an SQL file for creating a local dataset of peer reviewed journal titles.  Xerxes will use this to flag articles from peer reviewed journals in the interface.
 
 ==8. Optional: Create a cache of the SFX Knowledgebase==
 
