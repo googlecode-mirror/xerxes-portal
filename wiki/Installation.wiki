@@ -1,0 +1,107 @@
+#summary Manual installation
+
+==1. Download the code==
+ 
+You can check out the latest code from SVN or grab the .zip in the downloads section
+
+==2. Inspect the contents of the .zip file==
+ 
+The .zip and svn should contain the following directories:
+ 
+ * commands – this is where the main 'business logic' code lives.
+ 
+ * demo – this is where the individual 'presentation' files live, including configuration files.  Throughout the documentation, I will refer to this as the 'demo' folder, but you can change the name of this directory to anything you like, and can even have multiple instances of this directory for different interfaces; for example, in a centrally hosted consortium with multiple libraries, as we have here.
+ 
+ * lib – basic classes that Xerxes will use for communicating with Metalib and other systems.
+ 
+ * sql – scripts to create the necessary local database tables.
+ 
+You will need to place the 'demo' directory in a directory accessible to the web, but 
+the other directories can live anywhere on your server.  In the 'demo/index.php' file, 
+you can construct the path to where these other directories are located.
+
+
+==3. Create the database tables==
+ 
+The first thing you should do is create the database tables that the application 
+will use.  I would normally create a new database, or schema, when setting this up, 
+and the SQL scripts will by default create a new database called 'xerxes' if one does
+not already exist.  But the table names should be unique enough to live in an existing 
+schema, if necessary.  If you want to host multiple instances of Xerxes, you will need 
+a separate schema for each instance.
+
+Run the 'sql/create-kb.sql' and 'sql/create-serv.sql' scripts to create all the necessary 
+tables.
+ 
+Xerxes will need to select, delete, update, and insert records into these tables, so if 
+you don't already have a user account with these permissions that Xerxes can use, you 
+will need to create one.  Xerxes will have no need to create or drop tables, and the 
+account it uses should never have access to other databases or tables.  The 
+'sql/web-user.sql' script has an example of such an account.
+
+
+==4. Edit the main config file==
+ 
+The next step is to edit the configuration files to include information specific to your 
+implementation, including the address of Metalib, the address of your link resolver, 
+proxy server, and other information related to authentication and application behavior.  
+Many of these include empty or dummy values, so check them all out.
+ 
+The main configuration file is located at 'demo/config/config.xml'.  The file includes some 
+comments and examples that should guide you in how to enter the information.  Make sure to 
+enter the database name and user account information you created in the previous section.
+
+
+==5. Populate the local knowledgebase==
+ 
+Assuming you having PHP set-up with the CLI (command line interface) option, you can issue a 
+command like this to do the initial pull-down of your Metalib knowledgebase.  Make sure to 
+change the path accordingly.
+ 
+  {{{php -f /path/to/xerxes/demo/index.php action=populate base=databases}}}
+
+==6. Check to see if everything is working==
+
+You should now be able to visit your.server.edu/xerxes/demo to see a functioning implementation.  
+
+If you kept the mod_rewrite scheme setting, and are using Apache, make sure to edit the 
+accompanying 'demo/.htaccess' file to reflect the name and location of the 'demo' directory.
+
+==7. Optional: Load the peer-review titles==
+
+Assuming you have a subscription to Ulrich, you can ask David for an SQL file for creating
+a local dataset of peer reviewed journal titles.  Xerxes will use this to flag 
+articles from peer reviewed journals in the interface.
+
+==8. Optional: Create a cache of the SFX Knowledgebase==
+
+Xerxes can pull down and cache the institutional holdings export file from SFX, so long as you have registered and set this up on your SFX server for Google or other search engines to harvest.  Xerxes will use this to flag when articles are available online in another database.
+
+To do this, first go to SFX and edit the 'config/get_file_restriction.config_' file to include the IP address, or IP range, of the server you are hosting Xerxes on.
+
+Next, issue this command from the command line:
+
+  {{{php -f /path/to/xerxes/demo/index.php action=populate base=availability}}}
+
+Make sure to change the path accordingly. That should populate the local sfx table.
+
+==9. Set-up cron jobs for the cache==
+
+Eventually you will want to have Xerxes automatically refresh the Metalib KB and SFX 
+institutional holding data on a regular basis.  
+
+I assume here you know how to add items to Linux crontab or Window's ScheduledTasks in order to do this.  I always make a batch file that issues the php command, and then add a crontab entry that calls the batch file.  You could just add the php command directly to the crontab if you prefer.
+
+I run the Metalib KB pull every hour during normal daylight hours -- that is, the time when people are most likely making changes.  We run the SFX pull at the same frequency as the institutional holding export cron on SFX, which we have set to once a week.
+
+So, the Metalib pull might look like:
+ 
+crontab:
+ 
+  {{{0 9-20 * * * sh /path/to/xerxes/cron/pull.sh}}}
+ 
+'pull.sh' :
+ 
+  {{{php -f /path/to/xerxes/demo/index.php action=populate base=databases}}}
+ 
+Make sure to change the path accordingly.
