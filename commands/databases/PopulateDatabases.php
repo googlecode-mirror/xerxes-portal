@@ -134,6 +134,8 @@
 			$objXml = new DOMDocument();
 			$objXml = $this->objSearch->categories($this->configIPAddress);
 			
+			$objXml->save("test.xml");
+			
 			$objXPath = new DOMXPath($objXml);
 			$objCategories = $objXPath->query("//category_info");
 
@@ -160,6 +162,13 @@
 				// GET EACH SUBCATEGORY
 								
 				$objSubCategories = $objCategory->getElementsByTagName("subcategory_info");
+				
+				// version 3 fix!
+				
+				if ( $objSubCategories->length == 0 )
+				{
+					$objSubCategories = $objCategory->getElementsByTagName("subcategory-info");
+				}
 				
 				foreach ( $objSubCategories as $objSubCategory )
 				{
