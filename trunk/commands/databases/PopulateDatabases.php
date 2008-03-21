@@ -134,8 +134,6 @@
 			$objXml = new DOMDocument();
 			$objXml = $this->objSearch->categories($this->configIPAddress);
 			
-			$objXml->save("test.xml");
-			
 			$objXPath = new DOMXPath($objXml);
 			$objCategories = $objXPath->query("//category_info");
 
