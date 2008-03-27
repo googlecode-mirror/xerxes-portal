@@ -1,0 +1,56 @@
+################################
+# block access to config files #
+################################
+
+<FilesMatch "^config\.|^actions\.">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+
+##############
+# short urls #
+##############
+
+RewriteEngine on
+RewriteBase /demo/
+
+# saved records
+
+RewriteRule ^folder$ index.php?base=folder [QSA]
+RewriteRule ^folder/$ /demo/ [R=301,L]
+RewriteRule ^folder/([a-zA-Z0-9@\.\-_]{1,})$ index.php?base=folder&username=$1 [QSA]
+RewriteRule ^folder/([a-zA-Z0-9@\.\-_]{1,})/record/([0-9]{1,})$ index.php?base=folder&action=full&username=$1&record=$2 [QSA]
+
+RewriteRule ^r/([0-9]{1,})$ index.php?base=folder&action=redirect&type=openurl&id=$1
+RewriteRule ^pf/([0-9]{1,})$ index.php?base=folder&action=redirect&type=online&id=$1
+RewriteRule ^ph/([0-9]{1,})$ index.php?base=folder&action=redirect&type=html&id=$1
+RewriteRule ^pp/([0-9]{1,})$ index.php?base=folder&action=redirect&type=pdf&id=$1
+RewriteRule ^pc/([0-9]{1,})$ index.php?base=folder&action=redirect&type=construct&id=$1
+
+# databases and categories
+
+RewriteRule ^categories/([a-zA-Z\-]{1,})$ index.php?base=databases&action=subject&subject=$1 [QSA]
+RewriteRule ^databases/alphabetical$ index.php?base=databases&action=alphabetical [QSA]
+RewriteRule ^database/([a-zA-Z0-9]{1,})$ index.php?base=databases&action=database&id=$1 [QSA]
+
+
+###############
+# legacy urls #
+###############
+
+RewriteCond %{QUERY_STRING} ^action=alphabetical$
+RewriteRule ^databases$ /demo/databases/alphabetical? [R=301,L]
+
+RewriteCond %{QUERY_STRING} ^action=database&id=([a-zA-Z0-9]{1,})$
+RewriteRule ^databases$ /demo/database/%1? [R=301,L]
+
+RewriteRule ^databases/([a-zA-Z]{1,})$ index.php?base=databases&action=old-subject&category=$1 [QSA]
+
+RewriteRule ^metasearch$ /sacramento/?base=metasearch [QSA]
+
+
+
+
+
+
