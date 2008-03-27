@@ -70,7 +70,20 @@
 				
 				// base url of the instance
 				
-				$web = "http://" . $objRequest->getServer('SERVER_NAME') . dirname($objRequest->getServer('PHP_SELF'));
+        // base path supplied in config?
+        $cfg_base_path = $objRegistry->getConfig('base_web_path', false);
+        if ( $cfg_base_path ) {
+          $base_path = $cfg_base_path;
+        }
+        else {
+          // try to guess from request. Warning, won't work well
+          // with REST-y urls. 
+          $base_path = dirname($objRequest->getServer('PHP_SELF'));
+        }
+        
+				$web = "http://" . $objRequest->getServer('SERVER_NAME') . $base_path;
+                
+        
 				if ( substr($web, strlen($web) - 1, 1) == "/") $web = substr($web, 0, strlen($web) - 1);
 				
 				// register these values
@@ -89,14 +102,9 @@
 				$strBase = $objRequest->getProperty("base");
 				$strAction = $objRequest->getProperty("action");
 				
-				$objControllerMap->setAction($strBase, $strAction);
+				$objControllerMap->setAction($strBase, $strAction, $objRequest);
 	
-				// add any predefined values to the request object from ControllerMap
-				
-				foreach ( $objControllerMap->getRequests() as $key => $value )
-				{
-					$objRequest->setProperty($key, $value, is_array($value));
-				}
+
 				
 				
 				####################

@@ -7,10 +7,20 @@
     Deny from all
 </FilesMatch>
 
+###############
+# pretty urls #
+###############
+RewriteEngine on
+RewriteBase /xerxes/
+# Pass /css, /images, and /javascript through
+RewriteRule ^(css|images|javascript)/(.*)$ $1/$2 [L]
+# Everything else goes to index.php
+RewriteRule ^/xerxes/.*$ index.php [L]
 
-##############
-# short urls #
-##############
+########################################
+# short urls:                          #
+# deprecated, use pretty urls instead. #
+########################################
 
 RewriteEngine on
 RewriteBase /demo/

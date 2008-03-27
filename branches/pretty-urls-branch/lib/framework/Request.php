@@ -20,6 +20,7 @@
 		private $arrSession = array();		// session array for command line, unused right now
 		private $xml = null;				// main xml document for holding data from commands
 		private $strRedirect = "";			// redirect url
+    private $path_elements = null; // http path into array of elements. 
 		
 		/**
 		 * Process the incloming request paramaters and cookie values
@@ -32,7 +33,15 @@
 				$this->method = $_SERVER['REQUEST_METHOD'];
 				
 				// request has come in from GET or POST
+        
+        // If pretty URIs are turned on, extract params from uri. 
+        $objRegistry = Xerxes_Framework_Registry::getInstance(); 
+        if ( $objRegistry->getConfig("pretty_uris", false) )
+        {
+          $this->extractParamsFromPath();          
+        }
 				
+        // Now extract remaining params in query string. 
 				if ( $_SERVER['QUERY_STRING'] != "" )
 				{
 					// querystring can be delimited either with ampersand
@@ -54,7 +63,7 @@
 							if ( array_key_exists($strKey,$this->arrParams) )
 							{
 								// if there are multiple params of the same name,
-								// make sure we add them as array
+								// make sure we add them as array. 
 									
 								if ( ! is_array( $this->arrParams[$strKey]) )
 								{
@@ -114,6 +123,48 @@
 			}
 		}
 		
+     /**
+		 * Extract params from pretty uris when turned on in config. Requires base url to be set in config. 
+     *
+		 *      will get from $_SERVER['REQUEST_URI'], first stripping base url.
+     */
+    public function extractParamsFromPath()
+    {
+       $this->mapPathToProperty(0, "base");
+       $this->mapPathToProperty(1, "action");                  
+    }
+    
+     /**
+		 *      Take the http request path and translate it to an array. 
+		 *      will get from $_SERVER['SCRIPT_NAME'], first stripping base url.
+     *      If path was just "/", array will be empty. 
+     */
+    private function pathElements() {
+      // lazy load
+      if (! $this->path_elements ) {
+        $objRegistry = Xerxes_Framework_Registry::getInstance(); 
+
+        $request_uri_path = $_SERVER['SCRIPT_NAME'];
+        // Strip off base url. 
+        $request_uri = substr($request_uri_path, strlen($objRegistry->getConfig('base_web_path', true)));                
+                    
+        $path_elements = explode('/', $request_uri);
+        // For an empty path, we'll have one empty string element, get rid of it.
+        if ( strlen($path_elements[0]) == 0) {
+          unset($path_elements[0]);
+        }
+        $this->path_elements = $path_elements;
+      }
+      return $this->path_elements;
+    }
+    public function mapPathToProperty($path_index, $property_name) {
+      $path_elements = $this->pathElements();
+      if (array_key_exists($path_index, $path_elements)) {
+        $this->setProperty($property_name, $path_elements[$path_index]);
+      }
+    }
+
+    
 		/**
 		 * Add a value to the request parameters
 		 *

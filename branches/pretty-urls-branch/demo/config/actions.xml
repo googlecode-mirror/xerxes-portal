@@ -64,11 +64,14 @@
 			<action name="categories">
 				<command>DatabasesCategories</command>
 				<command>DatabasesSubject</command>
-				<request name="subject">quick-search</request>
+				<request name="subject">multi-subject</request>
 				<view>xsl/databases_categories.xsl</view>
 			</action>
 			<action name="subject">
-				<command>DatabasesSubject</command>
+				<command>DatabasesSubject</command>        
+        <pathParamMap>
+          <mapEntry pathIndex="2" property="subject"/>            
+        </pathParamMap>        
 				<view>xsl/databases_subject.xsl</view>
 			</action>
 			<action name="old-subject">
@@ -186,7 +189,7 @@
 			</action>
 			<action name="results">
 				<command>MetasearchResults</command>
-				<command>MetasearchPaging</command>
+				<command>MetasearchPaging</command>                
 				<view>xsl/metasearch_results.xsl</view>
 			</action>
 			<action name="facet">

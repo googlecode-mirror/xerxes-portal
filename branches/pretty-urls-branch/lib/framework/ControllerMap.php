@@ -77,13 +77,16 @@
 		
 		/**
 		 * Process the action in the incoming request and parse the xml file to determine
-		 * the necessary includes, command classes, and view to call
+		 * the necessary includes, command classes, and view to call. 
+     * Also translates path to properties in command-specific ways. 
+     * Adds properties to Xerxes Request object. 
 		 *
 		 * @param string $section		'base' in the url or cli paramaters, corresponds to 'section' in xml
 		 * @param string $action		'action' in the url or cli paramaters, corresponds to 'action' in the xml
+     * @param Xerxes_Framework_Request @xerxes_request The operative xerxes request object, used for getting properties from path in action specific ways.
 		 */
 		
-		public function setAction( $section, $action )
+		public function setAction( $section, $action, $xerxes_request  )
 		{
 			// get include files and directories for the entire application
 			
@@ -151,6 +154,9 @@
 					}
 				}
 				
+        // Section may supply a path to property map for the section. 
+        $section_path_map = $section->pathParamMap;
+        
 				// if no action is supplied, then simply grab the first command
 				// entry; you may well pay for this later!
 				
@@ -207,14 +213,32 @@
 							array_push($this->arrIncludes, (string) $include );
 						}
 					}
-					
-					// commands
+          
+          //If pretty uris are on, then additional command-specific properties
+          // from path may be specified in the action config file. Execute
+          // them.
+          $obj_registry = Xerxes_Framework_Registry::getInstance();
+          if ($obj_registry->getConfig("pretty_uris", false)) {
+            $path_map = $section_path_map;
+            if ( $action->pathParamMap ) {
+              $path_map = $action->pathParamMap;
+            }
+            
+            if ($path_map) {
+              foreach ($path_map->mapEntry as $map_entry) {
+                
+                $xerxes_request->mapPathToProperty((string) $map_entry['pathIndex'], (string) $map_entry['property']);
+              }
+            }
+          }
+					                              
+					// commands          
 					
 					foreach ( $action->command as $command )
 					{
 						if ( $command["directory"] != null ) $strCommandDirectory = (string) $command["directory"];
-						if ( $command["namespace"] != null ) $strCommandNamespace = (string) $command["namespace"];
-						
+						if ( $command["namespace"] != null ) $strCommandNamespace = (string) $command["namespace"];						          
+                        
 						// add it to the list of commands
 						
 						$arrCommand = array($strCommandDirectory, $strCommandNamespace, (string) $command);
@@ -241,6 +265,13 @@
 			
 			if ( $strRestricted == "true") $this->bolRestricted = true;
 			if ( $strLogin == "true") $this->bolLogin = true;
+      
+      // add any predefined values to the request object from ControllerMap
+				
+      foreach ( $this->getRequests() as $key => $value )
+      {
+        $xerxes_request->setProperty($key, $value, is_array($value));
+      }
 		}
 		
 		/**
@@ -356,7 +387,7 @@
 			
 			if ( ! in_array($value, $this->arrCommands) )
 			{
-				array_push($this->arrCommands, $value);
+				array_push($this->arrCommands, $value);               
 			}
 		}
 		
