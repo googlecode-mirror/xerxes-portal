@@ -1,5 +1,5 @@
 Some useful developer hints
 
-= Request XML for page=
+== Request XML for page==
 
 Add format=xml url param to any page. 
