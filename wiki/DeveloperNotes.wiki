@@ -13,8 +13,11 @@ I actually started off thinking I would do more caching -- obviously the config 
  
 There are a couple of things related to the search that we DO cache.  Commands that need to cache data send it to and receive it from a Xerxes_Cache object.  That, in turn, stores the data in a table in the database called xerxes_cache by way of the DataMap.
  
-=== MetasearchSearch ===: caches information ABOUT the search: your search terms, what category you were in, any spelling suggestions from yahoo, and also any links to the native interfaces from the database you chose, all as a single XML fragment.  Later actions keep retrieving this data for display.
+=== MetasearchSearch ===
+caches information ABOUT the search: your search terms, what category you were in, any spelling suggestions from yahoo, and also any links to the native interfaces from the database you chose, all as a single XML fragment.  Later actions keep retrieving this data for display.
  
-=== MetasearchHits ===: caches information about the search status as it keeps polling Metalib, again so later actions can use it in the display without having to go back to Metlib.  It also caches the facets as well.
+=== MetasearchHits ===
+caches information about the search status as it keeps polling Metalib, again so later actions can use it in the display without having to go back to Metlib.  It also caches the facets as well.
  
-=== MetasearchSort ===: updates the search status cache with the current sort order.
+=== MetasearchSort ===
+updates the search status cache with the current sort order.
