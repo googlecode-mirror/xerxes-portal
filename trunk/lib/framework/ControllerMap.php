@@ -212,12 +212,15 @@
 					
 					foreach ( $action->command as $command )
 					{
-						if ( $command["directory"] != null ) $strCommandDirectory = (string) $command["directory"];
-						if ( $command["namespace"] != null ) $strCommandNamespace = (string) $command["namespace"];
+						$strLocalCommandDirectory = $strCommandDirectory;
+						$strLocalCommandNamespace = $strCommandNamespace;
+						
+						if ( $command["directory"] != null ) $strLocalCommandDirectory = (string) $command["directory"];
+						if ( $command["namespace"] != null ) $strLocalCommandNamespace = (string) $command["namespace"];
 						
 						// add it to the list of commands
 						
-						$arrCommand = array($strCommandDirectory, $strCommandNamespace, (string) $command);
+						$arrCommand = array($strLocalCommandDirectory, $strLocalCommandNamespace, (string) $command);
 						
 						$this->addCommand($arrCommand);
 					}
