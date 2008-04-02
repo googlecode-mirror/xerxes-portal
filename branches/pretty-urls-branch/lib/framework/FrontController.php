@@ -38,8 +38,8 @@
 				
 				$objRegistry = Xerxes_Framework_Registry::getInstance(); $objRegistry->init();
 				$objControllerMap = Xerxes_Framework_ControllerMap::getInstance(); $objControllerMap->init();
-				
-				$objRequest = new Xerxes_Framework_Request();	// stores data about the request and fetched results
+				$objRequest = new Xerxes_Framework_Request();	
+        
 				$objPage = new Xerxes_Framework_Page();			// assists with basic paging/navigation elements for the view
 				$objError = new Xerxes_Framework_Error();		// functions for special logging or handling of errors
 				
@@ -81,16 +81,21 @@
           $base_path = dirname($objRequest->getServer('PHP_SELF'));
         }
         
-				$web = "http://" . $objRequest->getServer('SERVER_NAME') . $base_path;
-                
-        
-				if ( substr($web, strlen($web) - 1, 1) == "/") $web = substr($web, 0, strlen($web) - 1);
+        //Base path should canonicalize without a trailing slash. 
+        if ( 
+              substr($base_path, strlen($base_path) - 1, 1) == "/") {
+          $base_path = substr($base_path, 0, strlen($base_path) - 1);
+        }
+        //Full absolute base path in $web
+				$web = "http://" . $objRequest->getServer('SERVER_NAME') . $base_path;                
 				
 				// register these values
 				
 				$objRegistry->setConfig("PATH_PARENT_DIRECTORY", $path_to_parent);
 				$objRegistry->setConfig("BASE_URL", $web, true);
-	
+        //re-save canonicalized. 
+        $objRegistry->setConfig('BASE_PATH', $base_path, true);    
+
 	
 				####################
 				#   INSTRUCTIONS   #
@@ -182,7 +187,7 @@
 					$objConfigXml->documentElement->appendChild($objElement);
 				}
 				
-				$objRequest->addDocument($objConfigXml);
+				$objRequest->addDocument($objConfigXml);        
 				
 				// the data will be built-up by calling one or more command classes
 				// which will fetch their data based on other parameters supplied in

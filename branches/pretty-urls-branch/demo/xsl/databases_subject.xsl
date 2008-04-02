@@ -100,7 +100,13 @@
 									<a>
 									<xsl:attribute name="href"><xsl:call-template name="proxy_link" /></xsl:attribute>
 										<xsl:value-of select="title_display" />
-									</a>					
+									</a>
+                   &amp;nbsp;<a>
+                   <xsl:attribute name="href"><xsl:value-of select="url" /></xsl:attribute>
+                   <img alt="info" src="images/info.gif" >
+                    <xsl:attribute name="src"><xsl:value-of select="/knowledge_base/config/base_url" />/images/info.gif</xsl:attribute>
+                   </img>
+                   </a>
 								</xsl:element>
 							</td>							
 						</tr>

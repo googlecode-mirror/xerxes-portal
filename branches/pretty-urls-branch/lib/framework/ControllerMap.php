@@ -18,6 +18,8 @@
 		private $file = "config/actions.xml";	// actions configuration file
 		
 		private $xml = null;				// simplexml object containing instructions for the actions
+    private $path_map = null;   //Xerxes_Framework_PathMap object. 
+    
 		private static $instance;			// singleton pattern
 	
 		private $strDocumentElement = "";	// name of the document element for the xml
@@ -152,10 +154,7 @@
 					{
 						array_push($this->arrIncludes, (string) $include );
 					}
-				}
-				
-        // Section may supply a path to property map for the section. 
-        $section_path_map = $section->pathParamMap;
+				}				
         
 				// if no action is supplied, then simply grab the first command
 				// entry; you may well pay for this later!
@@ -213,25 +212,7 @@
 							array_push($this->arrIncludes, (string) $include );
 						}
 					}
-          
-          //If pretty uris are on, then additional command-specific properties
-          // from path may be specified in the action config file. Execute
-          // them.
-          $obj_registry = Xerxes_Framework_Registry::getInstance();
-          if ($obj_registry->getConfig("pretty_uris", false)) {
-            $path_map = $section_path_map;
-            if ( $action->pathParamMap ) {
-              $path_map = $action->pathParamMap;
-            }
-            
-            if ($path_map) {
-              foreach ($path_map->mapEntry as $map_entry) {
-                
-                $xerxes_request->mapPathToProperty((string) $map_entry['pathIndex'], (string) $map_entry['property']);
-              }
-            }
-          }
-					                              
+                 	                              
 					// commands          
 					
 					foreach ( $action->command as $command )
@@ -274,6 +255,14 @@
       }
 		}
 		
+    public function path_map_obj() {
+      if ( ! $this->path_map ) {
+        $this->path_map = new Xerxes_Framework_PathMap($this->xml);
+      }
+      return $this->path_map;
+    }
+    
+    
 		/**
 		 * Document element that the master xml should contain
 		 *
@@ -421,6 +410,95 @@
 			}
 		}
 	}
+  
+	/**
+	 * Keeps track of mapping path components to query properties on an
+   * action by action basis. Used only when pretty uris are turned on.  
+   * Usually used by ControllerMap, and not
+   * accessed directly by any other code. Gets mappings from actions.xml.
+   * Caches answer for length of life of ControllerMap/PathMap, but that's
+   * currently just life of a request. This works well enough it looks like. 
+	 * 
+	 * @author Jonathan Rochkind
+	 * @copyright 2008 Johns Hopkins University
+	 * @version 1.1
+	 * @package  Xerxes_Framework
+	 * @license http://www.gnu.org/licenses/
+	 *
+	 */  
+   class Xerxes_Framework_PathMap {
+      private $actions_xml = null; // simplexml object containing instructions for the actions
+      private $mapsByProperty = array(); // array keyed by section name or "section/action", value is an array mapping properties (key) to path indexes. (value) 
+      private $mapsByIndex = array();
+      
+      
+     /**
+		 * 
+		 * @actions_xml 	Pass in SimpleXML object of actions.xml directives. Passed by reference for efficiency.  
+		 */
+      public function __construct(&$actions_xml_arg) { 
+        $this->actions_xml = $actions_xml_arg;
+      }     
+      
+      public function propertyToIndexMap($section, $action) {
+        $key_name = "$section/$action";
+        if (! array_key_exists($key_name, $this->mapsByProperty) ) {
+          $this->buildMapForAction( $section, $action );
+        }
+        return $this->mapsByProperty[$key_name];
+      }
+      
+      public function indexForProperty($section, $action, $property_name) {        
+        $map = $this->propertyToIndexMap($section, $action);
+                
+        return (array_key_exists($property_name, $map)) ? $map[$property_name] : NULL;
+      }
+      
+      public function indexToPropertyMap($section, $action) {
+        $key_name = "$section/$action";
+        if (! array_key_exists($key_name, $this->mapsByIndex ) ) {
+          $this->buildMapForAction( $section, $action );
+        }
+        return $this->mapsByIndex[$key_name];
+      }
+      
+      public function propertyForIndex($section, $action, $path_index) {
+        $map = $this->mapsByIndex[$key_name];
+        return ($map && array_key_exists($property_name, $map)) ? $map[$property_name] : NULL;
+      }
+      
+      private function buildMapForAction($section, $action) {
+        $key_name = "$section/$action";
+
+        //if no configed path param,  empty array will be stored, good.  
+        $this->mapsByProperty[$key_name] = array();
+        $this->mapsByIndex[$key_name] = array();
+                
+        $sections = $this->actions_xml->xpath("commands/section[@name='$section']");
+        if ( $sections == false )
+        {
+          return;
+        }
+        // Section may supply a default path to property map for the section. 
+        $section_xml = $sections[0]->pathParamMap;
+        
+        $actions = $section_xml->xpath("action[@name='$action']");
+        $action_xml = ($actions && $actions[0] && $actions[0]->pathParamMap) ? ($actions[0]->pathParamMap) : ($section_xml);
+        
+        $map_xml = $action_xml ? $action_xml : $section_xml;
+        
+        if ( $map_xml ) {
+          foreach ($map_xml->mapEntry as $map_entry) {
+            $action_mapByProperty = &$this->mapsByProperty[$key_name];
+          
+            $action_mapByProperty[ (string) $map_entry['property'] ] = (integer) ($map_entry['pathIndex']);
+            
+            $action_mapByIndex = &$this->mapsByIndex[$key_name];
+            $action_mapByIndex[ (integer) $map_entry['pathIndex'] ] = (string) $map_entry['property'];
+          }
+        }
+      }
+   }
 
 
 ?>

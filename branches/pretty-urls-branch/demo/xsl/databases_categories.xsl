@@ -33,7 +33,8 @@
 				<xsl:text>categories/</xsl:text>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:text>./?base=databases&amp;action=subject&amp;subject=</xsl:text>
+        <!-- get from xml. could be pretty uris if configured. -->
+				 <xsl:text>./?base=databases&amp;action=subject&amp;subject=</xsl:text> 
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
@@ -85,7 +86,7 @@
 				<ul>
 				<xsl:for-each select="categories/category[@position &lt;= ( $total * .33 )]">
 					<xsl:variable name="normalized" select="normalized" />
-					<li><a href="{$category}{$normalized}"><xsl:value-of select="name" /></a></li>
+					<li><a href="{url}"><xsl:value-of select="name" /></a></li>
 				</xsl:for-each>
 				</ul>
 			</td>
@@ -93,7 +94,7 @@
 				<ul>
 				<xsl:for-each select="categories/category[@position &gt; ( $total * .33 ) and @position &lt; ( $total * .66 )]">
 					<xsl:variable name="normalized" select="normalized" />
-					<li><a href="{$category}{$normalized}"><xsl:value-of select="name" /></a></li>
+					<li><a href="{url}"><xsl:value-of select="name" /></a></li>
 				</xsl:for-each>
 				</ul>
 			</td>
@@ -101,7 +102,7 @@
 				<ul>
 				<xsl:for-each select="categories/category[@position &gt;= ( $total * .66 )]">
 					<xsl:variable name="normalized" select="normalized" />
-					<li><a href="{$category}{$normalized}"><xsl:value-of select="name" /></a></li>
+					<li><a href="{url}"><xsl:value-of select="name" /></a></li>
 				</xsl:for-each>
 				</ul>
 			</td>

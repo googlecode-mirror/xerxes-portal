@@ -20,8 +20,9 @@
 		private $arrSession = array();		// session array for command line, unused right now
 		private $xml = null;				// main xml document for holding data from commands
 		private $strRedirect = "";			// redirect url
-    private $path_elements = null; // http path into array of elements. 
-		
+    
+    private $path_elements = null; // http path tranlsated into array of elements.
+    		
 		/**
 		 * Process the incloming request paramaters and cookie values
 		 */
@@ -34,12 +35,6 @@
 				
 				// request has come in from GET or POST
         
-        // If pretty URIs are turned on, extract params from uri. 
-        $objRegistry = Xerxes_Framework_Registry::getInstance(); 
-        if ( $objRegistry->getConfig("pretty_uris", false) )
-        {
-          $this->extractParamsFromPath();          
-        }
 				
         // Now extract remaining params in query string. 
 				if ( $_SERVER['QUERY_STRING'] != "" )
@@ -79,6 +74,7 @@
 						}
 					}
 				}
+                
 				foreach ( $_POST as $key => $value )
 				{
 					$this->arrParams[$key] = $value;
@@ -87,6 +83,15 @@
 				{
 					$this->arrParams[$key] = $value;
 				}
+        
+        // If pretty URIs are turned on, extract params from uri. 
+        $objRegistry = Xerxes_Framework_Registry::getInstance(); 
+        if ( $objRegistry->getConfig("pretty_uris", false) )
+        {
+          $this->extractParamsFromPath();          
+        }
+        
+        
 			}
 			else
 			{			
@@ -131,7 +136,14 @@
     public function extractParamsFromPath()
     {
        $this->mapPathToProperty(0, "base");
-       $this->mapPathToProperty(1, "action");                  
+       $this->mapPathToProperty(1, "action");
+       //Action-specific stuff
+                     
+       $map = Xerxes_Framework_ControllerMap::getInstance()->path_map_obj()->indexToPropertyMap($this->getProperty("base"), $this->getProperty("action"));
+                    
+       foreach ( $map as $index => $property) {
+         $this->mapPathToProperty( $index, $property );         
+       }
     }
     
      /**
@@ -145,8 +157,8 @@
         $objRegistry = Xerxes_Framework_Registry::getInstance(); 
 
         $request_uri_path = $_SERVER['SCRIPT_NAME'];
-        // Strip off base url. 
-        $request_uri = substr($request_uri_path, strlen($objRegistry->getConfig('base_web_path', true)));                
+        // Strip off base url. +1 for trailing slash. 
+        $request_uri = substr($request_uri_path, strlen($objRegistry->getConfig('BASE_WEB_PATH', true)) +1);                
                     
         $path_elements = explode('/', $request_uri);
         // For an empty path, we'll have one empty string element, get rid of it.
@@ -157,10 +169,12 @@
       }
       return $this->path_elements;
     }
-    public function mapPathToProperty($path_index, $property_name) {
+    public function mapPathToProperty($path_index, $property_name) {      
       $path_elements = $this->pathElements();
+      
+            
       if (array_key_exists($path_index, $path_elements)) {
-        $this->setProperty($property_name, $path_elements[$path_index]);
+        $this->setProperty((string) $property_name, (string) $path_elements[$path_index]);
       }
     }
 
@@ -185,7 +199,7 @@
 				array_push($this->arrParams[$key], $val);
 			}
 			else
-			{
+			{       
 				$this->arrParams[$key] = $val;
 			}
 		}
@@ -436,7 +450,69 @@
 				return $objNodes->item(0)->nodeValue;
 			}
 		}
-
+    
+    /**
+		 * Generate a url for a given action. Used by commands to generate action
+     * urls, rather than calculating manually. This method returns different
+     * urls depending on whether pretty_uris is on in config. Will use
+     * configured base_web_path if available, which is best.  
+		 * 
+		 * @param array $properties	Keys are xerxes request properties, values are 
+     * the values. For an action url, "base" and "action" are required as keys.
+     * Properties
+     * will be put in path or query string of url, if pretty urls are turned on
+     * in config.xml, as per action configuration in actions.xml.
+     *     *
+		 * @return string url 
+		 */
+				
+    public function url_for($properties) {
+      
+      if (! array_key_exists("base", $properties)) {
+        throw new Exception("no base/section supplied in url_for.");
+      }
+      
+      $config  = Xerxes_Framework_Registry::getInstance();
+            
+      $base_path = $config->getConfig('base_web_path', false, ".") . "/";      
+      $extra_path = "";
+      $query_string = "";                  
+      
+      $base = $properties["base"];
+      $action = $properties["action"];
+      
+      if ( $config->getConfig('pretty_uris', false) ) {
+        //base in path
+        $extra_path_arr[0] = urlencode($base);
+        unset($properties["base"]);
+        //action in path
+        if ( array_key_exists("action", $properties)) {
+          $extra_path_arr[1] = urlencode($action);
+          unset($properties["action"]);
+        }
+        // Action-specific stuff
+        foreach ( array_keys($properties) as $property ) {
+          $controller_map = Xerxes_Framework_ControllerMap::getInstance();
+          $index = $controller_map->path_map_obj()->indexForProperty( $base, $action, $property );
+          if ( $index ) {
+            $extra_path_arr[$index] = urlencode($properties[$property]);
+            unset($properties[$property]);
+          }
+        }       
+        $extra_path = implode("/", $extra_path_arr);
+      }          
+      //everything else, which may be everything if it's ugly uris,
+      // in query string. Make sure not to use default "&" seperator,
+      // it breaks xml.       
+      $query_string = http_build_query($properties, '', ';');
+      $assembled_path = $base_path . $extra_path;
+      if ( $query_string ) {
+        $assembled_path = $assembled_path . '?' . $query_string;
+      }
+      return $assembled_path;
+    }
+    
+    
 		/**
 		 * Retrieve master XML and all request paramaters
 		 * 

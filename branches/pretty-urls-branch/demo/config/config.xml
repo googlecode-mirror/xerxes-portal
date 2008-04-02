@@ -13,9 +13,9 @@
 	<!-- BASIC CONFIGURATION -->
   
     <!-- The base web server path for your xerxes installation. Highly
-     reccommended to set this if you are using pretty URL functionality.
-     If you have installed at document root, just enter / -->
-    <config name="base_web_path">/demo/</config>
+         reccommended to set this if you are using RESTy URL functionality.
+         NO trailing slash. If you have installed at web root, empty string. -->
+    <config name="base_web_path">/demo</config>
   
 		
 		<!-- turns the display of php errors and warnings on in a production system; value = true | false -->
