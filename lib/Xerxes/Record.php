@@ -34,6 +34,7 @@
 		private $strEric = "";				// eric document number
 		private $arrIsbn = array();			// isbn
 		private $arrIssn = array();			// issn
+		private $strCallNumber = "";		// lc call number
 
 		private $arrAuthors = array();		// authors
 		private $strAuthorFromTitle = "";	// author from title statement
@@ -71,7 +72,7 @@
 		private $arrSubjects = array();		// subjects
 		private $strTOC = "";				// table of contents note
 		
-		private $arrLinks = array();		// links back to the record both full text and non
+		private $arrLinks = array();		// all supplied links in the record both full text and non
 		
 		
 		### PUBLIC FUNCTIONS ###
@@ -183,9 +184,23 @@
 				$arrIsbn = $this->extractMarcArray($objXPath, 20, "a");
 				$this->strGovDoc = $this->extractMarcDataField($objXPath, 86, "a");
 				$this->strGPO = $this->extractMarcDataField($objXPath, 74, "a");
-
+				
 				$strJournalIssn = $this->extractMarcDataField($objXPath, 773, "x");
 				if ( $strJournalIssn != null ) array_push($arrIssn, $strJournalIssn);
+				
+				// call number
+				
+				$strCallNumber = $this->extractMarcDataField($objXPath, 50, "a");
+				$strCallNumberLocal = $this->extractMarcDataField($objXPath, 90, "a");
+				
+				if ( $strCallNumber != null )
+				{
+					$this->strCallNumber = $strCallNumber;
+				}
+				elseif ( $strCallNumberLocal != null)
+				{
+					$this->strCallNumber = $strCallNumberLocal;
+				}
 				
 				// format
 	
@@ -225,19 +240,36 @@
 				$this->strSubTitle = $this->extractMarcDataField($objXPath, 245, "b");
 				$this->strSeriesTitle = $this->extractMarcDataField($objXPath, 440, "a");
 
+				// sometimes the title appears in a 242 or even a 246 if it is translated from another
+				// language, although the latter is probably bad practice.  We will only take these
+				// if the title in the 245 is blank, and take a 242 over the 246
+				
 				$strTransTitle = $this->extractMarcDataField($objXPath, 242, "a");
 				$strTransSubTitle = $this->extractMarcDataField($objXPath, 242, "b");
+				
+				$strVaryingTitle = $this->extractMarcDataField($objXPath, 246, "a");
+				$strVaryingSubTitle = $this->extractMarcDataField($objXPath, 246, "b");
 				
 				if ( $this->strTitle == "" && $strTransTitle != "" )
 				{
 					$this->strTitle = $strTransTitle;
 					$this->bolTransTitle = true;
 				}
+				elseif ( $this->strTitle == "" && $strVaryingTitle != "" )
+				{
+					$this->strTitle = $strVaryingTitle;
+					$this->bolTransTitle = true;				
+				}
 				
 				if ( $this->strSubTitle == "" && $strTransSubTitle != "" )
 				{
 					$this->strSubTitle = $strTransTitle;
 					$this->bolTransTitle = true;
+				}
+				elseif ( $this->strSubTitle == "" && $strVaryingSubTitle != "" )
+				{
+					$this->strSubTitle = $strVaryingSubTitle;
+					$this->bolTransTitle = true;					
 				}
 				
 				// leader
@@ -342,7 +374,7 @@
 				// gale puts issn in 773b
 				
 				$strGaleIssn = $this->extractMarcDataField($objXPath, 773, "b");
-				if ( $strGaleIssn != null ) $strIssn = $strGaleIssn;
+				if ( $strGaleIssn != null ) array_push($arrIssn, $strGaleIssn);
 				
 				// ebsco book chapter
 				
@@ -429,7 +461,7 @@
 				############################
 				
 				
-				### xml parsers issue and volume
+				### issue and volume
 				
 				// for some reason Metalib misses these sometimes, so we'll parse them out here
 				// and take them over the context object
@@ -621,6 +653,13 @@
 						}
 					}
 					
+					// empty link, skip to next foreach entry
+					
+					if ( $strUrl == "")
+					{
+						continue;
+					}
+					
 					// bad links
 					// records that have 856s, but are not always for full-text; in that case, specify them
 					// as being TOCs, which makes the 'none' links
@@ -628,6 +667,7 @@
 					// wilson: if it has '$3' in the URL not full-text, since these are improperly parsed out (3/26/07) 
 					// cabi: just point back to site (10/30/07)
 					// google scholar: just point back to site (3/26/07) 
+					// amazon: just point back to site (3/20/08)
 					// abc-clio: just point back to site (7/30/07)						
 					// gale: only has full-text if 'text available' note in 500 field (9/7/07)
 
@@ -635,7 +675,9 @@
 					if ( stristr($strUrl, "$3") || 	
 						 stristr($this->strSource, "CABI") || 
 					     stristr($this->strSource, "GOOGLE_SCH") || 
+					     stristr($this->strSource, "AMAZON") || 
 					     stristr($this->strSource, "ABCCLIO") || 
+					     stristr($this->strSource, "EVII") || 
 					     ( strstr($this->strSource, "GALE") && ! in_array("Text available", $this->arrNotes) ) )
 					{
 						$bolToc = true;
@@ -685,12 +727,12 @@
 				
 				### oclc number
 				
-				// oclc number can be either in the 001 (if 003 says source is oclc)
+				// oclc number can be either in the 001 (unless 003 says otherwise)
 				// or in the 035$a -- either way, we'll get just the number itself
 				
-				if ( $str001 != "" && $str003 == "OCoLC" )
+				if ( $str001 != "" && ( $str003 == "" || $str003 == "OCoLC" ) )
 				{
-					$this->strOCLC = $str003;
+					$this->strOCLC = $str001;
 				}
 				elseif ( strpos($str035, "OCoLC") !== false )
 				{
@@ -703,7 +745,13 @@
 				
 				if ( preg_match("/[0-9]{1,}/", $this->strOCLC, $arrOclc) != 0 )
 				{
-					$this->strOCLC = $arrOclc[0];
+					$strJustOclcNumber = $arrOclc[0];
+					
+					// strip out leading 0s
+					
+					$strJustOclcNumber = preg_replace("/^0{1,8}/", "", $strJustOclcNumber);
+					
+					$this->strOCLC = $strJustOclcNumber;
 				}
 				
 				
@@ -955,29 +1003,9 @@
 				}
 				
 				// make sure nonSort portion of the title is extracted
-				
-				// common definite and indefinite articles
-				
-				if ( strlen($this->strTitle) > 4 )
-				{
-					if ( strtolower( substr($this->strTitle, 0, 4) ) == "the " )
-					{
-						$this->strNonSort = substr($this->strTitle, 0, 4);
-						$this->strTitle = substr($this->strTitle, 4);
-					}
-					elseif ( strtolower( substr($this->strTitle, 0, 2) ) == "a " )
-					{
-						$this->strNonSort = substr($this->strTitle, 0, 2);
-						$this->strTitle = substr($this->strTitle, 2);						
-					}
-					elseif ( strtolower( substr($this->strTitle, 0, 3) ) == "an " )
-					{
-						$this->strNonSort = substr($this->strTitle, 0, 3);
-						$this->strTitle = substr($this->strTitle, 3);						
-					}
-				}
-				
-				// punctuation
+
+				// punctuation; we'll also *add* the definite/indefinite article below should 
+				// the quote be followed by one of those -- this is all in english, yo!
 				
 				if ( strlen($this->strTitle) > 0 )
 				{
@@ -987,6 +1015,29 @@
 						$this->strTitle = substr($this->strTitle, 1);
 					}
 				}
+				
+				// common definite and indefinite articles
+				
+				if ( strlen($this->strTitle) > 4 )
+				{
+					if ( strtolower( substr($this->strTitle, 0, 4) ) == "the " )
+					{
+						$this->strNonSort .= substr($this->strTitle, 0, 4);
+						$this->strTitle = substr($this->strTitle, 4);
+					}
+					elseif ( strtolower( substr($this->strTitle, 0, 2) ) == "a " )
+					{
+						$this->strNonSort .= substr($this->strTitle, 0, 2);
+						$this->strTitle = substr($this->strTitle, 2);						
+					}
+					elseif ( strtolower( substr($this->strTitle, 0, 3) ) == "an " )
+					{
+						$this->strNonSort .= substr($this->strTitle, 0, 3);
+						$this->strTitle = substr($this->strTitle, 3);						
+					}
+				}
+				
+
 				
 				
 				### year
@@ -1383,6 +1434,8 @@
 			if ($this->getInstitution() != null ) $objRecord->appendChild($objXml->createElement("institution", $this->escapeXML($this->getInstitution()))); 
 			if ($this->getDegree() != null ) $objRecord->appendChild($objXml->createElement("degree", $this->escapeXML($this->getDegree()))); 
 			if ($this->getDatabaseName() != null ) $objRecord->appendChild($objXml->createElement("database_name", $this->escapeXML($this->getDatabaseName()))); 
+			if ($this->getEdition() != null ) $objRecord->appendChild($objXml->createElement("edition", $this->escapeXML($this->getEdition()))); 
+			if ($this->getCallNumber() != null ) $objRecord->appendChild($objXml->createElement("call_number", $this->escapeXML($this->getCallNumber()))); 
 			
 			// table of contents
 			
@@ -1419,7 +1472,7 @@
 			
 			// standard numbers
 			
-			if ( count($arrIssn) > 0 || count($arrIsbn) > 0 || $this->strGovDoc != "" || $this->strGPO != "")
+			if ( count($arrIssn) > 0 || count($arrIsbn) > 0 || $this->strGovDoc != "" || $this->strGPO != "" || $this->strOCLC != "")
 			{
 				$objStandard = $objXml->createElement("standard_numbers");
 				
@@ -1451,6 +1504,12 @@
 				{
 					$objGPO = $objXml->createElement("govdoc", $this->escapeXml($this->strGPO));
 					$objStandard->appendChild($objGPO);
+				}
+				
+				if ( $this->strOCLC != "" )
+				{
+					$objOCLC = $objXml->createElement("oclc", $this->escapeXml($this->strOCLC));
+					$objStandard->appendChild($objOCLC);					
 				}
 				
 				
@@ -2718,7 +2777,8 @@
 		{
 			// NOTE: if you make a change to this function, make a corresponding change 
 			// in the Xerxes_Parser class, since this one here is a duplicate function 
-			// allowing Xerxes_Record to be a stand-alone class 
+			// allowing Xerxes_Record to be a stand-alone class
+			
 			
 			
 			
@@ -2766,7 +2826,7 @@
 			// join the words back into a string
 			
 			$strFinal = implode(' ', $arrWords);
-
+			
 			// catch subtitles
 			
 			if ( preg_match("/: ([a-z])/", $strFinal, $arrMatches) )
@@ -2783,19 +2843,58 @@
 				$strFinal = preg_replace("/\"[a-z]/", "\"" . $strLetter, $strFinal );
 			}
 			
-			// catch words that start with a single quote;
-			// need to be a little more cautious here and make sure there 
-			// is a space before the quote to ensure we are not inside a word
+			// catch words that start with a single quote
+			// need to be a little more cautious here and make sure there is a space before the quote when
+			// inside the title to ensure this isn't a quote for a contraction or for possisive; seperate
+			// case to handle when the quote is the first word
 			
 			if ( preg_match("/ '([a-z])/", $strFinal, $arrMatches) )
 			{
 				$strLetter = ucwords($arrMatches[1]);
 				$strFinal = preg_replace("/ '[a-z]/", " '" . $strLetter, $strFinal );
 			}
-
+			
+			if ( preg_match("/^'([a-z])/", $strFinal, $arrMatches) )
+			{
+				$strLetter = ucwords($arrMatches[1]);
+				$strFinal = preg_replace("/^'[a-z]/", "'" . $strLetter, $strFinal );
+			}
 			
 			return $strFinal;
 
+		}
+		
+		private function ordinal($value)
+		{
+			if ( is_numeric($value) )
+			{
+				if( substr($value, -2, 2) == 11 || substr($value, -2, 2) == 12 || substr($value, -2, 2) == 13 )
+				{
+			        $suffix = "th";
+			    }
+			    elseif ( substr($value, -1, 1) == 1 )
+			    {
+			        $suffix = "st";
+			    }
+			    elseif ( substr($value, -1, 1) == 2 )
+			    {
+			        $suffix = "nd";
+			    }
+			    elseif ( substr($value, -1, 1) == 3 )
+			    {
+			        $suffix = "rd";
+			    }
+			    else
+			    {
+			        $suffix = "th";
+			    }
+			    
+			    return $value . $suffix;
+			}
+			else
+			{
+				return $value;
+			}
 		}
 		
 
@@ -2908,7 +3007,7 @@
 			
 			if ( $this->strNonSort != "") 
 			{
-				$strTitle = $this->strNonSort . " ";
+				$strTitle = $this->strNonSort;
 			}
 
 			$strTitle .= $this->strTitle;
@@ -2952,7 +3051,7 @@
 		{ 
 			if ( count($this->arrIssn) > 0 )
 			{
-				return $this->arrIssn[0];
+				return str_replace("-", "", $this->arrIssn[0]);
 			}
 			else
 			{
@@ -2963,7 +3062,7 @@
 		{ 
 			if ( count($this->arrIsbn) > 0 )
 			{
-				return $this->arrIsbn[0];
+				return str_replace("-", "", $this->arrIsbn[0]);
 			}
 			else
 			{
@@ -2971,8 +3070,32 @@
 			}
 		}
 		
-		public function getAllISSN() { return array_unique($this->arrIssn); }
-		public function getAllISBN() { return  array_unique($this->arrIsbn); }
+		public function getAllISSN()
+		{ 
+			$arrClean = array();
+			$arrUnique = array_unique($this->arrIssn);
+			
+			foreach ($arrUnique as $strISSN )
+			{
+				$strISSN = str_replace("-", "", $strISSN);
+				array_push($arrClean, $strISSN);
+			}
+			
+			return $arrClean;
+		}
+		public function getAllISBN()
+		{ 
+			$arrClean = array();
+			$arrUnique = array_unique($this->arrIsbn);
+			
+			foreach ($arrUnique as $strIsbn )
+			{
+				$strIsbn = str_replace("-", "", $strIsbn);
+				array_push($arrClean, $strIsbn);
+			}
+			
+			return $arrClean;
+		}
 		
 		public function getMetalibID() { return $this->strMetalibID; }
 		public function getResultSet() { return $this->strResultSet; }
@@ -3014,6 +3137,21 @@
 		public function getDegree()
 		{
 			return $this->strDegree;
+		}
+		
+		public function getEdition()
+		{
+			return $this->ordinal($this->strEdition);
+		}
+		
+		public function getCallNumber()
+		{
+			return $this->strCallNumber;
+		}
+		
+		public function getOCLCNumber()
+		{
+			return $this->strOCLC;
 		}
 	}
 

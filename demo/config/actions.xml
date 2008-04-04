@@ -121,6 +121,8 @@
 		<section name="folder" directory="folder" namespace="Xerxes" documentElement="folder" restricted="true">	
 			<action name="home">
 				<command>FolderResults</command>
+				<command directory="availability">AvailabilityInjectFullText</command>
+				<command>FolderTags</command>
 				<command>FolderPaging</command>
 				<view>xsl/folder_home.xsl</view>
 			</action>
@@ -161,7 +163,12 @@
 				<view />
 			</action>
 		</section>
-		<section name="availability" directory="availability" namespace="Xerxes" documentElement="xerxes">	
+		<section name="availability" directory="availability" namespace="Xerxes" documentElement="xerxes">
+
+			<!-- fulltext and refereed are depricated in version 1.2 in favor of the 'inject'
+			     equivalent commands, which are included now as part of actions in metasearch
+			     and folder sections -->
+			     
 			<action name="fulltext">
 				<command>AvailabilityFulltext</command>
 				<view />
@@ -170,6 +177,7 @@
 				<command>AvailabilityRefereed</command>
 				<view />
 			</action>
+			
 			<action name="populate" cli="true">
 				<command>PopulateFulltext</command>
 				<view />
@@ -186,11 +194,15 @@
 			</action>
 			<action name="results">
 				<command>MetasearchResults</command>
+				<command directory="availability">AvailabilityInjectRefereed</command>
+				<command directory="availability">AvailabilityInjectFullText</command>
 				<command>MetasearchPaging</command>
 				<view>xsl/metasearch_results.xsl</view>
 			</action>
 			<action name="facet">
 				<command>MetasearchFacet</command>
+				<command directory="availability">AvailabilityInjectRefereed</command>
+				<command directory="availability">AvailabilityInjectFullText</command>
 				<command>MetasearchPaging</command>
 				<view>xsl/metasearch_results.xsl</view>
 			</action>
@@ -208,6 +220,7 @@
 			</action>
 			<action name="record">
 				<command>MetasearchRecord</command>
+				<command directory="availability">AvailabilityInjectRefereed</command>
 				<view>xsl/metasearch_record.xsl</view>
 			</action>
 		</section>

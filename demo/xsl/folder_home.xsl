@@ -161,22 +161,24 @@
 							<!-- Full-Text -->
 							
 							<xsl:choose>
-								<xsl:when test="full_text_bool">
-		
-									<xsl:call-template name="full_text_links">
-										<xsl:with-param name="class">resultsFullTextOption</xsl:with-param>
-									</xsl:call-template>
-								
-								</xsl:when>
-								<xsl:otherwise>
+							<xsl:when test="full_text_bool">
 							
-									<a href="{$base_url}/?base=folder&amp;action=redirect&amp;type=openurl&amp;id={$id}" class="resultsFullText" target="{$link_target}">
-										<img src="{$base_url}/?base=availability&amp;action=fulltext&amp;issn={$issn}&amp;year={$year}" 
-											 alt="check for availability" border="0"/>
-									</a>
-									
-								</xsl:otherwise>
-							</xsl:choose>		
+								<xsl:call-template name="full_text_links">
+									<xsl:with-param name="class">resultsFullTextOption</xsl:with-param>
+								</xsl:call-template>
+								
+							</xsl:when>
+							<xsl:when test="//fulltext/issn = standard_numbers/issn">
+								<a href="./?base=metasearch&amp;action=sfx&amp;resultSet={$result_set}&amp;startRecord={$record_number}&amp;fulltext=1" class="resultsFullText"  target="{$link_target}" >
+									<img src="{$base_include}/images/html.gif" alt="full text online" width="16" height="16" border="0" /> Full-Text Online
+								</a>
+							</xsl:when>
+							<xsl:otherwise>
+								<a href="./?base=metasearch&amp;action=sfx&amp;resultSet={$result_set}&amp;startRecord={$record_number}" class="resultsFullText"  target="{$link_target}" >
+									<img src="{$base_url}/images/sfx.gif" alt="check for availability" /> Check for availability
+								</a>
+							</xsl:otherwise>
+							</xsl:choose>
 						</div>
 						
 					</td>
@@ -190,7 +192,7 @@
 							href="{$base_url}/?base=folder&amp;action=delete&amp;username={$username}&amp;source={$source}&amp;id={$original_id}&amp;sortKeys={$sort}">Delete</a>
 					</td>
 				</tr>
-				</xsl:for-each>				
+				</xsl:for-each>
 			</table>
 			
 			<!-- Paging Navigation -->

@@ -181,8 +181,6 @@
 							</h4>
 							
 							<ul>
-							
-							
 
 							<xsl:choose>
 								<xsl:when test="@name != 'DATE'">
@@ -229,7 +227,7 @@
 					</div>
 				</xsl:when>
 			</xsl:choose>
-                        
+			
 			<xsl:if test="$merge_bug = 'false'">
 				<div class="resultsPageOptions">
 					<xsl:if test="sort_display and not(results/facet_name)">
@@ -308,17 +306,17 @@
 				<xsl:variable name="result_set" 	select="result_set" />
 				<xsl:variable name="record_number" 	select="record_number" />
 
-		                <xsl:variable name="this_start_number">
-		                	<xsl:choose>
-		                    	<xsl:when test="/metasearch/request/startrecord">
-		                        	<xsl:value-of select="number(/metasearch/request/startrecord) - 1" />
-		                        </xsl:when>
-		                        <xsl:otherwise>0</xsl:otherwise>
-		                     </xsl:choose>
-		                </xsl:variable>
-		                <xsl:variable name="this_record_number" select="position() + $this_start_number" />
+				<xsl:variable name="this_start_number">
+					<xsl:choose>
+						<xsl:when test="/metasearch/request/startrecord">
+							<xsl:value-of select="number(/metasearch/request/startrecord) - 1" />
+						</xsl:when>
+						<xsl:otherwise>0</xsl:otherwise>
+					</xsl:choose>
+				</xsl:variable>
+				<xsl:variable name="this_record_number" select="position() + $this_start_number" />
 
-				<div class="resultsMain">				
+				<div class="resultsMain">
 					
 					<!-- keep the url in the current result set, unless this is a facet, in which
 					     case we'll link to the record by original resultset, plus return param -->
@@ -341,10 +339,14 @@
 						<xsl:if test="language and language != 'English' and format != 'Video'">
 							<span class="resultsLanguage"> written in <xsl:value-of select="language" /></span>
 						</xsl:if>
-						<xsl:if test="standard_numbers/issn and format != 'Book Review'">
-							<xsl:text> </xsl:text><img src="./?base=availability&amp;action=refereed&amp;issn={$issn}" width="129" height="14" alt="" />
+						
+						<!-- peer reviewed -->
+						
+						<xsl:if test="//refereed/issn = standard_numbers/issn and format != 'Book Review'">
+							<xsl:text> </xsl:text><img src="images/refereed_hat.gif" width="20" height="14" alt="" />
+							<xsl:text> Peer Reviewed</xsl:text>
 						</xsl:if>
-					</div>			
+					</div>
 
 					<div class="resultsAbstract">
 						<xsl:choose>
@@ -360,7 +362,7 @@
 					<xsl:if test="primary_author">
 						<span class="resultsAuthor">
 							<strong>By: </strong><xsl:value-of select="primary_author" />
-						</span>				
+						</span>
 					</xsl:if>
 
 					<xsl:if test="year">
@@ -396,12 +398,15 @@
 								</xsl:call-template>
 									
 							</xsl:when>
-							<xsl:otherwise>
-						
-								<a href="./?base=metasearch&amp;action=sfx&amp;resultSet={$result_set}&amp;startRecord={$record_number}" class="resultsFullText"  target="{$link_target}" >
-									<img src="./?base=availability&amp;action=fulltext&amp;issn={$issn}&amp;year={$year}" alt="check for availability" border="0"/>
+							<xsl:when test="//fulltext/issn = standard_numbers/issn">
+								<a href="./?base=metasearch&amp;action=sfx&amp;resultSet={$result_set}&amp;startRecord={$record_number}&amp;fulltext=1" class="resultsFullText"  target="{$link_target}" >
+									<img src="{$base_include}/images/html.gif" alt="full text online" width="16" height="16" border="0" /> Full-Text Online
 								</a>
-								
+							</xsl:when>
+							<xsl:otherwise>
+								<a href="./?base=metasearch&amp;action=sfx&amp;resultSet={$result_set}&amp;startRecord={$record_number}" class="resultsFullText"  target="{$link_target}" >
+									<img src="{$base_url}/images/sfx.gif" alt="check for availability" /> Check for availability
+								</a>
 							</xsl:otherwise>
 						</xsl:choose>
 							
@@ -413,8 +418,8 @@
 							<a onClick="return saveRecord('{$group}', '{$result_set}','{$record_number}');"
 								href="./?base=metasearch&amp;action=save-delete&amp;group={$group}&amp;resultSet={$result_set}&amp;startRecord={$record_number}" 
 								class="resultsFullText">Save this record</a>
-						</span>	
-								
+						</span>
+						
 					</div>
 			
 				</div>
@@ -478,7 +483,7 @@
 
 <xsl:template name="facet_display">
 
-<xsl:variable name="node_pos" select="@position" />
+	<xsl:variable name="node_pos" select="@position" />
 	<xsl:param name="group" />
 	<xsl:param name="this_result_set" />
 	<xsl:param name="facet_number" />

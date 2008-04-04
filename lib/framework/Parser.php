@@ -66,11 +66,11 @@
 		 * @static 
 		 */ 
 
-		public static function toTitleCase( $strInput )
+		private function toTitleCase( $strInput )
 		{
 			// NOTE: if you make a change to this function, make a corresponding change 
-			// in the Xerxes_Record class, since it has a duplicate function 
-			// to allow it be as a stand-alone class 
+			// in the Xerxes_Parser class, since this one here is a duplicate function 
+			// allowing Xerxes_Record to be a stand-alone class
 			
 			
 			
@@ -83,7 +83,7 @@
 						
 			// if there are no lowercase letters (and its sufficiently long a title to 
 			// not just be an aconym or something) then this is likely a title stupdily
-			// entered into a database or something in ALL CAPS, so drop it entirely to 
+			// entered into a database in ALL CAPS, so drop it entirely to 
 			// lower-case first
 
 			$iMatch = preg_match("/[a-z]/", $strInput);
@@ -119,25 +119,41 @@
 			// join the words back into a string
 			
 			$strFinal = implode(' ', $arrWords);
-
+			
 			// catch subtitles
 			
 			if ( preg_match("/: ([a-z])/", $strFinal, $arrMatches) )
 			{
-				$strLetter = ucwords($arrMatches[0]);
+				$strLetter = ucwords($arrMatches[1]);
 				$strFinal = preg_replace("/: ([a-z])/", ": " . $strLetter, $strFinal );
 			}
-			
-			// catch words that start with a quotation mark
+
+			// catch words that start with double quotes
 			
 			if ( preg_match("/\"([a-z])/", $strFinal, $arrMatches) )
 			{
 				$strLetter = ucwords($arrMatches[1]);
-				$strFinal = preg_replace("/\"([a-z])/", "\"" . $strLetter, $strFinal );
+				$strFinal = preg_replace("/\"[a-z]/", "\"" . $strLetter, $strFinal );
 			}
-
+			
+			// catch words that start with a single quote
+			// need to be a little more cautious here and make sure there is a space before the quote when
+			// inside the title to ensure this isn't a quote for a contraction or for possisive; seperate
+			// case to handle when the quote is the first word
+			
+			if ( preg_match("/ '([a-z])/", $strFinal, $arrMatches) )
+			{
+				$strLetter = ucwords($arrMatches[1]);
+				$strFinal = preg_replace("/ '[a-z]/", " '" . $strLetter, $strFinal );
+			}
+			
+			if ( preg_match("/^'([a-z])/", $strFinal, $arrMatches) )
+			{
+				$strLetter = ucwords($arrMatches[1]);
+				$strFinal = preg_replace("/^'[a-z]/", "'" . $strLetter, $strFinal );
+			}
+			
 			return $strFinal;
-
 		}
 
 		/**
@@ -223,9 +239,6 @@
 			// NOTE: if you make a change to this function, make a corresponding change 
 			// in the Xerxes_Record class, since it has a duplicate function 
 			// to allow it be as a stand-alone class 
-
-			
-			
 			
 			$string = str_replace('&', '&amp;', $string);
 	        $string = str_replace('<', '&lt;', $string);

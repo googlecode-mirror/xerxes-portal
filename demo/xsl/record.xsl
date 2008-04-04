@@ -23,6 +23,7 @@
 
 		<xsl:variable name="result_set" 	select="result_set" />
 		<xsl:variable name="record_number" 	select="record_number" />
+		<xsl:variable name="group" 			select="//request/group" />
 		<xsl:variable name="issn" 		select="standard_numbers/issn" />
 		
 		<div id="citation">
@@ -122,12 +123,13 @@
 					<xsl:value-of select="format" />
 					
 					<xsl:choose>
-					
 					<xsl:when test="../refereed = 1 and format != 'Book Review'">
-						<xsl:text> </xsl:text><img src="{$base_url}/images/refereed.gif" width="129" height="14" alt="" />
+						<xsl:text> </xsl:text><img src="images/refereed_hat.gif" width="20" height="14" alt="" />
+						<strong> Peer Reviewed</strong>
 					</xsl:when>
-					<xsl:when test="standard_numbers/issn and format != 'Book Review'">
-						<xsl:text> </xsl:text><img src="./?base=availability&amp;action=refereed&amp;issn={$issn}" width="129" height="14" alt="" />
+					<xsl:when test="//refereed/issn = standard_numbers/issn and format != 'Book Review'">
+						<xsl:text> </xsl:text><img src="images/refereed_hat.gif" width="20" height="14" alt="" />
+						<strong> Peer Reviewed</strong>
 					</xsl:when>
 					</xsl:choose>
 				</td>
@@ -228,11 +230,18 @@
 							</a>
 						</xsl:when>
 					</xsl:choose>
-				</div>		
+				</div>
+                <xsl:if test="/metasearch">
+                    <div class="recordFullTextOption">
+						<img id="folder_{$result_set}{$record_number}" src="images/folder.gif" width="17" height="15" alt="" border="0" />
+						<xsl:text> </xsl:text>
+						<a onClick="return saveRecord('{$group}', '{$result_set}','{$record_number}');"
+							href="./?base=metasearch&amp;action=save-delete&amp;group={$group}&amp;resultSet={$result_set}&amp;startRecord={$record_number}" 
+							class="resultsFullText">Save this record</a>
+                    </div>
+                </xsl:if>
 			</div>
-			
-			
-			
+
 			<!-- Abstract -->
 			<xsl:if test="abstract">
 				<h4>Summary</h4>

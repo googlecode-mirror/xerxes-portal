@@ -51,7 +51,24 @@
 				
 				if ( $objDatabaseData != null )
 				{
-					if ( $objDatabaseData->subscription == "1" ) $bolProxy = true;
+					// databases marked as subscription should be proxied
+					
+					if ( $objDatabaseData->subscription == "1" )
+					{
+						$bolProxy = true;
+					}
+					
+					// override the behavior if proxy flag specifically set
+					
+					if ( $objDatabaseData->proxy == 1 )
+					{
+						$bolProxy = true;
+					}
+					elseif ( $objDatabaseData->proxy == 0 )
+					{
+						$bolProxy = false;
+					}
+					
 					$strConstructPattern = $objDatabaseData->link_native_record;
 				}
 			}
