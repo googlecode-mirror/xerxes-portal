@@ -44,7 +44,7 @@
 				
 			if ( $iTotal > 0 )
 			{	
-				$objXml->loadXML("<summary><range>$iStart-$iStop</range><total>$iTotal</total></summary>");
+				$objXml->loadXML("<summary><range>$iStart-$iStop</range><total>" . number_format($iTotal) . "</total></summary>");
 			}
 			
 			return $objXml;

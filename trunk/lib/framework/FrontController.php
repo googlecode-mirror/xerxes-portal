@@ -70,7 +70,10 @@
 				
 				// base url of the instance
 				
-				$web = "http://" . $objRequest->getServer('SERVER_NAME') . dirname($objRequest->getServer('PHP_SELF'));
+				$self_dir = dirname($objRequest->getServer('PHP_SELF'));
+				$self_dir = str_replace("\\", "/", $self_dir);
+				
+				$web = "http://" . $objRequest->getServer('SERVER_NAME') . $self_dir;
 				if ( substr($web, strlen($web) - 1, 1) == "/") $web = substr($web, 0, strlen($web) - 1);
 				
 				// register these values

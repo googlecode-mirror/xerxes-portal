@@ -10,9 +10,9 @@
  *
  * global variables dateSearch and xerxesRoot set by include.xsl since this is set server-side
  *
- * @param string resultSet		metalib result set id
+ * @param string resultSet	metalib result set id
  * @param string recordNumber	record number
- * @return bool					false if browser is AJAX capable, true if it is not
+ * @return bool			false if browser is AJAX capable, true if it is not
  */
 
 
@@ -205,6 +205,11 @@ function databaseLimit(form1)
 {
 	var iTotal = 0;
 	var iMax = form1.database.length;
+	
+	if ( iMax == "" || iMax == undefined)
+	{
+		iMax = 1;
+	}
 
 	for (var x = 0; x < iMax; x++)
 	{

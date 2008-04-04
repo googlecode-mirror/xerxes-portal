@@ -1,5 +1,3 @@
-﻿
-
 CREATE DATABASE IF NOT EXISTS xerxes;
 USE xerxes;
 

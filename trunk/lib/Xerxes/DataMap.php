@@ -1,5 +1,17 @@
 <?php
 
+class Xerxes_Data_Record_Tag extends Xerxes_Framework_DataValue
+{
+	public $label;
+	public $total;
+}
+
+class Xerxes_Data_Record_Format extends Xerxes_Framework_DataValue
+{
+	public $format;
+	public $total;
+}
+
 class Xerxes_Data_Cache extends Xerxes_Framework_DataValue
 {
 	public $source;
@@ -324,9 +336,13 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		{										
 			return 1;
 		}
-		else
+		elseif ($strValue == "no")
 		{
 			return 0;
+		}
+		else
+		{
+			return null;
 		}
 	}
 	
@@ -827,6 +843,55 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 	}
 	
 	/**
+	 * Retrive format-based record counts for saved records
+	 *
+	 * @param string $strUsername		username under which the records are saved
+	 * @return array					array of Xerxes_Data_Record_Facet objects
+	 */
+	
+	public function getRecordFormats($strUsername)
+	{
+		$arrFacets = array();
+		
+		$strSQL = "SELECT format, count(id) as total from xerxes_records WHERE username = :username GROUP BY format ORDER BY format";
+		$arrResults = $this->select($strSQL, array( ":username" => $strUsername));
+		
+		foreach ( $arrResults as $arrResult )
+		{
+			$objRecord = new Xerxes_Data_Record_Format();
+			$objRecord->load($arrResult);
+			array_push($arrFacets, $objRecord);
+		}
+		
+		return $arrFacets;
+	}
+
+	/**
+	 * Retrieve listing and count of labels for saved records
+	 *
+	 * @param unknown_type $strUsername
+	 * @return unknown
+	 */
+	
+	public function getRecordTags($strUsername)
+	{
+		$arrFacets = array();
+		
+		$strSQL = "SELECT tag as label, count(record_id) as total from xerxes_tags WHERE username = :username GROUP BY label ORDER BY label";
+		$arrResults = $this->select($strSQL, array( ":username" => $strUsername));
+		
+		foreach ( $arrResults as $arrResult )
+		{
+			$objRecord = new Xerxes_Data_Record_Tag();
+			$objRecord->load($arrResult);
+			array_push($arrFacets, $objRecord);
+		}
+		
+		return $arrFacets;
+	}
+	
+	
+	/**
 	 * Update the user table to include the last date of login
 	 *
 	 * @param string $username		username
@@ -960,18 +1025,49 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 	/**
 	 * Get a list of journals from the sfx table by issn
 	 *
-	 * @param string $issn		ISSN
+	 * @param mixed $issn		[string or array] ISSN or multiple ISSNs
 	 * @return array			array of Xerxes_Data_Fulltext objects
 	 */
 	
 	public function getFullText($issn)
 	{
 		$arrFull = array();
-		$issn = str_replace("-","",$issn);
+		$arrResults = array();
+		$strSQL = "SELECT * FROM xerxes_sfx WHERE ";
 		
-		$strSQL = "SELECT * FROM xerxes_sfx WHERE issn = :issn";
+		if ( is_array($issn) )
+		{
+			if ( count($issn) == 0 ) throw new Exception("issn query with no values");
 			
-		$arrResults = $this->select($strSQL, array( ":issn" => $issn));
+			$x = 1;
+			$arrParams = array();
+			
+			foreach ( $issn as $strIssn )
+			{
+				$strIssn = str_replace("-","",$strIssn);
+				
+				if ( $x == 1 )
+				{
+					$strSQL .= " issn = :issn$x ";
+				}
+				else
+				{
+					$strSQL .= " OR issn = :issn$x ";					
+				}
+				
+				$arrParams["issn$x"] = $strIssn;
+				
+				$x++;
+			}
+			
+			$arrResults = $this->select($strSQL, $arrParams);
+		}
+		else
+		{
+			$issn = str_replace("-","",$issn);
+			$strSQL .= " issn = :issn";
+			$arrResults = $this->select($strSQL, array( ":issn" => $issn));
+		}
 
 		foreach ( $arrResults as $arrResult )
 		{
@@ -982,25 +1078,55 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		}
 		
 		return $arrFull;
-		
 	}
 	
 	/**
 	 * get a list of journals from the refereed table
 	 *
-	 * @param string $issn		ISSN
+	 * @param mixed $issn		[string or array] ISSN or multiple ISSNs
 	 * @return array			array of Xerxes_Data_Refereed objects
 	 */
 	
 	public function getRefereed($issn)
 	{
 		$arrPeer = array();
-		$issn = str_replace("-","",$issn);
+		$arrResults = array();
+		$strSQL = "SELECT * FROM xerxes_refereed WHERE ";
 		
-		$strSQL = "SELECT * FROM xerxes_refereed WHERE issn = :issn";
+		if ( is_array($issn) )
+		{
+			if ( count($issn) == 0 ) throw new Exception("issn query with no values");
+			
+			$x = 1;
+			$arrParams = array();
+			
+			foreach ( $issn as $strIssn )
+			{
+				$strIssn = str_replace("-","",$strIssn);
+				
+				if ( $x == 1 )
+				{
+					$strSQL .= " issn = :issn$x ";
+				}
+				else
+				{
+					$strSQL .= " OR issn = :issn$x ";					
+				}
+				
+				$arrParams["issn$x"] = $strIssn;
+				
+				$x++;
+			}
+			
+			$arrResults = $this->select($strSQL, $arrParams);
+		}
+		else
+		{
+			$issn = str_replace("-","",$issn);
+			$strSQL .= " issn = :issn";
+			$arrResults = $this->select($strSQL, array( ":issn" => $issn));
+		}
 	
-		$arrResults = $this->select($strSQL, array( ":issn" => $issn));
-
 		foreach ( $arrResults as $arrResult )
 		{
 			$objPeer = new Xerxes_Data_Refereed();

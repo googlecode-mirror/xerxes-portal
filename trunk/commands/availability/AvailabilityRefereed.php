@@ -9,6 +9,7 @@
 	 * @license http://www.gnu.org/licenses/
 	 * @version 1.1
 	 * @package Xerxes
+	 * @deprecated
 	 */
 	
 	class Xerxes_Command_AvailabilityRefereed extends Xerxes_Command_Availability

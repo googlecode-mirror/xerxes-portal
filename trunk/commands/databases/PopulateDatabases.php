@@ -185,7 +185,7 @@
 					
 					$objDatabasesXml = new DOMDocument();
 					$objDatabasesXml = $this->objSearch->databasesSubCategory($strID, false);
-					
+										
 					// extract just the database id
 				
 					$objXPath = new DOMXPath($objDatabasesXml);
@@ -277,6 +277,7 @@
 
 			$objXml = new DOMDocument();
 			$objXml = $this->objSearch->allDatabases($this->configInstitute, $this->configIPAddress, true);
+			
 			$strXml = Xerxes_Parser::Transform($objXml, $this->configParentDirectory .  "/lib/xsl/marc-to-database.xsl");
 			
 			// get just the database info

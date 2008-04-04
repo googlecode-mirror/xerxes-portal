@@ -67,9 +67,15 @@
 			<subscription>yes</subscription>
 		</xsl:if>
 		
-		<xsl:if test="marc:datafield[@tag='PXY']/marc:subfield[@code='a'] = 'N'">
-			<proxy>no</proxy>
-		</xsl:if>
+        <xsl:choose>
+            <xsl:when test="marc:datafield[@tag='PXY']/marc:subfield[@code='a'] = 'N'">
+                <proxy>no</proxy>
+            </xsl:when>
+         	<xsl:when test="marc:datafield[@tag='PXY']/marc:subfield[@code='a'] = 'Y'">
+				<proxy>yes</proxy>
+            </xsl:when>
+		</xsl:choose>
+
 				
 		<active><xsl:value-of select="marc:datafield[@tag='STA']/marc:subfield[@code='a']" /></active>
 
