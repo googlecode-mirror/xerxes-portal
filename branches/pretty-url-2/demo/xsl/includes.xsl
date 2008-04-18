@@ -52,6 +52,7 @@
 	<head>
 	<title><xsl:call-template name="title" /></title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<base href="{$base_include}/" />
 	<link href="{$base_include}/css/xerxes.css" rel="stylesheet" type="text/css" />
 	<link href="{$base_include}/css/xerxes-print.css" rel="stylesheet" type="text/css" media="print" />
 	<xsl:call-template name="header" />

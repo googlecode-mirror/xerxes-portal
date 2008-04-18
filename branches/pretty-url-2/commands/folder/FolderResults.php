@@ -36,6 +36,8 @@
 			$strReturn = $objRequest->getProperty("return");
 			
 			$iCount = $objRegistry->getConfig("SAVED_RECORDS_PER_PAGE", false, 20);
+			$configMarcBrief = $objRegistry->getConfig("XERXES_BRIEF_INCLUDE_MARC", false, false);
+			$configMarcFull = $objRegistry->getConfig("XERXES_FULL_INCLUDE_MARC", false, false);
 			
 			// save the return url back to metasearch page if specified
 			
@@ -63,7 +65,6 @@
 				$strFullness = "full";
 			}
 			
-
 			// fetch result(s) from the database
 			
 			$objData = new Xerxes_DataMap();
@@ -93,6 +94,8 @@
 					{
 						if ( $key == "xerxes_record" && $value != null)
 						{
+							// import the xerxes record
+							
 							$objXerxesRecord = $value;
 							
 							$objBibRecord = new DOMDocument();
@@ -102,6 +105,25 @@
 								
 							$objImportNode = $objXml->importNode($objBibRecord->documentElement, true);
 							$objRecord->appendChild($objImportNode);
+						}
+						elseif ($key == "marc" && $value != null)
+						{
+							// import the marc record, but only if configured to do so; since both brief
+							// and full record display come in on the same command, we'll use the record count 
+							// here as an approximate for the brief versus full view
+							
+							$iNumRecords = count($arrID);
+							
+							if (  ( $strFullness == "full" && $configMarcFull == true && $iNumRecords == 1 ) || 
+							      ( $strFullness == "full" && $configMarcBrief == true && $iNumRecords != 1 ) )
+							{
+								$objMarcXml = new DOMDocument();
+							    $objMarcXml->recover = true;
+							    $objMarcXml->loadXML($value);
+							     	
+							    $objImportNode = $objXml->importNode($objMarcXml->getElementsByTagName("record")->item(0), true);
+								$objRecord->appendChild($objImportNode);
+							}
 						}
 						else
 						{

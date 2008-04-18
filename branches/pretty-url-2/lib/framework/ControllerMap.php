@@ -18,20 +18,21 @@
 		private $file = "config/actions.xml";	// actions configuration file
 		
 		private $xml = null;				// simplexml object containing instructions for the actions
+		private $path_map = null;			//Xerxes_Framework_PathMap object.
 		private static $instance;			// singleton pattern
 	
-		private $strDocumentElement = "";	// name of the document element for the xml
-		private $bolRestricted = false;		// whether action should require authentication
+		private $strDocumentElement = "";		// name of the document element for the xml
+		private $bolRestricted = false;			// whether action should require authentication
 		private $bolLogin = false;			// whether action requires an explicit login
 		private $bolCLI = false;			// whether action should be restricted to command line interface
 		
-		private $arrCommands = array();		// list of commands
-		private $arrRequest = array();		// list of request params
-		private $arrIncludes = array();		// directories and files to include
+		private $arrCommands = array();			// list of commands
+		private $arrRequest = array();			// list of request params
+		private $arrIncludes = array();			// directories and files to include
 
 		private $strViewType = "";			// the folder the file lives in, important if it is 'xsl'
 		private $strViewFile = "";			// name of the file to use in view
-				
+		
 		private function __construct() { }
 		
 		/**
@@ -77,13 +78,16 @@
 		
 		/**
 		 * Process the action in the incoming request and parse the xml file to determine
-		 * the necessary includes, command classes, and view to call
+		 * the necessary includes, command classes, and view to call. 
+		 * Also translates path to properties in command-specific ways. 
+		 * Adds properties to Xerxes Request object. 
 		 *
 		 * @param string $section		'base' in the url or cli paramaters, corresponds to 'section' in xml
 		 * @param string $action		'action' in the url or cli paramaters, corresponds to 'action' in the xml
+		 * @param Xerxes_Framework_Request @xerxes_request The operative xerxes request object, used for getting properties from path in action specific ways.
 		 */
 		
-		public function setAction( $section, $action )
+		public function setAction( $section, $action, $xerxes_request  )
 		{
 			// get include files and directories for the entire application
 			
@@ -171,7 +175,7 @@
 				if ( $action == "")
 				{
 					$action = (string) $actions[0]["name"];
-					$this->addRequest("action", $action);				
+					$this->addRequest("action", $action);
 				}
 				
 				foreach ( $actions as $action )
@@ -244,8 +248,30 @@
 			
 			if ( $strRestricted == "true") $this->bolRestricted = true;
 			if ( $strLogin == "true") $this->bolLogin = true;
+			
+			// add any predefined values to the request object from ControllerMap
+			
+			foreach ( $this->getRequests() as $key => $value )
+			{
+				$xerxes_request->setProperty($key, $value, is_array($value));
+			}
 		}
 		
+		/**
+		 * Path Mapping object
+		 *
+		 * @return Xerxes_Framework_PathMap
+		 */	
+		
+		public function path_map_obj()
+		{
+			if ( ! $this->path_map )
+			{
+				$this->path_map = new Xerxes_Framework_PathMap($this->xml);
+			}
+			return $this->path_map;
+		}
+
 		/**
 		 * Document element that the master xml should contain
 		 *
@@ -359,7 +385,7 @@
 			
 			if ( ! in_array($value, $this->arrCommands) )
 			{
-				array_push($this->arrCommands, $value);
+				array_push($this->arrCommands, $value);               
 			}
 		}
 		
@@ -390,6 +416,185 @@
 			else
 			{
 				$this->arrRequest[$key] = $value;
+			}
+		}
+	}
+  
+	/**
+	 * Keeps track of mapping path components to query properties on an
+	 * action by action basis. Used only when pretty uris are turned on.
+	 * Usually used by ControllerMap, and not accessed directly by any 
+	 * other code. Gets mappings from actions.xml.
+	 * 
+	 * Caches answer for length of life of ControllerMap/PathMap, but that's
+	 * currently just life of a request. This works well enough it looks like. 
+	 * 
+	 * @author Jonathan Rochkind
+	 * @copyright 2008 Johns Hopkins University
+	 * @version 1.1
+	 * @package  Xerxes_Framework
+	 * @license http://www.gnu.org/licenses/
+	 *
+	 */
+	
+	class Xerxes_Framework_PathMap
+	{
+		private $actions_xml = null; 		// simplexml object containing instructions for the actions
+		private $mapsByProperty = array();	// array keyed by section name or "section/action"
+											// value is an array mapping properties (key) to path indexes (value) 
+		private $mapsByIndex = array();		// array keyed by section name or "section/action"
+											// value is an array mapping path indexes (key) to properties (value) 
+		
+		/**
+		 * Constructor
+		 * 
+		 * @param SimpleXML $actions_xml_arg		SimpleXML object of actions.xml directives
+		 */
+		
+		public function __construct($actions_xml_arg)
+		{ 
+			$this->actions_xml = $actions_xml_arg;
+		}
+		
+		/**
+		 * Retrieve an array of paramater-name-to-path-index mappings for a given action
+		 *
+		 * @param string $section		the section to find the action
+		 * @param string $action		the specific action being called
+		 * @return array				array in form of [paramater_name] => position_in_path
+		 */
+		
+		public function propertyToIndexMap($section, $action)
+		{
+			$key_name = "$section/$action";
+			
+			if (! array_key_exists($key_name, $this->mapsByProperty) )
+			{
+				$this->buildMapForAction( $section, $action );
+			}
+			
+			return $this->mapsByProperty[$key_name];
+		}
+
+		/**
+		 * Retrieve an individual path-index for a given action's paramater-name
+		 *
+		 * @param string $section			the section to find the action
+		 * @param string $action			the specific action being called
+		 * @param string $property_name		property name
+		 * @return mixed					[int] path index number or [null] if no mapping exists
+		 */
+		
+		public function indexForProperty($section, $action, $property_name)
+		{
+			$map = $this->propertyToIndexMap($section, $action);
+					 
+			if ( array_key_exists($property_name, $map) )
+			{
+				return $map[$property_name];
+			}
+			else
+			{
+				return null;
+			}
+		}
+		
+		/**
+		 * Retrieve an array of path-index-to-parameter-name mappings for a given action
+		 *
+		 * @param string $section		the section to find the action
+		 * @param string $action		the specific action being called
+		 * @return array				array in form of [position_in_path] => paramater_name
+		 */
+		
+		public function indexToPropertyMap($section, $action)
+		{
+			$key_name = "$section/$action";
+			
+			if (! array_key_exists($key_name, $this->mapsByIndex ) )
+			{
+				$this->buildMapForAction( $section, $action );
+			}
+			
+			return $this->mapsByIndex[$key_name];
+		}
+		
+		/**
+		 * Retrieve an individual paramater-name for a given action's path-index
+		 *
+		 * @param string $section		the section to find the action
+		 * @param string $action		the specific action being called
+		 * @param int $path_index		the 0-based numbered index of the path
+		 * @return mixed				[string] paramater name or [null] if no mapping exists
+		 */
+		
+		public function propertyForIndex($section, $action, $path_index)
+		{
+			$map = $this->indexToPropertyMap($section, $action);
+
+			if ( array_key_exists($path_index, $map) )
+			{
+				return $map[$path_index];
+			}
+			else
+			{
+				return null;
+			}
+		}
+		
+		/**
+		 * Does the actual work of extracting the pathIndex mappings
+		 *
+		 * @param string $section		the section to find the action
+		 * @param string $action		the specific action being called
+		 * @return null					extracts the values to member variables
+		 */
+		
+		private function buildMapForAction($section, $action)
+		{
+			$map_xml = null;
+			$key_name = "$section/$action";
+
+			// if no configed path param, empty array will be stored, good.
+			
+			$this->mapsByProperty[$key_name] = array();
+			$this->mapsByIndex[$key_name] = array();
+					 
+			// section may supply a default param-map for the section. 
+
+			$section_paths = $this->actions_xml->xpath("commands/section[@name='$section']/pathParamMap");
+			
+			// action may provide a param-map as well
+			
+			$action_paths = $this->actions_xml->xpath("commands/section[@name='$section']/action[@name='$action']/pathParamMap");
+			
+			// assign the default section map if present
+			
+			if ( $section_paths != false )
+			{
+				$map_xml = $section_paths[0];
+			}
+			
+			// but take the local action's map over the section one if that is present
+			
+			if ( $action_paths != false )
+			{
+				$map_xml = $action_paths[0];
+			}
+			
+			// if we got anything, go and ahead and loop over the mapEntries to pull out
+			// their path index and property name and assign it to the arrays above
+			
+			if ( $map_xml != null ) 
+			{
+				foreach ($map_xml->mapEntry as $map_entry)
+				{
+					$iIndex = (integer) $map_entry['pathIndex'];
+					$strProperty = (string) $map_entry['property'];
+					
+					$this->mapsByProperty[$key_name][$strProperty] = $iIndex;
+					$this->mapsByIndex[$key_name][$iIndex] = $strProperty;
+				}
 			}
 		}
 	}

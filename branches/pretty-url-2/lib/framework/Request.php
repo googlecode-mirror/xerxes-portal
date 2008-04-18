@@ -16,22 +16,25 @@
 	class Xerxes_Framework_Request
 	{
 		private $method = "";				// request method: GET, POST, COMMAND
-		private $arrParams = array();		// request paramaters
-		private $arrSession = array();		// session array for command line, unused right now
+		private $arrParams = array();			// request paramaters
+		private $arrSession = array();			// session array for command line, unused right now
 		private $xml = null;				// main xml document for holding data from commands
 		private $strRedirect = "";			// redirect url
-		
+		private $path_elements = null;			 // http path tranlsated into array of elements.
+			
 		/**
-		 * Process the incloming request paramaters and cookie values
+		 * Process the incoming request paramaters and cookie values
 		 */
 		
 		public function __construct()
 		{
 			if ( array_key_exists("REQUEST_METHOD", $_SERVER) )
 			{
+				// request has come in from GET or POST
+
 				$this->method = $_SERVER['REQUEST_METHOD'];
 				
-				// request has come in from GET or POST
+				// now extract remaining params in query string. 
 				
 				if ( $_SERVER['QUERY_STRING'] != "" )
 				{
@@ -54,13 +57,13 @@
 							if ( array_key_exists($strKey,$this->arrParams) )
 							{
 								// if there are multiple params of the same name,
-								// make sure we add them as array
+								// make sure we add them as array. 
 									
 								if ( ! is_array( $this->arrParams[$strKey]) )
 								{
 									$this->arrParams[$strKey] = array($this->arrParams[$strKey]);
 								}
-																		
+								
 								array_push( $this->arrParams[$strKey], $strValue );
 							}
 							else
@@ -70,6 +73,7 @@
 						}
 					}
 				}
+				
 				foreach ( $_POST as $key => $value )
 				{
 					$this->arrParams[$key] = $value;
@@ -77,6 +81,15 @@
 				foreach ( $_COOKIE as $key => $value )
 				{
 					$this->arrParams[$key] = $value;
+				}
+				
+				// if pretty URIs are turned on, extract params from uri. 
+				
+				$objRegistry = Xerxes_Framework_Registry::getInstance(); 
+				
+				if ( $objRegistry->getConfig("pretty_uris", false) )
+				{
+					$this->extractParamsFromPath();
 				}
 			}
 			else
@@ -111,6 +124,78 @@
 			else
 			{
 				return false;
+			}
+		}
+		
+		/**
+		 * Extract params from pretty uris when turned on in config. Requires base url to be set in config.
+		 * will get from $_SERVER['REQUEST_URI'], first stripping base url.
+		 */
+		 
+		public function extractParamsFromPath()
+		{
+			$this->mapPathToProperty(0, "base");
+			$this->mapPathToProperty(1, "action");
+			
+			// if the action has any specific parmaters it defines beyond base and action
+			// they are extracted here
+			
+			$objMap = Xerxes_Framework_ControllerMap::getInstance()->path_map_obj();
+			$map = $objMap->indexToPropertyMap($this->getProperty("base"), $this->getProperty("action"));
+			 		
+			foreach ( $map as $index => $property)
+			{
+				 $this->mapPathToProperty( $index, $property );				 
+			}
+		}
+		
+		/**
+		* Take the http request path and translate it to an array. 
+		* will get from $_SERVER['REQUEST_URI'], first stripping base url.
+		* If path was just "/", array will be empty. 
+		*/
+		
+		private function pathElements()
+		{
+			// lazy load
+			
+			if (! $this->path_elements )
+			{
+				$objRegistry = Xerxes_Framework_Registry::getInstance(); 
+				
+				$request_uri = $this->getServer('REQUEST_URI');
+
+				// get the path by stripping off base url + querystring
+				
+				$configBase = $objRegistry->getConfig('BASE_WEB_PATH', true);
+				$request_uri = str_replace($configBase . "/", "", $request_uri );
+				$request_uri = Xerxes_Parser::removeRight($request_uri, "?");
+				
+				// now get the elements
+				
+				$path_elements = explode('/', $request_uri);
+				
+				// for an empty path, we'll have one empty string element, get rid of it.
+				
+				if ( strlen($path_elements[0]) == 0)
+				{
+					unset($path_elements[0]);
+				}
+				
+				$this->path_elements = $path_elements;
+			}
+			
+			return $this->path_elements;
+		}
+		
+		
+		public function mapPathToProperty($path_index, $property_name)
+		{
+			$path_elements = $this->pathElements();
+						
+			if (array_key_exists($path_index, $path_elements))
+			{
+				$this->setProperty((string) $property_name, (string) $path_elements[$path_index]);
 			}
 		}
 		
@@ -202,15 +287,15 @@
 			{				
 				if (!isset($_SERVER['REQUEST_URI']))
 				{
-				    if (!isset($_SERVER['QUERY_STRING']))
-				    {
-				        $_SERVER['REQUEST_URI'] = $_SERVER["SCRIPT_NAME"];
-				    }
-				    else
-				    {
-				        $_SERVER['REQUEST_URI'] = $_SERVER["SCRIPT_NAME"] .'?'.
-				        $_SERVER['QUERY_STRING'];
-				    }
+					if (!isset($_SERVER['QUERY_STRING']))
+					{
+						$_SERVER['REQUEST_URI'] = $_SERVER["SCRIPT_NAME"];
+					}
+					else
+					{
+						$_SERVER['REQUEST_URI'] = $_SERVER["SCRIPT_NAME"] .'?'.
+						$_SERVER['QUERY_STRING'];
+					}
 				}
 			}
 			
@@ -325,10 +410,10 @@
 		/**
 		 * Extract a value from the master xml
 		 *
-		 * @param string $xpath				xpath expression to the element(s)
+		 * @param string $xpath			xpath expression to the element(s)
 		 * @param array $arrNamespaces		key / value pair of url / namespace reference for the xpath
 		 * @param string $strReturnType		[optional] return query results as 'DOMNODELIST' or 'ARRAY', otherwise as sting
-		 * @return mixed					if no value in return type, then single value returned as string					
+		 * @return mixed			if no value in return type, then single value returned as string					
 		 */
 		
 		public function getData($xpath, $arrNamespaces = null, $strReturnType = null)
@@ -385,7 +470,68 @@
 				return $objNodes->item(0)->nodeValue;
 			}
 		}
+		
+		/**
+		 * Generate a url for a given action. Used by commands to generate action
+		 * urls, rather than calculating manually. This method returns different
+		 * urls depending on whether pretty_uris is on in config. Will use
+		 * configured base_web_path if available, which is best.	
+		 * 
+		 * @param array $properties	Keys are xerxes request properties, values are 
+		 * the values. For an action url, "base" and "action" are required as keys.
+		 * Properties will be put in path or query string of url, if pretty urls are turned on
+		 * in config.xml, as per action configuration in actions.xml.
+		 *
+		 * @return string url 
+		 */
+		
+		public function url_for($properties) {
+			
+			if (! array_key_exists("base", $properties)) {
+				throw new Exception("no base/section supplied in url_for.");
+			}
+			
+			$config	= Xerxes_Framework_Registry::getInstance();
+			
+			$base_path = $config->getConfig('base_web_path', false, ".") . "/";
+			$extra_path = "";
+			$query_string = "";
+			
+			$base = $properties["base"];
+			$action = $properties["action"];
+			
+			if ( $config->getConfig('pretty_uris', false) ) {
+				//base in path
+				$extra_path_arr[0] = urlencode($base);
+				unset($properties["base"]);
+				//action in path
+				if ( array_key_exists("action", $properties)) {
+					$extra_path_arr[1] = urlencode($action);
+					unset($properties["action"]);
+				}
+				// Action-specific stuff
+				foreach ( array_keys($properties) as $property ) {
+					$controller_map = Xerxes_Framework_ControllerMap::getInstance();
+					$index = $controller_map->path_map_obj()->indexForProperty( $base, $action, $property );
+					if ( $index ) {
+						$extra_path_arr[$index] = urlencode($properties[$property]);
+						unset($properties[$property]);
+					}
+				}
+				$extra_path = implode("/", $extra_path_arr);
+			}
+			
+			//everything else, which may be everything if it's ugly uris,
 
+			$query_string = http_build_query($properties, '', '&amp;');
+			$assembled_path = $base_path . $extra_path;
+			if ( $query_string ) {
+				$assembled_path = $assembled_path . '?' . $query_string;
+			}
+			return $assembled_path;
+		}
+		
+		
 		/**
 		 * Retrieve master XML and all request paramaters
 		 * 
@@ -393,7 +539,7 @@
 		 *
 		 * @return DOMDocument
 		 */
-				
+		
 		public function toXML($bolHideServer = false)
 		{
 			// add the url parameters and session and server global arrays
@@ -409,7 +555,7 @@
 			
 			// add the session global array
 			
-			$objSession = $objXml->createElement("session");			
+			$objSession = $objXml->createElement("session");
 			$objXml->documentElement->appendChild($objSession);
 			$this->addElement($objXml, $objSession, $_SESSION);
 			

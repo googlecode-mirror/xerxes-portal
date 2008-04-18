@@ -131,6 +131,7 @@ class Xerxes_Data_Record extends Xerxes_Framework_DataValue
 	public $year;
 	public $format;
 	public $refereed;
+	public $marc;
 	public $xerxes_record;		// not part of table!
 }
 

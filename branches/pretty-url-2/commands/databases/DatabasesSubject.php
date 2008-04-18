@@ -55,7 +55,7 @@
 					foreach ( $objSubData->databases as $objDatabaseData )
 					{
 						$objDatabase = $objXml->createElement("database");
-
+						
 						foreach ( $objDatabaseData->properties() as $key => $value )
 						{
 							if ( $value != null )
@@ -75,6 +75,16 @@
 							}
 						}
 						
+						// add URL to access xerxes database page.
+						
+						$properties = $objDatabaseData->properties();
+						$objElement = $objXml->createElement( "url", 
+							$objRequest->url_for( array(
+								"base" => "databases",
+								"action" => "database",
+								"id" => htmlentities($properties['metalib_id']
+							))));
+						$objDatabase->appendChild($objElement);
 						$objSubCategory->appendChild($objDatabase);
 					}
 					

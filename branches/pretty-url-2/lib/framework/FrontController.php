@@ -38,8 +38,8 @@
 				
 				$objRegistry = Xerxes_Framework_Registry::getInstance(); $objRegistry->init();
 				$objControllerMap = Xerxes_Framework_ControllerMap::getInstance(); $objControllerMap->init();
-				
-				$objRequest = new Xerxes_Framework_Request();	// stores data about the request and fetched results
+				$objRequest = new Xerxes_Framework_Request();	
+        
 				$objPage = new Xerxes_Framework_Page();			// assists with basic paging/navigation elements for the view
 				$objError = new Xerxes_Framework_Error();		// functions for special logging or handling of errors
 				
@@ -61,7 +61,7 @@
 				
 				// the working directory is the instance, so any relative paths will
 				// be executed in relation to the root directory of the instance
-							
+				
 				// set the 'parent' directory to '../../' from here
 				
 				$path_to_parent = $this_directory; $path_to_parent = str_replace("\\", "/", $path_to_parent);
@@ -70,18 +70,37 @@
 				
 				// base url of the instance
 				
-				$self_dir = dirname($objRequest->getServer('PHP_SELF'));
-				$self_dir = str_replace("\\", "/", $self_dir);
+				// base path supplied in config?
+				$cfg_base_path = $objRegistry->getConfig('base_web_path', false);
 				
-				$web = "http://" . $objRequest->getServer('SERVER_NAME') . $self_dir;
-				if ( substr($web, strlen($web) - 1, 1) == "/") $web = substr($web, 0, strlen($web) - 1);
+				if ( $cfg_base_path )
+				{
+					$base_path = $cfg_base_path;
+				}
+				else
+				{
+					// try to guess from request. Warning, won't work well
+					// with REST-y urls. 
+					
+					$base_path = dirname($objRequest->getServer('PHP_SELF'));
+				}
 				
+				// Base path should canonicalize without a trailing slash. 
+				if (substr($base_path, strlen($base_path) - 1, 1) == "/") {
+					$base_path = substr($base_path, 0, strlen($base_path) - 1);
+				}
+				
+				// Full absolute base path in $web
+				$web = "http://" . $objRequest->getServer('SERVER_NAME') . $base_path;
+					
 				// register these values
-				
+					
 				$objRegistry->setConfig("PATH_PARENT_DIRECTORY", $path_to_parent);
 				$objRegistry->setConfig("BASE_URL", $web, true);
-	
-	
+				
+				//re-save canonicalized. 
+				$objRegistry->setConfig('BASE_PATH', $base_path, true);
+			
 				####################
 				#   INSTRUCTIONS   #
 				####################
@@ -92,14 +111,7 @@
 				$strBase = $objRequest->getProperty("base");
 				$strAction = $objRequest->getProperty("action");
 				
-				$objControllerMap->setAction($strBase, $strAction);
-	
-				// add any predefined values to the request object from ControllerMap
-				
-				foreach ( $objControllerMap->getRequests() as $key => $value )
-				{
-					$objRequest->setProperty($key, $value, is_array($value));
-				}
+				$objControllerMap->setAction($strBase, $strAction, $objRequest);
 				
 				
 				####################
@@ -177,7 +189,7 @@
 					$objConfigXml->documentElement->appendChild($objElement);
 				}
 				
-				$objRequest->addDocument($objConfigXml);
+				$objRequest->addDocument($objConfigXml);        
 				
 				// the data will be built-up by calling one or more command classes
 				// which will fetch their data based on other parameters supplied in
@@ -271,7 +283,7 @@
 	
 				$objXml = new DOMDocument();
 				$objXml = $objRequest->toXML($bolShowServer);
-							
+				
 				
 				// RAW XML DISPLAY
 				//
