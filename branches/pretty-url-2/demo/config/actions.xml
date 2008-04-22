@@ -167,6 +167,10 @@
 				<command>FolderDelete</command>
 				<view />
 			</action>
+			<action name="tags_edit">
+				<command>FolderTagsEdit</command>
+				<view>xsl/folder_tags_edit.xsl</view>
+			</action>
 			<action name="redirect" restricted="false">
 				<command>FolderRedirect</command>
 				<view />

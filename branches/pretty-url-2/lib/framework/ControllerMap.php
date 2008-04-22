@@ -253,7 +253,7 @@
 			
 			foreach ( $this->getRequests() as $key => $value )
 			{
-				$xerxes_request->setProperty($key, $value, is_array($value));
+				$xerxes_request->setProperty($key, $value);
 			}
 		}
 		

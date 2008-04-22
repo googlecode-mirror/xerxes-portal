@@ -173,14 +173,9 @@
 		<config name="demo_users"></config>
 		
 	<!-- DISPLAY AND BEHAVIOR -->
-	
-		<!-- Use pretty uris. Requires a couple lines in apache config or .htaccess.
-		     This is preferred instead of using the 'rewrite' config, this is more powerful -->
-	
-		<config name="pretty_uris" pass="true">true</config>
 
 		<!-- mod_rewrite scheme
-			Deprecated. Use pretty_uris above instead. 
+
 			You have the option to run Xerxes together with Apache's mod_rewrite module or with one 
 			 of the various mod_rewite-like ISAPI modules available for IIS.  This option will
 			 create simpler URLs for thing like the categories and databases pages, 'my saved records' and links sent

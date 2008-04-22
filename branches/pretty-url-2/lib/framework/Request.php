@@ -23,7 +23,7 @@
 		private $path_elements = null;			 // http path tranlsated into array of elements.
 			
 		/**
-		 * Process the incoming request paramaters and cookie values
+		 * Process the incoming request paramaters, cookie values, url path if pretty-uri on
 		 */
 		
 		public function __construct()
@@ -53,41 +53,26 @@
 						{
 							$strKey = substr($strParam, 0, $iEqual);
 							$strValue = substr($strParam, $iEqual + 1);
-							
-							if ( array_key_exists($strKey,$this->arrParams) )
-							{
-								// if there are multiple params of the same name,
-								// make sure we add them as array. 
-									
-								if ( ! is_array( $this->arrParams[$strKey]) )
-								{
-									$this->arrParams[$strKey] = array($this->arrParams[$strKey]);
-								}
-								
-								array_push( $this->arrParams[$strKey], $strValue );
-							}
-							else
-							{
-								$this->arrParams[$strKey] = urldecode($strValue);
-							}
+						
+							$this->setProperty($strKey, urldecode($strValue) );
 						}
 					}
 				}
 				
 				foreach ( $_POST as $key => $value )
 				{
-					$this->arrParams[$key] = $value;
+					$this->setProperty($key, $value);
 				}
 				foreach ( $_COOKIE as $key => $value )
 				{
-					$this->arrParams[$key] = $value;
+					$this->setProperty($key, $value);
 				}
 				
-				// if pretty URIs are turned on, extract params from uri. 
+				// if pretty-urls is turned on, extract params from uri. 
 				
 				$objRegistry = Xerxes_Framework_Registry::getInstance(); 
 				
-				if ( $objRegistry->getConfig("pretty_uris", false) )
+				if ( $objRegistry->getConfig("REWRITE", false) )
 				{
 					$this->extractParamsFromPath();
 				}
@@ -106,7 +91,22 @@
 						$this->setProperty($key, $val);
 					}
 				}
-			}			
+			}
+			
+			// IIS fix, since it doesn't hold value for request_uri
+			
+			if (!isset($_SERVER['REQUEST_URI']))
+			{
+				if (!isset($_SERVER['QUERY_STRING']))
+				{
+					$_SERVER['REQUEST_URI'] = $_SERVER["SCRIPT_NAME"];
+				}
+				else
+				{
+					$_SERVER['REQUEST_URI'] = $_SERVER["SCRIPT_NAME"] .'?'.
+					$_SERVER['QUERY_STRING'];
+				}
+			}
 		}
 		
 		/**
@@ -128,7 +128,7 @@
 		}
 		
 		/**
-		 * Extract params from pretty uris when turned on in config. Requires base url to be set in config.
+		 * Extract params from pretty-urls when turned on in config. Requires base url to be set in config.
 		 * will get from $_SERVER['REQUEST_URI'], first stripping base url.
 		 */
 		 
@@ -150,10 +150,12 @@
 		}
 		
 		/**
-		* Take the http request path and translate it to an array. 
-		* will get from $_SERVER['REQUEST_URI'], first stripping base url.
-		* If path was just "/", array will be empty. 
-		*/
+		 *  Take the http request path and translate it to an array. 
+		 * will get from $_SERVER['REQUEST_URI'], first stripping base url.
+		 * If path was just "/", array will be empty. 
+		 *
+		 * @return array		array of path elements
+		 */
 		
 		private function pathElements()
 		{
@@ -188,6 +190,12 @@
 			return $this->path_elements;
 		}
 		
+		/**
+		 * Maps and inserts the path elements into the request parameters
+		 *
+		 * @param int $path_index			the numbered path element
+		 * @param string $property_name		the property name
+		 */
 		
 		public function mapPathToProperty($path_index, $property_name)
 		{
@@ -203,24 +211,40 @@
 		 * Add a value to the request parameters
 		 *
 		 * @param string $key		key to identify the value
-		 * @param string $val		value to add
-		 * @param bool $bolArray	[optional] set to true will convert property to array and push value into it
+		 * @param string $value		value to add
+		 * @param bool $bolArray	[optional] set to true will ensure property is set as array
 		 */
 		
-		public function setProperty($key, $val, $bolArray = false)
+		public function setProperty($key, $value, $bolArray = false)
 		{
-			if ( $bolArray == true )
+			if ( array_key_exists($key, $this->arrParams) )
 			{
-				if ( array_key_exists($key, $this->arrParams) && ! is_array($this->arrParams[$key]) )
+				// if there is an existing element, then we always push in the
+				// the new value into an array, first converting the exising value
+				// to an array if it is not already one 
+				
+				if ( ! is_array($this->arrParams[$key]) )
 				{
 					$this->arrParams[$key] = array($this->arrParams[$key]);
 				}
 				
-				array_push($this->arrParams[$key], $val);
+				array_push($this->arrParams[$key], $value);
+			}
+			elseif ( $bolArray == true )
+			{
+				// no existing value in property, but the calling code says 
+				// this *must* be added as an array, so make it an array, if not one already
+				
+				if ( ! is_array($value) )
+				{
+					$value = array($value);
+				}
+				
+				$this->arrParams[$key] = $value;
 			}
 			else
 			{
-				$this->arrParams[$key] = $val;
+				$this->arrParams[$key] = $value;
 			}
 		}
 
@@ -281,24 +305,6 @@
 		
 		public function getServer($key)
 		{
-			// IIS fix, since it doesn't hold value for request_uri
-			
-			if ( $key == "REQUEST_URI")
-			{				
-				if (!isset($_SERVER['REQUEST_URI']))
-				{
-					if (!isset($_SERVER['QUERY_STRING']))
-					{
-						$_SERVER['REQUEST_URI'] = $_SERVER["SCRIPT_NAME"];
-					}
-					else
-					{
-						$_SERVER['REQUEST_URI'] = $_SERVER["SCRIPT_NAME"] .'?'.
-						$_SERVER['QUERY_STRING'];
-					}
-				}
-			}
-			
 			if ( array_key_exists($key, $_SERVER) )
 			{
 				return $_SERVER[$key];
@@ -474,12 +480,12 @@
 		/**
 		 * Generate a url for a given action. Used by commands to generate action
 		 * urls, rather than calculating manually. This method returns different
-		 * urls depending on whether pretty_uris is on in config. Will use
+		 * urls depending on whether rewrite is on in config. Will use
 		 * configured base_web_path if available, which is best.	
 		 * 
 		 * @param array $properties	Keys are xerxes request properties, values are 
 		 * the values. For an action url, "base" and "action" are required as keys.
-		 * Properties will be put in path or query string of url, if pretty urls are turned on
+		 * Properties will be put in path or query string of url, if pretty-urls are turned on
 		 * in config.xml, as per action configuration in actions.xml.
 		 *
 		 * @return string url 
@@ -500,7 +506,7 @@
 			$base = $properties["base"];
 			$action = $properties["action"];
 			
-			if ( $config->getConfig('pretty_uris', false) ) {
+			if ( $config->getConfig('REWRITE', false) ) {
 				//base in path
 				$extra_path_arr[0] = urlencode($base);
 				unset($properties["base"]);

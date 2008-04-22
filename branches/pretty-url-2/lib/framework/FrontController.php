@@ -71,6 +71,7 @@
 				// base url of the instance
 				
 				// base path supplied in config?
+				
 				$cfg_base_path = $objRegistry->getConfig('base_web_path', false);
 				
 				if ( $cfg_base_path )
@@ -85,22 +86,24 @@
 					$base_path = dirname($objRequest->getServer('PHP_SELF'));
 				}
 				
-				// Base path should canonicalize without a trailing slash. 
-				if (substr($base_path, strlen($base_path) - 1, 1) == "/") {
+				// base path should canonicalize without a trailing slash. 
+				
+				if (substr($base_path, strlen($base_path) - 1, 1) == "/")
+				{
 					$base_path = substr($base_path, 0, strlen($base_path) - 1);
 				}
 				
-				// Full absolute base path in $web
+				// full absolute base path in $web
+				
 				$web = "http://" . $objRequest->getServer('SERVER_NAME') . $base_path;
 					
 				// register these values
 					
 				$objRegistry->setConfig("PATH_PARENT_DIRECTORY", $path_to_parent);
 				$objRegistry->setConfig("BASE_URL", $web, true);
-				
-				//re-save canonicalized. 
 				$objRegistry->setConfig('BASE_PATH', $base_path, true);
-			
+
+				
 				####################
 				#   INSTRUCTIONS   #
 				####################

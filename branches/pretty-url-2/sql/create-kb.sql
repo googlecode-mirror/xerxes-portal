@@ -1,7 +1,7 @@
-
-
 CREATE DATABASE IF NOT EXISTS xerxes;
 USE xerxes;
+
+SET storage_engine = INNODB;
 
 DROP TABLE IF EXISTS xerxes_database_alternate_publishers;
 DROP TABLE IF EXISTS xerxes_database_alternate_titles;
