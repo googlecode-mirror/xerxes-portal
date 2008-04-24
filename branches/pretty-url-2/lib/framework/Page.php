@@ -50,21 +50,66 @@
 			return $objXml;
 		}
 
+    
+    protected function build_link($strBaseUrl, $params, $extraParams, $objRequest)
+    {
+        
+        # $extraParams can be array, or already formatted string.
+        # array preferred.				
+        if (is_array($extraParams)) {
+          $params = array_merge($params, $extraParams);
+        }
+        
+        $strLink;
+        if ( $objRequest == null ) {
+          #old Style, deprecated.
+          $strLink = $strBaseUrl . '?' . http_build_query($params, "", "&amp;");
+        }
+        else {
+          # new style!
+          $strLink = $objRequest->url_for($params);
+        }
+        
+        # Do we need to add on a string $extraParams? Bah, deprecated!
+        if (! is_array($extraParams) ) {
+          # deprecated. 
+          $strLink .=  $extraParams;
+        }
+        
+        return $strLink;
+        
+    }
+   
+    
+		public function pager_dom($arrParams, $strStartAttribute, $iStartRecord, $strTotalHitsAttribute, $iTotalHits, 
+			$iRecordsPerPage, $objRequest)
+		{
+      return $this->pager(null, $strStartAttribute, $iStartRecord, $strTotalHitsAttribute, $iTotalHits, 
+			$iRecordsPerPage, $arrParams, $objRequest);
+		}
+    
 		/**
-		 * Creates a paging navigation for the results sets in XML
+		 * Deprecated. Call pager_dom instead with more sensible params
+     * for new style with request url_for url gen. 
+     * Creates a paging navigation for the results sets in XML
+     * This method has to create a URL. Legacy code may pass in parts
+     * or url directly. This is deprecated. Preferred way is to pass
+     * in an $objRequest, and url_for will be used. Pass in an array
+     * of additional params if neccesary. 
 		 *
-		 * @param string $strPage
+		 * @param string $strPage. For new style (url_for), please leave null! 
 		 * @param string $strStartAttribute
 		 * @param int $iStartRecord
 		 * @param string $strTotalHitsAttribute
 		 * @param int $iTotalHits
 		 * @param int $iRecordsPerPage
-		 * @param string $strAdditional
+		 * @param string $strAdditional. For new style, should be an array of params. 
+     * @param Xerxes_Framework_Request $objRequest. For new style, _required_. 
 		 * @return DOMDocument formatted paging navigation
 		 */
 		
 		public function pager( $strPage, $strStartAttribute, $iStartRecord, $strTotalHitsAttribute, $iTotalHits, 
-			$iRecordsPerPage, $strAdditional)
+			$iRecordsPerPage, $strAdditional, $objRequest = null)
 		{
 			$objXml = new DOMDocument();
 			$objXml->loadXML("<pager />");
@@ -122,15 +167,13 @@
 				{
 					$objPage = $objXml->createElement("page", "1");
 
-					$strLink =  $strPage . "?" . $strStartAttribute . "=1";
-						
-					if ( $strTotalHitsAttribute != "" )
-					{
-						$strLink .= "&" . $strTotalHitsAttribute . "=" . $iTotalHits;
-					}
-	
-					$strLink .=  $strAdditional;
-					
+          $params = array($strStartAttribute => 1);
+          if ( $strTotalHitsAttribute != "") {
+            $params[$strTotalHitsAttribute] = $iTotalHits;
+          }
+          
+          $strLink = $this->build_link($strPage, $params, $strAdditional, $objRequest);
+            
 					$objPage->setAttribute("link", Xerxes_Parser::escapeXml($strLink));
 					$objPage->setAttribute("type", "first");
 					$objXml->documentElement->appendChild($objPage);
@@ -152,15 +195,14 @@
 						{
 							$objPage = $objXml->createElement("page", $iPageNumber);
 							
-							$strLink =  $strPage . "?" . $strStartAttribute . "=" . $iBaseRecord;
-								
-							if ( $strTotalHitsAttribute != "" )
+              $params = array( $strStartAttribute => $iBaseRecord );
+              if ( $strTotalHitsAttribute != "" )
 							{
-								$strLink .= "&" . $strTotalHitsAttribute . "=" . $iTotalHits;
+                $params[$strTotalHitsAttribute] = $iTotalHits;
 							}
 	
-							$strLink .=  $strAdditional;
-
+              $strLink = $this->build_link( $strPage, $params, $strAdditional, $objRequest);
+              
 							$objPage->setAttribute("link", Xerxes_Parser::escapeXml($strLink));
 							$objXml->documentElement->appendChild($objPage);
 
@@ -177,15 +219,14 @@
 				if ($iNext <= $iTotalHits )
 				{
 					$objPage = $objXml->createElement("page", "Next");
-					
-					$strLink = $strPage . "?" . $strStartAttribute . "=" . $iNext;
-	
+          
+          $params = array( $strStartAttribute => $iNext );										
 					if ( $strTotalHitsAttribute != "" )
 					{
-						$strLink .= "&" . $strTotalHitsAttribute . "=" . $iTotalHits;
+            $params[$strTotalHitsAttribute] = $iTotalHits;
 					}
 						
-					$strLink .= $strAdditional;
+					$strLink = $this->build_link( $strPage, $params, $strAdditional, $objRequest);
 					
 					$objPage->setAttribute("link", Xerxes_Parser::escapeXml($strLink));
 					$objPage->setAttribute("type", "next");

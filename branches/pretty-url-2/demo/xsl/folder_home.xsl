@@ -27,16 +27,6 @@
 	<xsl:variable name="sort" 		select="request/sortkeys" />
 	<xsl:variable name="return" 	select="php:function('urlencode', string(request/server/request_uri))" />
     
-	<xsl:variable name="full">
-		<xsl:choose>
-			<xsl:when test="$rewrite = 'true'">
-				<xsl:value-of select="$username" /><xsl:text>/record/</xsl:text>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:text>./?base=folder&amp;action=full&amp;username=</xsl:text><xsl:value-of select="$username" /><xsl:text>&amp;record=</xsl:text>
-			</xsl:otherwise>
-		</xsl:choose>	
-	</xsl:variable>
 	
 	<xsl:call-template name="results_return" />
 	
@@ -100,6 +90,7 @@
 				<xsl:variable name="record_number" 	select="record_number" />
 				<xsl:variable name="position" 		select="position()" />
 				<xsl:variable name="id" 		select="../id" />
+        <xsl:variable name="url"    select="../url" />
 				<xsl:variable name="original_id"	select="../original_id" />
 				<xsl:variable name="source" 		select="../source" />
 				
@@ -107,7 +98,7 @@
 					<td align="left" class="folderRecord" width="100%">			
 						<a name="{$position}"></a>
 						
-						<a href="{$full}{$id}" class="resultsTitle">
+						<a href="{$url}" class="resultsTitle">
 							<xsl:value-of select="title_normalized" />
 						</a>
 			

@@ -136,6 +136,9 @@
 				<view>xsl/folder_home.xsl</view>
 			</action>
 			<action name="full">
+        <pathParamMap>
+          <mapEntry pathIndex="3" property="record" />
+        </pathParamMap>      
 				<command>FolderResults</command>
 				<view>xsl/folder_full.xsl</view>
 			</action>
@@ -176,6 +179,11 @@
 				<view />
 			</action>
 		</section>
+    
+
+    
+    
+    
 		<section name="availability" directory="availability" namespace="Xerxes" documentElement="xerxes">
 
 			<!-- fulltext and refereed are depricated in version 1.2 in favor of the 'inject'

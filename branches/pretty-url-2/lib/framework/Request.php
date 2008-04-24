@@ -142,7 +142,7 @@
 			
 			$objMap = Xerxes_Framework_ControllerMap::getInstance()->path_map_obj();
 			$map = $objMap->indexToPropertyMap($this->getProperty("base"), $this->getProperty("action"));
-			 		
+      
 			foreach ( $map as $index => $property)
 			{
 				 $this->mapPathToProperty( $index, $property );				 
@@ -200,7 +200,7 @@
 		public function mapPathToProperty($path_index, $property_name)
 		{
 			$path_elements = $this->pathElements();
-						
+      
 			if (array_key_exists($path_index, $path_elements))
 			{
 				$this->setProperty((string) $property_name, (string) $path_elements[$path_index]);
@@ -258,10 +258,10 @@
 		
 		public function getProperty($key, $bolArray = false)
 		{
+      
 			if ( array_key_exists( $key, $this->arrParams ) )
 			{
 				// if the value is requested as array, but is not array, make it one!
-				
 				if ( $bolArray == true && ! is_array($this->arrParams[$key]))
 				{
 					return array($this->arrParams[$key]);
@@ -492,7 +492,7 @@
 		 */
 		
 		public function url_for($properties) {
-			
+      
 			if (! array_key_exists("base", $properties)) {
 				throw new Exception("no base/section supplied in url_for.");
 			}
@@ -504,7 +504,10 @@
 			$query_string = "";
 			
 			$base = $properties["base"];
-			$action = $properties["action"];
+      $action = null;
+      if ( array_key_exists( "action", $properties)) {
+        $action = $properties["action"];
+      }
 			
 			if ( $config->getConfig('REWRITE', false) ) {
 				//base in path
@@ -538,6 +541,18 @@
 		}
 		
 		
+    public function hasLoggedInUser()
+    {
+      # This logic used to be in view in includes.xsl. Factored out here. 
+      if ( array_key_exists("role", $_SESSION) && $_SESSION["role"] != 'local')
+      {
+        return true;
+      }
+      else {
+        return false;
+      }
+    }
+    
 		/**
 		 * Retrieve master XML and all request paramaters
 		 * 
@@ -564,7 +579,13 @@
 			$objSession = $objXml->createElement("session");
 			$objXml->documentElement->appendChild($objSession);
 			$this->addElement($objXml, $objSession, $_SESSION);
-			
+      # We might add some calculated thigns to XML that aren't actually
+      # stored in session. 
+      # add a boolean for hasLoggedInUser too.
+      $el = $objXml->createElement("hasLoggedInUser", $this->hasLoggedInUser());
+			$objSession->appendChild( $el );
+      
+      
 			// add the server global array, but only if the request
 			// asks for it, for security purposes
 			

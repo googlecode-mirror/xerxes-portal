@@ -28,6 +28,9 @@
 		
 		public function doExecute( Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry )
 		{			
+      
+      $this->add_export_options( $objRequest, $objRegistry );
+      
 			$strUsername = $objRequest->getSession("username");
 			$strOrder = $objRequest->getProperty("sortKeys");
 			$iStart = $objRequest->getProperty("startRecord");
@@ -89,6 +92,14 @@
 					
 					$objRecord = $objXml->createElement("record");				
 					$objRecords->appendChild($objRecord);
+          # Add url to record
+          $properties = $objDataRecord->properties(); 
+          $url = $objXml->createElement("url", 
+                  $objRequest->url_for( array ( "base" => "folder",
+                                                "action" => "full",
+                                                "username" => $_SESSION["username"],
+                                                "record" => $properties["id"])));
+          $objRecord->appendChild( $url );
 					
 					foreach ( $objDataRecord->properties() as $key => $value )
 					{
@@ -138,5 +149,31 @@
 			
 			return 1;
 		}
+    
+    
+   public function add_export_options( Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry )
+    {
+      $objXml = new DOMDocument();
+      $objXml->loadXML("<export_functions />");
+      
+      $all_params = array(array( "id" => "email", "action" => "output_email"),
+                          array( "id" => "endnote", "action" => "output_export_endnote" ),
+                          array( "id" => "text", "action" => "output_export_text"));
+      foreach ( $all_params as $params ) {
+        $option = $objXml->createElement("export_option");
+        $option->setAttribute("id", $params["id"] );
+        $url_str = $objRequest->url_for( array(
+                           "base" => "folder",
+                           "username" => $objRequest->getSession("username"),
+                           "action" => $params["action"],
+                           "sortKeys" => "title"));
+        $url = $objXml->createElement('url', $url_str );             
+        $option->appendChild( $url );
+        $objXml->documentElement->appendChild( $option );
+      }
+      $objRequest->addDocument( $objXml );
+    }
+
+    
 	}	
 ?>

@@ -29,7 +29,9 @@
 			
 			$strID = $objRequest->getProperty("id");
 			$strType = $objRequest->getProperty("type");
-			
+      
+      print "strid $strID $strType <br><br>\n\n";
+      			
 			$configLinkResolver = $objRegistry->getConfig("LINK_RESOLVER_ADDRESS", true);
 			$configSID = $objRegistry->getConfig("APPLICATION_SID", false, "calstate.edu:xerxes");
 			$configBaseUrl  = $objRegistry->getConfig("BASE_URL", true);

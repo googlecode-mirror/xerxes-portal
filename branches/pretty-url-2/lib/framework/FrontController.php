@@ -53,8 +53,7 @@
 					error_reporting(E_ALL);
 					ini_set('display_errors', '1');
 				}
-				
-				
+
 				####################
 				#     SET PATHS    #
 				####################
@@ -191,16 +190,22 @@
 					$objElement = $objConfigXml->createElement($key, $value);
 					$objConfigXml->documentElement->appendChild($objElement);
 				}
-				
-				$objRequest->addDocument($objConfigXml);        
-				
+				$objRequest->addDocument($objConfigXml);     
+        				
 				// the data will be built-up by calling one or more command classes
 				// which will fetch their data based on other parameters supplied in
 				// the request; returning that data as xml to a master xml dom document
 				// inside the Xerxes_Framework_Request class, or in some cases specififying 
 				// a url to redirect the user out
-				
-				foreach ( $objControllerMap->getCommands() as $arrCommand )
+        
+        $commands = $objControllerMap->getCommands();        
+        
+        // Add some general nav bar stuff to every response with the helper/navbar 'command'. 
+        $navbarCommand = array("helper", "Xerxes", "HelperNavbar"  );
+        #$navbarCommand = array("databases", "Xerxes", "DatabasesCategories");
+        array_unshift( $commands, $navbarCommand );			
+        
+				foreach ( $commands as $arrCommand )
 				{
 					$strDirectory = $arrCommand[0];		// directory where the command class is located
 					$strNamespace = $arrCommand[1];		// prefix namespace of the command class
@@ -223,15 +228,14 @@
 					
 					$objCommand = null;
 					
-					if ( file_exists("$path_to_parent/commands/$strDirectory/$strClassFile.php") )
+          if ( file_exists("$path_to_parent/commands/$strDirectory/$strClassFile.php") )
 					{
 						require_once("$path_to_parent/commands/$strDirectory/$strClassFile.php");
 						
 						// instantiate the command class and execute it, but only
 						// if it extends xerxes_framework_command
 						
-						$objCommand = new $strClass();
-						
+						$objCommand = new $strClass();						      
 						if ( $objCommand instanceof Xerxes_Framework_Command )
 						{
 							$objCommand->execute($objRequest, $objRegistry);
@@ -332,6 +336,8 @@
 			}
 		}
 		
+    
+    
 		/**
 		 * require_once() all php files or directories specified
 		 *

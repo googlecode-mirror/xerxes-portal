@@ -177,6 +177,7 @@
 					$action = (string) $actions[0]["name"];
 					$this->addRequest("action", $action);
 				}
+        
 				
 				foreach ( $actions as $action )
 				{
@@ -573,29 +574,35 @@
 			if ( $section_paths != false )
 			{
 				$map_xml = $section_paths[0];
-			}
-			
-			// but take the local action's map over the section one if that is present
-			
-			if ( $action_paths != false )
-			{
-				$map_xml = $action_paths[0];
-			}
-			
-			// if we got anything, go and ahead and loop over the mapEntries to pull out
-			// their path index and property name and assign it to the arrays above
-			
-			if ( $map_xml != null ) 
-			{
-				foreach ($map_xml->mapEntry as $map_entry)
+        
+          foreach ($map_xml->mapEntry as $map_entry)
 				{
 					$iIndex = (integer) $map_entry['pathIndex'];
 					$strProperty = (string) $map_entry['property'];
 					
 					$this->mapsByProperty[$key_name][$strProperty] = $iIndex;
 					$this->mapsByIndex[$key_name][$iIndex] = $strProperty;
+				}        
+			}
+			
+			// and add the local map on top if also present. Important that
+      // action overrides section, not replaces! 
+			
+			if ( $action_paths != false )
+			{
+        
+				$map_xml = $action_paths[0];
+        
+        foreach ($map_xml->mapEntry as $map_entry)
+				{          
+					$iIndex = (integer) $map_entry['pathIndex'];
+					$strProperty = (string) $map_entry['property'];					
+          
+					$this->mapsByProperty[$key_name][$strProperty] = $iIndex;
+					$this->mapsByIndex[$key_name][$iIndex] = $strProperty;
 				}
 			}
+			
 		}
 	}
 
