@@ -11,12 +11,12 @@
 	<configuration>
 		
 	<!-- BASIC CONFIGURATION -->
-  
-  
-    <!-- The base web server path for your xerxes installation. Highly
-         reccommended to set this if you are using RESTy URL functionality.
-         NO trailing slash. If you have installed at web root, empty string. -->
-    <config name="base_web_path">/xerxes</config>
+	
+		<!-- The base web server path for your xerxes installation. Highly
+		     reccommended to set this if you are using RESTy URL functionality.
+		     NO trailing slash. If you have installed at web root, empty string. -->
+		
+		<config name="base_web_path">/demo</config>
 		
 		<!-- turns the display of php errors and warnings on in a production system; value = true | false -->
 		
@@ -46,16 +46,16 @@
 			  * username and password must correspond to a valid /M interface user.
 			  * institute is usually the same as username. -->
 			  
-		<config name="metalib_address">http://jhsearch.library.jhu.edu</config>
-		<config name="metalib_username">sakai_x</config>
-		<config name="metalib_password">ss99ww</config>
-		<config name="metalib_institute">JHU</config>
+		<config name="metalib_address"></config>
+		<config name="metalib_username"></config>
+		<config name="metalib_password"></config>
+		<config name="metalib_institute"></config>
 		
 		<!-- IP adress associated with this implementation. If your metalib instance is associated with a specific 
 		     IP range, as you might have with a consortium, then enter a single IP address within that range here, 
 			 so that Metalib knows which knowledgebase to associate with this implementation of Xerxes. -->
 		
-		<config name="ip_address">128.220.8.89</config>
+		<config name="ip_address"></config>
 		
 	<!-- LOCAL DATABASE -->
 	
@@ -63,19 +63,19 @@
 		     so connection strings should be in that format -->
 		
 		<config name="database_connection">mysql:host=localhost;dbname=xerxes</config>
-		<config name="database_username">xerxes</config>
-		<config name="database_password">x3rX35</config>
+		<config name="database_username"></config>
+		<config name="database_password"></config>
 		
 	<!-- PROXY, LINK RESOLVER, AND EXTERNAL APIS -->
 		
 		<!-- base open url to link resolver -->
 		
-		<config name="link_resolver_address">http://sfx.library.jhu.edu:8000/sfxlcl3</config>
+		<config name="link_resolver_address"></config>
 		
 		<!-- the sid that will be passed to the link resolver, xerxes will also append the name 
 		     of the database to the sid -->
 		
-		<config name="application_sid">jhu.edu:xerxes</config>
+		<config name="application_sid">calstate.edu:xerxes</config>
 		
 		<!-- Base URL of proxy server 
 
@@ -86,7 +86,7 @@
 			e.g.,  http://{WAM}.catalog.library.edu
 		 -->
 		
-		<config name="proxy_server">http://proxy.library.jhu.edu/login?qurl=</config>
+		<config name="proxy_server"></config>
 		
 		<!-- for spell check api, doesn't hurt to leave this as 'calstate', since the usage limits are 
 		     based on ip address, but better to get your own key from Yahoo -->
@@ -170,15 +170,13 @@
 		<!-- list of users who can access the system without being in the local directory server 
 		     enter as username:password and seperate entries by comma -->
 		
-		<config name="demo_users">jrochkind:charlesx,guest:tukwut1989</config>
+		<config name="demo_users"></config>
 		
 	<!-- DISPLAY AND BEHAVIOR -->
-	
-  
-    <config name="pretty_uris" pass="true">true</config>
-  
+
 		<!-- mod_rewrite scheme
-		     You have the option to run Xerxes together with Apache's mod_rewrite module or with one 
+
+			You have the option to run Xerxes together with Apache's mod_rewrite module or with one 
 			 of the various mod_rewite-like ISAPI modules available for IIS.  This option will
 			 create simpler URLs for thing like the categories and databases pages, 'my saved records' and links sent
 			 out when users email records to themselves.  This is advantageous, since these URLs will likely 
@@ -186,7 +184,7 @@
 			 for shorter and simpler URLs for that purpose. If you do not want to use Apache's mod_rewrite
 			 module or choose not to install a URL rewriting ISAPI module in IIS, then set this value to false. -->
 		
-		<config name="rewrite" pass="true">true</config>		
+		<config name="rewrite" pass="true">false</config>		
 		
 		<!-- full text and sfx links
 		     You can change this value to any valid HTML anchor target attribute value to affect the behavior
