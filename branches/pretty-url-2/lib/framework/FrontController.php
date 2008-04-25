@@ -21,29 +21,29 @@
 		{			
 			session_start();
 			
-			// we'll put all code in a try-catch block in order to show friendly error page
+			// include the framework files
+				
+			$this_directory = dirname(__FILE__);
+			$base = basename(__FILE__);
+
+			self::includeFiles($this_directory, $base);
+				
+			// initialize the configuration setting (Registry) and 
+			// command-view mapping (ControllerMap) objects
+				
+			$objRegistry = Xerxes_Framework_Registry::getInstance(); $objRegistry->init();
+			$objControllerMap = Xerxes_Framework_ControllerMap::getInstance(); $objControllerMap->init();
+			
+			$objRequest = new Xerxes_Framework_Request();	// processes the incoming request
+			$objPage = new Xerxes_Framework_Page();			// assists with basic paging/navigation elements for the view
+			$objError = new Xerxes_Framework_Error();		// functions for special logging or handling of errors
+				
+			
+			// we'll put the remaining code in a try-catch block in order to show friendly error page
 			// for any uncaught exceptions
 			
 			try
-			{
-				// include the framework files
-				
-				$this_directory = dirname(__FILE__);
-				$base = basename(__FILE__);
-				
-				self::includeFiles($this_directory, $base);
-				
-				// initialize the configuration setting (Registry) and 
-				// command-view mapping (ControllerMap) objects
-				
-				$objRegistry = Xerxes_Framework_Registry::getInstance(); $objRegistry->init();
-				$objControllerMap = Xerxes_Framework_ControllerMap::getInstance(); $objControllerMap->init();
-				$objRequest = new Xerxes_Framework_Request();	
-        
-				$objPage = new Xerxes_Framework_Page();			// assists with basic paging/navigation elements for the view
-				$objError = new Xerxes_Framework_Error();		// functions for special logging or handling of errors
-				
-				
+			{	
 				####################
 				#  DISPLAY ERRORS  #
 				####################
@@ -67,40 +67,15 @@
 				$arrPath = explode("/", $path_to_parent); array_pop($arrPath); array_pop($arrPath);
 				$path_to_parent = implode("/", $arrPath);
 				
-				// base url of the instance
+				// full web path
 				
-				// base path supplied in config?
-				
-				$cfg_base_path = $objRegistry->getConfig('base_web_path', false);
-				
-				if ( $cfg_base_path )
-				{
-					$base_path = $cfg_base_path;
-				}
-				else
-				{
-					// try to guess from request. Warning, won't work well
-					// with REST-y urls. 
-					
-					$base_path = dirname($objRequest->getServer('PHP_SELF'));
-				}
-				
-				// base path should canonicalize without a trailing slash. 
-				
-				if (substr($base_path, strlen($base_path) - 1, 1) == "/")
-				{
-					$base_path = substr($base_path, 0, strlen($base_path) - 1);
-				}
-				
-				// full absolute base path in $web
-				
+				$base_path = $objRegistry->getConfig('BASE_WEB_PATH', true);
 				$web = "http://" . $objRequest->getServer('SERVER_NAME') . $base_path;
-					
+				
 				// register these values
 					
 				$objRegistry->setConfig("PATH_PARENT_DIRECTORY", $path_to_parent);
 				$objRegistry->setConfig("BASE_URL", $web, true);
-				$objRegistry->setConfig('BASE_PATH', $base_path, true);
 
 				
 				####################
@@ -197,13 +172,13 @@
 				// the request; returning that data as xml to a master xml dom document
 				// inside the Xerxes_Framework_Request class, or in some cases specififying 
 				// a url to redirect the user out
-        
-        $commands = $objControllerMap->getCommands();        
-        
-        // Add some general nav bar stuff to every response with the helper/navbar 'command'. 
-        $navbarCommand = array("helper", "Xerxes", "HelperNavbar"  );
-        #$navbarCommand = array("databases", "Xerxes", "DatabasesCategories");
-        array_unshift( $commands, $navbarCommand );			
+				
+				$commands = $objControllerMap->getCommands();        
+				
+				// add some general nav bar stuff to every response with the helper/navbar 'command'
+				
+				$navbarCommand = array("helper", "Xerxes", "HelperNavbar");
+				array_unshift( $commands, $navbarCommand );			
         
 				foreach ( $commands as $arrCommand )
 				{
@@ -228,7 +203,7 @@
 					
 					$objCommand = null;
 					
-          if ( file_exists("$path_to_parent/commands/$strDirectory/$strClassFile.php") )
+					if ( file_exists("$path_to_parent/commands/$strDirectory/$strClassFile.php") )
 					{
 						require_once("$path_to_parent/commands/$strDirectory/$strClassFile.php");
 						

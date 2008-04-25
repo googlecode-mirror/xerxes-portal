@@ -90,7 +90,7 @@
 				<xsl:variable name="record_number" 	select="record_number" />
 				<xsl:variable name="position" 		select="position()" />
 				<xsl:variable name="id" 		select="../id" />
-        <xsl:variable name="url"    select="../url" />
+        			<xsl:variable name="url"    		select="../url" />
 				<xsl:variable name="original_id"	select="../original_id" />
 				<xsl:variable name="source" 		select="../source" />
 				
@@ -105,7 +105,7 @@
 						<div class="resultsType">
 							<xsl:value-of select="format" />
 							<xsl:if test="../refereed = 1 and format != 'Book Review'">
-								<xsl:text> </xsl:text><img src="{$base_url}/images/refereed.gif" width="129" height="14" alt="" />
+								<xsl:text> </xsl:text><img src="{$base_url}/images/refereed_hat.gif" alt="hat" /><xsl:text> Peer Reviewed</xsl:text>
 							</xsl:if>
 						</div>			
 			
@@ -160,12 +160,12 @@
 								
 							</xsl:when>
 							<xsl:when test="//fulltext/issn = standard_numbers/issn">
-								<a href="./?base=metasearch&amp;action=sfx&amp;resultSet={$result_set}&amp;startRecord={$record_number}&amp;fulltext=1" class="resultsFullText"  target="{$link_target}" >
+								<a href="{$base_url}/?base=folder&amp;action=redirect&amp;type=openurl&amp;id={$id}" class="resultsFullText" target="{$link_target}">
 									<img src="{$base_include}/images/html.gif" alt="full text online" width="16" height="16" border="0" /> Full-Text Online
 								</a>
 							</xsl:when>
 							<xsl:otherwise>
-								<a href="./?base=metasearch&amp;action=sfx&amp;resultSet={$result_set}&amp;startRecord={$record_number}" class="resultsFullText"  target="{$link_target}" >
+								<a href="{$base_url}/?base=folder&amp;action=redirect&amp;type=openurl&amp;id={$id}" class="resultsFullText" target="{$link_target}">
 									<img src="{$base_url}/images/sfx.gif" alt="check for availability" /> Check for availability
 								</a>
 							</xsl:otherwise>

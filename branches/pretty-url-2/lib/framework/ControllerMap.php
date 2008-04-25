@@ -82,12 +82,12 @@
 		 * Also translates path to properties in command-specific ways. 
 		 * Adds properties to Xerxes Request object. 
 		 *
-		 * @param string $section		'base' in the url or cli paramaters, corresponds to 'section' in xml
-		 * @param string $action		'action' in the url or cli paramaters, corresponds to 'action' in the xml
+		 * @param string $strSection		'base' in the url or cli paramaters, corresponds to 'section' in xml
+		 * @param string $strActin			'action' in the url or cli paramaters, corresponds to 'action' in the xml
 		 * @param Xerxes_Framework_Request @xerxes_request The operative xerxes request object, used for getting properties from path in action specific ways.
 		 */
 		
-		public function setAction( $section, $action, $xerxes_request  )
+		public function setAction( $strSection, $strAction, $xerxes_request  )
 		{
 			// get include files and directories for the entire application
 			
@@ -103,15 +103,15 @@
 			
 			// set a default section if none supplied
 			
-			if ( $section == "" )
+			if ( $strSection == "" )
 			{
-				$section = (string) $this->xml->commands->default->section;
-				$action = (string) $this->xml->commands->default->action;
+				$strSection = (string) $this->xml->commands->default->section;
+				$strAction = (string) $this->xml->commands->default->action;
 				
-				$this->addRequest("base", $section);
-				$this->addRequest("action", $action);
+				$this->addRequest("base", $strSection);
+				$this->addRequest("action", $strAction);
 				
-				if ($section == null || $action == null )
+				if ($strSection == null || $strAction == null )
 				{
 					throw new Exception("no default action defined");
 				}
@@ -124,11 +124,11 @@
 			
 			// make sure a section is defined
 			
-			$sections = $this->xml->xpath("commands/section[@name='$section']");
+			$sections = $this->xml->xpath("commands/section[@name='$strSection']");
 			
 			if ( $sections == false )
 			{
-				throw new Exception("no section defined for '$section'");
+				throw new Exception("no section defined for '$strSection'");
 			}
 			
 			foreach ( $sections as $section )
@@ -159,25 +159,34 @@
 				// entry; you may well pay for this later!
 				
 				$xpath = "";
-				$actions = array();
 				
-				if ( $action == "")
+				if ( $strAction == "")
 				{
 					$xpath = "action[position() = 1]";
 				}
 				else
 				{
-					$xpath = "action[@name='$action']";
+					$xpath = "action[@name='$strAction']";
 				}
-						
+
+				$actions = array();
 				$actions = $section->xpath($xpath);
 				
-				if ( $action == "")
+				// no actions found in the actions.xml file
+				
+				if ( $actions == false )
+				{
+					throw new Exception("no action defined for '$strAction'");
+				}
+
+				// if action was empty, we'll also need to grab the name out of the 
+				// resulting xpath query
+				
+				if ( $strAction == "")
 				{
 					$action = (string) $actions[0]["name"];
 					$this->addRequest("action", $action);
 				}
-        
 				
 				foreach ( $actions as $action )
 				{
@@ -574,30 +583,29 @@
 			if ( $section_paths != false )
 			{
 				$map_xml = $section_paths[0];
-        
-          foreach ($map_xml->mapEntry as $map_entry)
+				
+				foreach ($map_xml->mapEntry as $map_entry)
 				{
 					$iIndex = (integer) $map_entry['pathIndex'];
 					$strProperty = (string) $map_entry['property'];
 					
 					$this->mapsByProperty[$key_name][$strProperty] = $iIndex;
 					$this->mapsByIndex[$key_name][$iIndex] = $strProperty;
-				}        
+				}
 			}
 			
 			// and add the local map on top if also present. Important that
-      // action overrides section, not replaces! 
+			// action overrides section, not replaces! 
 			
 			if ( $action_paths != false )
 			{
-        
 				$map_xml = $action_paths[0];
-        
-        foreach ($map_xml->mapEntry as $map_entry)
-				{          
+				
+				foreach ($map_xml->mapEntry as $map_entry)
+				{
 					$iIndex = (integer) $map_entry['pathIndex'];
-					$strProperty = (string) $map_entry['property'];					
-          
+					$strProperty = (string) $map_entry['property'];
+					
 					$this->mapsByProperty[$key_name][$strProperty] = $iIndex;
 					$this->mapsByIndex[$key_name][$iIndex] = $strProperty;
 				}

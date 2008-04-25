@@ -49,16 +49,16 @@
 					}
 					
 					// add the url for the category
-					$props = $objCategoryData->properties();
-					$subject_prop = $props["normalized"];
+
+					$arrParams = array(
+						"base" => "databases",
+						"action" => "subject",
+						"subject" => $objCategoryData->normalized
+					);
 					
-					$objElement = $objXml->createElement("url", Xerxes_Parser::escapeXml(   
-						$objRequest->url_for( array( 
-							"base" => "databases",
-							"action" => "subject",
-							"subject" => $subject_prop
-						))));
-						
+					$url = Xerxes_Parser::escapeXml($objRequest->url_for($arrParams));
+					
+					$objElement = $objXml->createElement("url", $url); 
 					$objCategory->appendChild($objElement);
 					$objXml->documentElement->appendChild($objCategory);
 					

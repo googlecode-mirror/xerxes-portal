@@ -16,11 +16,11 @@
 	class Xerxes_Framework_Request
 	{
 		private $method = "";				// request method: GET, POST, COMMAND
-		private $arrParams = array();			// request paramaters
-		private $arrSession = array();			// session array for command line, unused right now
+		private $arrParams = array();		// request paramaters
+		private $arrSession = array();		// session array for command line, unused right now
 		private $xml = null;				// main xml document for holding data from commands
 		private $strRedirect = "";			// redirect url
-		private $path_elements = null;			 // http path tranlsated into array of elements.
+		private $path_elements = null;		// http path tranlsated into array of elements.
 			
 		/**
 		 * Process the incoming request paramaters, cookie values, url path if pretty-uri on
@@ -93,7 +93,7 @@
 				}
 			}
 			
-			// IIS fix, since it doesn't hold value for request_uri
+			// iis fix, since it doesn't hold value for request_uri
 			
 			if (!isset($_SERVER['REQUEST_URI']))
 			{
@@ -145,12 +145,12 @@
       
 			foreach ( $map as $index => $property)
 			{
-				 $this->mapPathToProperty( $index, $property );				 
+				 $this->mapPathToProperty( $index, $property );		 
 			}
 		}
 		
 		/**
-		 *  Take the http request path and translate it to an array. 
+		 * Take the http request path and translate it to an array. 
 		 * will get from $_SERVER['REQUEST_URI'], first stripping base url.
 		 * If path was just "/", array will be empty. 
 		 *
@@ -200,7 +200,7 @@
 		public function mapPathToProperty($path_index, $property_name)
 		{
 			$path_elements = $this->pathElements();
-      
+			
 			if (array_key_exists($path_index, $path_elements))
 			{
 				$this->setProperty((string) $property_name, (string) $path_elements[$path_index]);
@@ -258,7 +258,6 @@
 		
 		public function getProperty($key, $bolArray = false)
 		{
-      
 			if ( array_key_exists( $key, $this->arrParams ) )
 			{
 				// if the value is requested as array, but is not array, make it one!
@@ -416,14 +415,20 @@
 		/**
 		 * Extract a value from the master xml
 		 *
-		 * @param string $xpath			xpath expression to the element(s)
-		 * @param array $arrNamespaces		key / value pair of url / namespace reference for the xpath
-		 * @param string $strReturnType		[optional] return query results as 'DOMNODELIST' or 'ARRAY', otherwise as sting
-		 * @return mixed			if no value in return type, then single value returned as string					
+		 * @param string $xpath				[optional] xpath expression to the element(s)
+		 * @param array $arrNamespaces		[optional] key / value pair of url / namespace reference for the xpath
+		 * @param string $strReturnType		[optional] return query results as 'DOMNODELIST' or 'ARRAY', otherwise as 'sting'
+		 * @return mixed					if no paramaters set, returns entire xml as DOMDocument
+		 * 									otherwise returns a string, unless value supplied in return type
 		 */
 		
-		public function getData($xpath, $arrNamespaces = null, $strReturnType = null)
+		public function getData($xpath = null, $arrNamespaces = null, $strReturnType = null)
 		{
+			if ( $xpath == null && $arrNamespaces == null && $strReturnType == null )
+			{
+				return $this->xml;
+			}
+			
 			$strReturnType = strtoupper($strReturnType);
 			
 			if ( $strReturnType != null && $strReturnType != "DOMNODELIST" && $strReturnType != "ARRAY")
@@ -491,67 +496,91 @@
 		 * @return string url 
 		 */
 		
-		public function url_for($properties) {
-      
-			if (! array_key_exists("base", $properties)) {
+		public function url_for($properties)
+		{
+			if (! array_key_exists("base", $properties))
+			{
 				throw new Exception("no base/section supplied in url_for.");
 			}
 			
 			$config	= Xerxes_Framework_Registry::getInstance();
 			
-			$base_path = $config->getConfig('base_web_path', false, ".") . "/";
+			$base_path = $config->getConfig('BASE_WEB_PATH', false, ".") . "/";
 			$extra_path = "";
 			$query_string = "";
 			
 			$base = $properties["base"];
-      $action = null;
-      if ( array_key_exists( "action", $properties)) {
-        $action = $properties["action"];
-      }
+			$action = null;
 			
-			if ( $config->getConfig('REWRITE', false) ) {
-				//base in path
+			if ( array_key_exists( "action", $properties))
+			{
+				$action = $properties["action"];
+			}
+			
+			if ( $config->getConfig('REWRITE', false) )
+			{
+				// base in path
+				
 				$extra_path_arr[0] = urlencode($base);
 				unset($properties["base"]);
-				//action in path
-				if ( array_key_exists("action", $properties)) {
+				
+				// action in path
+				
+				if ( array_key_exists("action", $properties))
+				{
 					$extra_path_arr[1] = urlencode($action);
 					unset($properties["action"]);
 				}
-				// Action-specific stuff
-				foreach ( array_keys($properties) as $property ) {
+				
+				// action-specific stuff
+				
+				foreach ( array_keys($properties) as $property )
+				{
 					$controller_map = Xerxes_Framework_ControllerMap::getInstance();
 					$index = $controller_map->path_map_obj()->indexForProperty( $base, $action, $property );
-					if ( $index ) {
+					
+					if ( $index )
+					{
 						$extra_path_arr[$index] = urlencode($properties[$property]);
 						unset($properties[$property]);
 					}
 				}
+				
 				$extra_path = implode("/", $extra_path_arr);
 			}
 			
-			//everything else, which may be everything if it's ugly uris,
+			// everything else, which may be everything if it's ugly uris,
 
 			$query_string = http_build_query($properties, '', '&amp;');
 			$assembled_path = $base_path . $extra_path;
-			if ( $query_string ) {
+			
+			if ( $query_string )
+			{
 				$assembled_path = $assembled_path . '?' . $query_string;
 			}
+			
 			return $assembled_path;
 		}
+
+		/**
+		 * Check if the user has explicitly logged in
+		 *
+		 * @return bool		true if user is named and logged in, otherwise false
+		 */
 		
-		
-    public function hasLoggedInUser()
-    {
-      # This logic used to be in view in includes.xsl. Factored out here. 
-      if ( array_key_exists("role", $_SESSION) && $_SESSION["role"] != 'local')
-      {
-        return true;
-      }
-      else {
-        return false;
-      }
-    }
+		public function hasLoggedInUser()
+		{
+			// this logic used to be in view in includes.xsl. factored out here. 
+			
+			if ( array_key_exists("role", $_SESSION) && $_SESSION["role"] != 'local')
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
     
 		/**
 		 * Retrieve master XML and all request paramaters
@@ -579,13 +608,13 @@
 			$objSession = $objXml->createElement("session");
 			$objXml->documentElement->appendChild($objSession);
 			$this->addElement($objXml, $objSession, $_SESSION);
-      # We might add some calculated thigns to XML that aren't actually
-      # stored in session. 
-      # add a boolean for hasLoggedInUser too.
-      $el = $objXml->createElement("hasLoggedInUser", $this->hasLoggedInUser());
+			
+			// we might add some calculated thigns to xml that aren't actually
+			// stored in session. add a boolean for hasloggedinuser too.
+		
+			$el = $objXml->createElement("hasLoggedInUser", $this->hasLoggedInUser());
 			$objSession->appendChild( $el );
-      
-      
+			
 			// add the server global array, but only if the request
 			// asks for it, for security purposes
 			

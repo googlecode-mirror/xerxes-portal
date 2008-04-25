@@ -75,15 +75,17 @@
 							}
 						}
 						
-						// add URL to access xerxes database page.
+						// add url to access xerxes database page
 						
-						$properties = $objDatabaseData->properties();
-						$objElement = $objXml->createElement( "url", 
-							$objRequest->url_for( array(
-								"base" => "databases",
-								"action" => "database",
-								"id" => htmlentities($properties['metalib_id']
-							))));
+						$arrParams = array(
+							"base" => "databases",
+							"action" => "subject",
+							"subject" => $objCategoryData->normalized
+						);
+						
+						$url = Xerxes_Parser::escapeXml($objRequest->url_for($arrParams));
+						
+						$objElement = $objXml->createElement("url", $url);
 						$objDatabase->appendChild($objElement);
 						$objSubCategory->appendChild($objDatabase);
 					}

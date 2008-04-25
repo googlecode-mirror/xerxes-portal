@@ -15,7 +15,6 @@ RewriteBase /demo/
 # legacy urls #
 ###############
 
-RewriteRule ^folder/([a-zA-Z0-9@\.\-_]{1,})$ index.php?base=folder&action=home&username=$1 [QSA]
 RewriteRule ^folder/([a-zA-Z0-9@\.\-_]{1,})/record/([0-9]{1,})$ index.php?base=folder&action=full&username=$1&record=$2 [QSA]
 
 RewriteRule ^r/([0-9]{1,})$ index.php?base=folder&action=redirect&type=openurl&id=$1

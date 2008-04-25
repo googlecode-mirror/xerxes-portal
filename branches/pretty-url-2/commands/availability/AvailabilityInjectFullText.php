@@ -33,7 +33,7 @@
 			// as well as no native full-text link already
 			
 			$strXpath = "//xerxes_record[not(links/link[@type = 'pdf' or @type = 'html' or @type = 'online']) and standard_numbers/issn and year]";
-			$objSimple = simplexml_import_dom($objRequest->toXML());
+			$objSimple = simplexml_import_dom($objRequest->getData());
 			$arrRecords = $objSimple->xpath($strXpath);
 			
 			// pair-up the issn-year into a simple array here
