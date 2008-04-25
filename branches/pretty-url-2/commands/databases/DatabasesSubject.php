@@ -79,8 +79,8 @@
 						
 						$arrParams = array(
 							"base" => "databases",
-							"action" => "subject",
-							"subject" => $objCategoryData->normalized
+							"action" => "database",
+							"id" => $objDatabaseData->metalib_id
 						);
 						
 						$url = Xerxes_Parser::escapeXml($objRequest->url_for($arrParams));
