@@ -27,10 +27,9 @@
 		 */
 		
 		public function doExecute( Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry )
-		{			
-      
-      $this->add_export_options( $objRequest, $objRegistry );
-      
+		{
+			$this->add_export_options( $objRequest, $objRegistry );
+		
 			$strUsername = $objRequest->getSession("username");
 			$strOrder = $objRequest->getProperty("sortKeys");
 			$iStart = $objRequest->getProperty("startRecord");
@@ -71,7 +70,6 @@
 			// fetch result(s) from the database
 			
 			$objData = new Xerxes_DataMap();
-			$iTotal = $objData->totalRecords($strUsername);
 			$arrResults = $objData->getRecords($strUsername, $strFullness, $strOrder, $arrID, $iStart, $iCount);			
 			
 			// create master results xml doc
@@ -92,14 +90,21 @@
 					
 					$objRecord = $objXml->createElement("record");				
 					$objRecords->appendChild($objRecord);
-          # Add url to record
-          $properties = $objDataRecord->properties(); 
-          $url = $objXml->createElement("url", 
-                  $objRequest->url_for( array ( "base" => "folder",
-                                                "action" => "full",
-                                                "username" => $_SESSION["username"],
-                                                "record" => $properties["id"])));
-          $objRecord->appendChild( $url );
+					
+					# add url to record
+					
+					$arrParams = array(
+						"base" => "folder",
+						"action" => "full",
+						"username" => $strUsername,
+						"record" => $objDataRecord->id
+					);
+					
+					
+					$url = $objRequest->url_for( $arrParams);
+
+					$objURL = $objXml->createElement("url", $url);
+			 		$objRecord->appendChild( $objURL );
 					
 					foreach ( $objDataRecord->properties() as $key => $value )
 					{
@@ -126,13 +131,13 @@
 							$iNumRecords = count($arrID);
 							
 							if (  ( $strFullness == "full" && $configMarcFull == true && $iNumRecords == 1 ) || 
-							      ( $strFullness == "full" && $configMarcBrief == true && $iNumRecords != 1 ) )
+									( $strFullness == "full" && $configMarcBrief == true && $iNumRecords != 1 ) )
 							{
 								$objMarcXml = new DOMDocument();
-							    $objMarcXml->recover = true;
-							    $objMarcXml->loadXML($value);
-							     	
-							    $objImportNode = $objXml->importNode($objMarcXml->getElementsByTagName("record")->item(0), true);
+								 $objMarcXml->recover = true;
+								 $objMarcXml->loadXML($value);
+								  	
+								 $objImportNode = $objXml->importNode($objMarcXml->getElementsByTagName("record")->item(0), true);
 								$objRecord->appendChild($objImportNode);
 							}
 						}
@@ -149,31 +154,31 @@
 			
 			return 1;
 		}
-    
-    
-   public function add_export_options( Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry )
-    {
-      $objXml = new DOMDocument();
-      $objXml->loadXML("<export_functions />");
-      
-      $all_params = array(array( "id" => "email", "action" => "output_email"),
-                          array( "id" => "endnote", "action" => "output_export_endnote" ),
-                          array( "id" => "text", "action" => "output_export_text"));
-      foreach ( $all_params as $params ) {
-        $option = $objXml->createElement("export_option");
-        $option->setAttribute("id", $params["id"] );
-        $url_str = $objRequest->url_for( array(
-                           "base" => "folder",
-                           "username" => $objRequest->getSession("username"),
-                           "action" => $params["action"],
-                           "sortKeys" => "title"));
-        $url = $objXml->createElement('url', $url_str );             
-        $option->appendChild( $url );
-        $objXml->documentElement->appendChild( $option );
-      }
-      $objRequest->addDocument( $objXml );
-    }
+	 
+	 
+	public function add_export_options( Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry )
+	{
+	 	$objXml = new DOMDocument();
+		$objXml->loadXML("<export_functions />");
+		
+		$all_params = array(array( "id" => "email", "action" => "output_email"),
+								  array( "id" => "endnote", "action" => "output_export_endnote" ),
+								  array( "id" => "text", "action" => "output_export_text"));
+		foreach ( $all_params as $params ) {
+		  $option = $objXml->createElement("export_option");
+		  $option->setAttribute("id", $params["id"] );
+		  $url_str = $objRequest->url_for( array(
+									"base" => "folder",
+									"username" => $objRequest->getSession("username"),
+									"action" => $params["action"],
+									"sortKeys" => "title"));
+		  $url = $objXml->createElement('url', $url_str );				 
+		  $option->appendChild( $url );
+		  $objXml->documentElement->appendChild( $option );
+		}
+		$objRequest->addDocument( $objXml );
+	 }
 
-    
+	 
 	}	
 ?>
