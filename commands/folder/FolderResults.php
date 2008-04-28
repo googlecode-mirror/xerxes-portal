@@ -27,7 +27,9 @@
 		 */
 		
 		public function doExecute( Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry )
-		{			
+		{
+			$this->add_export_options( $objRequest, $objRegistry );
+		
 			$strUsername = $objRequest->getSession("username");
 			$strOrder = $objRequest->getProperty("sortKeys");
 			$iStart = $objRequest->getProperty("startRecord");
@@ -36,6 +38,8 @@
 			$strReturn = $objRequest->getProperty("return");
 			
 			$iCount = $objRegistry->getConfig("SAVED_RECORDS_PER_PAGE", false, 20);
+			$configMarcBrief = $objRegistry->getConfig("XERXES_BRIEF_INCLUDE_MARC", false, false);
+			$configMarcFull = $objRegistry->getConfig("XERXES_FULL_INCLUDE_MARC", false, false);
 			
 			// save the return url back to metasearch page if specified
 			
@@ -63,11 +67,9 @@
 				$strFullness = "full";
 			}
 			
-
 			// fetch result(s) from the database
 			
 			$objData = new Xerxes_DataMap();
-			$iTotal = $objData->totalRecords($strUsername);
 			$arrResults = $objData->getRecords($strUsername, $strFullness, $strOrder, $arrID, $iStart, $iCount);			
 			
 			// create master results xml doc
@@ -89,10 +91,27 @@
 					$objRecord = $objXml->createElement("record");				
 					$objRecords->appendChild($objRecord);
 					
+					# add url to record
+					
+					$arrParams = array(
+						"base" => "folder",
+						"action" => "full",
+						"username" => $strUsername,
+						"record" => $objDataRecord->id
+					);
+					
+					
+					$url = $objRequest->url_for( $arrParams);
+
+					$objURL = $objXml->createElement("url", $url);
+			 		$objRecord->appendChild( $objURL );
+					
 					foreach ( $objDataRecord->properties() as $key => $value )
 					{
 						if ( $key == "xerxes_record" && $value != null)
 						{
+							// import the xerxes record
+							
 							$objXerxesRecord = $value;
 							
 							$objBibRecord = new DOMDocument();
@@ -102,6 +121,25 @@
 								
 							$objImportNode = $objXml->importNode($objBibRecord->documentElement, true);
 							$objRecord->appendChild($objImportNode);
+						}
+						elseif ($key == "marc" && $value != null)
+						{
+							// import the marc record, but only if configured to do so; since both brief
+							// and full record display come in on the same command, we'll use the record count 
+							// here as an approximate for the brief versus full view
+							
+							$iNumRecords = count($arrID);
+							
+							if (  ( $strFullness == "full" && $configMarcFull == true && $iNumRecords == 1 ) || 
+									( $strFullness == "full" && $configMarcBrief == true && $iNumRecords != 1 ) )
+							{
+								$objMarcXml = new DOMDocument();
+								 $objMarcXml->recover = true;
+								 $objMarcXml->loadXML($value);
+								  	
+								 $objImportNode = $objXml->importNode($objMarcXml->getElementsByTagName("record")->item(0), true);
+								$objRecord->appendChild($objImportNode);
+							}
 						}
 						else
 						{
@@ -116,5 +154,31 @@
 			
 			return 1;
 		}
+	 
+	 
+	public function add_export_options( Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry )
+	{
+	 	$objXml = new DOMDocument();
+		$objXml->loadXML("<export_functions />");
+		
+		$all_params = array(array( "id" => "email", "action" => "output_email"),
+								  array( "id" => "endnote", "action" => "output_export_endnote" ),
+								  array( "id" => "text", "action" => "output_export_text"));
+		foreach ( $all_params as $params ) {
+		  $option = $objXml->createElement("export_option");
+		  $option->setAttribute("id", $params["id"] );
+		  $url_str = $objRequest->url_for( array(
+									"base" => "folder",
+									"username" => $objRequest->getSession("username"),
+									"action" => $params["action"],
+									"sortKeys" => "title"));
+		  $url = $objXml->createElement('url', $url_str );				 
+		  $option->appendChild( $url );
+		  $objXml->documentElement->appendChild( $option );
+		}
+		$objRequest->addDocument( $objXml );
+	 }
+
+	 
 	}	
 ?>

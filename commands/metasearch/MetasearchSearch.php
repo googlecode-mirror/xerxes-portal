@@ -173,11 +173,11 @@
 				$objNodeDatabase->setAttribute("metalib_id", $objDatabase->metalib_id);
 				$objDatabaseLinks->appendChild($objNodeDatabase);
 				
-				// attach all the links
+				// attach all the links and the database name
 				
 				foreach ( $objDatabase->properties() as $key => $value )
 				{
-					if ( strstr($key, "link_") && $value != "" )
+					if ( $value != "" && ( strstr($key, "link_") || $key == "title_display" ))
 					{
 						$objLink = $objXml->createElement($key, Xerxes_Parser::escapeXml($value));
 						$objNodeDatabase->appendChild($objLink);

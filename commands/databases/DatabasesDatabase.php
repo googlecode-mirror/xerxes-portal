@@ -66,13 +66,22 @@
 						}
 					}
 				}
-								
+				
+				$properties = $objDatabaseData->properties();
+				$objElement = $objXml->createElement( "url", 
+					$objRequest->url_for( array(
+						"base" => "databases",
+						"action" => "database",
+						"id" => htmlentities($properties['metalib_id']
+					))));
+				
+				$objDatabase->appendChild($objElement);
 				$objXml->documentElement->appendChild($objDatabase);
 			}
-					
+			
 			$objRequest->addDocument($objXml);
 				
 			return 1;
 		}
-	}	
+	}
 ?>

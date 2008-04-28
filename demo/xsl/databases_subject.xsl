@@ -28,7 +28,7 @@
 
 	<form name="form1" method="get" action="{$base_url}/" onSubmit="return databaseLimit(this)">
 	<input type="hidden" name="base" value="metasearch" />
-    <input type="hidden" name="action" value="search" />
+	<input type="hidden" name="action" value="search" />
 	<input type="hidden" name="context" value="{$category_name}" />
 	<input type="hidden" name="context_url" value="{$request_uri}" />
 	
@@ -100,9 +100,15 @@
 									<a>
 									<xsl:attribute name="href"><xsl:call-template name="proxy_link" /></xsl:attribute>
 										<xsl:value-of select="title_display" />
-									</a>					
+									</a>
+									&#160;<a>
+										<xsl:attribute name="href"><xsl:value-of select="url" /></xsl:attribute>
+										<img alt="info" src="images/info.gif" >
+											<xsl:attribute name="src"><xsl:value-of select="/knowledge_base/config/base_url" />/images/info.gif</xsl:attribute>
+										</img>
+									</a>
 								</xsl:element>
-							</td>							
+							</td>
 						</tr>
 					</xsl:for-each>	
 					</table>
