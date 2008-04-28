@@ -39,6 +39,7 @@
                 	<p>There was a problem with the database.</p>
                 </xsl:when>
             	<xsl:when test="request/base = 'folder'">
+            		<p><xsl:value-of select="message" /></p>
                 	<p>You can <a href="./?base=folder">access your saved records here</a>.</p>
                 </xsl:when>                
                 <xsl:otherwise>
