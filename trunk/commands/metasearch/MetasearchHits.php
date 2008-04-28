@@ -184,7 +184,7 @@
 							// cache a slimmed down version of the facets as well
 							// to ease the load on the interface
 							
-							$strFacetSlim = Xerxes_Parser::transform($objFacetXml, $configParentDirectory . "/lib/xsl/facets-slim.xsl");
+							$strFacetSlim = Xerxes_Parser::transform($objFacetXml, "xsl/facets-slim.xsl");
 							$this->setCache($strGroup, "facets-slim", $strFacetSlim);
 						}
 					}

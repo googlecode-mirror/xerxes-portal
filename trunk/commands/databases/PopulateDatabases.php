@@ -17,7 +17,6 @@
 	{
 		private $configIPAddress = "";			// config entry
 		private $configInstitute = "";			// config entry
-		private $configParentDirectory = "";	// config entry
 		private $objSearch = null;				// metasearch object
 		private $arrMissing = array();			// databases assigned to a category but missing from the all db pull
 		
@@ -42,7 +41,6 @@
 			
 			$this->configIPAddress = $objRegistry->getConfig("IP_ADDRESS", true);
 			$this->configInstitute = $objRegistry->getConfig("METALIB_INSTITUTE", true);
-			$this->configParentDirectory = $objRegistry->getConfig("PATH_PARENT_DIRECTORY", true);
 			
 			$configMetalibAddress = $objRegistry->getConfig("METALIB_ADDRESS", true);
 			$configMetalibUsername = $objRegistry->getConfig("METALIB_USERNAME", true);
@@ -278,7 +276,7 @@
 			$objXml = new DOMDocument();
 			$objXml = $this->objSearch->allDatabases($this->configInstitute, $this->configIPAddress, true);
 			
-			$strXml = Xerxes_Parser::Transform($objXml, $this->configParentDirectory .  "/lib/xsl/marc-to-database.xsl");
+			$strXml = Xerxes_Parser::transform($objXml, "xsl/marc-to-database.xsl");
 			
 			// get just the database info
 			
