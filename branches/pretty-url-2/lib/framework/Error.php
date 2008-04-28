@@ -57,8 +57,22 @@
 				// set the base url for the error.xsl file's benefit; don't want to assume that 
 				// the earlier code to this effect was executed before an exception, so this is redundant
 				
-				$objBaseURL = $objError->createElement("base_url", $objRegistry->getConfig('BASE_URL'));
+				$objBaseURL = $objError->createElement("base_url", $objRegistry->getConfig('BASE_WEB_PATH', true));
 				$objError->documentElement->appendChild($objBaseURL);
+				
+				
+				// add in the request object
+				
+				$objXml = new DOMDocument();
+				$objXml = $objRequest->toXML(true);
+				$objRequestXml = $objXml->getElementsByTagName("request")->item(0);
+				
+				if ( $objRequestXml != null )
+				{
+					$objImport = $objError->importNode($objRequestXml, true);
+					$objError->documentElement->appendChild($objImport);
+				}
+				
 				
 				// display it to the user
 				
