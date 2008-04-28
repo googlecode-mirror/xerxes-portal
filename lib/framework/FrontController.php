@@ -66,6 +66,8 @@
 				$path_to_parent = $this_directory; $path_to_parent = str_replace("\\", "/", $path_to_parent);
 				$arrPath = explode("/", $path_to_parent); array_pop($arrPath); array_pop($arrPath);
 				$path_to_parent = implode("/", $arrPath);
+        
+        
 				
 				// full web path
 				
@@ -75,6 +77,10 @@
 				// register these values
 					
 				$objRegistry->setConfig("PATH_PARENT_DIRECTORY", $path_to_parent);
+        // That was the library/../ directory. Find and set the app directory
+        // too. The index.php better have set the working directory to itself
+        // as required!        
+        $objRegistry->setConfig("APP_DIRECTORY", getcwd() );
 				$objRegistry->setConfig("BASE_URL", $web, true);
 
 				
@@ -285,7 +291,7 @@
 				// provide enough flexibility; php page will inherit the xml dom document &
 				// can go from there
 						
-				elseif ( file_exists( $objControllerMap->getView() ) )
+				else /*( file_exists( $objControllerMap->getView() ) )(*/
 				{
 					if ( $objControllerMap->getViewType() != "xsl" && $objControllerMap->getViewType() != null )
 					{
@@ -296,10 +302,10 @@
 						echo $objPage->transform($objXml, $objControllerMap->getView(), null, true);
 					}
 				}
-				else
+				/*else
 				{
 					throw new Exception("view file '" . $objControllerMap->getView() . "' does not exist");
-				}
+				}*/
 			}
 			
 			// we'll catch all exceptions here, but the Xerxes_Error class can perform actions
