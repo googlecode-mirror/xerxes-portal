@@ -17,13 +17,13 @@
 		 * Simple XSLT transformation function
 		 * 
 		 * @param mixed $xml			DOMDocument or string containing xml
-		 * @param string $strXslt		physical path to xslt document 
+		 * @param string $strXsltPath		Relative file path to xslt document. Will look in both library location and local app location for documents, and combine them so local over-rides library templates, if neccesary. 
 		 * @param array $arrParams		[optional] array of parameters to pass to stylesheet
 		 * @return string				newly formatted document
 		 * @static 
 		 */ 
 					
-		public static function transform ( $xml, $strXslt, $arrParams = null )
+		public static function transform ( $xml, $strXsltPath, $arrParams = null )
 		{
 			if ( is_string($xml) )
 			{
@@ -32,11 +32,9 @@
 				$objXml->loadXML($xml);
 				$xml = $objXml;
 			}
-	
-			// load xslt document from location
-			$objXsl = new DOMDocument();
-			$objXsl->load($strXslt);
-				
+      
+      $objXsl = self::generateBaseXsl($strXsltPath);
+
 			// create XSLT Processor
 			$objProcessor = new XsltProcessor();
 			$objProcessor->registerPhpFunctions();
@@ -56,6 +54,104 @@
 			return $objProcessor->transformToXml($xml);
 		}
 
+    /**
+		 * Dynamically create our 'base' stylesheet, combining distro and local
+     * stylesheets, as available, using includes and imports into our
+     * 'base'.  Base uses the distro file xsl/dynamic_skeleton.xsl to
+     * begin with. 
+		 * 
+		 * @param string $strXsltRelPath Relative path to a stylesheet, generally 
+     * beginning with "xsl/". Stylesheet may exist in library location, app
+     * location, or both. 
+     * @return DomDocument A DomDocument holding the generated XSLT stylesheet.
+     * @static
+		 */ 
+    public static function generateBaseXsl($strXsltRelPath) {
+      
+      $objRegistry = Xerxes_Framework_Registry::getInstance(); 
+
+      // The relative path passed in should, starting from our working
+      // dir, give us the localized xsl if it exists. 
+      $local_xsl_dir = $objRegistry->getConfig("APP_DIRECTORY", true);
+      $local_path =  $local_xsl_dir . "/" . $strXsltRelPath;
+      
+      // Applying that relative URL with a base of xerxes library install
+      // gives us our distro file, if it exists. 
+      $distro_xsl_dir = $objRegistry->getConfig("PATH_PARENT_DIRECTORY", true) . '/lib/';
+      $distro_path = $distro_xsl_dir . $strXsltRelPath;
+            
+      $generated_xsl = new DOMDocument();
+      $generated_xsl->load( $distro_xsl_dir . "xsl/dynamic_skeleton.xsl");      
+      
+      // Pre-pend imports to this, to put them at the top of the file. 
+      $importInsertionPoint = $generated_xsl->documentElement->firstChild;      
+
+      // Add actual stylesheets to 'base' stylesheet. Local are included,
+      // distro are imported. This will ensure local overrides distro. 
+      if ( $distro_path ) {  
+          //import the distro, include the local. 
+          self::addImportReference($generated_xsl, $distro_path, $importInsertionPoint);                  
+      }
+      
+      // Include local. 
+      if ( file_exists($local_path) ) {
+        self::addIncludeReference( $generated_xsl, $local_path);
+      }
+      
+      // If we don't have a local or a distro for given stylesheet path,
+      // that's a problem. 
+      if (! ( file_exists($local_path) || file_exists($distro_path))) {
+        throw new Exception("No xsl stylesheet found for view template specified: $strXsltRelPath");
+      }
+      
+      // add any locally overridden subsidiary 'included' type files if
+      // neccesary. Right now, that's just includes.xsl.
+      // includes.xsl still needs manually xsl:include'd in the distro source,
+      // but local source shouldn't, we will import local includes.xsl
+      // dynamically here. We import instead of include in case the local
+      // stylesheet does erroneously 'include', to avoid a conflict. We
+      // import LAST to make sure it takes precedence over distro. 
+      $extra_xsl_names = array("xsl/includes.xsl");
+      foreach ($extra_xsl_names as $rel_path ) {
+        $abs_local_path = $local_xsl_dir . '/' . $rel_path;
+        if ( file_exists( $abs_local_path )) {
+          self::addImportReference($generated_xsl, $abs_local_path, $importInsertionPoint);        
+        }
+      }
+      
+      return $generated_xsl;
+    }
+    /**
+		 * Internal function used to add another import statement to a supplied
+     * XSLT stylesheet. An insertPoint is also passed in--a reference to a 
+     * particular DOMElement which the 'import' will be added right before.
+     * Ordering of imports matters. 
+		 * 
+		 * @param DomDocument $xsltStylesheet	stylesheet to be modified
+     * @param string $absoluteFilePath abs filepath of stylesheet to be imported
+		 * @param DomElement $insertPoint DOM Element to insert before. 
+		 */ 
+    private static function addImportReference($xsltStylesheet, $absoluteFilePath, $insertPoint) {      
+      $import_element = $xsltStylesheet->createElementNS("http://www.w3.org/1999/XSL/Transform", "xsl:import");
+      $import_element->setAttribute("href", $absoluteFilePath);
+      $xsltStylesheet->documentElement->insertBefore( $import_element, $insertPoint);  
+      
+      return $xsltStylesheet;
+    }
+     /**
+		 * Internal function used to add another inlude statement to a supplied
+     * XSLT stylesheet. Include will be added at end of stylesheet. 
+     *
+		 * @param DomDocument $xsltStylesheet	stylesheet to be modified
+     * @param string $absoluteFilePath abs filepath of stylesheet to be imported
+		 */ 
+   
+    private static function addIncludeReference($xsltStylesheet, $absoluteFilePath) {
+      $include_element = $xsltStylesheet->createElementNS("http://www.w3.org/1999/XSL/Transform", "xsl:include");
+      $include_element->setAttribute("href", $absoluteFilePath);
+      $xsltStylesheet->documentElement->appendChild( $include_element );
+    }
+    
 		/**
 		 * Simple function to convert text to title case
 		 * Drops titles in ALL CAPS to lowercase first; honors initial capitalized 
