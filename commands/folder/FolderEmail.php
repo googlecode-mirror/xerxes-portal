@@ -62,12 +62,9 @@
 			
 			// transform the documents to a basic style for now
 			// will give them citation style options in the future
-			print "HERE! <br>\n";
       
 			$strRecords = Xerxes_Parser::transform($objXml, "xsl/citation/basic.xsl");
       
-      print "AFTER! <br>\n";
-			
 			// add notes and records to body
 			
 			$strBody = $strNotes ."\r\n\r\n";
