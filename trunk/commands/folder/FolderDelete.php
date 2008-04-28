@@ -43,9 +43,6 @@
 			$strSource = $objRequest->getProperty("source"); 
 			$strID = $objRequest->getProperty("id");
 			
-			$configModRewrite = $objRegistry->getConfig("REWRITE", false, false);
-			$configBaseUrl = $objRegistry->getConfig("BASE_URL", true);
-			
 			// delete the record from the database
 			
 			$objData = new Xerxes_DataMap();
@@ -58,17 +55,18 @@
 			
 			// send the user back out, so they don't step on this again
 			
-			if ( $configModRewrite == false )
-			{
-				$objRequest->setRedirect($configBaseUrl . "/?base=folder&username=" . 
-					urlencode($strUsername) . "&sortKeys=" . $strSort );			
-			}
-			else
-			{
-				$objRequest->setRedirect($configBaseUrl . "/folder/" . 
-					urlencode($strUsername) . "?sortKeys=" . $strSort);
-			}
+			$arrParams = array(
+				"base" => "folder",
+				"action" => "home",
+				"username" => $strUsername,
+				"sortKeys" =>  $strSort
+			);
 			
+			$url = $objRequest->url_for($arrParams);
+			
+			$objRequest->setRedirect($url);
+			
+			return 1;
 		}
 	}
 

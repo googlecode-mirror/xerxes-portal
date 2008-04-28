@@ -41,7 +41,8 @@
 			<xsl:variable name="letter" select="substring(translate(title_display,$lower,$upper), 1, 1)" />
 			
 			<xsl:if test="substring(translate(preceding-sibling::database[1]/title_display,$lower,$upper), 1, 1) !=  $letter">
-				<a href="#{$letter}"><xsl:value-of select="$letter" /></a>
+				<a><xsl:attribute name="href"><xsl:value-of select="/knowledge_base/request/server/request_uri" />#<xsl:value-of select="$letter" /></xsl:attribute> 
+				<xsl:value-of select="$letter" /></a>
 				<span class="letterSeperator"> | </span> 
 			</xsl:if>
 
@@ -51,13 +52,12 @@
 		
 		<xsl:for-each select="databases/database">
 		
-		
 			<xsl:variable name="letter" select="substring(translate(title_display,$lower,$upper), 1, 1)" />
 			
 			<xsl:if test="substring(translate(preceding-sibling::database[1]/title_display,$lower,$upper), 1, 1) !=  $letter">
 				<a name="{$letter}"><h2><xsl:value-of select="$letter" /></h2></a>
 				<div class="alphaBack">
-					[ <a href="#top">Back to top</a> ]
+					[ <a><xsl:attribute name="href"><xsl:value-of select="/knowledge_base/request/server/request_uri" />#top</xsl:attribute>  Back to top</a> ]
 				</div>
 			</xsl:if>
 		
@@ -70,6 +70,14 @@
 					<xsl:attribute name="href"><xsl:call-template name="proxy_link" /></xsl:attribute>
 						<xsl:value-of select="title_display" />
 					</a>
+					<xsl:if test="title_display">
+						&amp;nbsp;<a>
+						<xsl:attribute name="href"><xsl:value-of select="url" /></xsl:attribute>
+						<img alt="info" src="images/info.gif" >
+							<xsl:attribute name="src"><xsl:value-of select="/knowledge_base/config/base_url" />/images/info.gif</xsl:attribute>
+						</img>
+					</a>
+					</xsl:if>
 				</div>
 				
 				<div class="alphaDescription">

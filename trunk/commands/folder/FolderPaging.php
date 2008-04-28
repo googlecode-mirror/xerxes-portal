@@ -52,16 +52,11 @@
 			$strSort = $objRequest->getProperty("sortKeys");
 			if ( $strSort == "" ) $strSort = "id";
 		
-			$strQueryString = "";
-		
-			if ( $configModRewrite == true )
-			{
-				$strQueryString = "$strUsername?startRecord=1";
-			}
-			else 
-			{
-				$strQueryString = "./?base=folder&username=$strUsername&startRecord=1";
-			}
+			$strQueryString = $objRequest->url_for( array( "base" => "folder",
+                                                     "action" => "home",
+                                                     "username" => $strUsername,
+                                                     "startRecord" => 1));;
+
 
 			$arrSortOptions = array("title" => "title", "author" => "author", "year" => "date", "id" => "most recently added");
 			$objSortXml = $objPage->sortDisplay( $strQueryString, $strSort, $arrSortOptions);
@@ -70,30 +65,20 @@
 			
 			
 			
-			### create paging element
-			
-			$strBase = "";
-			$strNonRewrite = "";
-			
-			if ( $configModRewrite == true )
-			{
-				$strBase = $strUsername;
-			}
-			else
-			{
-				$strBase = "./";
-				$strNonRewrite = "&base=folder&action=home&username=" . $objRequest->getSession("username");
-			}
+			### create paging element			
+
+      $params = array ( "base" => "folder",
+                       "action" => "home",
+                       "username" => $objRequest->getSession("username"),
+                       "sortKeys" => $objRequest->getProperty("sortKeys"));
 	   
-			$objPagerXml = $objPage->pager( 
-				$strBase, 
+      
+			$objPagerXml = $objPage->pager_dom(  
+        $params,
 				"startRecord",  (int) $objRequest->getProperty("startRecord"), 
 				null,  $iTotal, 
-				$iMax,
-				"&sortKeys=" . $objRequest->getProperty("sortKeys") .
-				$strNonRewrite
+				$iMax, $objRequest
 			);
-	
 			
 			$objRequest->addDocument($objPagerXml);
 				

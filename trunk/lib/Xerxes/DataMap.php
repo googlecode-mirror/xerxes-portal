@@ -131,6 +131,7 @@ class Xerxes_Data_Record extends Xerxes_Framework_DataValue
 	public $year;
 	public $format;
 	public $refereed;
+	public $marc;
 	public $xerxes_record;		// not part of table!
 }
 
@@ -163,10 +164,19 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 	
 	public function clearKB()
 	{
-		// xerxes_databases and xerxes_subcategories will
-		// cascade delete to join tables
+		// delete join tables in the event mysql is set-up with myisam
+		// storage engine -- this should be fixed in xerxes 1.2 since 
+		// sql scripts for mysql will specifically set to innodb
 		
+		$this->delete("DELETE FROM xerxes_database_alternate_publishers");
+		$this->delete("DELETE FROM xerxes_database_alternate_titles");
+		$this->delete("DELETE FROM xerxes_database_keywords");
+		$this->delete("DELETE FROM xerxes_database_languages");
+		$this->delete("DELETE FROM xerxes_database_notes");
 		$this->delete("DELETE FROM xerxes_subcategory_databases");
+		
+		// delete parent tables
+		
 		$this->delete("DELETE FROM xerxes_databases");
 		$this->delete("DELETE FROM xerxes_subcategories");
 		$this->delete("DELETE FROM xerxes_categories");
@@ -243,7 +253,6 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 					  
 			$this->insert($strSQL, array(":metalib_id" => $objDatabase->metalib_id, ":alt_title" => $alternate_title));
 		}		
-		
 	}
 	
 	/**
@@ -888,6 +897,43 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		}
 		
 		return $arrFacets;
+	}
+	
+	/**
+	 * Associate tags with a saved record
+	 *
+	 * @param string $strUsername		username 
+	 * @param array $arrTags			array of tags supplied by user
+	 * @param int $iRecord				record id tags are associated with
+	 */
+	
+	public function assignTags($strUsername, $arrTags, $iRecord)
+	{
+		// data check
+		
+		if ( $strUsername == "" ) throw new Exception("param 1 'username' must not be null");
+		if ( ! is_array($arrTags) ) throw new Exception("param 2 'tags' must be of type array");
+		if ( $iRecord == "" ) throw new Exception("param 3 'record' must not be null");
+		
+		// wrap it in a transaction, yo!
+		
+		$this->beginTransaction();
+		
+		// first clear any old tags associated with the record, so 
+		// we can 'edit' and 'add' on the same action
+		
+		$strSQL = "DELETE FROM xerxes_tags WHERE record_id = :record_id AND username = :username";
+		$this->delete($strSQL, array(":record_id" => $iRecord, ":username" => $strUsername));
+		
+		// now assign the new ones to the database
+		
+		foreach ( $arrTags as $strTag )
+		{
+			$strSQL = "INSERT INTO xerxes_tags (username, record_id, tag) VALUES (:username, :record_id, :tag)";
+			$this->insert($strSQL, array(":username" => $strUsername, ":record_id" => $iRecord, ":tag" => $strTag));
+		}
+		
+		$this->commit();
 	}
 	
 	

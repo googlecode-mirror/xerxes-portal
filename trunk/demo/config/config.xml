@@ -11,6 +11,12 @@
 	<configuration>
 		
 	<!-- BASIC CONFIGURATION -->
+	
+		<!-- The base web server path for your xerxes installation. Highly
+		     reccommended to set this if you are using RESTy URL functionality.
+		     NO trailing slash. If you have installed at web root, empty string. -->
+		
+		<config name="base_web_path">/demo</config>
 		
 		<!-- turns the display of php errors and warnings on in a production system; value = true | false -->
 		
@@ -167,9 +173,10 @@
 		<config name="demo_users"></config>
 		
 	<!-- DISPLAY AND BEHAVIOR -->
-	
+
 		<!-- mod_rewrite scheme
-		     You have the option to run Xerxes together with Apache's mod_rewrite module or with one 
+
+			You have the option to run Xerxes together with Apache's mod_rewrite module or with one 
 			 of the various mod_rewite-like ISAPI modules available for IIS.  This option will
 			 create simpler URLs for thing like the categories and databases pages, 'my saved records' and links sent
 			 out when users email records to themselves.  This is advantageous, since these URLs will likely 

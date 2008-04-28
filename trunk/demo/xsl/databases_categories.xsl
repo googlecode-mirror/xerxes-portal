@@ -24,19 +24,6 @@
 <xsl:template name="main">
 
 	<xsl:variable name="search_limit" select="config/search_limit" />
-
-	<!-- links are different depending on whether we are using rewrite scheme or not  -->
-
-	<xsl:variable name="category">
-		<xsl:choose>
-			<xsl:when test="$rewrite = 'true'">
-				<xsl:text>categories/</xsl:text>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:text>./?base=databases&amp;action=subject&amp;subject=</xsl:text>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:variable>
 	
 	<!-- a single category added to the page is assumed to be the quicksearch -->
 	
@@ -56,7 +43,7 @@
 					<input name="database" type="hidden" >
 						<xsl:attribute name="id"><xsl:value-of select="metalib_id" /></xsl:attribute>
 						<xsl:attribute name="value"><xsl:value-of select="metalib_id" /></xsl:attribute>					 
-					 </input>
+					</input>
 				</xsl:for-each>
 			
 				<div style="width: 500px;">
@@ -85,7 +72,7 @@
 				<ul>
 				<xsl:for-each select="categories/category[@position &lt;= ( $total * .33 )]">
 					<xsl:variable name="normalized" select="normalized" />
-					<li><a href="{$category}{$normalized}"><xsl:value-of select="name" /></a></li>
+					<li><a href="{url}"><xsl:value-of select="name" /></a></li>
 				</xsl:for-each>
 				</ul>
 			</td>
@@ -93,7 +80,7 @@
 				<ul>
 				<xsl:for-each select="categories/category[@position &gt; ( $total * .33 ) and @position &lt; ( $total * .66 )]">
 					<xsl:variable name="normalized" select="normalized" />
-					<li><a href="{$category}{$normalized}"><xsl:value-of select="name" /></a></li>
+					<li><a href="{url}"><xsl:value-of select="name" /></a></li>
 				</xsl:for-each>
 				</ul>
 			</td>
@@ -101,7 +88,7 @@
 				<ul>
 				<xsl:for-each select="categories/category[@position &gt;= ( $total * .66 )]">
 					<xsl:variable name="normalized" select="normalized" />
-					<li><a href="{$category}{$normalized}"><xsl:value-of select="name" /></a></li>
+					<li><a href="{url}"><xsl:value-of select="name" /></a></li>
 				</xsl:for-each>
 				</ul>
 			</td>

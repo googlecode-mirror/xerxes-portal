@@ -8,7 +8,7 @@ $strFolder = $objRequest->getProperty("folder");
 
 if ( $strFolder == null )
 {
-	$strFolder = "categories";
+	$strFolder = "databases/subject";
 }
 
 $objDatabases = simplexml_import_dom($objXml->documentElement);

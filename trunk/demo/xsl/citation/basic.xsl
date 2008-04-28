@@ -137,6 +137,7 @@
 				<xsl:with-param name="type"><xsl:value-of select="@type" /></xsl:with-param>
 				<xsl:with-param name="id"><xsl:value-of select="../../../id" /></xsl:with-param>
 				<xsl:with-param name="base_url"><xsl:value-of select="$base_url" /></xsl:with-param>
+        <xsl:with-param name="url"><xsl:value-of select="../../../url" /></xsl:with-param>
 				
 			</xsl:call-template>
 			

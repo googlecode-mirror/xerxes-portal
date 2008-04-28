@@ -52,6 +52,7 @@
 	<head>
 	<title><xsl:call-template name="title" /></title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<base href="{$base_include}/" />
 	<link href="{$base_include}/css/xerxes.css" rel="stylesheet" type="text/css" />
 	<link href="{$base_include}/css/xerxes-print.css" rel="stylesheet" type="text/css" media="print" />
 	<xsl:call-template name="header" />
@@ -174,17 +175,8 @@
 	<xsl:variable name="start_record" 	select="request/startrecord" />
 	<xsl:variable name="records_per_page" 	select="config/records_per_page" />
     
-	<xsl:variable name="folder">
-		<xsl:choose>
-			<xsl:when test="$rewrite = 'true'">
-				<xsl:value-of select="$base_url" /><xsl:text>/folder/</xsl:text><xsl:value-of select="$username" />
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:value-of select="$base_url" /><xsl:text>/?base=folder&amp;username=</xsl:text><xsl:value-of select="$username" />
-			</xsl:otherwise>
-		</xsl:choose>	
-	</xsl:variable>
-
+	<xsl:variable name="folder" select="navbar/element[@id = 'saved_records']/url" />
+		
 	<xsl:choose>
 		<xsl:when test="request/action = 'categories'">
 			<span class="breadcrumbHere">Home</span>
@@ -286,10 +278,14 @@
 		<span class="sessionAction">
 			<xsl:choose>
 			<xsl:when test="request/session/role and request/session/role != 'local'">
-				<a href="{$base_url}/?base=authenticate&amp;action=logout&amp;return={$return}">Log-out</a>
+				<a>
+        <xsl:attribute name="href"><xsl:value-of select="navbar/element[@id = 'logout']/url" /></xsl:attribute>
+        Log-out</a>
 			</xsl:when>
 			<xsl:otherwise>
-				<a href="{$base_url}/?base=authenticate&amp;action=login&amp;return={$return}">Log-in</a>
+				<a>
+        <xsl:attribute name="href"><xsl:value-of select="navbar/element[@id = 'login']/url" /></xsl:attribute>
+        Log-in</a>
 			</xsl:otherwise>
 			</xsl:choose>
 		</span>
@@ -372,28 +368,19 @@
 
 <xsl:template name="folder_brief_results">
 
-	<xsl:variable name="username" 	select="request/session/username" />
-
-	<xsl:variable name="full">
-		<xsl:choose>
-			<xsl:when test="$rewrite = 'true'">
-				<xsl:value-of select="$username" /><xsl:text>/record/</xsl:text>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:text>./?base=folder&amp;action=full&amp;username=</xsl:text><xsl:value-of select="$username" /><xsl:text>&amp;record=</xsl:text>
-			</xsl:otherwise>
-		</xsl:choose>	
-	</xsl:variable>
+  <xsl:variable name="username" 	select="request/session/username" />
 
 	<table>
 	<xsl:for-each select="results/records/record">	
 		<xsl:variable name="id" select="id" />
+    <xsl:variable name="url"    select="url" />
+
 		<tr valign="top">
 			<td class="folderRecord">
 				<input type="checkbox" name="record" value="{$id}" />
 			</td>
 			<td align="left" class="folderRecord" width="100%">
-				<a href="{$full}{$id}" class="resultsTitle">
+				<a href="{$url}" class="resultsTitle">
 					<xsl:value-of select="title" />
 				</a>
 				<br /><xsl:value-of select="author" /> / <xsl:value-of select="format" /> / <xsl:value-of select="year" />
@@ -413,17 +400,6 @@
 <xsl:template name="folder_options">
 	
 	<xsl:variable name="username" 	select="request/session/username" />
-
-	<xsl:variable name="base">
-		<xsl:choose>
-			<xsl:when test="$rewrite = 'true'">
-				<xsl:value-of select="$username" /><xsl:text>?</xsl:text>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:text>./?base=folder&amp;username=</xsl:text><xsl:value-of select="$username" /><xsl:text>&amp;</xsl:text>
-			</xsl:otherwise>
-		</xsl:choose>	
-	</xsl:variable>
 	 
 	 <div class="folderOutputs">
 		 <table border="0" cellspacing="0" cellpadding="5">
@@ -432,7 +408,9 @@
 					<img src="{$base_include}/images/folder_email.gif" alt="email" />
 				</td>
 				<td>
-					<p><strong><a href="{$base}action=output_email&amp;sortKeys=title">Email</a></strong> records</p>
+					<p><strong><a>
+          <xsl:attribute name="href"><xsl:value-of select='export_functions/export_option[@id="email"]/url' /></xsl:attribute>
+          Email</a></strong> records</p>
 				</td>
 				<td class="folderOutputOptions">
 					<img src="{$base_include}/images/folder_download.gif" alt="download" />
@@ -440,8 +418,12 @@
 				<td>
 					<p>Download to: </p>
 					<ul>
-					<li><strong><a href="{$base}action=output_export_endnote&amp;sortKeys=title">Endnote</a></strong></li>
-					<li><strong><a href="{$base}action=output_export_text&amp;sortKeys=title">Text file</a></strong></li>
+					<li><strong><a>
+          <xsl:attribute name="href"><xsl:value-of select='export_functions/export_option[@id="endnote"]/url' /></xsl:attribute>
+          Endnote</a></strong></li>
+					<li><strong><a>
+          <xsl:attribute name="href"><xsl:value-of select='export_functions/export_option[@id="text"]/url' /></xsl:attribute>
+          Text file</a></strong></li>
 					</ul>
 				</td>
 			  </tr>

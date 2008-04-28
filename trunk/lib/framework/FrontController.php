@@ -21,29 +21,29 @@
 		{			
 			session_start();
 			
-			// we'll put all code in a try-catch block in order to show friendly error page
+			// include the framework files
+				
+			$this_directory = dirname(__FILE__);
+			$base = basename(__FILE__);
+
+			self::includeFiles($this_directory, $base);
+				
+			// initialize the configuration setting (Registry) and 
+			// command-view mapping (ControllerMap) objects
+				
+			$objRegistry = Xerxes_Framework_Registry::getInstance(); $objRegistry->init();
+			$objControllerMap = Xerxes_Framework_ControllerMap::getInstance(); $objControllerMap->init();
+			
+			$objRequest = new Xerxes_Framework_Request();	// processes the incoming request
+			$objPage = new Xerxes_Framework_Page();			// assists with basic paging/navigation elements for the view
+			$objError = new Xerxes_Framework_Error();		// functions for special logging or handling of errors
+				
+			
+			// we'll put the remaining code in a try-catch block in order to show friendly error page
 			// for any uncaught exceptions
 			
 			try
-			{
-				// include the framework files
-				
-				$this_directory = dirname(__FILE__);
-				$base = basename(__FILE__);
-				
-				self::includeFiles($this_directory, $base);
-				
-				// initialize the configuration setting (Registry) and 
-				// command-view mapping (ControllerMap) objects
-				
-				$objRegistry = Xerxes_Framework_Registry::getInstance(); $objRegistry->init();
-				$objControllerMap = Xerxes_Framework_ControllerMap::getInstance(); $objControllerMap->init();
-				
-				$objRequest = new Xerxes_Framework_Request();	// stores data about the request and fetched results
-				$objPage = new Xerxes_Framework_Page();			// assists with basic paging/navigation elements for the view
-				$objError = new Xerxes_Framework_Error();		// functions for special logging or handling of errors
-				
-				
+			{	
 				####################
 				#  DISPLAY ERRORS  #
 				####################
@@ -53,35 +53,31 @@
 					error_reporting(E_ALL);
 					ini_set('display_errors', '1');
 				}
-				
-				
+
 				####################
 				#     SET PATHS    #
 				####################
 				
 				// the working directory is the instance, so any relative paths will
 				// be executed in relation to the root directory of the instance
-							
+				
 				// set the 'parent' directory to '../../' from here
 				
 				$path_to_parent = $this_directory; $path_to_parent = str_replace("\\", "/", $path_to_parent);
 				$arrPath = explode("/", $path_to_parent); array_pop($arrPath); array_pop($arrPath);
 				$path_to_parent = implode("/", $arrPath);
 				
-				// base url of the instance
+				// full web path
 				
-				$self_dir = dirname($objRequest->getServer('PHP_SELF'));
-				$self_dir = str_replace("\\", "/", $self_dir);
-				
-				$web = "http://" . $objRequest->getServer('SERVER_NAME') . $self_dir;
-				if ( substr($web, strlen($web) - 1, 1) == "/") $web = substr($web, 0, strlen($web) - 1);
+				$base_path = $objRegistry->getConfig('BASE_WEB_PATH', true);
+				$web = "http://" . $objRequest->getServer('SERVER_NAME') . $base_path;
 				
 				// register these values
-				
+					
 				$objRegistry->setConfig("PATH_PARENT_DIRECTORY", $path_to_parent);
 				$objRegistry->setConfig("BASE_URL", $web, true);
-	
-	
+
+				
 				####################
 				#   INSTRUCTIONS   #
 				####################
@@ -92,14 +88,7 @@
 				$strBase = $objRequest->getProperty("base");
 				$strAction = $objRequest->getProperty("action");
 				
-				$objControllerMap->setAction($strBase, $strAction);
-	
-				// add any predefined values to the request object from ControllerMap
-				
-				foreach ( $objControllerMap->getRequests() as $key => $value )
-				{
-					$objRequest->setProperty($key, $value, is_array($value));
-				}
+				$objControllerMap->setAction($strBase, $strAction, $objRequest);
 				
 				
 				####################
@@ -176,16 +165,22 @@
 					$objElement = $objConfigXml->createElement($key, $value);
 					$objConfigXml->documentElement->appendChild($objElement);
 				}
-				
-				$objRequest->addDocument($objConfigXml);
-				
+				$objRequest->addDocument($objConfigXml);     
+        				
 				// the data will be built-up by calling one or more command classes
 				// which will fetch their data based on other parameters supplied in
 				// the request; returning that data as xml to a master xml dom document
 				// inside the Xerxes_Framework_Request class, or in some cases specififying 
 				// a url to redirect the user out
 				
-				foreach ( $objControllerMap->getCommands() as $arrCommand )
+				$commands = $objControllerMap->getCommands();        
+				
+				// add some general nav bar stuff to every response with the helper/navbar 'command'
+				
+				$navbarCommand = array("helper", "Xerxes", "HelperNavbar");
+				array_unshift( $commands, $navbarCommand );			
+        
+				foreach ( $commands as $arrCommand )
 				{
 					$strDirectory = $arrCommand[0];		// directory where the command class is located
 					$strNamespace = $arrCommand[1];		// prefix namespace of the command class
@@ -215,8 +210,7 @@
 						// instantiate the command class and execute it, but only
 						// if it extends xerxes_framework_command
 						
-						$objCommand = new $strClass();
-						
+						$objCommand = new $strClass();						      
 						if ( $objCommand instanceof Xerxes_Framework_Command )
 						{
 							$objCommand->execute($objRequest, $objRegistry);
@@ -271,7 +265,7 @@
 	
 				$objXml = new DOMDocument();
 				$objXml = $objRequest->toXML($bolShowServer);
-							
+				
 				
 				// RAW XML DISPLAY
 				//
@@ -317,6 +311,8 @@
 			}
 		}
 		
+    
+    
 		/**
 		 * require_once() all php files or directories specified
 		 *

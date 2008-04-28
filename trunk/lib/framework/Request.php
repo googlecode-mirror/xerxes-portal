@@ -20,18 +20,21 @@
 		private $arrSession = array();		// session array for command line, unused right now
 		private $xml = null;				// main xml document for holding data from commands
 		private $strRedirect = "";			// redirect url
-		
+		private $path_elements = null;		// http path tranlsated into array of elements.
+			
 		/**
-		 * Process the incloming request paramaters and cookie values
+		 * Process the incoming request paramaters, cookie values, url path if pretty-uri on
 		 */
 		
 		public function __construct()
 		{
 			if ( array_key_exists("REQUEST_METHOD", $_SERVER) )
 			{
+				// request has come in from GET or POST
+
 				$this->method = $_SERVER['REQUEST_METHOD'];
 				
-				// request has come in from GET or POST
+				// now extract remaining params in query string. 
 				
 				if ( $_SERVER['QUERY_STRING'] != "" )
 				{
@@ -50,33 +53,28 @@
 						{
 							$strKey = substr($strParam, 0, $iEqual);
 							$strValue = substr($strParam, $iEqual + 1);
-							
-							if ( array_key_exists($strKey,$this->arrParams) )
-							{
-								// if there are multiple params of the same name,
-								// make sure we add them as array
-									
-								if ( ! is_array( $this->arrParams[$strKey]) )
-								{
-									$this->arrParams[$strKey] = array($this->arrParams[$strKey]);
-								}
-																		
-								array_push( $this->arrParams[$strKey], $strValue );
-							}
-							else
-							{
-								$this->arrParams[$strKey] = urldecode($strValue);
-							}
+						
+							$this->setProperty($strKey, urldecode($strValue) );
 						}
 					}
 				}
+				
 				foreach ( $_POST as $key => $value )
 				{
-					$this->arrParams[$key] = $value;
+					$this->setProperty($key, $value);
 				}
 				foreach ( $_COOKIE as $key => $value )
 				{
-					$this->arrParams[$key] = $value;
+					$this->setProperty($key, $value);
+				}
+				
+				// if pretty-urls is turned on, extract params from uri. 
+				
+				$objRegistry = Xerxes_Framework_Registry::getInstance(); 
+				
+				if ( $objRegistry->getConfig("REWRITE", false) )
+				{
+					$this->extractParamsFromPath();
 				}
 			}
 			else
@@ -93,7 +91,22 @@
 						$this->setProperty($key, $val);
 					}
 				}
-			}			
+			}
+			
+			// iis fix, since it doesn't hold value for request_uri
+			
+			if (!isset($_SERVER['REQUEST_URI']))
+			{
+				if (!isset($_SERVER['QUERY_STRING']))
+				{
+					$_SERVER['REQUEST_URI'] = $_SERVER["SCRIPT_NAME"];
+				}
+				else
+				{
+					$_SERVER['REQUEST_URI'] = $_SERVER["SCRIPT_NAME"] .'?'.
+					$_SERVER['QUERY_STRING'];
+				}
+			}
 		}
 		
 		/**
@@ -115,27 +128,123 @@
 		}
 		
 		/**
+		 * Extract params from pretty-urls when turned on in config. Requires base url to be set in config.
+		 * will get from $_SERVER['REQUEST_URI'], first stripping base url.
+		 */
+		 
+		public function extractParamsFromPath()
+		{
+			$this->mapPathToProperty(0, "base");
+			$this->mapPathToProperty(1, "action");
+			
+			// if the action has any specific parmaters it defines beyond base and action
+			// they are extracted here
+			
+			$objMap = Xerxes_Framework_ControllerMap::getInstance()->path_map_obj();
+			$map = $objMap->indexToPropertyMap($this->getProperty("base"), $this->getProperty("action"));
+      
+			foreach ( $map as $index => $property)
+			{
+				 $this->mapPathToProperty( $index, $property );		 
+			}
+		}
+		
+		/**
+		 * Take the http request path and translate it to an array. 
+		 * will get from $_SERVER['REQUEST_URI'], first stripping base url.
+		 * If path was just "/", array will be empty. 
+		 *
+		 * @return array		array of path elements
+		 */
+		
+		private function pathElements()
+		{
+			// lazy load
+			
+			if (! $this->path_elements )
+			{
+				$objRegistry = Xerxes_Framework_Registry::getInstance(); 
+				
+				$request_uri = $this->getServer('REQUEST_URI');
+
+				// get the path by stripping off base url + querystring
+				
+				$configBase = $objRegistry->getConfig('BASE_WEB_PATH', true);
+				$request_uri = str_replace($configBase . "/", "", $request_uri );
+				$request_uri = Xerxes_Parser::removeRight($request_uri, "?");
+				
+				// now get the elements
+				
+				$path_elements = explode('/', $request_uri);
+				
+				// for an empty path, we'll have one empty string element, get rid of it.
+				
+				if ( strlen($path_elements[0]) == 0)
+				{
+					unset($path_elements[0]);
+				}
+				
+				$this->path_elements = $path_elements;
+			}
+			
+			return $this->path_elements;
+		}
+		
+		/**
+		 * Maps and inserts the path elements into the request parameters
+		 *
+		 * @param int $path_index			the numbered path element
+		 * @param string $property_name		the property name
+		 */
+		
+		public function mapPathToProperty($path_index, $property_name)
+		{
+			$path_elements = $this->pathElements();
+			
+			if (array_key_exists($path_index, $path_elements))
+			{
+				$this->setProperty((string) $property_name, (string) $path_elements[$path_index]);
+			}
+		}
+		
+		/**
 		 * Add a value to the request parameters
 		 *
 		 * @param string $key		key to identify the value
-		 * @param string $val		value to add
-		 * @param bool $bolArray	[optional] set to true will convert property to array and push value into it
+		 * @param string $value		value to add
+		 * @param bool $bolArray	[optional] set to true will ensure property is set as array
 		 */
 		
-		public function setProperty($key, $val, $bolArray = false)
+		public function setProperty($key, $value, $bolArray = false)
 		{
-			if ( $bolArray == true )
+			if ( array_key_exists($key, $this->arrParams) )
 			{
-				if ( array_key_exists($key, $this->arrParams) && ! is_array($this->arrParams[$key]) )
+				// if there is an existing element, then we always push in the
+				// the new value into an array, first converting the exising value
+				// to an array if it is not already one 
+				
+				if ( ! is_array($this->arrParams[$key]) )
 				{
 					$this->arrParams[$key] = array($this->arrParams[$key]);
 				}
 				
-				array_push($this->arrParams[$key], $val);
+				array_push($this->arrParams[$key], $value);
+			}
+			elseif ( $bolArray == true )
+			{
+				// no existing value in property, but the calling code says 
+				// this *must* be added as an array, so make it an array, if not one already
+				
+				if ( ! is_array($value) )
+				{
+					$value = array($value);
+				}
+				
+				$this->arrParams[$key] = $value;
 			}
 			else
 			{
-				$this->arrParams[$key] = $val;
+				$this->arrParams[$key] = $value;
 			}
 		}
 
@@ -152,7 +261,6 @@
 			if ( array_key_exists( $key, $this->arrParams ) )
 			{
 				// if the value is requested as array, but is not array, make it one!
-				
 				if ( $bolArray == true && ! is_array($this->arrParams[$key]))
 				{
 					return array($this->arrParams[$key]);
@@ -196,24 +304,6 @@
 		
 		public function getServer($key)
 		{
-			// IIS fix, since it doesn't hold value for request_uri
-			
-			if ( $key == "REQUEST_URI")
-			{				
-				if (!isset($_SERVER['REQUEST_URI']))
-				{
-				    if (!isset($_SERVER['QUERY_STRING']))
-				    {
-				        $_SERVER['REQUEST_URI'] = $_SERVER["SCRIPT_NAME"];
-				    }
-				    else
-				    {
-				        $_SERVER['REQUEST_URI'] = $_SERVER["SCRIPT_NAME"] .'?'.
-				        $_SERVER['QUERY_STRING'];
-				    }
-				}
-			}
-			
 			if ( array_key_exists($key, $_SERVER) )
 			{
 				return $_SERVER[$key];
@@ -325,14 +415,20 @@
 		/**
 		 * Extract a value from the master xml
 		 *
-		 * @param string $xpath				xpath expression to the element(s)
-		 * @param array $arrNamespaces		key / value pair of url / namespace reference for the xpath
-		 * @param string $strReturnType		[optional] return query results as 'DOMNODELIST' or 'ARRAY', otherwise as sting
-		 * @return mixed					if no value in return type, then single value returned as string					
+		 * @param string $xpath				[optional] xpath expression to the element(s)
+		 * @param array $arrNamespaces		[optional] key / value pair of url / namespace reference for the xpath
+		 * @param string $strReturnType		[optional] return query results as 'DOMNODELIST' or 'ARRAY', otherwise as 'sting'
+		 * @return mixed					if no paramaters set, returns entire xml as DOMDocument
+		 * 									otherwise returns a string, unless value supplied in return type
 		 */
 		
-		public function getData($xpath, $arrNamespaces = null, $strReturnType = null)
+		public function getData($xpath = null, $arrNamespaces = null, $strReturnType = null)
 		{
+			if ( $xpath == null && $arrNamespaces == null && $strReturnType == null )
+			{
+				return $this->xml;
+			}
+			
 			$strReturnType = strtoupper($strReturnType);
 			
 			if ( $strReturnType != null && $strReturnType != "DOMNODELIST" && $strReturnType != "ARRAY")
@@ -385,7 +481,107 @@
 				return $objNodes->item(0)->nodeValue;
 			}
 		}
+		
+		/**
+		 * Generate a url for a given action. Used by commands to generate action
+		 * urls, rather than calculating manually. This method returns different
+		 * urls depending on whether rewrite is on in config. Will use
+		 * configured base_web_path if available, which is best.	
+		 * 
+		 * @param array $properties	Keys are xerxes request properties, values are 
+		 * the values. For an action url, "base" and "action" are required as keys.
+		 * Properties will be put in path or query string of url, if pretty-urls are turned on
+		 * in config.xml, as per action configuration in actions.xml.
+		 *
+		 * @return string url 
+		 */
+		
+		public function url_for($properties)
+		{
+			if (! array_key_exists("base", $properties))
+			{
+				throw new Exception("no base/section supplied in url_for.");
+			}
+			
+			$config	= Xerxes_Framework_Registry::getInstance();
+			
+			$base_path = $config->getConfig('BASE_WEB_PATH', false, ".") . "/";
+			$extra_path = "";
+			$query_string = "";
+			
+			$base = $properties["base"];
+			$action = null;
+			
+			if ( array_key_exists( "action", $properties))
+			{
+				$action = $properties["action"];
+			}
+			
+			if ( $config->getConfig('REWRITE', false) )
+			{
+				// base in path
+				
+				$extra_path_arr[0] = urlencode($base);
+				unset($properties["base"]);
+				
+				// action in path
+				
+				if ( array_key_exists("action", $properties))
+				{
+					$extra_path_arr[1] = urlencode($action);
+					unset($properties["action"]);
+				}
+				
+				// action-specific stuff
+				
+				foreach ( array_keys($properties) as $property )
+				{
+					$controller_map = Xerxes_Framework_ControllerMap::getInstance();
+					$index = $controller_map->path_map_obj()->indexForProperty( $base, $action, $property );
+					
+					if ( $index )
+					{
+						$extra_path_arr[$index] = urlencode($properties[$property]);
+						unset($properties[$property]);
+					}
+				}
+				
+				$extra_path = implode("/", $extra_path_arr);
+			}
+			
+			// everything else, which may be everything if it's ugly uris,
 
+			$query_string = http_build_query($properties, '', '&amp;');
+			$assembled_path = $base_path . $extra_path;
+			
+			if ( $query_string )
+			{
+				$assembled_path = $assembled_path . '?' . $query_string;
+			}
+			
+			return $assembled_path;
+		}
+
+		/**
+		 * Check if the user has explicitly logged in
+		 *
+		 * @return bool		true if user is named and logged in, otherwise false
+		 */
+		
+		public function hasLoggedInUser()
+		{
+			// this logic used to be in view in includes.xsl. factored out here. 
+			
+			if ( array_key_exists("role", $_SESSION) && $_SESSION["role"] != 'local')
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+    
 		/**
 		 * Retrieve master XML and all request paramaters
 		 * 
@@ -393,7 +589,7 @@
 		 *
 		 * @return DOMDocument
 		 */
-				
+		
 		public function toXML($bolHideServer = false)
 		{
 			// add the url parameters and session and server global arrays
@@ -409,9 +605,15 @@
 			
 			// add the session global array
 			
-			$objSession = $objXml->createElement("session");			
+			$objSession = $objXml->createElement("session");
 			$objXml->documentElement->appendChild($objSession);
 			$this->addElement($objXml, $objSession, $_SESSION);
+			
+			// we might add some calculated thigns to xml that aren't actually
+			// stored in session. add a boolean for hasloggedinuser too.
+		
+			$el = $objXml->createElement("hasLoggedInUser", $this->hasLoggedInUser());
+			$objSession->appendChild( $el );
 			
 			// add the server global array, but only if the request
 			// asks for it, for security purposes

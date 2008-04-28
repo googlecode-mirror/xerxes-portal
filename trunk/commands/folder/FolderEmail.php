@@ -57,8 +57,6 @@
 			// get configuration options
 			
 			$configFromEmail = $objRegistry->getConfig("EMAIL_FROM", false, null);
-			$configBaseURL = $objRegistry->getConfig("BASE_URL", true);
-			$configRewrite = $objRegistry->getConfig("REWRITE", false, false);
 			
 			if ( $strEmail == null ) throw new Exception("Please enter an email address", 1);
 			
@@ -79,20 +77,21 @@
 				$headers .= "From: $configFromEmail \r\n";
 			}
 			
-			// send it out
+			// send the user back out, so they don't step on this again
 			
 			if ( mail( $strEmail, $strSubject, $strBody, $headers) )
 			{
-				if ( $configRewrite == false )
-				{
-					$objRequest->setRedirect( $configBaseURL . "/?base=folder&username=" . 
-						urlencode($strUsername) . "&action=output_email&message=done");
-				}
-				else
-				{
-					$objRequest->setRedirect( $configBaseURL . "/folder/" . 
-						urlencode($strUsername) . "?action=output_email&message=done");
-				}
+				// send the user back out, so they don't step on this again
+			
+				$arrParams = array(
+					"base" => "folder",
+					"action" => "output_email",
+					"username" => $strUsername,
+					"message" =>  "done"
+				);
+				
+				$url = $objRequest->url_for($arrParams);
+				$objRequest->setRedirect($url);	
 				
 				return 1;
 			}

@@ -5,7 +5,6 @@
  *
  */
 
-
 abstract class Xerxes_Command_Folder extends Xerxes_Framework_Command
 {	
 	/**
@@ -20,14 +19,12 @@ abstract class Xerxes_Command_Folder extends Xerxes_Framework_Command
 	{
 		if ( $objRequest->getProperty("username") == "" || $objRequest->getProperty("username") != $objRequest->getSession("username") )
 		{
-			if ( $objRegistry->getConfig("REWRITE", false, false) == false )
-			{
-				return $objRegistry->getConfig("BASE_URL") . "/?base=folder&action=home&username=" . urlencode($objRequest->getSession("username"));
-			}
-			else 
-			{
-				return $objRegistry->getConfig("BASE_URL") . "/folder/" . urlencode($objRequest->getSession("username"));
-			}
+			return $objRequest->url_for( 
+				array( "base" => "folder",
+					"action" => "home",
+					"username" => $objRequest->getSession("username")
+					)
+				);
 		}
 	}
 }
