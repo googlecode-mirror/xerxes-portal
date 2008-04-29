@@ -276,7 +276,7 @@
 			$objXml = new DOMDocument();
 			$objXml = $this->objSearch->allDatabases($this->configInstitute, $this->configIPAddress, true);
 			
-			$strXml = Xerxes_Parser::transform($objXml, "xsl/marc-to-database.xsl");
+			$strXml = Xerxes_Parser::transform($objXml, "xsl/utility/marc-to-database.xsl");
 			
 			// get just the database info
 			

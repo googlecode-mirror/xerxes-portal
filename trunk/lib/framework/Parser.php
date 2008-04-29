@@ -32,8 +32,8 @@
 				$objXml->loadXML($xml);
 				$xml = $objXml;
 			}
-      
-      $objXsl = self::generateBaseXsl($strXsltPath);
+			
+			$objXsl = self::generateBaseXsl($strXsltPath);
 
 			// create XSLT Processor
 			$objProcessor = new XsltProcessor();
