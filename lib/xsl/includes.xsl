@@ -312,7 +312,9 @@
 		<span class="sessionAction">
 			<img src="{$base_include}/images/folder.gif" name="folder" width="17" height="15" border="0" id="folder" alt="folder"/>
 			<xsl:text> </xsl:text>
-			<a href="{$base_url}/?base=folder&amp;return={$return}">My Saved Records</a>
+			<a href="{$base_url}/?base=folder&amp;return={$return}">
+      <xsl:attribute name="href"><xsl:value-of select="navbar/element[@id='saved_records']/url" /></xsl:attribute>
+      My Saved Records</a>
 		</span>	
 	</div>
 </xsl:template>
