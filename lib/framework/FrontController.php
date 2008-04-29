@@ -67,20 +67,21 @@
 				$arrPath = explode("/", $path_to_parent); array_pop($arrPath); array_pop($arrPath);
 				$path_to_parent = implode("/", $arrPath);
         
-        
-				
-				// full web path
+				// set the app directory -- the index.php better have set 
+				// the working directory to itself as required!        
+        		
+        		$working_dir = getcwd();
+        		$working_dir = str_replace("\\", "/", $working_dir);
+		
+  				// full web path
 				
 				$base_path = $objRegistry->getConfig('BASE_WEB_PATH', true);
 				$web = "http://" . $objRequest->getServer('SERVER_NAME') . $base_path;
-				
+
 				// register these values
-					
+
 				$objRegistry->setConfig("PATH_PARENT_DIRECTORY", $path_to_parent);
-        // That was the library/../ directory. Find and set the app directory
-        // too. The index.php better have set the working directory to itself
-        // as required!        
-        $objRegistry->setConfig("APP_DIRECTORY", getcwd() );
+        		$objRegistry->setConfig("APP_DIRECTORY", $working_dir);
 				$objRegistry->setConfig("BASE_URL", $web, true);
 
 				
