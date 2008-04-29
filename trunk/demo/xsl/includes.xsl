@@ -41,8 +41,7 @@
 </xsl:template>
 
 <xsl:template name="footer_div">
-    <h2 style="margin-top: 0;"><a style="color:white" class="footer" href="{$base_url}">WELCOME TO XERXES</a></h2>
-    <p style="color:white">Header content. Customize by editing {Xerxes_app}/xsl/includes.xsl to
+    <p>Footer content. Customize by editing {Xerxes_app}/xsl/includes.xsl to
   override the template.</p>
 </xsl:template>
 
