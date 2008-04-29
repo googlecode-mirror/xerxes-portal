@@ -668,7 +668,9 @@
 					// cabi: just point back to site (10/30/07)
 					// google scholar: just point back to site (3/26/07) 
 					// amazon: just point back to site (3/20/08)
-					// abc-clio: just point back to site (7/30/07)						
+					// abc-clio: just point back to site (7/30/07)
+					// engineering village (evii): has unreliable full-text links in a consortium environment (4/1/08)
+					// wiley interscience: wiley does not limit full-text links only to your subscription (4/29/08)
 					// gale: only has full-text if 'text available' note in 500 field (9/7/07)
 
 					
@@ -678,6 +680,7 @@
 					     stristr($this->strSource, "AMAZON") || 
 					     stristr($this->strSource, "ABCCLIO") || 
 					     stristr($this->strSource, "EVII") || 
+					     stristr($this->strSource, "WILEY_IS") ||
 					     ( strstr($this->strSource, "GALE") && ! in_array("Text available", $this->arrNotes) ) )
 					{
 						$bolToc = true;
@@ -1218,7 +1221,7 @@
 			$strKev = "url_ver=Z39.88-2004";
 
 			if ( $strResolver != "" ) $strBaseUrl = $strResolver . "?";
-			if ( $strReferer != "" ) $strKev .= "&rfr_id=info:sid/" .  urlencode($strReferer . " -- " . $this->strDatabaseName );
+			if ( $strReferer != "" ) $strKev .= "&rfr_id=info:sid/" .  urlencode($strReferer . " ( " . $this->strDatabaseName . ")" );
 			
 			// add simple referrant values
 			
