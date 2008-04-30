@@ -48,8 +48,8 @@
 				</div>
 			</div>
 			<div class="citationNote">
-				Need to include a note here with some simple caveats about not trusting this
-				thing fully.
+				These citations are software generated and may contain errors. 
+				To verify accuracy, check the appropriate style guide.
 			</div>
 		</div>
 		

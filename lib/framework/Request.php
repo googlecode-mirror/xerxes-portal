@@ -53,7 +53,7 @@
 						{
 							$strKey = substr($strParam, 0, $iEqual);
 							$strValue = substr($strParam, $iEqual + 1);
-						
+							
 							$this->setProperty($strKey, urldecode($strValue) );
 						}
 					}
@@ -176,6 +176,11 @@
 				// now get the elements
 				
 				$path_elements = explode('/', $request_uri);
+				
+				for ( $x = 0; $x < count($path_elements); $x++ )
+				{
+					$path_elements[$x] = urldecode($path_elements[$x]);
+				}
 				
 				// for an empty path, we'll have one empty string element, get rid of it.
 				
