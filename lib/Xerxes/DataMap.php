@@ -500,11 +500,14 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 	 *
 	 * @param mixed $id			[optional] null returns all database, array returns a list of databases by id, 
 	 * 							string id returns single id
+   * @param array $args   Hash of extra arguments named by keys:
+   *              "query" =>  user-entered query to search for dbs. 
 	 * @return array			array of Xerxes_Data_Database objects
 	 */
 	
-	public function getDatabases($id = null)
+	public function getDatabases($id = null, $query = null )
 	{
+    
 		$arrDatabases = array();
 		$arrResults = array();
 		
@@ -515,38 +518,49 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		          " LEFT OUTER JOIN xerxes_database_alternate_titles ON xerxes_databases.metalib_id = xerxes_database_alternate_titles.database_id " .
 		          " LEFT OUTER JOIN xerxes_database_alternate_publishers ON xerxes_databases.metalib_id = xerxes_database_alternate_publishers.database_id ";
 		
-		if ( $id != null )
-		{
-			if ( is_array($id) )
-			{
-				// databases specified by an array of ids
-				
-				$arrParams = array();
-				$strSQL .= " WHERE ";
-				
-				for ($x = 0; $x < count($id); $x++)
-				{
-					if ( $x > 0 )
-					{
-						$strSQL .= " OR ";
-					}
+    if ( $id != null && is_array($id) )
+    {
+      // databases specified by an array of ids
+      
+      $arrParams = array();
+      $strSQL .= " WHERE ";
+      
+      for ($x = 0; $x < count($id); $x++)
+      {
+        if ( $x > 0 )
+        {
+          $strSQL .= " OR ";
+        }
 
-					$strSQL .= "xerxes_databases.metalib_id = :id$x ";
-					$arrParams[":id$x"] = $id[$x];
-				}
-				
-				$strSQL .= " ORDER BY xerxes_databases.metalib_id";
-				
-				$arrResults = $this->select($strSQL, $arrParams);
-			}
-			else
-			{
-				// single database query
-				
-				$strSQL .= " WHERE xerxes_databases.metalib_id = :id ";
-				$arrResults= $this->select($strSQL, array(":id" => $id));
-			}
-		}
+        $strSQL .= "xerxes_databases.metalib_id = :id$x ";
+        $arrParams[":id$x"] = $id[$x];
+      }
+      
+      $strSQL .= " ORDER BY xerxes_databases.metalib_id";
+      
+      $arrResults = $this->select($strSQL, $arrParams);
+    }
+    elseif ( $id != null && ! is_array($id))
+    {
+      // single database query
+      
+      $strSQL .= " WHERE xerxes_databases.metalib_id = :id ";
+      $arrResults= $this->select($strSQL, array(":id" => $id));
+    }		
+    elseif ( $query != null ) 
+    {   // string query for databases.
+        // we match title, descrition, or keywords. 
+        $strSQL .= "WHERE xerxes_databases.title_display REGEXP :query1 OR xerxes_databases.title_full REGEXP :query2 OR xerxes_databases.description REGEXP :query3 OR xerxes_database_keywords.keyword REGEXP :query4 ";
+      $strSQL .= " ORDER BY UPPER(title_display) ";
+      
+      $sqlQuery = '[[:<:]]' . $query . '[[:>:]]';
+      $arrParams[":query1"] = $sqlQuery;
+      $arrParams[":query2"] = $sqlQuery;
+      $arrParams[":query3"] = $sqlQuery;
+      $arrParams[":query4"] = $sqlQuery;
+      
+      $arrResults = $this->select($strSQL, $arrParams);
+    }
 		else
 		{
 			// all databases, sorted alphabetically
@@ -555,6 +569,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 			$arrResults= $this->select($strSQL);
 		}
 		
+    // Read SQL and transform to internal data objs. 
 		if ( $arrResults != null )
 		{
 			$objDatabase = new Xerxes_Data_Database();

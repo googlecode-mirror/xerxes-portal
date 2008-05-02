@@ -35,12 +35,15 @@
 
 
 <xsl:template name="header_div">
-    <h2 style="margin-top: 0;"><a style="color:white" class="footer" href="{$base_url}">WELCOME TO XERXES</a></h2>
+    <h2 style="margin-top: 0;"><a style="color:white" class="footer" href="{$base_url}">WELCOME TO <xsl:value-of select="/knowledge_base/config/application_name" /></a></h2>
     <p style="color:white">Header content. Customize by editing {Xerxes_app}/xsl/includes.xsl to
   override the template.</p>
 </xsl:template>
 
 <xsl:template name="footer_div">
+    <p><a>
+    <xsl:attribute name="href"><xsl:value-of select="navbar/element[@id='database_list']/url" /></xsl:attribute>
+    Database List (A-Z)</a></p>
     <p>Footer content. Customize by editing {Xerxes_app}/xsl/includes.xsl to
   override the template.</p>
 </xsl:template>
