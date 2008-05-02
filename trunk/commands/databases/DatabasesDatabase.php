@@ -1,7 +1,9 @@
 <?php	
 	
 	/**
-	 * Display information for a single database
+	 * Search for databases in the Xerxes db, and put database
+   * info in xml. Can be: a single database; all databases (for a-z list);
+   * or a database query. 
 	 * 
 	 * @author David Walker
 	 * @copyright 2008 California State University
@@ -28,10 +30,20 @@
 			$objXml->loadXML("<databases />");
 			
 			$strID = $objRequest->getProperty("id");
-			
+			$strQuery = $objRequest->getProperty("query");
 			$objData = new Xerxes_DataMap();
-			$arrResults = $objData->getDatabases($strID);
-			
+      $arrResults;
+      if ( $strID ) {
+        $arrResults = $objData->getDatabases($strID);
+      }
+      elseif ( $strQuery ) {
+        $arrResults = $objData->getDatabases(null, $strQuery);
+      }
+			else {
+        # all database.
+        $arrResults = $objData->getDatabases();
+      }
+      
 			foreach ( $arrResults as $objDatabaseData )
 			{
 				$objDatabase = $objXml->createElement("database");

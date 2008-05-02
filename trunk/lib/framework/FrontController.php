@@ -53,7 +53,13 @@
 					error_reporting(E_ALL);
 					ini_set('display_errors', '1');
 				}
-
+        
+        ####################
+        #   DEFAULTS       #
+        ####################
+        // Make sure application_name is passthrough, and has a value.
+        $objRegistry->setConfig("application_name",    $objRegistry->getConfig("application_name", false, "Xerxes"), true);
+        
 				####################
 				#     SET PATHS    #
 				####################

@@ -10,13 +10,18 @@
 	 
 	<configuration>
 		
-	<!-- BASIC CONFIGURATION -->
+	<!-- BASIC CONFIGURATION -->  
 	
 		<!-- The base web server path for your xerxes installation. Highly
-		     reccommended to set this if you are using RESTy URL functionality.
+		     reccommended to set this if you are using config rewrite=true urls.
 		     NO trailing slash. If you have installed at web root, empty string. -->
 		
 		<config name="base_web_path">/demo</config>
+    
+    <!-- What is your application called? Will be used in some view templates.
+         Also used to uniquely identify multiple instances of the same application on the server, specifically to prevent users authenticated in one instance to be automatically authenticated in another instance -->
+			 
+		<config name="application_name" pass="true">Xerxes Demo</config>
 		
 		<!-- turns the display of php errors and warnings on in a production system; value = true | false -->
 		
@@ -28,10 +33,6 @@
 			 
 		<config name="local_ip_range"></config>
 		
-		<!-- use this to uniquely identify multiple instances of the same application on the server, specifically to
-		     prevent users authenticated in one instance to be automatically authenticated in another instance -->
-			 
-		<config name="application_name">demo</config>
 		
 		<!-- the uri to the authentication page; here just in case you need to change it for some reason -->
 		
@@ -182,7 +183,7 @@
 			 out when users email records to themselves.  This is advantageous, since these URLs will likely 
 			 be copied-and-pasted or otherwise used by users as stable links, and mod_rewrite will allow
 			 for shorter and simpler URLs for that purpose. If you do not want to use Apache's mod_rewrite
-			 module or choose not to install a URL rewriting ISAPI module in IIS, then set this value to false. -->
+			 module or choose not to install a URL rewriting ISAPI module in IIS, then set this value to false. If you are using rewrite true, you need to set up redirects in your webserver, see teh demo/.htaccess file for specification. -->
 		
 		<config name="rewrite" pass="true">false</config>		
 		

@@ -87,9 +87,19 @@
 				<view type="php">custom/databases_jump.php</view>
 			</action>
 			<action name="alphabetical">
+        <!-- would you like a search box on your A-Z list? If not, remove
+             or comment out the next <request> line. -->
+        <request name="show_search_box">true</request>
 				<command>DatabasesDatabase</command>
-				<view>xsl/databases_alphabetical.xsl</view>
+      	<view>xsl/databases_alphabetical.xsl</view>
 			</action>
+      <action name="find">
+        <request name="show_alpha_links">false</request>
+        <request name="show_search_box">true</request>
+        <command>DatabasesDatabase</command>
+        <command>DatabasesRedirectOneResult</command>
+      	<view>xsl/databases_alphabetical.xsl</view>
+      </action>
 			<action name="database">
 				<command>DatabasesDatabase</command>
 				<pathParamMap>

@@ -92,7 +92,7 @@
   Contents of on-screen header. Generally overridden in local stylesheet.
 -->
 <xsl:template name="header_div" >
-    <h2 style="margin-top: 0;"><a style="color:white" class="footer" href="{$base_url}">WELCOME TO XERXES</a></h2>
+    <h2 style="margin-top: 0;"><a style="color:white" class="footer" href="{$base_url}">WELCOME TO <xsl:value-of select="/knowledge_base/config/application_name" /></a></h2>
     <p style="color:white">Header content. Customize by editing {Xerxes_app}/xsl/includes.xsl to
   override the template.</p>
 </xsl:template>
@@ -106,20 +106,90 @@
   override the template. 
 </xsl:template>
 
+
+<!--
+  TEMPLATE: page_name
+  A heading that can be used to label this page. Some views use this for
+  their heading, others don't. 
+  The "title" template always uses this to construct an html title. 
+-->
+<xsl:template name="page_name">
+  <xsl:variable name="folder">
+		<xsl:text>Saved Records</xsl:text>
+	</xsl:variable>
+  
+	<xsl:choose>
+		<xsl:when test="request/action = 'subject' or request/actions/action = 'subject'">
+	     <xsl:text></xsl:text><xsl:value-of select="//category/@name" />
+		</xsl:when>
+		<xsl:when test="request/action = 'alphabetical'">
+			<xsl:text>Databases A-Z</xsl:text>
+		</xsl:when>
+    <xsl:when test="request/base = 'databases' and request/action = 'find'">
+      <xsl:text>Find a Database</xsl:text>
+    </xsl:when>
+		<xsl:when test="request/action = 'database'">
+			<xsl:text></xsl:text><xsl:value-of select="//title_display" />
+		</xsl:when>
+		<xsl:when test="request/action = 'hits'">
+			<xsl:value-of select="results/search/context" /><xsl:text>: </xsl:text>
+			<xsl:value-of select="results/search/pair/query" /><xsl:text>: </xsl:text>
+			<xsl:text>Searching</xsl:text>
+		</xsl:when>
+		<xsl:when test="request/action = 'results' or request/action = 'facet'">
+			<xsl:value-of select="results/search/context" /><xsl:text>: </xsl:text>
+			<xsl:value-of select="results/search/pair/query" /><xsl:text>: </xsl:text>
+			<xsl:text>Results </xsl:text>
+			( <xsl:value-of select="summary/range" /> )
+		</xsl:when>
+		<xsl:when test="request/action = 'record'">
+			<xsl:value-of select="results/search/context" /><xsl:text>: </xsl:text>
+			<xsl:value-of select="results/search/pair/query" /><xsl:text>: </xsl:text>
+			<xsl:text>Record</xsl:text>
+		</xsl:when>
+		<xsl:when test="request/action = 'home'">
+			<xsl:value-of select="$folder" />
+		</xsl:when>
+		<xsl:when test="request/action = 'login'">
+			<xsl:text>Login</xsl:text>
+		</xsl:when>
+		<xsl:when test="request/action = 'logout'">
+			<xsl:text>Logout</xsl:text>
+		</xsl:when>
+		<xsl:when test="request/action = 'output_email'">
+			<xsl:text>Email</xsl:text>
+		</xsl:when>
+		<xsl:when test="request/action = 'output_export_endnote'">
+			<xsl:text>Download to Endnote</xsl:text>
+		</xsl:when>
+		<xsl:when test="request/action = 'output_export_text'">
+			<xsl:value-of select="$folder" /><xsl:text>: Download to Text File</xsl:text>
+		</xsl:when>
+		<xsl:when test="request/action = 'full'">
+			<xsl:value-of select="$folder" /><xsl:text>: Record</xsl:text>
+		</xsl:when>    
+	</xsl:choose>
+	
+</xsl:template>
+
 <!-- 	
 	TEMPLATE: TITLE
 	Sets the title ( the one that appears in the browser title bar)
-	for each page based on the action
+  Takes the 'header' and adds more stuff to it.  
 -->
-
 <xsl:template name="title">
+    <xsl:variable name="page_title"><xsl:call-template name="page_name" /></xsl:variable>    
+    <xsl:value-of select="config/application_name" />
+    <xsl:if test="$page_title != ''">
+      <xsl:text>: </xsl:text>
+      <xsl:value-of select="$page_title" />
+    </xsl:if>    
+</xsl:template>
+
+
+<xsl:template name="title_old">
 	
-	<xsl:variable name="base">
-		<xsl:text>Xerxes Demo</xsl:text>
-	</xsl:variable>
-	<xsl:variable name="folder">
-		<xsl:text>Xerxes Demo: Saved Records</xsl:text>
-	</xsl:variable>
+  <xsl:variable name="base" select="config/application_name" />
 	
 	<xsl:choose>
 		<xsl:when test="request/action = 'categories' or request/actions/action = 'categories'">
@@ -131,6 +201,9 @@
 		<xsl:when test="request/action = 'alphabetical'">
 			<xsl:value-of select="$base" /><xsl:text>: Databases A-Z</xsl:text>
 		</xsl:when>
+    <xsl:when test="request/base = 'databases' and request/action = 'find'">
+      <xsl:value-of select="$base" /><xsl:text>: Find a Database</xsl:text>
+    </xsl:when>
 		<xsl:when test="request/action = 'database'">
 			<xsl:value-of select="$base" /><xsl:text>: </xsl:text><xsl:value-of select="//title_display" />
 		</xsl:when>
@@ -174,6 +247,9 @@
 		<xsl:when test="request/action = 'full'">
 			<xsl:value-of select="$folder" /><xsl:text>: Record</xsl:text>
 		</xsl:when>
+    <xsl:otherwise>
+      <xsl:value-of select="$base" />
+    </xsl:otherwise>
 	</xsl:choose>
 	
 </xsl:template>
@@ -189,13 +265,16 @@
 	<xsl:variable name="context_url" 	select="results/search/context_url" />
 	<xsl:variable name="username"		select="request/session/username" />
 	<xsl:variable name="return"			select="request/return" />
+  <xsl:variable name="return_title" select="request/return_title" />
 	<xsl:variable name="group"			select="request/group" />
 	<xsl:variable name="resultset" 		select="request/resultset" />
 	<xsl:variable name="start_record" 	select="request/startrecord" />
 	<xsl:variable name="records_per_page" 	select="config/records_per_page" />
     
 	<xsl:variable name="folder" select="navbar/element[@id = 'saved_records']/url" />
-		
+	
+  
+	
 	<xsl:choose>
 		<xsl:when test="request/action = 'categories'">
 			<span class="breadcrumbHere">Home</span>
@@ -218,7 +297,22 @@
 		<xsl:when test="request/action = 'alphabetical'">
 			<span class="breadcrumbHere">Databases A-Z</span>
 		</xsl:when>
+    <xsl:when test="request/base = 'databases' and request/action = 'find'">
+      <xsl:call-template name="page_name" />
+    </xsl:when>
 		<xsl:when test="request/action = 'database'">
+    
+      <xsl:if test="$return != ''">          
+          <a href="{$return}">
+            <xsl:choose>
+              <xsl:when test="$return_title != ''">
+                <xsl:value-of select="$return_title" />
+              </xsl:when>
+              <xsl:otherwise><xsl:text>Databases</xsl:text></xsl:otherwise>
+            </xsl:choose>
+          </a> &gt;
+      </xsl:if>
+    
 			<span class="breadcrumbHere"><xsl:value-of select="//title_display" /></span>
 		</xsl:when>
 		<xsl:when test="request/action = 'hits'">
@@ -312,7 +406,7 @@
 		<span class="sessionAction">
 			<img src="{$base_include}/images/folder.gif" name="folder" width="17" height="15" border="0" id="folder" alt="folder"/>
 			<xsl:text> </xsl:text>
-			<a href="{$base_url}/?base=folder&amp;return={$return}">
+			<a>
       <xsl:attribute name="href"><xsl:value-of select="navbar/element[@id='saved_records']/url" /></xsl:attribute>
       My Saved Records</a>
 		</span>	
@@ -380,6 +474,33 @@
 		</xsl:if>
 	</xsl:for-each>
 
+</xsl:template>
+
+<!-- 
+  TEMPLATE: databases_search_box
+  Search box that appears sometimes on databases_alphabetical.xsl. May
+  appear other places eventually.
+  -->
+<xsl:template name="databases_search_box">
+<!-- would be nice if the form action was rewrite aware, but couldn't figure
+out a way to do that that wasn't awful. -->
+<form method="GET" action="./">
+	<div class="searchBox">  
+    <input type="hidden" name="base" value="databases" />
+    <input type="hidden" name="action" value="find" />
+  
+    <label for="query">List databases matching: </label> 
+    <input id="query" name="query" type="text" size="32">
+      <xsl:attribute name="value"><xsl:value-of select="request/query" /></xsl:attribute>
+    </input>  
+    <input type="submit" value="GO" />
+   <xsl:if test="request/action != 'alphabetical'">
+     <hr /><a>
+     <xsl:attribute name="href"><xsl:value-of select="navbar/element[@id='database_list']/url" /></xsl:attribute>
+     Show all Databases (A-Z)</a>
+   </xsl:if>
+  </div>
+</form>
 </xsl:template>
 
 <!-- 	
