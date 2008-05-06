@@ -255,7 +255,7 @@
 			
 			$strBase = "";
 			
-			if ( strstr($strBase, "?") )
+			if ( strstr($strSortQuery, "?") )
 			{
 				$strBase="$strSortQuery&";
 			}
