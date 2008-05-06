@@ -253,6 +253,18 @@
 			$objXml = new DOMDocument();
 			$objXml->loadXML("<sort_display />");
 			
+			$strBase = "";
+			
+			if ( strstr($strBase, "?") )
+			{
+				$strBase="$strSortQuery&";
+			}
+			else
+			{
+				$strBase="$strSortQuery?sortKeys";
+			}
+			
+			
 			$x = 1;
 			
 			foreach ( $arrOptions as $key => $value )
@@ -267,7 +279,7 @@
 				{
 					$objHere = $objXml->createElement("option", $value);
 					$objHere->setAttribute("active", "false");
-					$objHere->setAttribute("link", Xerxes_Parser::escapeXml("$strSortQuery&sortKeys=$key"));
+					$objHere->setAttribute("link", Xerxes_Parser::escapeXml("$strBase=$key"));
 					$objXml->documentElement->appendChild($objHere);			
 				}
 				

@@ -54,11 +54,13 @@
 					ini_set('display_errors', '1');
 				}
         
-        ####################
-        #   DEFAULTS       #
-        ####################
-        // Make sure application_name is passthrough, and has a value.
-        $objRegistry->setConfig("application_name",    $objRegistry->getConfig("application_name", false, "Xerxes"), true);
+				####################
+				#   DEFAULTS       #
+				####################
+				
+				// make sure application_name is passthrough, and has a value.
+				
+				$objRegistry->setConfig("application_name", $objRegistry->getConfig("application_name", false, "Xerxes"), true);
         
 				####################
 				#     SET PATHS    #
@@ -298,8 +300,15 @@
 				// provide enough flexibility; php page will inherit the xml dom document &
 				// can go from there
 						
-				else /*( file_exists( $objControllerMap->getView() ) )(*/
+				else
 				{
+					// content type set in action.xml
+					
+					if ( $objRequest->getProperty("content-type") != "" )
+					{
+						header('Content-type: ' . $objRequest->getProperty("content-type") );						
+					}
+					
 					if ( $objControllerMap->getViewType() != "xsl" && $objControllerMap->getViewType() != null )
 					{
 						require_once($objControllerMap->getView());
@@ -309,10 +318,6 @@
 						echo $objPage->transform($objXml, $objControllerMap->getView(), null, true);
 					}
 				}
-				/*else
-				{
-					throw new Exception("view file '" . $objControllerMap->getView() . "' does not exist");
-				}*/
 			}
 			
 			// we'll catch all exceptions here, but the Xerxes_Error class can perform actions

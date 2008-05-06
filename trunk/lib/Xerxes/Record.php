@@ -3080,8 +3080,11 @@
 			
 			foreach ($arrUnique as $strISSN )
 			{
-				$strISSN = str_replace("-", "", $strISSN);
-				array_push($arrClean, $strISSN);
+				if ( $strISSN != null )
+				{
+					$strISSN = str_replace("-", "", $strISSN);
+					array_push($arrClean, $strISSN);
+				}
 			}
 			
 			return $arrClean;
@@ -3093,8 +3096,11 @@
 			
 			foreach ($arrUnique as $strIsbn )
 			{
-				$strIsbn = str_replace("-", "", $strIsbn);
-				array_push($arrClean, $strIsbn);
+				if ( $strIsbn != "" )
+				{
+					$strIsbn = str_replace("-", "", $strIsbn);
+					array_push($arrClean, $strIsbn);
+				}
 			}
 			
 			return $arrClean;
