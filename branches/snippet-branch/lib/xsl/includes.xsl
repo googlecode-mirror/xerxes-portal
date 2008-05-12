@@ -558,6 +558,33 @@
   </xsl:for-each>
 </xsl:template>
 
+<!-- 
+  TEMPLATE: databases_search_box
+  Search box that appears sometimes on databases_alphabetical.xsl. May
+  appear other places eventually.
+  -->
+<xsl:template name="databases_search_box">
+<!-- would be nice if the form action was rewrite aware, but couldn't figure
+out a way to do that that wasn't awful. -->
+<form method="GET" action="./">
+	<div class="searchBox">  
+    <input type="hidden" name="base" value="databases" />
+    <input type="hidden" name="action" value="find" />
+  
+    <label for="query">List databases matching: </label> 
+    <input id="query" name="query" type="text" size="32">
+      <xsl:attribute name="value"><xsl:value-of select="request/query" /></xsl:attribute>
+    </input>  
+    <input type="submit" value="GO" />
+   <xsl:if test="request/action != 'alphabetical'">
+     <hr /><a>
+     <xsl:attribute name="href"><xsl:value-of select="navbar/element[@id='database_list']/url" /></xsl:attribute>
+     Show all Databases (A-Z)</a>
+   </xsl:if>
+  </div>
+</form>
+</xsl:template>
+
 
 <!-- 	
 	TEMPLATE: FOLDER_BRIEF_RESULTS
