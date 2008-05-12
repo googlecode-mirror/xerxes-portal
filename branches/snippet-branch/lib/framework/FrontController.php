@@ -287,6 +287,8 @@
 				// you can append 'format=xml' to the querystring to have this controller spit back
 				// the response in plain xml, which can be useful in some cases, like maybe AJAX?
 				
+
+        
 				if ( $objRequest->getProperty("format") == "xml" )
 				{
 					header('Content-type: text/xml');
@@ -299,7 +301,8 @@
 				// this will be an xslt file, but could be a php file if the xslt does not
 				// provide enough flexibility; php page will inherit the xml dom document &
 				// can go from there
-						
+
+        
 				else
 				{
 					// content type set in action.xml
@@ -311,11 +314,38 @@
 					
 					if ( $objControllerMap->getViewType() != "xsl" && $objControllerMap->getViewType() != null )
 					{
+
 						require_once($objControllerMap->getView());
 					}
 					else
 					{	
-						echo $objPage->transform($objXml, $objControllerMap->getView(), null, true);
+
+						$output = $objPage->transform($objXml, $objControllerMap->getView(), null, true);
+            
+
+            
+            if ( $objRequest->getProperty("disp_embed") == "true") {
+              //Strip out the <DOCTYPE>, since this is partial HTML
+              //snippet that shouldn't have one. 
+              $output = ereg_replace('<!DOCTYPE[^>]*>', '', $output);
+            }
+            if ( $objRequest->getProperty("disp_embed_js") == "true") {
+              header('Content-type: text/javascript; charset=UTF-8');
+
+              //Tricky, all of this is going to go in a script tag,
+              //we want to output our html with document.write. 
+              $lines = explode("\n", $output);
+              $new_lines = array("// Javascript output. ");
+              foreach ($lines as $line ) {
+                array_push( $new_lines, "document.write('" . $line . "');" );
+              }
+              $output = implode("\n", $new_lines);
+            }
+            if ( $objRequest->getProperty("format") == "source" ) {
+              header('Content-type: text/plain; charset=UTF-8');
+            }
+            
+            echo $output;
 					}
 				}
 			}

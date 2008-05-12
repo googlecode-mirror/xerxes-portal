@@ -57,14 +57,14 @@
 	<link href="{$base_include}/css/xerxes-print.css" rel="stylesheet" type="text/css" media="print" />
 	<xsl:call-template name="header" />
 	</head>
-	<body>
+	<body class="xerxes">
 	<xsl:if test="/metasearch">
 		<xsl:attribute name="onLoad">loadFolders()</xsl:attribute>
 	</xsl:if>
 	<xsl:if test="request/action = 'subject'">
 		<xsl:attribute name="onLoad">document.forms.form1.query.focus()</xsl:attribute>
 	</xsl:if>
-	
+	<div id="xerxes_outer_wrapper">
 	<div id="header">
     <xsl:call-template name="header_div" />
 	</div>
@@ -82,6 +82,7 @@
 	<div id="footer">
 		<xsl:call-template name="footer_div" />
 	</div>
+  </div>
 	</body>
 	</html>
 	
@@ -131,6 +132,10 @@
 		<xsl:when test="request/action = 'database'">
 			<xsl:text></xsl:text><xsl:value-of select="//title_display" />
 		</xsl:when>
+    <xsl:when test="request/base = 'embed' and request/action = 'gen_subject'">
+      <xsl:text>Create Snippet for: </xsl:text> 
+      <xsl:value-of select="//category/@name" />
+    </xsl:when>
 		<xsl:when test="request/action = 'hits'">
 			<xsl:value-of select="results/search/context" /><xsl:text>: </xsl:text>
 			<xsl:value-of select="results/search/pair/query" /><xsl:text>: </xsl:text>
@@ -368,6 +373,19 @@
 			<a href="{$folder}">My Saved Records</a> &gt; 
 			<span class="breadcrumbHere">Record</span>
 		</xsl:when>
+    <xsl:when test="request/base = 'embed' and request/action = 'gen_subject'">
+      <a>
+        <xsl:attribute name="href">
+          <xsl:value-of select="//category/url" />
+        </xsl:attribute>
+        <xsl:value-of select="//category/@name" />
+      </a>
+      &gt;
+      <span class="breadcrumbHere">Create Snippet</span>
+    </xsl:when>
+    <xsl:otherwise>
+      <span class="breadcrumbHere"><xsl:call-template name="page_name" /></span>
+    </xsl:otherwise>
 	</xsl:choose>
 
 </xsl:template>
@@ -415,51 +433,42 @@
 
 <!-- 	
 	TEMPLATE: SEARCH_BOX
-	Search box that appears in the 'hits' and 'results' page.  The one that lives in the 
-	databases_subject.xsl template is seperate, but should look the same 
-	( NOTE: maybe these should be combined? )
+	Search box that appears in the 'hits' and 'results' page, as well as databases_subject.xsl. 
 -->
 
 
 <xsl:template name="search_box">
 	
 	<div class="searchBox">
-		<xsl:for-each select="//pair">
-			<xsl:variable name="query" select="query" />
+    
+			<xsl:variable name="query" select="//search/pair[1]/query" />
 				<label for="field">Search</label><xsl:text> </xsl:text>
 				<select id="field" name="field">
-					<option value="WRD">all fields</option>	
-					<xsl:choose>
-						<xsl:when test="field = 'WTI'">
-							<option value="WTI" selected="selected">title</option>
-						</xsl:when>
-						<xsl:otherwise>
-							<option value="WTI">title</option>
-						</xsl:otherwise>
-					</xsl:choose>
-					<xsl:choose>
-						<xsl:when test="field = 'WAU'">
-							<option value="WAU" selected="selected">author</option>
-						</xsl:when>
-						<xsl:otherwise>
-							<option value="WAU">author</option>
-						</xsl:otherwise>
-					</xsl:choose>	  
-					<xsl:choose>
-						<xsl:when test="field = 'WSU'">
-							<option value="WSU" selected="selected">subject</option>
-						</xsl:when>
-						<xsl:otherwise>
-							<option value="WSU">subject</option>
-						</xsl:otherwise>
-					</xsl:choose>		  
-				  
-				  
+          <option value="WRD">all fields</option>	
+          <option value="WTI">
+            <xsl:if test="//search/pair[1]/field = 'WTI'">
+              <xsl:attribute name="selected">seleted</xsl:attribute>
+            </xsl:if>
+            title
+          </option>
+          <option value="WAU">
+            <xsl:if test="//search/pair[1]/field = 'WAU'">
+              <xsl:attribute name="selected">selected</xsl:attribute>
+            </xsl:if>
+            author              
+          </option>
+          <option value="WSU">
+            <xsl:if test="//search/pair[1]/field = 'WSU'">
+              <xsl:attribute name="selected">selected</xsl:attribute>
+            </xsl:if>
+            subject
+          </option>          				  
 				</select>
 				<xsl:text> </xsl:text><label for="query">for</label><xsl:text> </xsl:text>
 				<input id="query" name="query" type="text" size="32" value="{$query}" /><xsl:text> </xsl:text>
-				<input type="submit" name="Submit" value="GO" />
-		</xsl:for-each>
+
+
+      <input type="submit" name="Submit" value="GO" />
 
 		<xsl:if test="results/search/spelling != ''">
 			<xsl:variable name="spell_url" select="results/search/spelling_url" />
@@ -476,32 +485,79 @@
 
 </xsl:template>
 
-<!-- 
-  TEMPLATE: databases_search_box
-  Search box that appears sometimes on databases_alphabetical.xsl. May
-  appear other places eventually.
-  -->
-<xsl:template name="databases_search_box">
-<!-- would be nice if the form action was rewrite aware, but couldn't figure
-out a way to do that that wasn't awful. -->
-<form method="GET" action="./">
-	<div class="searchBox">  
-    <input type="hidden" name="base" value="databases" />
-    <input type="hidden" name="action" value="find" />
+<!-- TEMPLATE: subject_databases_list
+  used to list databases, generally on a search form, on databases_subject.xsl,
+  and embed_subject.xsl -->
+<xsl:template name="subject_databases_list">
+    <!-- default to true: -->
+  <xsl:param name="should_show_checkboxes" select="true()" /> 
   
-    <label for="query">List databases matching: </label> 
-    <input id="query" name="query" type="text" size="32">
-      <xsl:attribute name="value"><xsl:value-of select="request/query" /></xsl:attribute>
-    </input>  
-    <input type="submit" value="GO" />
-   <xsl:if test="request/action != 'alphabetical'">
-     <hr /><a>
-     <xsl:attribute name="href"><xsl:value-of select="navbar/element[@id='database_list']/url" /></xsl:attribute>
-     Show all Databases (A-Z)</a>
-   </xsl:if>
-  </div>
-</form>
+  <xsl:for-each select="category/subcategory">
+    <fieldset class="subjectSubCategory">
+    <legend><xsl:value-of select="@name" /></legend>
+    
+    <xsl:variable name="subcategory" select="position()" />
+  
+    <table summary="this table lists databases you can search" class="subjectCheckList">
+    <xsl:for-each select="database">
+      <xsl:variable name="id_meta" select="metalib_id" />
+  
+      <tr valign="top">		
+        <td>
+          <xsl:choose>
+            <xsl:when test="not($should_show_checkboxes)">
+            <xsl:text> </xsl:text>
+            </xsl:when>
+            <xsl:when test="searchable = 1">
+              <xsl:choose>
+                <xsl:when test="subscription = '1' and /knowledge_base/request/session/role = 'guest'">
+                  <img src="{$base_url}/images/lock.gif" alt="restricted to campus users only" />
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:element name="input">
+                    <xsl:attribute name="name">database</xsl:attribute>
+                    <xsl:attribute name="id"><xsl:value-of select="metalib_id" /></xsl:attribute>
+                    <xsl:attribute name="value"><xsl:value-of select="metalib_id" /></xsl:attribute>
+                    <xsl:attribute name="type">checkbox</xsl:attribute>
+                    <xsl:if test="$subcategory = 1 and searchable/@count &lt;= 10">
+                      <xsl:attribute name="checked">checked</xsl:attribute>
+                    </xsl:if>
+                  </xsl:element>
+                </xsl:otherwise>
+              </xsl:choose>
+            </xsl:when>
+            <xsl:otherwise>
+              <img src="{$base_url}/images/link-out.gif" alt="non-searchable database" />
+            </xsl:otherwise>
+          </xsl:choose>
+        </td>
+        <td>
+          <xsl:element name="label">
+            <xsl:attribute name="for"><xsl:value-of select="metalib_id" /></xsl:attribute>
+            
+            <xsl:variable name="link_native_home" select="php:function('urlencode', string(link_native_home))" />
+            
+            <a>
+            <xsl:attribute name="href"><xsl:call-template name="proxy_link" /></xsl:attribute>
+              <xsl:value-of select="title_display" />
+            </a>
+            &#160;<a>
+              <xsl:attribute name="href"><xsl:value-of select="url" /></xsl:attribute>
+              <img alt="info" src="images/info.gif" >
+                <xsl:attribute name="src"><xsl:value-of select="/*/config/base_url" />/images/info.gif</xsl:attribute>
+              </img>
+            </a>
+          </xsl:element>
+        </td>
+      </tr>
+    </xsl:for-each>	
+    </table>
+    
+    </fieldset>
+    
+  </xsl:for-each>
 </xsl:template>
+
 
 <!-- 	
 	TEMPLATE: FOLDER_BRIEF_RESULTS
@@ -614,6 +670,9 @@ out a way to do that that wasn't awful. -->
 		<meta http-equiv="refresh" content="6" />
 	</xsl:if>
 	
+  <!-- prototype -->
+  <script src="{$base_include}/javascript/prototype-1.6.0.2.js" language="javascript" type="text/javascript"></script>	
+  
 	<script src="{$base_include}/javascript/save.js" language="javascript" type="text/javascript"></script>	
 	<script language="javascript" type="text/javascript">
 

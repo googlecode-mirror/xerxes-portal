@@ -1,5 +1,6 @@
 <?php	
 	
+
 	/**
 	 * Display a single 'subject' in Xerxes, which is an inlined display of a subcategories
 	 * 
@@ -39,10 +40,20 @@
 			if ( $objCategoryData != null )
 			{
 				$objXml->documentElement->setAttribute("name", $objCategoryData->name);
-				$x = 1;
+        $objXml->documentElement->setAttribute("normalized", $objCategoryData->normalized );
 				
-				// the attributes of the subcategory
-				
+        // Standard URL for the category        
+        $arrParams = array(
+          "base" => "databases",
+          "action" => "subject",
+          "subject" => $objCategoryData->normalized
+        );					
+        $url = Xerxes_Parser::escapeXml($objRequest->url_for($arrParams));					
+        $objElement = $objXml->createElement("url", $url); 
+        $objXml->documentElement->appendChild($objElement);
+      
+				// the attributes of the subcategories
+				$x = 1;        
 				foreach ( $objCategoryData->subcategories as $objSubData )
 				{
 					$objSubCategory = $objXml->createElement("subcategory");

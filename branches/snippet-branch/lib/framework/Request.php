@@ -497,11 +497,12 @@
 		 * the values. For an action url, "base" and "action" are required as keys.
 		 * Properties will be put in path or query string of url, if pretty-urls are turned on
 		 * in config.xml, as per action configuration in actions.xml.
+     * @param boolean $full Optional, force full absolute url with hostname. 
 		 *
 		 * @return string url 
 		 */
 		
-		public function url_for($properties)
+		public function url_for($properties, $full = false)
 		{
 			if (! array_key_exists("base", $properties))
 			{
@@ -509,8 +510,14 @@
 			}
 			
 			$config	= Xerxes_Framework_Registry::getInstance();
-			
+			      
 			$base_path = $config->getConfig('BASE_WEB_PATH', false, ".") . "/";
+      // Should we generate full absolute urls with hostname? Indicated by a
+      // reuqest property, set automatically by snippet embed controllers. 
+      if ( $this->getProperty("gen_full_urls") == 'true' || $full ) {
+        $base_path = $config->getConfig('BASE_URL', true) . "/"; 
+      }
+      
 			$extra_path = "";
 			$query_string = "";
 			

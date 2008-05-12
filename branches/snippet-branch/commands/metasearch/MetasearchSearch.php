@@ -38,6 +38,7 @@
 		 	$strQuery = $objRequest->getProperty("query");
 		 	$strField = $objRequest->getProperty("field");
 		 	$arrDatabases = $objRequest->getProperty("database", true);
+      $strSubject = $objRequest->getProperty("subject");     
 		 	$strSpell = $objRequest->getProperty("spell");
 		 	$strContext = $objRequest->getProperty("context");
 		 	$strContextUrl = $objRequest->getProperty("context_url");
@@ -49,6 +50,33 @@
 		 	$configYahooID = $objRegistry->getConfig("YAHOO_ID", false, "calstate" );
 		 	$configSearchLimit = $objRegistry->getConfig("SEARCH_LIMIT", true);
 		 	
+      // If subject is given but not databases, automatically find
+      // databases for subject, from first sub-category. 
+      if ( $strSubject && ! $arrDatabases ) {                  
+        $search_limit = $objRegistry->getConfig("SEARCH_LIMIT", true);
+        
+        $arrDatabases = array();
+        $objData = new Xerxes_DataMap();
+        $objSubject = $objData->getSubject($strSubject);
+        
+        // Did we find a subject that has subcategories?
+        if ( $objSubject != null && $objSubject->subcategories != null && count($objSubject->subcategories) > 0) {
+          $subs = $objSubject->subcategories;
+          $objSubcategory = $subs[0];
+          $index = 0;
+          // Get databases up to search limit from first subcat,
+          // add to $arrDatabases. 
+          foreach ( $objSubcategory->databases as $objDatabaseData ) {
+            if ($objDatabaseData->searchable == 1 ) {
+              array_push( $arrDatabases, $objDatabaseData->metalib_id );           
+              $index++;
+            }
+            if ($index >= $search_limit) { 
+              break; 
+            }
+          }
+        }        
+      }
 		 	
 		 	// ensure a query and field
 		 	

@@ -35,17 +35,26 @@
 
 
 <xsl:template name="header_div">
-    <h2 style="margin-top: 0;"><a style="color:white" class="footer" href="{$base_url}">WELCOME TO <xsl:value-of select="/knowledge_base/config/application_name" /></a></h2>
-    <p style="color:white">Header content. Customize by editing {Xerxes_app}/xsl/includes.xsl to
-  override the template.</p>
+    <h2 style="margin-top: 0;"><a style="color:white" class="footer" href="{$base_url}">
+    <img src="{$base_url}/images/jhsearch-banner.jpg" >
+      <xsl:attribute name="alt">    
+        <xsl:value-of select="/knowledge_base/config/application_name" />
+      </xsl:attribute>
+    </img>            
+    </a></h2>
 </xsl:template>
 
 <xsl:template name="footer_div">
     <p><a>
     <xsl:attribute name="href"><xsl:value-of select="navbar/element[@id='database_list']/url" /></xsl:attribute>
-    Database List (A-Z)</a></p>
-    <p>Footer content. Customize by editing {Xerxes_app}/xsl/includes.xsl to
-  override the template.</p>
+    [Database List (A-Z)]</a>
+    <xsl:if test="request/base = 'databases' and request/action = 'subject'">
+      <xsl:variable name="subject" select="//category/@normalized" />
+       <xsl:text> </xsl:text>
+       <a href="./embed/gen_subject/{$subject}">[Generate Snippet]</a>
+    </xsl:if>
+    
+    </p>
 </xsl:template>
 
 <!-- CSU demo examples
