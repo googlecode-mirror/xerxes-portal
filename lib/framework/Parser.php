@@ -99,6 +99,11 @@
 			{	
 				self::addImportReference($generated_xsl, $distro_path, $importInsertionPoint);
 			}
+      else {
+        //Need to directly import distro includes.xsl, since we're not
+        //importing a distro file that will reference it. 
+        self::addImportReference($generated_xsl, $distro_xsl_dir . "xsl/includes.xsl", $importInsertionPoint);
+      }
 			
 			// include local
 			
