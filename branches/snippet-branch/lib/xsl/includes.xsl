@@ -136,6 +136,10 @@
       <xsl:text>Create Snippet for: </xsl:text> 
       <xsl:value-of select="//category/@name" />
     </xsl:when>
+    <xsl:when test="request/base = 'embed' and request/action = 'gen_database'">
+      <xsl:text>Create Snippet for: </xsl:text>
+      <xsl:value-of select="//title_display" />
+    </xsl:when>
 		<xsl:when test="request/action = 'hits'">
 			<xsl:value-of select="results/search/context" /><xsl:text>: </xsl:text>
 			<xsl:value-of select="results/search/pair/query" /><xsl:text>: </xsl:text>
@@ -383,6 +387,16 @@
       &gt;
       <span class="breadcrumbHere">Create Snippet</span>
     </xsl:when>
+    <xsl:when test="request/base = 'embed' and request/action = 'gen_database'">
+      <a>
+        <xsl:attribute name="href">
+            <xsl:value-of select="//database/url" />
+        </xsl:attribute>
+        <xsl:value-of select="//title_display" />
+      </a>
+      &gt;
+      <span class="breadcrumbHere">Create Snippet</span>
+    </xsl:when>
     <xsl:otherwise>
       <span class="breadcrumbHere"><xsl:call-template name="page_name" /></span>
     </xsl:otherwise>
@@ -538,7 +552,7 @@
             <xsl:variable name="link_native_home" select="php:function('urlencode', string(link_native_home))" />
             
             <a>
-            <xsl:attribute name="href"><xsl:call-template name="proxy_link" /></xsl:attribute>
+            <xsl:attribute name="href"><xsl:value-of select="xerxes_native_link_url" /></xsl:attribute>
               <xsl:value-of select="title_display" />
             </a>
             &#160;<a>
@@ -716,7 +730,7 @@ out a way to do that that wasn't awful. -->
 	Determines whether native link to database should be proxied or not
 	based on subscription flag in the database record, used on a number of pages
 -->
-
+<!-- obsoleted. But left here for a second while until I'm SURE of that. 
 <xsl:template name="proxy_link">
 	
 	<xsl:variable name="link_native_home" select="php:function('urlencode', string(link_native_home))" />
@@ -735,7 +749,7 @@ out a way to do that that wasn't awful. -->
 	</xsl:choose>
 
 
-</xsl:template>
+</xsl:template> -->
 
 <!--
 
@@ -800,6 +814,42 @@ out a way to do that that wasn't awful. -->
 		</div>
 		
 	</xsl:for-each>
+</xsl:template>
+
+<!-- TEMPLATE: embed_js_update
+     just some fancy Prototype javascript to auto-update on snippet/embed
+     generator pages. Assumes a form with id "generator".
+  -->
+<xsl:template name="embed_js_update">
+ <!-- Use prototype to have fancy fancy auto-update of example when
+       form changes. -->
+  <script type="text/javascript">
+    function updateExample() {
+    
+      var query_hash = Form.serialize($("generator"), true);
+      // Remove base and action, they point to ourselves, the generator.            
+      delete query_hash["base"];
+      delete query_hash["action"];
+      //prototype Hash converts back to a query string. 
+      var query_string = new Hash(query_hash).toQueryString ();
+      
+      var complete_url = '<xsl:value-of select="embed_info/raw_embedded_action_url" />&amp;disp_embed=true&amp;' + query_string;
+      
+      // Update the content
+      new Ajax.Updater('example_content',complete_url, 
+      { method:'get'});
+      
+      // Update our instruction urls
+      $("direct_url_content").update( complete_url );
+      // Sorry about weird double-escaping, in an XSLT->js world, that's
+      // how it goes sometimes. 
+      $("js_widget_content").update('&amp;lt;script type="text/javascript" charset="utf-8" src="' + complete_url + '&amp;disp_embed_js=true" &amp;gt;&amp;lt;/script&amp;gt;');
+      $("view_source_link").href = complete_url + "&amp;format=source";
+    }
+    Event.observe(window, 'load', function() {
+      new Form.EventObserver($("generator"), updateExample);
+    });
+  </script>
 </xsl:template>
 
 </xsl:stylesheet>

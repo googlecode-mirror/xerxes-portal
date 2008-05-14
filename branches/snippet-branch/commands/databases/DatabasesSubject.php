@@ -87,17 +87,24 @@
 						}
 						
 						// add url to access xerxes database page
-						
 						$arrParams = array(
 							"base" => "databases",
 							"action" => "database",
 							"id" => $objDatabaseData->metalib_id
-						);
-						
-						$url = Xerxes_Parser::escapeXml($objRequest->url_for($arrParams));
-						
+						);						
+						$url = Xerxes_Parser::escapeXml($objRequest->url_for($arrParams));						
 						$objElement = $objXml->createElement("url", $url);
 						$objDatabase->appendChild($objElement);
+            
+            //And one for the via-Xerxes native link. 
+            $objElement = $objXml->createElement("xerxes_native_link_url",
+                $objRequest->url_for( array(
+                  "base" => "databases",
+                  "action" => "proxy",
+                  "database" => htmlentities($objDatabaseData->metalib_id)
+                )));
+            $objDatabase->appendChild($objElement);
+            
 						$objSubCategory->appendChild($objDatabase);
 					}
 					

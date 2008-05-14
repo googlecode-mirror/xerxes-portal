@@ -6,7 +6,7 @@
 	 * 
 	 */
 	
-	class Xerxes_Command_EmbedGenSubject extends Xerxes_Command_Embed
+	class Xerxes_Command_EmbedGenDatabase extends Xerxes_Command_Embed
 	{
     
     
@@ -19,10 +19,11 @@
 		
 		public function doExecute( Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry )
 		{
-       //Define url params for subject display action, and call helper.
+       //Define url params for display action, and call helper, that
+       // does all the real work. 
        $url_params = array( "base" => "embed",
-                           "action" => "subject",
-                           "subject" => $objRequest->getProperty("subject"));
+                           "action" => "database",
+                           "id" => $objRequest->getProperty("id"));
        //The meet of it in this helper method in superclass!
        $this->doExecuteHelper($objRequest, $objRegistry, $url_params);
        return 1;

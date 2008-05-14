@@ -74,14 +74,6 @@
 				</pathParamMap>
 				<view>xsl/databases_subject.xsl</view>
 			</action>
-      <action name="subject_embed_gen">
-        <command>DatabasesSubject</command>
-        <command directory="snippets">SnippetsGenSubject</command>
-				<pathParamMap>
-					<mapEntry pathIndex="2" property="subject"/>
-				</pathParamMap>
-        <view>xsl/snippets_gen_subject.xsl</view>
-      </action>
 			<action name="old-subject">
 				<command>DatabasesCategories</command>
 				<view type="php">custom/databases_old-subject.php</view>
@@ -116,6 +108,9 @@
 				<view>xsl/databases_database.xsl</view>		
 			</action>
 			<action name="proxy">
+        <pathParamMap>
+					<mapEntry pathIndex="2" property="database"/>
+				</pathParamMap>
 				<command>DatabasesProxy</command>
 				<view />
 			</action>
@@ -127,12 +122,20 @@
     
     <section name="embed" directory="embed" namespace="Xerxes" documentElement="xerxes">
       <action name="gen_subject">
-        <command directory="databases">DatabasesSubject</command>
-        <command>EmbedGenSubject</command>
-				<pathParamMap>
+        <pathParamMap>
 					<mapEntry pathIndex="2" property="subject"/>
 				</pathParamMap>
+        <command directory="databases">DatabasesSubject</command>
+        <command>EmbedGenSubject</command>
         <view type="xsl">xsl/embed/embed_gen_subject.xsl</view>
+      </action>
+      <action name="gen_database">
+        <pathParamMap>
+					<mapEntry pathIndex="2" property="id"/>
+				</pathParamMap>
+        <command directory="databases">DatabasesDatabase</command>
+        <command>EmbedGenDatabase</command>
+        <view>xsl/embed/embed_gen_database.xsl</view>
       </action>
       <action name="subject">
         <command directory="databases">DatabasesSubject</command>
@@ -141,6 +144,13 @@
 				</pathParamMap>
         <view>xsl/embed/embed_subject.xsl</view>
       </action>
+      <action name="database">
+        <command directory="databases">DatabasesDatabase</command>
+        <pathParamMap>
+          <mapEntry pathIndex="2" property="id" />
+        </pathParamMap>
+        <view>xsl/embed/embed_database.xsl</view>
+      </action>  
     </section>
     
 		<section name="authenticate" directory="authenticate" namespace="Xerxes" documentElement="authenticate">

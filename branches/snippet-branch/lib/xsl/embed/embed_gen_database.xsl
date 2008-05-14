@@ -28,10 +28,10 @@
 
 <!-- js to update example immediately -->
 <xsl:call-template name="embed_js_update" />
-    
- <div id="headingBox">
+
+<div id="headingBox">
     <h2><xsl:call-template name="page_name" /></h2>
-    <p>Include a snippet for this subject on your own web page.</p>
+    <p>Include a snippet for this database on your own web page.</p>
  </div>
 
  <div id="snippet_generator">
@@ -39,47 +39,28 @@
     <div id="snippet_option_column">
   
     <form method="GET" id="generator">
-      <input type="hidden" name="base" value="embed" />
-      <input type="hidden" name="action" value="gen_subject" />
-      <input type="hidden" name="subject">
-         <xsl:attribute name="value"><xsl:value-of select="request/subject" /></xsl:attribute>
+      <input type="hidden" name="base" id="base" value="embed" />
+      <input type="hidden" name="action" id="action" value="gen_database" />
+      <input type="hidden" name="id">
+         <xsl:attribute name="value"><xsl:value-of select="request/id" /></xsl:attribute>
       </input>
   
       <fieldset id="options">
         <legend>Options</legend>
         <p>How would you like the included snippet to look?</p>
         <table>
-        
-          <tr class="optionRow">
-          <td><h4><label for="disp_show_title">Show title?</label></h4></td>
-          <td><select id="disp_show_title" name="disp_show_title">
-            <option value="true">
-            <xsl:if test="request/disp_show_title = 'true'">
-              <xsl:attribute name="selected">selected</xsl:attribute>
-            </xsl:if>
-            yes
-            </option>
-            <option value="false">
-            <xsl:if test="request/disp_show_title = 'false'">
-              <xsl:attribute name="selected">selected</xsl:attribute>
-            </xsl:if>      
-            no
-            </option>
-          </select>
-          </td>
-          </tr>
     
           <tr class="optionRow">
-          <td><h4><label for="disp_show_search">Show search box?</label></h4></td> 
-          <td><select name="disp_show_search" id="disp_show_search">
+          <td><h4><label for="disp_show_search">Show database description?</label></h4></td> 
+          <td><select name="disp_show_desc" id="disp_show_search">
             <option value="true">
-            <xsl:if test="request/disp_show_search = 'true'">
+            <xsl:if test="request/disp_show_desc = 'true'">
               <xsl:attribute name="selected">selected</xsl:attribute>
             </xsl:if>
             yes
             </option>
             <option value="false">
-            <xsl:if test="request/disp_show_search = 'false'">
+            <xsl:if test="request/disp_show_desc = 'false'">
               <xsl:attribute name="selected">selected</xsl:attribute>
             </xsl:if>      
             no
@@ -89,16 +70,16 @@
           </tr>
     
           <tr class="optionRow">
-          <td><h4><label for="disp_show_subcategories">Show database listing?</label></h4></td> 
-          <td><select name="disp_show_subcategories" id="disp_show_subcategories">
+          <td><h4><label for="disp_show_info_link">Show info button?</label></h4></td> 
+          <td><select name="disp_show_info_link" id="disp_show_info_link">
             <option value="true">
-            <xsl:if test="request/disp_show_subcategories = 'true'">
+            <xsl:if test="request/disp_show_info_link = 'true'">
               <xsl:attribute name="selected">selected</xsl:attribute>
             </xsl:if>
             yes
             </option>
             <option value="false">
-            <xsl:if test="request/disp_show_subcategories = 'false'">
+            <xsl:if test="request/disp_show_info_link = 'false'">
               <xsl:attribute name="selected">selected</xsl:attribute>
             </xsl:if>      
             no

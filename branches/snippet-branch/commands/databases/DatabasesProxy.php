@@ -1,7 +1,10 @@
 <?php	
 	
 	/**
-	 * Determines if a link should be proxied and the resulting URL that would result from that
+	 * Determines if a link should be proxied and the resulting URL that would result from that.
+   * Can also be used with a "database" request property to link to a database;
+   * will be redirected to native home url for that db, either with proxy or
+   * not as appropriate. 
 	 * 
 	 * @author David Walker
 	 * @copyright 2008 California State University
@@ -70,6 +73,10 @@
 					}
 					
 					$strConstructPattern = $objDatabaseData->link_native_record;
+          if ( ! $arrParams ) {
+            //Link straight to native DB
+            $strUrl = $objDatabaseData->link_native_home;
+          }          
 				}
 			}
 			else

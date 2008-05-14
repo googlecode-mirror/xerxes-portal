@@ -30,7 +30,7 @@
         <div id="searchArea">
         
         <xsl:if test="$disp_show_title">
-          <div class="subject">
+          <div class="heading">
               <h3 class="xerxes_heading"><xsl:value-of select="//category/@name" /></h3>
           </div>
         </xsl:if>
@@ -69,7 +69,7 @@
     <!-- First a way that's technically HTML illegal (style tag in body)
          but works: -->
     <style type="text/css">
-       @import url(<xsl:value-of select="$base_include"/>/css/xerxes.css);
+       @import url(<xsl:value-of select="$base_include"/>/css/xerxes-embeddable.css);
     </style>
     
     <!-- now a way that's legal, but requires javascript, and won't

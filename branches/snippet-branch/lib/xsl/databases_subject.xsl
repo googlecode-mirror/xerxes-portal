@@ -58,6 +58,4 @@
 	
 </xsl:template>
 
-
-
 </xsl:stylesheet>

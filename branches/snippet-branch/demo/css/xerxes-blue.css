@@ -1,11 +1,8 @@
 /**
  * Xerxes Blue Design July 2007
  *
- * All selectors begin with #xerxes_outer_wrapper. Surround template
- * wraps all content in #xerxes_outer_wrapper. But this way when using
- * the embed html snippet function, this CSS will only apply to xerxes
- * embedded content, not other content that may be on a page. 
- *
+ *  See also xerxes-blue-embeddable.css, used specifically for embedding a stylesheet with a snippet. 
+
  *
  * @author David Walker
  * @copyright 2007 California State University
@@ -16,48 +13,48 @@
  
 /** BASIC ELEMENTS **/
 
-body.xerxes { font-family: Verdana, Geneva, Arial, helvetica, sans-serif; margin: 0px; padding: 0px; font-size: 12px; height:100%; }
+body { font-family: Verdana, Geneva, Arial, helvetica, sans-serif; margin: 0px; padding: 0px; font-size: 12px; height:100%; }
 
-#xerxes_outer_wrapper td { font-family: Verdana, Geneva, Arial, helvetica, sans-serif; font-size: 12px;}
-#xerxes_outer_wrapper th { font-family: Verdana, Geneva, Arial, helvetica, sans-serif; font-size: 12px;}
-#xerxes_outer_wrapper h1 { font-family: Arial, Verdana, Geneva, Arial, helvetica, sans-serif; color: #3366cc; font-size: 22px; font-weight: bold; margin: 2px; }
-#xerxes_outer_wrapper h2 { font-family: Arial, Verdana, Geneva, Arial, helvetica, sans-serif; color: #000; font-size: 16px; font-weight: bold; margin-bottom: 2px; }
-#xerxes_outer_wrapper h3 { font-family: Arial, Verdana, Geneva, Arial, helvetica, sans-serif; color: #000; font-size: 14px; font-weight: bold; margin-bottom: 2px; }
-#xerxes_outer_wrapper h4 {font-family: Arial, Verdana, Geneva, Arial, helvetica, sans-serif; color: #000; font-size: 12px; font-weight: bold; margin-bottom: 2px; }
-#xerxes_outer_wrapper h5 { font-style:italic; }
-#xerxes_outer_wrapper  ul { margin:.5em 0 1.25em; padding:0 0px; list-style:none; }
-#xerxes_outer_wrapper ul li {	background:url(../images/icon_arrow_sm.gif) no-repeat 2px .25em; margin:0; padding:0 0 3px 16px; margin-bottom:3px; line-height:1.4em; }
-#xerxes_outer_wrapper legend { font-family: Arial, Verdana, Geneva, Arial, helvetica, sans-serif; color: #3366cc; font-size: 14px; font-weight: bold; margin-bottom: 2px; }
-#xerxes_outer_wrapper label { margin: 0px; padding: 0px; }
-#xerxes_outer_wrapper fieldset { border: 1px solid #CCCCCC; padding: 10px; }
-#xerxes_outer_wrapper a { text-decoration: none; }
-#xerxes_outer_wrapper a:visited { color: #0000CC; text-decoration: none; }
-#xerxes_outer_wrapper a:active { color: #FFCC33; text-decoration: none; }
-#xerxes_outer_wrapper a:hover { text-decoration: underline; }
-#xerxes_outer_wrapper a img{  border: 0px; }
+td { font-family: Verdana, Geneva, Arial, helvetica, sans-serif; font-size: 12px;}
+th { font-family: Verdana, Geneva, Arial, helvetica, sans-serif; font-size: 12px;}
+h1 { font-family: Arial, Verdana, Geneva, Arial, helvetica, sans-serif; color: #3366cc; font-size: 22px; font-weight: bold; margin: 2px; }
+h2 { font-family: Arial, Verdana, Geneva, Arial, helvetica, sans-serif; color: #000; font-size: 16px; font-weight: bold; margin-bottom: 2px; }
+h3 { font-family: Arial, Verdana, Geneva, Arial, helvetica, sans-serif; color: #000; font-size: 14px; font-weight: bold; margin-bottom: 2px; }
+h4 {font-family: Arial, Verdana, Geneva, Arial, helvetica, sans-serif; color: #000; font-size: 12px; font-weight: bold; margin-bottom: 2px; }
+h5 { font-style:italic; }
+ ul { margin:.5em 0 1.25em; padding:0 0px; list-style:none; }
+ul li {	background:url(../images/icon_arrow_sm.gif) no-repeat 2px .25em; margin:0; padding:0 0 3px 16px; margin-bottom:3px; line-height:1.4em; }
+legend { font-family: Arial, Verdana, Geneva, Arial, helvetica, sans-serif; color: #3366cc; font-size: 14px; font-weight: bold; margin-bottom: 2px; }
+label { margin: 0px; padding: 0px; }
+fieldset { border: 1px solid #CCCCCC; padding: 10px; }
+a { text-decoration: none; }
+a:visited { color: #0000CC; text-decoration: none; }
+a:active { color: #FFCC33; text-decoration: none; }
+a:hover { text-decoration: underline; }
+a img{  border: 0px; }
 
 
 
 /** STRUCTURE **/
 
-#xerxes_outer_wrapper #skipnav { 
+#skipnav { 
 	position: absolute; 
 	top: -1000px; 
 }
-#xerxes_outer_wrapper #header {
+#header {
 	background-color: #386ace;
 	margin: 0px;
 	height: 67px;
 }
 
-#xerxes_outer_wrapper #breadcrumb {
+#breadcrumb {
 	padding: 10px;
 	padding-left: 20px;
 	background-color: #EFEFEF;
 	font-size: 90%;
 	color: #666666;
 }
-#xerxes_outer_wrapper #container {
+#container {
 	/*clear:both;
 	width: 900px;*/
 	margin-top: 0px;
@@ -66,31 +63,31 @@ body.xerxes { font-family: Verdana, Geneva, Arial, helvetica, sans-serif; margin
 	line-height: 130%;
 }
 
-#xerxes_outer_wrapper #databasesAlpha {
+#databasesAlpha {
 	margin: 30px;
 }
-#xerxes_outer_wrapper #sidebar {
+#sidebar {
 	padding: 10px;
 	margin-left: 545px;
 }
-#xerxes_outer_wrapper #searchArea {
+#searchArea {
 	float: left;
 	width: 500px;
 	padding: 20px;
 }
-#xerxes_outer_wrapper #resultsArea {
+#resultsArea {
 	clear: both;
 	margin-top: 10px;
 	padding: 20px;
 }
 
-#xerxes_outer_wrapper #folderArea {
+#folderArea {
 	clear: both;
 	margin-top: 10px;
 	padding: 20px;
 	width: 80%;
 }
-#xerxes_outer_wrapper #resultsOptions {
+#resultsOptions {
 	float: right;
 	width: 339px;
 	font-size:97%;
@@ -98,13 +95,13 @@ body.xerxes { font-family: Verdana, Geneva, Arial, helvetica, sans-serif; margin
 	margin: 20px;
 	margin-top: 30px;
 }
-#xerxes_outer_wrapper #footer {
+#footer {
 	clear: both;
 	margin-top: 50px;
 	padding: 20px;
 	background-color: #efefef;
 }
-#xerxes_outer_wrapper #citation {
+#citation {
 	float:right; 
 	width: 300px; 
 	padding: 10px; 
@@ -112,7 +109,7 @@ body.xerxes { font-family: Verdana, Geneva, Arial, helvetica, sans-serif; margin
 	background-color: #efefef;
 }
 
-#xerxes_outer_wrapper #record { 
+#record { 
 	margin-top: 20px;
 }
 
@@ -120,22 +117,22 @@ body.xerxes { font-family: Verdana, Geneva, Arial, helvetica, sans-serif; margin
 
 /* librarian */
 
-#xerxes_outer_wrapper .librarian {
+.librarian {
 	border: 1px solid #FFCC33;
 }
-#xerxes_outer_wrapper .librarian td {
+.librarian td {
 	padding: 10px;
 	vertical-align: top;
 }
-#xerxes_outer_wrapper .librarianName {
+.librarianName {
 	font-family: Arial, Verdana, Geneva, Arial, helvetica, sans-serif; 
 	color: #3366cc; font-size: 14px; 
 	font-weight: bold;
 }
-#xerxes_outer_wrapper .librarianTitle {
+.librarianTitle {
 	margin-bottom: 6px;
 }
-#xerxes_outer_wrapper .librarianChat td {
+.librarianChat td {
 	padding: 0px;
 	padding-right: 3px;
 	vertical-align: middle;
@@ -146,80 +143,80 @@ body.xerxes { font-family: Verdana, Geneva, Arial, helvetica, sans-serif; margin
 
 /* breadcrumb */
 
-#xerxes_outer_wrapper .trail {
+.trail {
 	float: left;
 	width: 50%;
 }
-#xerxes_outer_wrapper .sessionOptions {
+.sessionOptions {
 	text-align: right;
 	margin-right: 10px;
 }
 
 /* subject and categories */
 
-#xerxes_outer_wrapper .subject {
+.subject {
 	margin-bottom: 30px;
 }
-#xerxes_outer_wrapper .subjectMetaSearch {
+.subjectMetaSearch {
 	width: 500px;
 }
-#xerxes_outer_wrapper .subjectSubCategory {
+.subjectSubCategory {
 	margin-top: 20px;
 }
-#xerxes_outer_wrapper .subjectCheckList {
+.subjectCheckList {
 	margin-top: 10px;
 }
 
-#xerxes_outer_wrapper .categories {
+.categories {
 	margin-top: 30px;
 }
-#xerxes_outer_wrapper .categoriesTable td {
+.categoriesTable td {
 	padding-right: 15px;
 }
 
 /* databases full and a-z list? */
 
-#xerxes_outer_wrapper .databasesMoreInfo {
+.databasesMoreInfo {
 	font-family: Arial;
 	font-size: 85%;
 	padding-left: 13px;
 	color: #666;
 }
 
-#xerxes_outer_wrapper .databasesDescription {
+.databasesDescription {
 	margin-top: 30px;
 	margin-bottom: 20px;
 	line-height: 150%;
 }
 
-#xerxes_outer_wrapper .databasesAttribute {
+.databasesAttribute {
 	font-weight: bold;
 	text-align: right;
 }
-#xerxes_outer_wrapper .databasesTable td {
+.databasesTable td {
 	padding: 5px;
 	vertical-align: top;
 }
-#xerxes_outer_wrapper .alphaDatabase {
+.alphaDatabase {
 	margin-top: 20px;
 }
-#xerxes_outer_wrapper .alphaTitle {
+.alphaTitle {
 	margin-bottom: 5px;
 }
-#xerxes_outer_wrapper .alphaTitle a {
+.alphaTitle a {
 	font-weight: bold;
 }
-#xerxes_outer_wrapper .alphaDescription {
+.alphaDescription {
 	line-height: 130%;
 }
 
 /* search box */
 
-#xerxes_outer_wrapper .errorSpelling {
+.errorSpelling {
 	color: #990000;
 	font-weight: bold;
 }
-#xerxes_outer_wrapper .searchBox {
+.searchBox {
 	padding: 20px;
 	margin: 0px;
 	background-color: #fff;
@@ -242,7 +239,7 @@ body.xerxes { font-family: Verdana, Geneva, Arial, helvetica, sans-serif; margin
 
 /* results options */
 
-#xerxes_outer_wrapper .box {
+.box {
 	width:339px;
 	margin-bottom: 20px;
 	padding:10px;
@@ -265,7 +262,7 @@ body.xerxes { font-family: Verdana, Geneva, Arial, helvetica, sans-serif; margin
 	border-left-color: #CCCCCC;
 }
 
-#xerxes_outer_wrapper .sidebar-title {
+.sidebar-title {
 	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
 	margin:0;
 	padding:0 0 .2em;
@@ -278,112 +275,112 @@ body.xerxes { font-family: Verdana, Geneva, Arial, helvetica, sans-serif; margin
 
 /* results */
 
-#xerxes_outer_wrapper .resultsAbstract {
+.resultsAbstract {
 	margin-bottom: 10px;
 	line-height: 140%;
 	color: #333;
 }
-#xerxes_outer_wrapper .resultsAuthor {
+.resultsAuthor {
 	padding-right: 10px;
 }
-#xerxes_outer_wrapper .resultsAvailability {
+.resultsAvailability {
 	padding-top: 5px;
 } 
-#xerxes_outer_wrapper .resultsAvailableOption {
+.resultsAvailableOption {
 	padding-left: 6px;
 }
-#xerxes_outer_wrapper .resultsFacetNav {
+.resultsFacetNav {
 	margin-top: 20px;
 }
-#xerxes_outer_wrapper .resultsFullTextOption {
+.resultsFullTextOption {
 	display: inline;
 	padding-right: 3px;
 }
-#xerxes_outer_wrapper .resultsFullText {
+.resultsFullText {
 	color: #009900;
 }
-#xerxes_outer_wrapper .resultsFullText:link {
-	color: #009900;
-	text-decoration:none;
-}
-#xerxes_outer_wrapper .resultsFullText:visited {
+.resultsFullText:link {
 	color: #009900;
 	text-decoration:none;
 }
-#xerxes_outer_wrapper .resultsLanguage {
+.resultsFullText:visited {
+	color: #009900;
+	text-decoration:none;
+}
+.resultsLanguage {
 	color: #990000;
 	font-weight: bold;
 }
-#xerxes_outer_wrapper .resultsMain {
+.resultsMain {
 	padding-bottom:23px;
 	padding-top:23px;
 }
-#xerxes_outer_wrapper .resultsPageOptions {
+.resultsPageOptions {
 	margin-top: 10px;
 	margin-bottom: 20px;
 }
-#xerxes_outer_wrapper .resultsPager {
+.resultsPager {
 	padding: 4px;
 	margin-top: 30px;
 	margin-bottom: 20px;
 	border: 1px solid #A2C9EF;
 	background-color: #E4F1FD;
 }
-#xerxes_outer_wrapper .resultsPagerNext {
+.resultsPagerNext {
 	padding-left: 20px;
 }
-#xerxes_outer_wrapper .resultsPageSummary {
+.resultsPageSummary {
 	width: 200px;
 }
-#xerxes_outer_wrapper .resultsPublishing {
+.resultsPublishing {
 	padding-right: 10px;
 }
-#xerxes_outer_wrapper .resultsSearchLink {
+.resultsSearchLink {
 	margin: 20px;
 }
-#xerxes_outer_wrapper .resultsSorting {
+.resultsSorting {
 	text-align: right;
 	float: right;
 }
-#xerxes_outer_wrapper .resultsTitle:link {
+.resultsTitle:link {
 	font-size: 12px;
 	font-weight: bold;
 }
-#xerxes_outer_wrapper .resultsTitle:visited {
+.resultsTitle:visited {
 	font-size: 12px;
 	font-weight: bold;
 }
-#xerxes_outer_wrapper .resultsTitle:hover {
+.resultsTitle:hover {
 	font-size: 12px;
 	font-weight: bold;
 	text-decoration: underline;
 }
-#xerxes_outer_wrapper .resultsType {
+.resultsType {
 	font-weight: bold;
 	padding-top: 5px;
 	padding-bottom: 8px;
 }
-#xerxes_outer_wrapper .resultsYear {
+.resultsYear {
 	padding-right: 10px;
 }
 /* Record */
 
-#xerxes_outer_wrapper .recordAbstract {
+.recordAbstract {
 	line-height:14pt;
 }
-#xerxes_outer_wrapper .recordBasicTable {
+.recordBasicTable {
 	margin-top: 10px;
 }
-#xerxes_outer_wrapper .recordBasicTable td {
+.recordBasicTable td {
 	padding: 3px;
 }
-#xerxes_outer_wrapper .recordAttribute {
+.recordAttribute {
 	vertical-align: top;
 	font-weight: bold;
 	text-align: left;
 	white-space: nowrap;
 }
-#xerxes_outer_wrapper .recordFullText {
+.recordFullText {
 	margin: 30px; 
 	padding: 20px;
 	width: 400px;
@@ -403,21 +400,21 @@ body.xerxes { font-family: Verdana, Geneva, Arial, helvetica, sans-serif; margin
 	border-bottom-color: #999999;
 	border-left-color: #CCCCCC;
 }
-#xerxes_outer_wrapper .recordFullTextOption {
+.recordFullTextOption {
 	margin-bottom: 10px; 
 }
-#xerxes_outer_wrapper .recordNoFullText {
+.recordNoFullText {
 	margin-bottom: 15px; 
 	color: #000; 
 	font-weight: bold;
 }
-#xerxes_outer_wrapper .recordTitle {
+.recordTitle {
 	font-size: 22px;
 }
 
 /* Folder */
 
-#xerxes_outer_wrapper .folderEmailSuccess {
+.folderEmailSuccess {
 	margin: 20px;
 	font-weight: bold;
 	color: #006600;
@@ -438,12 +435,12 @@ body.xerxes { font-family: Verdana, Geneva, Arial, helvetica, sans-serif; margin
 	border-bottom-color: #CCCCCC;
 	border-left-color: #CCCCCC;
 }
-#xerxes_outer_wrapper .folderNoRecords {
+.folderNoRecords {
 	margin: 20px;
 	margin-bottom: 100px;
 }
 
-#xerxes_outer_wrapper .folderOptions {
+.folderOptions {
 	margin: 30px;
 	padding: 10px;
 	background-color: #f0f0f0;
@@ -464,7 +461,7 @@ body.xerxes { font-family: Verdana, Geneva, Arial, helvetica, sans-serif; margin
 	border-left-color: #CCCCCC;
 }
 
-#xerxes_outer_wrapper .folderOutputs {
+.folderOutputs {
 	background-color: #f6f6f3;
 	border-top-width: 1px;
 	border-right-width: 1px;
@@ -479,12 +476,12 @@ body.xerxes { font-family: Verdana, Geneva, Arial, helvetica, sans-serif; margin
 	border-bottom-color: #CCCCCC;
 	border-left-color: #CCCCCC;
 }
-#xerxes_outer_wrapper .folderOutputOptions
+.folderOutputOptions
 {
 	padding-left: 20px;
 }
 
-#xerxes_outer_wrapper .folderRecord {
+.folderRecord {
 	padding-top: 20px;
 	padding-right: 20px;
 	padding-bottom: 10px;
@@ -495,22 +492,22 @@ body.xerxes { font-family: Verdana, Geneva, Arial, helvetica, sans-serif; margin
 	border-bottom-color: #CCCCCC;
 	border-left-color: #CCCCCC;
 }
-#xerxes_outer_wrapper .folderResults {
+.folderResults {
 	
 }
 
-#xerxes_outer_wrapper .folderReturn {
+.folderReturn {
 	clear: both;
 	margin-top: 10px;
 	margin-left: 20px;
 }
-#xerxes_outer_wrapper .folderReturnText {
+.folderReturnText {
 	margin-left: 5px;
 }
 
 /* login page */
 
-#xerxes_outer_wrapper .loginBox {
+.loginBox {
     	margin-top: 50px;
 	margin-left: 50px;
 	padding: 15px;
@@ -532,24 +529,24 @@ body.xerxes { font-family: Verdana, Geneva, Arial, helvetica, sans-serif; margin
 	border-bottom-color: #999999;
 	border-left-color: #CCCCCC;
 }
-#xerxes_outer_wrapper .error {
+.error {
 	color: #990000;
 	font-weight: bold;
 }
 
 /* citation */
 
-#xerxes_outer_wrapper .citations {
+.citations {
 	margin-left: 20px;
 }
 
-#xerxes_outer_wrapper .citationStyle {
+.citationStyle {
 	margin-left: 20px; 
 	line-height: 1.3em; 
 	text-indent: -20px; 
 	margin-top: 3px;
 }
-#xerxes_outer_wrapper .citationNote {
+.citationNote {
 	margin-top: 20px; 
 	border: 1px solid #ccc; 
 	padding: 10px; 
@@ -560,16 +557,16 @@ body.xerxes { font-family: Verdana, Geneva, Arial, helvetica, sans-serif; margin
 /* options: Used on embed generators and generated embeds */
 
 
-#xerxes_outer_wrapper #headingBox {
+#headingBox {
   margin: 20px;
 }
 
-#xerxes_outer_wrapper #snippet_option_column {
+#snippet_option_column {
   float:left; 
   width:400px;
 }
 
-#xerxes_outer_wrapper #options {
+#options {
   border: 2px solid gray;
   margin-right: 20px;
   margin-left: 20px;
@@ -577,11 +574,11 @@ body.xerxes { font-family: Verdana, Geneva, Arial, helvetica, sans-serif; margin
   margin-bottom: 20px;
 }
 
-#xerxes_outer_wrapper #example_container {
+#example_container {
   overflow:scroll;
 }
 
-#xerxes_outer_wrapper #example {
+#example {
   border: 2px solid gray;
   /*background-color: #EFEFEF;*/
   margin-top: 20px;
@@ -589,23 +586,23 @@ body.xerxes { font-family: Verdana, Geneva, Arial, helvetica, sans-serif; margin
   margin-bottom: 20px;
   margin-left: 0;
 }
-#xerxes_outer_wrapper #embedding_instructions {
+#embedding_instructions {
   border: 2px solid gray;
   margin: 20px;
 }
 
 
-#xerxes_outer_wrapper .optionRow {
+.optionRow {
   vertical-align: top; 
 }
-#xerxes_outer_wrapper .optionRow h4 {
+.optionRow h4 {
   margin: 0;
   padding: 0;
 }
-#xerxes_outer_wrapper #snippet_generator .optionInfo {
+#snippet_generator .optionInfo {
   margin-left: 20px;
 }
-#xerxes_outer_wrapper #snippet_generator .displayTextbox {
+#snippet_generator .displayTextbox {
   margin-left: 5%;
   width:70%; 
   height: 5em;
