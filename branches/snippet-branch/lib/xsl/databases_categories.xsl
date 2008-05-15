@@ -37,15 +37,11 @@
 				<input type="hidden" name="action" value="search" />
 				<input type="hidden" name="context" value="{$quick_search_category}" />
 				<input type="hidden" name="context_url" value="{$base_url}" />
-				<input type="hidden" name="field" value="WRD" />
-				
-				<xsl:for-each select="category[@name = $quick_search_category]/subcategory/database[searchable = 1 and searchable/@count &lt;= $search_limit]">
-					<input name="database" type="hidden" >
-						<xsl:attribute name="id"><xsl:value-of select="metalib_id" /></xsl:attribute>
-						<xsl:attribute name="value"><xsl:value-of select="metalib_id" /></xsl:attribute>					 
-					</input>
-				</xsl:for-each>
-			
+				<input type="hidden" name="field" value="WRD" />        
+				<input type="hidden" name="subject">
+          <xsl:attribute name="value"><xsl:value-of select="category/@normalized" /></xsl:attribute>
+        </input>
+
 				<div style="width: 500px;">
 					<h2><xsl:value-of select="$quick_search_category" /></h2>
 					<p>Search a handful of our most popular databases.</p>	  	
