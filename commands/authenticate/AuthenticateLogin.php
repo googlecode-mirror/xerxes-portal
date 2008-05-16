@@ -29,10 +29,12 @@ class Xerxes_Command_AuthenticateLogin extends Xerxes_Command_Authenticate
 		$strUsername = $objRequest->getProperty("username");
 		$strPassword = $objRequest->getProperty("password");
 		$strReturn = $objRequest->getProperty("return");
-		
-		// came here by accident?
-		
-		if ( $strReturn == null ) throw new Exception("access to login page without return url");
+				
+		if ( $strReturn == null ) 
+    {
+      // default to home page
+      $strReturn = $objRegistry->getConfig("BASE_WEB_PATH", true);
+    }
 
 		// configuration settings
 		
@@ -44,7 +46,7 @@ class Xerxes_Command_AuthenticateLogin extends Xerxes_Command_Authenticate
 		
 		### REMOTE AUTHENTICATION ###
 
-		// right now only cas; different from 'local' authentication sources in that 
+		// for cas different from 'local' authentication sources in that 
 		// we redirect the user out to an external login page		
 		
 		if ( $configAuthenticationSource == "cas")
@@ -60,6 +62,11 @@ class Xerxes_Command_AuthenticateLogin extends Xerxes_Command_Authenticate
 			return 1;
 		}
 		
+    // for shibboleth, if they got this far, we should have authentication
+    // params in header already
+    if ( $configAuthenticationSource == "shibboleth" ) {
+      
+    }
 		
 		### LOCAL AUTHENTICATION ###
 		
