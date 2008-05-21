@@ -31,7 +31,7 @@ abstract class Xerxes_Command_Embed extends Xerxes_Framework_Command
       used for pointing to various types of snippet inclusion.  
       Subclass defines the starting url properties (base, action, anything else
       neccesary for a snippet display), and calls this. */
-     protected static function doExecuteHelper( Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry, Array $url_params) 
+     protected static function doExecuteHelper( Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry, Array $url_params, Array $direct_url_params = null) 
      {
         // Default embed css to false, because it's awful. 
         if ( $objRequest->getProperty("disp_embed_css") == "") {
@@ -48,9 +48,16 @@ abstract class Xerxes_Command_Embed extends Xerxes_Framework_Command
             array_push($display_properties, $p); 
           }
         }
-  
+
+        // Direct to resource non-embedded action url
+        if ( $direct_url_params) {
+          $direct_url = $objRequest->url_for( $direct_url_params, true);
+          $objXml->documentElement->appendChild( $objXml->createElement("direct_url", $direct_url));
+        }
+        
+        // Embedded urls
+        
         $url_params["gen_full_urls"] = "true";
-       
         
         //Base embedded action url
         $raw_embedded_action_url = $objRequest->url_for( $url_params, true);
@@ -58,7 +65,6 @@ abstract class Xerxes_Command_Embed extends Xerxes_Framework_Command
           $raw_embedded_action_url .= "?";
         }
         $objXml->documentElement->appendChild( $objXml->createElement("raw_embedded_action_url", $raw_embedded_action_url));      
-        $objRequest->addDocument( $objXml );
         
         //Direct embed url
         $url_params["disp_embed"] = "true";

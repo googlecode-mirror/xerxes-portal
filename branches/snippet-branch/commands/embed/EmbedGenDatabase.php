@@ -21,12 +21,14 @@
 		{
        //Define url params for display action, and call helper, that
        // does all the real work. 
-       $url_params = array( "base" => "embed",
+       $embed_url_params = array( "base" => "embed",
                            "action" => "database",
                            "id" => $objRequest->getProperty("id"));
-       
+       $direct_url_params = array("base" => "databases",
+                                  "action" => "database",
+                                  "id" => $objRequest->getProperty("id"));
        //The meet of it in this helper method in superclass!
-       $this->doExecuteHelper($objRequest, $objRegistry, $url_params);
+       $this->doExecuteHelper($objRequest, $objRegistry, $embed_url_params, $direct_url_params);
        return 1;
 		}
 	}	

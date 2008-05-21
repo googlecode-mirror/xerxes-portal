@@ -26,11 +26,14 @@
 
 <xsl:template name="main">
 
-<!-- js to update example immediately -->
+<xsl:variable name="noscript_content">
+<a><xsl:attribute name="href"><xsl:value-of select="//embed_info/direct_url"/></xsl:attribute><xsl:value-of select="//database/title_display" /></a>
+</xsl:variable>
+
 <!-- js to update example immediately -->
 <script type="text/javascript">
   snip_base_url = '<xsl:value-of select="embed_info/raw_embedded_action_url" />';
-  snip_noscript_content = '<a><xsl:attribute name="href"><xsl:value-of select="//database/url"/></xsl:attribute><xsl:value-of select="//database/title_display" /></a>';
+  snip_noscript_content = '<xsl:copy-of select="$noscript_content"/>';
 </script>    
 <script type="text/javascript" src="{$base_url}/javascript/embed-gen-update.js"></script>
 
@@ -113,7 +116,7 @@
             <xsl:attribute name="src"><xsl:value-of select="embed_info/embed_js_call_url"/></xsl:attribute>
           </script>        
           <noscript>
-          <a><xsl:attribute name="href"><xsl:value-of select="//database/url"/></xsl:attribute><xsl:value-of select="//database/title_display" /></a>
+            <xsl:copy-of select="$noscript_content"/>
           </noscript>
         </textarea>
     

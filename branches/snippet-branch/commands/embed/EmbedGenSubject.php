@@ -20,11 +20,17 @@
 		public function doExecute( Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry )
 		{
        //Define url params for subject display action, and call helper.
-       $url_params = array( "base" => "embed",
+       $embed_url_params = array( "base" => "embed",
                            "action" => "subject",
                            "subject" => $objRequest->getProperty("subject"));
+       
+       //Direct to resource without embed
+       $direct_url_params = array("base" => "databases",
+                                  "action" => "subject",
+                                  "subject" => $objRequest->getProperty("subject"));
+       
        //The meet of it in this helper method in superclass!
-       $this->doExecuteHelper($objRequest, $objRegistry, $url_params);
+       $this->doExecuteHelper($objRequest, $objRegistry, $embed_url_params, $direct_url_params);
        return 1;
 		}
 	}	
