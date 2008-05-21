@@ -38,7 +38,7 @@
     <h2 style="margin-top: 0;"><a style="color:white" class="footer" href="{$base_url}">
     <img src="{$base_url}/images/jhsearch-banner.jpg" >
       <xsl:attribute name="alt">    
-        <xsl:value-of select="/knowledge_base/config/application_name" />
+        <xsl:value-of select="/*/config/application_name" />
       </xsl:attribute>
     </img>            
     </a></h2>
