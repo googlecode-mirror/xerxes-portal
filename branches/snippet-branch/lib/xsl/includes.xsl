@@ -816,40 +816,6 @@ out a way to do that that wasn't awful. -->
 	</xsl:for-each>
 </xsl:template>
 
-<!-- TEMPLATE: embed_js_update
-     just some fancy Prototype javascript to auto-update on snippet/embed
-     generator pages. Assumes a form with id "generator".
-  -->
-<xsl:template name="embed_js_update">
- <!-- Use prototype to have fancy fancy auto-update of example when
-       form changes. -->
-  <script type="text/javascript">
-    function updateExample() {
-    
-      var query_hash = Form.serialize($("generator"), true);
-      // Remove base and action, they point to ourselves, the generator.            
-      delete query_hash["base"];
-      delete query_hash["action"];
-      //prototype Hash converts back to a query string. 
-      var query_string = new Hash(query_hash).toQueryString ();
-      
-      var complete_url = '<xsl:value-of select="embed_info/raw_embedded_action_url" />&amp;disp_embed=true&amp;' + query_string;
-      
-      // Update the content
-      new Ajax.Updater('example_content',complete_url, 
-      { method:'get'});
-      
-      // Update our instruction urls
-      $("direct_url_content").update( complete_url );
-      // Sorry about weird double-escaping, in an XSLT->js world, that's
-      // how it goes sometimes. 
-      $("js_widget_content").update('&amp;lt;script type="text/javascript" charset="utf-8" src="' + complete_url + '&amp;disp_embed_js=true" &amp;gt;&amp;lt;/script&amp;gt;');
-      $("view_source_link").href = complete_url + "&amp;format=source";
-    }
-    Event.observe(window, 'load', function() {
-      new Form.EventObserver($("generator"), updateExample);
-    });
-  </script>
-</xsl:template>
+
 
 </xsl:stylesheet>

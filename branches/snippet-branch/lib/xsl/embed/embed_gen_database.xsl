@@ -27,7 +27,13 @@
 <xsl:template name="main">
 
 <!-- js to update example immediately -->
-<xsl:call-template name="embed_js_update" />
+<!-- js to update example immediately -->
+<script type="text/javascript">
+  snip_base_url = '<xsl:value-of select="embed_info/raw_embedded_action_url" />';
+  snip_noscript_content = '<a><xsl:attribute name="href"><xsl:value-of select="//database/url"/></xsl:attribute><xsl:value-of select="//database/title_display" /></a>';
+</script>    
+<script type="text/javascript" src="{$base_url}/javascript/embed-gen-update.js"></script>
+
 
 <div id="headingBox">
     <h2><xsl:call-template name="page_name" /></h2>
@@ -106,11 +112,13 @@
           <script type="text/javascript" charset="utf-8" >
             <xsl:attribute name="src"><xsl:value-of select="embed_info/embed_js_call_url"/></xsl:attribute>
           </script>        
-        
+          <noscript>
+          <a><xsl:attribute name="href"><xsl:value-of select="//database/url"/></xsl:attribute><xsl:value-of select="//database/title_display" /></a>
+          </noscript>
         </textarea>
     
         <h3>3. HTML Source </h3>
-        <p class="optionInfo">Last resort. If this is your only option, you can embed this HTML source directly into your own web page. However, as JHSearch configuration or features change, your included snippet may not see any changes, and may even stop working. Use with care.</p>
+        <p class="optionInfo">Last resort. If this is your only option, you can embed this HTML source directly into your own web page. However, as <xsl:value-of select="config/application_name" /> configuration or features change, your included snippet may not see any changes, and may even stop working. Use with care.</p>
         <a target="_blank"  id="view_source_link" class="optionInfo">
         <xsl:attribute name="href" >
         <xsl:value-of select="embed_info/embed_direct_url" />

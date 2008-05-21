@@ -24,6 +24,7 @@
        $url_params = array( "base" => "embed",
                            "action" => "database",
                            "id" => $objRequest->getProperty("id"));
+       
        //The meet of it in this helper method in superclass!
        $this->doExecuteHelper($objRequest, $objRegistry, $url_params);
        return 1;
