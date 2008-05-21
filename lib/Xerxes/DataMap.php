@@ -413,7 +413,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		
 		$strSQL = 
 			"SELECT xerxes_categories.id as category_id, 
-		            xerxes_categories.name as category, 
+		            xerxes_categories.name as category,
 		            xerxes_subcategories.metalib_id as subcat_id,
 		            xerxes_subcategories.sequence as subcat_seq, 
 		            xerxes_subcategories.name as subcategory, 
@@ -437,6 +437,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 			$objCategory = new Xerxes_Data_Category();
 			$objCategory->id = $arrResults[0]["category_id"];
 			$objCategory->name = $arrResults[0]["category"];
+      $objCategory->normalized = $normalized;
 			
 			$objSubcategory = new Xerxes_Data_Subcategory();
 			$objSubcategory->metalib_id = $arrResults[0]["subcat_id"];

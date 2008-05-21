@@ -44,7 +44,7 @@
 						<td class="databasesAttribute">Link:</td>
 						<td class="databasesValue">		
 							<a>
-							<xsl:attribute name="href"><xsl:call-template name="proxy_link" /></xsl:attribute>
+							<xsl:attribute name="href"><xsl:value-of select="xerxes_native_link_url" /></xsl:attribute>
 								Go to this database!
 							</a>
 						</td>

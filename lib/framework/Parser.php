@@ -34,7 +34,7 @@
 			}
 			
 			$objXsl = self::generateBaseXsl($strXsltPath);
-
+      
 			// create XSLT Processor
 			$objProcessor = new XsltProcessor();
 			$objProcessor->registerPhpFunctions();
@@ -86,6 +86,7 @@
 			$generated_xsl = new DOMDocument();
 			$generated_xsl->load( $distro_xsl_dir . "xsl/dynamic_skeleton.xsl");
 			
+      
 			// pre-pend imports to this, to put them at the top of the file. 
 		
 			$importInsertionPoint = $generated_xsl->documentElement->firstChild;
@@ -94,7 +95,7 @@
 			// distro are imported. this will ensure local overrides distro.
 			
 			// import the distro
-
+      
 			if ( file_exists($distro_path) )
 			{	
 				self::addImportReference($generated_xsl, $distro_path, $importInsertionPoint);
