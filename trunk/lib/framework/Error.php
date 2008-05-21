@@ -48,6 +48,7 @@
 				// of exception and hand display off to the error.xsl file
 				
 				$objError = new DOMDocument();
+        
 				$objError->loadXML("<error />");
 				
 				$objMessage = $objError->createElement("message", $e->getMessage());
@@ -61,22 +62,16 @@
 				$objError->documentElement->appendChild($objBaseURL);
 				
 				
-				// add in the request object
-				
-				$objXml = new DOMDocument();
-				$objXml = $objRequest->toXML(true);
-				$objRequestXml = $objXml->getElementsByTagName("request")->item(0);
-				
-				if ( $objRequestXml != null )
-				{
-					$objImport = $objError->importNode($objRequestXml, true);
-					$objError->documentElement->appendChild($objImport);
-				}
-				
-				
-				// display it to the user
-				
+				// add in the request object's stuff. 
+        $request_xml = $objRequest->toXML();                
+        
+        $imported = $objError->importNode($request_xml->documentElement, true);
+        $objError->documentElement->appendChild($imported);
+        
+				// display it to the user. Transform will pick up local
+        // xsl for error page too, great. 
 				echo Xerxes_Parser::transform($objError, "xsl/error.xsl");
+        
 			}
 			
 			
