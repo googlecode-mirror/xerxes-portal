@@ -26,9 +26,9 @@
 			
 			// flag certain exception types for special handling in the xslt
 
-			$strErrorType = "Exception";
-			
+      $strErrorType = get_class($e);
 			if ( $e instanceof PDOException )
+        //might be a sub-class, reset so view will catch. 
 			{				
 				$strErrorType = "PDOException";
 			}
@@ -66,12 +66,20 @@
         $request_xml = $objRequest->toXML();                
         
         $imported = $objError->importNode($request_xml->documentElement, true);
-        $objError->documentElement->appendChild($imported);
+        foreach ($imported->childNodes as $childNode) {
+          $objError->documentElement->appendChild($childNode);
+        }
         
-				// display it to the user. Transform will pick up local
-        // xsl for error page too, great. 
-				echo Xerxes_Parser::transform($objError, "xsl/error.xsl");
-        
+        if ( $objRequest->getProperty("format") == "xml" )
+				{
+					header('Content-type: text/xml');
+					echo $objError->saveXML();
+				}
+        else {
+          // display it to the user. Transform will pick up local
+          // xsl for error page too, great. 
+          echo Xerxes_Parser::transform($objError, "xsl/error.xsl");
+        }
 			}
 			
 			
