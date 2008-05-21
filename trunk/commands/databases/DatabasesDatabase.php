@@ -80,14 +80,25 @@
 				}
 				
 				$properties = $objDatabaseData->properties();
+        //Add an element for url to Xerxes detail page for this db
 				$objElement = $objXml->createElement( "url", 
 					$objRequest->url_for( array(
 						"base" => "databases",
 						"action" => "database",
-						"id" => htmlentities($properties['metalib_id']
-					))));
-				
+						"id" => htmlentities($properties['metalib_id'])
+					)));				
 				$objDatabase->appendChild($objElement);
+        
+        //Add an element for url to Xerxes-mediated direct link
+        //to db. 
+        $objElement = $objXml->createElement("xerxes_native_link_url",
+          $objRequest->url_for( array(
+            "base" => "databases",
+            "action" => "proxy",
+            "database" => htmlentities($properties['metalib_id'])
+          )));
+        $objDatabase->appendChild($objElement);
+        
 				$objXml->documentElement->appendChild($objDatabase);
 			}
 			

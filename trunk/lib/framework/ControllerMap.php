@@ -250,6 +250,8 @@
 					// view
 					
 					$this->strViewFile = (string) $action->view;
+          
+          
 					$type = (string) $action->view["type"];
 					if ( $type != null ) $this->strViewType = $type;
 				}
