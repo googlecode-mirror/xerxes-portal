@@ -200,7 +200,7 @@
           to find the username in. Defaults to REMOTE_USER, which seems
           to be what the Shib SP normally does. Can customize if needed. 
           For even more flexible customization, see your
-          xerxes_app/config/shibboleth/shib_map.php file. 
+          xerxes_app/config/shibboleth/shib_map.php file. --> 
     <!-- <config name="shib_username_header">REMOTE_USER</config> -->
     
 		
