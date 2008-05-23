@@ -80,7 +80,7 @@
 		 * @return array				array of results as supplied by PDO
 		 */
 		
-		protected function select($strSQL, $arrValues = null)
+		public function select($strSQL, $arrValues = null)
 		{
 			$this->strSQL = $strSQL;
 				
@@ -107,7 +107,7 @@
 		 * @return mixed				status of the request, as set by PDO
 		 */
 		
-		protected function update($strSQL, $arrValues = null)
+		public function update($strSQL, $arrValues = null)
 		{
 			$this->strSQL = $strSQL;
 			
@@ -132,7 +132,7 @@
 		 * @return mixed				status of the request, as set by PDO
 		 */
 		
-		protected function insert($strSQL, $arrValues = null)
+		public function insert($strSQL, $arrValues = null)
 		{
 			$this->update($strSQL, $arrValues);
 		}

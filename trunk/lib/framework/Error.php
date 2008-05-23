@@ -54,6 +54,13 @@
 				$objMessage = $objError->createElement("message", $e->getMessage());
 				$objMessage->setAttribute("type", $strErrorType);
 				$objError->documentElement->appendChild($objMessage);
+
+        $heading = "Sorry, there was an error";
+        if ($e instanceof Xerxes_Exception) {
+          $heading = $e->heading();
+        }
+        $objHeading = $objError->createElement("heading", $heading);
+        $objError->documentElement->appendChild($objHeading);
 				
 				// set the base url for the error.xsl file's benefit; don't want to assume that 
 				// the earlier code to this effect was executed before an exception, so this is redundant

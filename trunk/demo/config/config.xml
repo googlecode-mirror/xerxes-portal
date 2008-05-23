@@ -102,6 +102,8 @@
 			* 'innovative' for authentication against the Innovative patron api
 			* 'cas' for authentication against a central authentication source server
 			* 'demo' for a simple demo set-up when you don't want to configure a directory
+      * 'shibboleth' for Shibboleth authentication using a local configured shibd. 
+      
 		 -->
 		
 		<config name="authentication_source">demo</config>
@@ -165,6 +167,42 @@
 		<config name="cas_login" />
 		<config name="cas_validate" />
 
+    <!-- Shibboleth  -->
+    
+    <!-- Shibboleth assumes a Shibboleth SP installed on your host, and
+         an apache configured to support Shibboleth auth.  Setting up the
+         SP is out of the scope of this document, but we will note that for
+         security you should allow only https shibboleth connections, and
+         use cookieProps in your shibboleth.xml to set cookies to be required
+         'secure'.
+         
+         Xerxes Shib logic assumes you have Xerxes config "rewrite" true, it
+         won't work if you don't. (It could probably be modified to do so,
+         but isn't not). 
+         
+         If you have secure shib, you should set Xerxes config 'secure_login',
+         above, to true. 
+         
+         In your apache conf for your 443/ssl apache, include this to
+         force shib authentication for Xerxes (you MAY be able to put
+         this in your .htaccess instead):
+         
+            <Location /path/to/xerxes/authenticate/login>
+              AuthType shibboleth
+              ShibRequireSession On
+              require valid-user
+            </Location>
+
+         If you would like to control access to Xerxes beyond any valid shib
+         user, you can do it either with apache directives to the shibboleth plugin, OR in Xerxes code by editing the file found in your Xerxes app directory (ie demo)/config/shibboleth/shib_map.php. This file can also be used to map shib-provided attributes to Xerxes user attributes, to fill out the Xerxes user db. -->
+         
+    <!--  shib_username_header is the HTTP header that xerxes will expect
+          to find the username in. Defaults to REMOTE_USER, which seems
+          to be what the Shib SP normally does. Can customize if needed. 
+          For even more flexible customization, see your
+          xerxes_app/config/shibboleth/shib_map.php file. 
+    <!-- <config name="shib_username_header">REMOTE_USER</config> -->
+    
 		
 		<!-- DEMO -->
 		

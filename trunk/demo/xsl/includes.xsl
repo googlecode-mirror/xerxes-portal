@@ -22,17 +22,16 @@
 
 <!-- 
 	GLOBAL VARIABLES
-	Configuration values used throughout the templates
+	Configuration values used throughout the templates. Can over-ride
+  distribution settings if desired. 
 -->
 
+<!-- Don't want username in your logout link? Put whatever you want
+     here -->
+<!-- <xsl:variable name="logout_text">Log-out</xsl:variable> -->
 
 
-<!-- 	
-	TEMPLATE: SURROUND
-	This is the master template that defines the overall design for the application; place
-	here the header, footer and other design elements which all pages should contain.
--->
-
+<!-- Individual named template overrides -->
 
 <xsl:template name="header_div">
     <h2 style="margin-top: 0;"><a style="color:white" class="footer" href="{$base_url}">
@@ -76,16 +75,6 @@
 </xsl:template>
 
 -->
-
-
-
-
-
-
-
-
-
-
 
 
 </xsl:stylesheet>

@@ -135,6 +135,21 @@ class Xerxes_Data_Record extends Xerxes_Framework_DataValue
 	public $xerxes_record;		// not part of table!
 }
 
+class Xerxes_User extends Xerxes_Framework_DataValue
+{
+  public $username;
+  public $last_login;
+  public $suspended;
+  public $first_name;
+  public $last_name;
+  public $email_addr;
+  
+  
+  function __construct($username = null) {
+    $this->username = $username;
+  }
+  
+}
 
 /**
  * Functions for inserting, updating, and deleting data from the database
@@ -954,35 +969,54 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 	
 	
 	/**
-	 * Update the user table to include the last date of login
+	 * Update the user table to include the last date of login. Creates new
+   * user if neccesary.If any attributes in Xerxes_User are set other than
+   * username, those will also be written to db over-riding anything that may
+   * have been there.
 	 *
-	 * @param string $username		username
+	 * @param Xerxes_User $user
 	 * @return int status
 	 */
-	
-	public function touchUser( $username )
-	{
-		$strTimeStamp = date("Y-m-d H:i:s");
-		
-		$strSQL = "SELECT username FROM xerxes_users WHERE username = :username";
-		
-		$arrResults = $this->select($strSQL, array(":username" => $username));
-		
+	public function touchUser(Xerxes_User $user) {
+    
+    // Array to pass to db updating routines. Make an array out of our
+    // properties. 
+    $update_values = array();
+    foreach ($user->properties() as $key => $value) {
+      $update_values[":" . $key] = $value;
+    }
+    $update_values[":last_login"] = date("Y-m-d H:i:s"); 
+        
+    
+		$strSQL = "SELECT * FROM xerxes_users WHERE username = :username";		
+		$arrResults = $this->select($strSQL, array(":username" => $user->username));
+		    
 		if ( count($arrResults) == 1 )
 		{
-			// user already exists in database, so update the last_login time
-
-			$strSQL = "UPDATE xerxes_users SET last_login = :login WHERE username = :username";
-			return $this->update($strSQL, array(":username" => $username, ":login" => $strTimeStamp));
+			// user already exists in database, so update the last_login time and
+      
+      //Use any data specified in our Xerxes_User record to overwrite. Start
+      // with what's already there, overwrite with anything provided in
+      // the Xerxes_User object. 
+      $db_values = $arrResults[0];            
+      foreach ($db_values as $key => $value) {
+        if (! (is_null($value) || is_numeric($key))) {
+          $update_values[":" . $key] = $value; 
+        }
+      }
+      
+			$strSQL = "UPDATE xerxes_users SET last_login = :last_login, suspended = :suspended, first_name = :first_name, last_name = :last_name, email_addr = :email_addr WHERE username = :username";
+      return $this->update($strSQL, $update_values);
 		}
 		else
 		{
 			// add em otherwise
 			
-			$strSQL = "INSERT INTO xerxes_users ( username, last_login) VALUES (:username, :login)";
-			return $this->insert($strSQL, array(":username" => $username, ":login" => $strTimeStamp));
+			$strSQL = "INSERT INTO xerxes_users ( username, last_login, suspended, first_name, last_name, email_addr) VALUES (:username, :last_login, :suspended, :first_name, :last_name, :email_addr)";
+			return $this->insert($strSQL, $update_values);
 		}
-	}
+  }
+
 	
 	/**
 	 * Add a record to the user's saved record space
