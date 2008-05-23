@@ -39,6 +39,12 @@
 			</xsl:otherwise>
 		</xsl:choose>	
 	</xsl:variable>
+  <!-- over-ride in local includes.xsl if you'd like different text, not including username for instance.  -->
+  <xsl:variable name="logout_text">
+      Log-out
+      <xsl:text> </xsl:text>
+      <xsl:value-of select="//request/session/username" />
+  </xsl:variable>
 
 <!-- 	
 	TEMPLATE: SURROUND
@@ -425,7 +431,8 @@
 			<xsl:when test="request/session/role and request/session/role != 'local'">
 				<a>
         <xsl:attribute name="href"><xsl:value-of select="navbar/element[@id = 'logout']/url" /></xsl:attribute>
-        Log-out</a>
+        <xsl:copy-of select="$logout_text" />        
+        </a>
 			</xsl:when>
 			<xsl:otherwise>
 				<a>

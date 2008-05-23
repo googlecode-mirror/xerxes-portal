@@ -626,6 +626,18 @@
 		
 			$el = $objXml->createElement("hasLoggedInUser", $this->hasLoggedInUser());
 			$objSession->appendChild( $el );
+      if ( $this->hasLoggedInUser() && array_key_exists("user_properties", $_SESSION)) {
+        $el = $objXml->createElement("logged_in_user");
+
+        $arrUserProps = $_SESSION["user_properties"];
+        
+        foreach ($arrUserProps as $key => $value ) {
+          $el->appendChild( $objXml->createElement($key, $value));
+        }        
+        
+
+        $objSession->appendChild($el);        
+      }
 			
 			// add the server global array, but only if the request
 			// asks for it, for security purposes

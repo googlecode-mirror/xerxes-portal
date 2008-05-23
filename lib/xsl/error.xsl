@@ -22,30 +22,29 @@
 </xsl:template>
 
 <xsl:template name="main">
-	
 	<div id="content">
 		<div class="loginBox">
 			<table border="0" cellspacing="0" cellpadding="5">
 			<tr>
 				<td><span class="error"><img src="{$base_url}/images/warning.gif" width="30" height="28" /></span></td>
-				<td><h3 class="error">Sorry, there was an error</h3></td>
+				<td><h3 class="error"><xsl:value-of select="//error/heading" /></h3></td>
 			</tr>
 			</table>
 			<xsl:choose>
             
-            	<!-- make sure that database errors are not shown to the user -->
-                
-            	<xsl:when test="message[@type = 'PDOException']">
-                	<p>There was a problem with the database.</p>
-                </xsl:when>
-            	<xsl:when test="request/base = 'folder'">
-            		<p><xsl:value-of select="message" /></p>
-                	<p>You can <a href="./?base=folder">access your saved records here</a>.</p>
-                </xsl:when>                
-                <xsl:otherwise>
-			<p><xsl:value-of select="message" /></p>
-                </xsl:otherwise>
-            </xsl:choose>
+        <!-- make sure that database errors are not shown to the user -->
+          
+        <xsl:when test="message[@type = 'PDOException']">
+            <p>There was a problem with the database.</p>
+        </xsl:when>
+        <xsl:when test="request/base = 'folder'">
+          <p><xsl:value-of select="message"/></p>
+            <p>You can <a href="./?base=folder">access your saved records here</a>.</p>
+        </xsl:when>                
+        <xsl:otherwise>
+          <p><xsl:value-of select="message"/></p>              
+        </xsl:otherwise>
+        </xsl:choose>
 		</div>
 	</div>
 	

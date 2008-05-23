@@ -14,6 +14,9 @@ CREATE TABLE xerxes_users (
 	username       	VARCHAR(50),
 	last_login	DATE,
 	suspended	INTEGER(1),
+  first_name VARCHAR(50),
+  last_name VARCHAR(50),
+  email_addr VARCHAR(120),
 
 	PRIMARY KEY (username)
 );

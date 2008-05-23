@@ -44,7 +44,17 @@ class Xerxes_Command_AuthenticateLogin extends Xerxes_Command_Authenticate
 		$configHttps = $objRegistry->getConfig("SECURE_LOGIN", false, false);
 		
 		
-		### REMOTE AUTHENTICATION ###
+    ### REDIRECT TO SECURE if neccesary ###
+		
+		// if secure login is required, then force the user back thru https
+		
+		if ( $configHttps == true && $objRequest->getServer("HTTPS") == null )
+		{
+			$objRequest->setRedirect("https://" .  $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'] );
+			return 1;
+		}
+    
+		### REMOTE AUTHENTICATION: CAS and Shibboleth ###
 
 		// for cas different from 'local' authentication sources in that 
 		// we redirect the user out to an external login page		
@@ -63,22 +73,36 @@ class Xerxes_Command_AuthenticateLogin extends Xerxes_Command_Authenticate
 		}
 		
     // for shibboleth, if they got this far, we should have authentication
-    // params in header already
+    // params in header already from the Shib SP and apache config, we don't
+    // need to redirect, just read what's been provided.  
     if ( $configAuthenticationSource == "shibboleth" ) {
       
+       //Get username header from configged name
+       $username_header = $objRegistry->getConfig("shib_username_header", false, "REMOTE_USER");      
+       $strUsername = null;
+       if ( array_key_exists($username_header, $_SERVER)) {
+         $strUsername = $_SERVER[$username_header];
+       }
+       
+       if ( $strUsername ) 
+       {
+         
+         $user = new Xerxes_User($strUsername);
+         $shib_map_file = $objRegistry->getConfig("APP_DIRECTORY", true) . "/config/shibboleth/shib_map.php";
+         if ( file_exists($shib_map_file)) {
+           require_once($shib_map_file);
+           $user = local_shib_user_setup($_SERVER, $user);
+         }                  
+         $this->register($user, "named");
+         
+         $objRequest->setRedirect("http://" . $objRequest->getServer('SERVER_NAME') . $strReturn );
+         return 1;
+       }
     }
 		
 		### LOCAL AUTHENTICATION ###
 		
-		// if secure login is required, then force the user back thru https
-		
-		if ( $configHttps == true && $objRequest->getServer("HTTPS") == null )
-		{
-			$objRequest->setRedirect("https://" .  $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'] );
-			return 1;
-		}
-		
-		
+    
 		// if this is not a 'postback', then the user has not 
 		// submitted the form, they are arriving for first time
 		// so stop the flow and just show the login page with form
