@@ -36,7 +36,7 @@
 		
 		<!-- the uri to the authentication page; here just in case you need to change it for some reason -->
 		
-		<config name="authentication_page">?base=authenticate&amp;action=login</config>
+		<!-- <config name="authentication_page">/authenticate/login</config> -->
 		
 		
 	<!-- METALIB CONFIGURATION -->
