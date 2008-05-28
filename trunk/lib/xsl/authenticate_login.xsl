@@ -23,7 +23,7 @@
 
 <xsl:template name="main">
 
-	<xsl:variable name="return" 		select="request/return" />
+	<xsl:variable name="return" 	select="request/return" />
 	<xsl:variable name="local" 		select="request/local" />
 
 	<xsl:variable name="username">
@@ -54,13 +54,13 @@
 				<input name="return" type="hidden" value="{$return}" />
 				<input name="local" type="hidden" value="{$local}" />
 				<input name="postback" type="hidden" value="true" />  
-				<table border="0" cellspacing="0" cellpadding="8">
+				<table border="0" cellspacing="0" cellpadding="8" summary="">
 					<tr>
-						<td>username:</td>
+						<td><label for="username">username:</label></td>
 						<td><input name="username" type="text" id="username" value="{$username}" /></td>
 					</tr>
 					<tr>
-						<td>password:</td>
+						<td><label for="password">password:</label></td>
 						<td><input name="password" type="password" id="password" /></td>
 					</tr>
 					<tr>
