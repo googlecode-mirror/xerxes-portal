@@ -4,7 +4,8 @@
 
   <xsl:import href="../includes.xsl" />  
   
-
+  <xsl:output method="html" />
+  
   <xsl:template match="/*">
     <xsl:variable name="disp_show_title" select="not( request/disp_show_title = 'false')" />
     <xsl:variable name="disp_show_search" select="not( request/disp_show_search = 'false' )" />

@@ -3,6 +3,7 @@
 	xmlns:php="http://php.net/xsl">
   <xsl:include href="../includes.xsl" />  
   
+  <xsl:output method="html" />
   
   <xsl:template match="/*">
     <!-- default true -->
