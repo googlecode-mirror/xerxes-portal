@@ -236,7 +236,7 @@
 			</action>	
 			<action name="export">
 				<command>FolderResults</command>
-				<view format="php">custom/folder_export.php</view>
+				<view type="php">custom/folder_export.php</view>
 			</action>
 			<action name="email">
 				<command>FolderResults</command>
