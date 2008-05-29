@@ -41,11 +41,11 @@
 		private $bolEditor = false;			// whether primary author is an editor
 
 		private $strNonSort = "";			// non-sort portion of title
-		private $strTitle = "";				// main title	
+		private $strTitle = "";				// main title
 		private $strSubTitle = "";			// subtitle	
 		private $strSeriesTitle = "";		// series title
 		private $bolTransTitle = false; 	// whether title is translated
-
+		
 		private $strPlace = "";				// place of publication	
 		private $strPublisher = "";			// publisher	
 		private $strDate = "";				// date of publication
@@ -56,7 +56,7 @@
 		private $strBookTitle = "";			// book title (for book chapters)
 		private $strJournalTitle = "";		// journal title
 		private $strJournal = "";			// journal source information
-		private $strShortTitle = "";		// short title
+		private $strShortTitle = "";		// journal short title
 		private $strVolume = "";			// volume
 		private $strIssue = "";				// issue
 		private $strStartPage = "";			// start page
@@ -68,12 +68,14 @@
 		private $strAbstract = "";			// abstract
 		private $strSummary = "";			// summary
 		private $strLanguage = "";			// primary language of the record
-		private $arrNotes = array();		// notes that are not the abstract, language, or table of cont
+		private $arrNotes = array();		// notes that are not the abstract, language, or table of contents
 		private $arrSubjects = array();		// subjects
 		private $strTOC = "";				// table of contents note
 		
 		private $arrLinks = array();		// all supplied links in the record both full text and non
 		
+		private $arrAltScript = array();	// alternate character-scripts like cjk or hebrew, taken from 880s
+		private $strAltScript = "";			// the name of the alternate character-script; we'll just assume one for now, I guess
 		
 		### PUBLIC FUNCTIONS ###
 		
@@ -301,9 +303,11 @@
 				$this->arrNotes = $this->extractMarcArray($objXPath, null, "*", 
 					"//marc:datafield[@tag >= 500 and @tag < 600 and @tag != 505 and @tag != 520 and @tag != 546]");
 					
-				// subjects 
+				// subjects
+				// we'll exclude the numeric subfields since they contain information about the
+				// source of the subject terms, which are probably not needed for display?
 				
-				$this->arrSubjects = $this->extractMarcArray($objXPath, "600-700", "*");
+				$this->arrSubjects = $this->extractMarcArray($objXPath, "600-700", "abcdefghijklmnopqrstuvwxyz");
 				
 				// full-text
 				
@@ -317,7 +321,42 @@
 				$this->strShortTitle = $this->extractMarcDataField($objXPath, 773, "p");
 				$strExtentHost = $this->extractMarcDataField($objXPath, 773, "h");
 				
+				// alternate character-scripts
 				
+				// the 880 represents an alternative character-script, like Hebrew or CJK;
+				// for simplicity's sake, we just dump them all here in an array, with the 
+				// intent of displaying them in paragraphs together in the interface or something?
+				
+				// we get every field except for the $6 which is a linking field
+				
+				$this->arrAltScript = $this->extractMarcArray($objXPath, 880, "abcdefghijklmnopqrstuvwxyz12345789");
+				
+				// now use the $6 to figure out which character-script this is
+				// assume just one for now
+				
+				$strAltScript = $this->extractMarcDataField($objXPath, 880, "6");
+				
+				if ( $strAltScript != null )
+				{
+					$arrMatchCodes = array();
+					
+					$arrScriptCodes = array(
+						"(3" => "Arabic",
+						"(B" => "Latin",
+						'$1' => "CJK",
+						"(N" => "Cyrillic",
+						"(S" => "Greek",
+						"(2" => "Hebrew"
+					);
+					
+					if ( preg_match("/[0-9]{3}-[0-9]{2}\/(.*)/", $strAltScript, $arrMatchCodes) )
+					{
+						if ( array_key_exists($arrMatchCodes[1], $arrScriptCodes) )
+						{
+							$this->strAltScript = $arrScriptCodes[$arrMatchCodes[1]];
+						}
+					}
+				}
 				
 				############################
 				## database-specific code ##
@@ -671,6 +710,7 @@
 					// abc-clio: just point back to site (7/30/07)
 					// engineering village (evii): has unreliable full-text links in a consortium environment (4/1/08)
 					// wiley interscience: wiley does not limit full-text links only to your subscription (4/29/08)
+					// oxford: only include the links that are free, otherwise just a link to abstract (5/7/08)
 					// gale: only has full-text if 'text available' note in 500 field (9/7/07)
 
 					
@@ -680,7 +720,8 @@
 					     stristr($this->strSource, "AMAZON") || 
 					     stristr($this->strSource, "ABCCLIO") || 
 					     stristr($this->strSource, "EVII") || 
-					     stristr($this->strSource, "WILEY_IS") ||
+					     stristr($this->strSource, "WILEY_IS") || 
+					     ( stristr($this->strSource, "OXFORD_JOU") && ! strstr($strUrl, "content/full/") ) ||
 					     ( strstr($this->strSource, "GALE") && ! in_array("Text available", $this->arrNotes) ) )
 					{
 						$bolToc = true;
@@ -1182,8 +1223,6 @@
 				$this->strBookTitle = $this->stripEndPunctuation($this->strBookTitle, "./;,:" );
 				$this->strTitle = $this->stripEndPunctuation($this->strTitle, "./;,:" );
 				$this->strSubTitle = $this->stripEndPunctuation($this->strSubTitle, "./;,:" );
-				$this->strTransTitle = $this->stripEndPunctuation($this->strTitle, "./;,:" );
-				$this->strTransSubTitle = $this->stripEndPunctuation($this->strSubTitle, "./;,:" );
 				$this->strShortTitle = $this->stripEndPunctuation($this->strShortTitle, "./;,:" );
 				$this->strJournalTitle = $this->stripEndPunctuation($this->strJournalTitle, "./;,:" );
 				$this->strSeriesTitle = $this->stripEndPunctuation($this->strSeriesTitle, "./;,:" );
@@ -1638,6 +1677,21 @@
 				}
 				
 				$objRecord->appendChild($objLinks);
+			}
+			
+			// information about the item in an alternate character-script
+			
+			if ( $this->arrAltScript != null )
+			{
+				$objScript = $objXml->createElement("alternate_script");
+				$objScript->setAttribute("name", $this->strAltScript);
+				$objRecord->appendChild($objScript);
+				
+				foreach ($this->arrAltScript as $strScriptInfo )
+				{
+					$objElement = $objXml->createElement("info", $strScriptInfo);
+					$objScript->appendChild($objElement);
+				}
 			}
 			
 			return $objXml;
