@@ -19,10 +19,10 @@
 <xsl:output method="html" encoding="utf-8" indent="yes" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
 
 <!-- certain operational parameters, given in request. -->
-    <!-- default to true -->
-    <xsl:variable name="show_alpha_links" select="not(/knowledge_base/request/show_alpha_links) or /knowledge_base/request/show_alpha_links != 'false'" />
-    <!-- default to false -->
-    <xsl:variable name="show_search_box" select="/knowledge_base/request/show_search_box = 'true'" />
+<!-- default to true -->
+<xsl:variable name="show_alpha_links" select="not(/knowledge_base/request/show_alpha_links) or /knowledge_base/request/show_alpha_links != 'false'" />
+<!-- default to false -->
+<xsl:variable name="show_search_box" select="/knowledge_base/config/show_search_box = 'true'" />
       
 <xsl:template match="/knowledge_base">
 	<xsl:call-template name="surround" />
@@ -44,7 +44,7 @@
       </div>
     </xsl:if>
     
-    <p><strong><xsl:value-of select="count(databases/database)" /> databases<xsl:if test="request/query"> matching "<xsl:value-of select="request/query" />"</xsl:if>.
+    <p><strong><xsl:value-of select="count(databases/database)" /> databases
     </strong></p> 
   
     <xsl:variable name="lower">abcdefghijklmnopqrstuvwxyz</xsl:variable>
