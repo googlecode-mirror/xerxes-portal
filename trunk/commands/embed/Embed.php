@@ -76,7 +76,7 @@ abstract class Xerxes_Command_Embed extends Xerxes_Framework_Command
         $objXml->documentElement->appendChild( $objXml->createElement("embed_direct_url", $embed_ssi_url));
         
         //Now the JS snippet url
-        $url_params["disp_embed_js"] = "true";
+        $url_params["format"] = "embed_html_js";
         $embed_js_call_url = $objRequest->url_for( $url_params, true);
         $objXml->documentElement->appendChild( $objXml->createElement("embed_js_call_url", $embed_js_call_url));      
         $objRequest->addDocument( $objXml );

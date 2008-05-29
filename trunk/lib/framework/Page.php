@@ -257,7 +257,7 @@
 			
 			if ( strstr($strSortQuery, "?") )
 			{
-				$strBase="$strSortQuery&";
+				$strBase="$strSortQuery&sortKeys";
 			}
 			else
 			{

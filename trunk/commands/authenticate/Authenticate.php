@@ -25,7 +25,7 @@ abstract class Xerxes_Command_Authenticate extends Xerxes_Framework_Command
 		// configuration settings
 		
 		$objRegistry = Xerxes_Framework_Registry::getInstance(); $objRegistry->init();	
-		$configApplication = $objRegistry->getConfig("APPLICATION_NAME", false, "xerxes");
+		$configApplication = $objRegistry->getConfig("BASE_WEB_PATH", false, "xerxes");
 		
 		// data map
 		
@@ -45,13 +45,15 @@ abstract class Xerxes_Command_Authenticate extends Xerxes_Framework_Command
 		$_SESSION["username"] = $user->username;
 		$_SESSION["role"] = $strRole;
 		$_SESSION["application"] = $configApplication;
-    // Store user's properties in session, so they can be used by
-    // controller, and included in XML for views. 
-    $_SESSION["user_properties"] = $user->properties();
+		
+		// store user's properties in session, so they can be used by
+		// controller, and included in xml for views. 
+    	
+    	$_SESSION["user_properties"] = $user->properties();
     
 		// add or update user in the database
 		
-    $objData->touchUser($user);        
+    	$objData->touchUser($user);        
 	}
 }
 

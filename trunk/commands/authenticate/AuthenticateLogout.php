@@ -38,18 +38,10 @@ class Xerxes_Command_AuthenticateLogout extends Xerxes_Command_Authenticate
 		session_destroy();			
 		session_unset();			
 			
-		// delete the session cookie
+		// delete cookies
 		
 		setcookie("PHPSESSID", "", 0, "/");
-		
-		// saved records cookie is a little tricky, since it
-		// needs a path to the current web url directory
-		
-		$path = $objRequest->getServer('REQUEST_URI');  
-		$arrPath = explode("/", $path); array_pop($arrPath);
-		$path = implode("/", $arrPath);
-		
-		setcookie("saves", "", 0, $path . "/");
+		setcookie("saves", "", 0, "/");
 			
 		// redirect to specified logout location
 

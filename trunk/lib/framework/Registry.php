@@ -154,7 +154,11 @@
 		{	
 			$name = strtoupper($name);
 			
-			if ( array_key_exists($name, $this->arrConfig) )
+			if ( $this->arrConfig == null )
+			{
+				return null;
+			}
+			elseif ( array_key_exists($name, $this->arrConfig) )
 			{
 				if ( $this->arrConfig[$name] == "true")
 				{
