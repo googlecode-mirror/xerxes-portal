@@ -31,14 +31,14 @@
         
         js_widget_content = 
           '&lt;script type="text/javascript" charset="utf-8" src="' + complete_url + 
-          '&amp;disp_embed_js=true" &gt;&lt;/script&gt;';
+          '&amp;format=embed_html_js" &gt;&lt;/script&gt;';
         //if we have a snip_noscript_content var, add that on. 
         if ( typeof(snip_noscript_content) != "undefined") {
             js_widget_content += 
               '\n&lt;noscript&gt;'+ snip_noscript_content + '&lt;/noscript&gt;';
         }
         $("js_widget_content").update(js_widget_content);
-        $("view_source_link").href = complete_url + "&amp;format=source";
+        $("view_source_link").href = complete_url + "&amp;format=text";
       }
       Event.observe(window, 'load', function() {
         new Form.EventObserver($("generator"), updateExample);

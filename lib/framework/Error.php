@@ -77,7 +77,7 @@
           $objError->documentElement->appendChild($childNode);
         }
         
-        if ( $objRequest->getProperty("format") == "xml" )
+        if ( $objRequest->getProperty("format") == "xerxes-xml" )
 				{
 					header('Content-type: text/xml');
 					echo $objError->saveXML();
@@ -90,7 +90,7 @@
 			}
 			
 			
-			// need toincorporate methods for doing additional actions based on the type
+			// need to incorporate methods for doing additional actions based on the type
 			// of error -- probably a config option
 	
 		}

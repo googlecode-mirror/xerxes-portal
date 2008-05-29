@@ -18,17 +18,17 @@
 		private $file = "config/actions.xml";	// actions configuration file
 		
 		private $xml = null;				// simplexml object containing instructions for the actions
-		private $path_map = null;			//Xerxes_Framework_PathMap object.
+		private $path_map = null;			// xerxes_framework_pathmap object.
 		private static $instance;			// singleton pattern
 	
-		private $strDocumentElement = "";		// name of the document element for the xml
-		private $bolRestricted = false;			// whether action should require authentication
+		private $strDocumentElement = "";	// name of the document element for the xml
+		private $bolRestricted = false;		// whether action should require authentication
 		private $bolLogin = false;			// whether action requires an explicit login
 		private $bolCLI = false;			// whether action should be restricted to command line interface
 		
-		private $arrCommands = array();			// list of commands
-		private $arrRequest = array();			// list of request params
-		private $arrIncludes = array();			// directories and files to include
+		private $arrCommands = array();		// list of commands
+		private $arrRequest = array();		// list of request params
+		private $arrIncludes = array();		// directories and files to include
 
 		private $strViewType = "";			// the folder the file lives in, important if it is 'xsl'
 		private $strViewFile = "";			// name of the file to use in view
@@ -99,6 +99,20 @@
 				foreach ( $includes as $include )
 				{
 					array_push($this->arrIncludes, (string) $include );
+				}
+			}
+			
+			// get global commands that should be included with every request
+			
+			$global_commands = $this->xml->commands->global->command;
+			
+			if ( $global_commands != false )
+			{
+				foreach ( $global_commands as $global_command )
+				{
+					$arrGlobalCommand = array((string) $global_command["directory"], (string) $global_command["namespace"], (string) $global_command);
+						
+					$this->addCommand($arrGlobalCommand);
 				}
 			}
 			
@@ -249,8 +263,26 @@
 					
 					// view
 					
+					// by default we'll take the first view file in the action
+					
 					$this->strViewFile = (string) $action->view;
           
+					// if there is a format={format-name} in the request and a seperate
+					// <view fomat="{format-name}"> that matches it, we'll take that as the
+					// view
+					
+					$format = $xerxes_request->getProperty("format");
+					
+					if ( $format != null )
+					{
+						foreach ( $action->view as $view )
+						{
+							if ( $view["format"] == $format)
+							{
+								$this->strViewFile = $view;
+							}
+						}
+					}
           
 					$type = (string) $action->view["type"];
 					if ( $type != null ) $this->strViewType = $type;
@@ -283,6 +315,27 @@
 				$this->path_map = new Xerxes_Framework_PathMap($this->xml);
 			}
 			return $this->path_map;
+		}
+		
+		/**
+		 * Get the header for a user-defined format
+		 *
+		 * @param string $format	name of the format
+		 * @return stringq			http header to be output for format
+		 */
+		
+		public function getFormat($format)
+		{
+			$formats = $this->xml->xpath("//formats/format[@name='$format']");
+			
+			if ( $formats != false )
+			{
+				return (string) $formats[0]["header"];
+			}
+			else
+			{
+				return null;
+			}
 		}
 
 		/**

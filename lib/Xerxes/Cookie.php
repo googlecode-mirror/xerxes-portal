@@ -58,6 +58,7 @@
 		 * @param string $strRecord			record identifier
 		 * @param string $strDelimiter		character delimiting entries in the cookie
 		 * @param bool $bolDelete			[optional] whether to delete regardless of whether item is in cookie
+		 * @param string $strPath			the path of the application directory
 		 * @return int						number of remaining records in the cookie
 		 */
 		
@@ -93,7 +94,7 @@
 				$iRecordsCookie++;
 			}
 			
-			setcookie($this->name, $this->cookie);
+			setcookie($this->name, $this->cookie, null, "/");
 			
 			return $iRecordsCookie;
 		}

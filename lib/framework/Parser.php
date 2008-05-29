@@ -17,14 +17,18 @@
 		 * Simple XSLT transformation function
 		 * 
 		 * @param mixed $xml			DOMDocument or string containing xml
-		 * @param string $strXsltPath		Relative file path to xslt document. Will look in both library location and local app location for documents, and combine them so local over-rides library templates, if neccesary. 
+		 * @param string $strXsltPath	Relative file path to xslt document. Will look in both library location and 
+		 * 								local app location for documents, and combine them so local over-rides library 
+		 * 								templates, if neccesary. 
 		 * @param array $arrParams		[optional] array of parameters to pass to stylesheet
-		 * @return string			newly formatted document
+		 * @return string				newly formatted document
 		 * @static 
 		 */ 
 					
 		public static function transform ( $xml, $strXsltPath, $arrParams = null )
 		{
+			if ( $strXsltPath == "") throw new Exception("no stylesheet supplied");
+			
 			if ( is_string($xml) )
 			{
 				// load xml document from string	
@@ -34,7 +38,7 @@
 			}
 			
 			$objXsl = self::generateBaseXsl($strXsltPath);
-      
+			
 			// create XSLT Processor
 			$objProcessor = new XsltProcessor();
 			$objProcessor->registerPhpFunctions();
@@ -113,8 +117,9 @@
 				self::addIncludeReference( $generated_xsl, $local_path);
 			}
 			
-			// if we don't have a local or a distro for given stylesheet path, that's a problem.
-			 
+			// if actions.xml specified a view and we don't have a local or 
+			// a distro copy, that's a problem.
+			
 			if (! ( file_exists($local_path) || file_exists($distro_path)))
 			{
 				throw new Exception("No xsl stylesheet found: $strXsltRelPath");

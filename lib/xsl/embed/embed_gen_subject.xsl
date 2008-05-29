@@ -164,7 +164,7 @@
         <a target="_blank"  id="view_source_link" class="optionInfo">
         <xsl:attribute name="href" >
         <xsl:value-of select="embed_info/embed_direct_url" />
-        <xsl:text>&amp;format=source</xsl:text>
+        <xsl:text>&amp;format=text</xsl:text>
         </xsl:attribute>
         View snippet source
         </a>

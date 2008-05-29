@@ -483,7 +483,14 @@
 				// just grab the value, if you know it is the 
 				// only one or first one in the query
 				
-				return $objNodes->item(0)->nodeValue;
+				if ( $objNodes->item(0) != null )
+				{
+					return $objNodes->item(0)->nodeValue;
+				}
+				else
+				{
+					return null;
+				}
 			}
 		}
 		
