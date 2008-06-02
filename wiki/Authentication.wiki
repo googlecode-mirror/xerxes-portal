@@ -1,4 +1,4 @@
-#Authentication and Restriction: How Xerxes decides who can do what 
+# Authentication and Restriction: How Xerxes decides who can do what 
 
 = Introduction =
 
