@@ -105,6 +105,7 @@ class Xerxes_Data_Database extends Xerxes_Framework_DataValue
 	public $active;
 	public $proxy;
 	public $searchable;
+  public $guest_access;
 	public $subscription;
 	public $sfx_suppress;
 	public $new_resource_expiry;
@@ -116,6 +117,7 @@ class Xerxes_Data_Database extends Xerxes_Framework_DataValue
 	public $languages = array();
 	public $alternate_publishers = array();
 	public $alternate_titles = array();
+  public $group_restrictions = array();
 }
 
 class Xerxes_Data_Record extends Xerxes_Framework_DataValue
@@ -143,6 +145,7 @@ class Xerxes_User extends Xerxes_Framework_DataValue
   public $first_name;
   public $last_name;
   public $email_addr;
+  public $usergroups = array();
   
   
   function __construct($username = null) {
@@ -186,6 +189,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		$this->delete("DELETE FROM xerxes_database_alternate_publishers");
 		$this->delete("DELETE FROM xerxes_database_alternate_titles");
 		$this->delete("DELETE FROM xerxes_database_keywords");
+    $this->delete("DELETE FROM xerxes_database_group_restrictions");
 		$this->delete("DELETE FROM xerxes_database_languages");
 		$this->delete("DELETE FROM xerxes_database_notes");
 		$this->delete("DELETE FROM xerxes_subcategory_databases");
@@ -210,6 +214,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		
 		$objDatabase->proxy = $this->convertMetalibBool($objDatabase->proxy);
 		$objDatabase->searchable = $this->convertMetalibBool($objDatabase->searchable);
+    $objDatabase->guest_access = $this->convertMetalibBool($objDatabase->guest_access);		
 		$objDatabase->subscription = $this->convertMetalibBool($objDatabase->subscription);
 		$objDatabase->sfx_suppress = $this->convertMetalibBool($objDatabase->sfx_suppress);
 		$objDatabase->new_resource_expiry = $this->convertMetalibDate($objDatabase->new_resource_expiry);
@@ -219,16 +224,27 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		
 		$this->doSimpleInsert("xerxes_databases", $objDatabase);
 		
+    
 		// keywords
 		
 		foreach ( $objDatabase->keywords as $keyword )
 		{
 			$strSQL = "INSERT INTO xerxes_database_keywords ( database_id, keyword ) " .
 					  "VALUES ( :metalib_id, :keyword )";
-					  
-			$this->insert($strSQL, array(":metalib_id" => $objDatabase->metalib_id, ":keyword" => $keyword));
+
+      $this->insert($strSQL, array(":metalib_id" => $objDatabase->metalib_id, ":keyword" => $keyword));
 		}
-		
+
+    // usergroups/"secondary affiliations". Used as access restrictions.
+    
+    foreach ( $objDatabase->group_restrictions as $usergroup )
+		{
+			$strSQL = "INSERT INTO xerxes_database_group_restrictions ( database_id, usergroup ) " .
+					  "VALUES ( :metalib_id, :usergroup )";
+			
+      $this->insert($strSQL, array(":metalib_id" => $objDatabase->metalib_id, ":usergroup" => $usergroup));
+		}
+    
 		// notes
 
 		foreach ( $objDatabase->notes as $note )
@@ -407,7 +423,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 	 * @return array					array of Xerxes_Data_Subcategory objects, with databases
 	 */
 	
-	public function getSubject($normalized, $old = null)
+public function getSubject($normalized, $old = null)
 	{
 		// we'll use the new 'categories' normalized scheme if available, but 
 		// otherwise get the old normalized scheme with the capitalizations for 
@@ -422,10 +438,9 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		}
 		
 		
-		// note that we aren't using the outter join here as we
-		// do with the getDatabases function, for speed; consider
-		// revising
-		
+		// We're outer joining only to group_restrictions, because it's
+    // really confusing and complicated to write this SQL, and that's all
+    // we need right now. 
 		$strSQL = 
 			"SELECT xerxes_categories.id as category_id, 
 		            xerxes_categories.name as category,
@@ -433,9 +448,11 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		            xerxes_subcategories.sequence as subcat_seq, 
 		            xerxes_subcategories.name as subcategory, 
 		            xerxes_subcategory_databases.sequence as sequence,
-		            xerxes_databases.* 
+		            xerxes_databases.*,
+                xerxes_database_group_restrictions.usergroup
 			   FROM xerxes_categories,
-			        xerxes_databases, 
+			        xerxes_databases
+               LEFT OUTER JOIN xerxes_database_group_restrictions ON xerxes_databases.metalib_id = xerxes_database_group_restrictions.database_id,
 			        xerxes_subcategory_databases, 
 			        xerxes_subcategories
 			 WHERE xerxes_categories.$column = :value
@@ -458,6 +475,8 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 			$objSubcategory->metalib_id = $arrResults[0]["subcat_id"];
 			$objSubcategory->name = $arrResults[0]["subcategory"];
 			
+      $objDatabase = new Xerxes_Data_Database();
+      
 			foreach ($arrResults as $arrResult)
 			{
 				// if the current row's subcategory name does not match the previous
@@ -465,6 +484,9 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 				
 				if ( $arrResult["subcategory"] != $objSubcategory->name )
 				{
+          // Get the last db in this subcategory first too. 
+          array_push($objSubcategory->databases, $objDatabase);
+          $objDatabase = new Xerxes_Data_Database();
 					array_push($objCategory->subcategories, $objSubcategory );
 					
 					$objSubcategory = new Xerxes_Data_Subcategory();
@@ -472,12 +494,43 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 					$objSubcategory->name = $arrResult["subcategory"];
 				}
 				
-				$objDatabase = new Xerxes_Data_Database();
-				$objDatabase->load($arrResult);
+        // if the previous row has a different id, then we've come 
+				// to a new database, otherwise these are values from the outer join
 				
-				array_push($objSubcategory->databases, $objDatabase);
+				if ( $arrResult["metalib_id"] != $objDatabase->metalib_id )
+				{
+          // Existing one that isn't empty? Save it. 
+					if ( $objDatabase->metalib_id != null )
+					{
+            array_push($objSubcategory->databases, $objDatabase);
+          }
+					
+					$objDatabase = new Xerxes_Data_Database();
+					$objDatabase->load($arrResult);
+				}
+        
+        // if the current row's outter join value is not already stored,
+				// then then we've come to a unique value, so add it
+				
+				$arrColumns = array(
+					 "usergroup" => "group_restrictions"					
+				);
+				
+				foreach ( $arrColumns as $column => $identifier )
+				{
+					if ( array_key_exists($column, $arrResult) && ! is_null($arrResult[$column]) )
+					{
+						if ( ! in_array($arrResult[$column], $objDatabase->$identifier) )
+						{
+							array_push($objDatabase->$identifier, $arrResult[$column]);
+						}
+					}
+				}
+        
 			}
 			
+      // Last ones. 
+      array_push($objSubcategory->databases, $objDatabase);
 			array_push($objCategory->subcategories, $objSubcategory );
 
 			return $objCategory;
@@ -489,7 +542,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		}
 		
 	}
-	
+		
 	/**
 	 * Get a single database from the knowledgebase
 	 *
@@ -516,8 +569,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 	 *
 	 * @param mixed $id			[optional] null returns all database, array returns a list of databases by id, 
 	 * 							string id returns single id
-   * @param array $args   Hash of extra arguments named by keys:
-   *              "query" =>  user-entered query to search for dbs. 
+   * @param string $query   user-entered query to search for dbs. 
 	 * @return array			array of Xerxes_Data_Database objects
 	 */
 	
@@ -528,7 +580,11 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		$arrResults = array();
 		
 		$strSQL = "SELECT * from xerxes_databases " .
-		          " LEFT OUTER JOIN xerxes_database_notes ON xerxes_databases.metalib_id = xerxes_database_notes.database_id " .
+		          " LEFT OUTER JOIN xerxes_database_notes ON xerxes_databases.metalib_id = xerxes_database_notes.database_id " 
+              
+              .
+              " LEFT OUTER JOIN xerxes_database_group_restrictions ON xerxes_databases.metalib_id = xerxes_database_group_restrictions.database_id"
+              .
 		          " LEFT OUTER JOIN xerxes_database_keywords ON xerxes_databases.metalib_id = xerxes_database_keywords.database_id " .
 		          " LEFT OUTER JOIN xerxes_database_languages ON xerxes_databases.metalib_id = xerxes_database_languages.database_id " .
 		          " LEFT OUTER JOIN xerxes_database_alternate_titles ON xerxes_databases.metalib_id = xerxes_database_alternate_titles.database_id " .
@@ -610,7 +666,8 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 				// then then we've come to a unique value, so add it
 				
 				$arrColumns = array(
-					"keyword" => "keywords", 
+					"keyword" => "keywords",
+          "usergroup" => "group_restrictions",
 					"language" =>"languages", 
 					"note" => "notes", 
 					"alt_title" => "alternate_titles", 
@@ -619,7 +676,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 				
 				foreach ( $arrColumns as $column => $identifier )
 				{
-					if ( array_key_exists($column, $arrResult) )
+					if ( array_key_exists($column, $arrResult) && ! is_null($arrResult[$column]) )
 					{
 						if ( ! in_array($arrResult[$column], $objDatabase->$identifier) )
 						{
@@ -985,8 +1042,11 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
     foreach ($user->properties() as $key => $value) {
       $update_values[":" . $key] = $value;
     }
+    //don't use usergroups though. 
+    unset($update_values[":usergroups"]);
     $update_values[":last_login"] = date("Y-m-d H:i:s"); 
-        
+    
+    $this->beginTransaction();
     
 		$strSQL = "SELECT * FROM xerxes_users WHERE username = :username";		
 		$arrResults = $this->select($strSQL, array(":username" => $user->username));
@@ -1000,21 +1060,39 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
       // the Xerxes_User object. 
       $db_values = $arrResults[0];            
       foreach ($db_values as $key => $value) {
-        if (! (is_null($value) || is_numeric($key))) {
+        if (! (is_null($value) || is_numeric($key) )) {
           $update_values[":" . $key] = $value; 
         }
       }
       
 			$strSQL = "UPDATE xerxes_users SET last_login = :last_login, suspended = :suspended, first_name = :first_name, last_name = :last_name, email_addr = :email_addr WHERE username = :username";
-      return $this->update($strSQL, $update_values);
+      $status = $this->update($strSQL, $update_values);
 		}
 		else
 		{
 			// add em otherwise
 			
 			$strSQL = "INSERT INTO xerxes_users ( username, last_login, suspended, first_name, last_name, email_addr) VALUES (:username, :last_login, :suspended, :first_name, :last_name, :email_addr)";
-			return $this->insert($strSQL, $update_values);
+			$status = $this->insert($strSQL, $update_values);
 		}
+    
+    
+    //Add let's make our group assignments match, unless the group
+    // assignments have been marked null which means to keep any existing ones
+    // only.
+    if ( is_null($user->usergroups)) {
+       //fetch what's in the db and use that please.
+        $user->usergroups = $this->select("SELECT usergroup FROM xerxes_user_usergroups WHERE username = :username", array(":username" => $user->username));
+    }
+    else {      
+      $status = $this->delete("DELETE FROM xerxes_user_usergroups WHERE username = :username", array(":username" => $user->username));
+      
+      
+      foreach ( $user->usergroups as $usergroup) {
+        $status = $this->insert("INSERT INTO xerxes_user_usergroups (username, usergroup) VALUES (:username, :usergroup)", array(":username" => $user->username, ":usergroup" => $usergroup));
+      }
+    }    
+    return $this->commit();
   }
 
 	

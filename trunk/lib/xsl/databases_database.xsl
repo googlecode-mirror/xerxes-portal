@@ -55,6 +55,9 @@
 						<td class="databasesAttribute">Availability:</td>
 						<td class="databasesValue">
 							<xsl:choose>
+                <xsl:when test="group_restriction">
+                  <xsl:call-template name="db_restriction_display" />
+                </xsl:when>
 								<xsl:when test="subscription = '1'">
 									Only available to registered users.
 								</xsl:when>

@@ -66,10 +66,36 @@ a img{  border: 0px; }
 #databasesAlpha {
 	margin: 30px;
 }
+
 #sidebar {
-	padding: 10px;
-	margin-left: 545px;
+  padding: 10px;
+  margin-left: 545px;
 }
+
+#sidebar_content {
+  min-width: 150px;
+  max-width: 320px;
+  margin-bottom: 20px;
+	padding:10px;
+	line-height:1.5em;
+	background-color: #f0f0f0;
+	background-image: url(../images/bg-long-light.gif);
+	background-repeat: repeat-x;
+	background-position: top;
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 2px;
+	border-left-width: 1px;
+	border-top-style: solid;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-left-style: solid;
+	border-top-color: #CCCCCC;
+	border-right-color: #CCCCCC;
+	border-bottom-color: #999999;
+	border-left-color: #CCCCCC;  
+}
+
 #searchArea {
 	float: left;
 	width: 500px;
@@ -165,10 +191,12 @@ a img{  border: 0px; }
 }
 .subjectCheckList {
 	margin-top: 10px;
+  width: 100%;
 }
 
 .categories {
 	margin-top: 30px;
+  float: left;
 }
 .categoriesTable td {
 	padding-right: 15px;

@@ -589,16 +589,7 @@
 		
 		public function hasLoggedInUser()
 		{
-			// this logic used to be in view in includes.xsl. factored out here. 
-			
-			if ( array_key_exists("role", $_SESSION) && $_SESSION["role"] != 'local')
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
+			return Xerxes_Framework_Restrict::isAuthenticatedUser($this);
 		}
     
 		/**
@@ -611,6 +602,9 @@
 		
 		public function toXML($bolHideServer = false)
 		{
+      
+			$objRegistry = Xerxes_Framework_Registry::getInstance();
+      
 			// add the url parameters and session and server global arrays
 			// to the master xml document
 			
@@ -626,24 +620,39 @@
 			
 			$objSession = $objXml->createElement("session");
 			$objXml->documentElement->appendChild($objSession);
-			$this->addElement($objXml, $objSession, $_SESSION);
-			
+			$this->addElement($objXml, $objSession, $_SESSION);			
+      
 			// we might add some calculated thigns to xml that aren't actually
-			// stored in session. add a boolean for hasloggedinuser too.
-		
-			$el = $objXml->createElement("hasLoggedInUser", $this->hasLoggedInUser());
-			$objSession->appendChild( $el );
-      if ( $this->hasLoggedInUser() && array_key_exists("user_properties", $_SESSION)) {
-        $el = $objXml->createElement("logged_in_user");
+			// stored in session.
+      
+      // Okay, yeah, we already have group memberships listed from the session,
+      // but it doesn't have all the data we need, plus we need to stick
+      // group memberships by virtue of IP address. 
+      $objAuth = $objXml->createElement("authorization_info");
+      $objXml->documentElement->appendChild($objAuth);
+      // Are they an affiliated user at all, meaning either logged in or
+      // ip recognized?
+      $authUser = Xerxes_Framework_Restrict::isAuthenticatedUser($this);
+      $authIP = Xerxes_Framework_Restrict::isIpAddrInRanges(
+        $this->getServer('REMOTE_ADDR'),
+        $objRegistry->getConfig("local_ip_range"));
+      $objElement = $objXml->createElement("affiliated", ($authUser || $authIP) ? "true" : "false");
+      $objElement->setAttribute("user_account", $authUser ? "true" : "false");
+      $objElement->setAttribute("ip_addr", $authIP ? "true" : "false");
+      $objAuth->appendChild( $objElement );
 
-        $arrUserProps = $_SESSION["user_properties"];
-        
-        foreach ($arrUserProps as $key => $value ) {
-          $el->appendChild( $objXml->createElement($key, $value));
-        }        
-        
-
-        $objSession->appendChild($el);        
+      //now each group
+      foreach( $objRegistry->userGroups() as $group) {
+        $authUser = array_key_exists("user_groups", $_SESSION) && in_array($group, $_SESSION["user_groups"]);
+        $authIP = Xerxes_Framework_Restrict::isIpAddrInRanges(
+            $this->getServer('REMOTE_ADDR'),
+            $objRegistry->getGroupLocalIpRanges( $group ));
+        $objElement = $objXml->createElement("group", ($authUser || $authIP) ? "true" : "false");
+        $objElement->setAttribute("id", $group);
+        $objElement->setAttribute("display_name", $objRegistry->getGroupDisplayName($group));
+        $objElement->setAttribute("user_account", $authUser ? "true" : "false");
+        $objElement->setAttribute("ip_addr", $authIP ? "true" : "false");
+        $objAuth->appendChild( $objElement );
       }
 			
 			// add the server global array, but only if the request
@@ -681,9 +690,9 @@
 				{
 					foreach ($value as $strKey => $strValue)
 					{
-						$objElement = $objXml->createElement(strtolower($key), Xerxes_Parser::escapeXml($strValue));
-						$objElement->setAttribute("key", $strKey);
-						$objAppend->appendChild($objElement);
+            $objElement = $objXml->createElement(strtolower($key), Xerxes_Parser::escapeXml($strValue));
+            $objElement->setAttribute("key", $strKey);
+            $objAppend->appendChild($objElement);
 					}
 				}
 				else

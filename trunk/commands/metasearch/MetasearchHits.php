@@ -51,6 +51,19 @@
 		 	$configSortPrimary = $objRegistry->getConfig("SORT_ORDER_PRIMARY", false, "rank");
 		 	$configSortSecondary = $objRegistry->getConfig("SORT_ORDER_SECONDARY", false, "year");
 		 	
+      // access control
+      $objSearchXml = $objSearch->searchStatus($strGroup);
+      $objSearchSimple = simplexml_import_dom($objSearchXml->documentElement);
+			$ids_xml = $objSearchSimple->xpath("//base_001");
+      
+      $metalib_ids = array();
+      foreach ($ids_xml as $id ) {
+        $metalib_ids[] = (string) $id;
+      }
+      $objData = new Xerxes_DataMap();
+      $dbs = $objData->getDatabases($metalib_ids);            
+      Xerxes_Framework_Restrict::checkDbListSearchableByUser( $dbs, $objRequest, $objRegistry );
+      
 			// determine if redirect after merge
 			
 			if ( $configShowMergedResults == true )

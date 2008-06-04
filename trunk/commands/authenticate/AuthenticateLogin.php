@@ -88,6 +88,9 @@ class Xerxes_Command_AuthenticateLogin extends Xerxes_Command_Authenticate
        {
          
          $user = new Xerxes_User($strUsername);
+         // set usergroups to null meaning unless the delegate sets
+         // usergroups, we'll just keep what's in the db, if anything. 
+         $user->usergroups = null;
          $shib_map_file = $objRegistry->getConfig("APP_DIRECTORY", true) . "/config/shibboleth/shib_map.php";
          if ( file_exists($shib_map_file)) {
            require_once($shib_map_file);

@@ -23,6 +23,14 @@ CREATE TABLE xerxes_users (
 
 CREATE INDEX xerxes_users_username_idx ON xerxes_users(username);
 
+CREATE TABLE xerxes_user_usergroups (
+	username    		VARCHAR(50),
+	usergroup			  VARCHAR(50),
+
+	PRIMARY KEY (username, usergroup),
+	FOREIGN KEY (username) REFERENCES xerxes_users(username) ON DELETE CASCADE
+);
+
 CREATE TABLE xerxes_sfx (
 	issn       	VARCHAR(8),
 	title       	VARCHAR(100),

@@ -41,7 +41,9 @@
   <xsl:variable name="logout_text">
       Log-out
       <xsl:text> </xsl:text>
-      <xsl:value-of select="//request/session/username" />
+      <xsl:if test="//request/authorization_info/affiliated[@user_account = 'true']">
+        <xsl:value-of select="//request/session/username" />
+      </xsl:if>
   </xsl:variable>
 
 <!-- 	
@@ -529,10 +531,14 @@
             </xsl:when>
             <xsl:when test="searchable = 1">
               <xsl:choose>
-                <xsl:when test="subscription = '1' and /knowledge_base/request/session/role = 'guest'">
+                <!-- <xsl:when test="subscription = '1' and /knowledge_base/request/session/role = 'guest'"> -->
+                <xsl:when test="(/*/request/authorization_info/affiliated[@user_account = 'true'] or /*/request/session/role = 'guest')  and searchable_by_user != '1'" >
+                  <!-- if we have a logged in user (or a registered guest), but they can't search this, show them a lock. -->                
                   <img src="{$base_url}/images/lock.gif" alt="restricted to campus users only" />
                 </xsl:when>
                 <xsl:otherwise>
+                  <!-- if no user logged in, or user logged in and they can
+                  search this, show them a checkbox. -->
                   <xsl:element name="input">
                     <xsl:attribute name="name">database</xsl:attribute>
                     <xsl:attribute name="id"><xsl:value-of select="metalib_id" /></xsl:attribute>
@@ -560,15 +566,23 @@
             <xsl:attribute name="href"><xsl:value-of select="xerxes_native_link_url" /></xsl:attribute>
               <xsl:value-of select="title_display" />
             </a>
-            &#160;<a>
-              <xsl:attribute name="href"><xsl:value-of select="url" /></xsl:attribute>
-              <img alt="info" src="images/info.gif" >
-                <xsl:attribute name="src"><xsl:value-of select="/*/config/base_url" />/images/info.gif</xsl:attribute>
-              </img>
-            </a>
           </xsl:element>
         </td>
+        <td>
+          <a>
+            <xsl:attribute name="href"><xsl:value-of select="url" /></xsl:attribute>
+            <img alt="info" src="images/info.gif" >
+              <xsl:attribute name="src"><xsl:value-of select="/*/config/base_url" />/images/info.gif</xsl:attribute>
+            </img>
+          </a>
+        </td>
       </tr>
+      <xsl:if test="group_restriction">
+        <tr>
+          <td></td>
+          <td colspan="2"><xsl:call-template name="db_restriction_display" /></td>
+        </tr>
+      </xsl:if>
     </xsl:for-each>	
     </table>
     
@@ -612,6 +626,36 @@
 		
 	</form>
 	
+</xsl:template>
+
+<!-- TEMPLATE: db_restriction_display 
+     Show access rights for db, including group restrictions. 
+     Either pass in a parameter, or else it assumes that
+     a <database> node is the XSL current() node. -->
+<xsl:template name="db_restriction_display">
+    <xsl:param name="database" select="current()" />
+
+    <xsl:variable name="group_restrictions" select="$database/group_restriction" />
+    
+    <xsl:if test="$group_restrictions">
+      Only available to
+    </xsl:if>
+    
+    <xsl:for-each select="$group_restrictions">
+      <xsl:value-of select="@display_name" />
+      <xsl:choose>
+        <xsl:when test="count(following-sibling::group_restriction) = 1">
+        and
+        </xsl:when>
+        <xsl:when test="count(following-sibling::group_restriction) > 1">
+        , 
+        </xsl:when>
+      </xsl:choose>
+    </xsl:for-each>
+    <xsl:if test="$group_restrictions">
+    <xsl:text> </xsl:text>
+    users
+    </xsl:if>
 </xsl:template>
 
 
@@ -831,6 +875,81 @@
 	</xsl:for-each>
 </xsl:template>
 
+<xsl:template name="excluded_db_list">
+  <ul>
+    <xsl:for-each select="//excluded_dbs/database">
+      <li><strong><xsl:value-of select="title_display"/></strong>:
+      <xsl:choose>
+        <xsl:when test="group_restriction">
+          <xsl:call-template name="db_restriction_display" />
+        </xsl:when>
+        <xsl:when test="subscription = '1'">
+          Only available to registered users.
+        </xsl:when>
+        <xsl:otherwise>
+          Available to everyone.
+        </xsl:otherwise>
+      </xsl:choose>      
+      </li>
+    </xsl:for-each>
+  </ul>
+</xsl:template>
+
+<!--
+
+	TEMPLATE: categories_sidebar
+  Override in local includes.xsl if you'd like a sidebar on the home/categories page. Put your content in a div with id="sidebar_content" if you'd like some style. 
+-->
+<xsl:template name="categories_sidebar">
+</xsl:template>
 
 
+<!--
+
+	TEMPLATE: session_auth_info
+	
+  Displays a user's authorization crednetials from login and IP. 
+  
+  Useful especially if you are using Metalib usergroup/secondary affiliation
+  access. jrochkind likes to display it on the front page in a sidebar.   
+-->
+<xsl:template name="session_auth_info">
+  <div id="session_auth_info">
+  <xsl:choose>
+    <xsl:when test="//request/authorization_info/affiliated = 'true'">
+      <p>Welcome,  <xsl:value-of select="//session/user_properties[@key = 'username']" />.</p>       
+    </xsl:when>
+    <xsl:otherwise>
+      <!-- <p>You are not logged in.</p> -->
+    </xsl:otherwise>
+  </xsl:choose>
+  
+  <xsl:if test="//request/authorization_info/group[@user_account = 'true']">
+    <h3>Your Affiliation</h3>
+    <ul>
+    <xsl:for-each select="//request/authorization_info/group[@user_account = 'true']">
+        <li><xsl:value-of select="@display_name" /></li>      
+    </xsl:for-each>
+    </ul>
+  </xsl:if>
+  
+    <h3>Your Location</h3>
+    <ul>
+      <xsl:choose>
+        <xsl:when test="//request/authorization_info/affiliated[@ip_addr = 'true']">
+          <li>On-campus</li>
+        </xsl:when>
+        <xsl:otherwise>
+          <li><strong>Off</strong> campus</li>
+        </xsl:otherwise>
+      </xsl:choose>
+      <xsl:for-each select="//request/authorization_info/group[@ip_addr = 'true']">
+        <li><xsl:value-of select="@display_name" /></li>      
+      </xsl:for-each>
+    </ul>
+  
+  </div>
+</xsl:template>
+  
+  
 </xsl:stylesheet>

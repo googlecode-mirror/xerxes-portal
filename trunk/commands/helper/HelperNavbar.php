@@ -19,7 +19,7 @@
                                   "return" => $objRequest->getServer("REQUEST_URI"));
       
       $element_id;
-      if ( $objRequest->hasLoggedInUser() )
+      if ( $objRequest->hasLoggedInUser() || $objRequest->getSession("role") == "guest" )
       {
         $element_id = "logout";
         $auth_action_params["action"] = "logout";

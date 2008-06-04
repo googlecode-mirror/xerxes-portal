@@ -76,5 +76,13 @@
 
 -->
 
+<!-- Over-ride categories_sidebar if you'd like to put something in the sidebar on the home page. Here's an example of giving the user their login/authentication details.
+
+<xsl:template name="categories_sidebar">
+<div id="sidebar_content">
+  <xsl:call-template name="session_auth_info" />
+</div>1
+</xsl:template>
+-->
 
 </xsl:stylesheet>

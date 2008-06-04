@@ -39,6 +39,18 @@
 			$strGroup =	$objRequest->getProperty("group");
 			$strResultSet =	$objRequest->getProperty("resultSet");
 			$iStartRecord =	(int) $objRequest->getProperty("startRecord");
+      
+      // access control
+      $objSearchXml = $this->getCache($strGroup, "search", "DOMDocument");
+      $objSearchSimple = simplexml_import_dom($objSearchXml->documentElement);					
+			$db_xml = $objSearchSimple->xpath("//database_links/database");
+      $metalib_ids = array();
+      foreach ($db_xml as $db ) {
+        $metalib_ids[] = (string) $db["metalib_id"];
+      }
+      $objData = new Xerxes_DataMap();
+      $dbs = $objData->getDatabases($metalib_ids);            
+      Xerxes_Framework_Restrict::checkDbListSearchableByUser( $dbs, $objRequest, $objRegistry );
 			
 			// marc fields to return from metalib; we specify these here in order to keep
 			// the response size as small (and thus as fast) as possible

@@ -61,7 +61,7 @@
 						<td align="right">to:</td>
 						<td>
 						<input name="email" type="text" id="email">
-              <xsl:attribute name="value"><xsl:value-of select="//logged_in_user/email_addr"/></xsl:attribute>
+              <xsl:attribute name="value"><xsl:value-of select="//session/user_properties[@key = email_addr]"/></xsl:attribute>
             </input>
 						</td>
 					</tr>

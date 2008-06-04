@@ -55,8 +55,7 @@
 
 		public function checkLogin(Xerxes_Framework_Request $objRequest)
 		{
-			if ( $objRequest->getSession("username") == null || $objRequest->getSession("application") != $this->strAppName || 
-				 $objRequest->getSession("role") == "local" )
+			if (self::isAuthenticatedUser($objRequest, $this->strAppName));
 			{
 				// redirect to authentication page
 					
@@ -65,6 +64,17 @@
 			}
 		}
 
+    // Session has a logged in authenticated user. Not "guest" or "local" role, // both of which imply a temporary session, not an authenticated user. 
+    public static function isAuthenticatedUser(Xerxes_Framework_Request $objRequest) {
+      $objRegistry =  Xerxes_Framework_Registry::getInstance(); 
+      $application = $objRegistry->getConfig("BASE_WEB_PATH");      
+      
+      return ! ( $objRequest->getSession("username") == null || $objRequest->getSession("application") != $application || 
+				 $objRequest->getSession("role") == "local" ||
+         $objRequest->getSession("role") == "guest" );
+    }
+    
+    
 		/**
 		 * Limit access to users within the local ip range, assigning local users a temporary
 		 * login id, and redirecting non-local users out to login page
@@ -80,7 +90,7 @@
 			{
 				// check to see if user is coming from campus range
 				
-				$bolLocal = $this->isLocal($objRequest->getServer('REMOTE_ADDR'), $this->strIPRange);
+				$bolLocal = self::isIpAddrInRanges($objRequest->getServer('REMOTE_ADDR'), $this->strIPRange);
 				
 				if ( $bolLocal == true )
 				{
@@ -100,7 +110,8 @@
 				}
 			}
 		}
-		
+		    
+    
 		/**
 		 * Strips periods and pads the subnets of an IP address to three spaces, 
 		 * e.g., 144.37.1.23 = 144037001023, to make it easier to see if a remote 
@@ -110,7 +121,7 @@
 		 * @return string					address normalized with extra zeros
 		 */
 			
-		private function normalizeAddress ( $strOriginal )
+		private static function normalizeAddress ( $strOriginal )
 		{
 			$strNormalized = "";
 			$arrAddress = explode(".", $strOriginal );
@@ -124,20 +135,23 @@
 		}
 		
 		/**
-		 * Is the ip address within the supplied local ip range(s)
+		 * Is the ip address within the supplied ip range(s)
+     * For syntax/formatting of an ip range string, see config.xml.
+     * Basically, it's comma seperated ranges, where each range can use
+     * wildcard (*) and hyphen to seperate endpoints. 
 		 *
 		 * @param string $strAddress	ip address
 		 * @param string $strRanges		ip ranges
 		 * @return bool					true if in range, otherwise false
 		 */
 		
-		private function isLocal($strAddress, $strRanges)
+		public static function isIpAddrInRanges($strAddress, $strRanges)
 		{
 			$bolLocal = false;
 			
 			// normalize the remote address
 				
-			$iRemoteAddress = $this->normalizeAddress( $strAddress );
+			$iRemoteAddress = self::normalizeAddress( $strAddress );
 			
 			// get the local campus ip range from config
 				
@@ -160,8 +174,8 @@
 					
 					$arrLocalRange = explode("-", $range );
 					
-					$iStart = $this->normalizeAddress( $arrLocalRange[0] );
-					$iEnd = $this->normalizeAddress( $arrLocalRange[1] );
+					$iStart = self::normalizeAddress( $arrLocalRange[0] );
+					$iEnd = self::normalizeAddress( $arrLocalRange[1] );
 				}
 				else
 				{
@@ -170,8 +184,8 @@
 					$strStart = str_replace("*", "000", $range );
 					$strEnd =  str_replace("*", "255", $range );
 					
-					$iStart = $this->normalizeAddress( $strStart );
-					$iEnd = $this->normalizeAddress( $strEnd );
+					$iStart = self::normalizeAddress( $strStart );
+					$iEnd = self::normalizeAddress( $strEnd );
 				
 				}
 				
@@ -185,6 +199,61 @@
 			
 			return $bolLocal;
 		}
-	}
-		
+    
+    /* Returns true or throws a Xerxes_DatabasesDeniedException 
+      Array of Xerxes_Data_Database
+    
+    */
+    public static function checkDbListSearchableByUser(Array $dbList, $objRequest, $objRegistry) {
+      $deniedList = array();
+      foreach ($dbList as $db ) {
+        if (! self::dbSearchableForUser($db, $objRequest, $objRegistry)) {
+          $deniedList[] = $db;
+        }
+      }
+      if ( count($deniedList) > 0) {
+         $e = new Xerxes_DatabasesDeniedException();
+         $e->setDeniedDatabases( $deniedList );
+         throw $e;
+      }
+      else {
+        return true;
+      }
+    }
+    
+    
+    public static function dbSearchableForUser(Xerxes_Data_Database $db, $objRequest, $objRegistry) {
+               
+        if (! $db->searchable) {
+          //nobody can search it!
+          $allowed = false;
+        }
+        elseif ( $db->guest_access ) {
+          //anyone can search it!
+          $allowed = true;
+        }
+        elseif ( count($db->group_restrictions) > 0) {
+          // They have to be authenticated, and in a group that is included
+          // in the restrictions, OR in an IP address associated with a
+          // restricted group. 
+          $allowed = ( Xerxes_Framework_Restrict::isAuthenticatedUser($objRequest) &&
+          array_intersect($_SESSION["user_groups"], $db->group_restrictions));
+          if ( ! $allowed ) {
+            // Not by virtue of a login, but now check for IP address
+            $ranges = array();
+            foreach ( $db->group_restrictions as $group ) {
+              $ranges[] = $objRegistry->getGroupLocalIpRanges($group); 
+            }
+            $allowed = self::isIpAddrInRanges($objRequest->getServer('REMOTE_ADDR') , implode(",",$ranges));
+          }
+        }
+        else {          
+          //Ordinary generally restricted resource. They need to be an authenticated user, or in the local ip range. 
+          $allowed =  Xerxes_Framework_Restrict::isAuthenticatedUser($objRequest) || self::isIpAddrInRanges($objRequest->getServer('REMOTE_ADDR'), $objRegistry->getConfig("local_ip_range"));          
+        }
+        return $allowed;
+    }    
+}
+
+
 ?>

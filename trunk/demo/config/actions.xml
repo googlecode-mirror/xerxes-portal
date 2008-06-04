@@ -53,7 +53,7 @@
 			 @directory [required] = must correspond to the directory in the commands folder where the command classes live
 			 @namespace [required]= the first part of the command class names, such as 'Xerxes' in Xerxes_Command_Databases
 			 @documentElement [required] = the name the document element in the xml response
-			 @restricted [optional] = whether this part of the application should be IP restricted to the local campus range, default false
+			 @restricted [optional] = if true, this action is restricted to users who are authenticated (logged in) OR in the local campus range. See wiki for more info.  default false
 			 @login [optional] = whether the user must be logged in under their username, default false
 		 -->
 	
@@ -111,10 +111,10 @@
 				<command>DatabasesCategories</command>
 				<view type="php">custom/databases_old-subject.php</view>
 			</action>
-			<action name="metasearch">
+			<!-- <action name="metasearch">
 				<command>DatabasesSubject</command>
 				<view>xsl/databases_metasearch.xsl</view>
-			</action>
+			</action> -->
 			<action name="jump">
 				<command>DatabasesSubject</command>
 				<view type="php">custom/databases_jump.php</view>

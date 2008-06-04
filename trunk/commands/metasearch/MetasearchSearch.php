@@ -83,10 +83,57 @@
 		 	if ( $strQuery == "" ) throw new Exception("Please enter search terms");
 		 	if ( $strField == "" ) $strField = "WRD";
 		 	
+      
+      // Load datamap, we need it now, and later. 
+      $objDataMap = new Xerxes_DataMap();			
+			$arrDB = $objDataMap->getDatabases($arrDatabases);
+      
+      // Start out database information XML object. 
+      $objXml = new DOMDocument();
+			$objXml->loadXML("<search />");
+      
+      // access control for databases
+      
+      $excludedDbs = array();
+      $excludedIDs = array();
+      foreach ( $arrDB as $db) {
+        if (! Xerxes_Framework_Restrict::dbSearchableForUser($db, $objRequest, $objRegistry)) {
+           $excludedDbs[] = $db;
+           $excludedIDs[] = (string) $db->metalib_id;
+        }        
+      }
+      if ( count($excludedDbs) > 0) {
+        // remove excluded dbs from our db lists. What a pain in php, sorry.        
+        foreach ( $arrDB as $key => $db) {
+          if ( in_array((string) $db->metalib_id, $excludedIDs)) {
+            unset($arrDB[$key]);
+          }
+        }
+        foreach ( $arrDatabases as $key => $id) {
+          if ( in_array($id, $excludedIDs)) {
+            unset($arrDatabases[$key]); 
+          }
+        }
+                
+        // and make a note of the excluded dbs please. 
+        $excluded_xml = $objXml->createElement("excluded_dbs");
+        $objXml->documentElement->appendChild($excluded_xml);
+        foreach ( $excludedDbs as $db ) {
+          $element = Xerxes_Helper::databaseToNodeset($db, $objRequest, $objRegistry);
+          $element = $objXml->importNode( $element, true );
+          $excluded_xml->appendChild( $element );
+        }
+      }        
 		 	// ensure correct number of databases selected
 		 	
-		 	if ( count($arrDatabases) < 1 )
+		 	if ( count($arrDatabases) < 1 && count($excludedDbs) > 0 ) 
 		 	{
+        $e = new Xerxes_DatabasesDeniedException("You are not authorized to search the databases you selected. Please choose other databases and try again.");
+        $e->setDeniedDatabases( $excludedDbs );
+        throw $e;
+      }
+      elseif ( count($arrDatabases) < 1)
+      {
 		 		throw new Exception("Please choose one or more databases to search");
 		 	}
 		 	if ( count($arrDatabases) > $configSearchLimit )
@@ -146,10 +193,7 @@
 				}
 			}
 	
-			// create search information xml
-			
-			$objXml = new DOMDocument();
-			$objXml->loadXML("<search />");
+			// create search information xml			
 			
 			$arrSearch = array();
 			$arrSearch["date"] = date("Y-m-d");
@@ -187,8 +231,7 @@
 			// store it here so we can get at this information easily on any subsequent page without having
 			// to go back to the database
 			
-			$objDataMap = new Xerxes_DataMap();			
-			$arrDB = $objDataMap->getDatabases($arrDatabases);
+
 			
 			$objDatabaseLinks = $objXml->createElement("database_links");
 			$objXml->documentElement->appendChild($objDatabaseLinks);

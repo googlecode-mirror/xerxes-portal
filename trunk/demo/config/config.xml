@@ -57,6 +57,20 @@
 		
 		<config name="ip_address"></config>
 		
+    <!-- Metalib user groups (aka 'secondary affiliations'). Extra info for
+       display and use of them. Metalib user groups are ordinarily in all caps.
+       <group id="metalib_code">  : id is the group code used in Metalib. 
+       <display_name>    : What to call this group to users       
+       <local_ip_range>  : 		IPs to be considered as local to this group, qualifying for this group even without user account user group qualification.  Enter as either 144.37.*.*, with * as wildcard, or as 144.37.0.0-144.37.255.255, seperate mutliple entries by comma -->
+       <!-- example:
+       
+       <groups>
+        <group id="science">
+          <display_name>Science Library</display_name>
+          <local_ip_range>201.2.4.*</local_ip_range>
+        </group>
+       </groups> -->
+    
 	<!-- LOCAL DATABASE -->
 	
 		<!-- Connection string, username, and password for local database: Xerxes uses PDO for database access, 
@@ -174,13 +188,13 @@
 		 security you should allow only https shibboleth connections, and
 		 use cookieProps in your shibboleth.xml to set cookies to be required
 		 'secure'.
+
+     If you have forced shib connections to be secure like this, you should set
+     Xerxes config 'secure_login', above, to true. 
 		 
 		 Xerxes Shib logic assumes you have Xerxes config "rewrite" true, it
 		 won't work if you don't. (It could probably be modified to do so,
-		 but isn't not). 
-		 
-		 If you have secure shib, you should set Xerxes config 'secure_login',
-		 above, to true. 
+		 but isn't yet). 
 		 
 		 In your apache conf for your 443/ssl apache, include this to
 		 force shib authentication for Xerxes (you MAY be able to put
