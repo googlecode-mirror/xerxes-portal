@@ -42,7 +42,12 @@
 			}
 			else
 			{
-				header(' ', true, 500);		// send back http status as internal server error
+        $resultStatus = 500;
+        if ( $e instanceof Xerxes_AccessDeniedException) {
+          $resultStatus = 403;
+        }
+        
+				header(' ', true, $resultStatus);		// send back http status as internal server error
 				
 				// for the web, we'll convert the error message to xml along with the type
 				// of exception and hand display off to the error.xsl file
@@ -68,6 +73,17 @@
 				$objBaseURL = $objError->createElement("base_url", $objRegistry->getConfig('BASE_WEB_PATH', true));
 				$objError->documentElement->appendChild($objBaseURL);
 				
+        // If it's a db denied exception, include info on dbs. 
+        if ( $e instanceof Xerxes_DatabasesDeniedException) {
+          $excluded_xml = $objError->createElement("excluded_dbs");
+          $objError->documentElement->appendChild($excluded_xml);
+          foreach ( $e->deniedDatabases() as $db ) {
+            $element = Xerxes_Helper::databaseToNodeset($db, $objRequest, $objRegistry);
+            $element = $objError->importNode( $element, true );
+            $excluded_xml->appendChild( $element );
+          }
+        }        
+      
 				
 				// add in the request object's stuff. 
         $request_xml = $objRequest->toXML();                

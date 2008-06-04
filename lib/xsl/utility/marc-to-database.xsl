@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0"
 	xmlns:marc="http://www.loc.gov/MARC21/slim"
-	xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:php="http://php.net/xsl">
 <xsl:output method="xml" encoding="utf-8"/>
 
 <xsl:template match="category">
@@ -56,7 +57,25 @@
 		<xsl:comment>access</xsl:comment>
 		
 		<institute><xsl:value-of select="marc:datafield[@tag='AF1']/marc:subfield[@code='a']" /></institute>
-		
+    
+    <!-- Sorry, have to go to php to conveniently seperate out the comma-delimited string of assigned groups. splitToNodeset function defined in PopulateDatabases.php. "GUEST" in the group list isn't a restriction,
+    but instead an indication that the resource is publically/guest searchable. That's how metalib does it. We translate to something more sane.-->
+    
+    <xsl:variable name="groups" select="php:functionString('splitToNodeset',  marc:datafield[@tag='AF3']/marc:subfield[@code='a'])/item" />
+    
+    <guest_access>
+      <xsl:choose>
+        <xsl:when test="count($groups[@value = 'GUEST']) > 0">yes</xsl:when>
+        <xsl:otherwise>no</xsl:otherwise>
+      </xsl:choose>
+    </guest_access>
+    
+    <group_restrictions>
+      <xsl:for-each select="$groups[@value != 'GUEST']">
+        <group><xsl:value-of select="@value" /></group>
+      </xsl:for-each>
+    </group_restrictions>
+    
 		<filter><xsl:value-of select="marc:datafield[@tag='FTL']/marc:subfield[@code='a']" /></filter>
 		
 		<xsl:if test="marc:datafield[@tag='TAR']/marc:subfield[@code='a']">

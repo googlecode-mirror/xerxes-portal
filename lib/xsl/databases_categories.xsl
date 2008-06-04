@@ -56,8 +56,10 @@
 			</form>
 		</xsl:if>
 		
+    
 		<div class="categories">
-		
+
+        
 			<h2>Search by Subject</h2>
 			<p>Search databases specific to your area of study.</p>
 			<xsl:variable name="total" select="count(categories/category)" />
@@ -93,6 +95,10 @@
 			
 		</div>
 
+    <div id="sidebar" class="categories_sidebar">
+      <xsl:call-template name="categories_sidebar" />
+    </div>	
+    
 	</div>
 
 	

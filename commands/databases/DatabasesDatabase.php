@@ -46,7 +46,12 @@
       
 			foreach ( $arrResults as $objDatabaseData )
 			{
-				$objDatabase = $objXml->createElement("database");
+        
+        $objDatabase = self::databaseToNodeset($objDatabaseData, $objRequest, $objRegistry);
+        $objDatabase = $objXml->importNode( $objDatabase, true );
+        $objXml->documentElement->appendChild($objDatabase);
+
+				/*$objDatabase = $objXml->createElement("database");
 				
 				// single value fields
 				
@@ -99,7 +104,7 @@
           )));
         $objDatabase->appendChild($objElement);
         
-				$objXml->documentElement->appendChild($objDatabase);
+				$objXml->documentElement->appendChild($objDatabase);*/
 			}
 			
 			$objRequest->addDocument($objXml);

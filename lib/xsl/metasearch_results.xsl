@@ -61,7 +61,6 @@
 		</div>
 			
 		<div id="sidebar">
-			
 		</div>	
 	</div>
 	
@@ -69,6 +68,14 @@
 			
 		<div id="resultsOptions">
 			
+    <xsl:if test="//excluded_dbs/database">
+      <div class="box">
+        <h3 class="error"><img src="{$base_url}/images/warning.gif" alt="Warning" /> Warning: Databases Left Out</h3>
+        <p>Some selected databases are not available to you and were not included in the search:</p>
+        <xsl:call-template name="excluded_db_list" />
+      </div>
+     </xsl:if>
+     
 			<div class="box">
 	
 				<h2 class="sidebar-title">Search Results</h2>

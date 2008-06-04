@@ -6,6 +6,7 @@ SET storage_engine = INNODB;
 DROP TABLE IF EXISTS xerxes_database_alternate_publishers;
 DROP TABLE IF EXISTS xerxes_database_alternate_titles;
 DROP TABLE IF EXISTS xerxes_database_keywords;
+DROP TABLE IF EXISTS xerxes_database_group_restrictions;
 DROP TABLE IF EXISTS xerxes_database_languages;
 DROP TABLE IF EXISTS xerxes_database_notes;
 DROP TABLE IF EXISTS xerxes_subcategory_databases;
@@ -21,6 +22,7 @@ CREATE TABLE xerxes_databases(
 	institute		VARCHAR(5),
 	filter			VARCHAR(50),
 	searchable		INTEGER(1),
+  guest_access  INTEGER(1),
 	subscription		INTEGER(1),
 	proxy 			INTEGER(1),
 	active			VARCHAR(10),
@@ -104,6 +106,16 @@ CREATE TABLE xerxes_database_keywords (
 	PRIMARY KEY (id),
 	FOREIGN KEY (database_id) REFERENCES xerxes_databases(metalib_id) ON DELETE CASCADE
 );
+
+CREATE TABLE xerxes_database_group_restrictions (
+	id			MEDIUMINT NOT NULL AUTO_INCREMENT,
+	database_id    		VARCHAR(10),
+	usergroup			VARCHAR(50),
+
+	PRIMARY KEY (id),
+	FOREIGN KEY (database_id) REFERENCES xerxes_databases(metalib_id) ON DELETE CASCADE
+);
+
 
 CREATE TABLE xerxes_categories(
 	id 			MEDIUMINT NOT NULL AUTO_INCREMENT,

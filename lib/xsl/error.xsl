@@ -45,7 +45,13 @@
           <p><xsl:value-of select="message"/></p>              
         </xsl:otherwise>
         </xsl:choose>
-		</div>
+        
+      <xsl:if test="//excluded_dbs/database">
+        <p>You do not have access to search these included databases:</p>
+        <xsl:call-template name="excluded_db_list" />
+      </xsl:if>
+		</div>    
+    
 	</div>
 	
 </xsl:template>

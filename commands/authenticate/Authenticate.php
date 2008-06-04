@@ -50,21 +50,14 @@ abstract class Xerxes_Command_Authenticate extends Xerxes_Framework_Command
 		// controller, and included in xml for views. 
     	
     	$_SESSION["user_properties"] = $user->properties();
-    
+      //Groups too
+      $_SESSION["user_groups"] = $user->usergroups;
+      
 		// add or update user in the database
 		
     	$objData->touchUser($user);        
 	}
 }
 
-class Xerxes_AccessDeniedException extends Xerxes_Exception { 
-  //New default heading. 
-  public function __construct($message, $heading = "Access Denied")
-  {
-    parent::__construct($message, $heading);
-    $this->heading = $heading;
-  }
-
-}
-
 ?>
+

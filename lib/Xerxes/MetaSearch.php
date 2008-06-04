@@ -482,10 +482,13 @@
 			if ($bolFull == false) $strFull = "N";
 			
 			$this->url = $this->server . "/X?op=source_locate_request" .
-				"&source_locate_filter=" .
-				"&institute=" . $strInstitute .
-				"&requester_ip=" . $strIpAddress .
-				"&user_group=" . 
+        // source_locate_filter not neccesary, and also messes up population
+        // of usergroup-specified resources in some ML versions. So left out.
+        // the locate_command below is sufficient to limit to the institution.
+				//"&source_locate_filter=" .
+				//"&institute=" . $strInstitute .
+				//"&requester_ip=" . $strIpAddress .
+				//"&user_group=" . 
 				"&locate_command=WIN=(" . urlencode(trim($strInstitute)) . ")" .
 				"&source_full_info_flag=" . $strFull .
 				"&session_id=" . $this->session;
@@ -496,6 +499,7 @@
 			$this->xml->recover = true;			
 			$this->xml->load($this->url);
 			
+      
 			// extract marc records
 			
 			$objXPathRecord = new DOMXPath($this->xml);

@@ -95,7 +95,10 @@
             <img alt="info" src="images/info.gif" >
               <xsl:attribute name="src"><xsl:value-of select="/knowledge_base/config/base_url" />/images/info.gif</xsl:attribute>
             </img>
-          </a>
+            </a>
+            <xsl:if test="count(group_restriction) > 0" >
+              <xsl:text> </xsl:text>(<xsl:call-template name="db_restriction_display" />)
+            </xsl:if>
           </xsl:if>
         </div>
         

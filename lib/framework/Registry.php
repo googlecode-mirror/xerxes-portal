@@ -137,6 +137,12 @@
 							}
 						}
 					}
+          // Get group information out of config.xml too
+          // We just store actual SimpleXML elements in the $this->usergroups array. 
+          foreach ($xml->configuration->groups->group as $group) {
+            $id = (string) $group["id"];
+            $this->usergroups[$id] = $group; 
+          }
 				}
 			}
 		}
@@ -261,5 +267,28 @@
 				return $value;
 			}
 		}
+    
+    public function userGroups() {
+      return array_keys($this->usergroups);
+    }
+    
+    public function getGroupDisplayName($id) {
+      if ( array_key_exists($id, $this->usergroups)) {
+        $group = $this->usergroups[$id];
+        return (string) $group->display_name;
+      }
+      else {
+        return $id;
+      }
+    }
+    public function getGroupLocalIpRanges($id) {
+      if ( array_key_exists($id, $this->usergroups)) {
+        $group = $this->usergroups[$id];
+        return (string) $group->local_ip_range;
+      }
+      else {
+        return $id;
+      }
+    }
 	}
 ?>
