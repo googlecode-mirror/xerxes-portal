@@ -447,7 +447,15 @@
 			<xsl:text> </xsl:text>
 			<a>
       <xsl:attribute name="href"><xsl:value-of select="navbar/element[@id='saved_records']/url" /></xsl:attribute>
-      My Saved Records</a>
+      <xsl:choose>
+        <xsl:when test="request/session/role = 'local' or request/session/role = 'guest'">
+        Temporary Saved Records
+        </xsl:when>
+        <xsl:otherwise>
+          My Saved Records
+        </xsl:otherwise>
+      </xsl:choose>
+      </a>
 		</span>	
 	</div>
 </xsl:template>
