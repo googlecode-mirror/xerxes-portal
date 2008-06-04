@@ -68,10 +68,10 @@
     public static function isAuthenticatedUser(Xerxes_Framework_Request $objRequest) {
       $objRegistry =  Xerxes_Framework_Registry::getInstance(); 
       $application = $objRegistry->getConfig("BASE_WEB_PATH");      
-      
-      return ! ( $objRequest->getSession("username") == null || $objRequest->getSession("application") != $application || 
-				 $objRequest->getSession("role") == "local" ||
-         $objRequest->getSession("role") == "guest" );
+                  
+      return ( $objRequest->getSession("username") != null && $objRequest->getSession("application") == $application && 
+				 $objRequest->getSession("role") != "local" &&
+         $objRequest->getSession("role") != "guest" );
     }
     
     
