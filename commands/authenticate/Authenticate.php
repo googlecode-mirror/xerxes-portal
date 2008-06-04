@@ -41,21 +41,22 @@ abstract class Xerxes_Command_Authenticate extends Xerxes_Framework_Command
 				$objData->reassignRecords($_SESSION["username"], $user->username);
 			}
 		}
-		
-		$_SESSION["username"] = $user->username;
-		$_SESSION["role"] = $strRole;
-		$_SESSION["application"] = $configApplication;
-		
-		// store user's properties in session, so they can be used by
-		// controller, and included in xml for views. 
-    	
-    	$_SESSION["user_properties"] = $user->properties();
-      //Groups too
-      $_SESSION["user_groups"] = $user->usergroups;
-      
-		// add or update user in the database
-		
-    	$objData->touchUser($user);        
+    
+    // add or update user in the database, get any values in the db not
+    // specified here.       
+    $user  = $objData->touchUser($user);
+    
+    // Set properties in session
+    $_SESSION["username"] = $user->username;
+    $_SESSION["role"] = $strRole;
+    $_SESSION["application"] = $configApplication;
+    
+    // store user's properties in session, so they can be used by
+    // controller, and included in xml for views. 
+    
+    $_SESSION["user_properties"] = $user->properties();
+    //Groups too. Empty array not null please. 
+    $_SESSION["user_groups"] = $user->usergroups;
 	}
 }
 

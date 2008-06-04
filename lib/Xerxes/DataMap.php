@@ -1026,13 +1026,15 @@ public function getSubject($normalized, $old = null)
 	
 	
 	/**
-	 * Update the user table to include the last date of login. Creates new
-   * user if neccesary.If any attributes in Xerxes_User are set other than
+	 * Update the user table to include the last date of login and any other
+   * specified attributes. Creates new user if neccesary.
+   * If any attributes in Xerxes_User are set other than
    * username, those will also be written to db over-riding anything that may
-   * have been there.
+   * have been there.  Returns Xerxes_User filled out with information matching
+   * db. 
 	 *
 	 * @param Xerxes_User $user
-	 * @return int status
+	 * @return Xerxes_User $user
 	 */
 	public function touchUser(Xerxes_User $user) {
     
@@ -1061,7 +1063,13 @@ public function getSubject($normalized, $old = null)
       $db_values = $arrResults[0];            
       foreach ($db_values as $key => $value) {
         if (! (is_null($value) || is_numeric($key) )) {
-          $update_values[":" . $key] = $value; 
+          $dbKey = ":" . $key;
+          //Merge with currently specified values
+          if(! array_key_exists($dbKey, $update_values)) {          
+             $update_values[$dbKey] = $value; 
+             //And add it to the user object too
+             //$user->$key = $value;
+          }          
         }
       }
       
@@ -1082,7 +1090,13 @@ public function getSubject($normalized, $old = null)
     // only.
     if ( is_null($user->usergroups)) {
        //fetch what's in the db and use that please.
-        $user->usergroups = $this->select("SELECT usergroup FROM xerxes_user_usergroups WHERE username = :username", array(":username" => $user->username));
+         $fetched = $this->select("SELECT usergroup FROM xerxes_user_usergroups WHERE username = :username", array(":username" => $user->username));
+         if (count($fetched)) {
+          $user->usergroups = $fetched[0];
+         }
+         else {
+          $user->usergroups = array();
+         }
     }
     else {      
       $status = $this->delete("DELETE FROM xerxes_user_usergroups WHERE username = :username", array(":username" => $user->username));
@@ -1092,7 +1106,9 @@ public function getSubject($normalized, $old = null)
         $status = $this->insert("INSERT INTO xerxes_user_usergroups (username, usergroup) VALUES (:username, :usergroup)", array(":username" => $user->username, ":usergroup" => $usergroup));
       }
     }    
-    return $this->commit();
+    $this->commit();
+    
+    return $user;
   }
 
 	
