@@ -36,7 +36,10 @@
 			<xsl:when test="request/session/role = 'local' or request/session/role = 'guest'">
 				<h2>Temporary Saved Records</h2>
 				<xsl:if test="request/session/role = 'local'">
-					<p>( <a href="{$base_url}/?base=authenticate&amp;action=login&amp;return={$return}">Log-in</a> 
+					<p>( 
+          <a>
+          <xsl:attribute name="href"><xsl:value-of select="navbar/element[@id='login']" /></xsl:attribute>
+          Log-in</a> 
 					to save and retrieve records across sessions.)</p>
 				</xsl:if>
 			</xsl:when>
