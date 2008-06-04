@@ -202,6 +202,11 @@ a img{  border: 0px; }
 	padding-right: 15px;
 }
 
+#categories_quicksearch {
+  width: 500px; 
+  float: left;
+}
+
 /* databases full and a-z list? */
 
 .databasesMoreInfo {
