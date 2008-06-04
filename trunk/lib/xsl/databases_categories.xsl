@@ -42,7 +42,7 @@
           <xsl:attribute name="value"><xsl:value-of select="category/@normalized" /></xsl:attribute>
         </input>
 
-				<div style="width: 500px;">
+				<div id="categories_quicksearch">
 					<h2><xsl:value-of select="$quick_search_category" /></h2>
 					<p>Search a handful of our most popular databases.</p>	  	
 					<div id="search">
