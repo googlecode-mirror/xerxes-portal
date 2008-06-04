@@ -643,7 +643,11 @@
 
       //now each group
       foreach( $objRegistry->userGroups() as $group) {
-        $authUser = array_key_exists("user_groups", $_SESSION) && in_array($group, $_SESSION["user_groups"]);
+        
+        
+        $authUser = array_key_exists("user_groups", $_SESSION) &&
+              is_array( $_SESSION["user_groups"] ) &&
+              in_array($group, $_SESSION["user_groups"]);
         $authIP = Xerxes_Framework_Restrict::isIpAddrInRanges(
             $this->getServer('REMOTE_ADDR'),
             $objRegistry->getGroupLocalIpRanges( $group ));

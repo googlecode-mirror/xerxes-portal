@@ -916,7 +916,7 @@
 <xsl:template name="session_auth_info">
   <div id="session_auth_info">
   <xsl:choose>
-    <xsl:when test="//request/authorization_info/affiliated = 'true'">
+    <xsl:when test="//request/authorization_info/affiliated[@user_account = 'true']">
       <p>Welcome,  <xsl:value-of select="//session/user_properties[@key = 'username']" />.</p>       
     </xsl:when>
     <xsl:otherwise>
