@@ -119,6 +119,26 @@
           </tr>
     
           <tr class="optionRow">
+          <td><h4><label for="disp_only_subcategory">Show specific section?</label></h4></td> 
+          <td>
+            <select name="disp_only_subcategory" id="disp_only_subcategory">
+              <option value="">ALL</option>
+              <xsl:for-each select="//subcategory">
+                <option>
+                  <xsl:if test="request/disp_only_subcategory = @id">
+                    <xsl:attribute name="selected">selected</xsl:attribute>
+                  </xsl:if>
+                  <xsl:attribute name="value">
+                    <xsl:value-of select="@id" />
+                  </xsl:attribute>
+                  <xsl:value-of select="@name" />
+                </option>
+              </xsl:for-each>
+            </select>
+          </td>
+          </tr>
+          
+          <tr class="optionRow">
           <td><h4><label for="disp_embed_css">Include Stylesheet in embed?</label></h4><p class="optionInfo">If you have the technical capability, it's preferable to define CSS styles yourself in your external context for the classes and elements used in the embedded content. Including Stylesheet in embed works imperfectly.</p></td>
           <td><select id="disp_embed_css" name="disp_embed_css">
             <option value="true">

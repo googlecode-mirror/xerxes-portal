@@ -11,6 +11,7 @@
     <xsl:variable name="disp_show_search" select="not( request/disp_show_search = 'false' )" />
     <xsl:variable name="disp_show_subcategories" select="not( request/disp_show_subcategories = 'false' )" />
     <xsl:variable name="disp_embed_css" select="request/disp_embed_css = 'true'"/>
+    <xsl:variable name="disp_only_subcategory" select="request/disp_only_subcategory" />
 
       <!-- if it's a partial page and we want to include CSS anyway, do it.-->
       <xsl:if test="$disp_embed_css">
@@ -53,6 +54,8 @@
             <div class="subjectDatabases">
               <xsl:call-template name="subject_databases_list">
                 <xsl:with-param name="should_show_checkboxes" select="$disp_show_search" />
+                <xsl:with-param name="show_only_subcategory" select="$disp_only_subcategory" />
+                
               </xsl:call-template>
       
             </div>
