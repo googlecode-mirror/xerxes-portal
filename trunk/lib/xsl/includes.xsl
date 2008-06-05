@@ -519,9 +519,13 @@
   and embed_subject.xsl -->
 <xsl:template name="subject_databases_list">
     <!-- default to true: -->
-  <xsl:param name="should_show_checkboxes" select="true()" /> 
+  <xsl:param name="should_show_checkboxes" select="true()" />
+    <!-- specific subcategory only? Default to false meaning, no, all subcats. -->
+  <xsl:param name="show_only_subcategory" select="false()" />
   
-  <xsl:for-each select="category/subcategory">
+  <xsl:for-each select="category/subcategory[(not($show_only_subcategory )) or  ($show_only_subcategory = '') or (@id = $show_only_subcategory)]">
+  
+  
     <fieldset class="subjectSubCategory">
     <legend><xsl:value-of select="@name" /></legend>
     
@@ -615,7 +619,6 @@
     </table>
     
     </fieldset>
-    
   </xsl:for-each>
 </xsl:template>
 
