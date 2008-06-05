@@ -17,6 +17,12 @@
         <xsl:call-template name="disp_embed_css" />
       </xsl:if>
     
+    <!-- we need this js for the database maximum limit. -->
+    <script language="javascript" type="text/javascript">
+      var iSearchable = "<xsl:value-of select="//config/search_limit" />";
+    </script>
+    <script src="{$base_url}/javascript/save.js" language="javascript" type="text/javascript" />
+      
     <div id="xerxes_outer_wrapper">
       <form name="form1" method="get" action="{$base_url}/" onSubmit="return databaseLimit(this)">
         <input type="hidden" name="base" value="metasearch" />
