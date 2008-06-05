@@ -63,15 +63,19 @@
     
     <xsl:variable name="groups" select="php:functionString('splitToNodeset',  marc:datafield[@tag='AF3']/marc:subfield[@code='a'])/item" />
     
+    <!-- we're going to need to a case shift. sigh. -->
+    <xsl:variable name="uc" select="'ABCDEFGHIJKLMNOPQRSTUVWXYZ'"/>
+    <xsl:variable name="lc" select="'abcdefghijklmnopqrstuvwxyz'"/>  
+    
     <guest_access>
       <xsl:choose>
-        <xsl:when test="count($groups[@value = 'GUEST']) > 0">yes</xsl:when>
+        <xsl:when test="count($groups[translate(@value,$lc,$uc) = 'GUEST']) > 0">yes</xsl:when>
         <xsl:otherwise>no</xsl:otherwise>
       </xsl:choose>
     </guest_access>
     
     <group_restrictions>
-      <xsl:for-each select="$groups[@value != 'GUEST']">
+      <xsl:for-each select="$groups[translate(@value,$lc,$uc) != 'GUEST']">
         <group><xsl:value-of select="@value" /></group>
       </xsl:for-each>
     </group_restrictions>
