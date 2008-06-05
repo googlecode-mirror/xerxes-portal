@@ -62,6 +62,8 @@
 					$objSubCategory = $objXml->createElement("subcategory");
 					$objSubCategory->setAttribute("name", $objSubData->name);
 					$objSubCategory->setAttribute("position", $y);
+					$objSubCategory->setAttribute("id", $objSubData->id);
+          
 					$y++;
 					
 					// the database information

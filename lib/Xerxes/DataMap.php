@@ -472,7 +472,9 @@ public function getSubject($normalized, $old = null)
       $objCategory->normalized = $normalized;
 			
 			$objSubcategory = new Xerxes_Data_Subcategory();
-			$objSubcategory->metalib_id = $arrResults[0]["subcat_id"];
+			//$objSubcategory->metalib_id = $arrResults[0]["subcat_id"];
+      $objSubcategory->id = $arrResults[0]["subcat_id"];
+
 			$objSubcategory->name = $arrResults[0]["subcategory"];
 			
       $objDatabase = new Xerxes_Data_Database();
