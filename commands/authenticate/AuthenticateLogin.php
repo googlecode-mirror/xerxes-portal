@@ -270,7 +270,7 @@ class Xerxes_Command_AuthenticateLogin extends Xerxes_Command_Authenticate
 		{			
 			// assign role appropriately
 			
-			$role = "named"; if ( $bolDemo == true ) $role = "demo";
+			$role = "named";
 			
 			$this->register($strUsername, $role);
 			
