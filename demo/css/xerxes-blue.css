@@ -180,16 +180,14 @@ a img{  border: 0px; }
 }
 
 .categories {
-	margin-top: 30px;
-  float: left;
+	margin-top: 30px;  
 }
 .categoriesTable td {
 	padding-right: 15px;
 }
 
 #categories_quicksearch {
-  width: 500px; 
-  float: left;
+  width: 500px;   
 }
 
 /* databases full and a-z list? */
