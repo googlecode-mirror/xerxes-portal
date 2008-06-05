@@ -12,26 +12,27 @@
 	 * @package Xerxes_Framework
 	 * @uses Xerxes_Parser
 	 */
-
+	
 	class Xerxes_Framework_Request
 	{
-		private $method = "";				// request method: GET, POST, COMMAND
-		private $arrParams = array();		// request paramaters
-		private $arrSession = array();		// session array for command line, unused right now
-		private $xml = null;				// main xml document for holding data from commands
-		private $strRedirect = "";			// redirect url
-		private $path_elements = null;		// http path tranlsated into array of elements.
-			
+		private $method = ""; // request method: GET, POST, COMMAND
+		private $arrParams = array ( ); // request paramaters
+		private $arrSession = array ( ); // session array for command line, unused right now
+		private $xml = null; // main xml document for holding data from commands
+		private $strRedirect = ""; // redirect url
+		private $path_elements = null; // http path tranlsated into array of elements.
+		
+	
 		/**
 		 * Process the incoming request paramaters, cookie values, url path if pretty-uri on
 		 */
 		
 		public function __construct()
 		{
-			if ( array_key_exists("REQUEST_METHOD", $_SERVER) )
+			if ( array_key_exists( "REQUEST_METHOD", $_SERVER ) )
 			{
 				// request has come in from GET or POST
-
+				
 				$this->method = $_SERVER['REQUEST_METHOD'];
 				
 				// now extract remaining params in query string. 
@@ -41,70 +42,69 @@
 					// querystring can be delimited either with ampersand
 					// or semicolon
 					
-					$arrParams = preg_split("/&|;/", $_SERVER['QUERY_STRING']);
+					$arrParams = preg_split( "/&|;/", $_SERVER['QUERY_STRING'] );
 					
 					foreach ( $arrParams as $strParam )
 					{
 						// split out key and value on equal sign
 						
-						$iEqual = strpos($strParam,"=");
+	
+						$iEqual = strpos( $strParam, "=" );
 						
 						if ( $iEqual !== false )
 						{
-							$strKey = substr($strParam, 0, $iEqual);
-							$strValue = substr($strParam, $iEqual + 1);
+							$strKey = substr( $strParam, 0, $iEqual );
+							$strValue = substr( $strParam, $iEqual + 1 );
 							
-							$this->setProperty($strKey, urldecode($strValue) );
+							$this->setProperty( $strKey, urldecode( $strValue ) );
 						}
 					}
 				}
 				
 				foreach ( $_POST as $key => $value )
 				{
-					$this->setProperty($key, $value);
+					$this->setProperty( $key, $value );
 				}
 				foreach ( $_COOKIE as $key => $value )
 				{
-					$this->setProperty($key, $value);
+					$this->setProperty( $key, $value );
 				}
 				
 				// if pretty-urls is turned on, extract params from uri. 
 				
-				$objRegistry = Xerxes_Framework_Registry::getInstance(); 
+				$objRegistry = Xerxes_Framework_Registry::getInstance();
 				
-				if ( $objRegistry->getConfig("REWRITE", false) )
+				if ( $objRegistry->getConfig( "REWRITE", false ) )
 				{
 					$this->extractParamsFromPath();
 				}
-			}
+			} 
 			else
-			{			
+			{
 				// request has come in from the command line
 				
 				$this->method = "COMMAND";
 				
 				foreach ( $_SERVER['argv'] as $arg )
 				{
-					if ( strpos($arg, "=") )
+					if ( strpos( $arg, "=" ) )
 					{
-						list($key,$val) = explode("=",$arg);
-						$this->setProperty($key, $val);
+						list ( $key, $val ) = explode( "=", $arg );
+						$this->setProperty( $key, $val );
 					}
 				}
 			}
 			
 			// iis fix, since it doesn't hold value for request_uri
 			
-			if (!isset($_SERVER['REQUEST_URI']))
+			if ( ! isset( $_SERVER['REQUEST_URI'] ) )
 			{
-				if (!isset($_SERVER['QUERY_STRING']))
+				if ( ! isset( $_SERVER['QUERY_STRING'] ) )
 				{
 					$_SERVER['REQUEST_URI'] = $_SERVER["SCRIPT_NAME"];
-				}
-				else
+				} else
 				{
-					$_SERVER['REQUEST_URI'] = $_SERVER["SCRIPT_NAME"] .'?'.
-					$_SERVER['QUERY_STRING'];
+					$_SERVER['REQUEST_URI'] = $_SERVER["SCRIPT_NAME"] . '?' . $_SERVER['QUERY_STRING'];
 				}
 			}
 		}
@@ -117,11 +117,10 @@
 		
 		public function isCommandLine()
 		{
-			if ( $this->method == "COMMAND")
+			if ( $this->method == "COMMAND" )
 			{
 				return true;
-			}
-			else
+			} else
 			{
 				return false;
 			}
@@ -131,21 +130,21 @@
 		 * Extract params from pretty-urls when turned on in config. Requires base url to be set in config.
 		 * will get from $_SERVER['REQUEST_URI'], first stripping base url.
 		 */
-		 
+		
 		public function extractParamsFromPath()
 		{
-			$this->mapPathToProperty(0, "base");
-			$this->mapPathToProperty(1, "action");
+			$this->mapPathToProperty( 0, "base" );
+			$this->mapPathToProperty( 1, "action" );
 			
 			// if the action has any specific parmaters it defines beyond base and action
 			// they are extracted here
 			
 			$objMap = Xerxes_Framework_ControllerMap::getInstance()->path_map_obj();
-			$map = $objMap->indexToPropertyMap($this->getProperty("base"), $this->getProperty("action"));
-      
-			foreach ( $map as $index => $property)
+			$map = $objMap->indexToPropertyMap( $this->getProperty( "base" ), $this->getProperty( "action" ) );
+			
+			foreach ( $map as $index => $property )
 			{
-				 $this->mapPathToProperty( $index, $property );		 
+				$this->mapPathToProperty( $index, $property );
 			}
 		}
 		
@@ -161,32 +160,32 @@
 		{
 			// lazy load
 			
-			if (! $this->path_elements )
+			if ( ! $this->path_elements )
 			{
-				$objRegistry = Xerxes_Framework_Registry::getInstance(); 
+				$objRegistry = Xerxes_Framework_Registry::getInstance();
 				
-				$request_uri = $this->getServer('REQUEST_URI');
-
+				$request_uri = $this->getServer( 'REQUEST_URI' );
+				
 				// get the path by stripping off base url + querystring
 				
-				$configBase = $objRegistry->getConfig('BASE_WEB_PATH', true);
-				$request_uri = str_replace($configBase . "/", "", $request_uri );
-				$request_uri = Xerxes_Parser::removeRight($request_uri, "?");
+				$configBase = $objRegistry->getConfig( 'BASE_WEB_PATH', true );
+				$request_uri = str_replace( $configBase . "/", "", $request_uri );
+				$request_uri = Xerxes_Parser::removeRight( $request_uri, "?" );
 				
 				// now get the elements
 				
-				$path_elements = explode('/', $request_uri);
+				$path_elements = explode( '/', $request_uri );
 				
-				for ( $x = 0; $x < count($path_elements); $x++ )
+				for ( $x = 0 ; $x < count( $path_elements ) ; $x ++ )
 				{
-					$path_elements[$x] = urldecode($path_elements[$x]);
+					$path_elements[$x] = urldecode( $path_elements[$x] );
 				}
 				
 				// for an empty path, we'll have one empty string element, get rid of it.
 				
-				if ( strlen($path_elements[0]) == 0)
+				if ( strlen( $path_elements[0] ) == 0 )
 				{
-					unset($path_elements[0]);
+					unset( $path_elements[0] );
 				}
 				
 				$this->path_elements = $path_elements;
@@ -206,9 +205,9 @@
 		{
 			$path_elements = $this->pathElements();
 			
-			if (array_key_exists($path_index, $path_elements))
+			if ( array_key_exists( $path_index, $path_elements ) )
 			{
-				$this->setProperty((string) $property_name, (string) $path_elements[$path_index]);
+				$this->setProperty( ( string ) $property_name, ( string ) $path_elements[$path_index] );
 			}
 		}
 		
@@ -222,37 +221,37 @@
 		
 		public function setProperty($key, $value, $bolArray = false)
 		{
-			if ( array_key_exists($key, $this->arrParams) )
+			if ( array_key_exists( $key, $this->arrParams ) )
 			{
 				// if there is an existing element, then we always push in the
 				// the new value into an array, first converting the exising value
 				// to an array if it is not already one 
 				
-				if ( ! is_array($this->arrParams[$key]) )
+				if ( ! is_array( $this->arrParams[$key] ) )
 				{
-					$this->arrParams[$key] = array($this->arrParams[$key]);
+					$this->arrParams[$key] = array ($this->arrParams[$key] );
 				}
 				
-				array_push($this->arrParams[$key], $value);
-			}
+				array_push( $this->arrParams[$key], $value );
+			} 
 			elseif ( $bolArray == true )
 			{
 				// no existing value in property, but the calling code says 
 				// this *must* be added as an array, so make it an array, if not one already
 				
-				if ( ! is_array($value) )
+				if ( ! is_array( $value ) )
 				{
-					$value = array($value);
+					$value = array ($value );
 				}
 				
 				$this->arrParams[$key] = $value;
-			}
+			} 
 			else
 			{
 				$this->arrParams[$key] = $value;
 			}
 		}
-
+		
 		/**
 		 * Retrieve a value from the request parameters
 		 *
@@ -266,24 +265,24 @@
 			if ( array_key_exists( $key, $this->arrParams ) )
 			{
 				// if the value is requested as array, but is not array, make it one!
-				if ( $bolArray == true && ! is_array($this->arrParams[$key]))
-				{
-					return array($this->arrParams[$key]);
-				}
 				
+				if ( $bolArray == true && ! is_array( $this->arrParams[$key] ) )
+				{
+					return array ($this->arrParams[$key] );
+				} 
+	
 				// the opposite: if the the value is not requested as array but is,
 				// take just the first value in the array
 				
-				elseif ( $bolArray == false && is_array($this->arrParams[$key]))
+				elseif ( $bolArray == false && is_array( $this->arrParams[$key] ) )
 				{
 					return $this->arrParams[$key][0];
-				}
+				} 
 				else
 				{
 					return $this->arrParams[$key];
 				}
-			}
-			else
+			} else
 			{
 				return null;
 			}
@@ -294,7 +293,7 @@
 		 *
 		 * @return array
 		 */
-
+		
 		public function getAllProperties()
 		{
 			return $this->arrParams;
@@ -309,11 +308,10 @@
 		
 		public function getServer($key)
 		{
-			if ( array_key_exists($key, $_SERVER) )
+			if ( array_key_exists( $key, $_SERVER ) )
 			{
 				return $_SERVER[$key];
-			}
-			else
+			} else
 			{
 				return null;
 			}
@@ -328,10 +326,10 @@
 		
 		public function getSession($key)
 		{
-			if ( array_key_exists($key, $_SESSION) )
+			if ( array_key_exists( $key, $_SESSION ) )
 			{
 				return $_SESSION[$key];
-			}
+			} 
 			else
 			{
 				return null;
@@ -362,12 +360,12 @@
 		{
 			if ( $strName == null )
 			{
-				error_log("document element name was null");	
-			}
+				error_log( "document element name was null" );
+			} 
 			else
 			{
-				$this->xml = new DOMDocument();
-				$this->xml->loadXML("<$strName />");
+				$this->xml = new DOMDocument( );
+				$this->xml->loadXML( "<$strName />" );
 			}
 		}
 		
@@ -379,18 +377,18 @@
 		
 		public function addDocument(DOMDocument $objData)
 		{
-			if (! $this->xml instanceof DOMDocument )
+			if ( ! $this->xml instanceof DOMDocument )
 			{
-				$this->xml = new DOMDocument();
-				$this->xml->loadXML("<xerxes />");
+				$this->xml = new DOMDocument( );
+				$this->xml->loadXML( "<xerxes />" );
 			}
 			
 			if ( $objData != null )
 			{
 				if ( $objData->documentElement != null )
 				{
-					$objImport = $this->xml->importNode($objData->documentElement, true);
-					$this->xml->documentElement->appendChild($objImport);
+					$objImport = $this->xml->importNode( $objData->documentElement, true );
+					$this->xml->documentElement->appendChild( $objImport );
 				}
 			}
 		}
@@ -434,60 +432,59 @@
 				return $this->xml;
 			}
 			
-			$strReturnType = strtoupper($strReturnType);
+			$strReturnType = strtoupper( $strReturnType );
 			
-			if ( $strReturnType != null && $strReturnType != "DOMNODELIST" && $strReturnType != "ARRAY")
+			if ( $strReturnType != null && $strReturnType != "DOMNODELIST" && $strReturnType != "ARRAY" )
 			{
-				throw new Exception("unsupported return type");
+				throw new Exception( "unsupported return type" );
 			}
 			
-			$objXPath = new DOMXPath($this->xml);
+			$objXPath = new DOMXPath( $this->xml );
 			
 			if ( $arrNamespaces != null )
 			{
 				foreach ( $arrNamespaces as $prefix => $identifier )
 				{
-					$objXPath->registerNamespace($prefix, $identifier);
+					$objXPath->registerNamespace( $prefix, $identifier );
 				}
 			}
 			
-			$objNodes = $objXPath->query($xpath);
+			$objNodes = $objXPath->query( $xpath );
 			
 			if ( $objNodes == null )
 			{
 				// no value found
 				
 				return null;
-			}
-			elseif ( $strReturnType == "DOMNODELIST")
+			} 
+			elseif ( $strReturnType == "DOMNODELIST" )
 			{
 				// return nodelist
 				
 				return $objNodes;
-			}
-			elseif ( $strReturnType == "ARRAY")
+			} 
+			elseif ( $strReturnType == "ARRAY" )
 			{
 				// return nodelist as array, for convenience
 				
-				$arrReturn = array();
+				$arrReturn = array ( );
 				
-				foreach  ( $objNodes as $objNode )
+				foreach ( $objNodes as $objNode )
 				{
 					array_push( $arrReturn, $objNode->nodeValue );
 				}
 				
 				return $arrReturn;
-			}
+			} 
 			else
 			{
 				// just grab the value, if you know it is the 
 				// only one or first one in the query
 				
-				if ( $objNodes->item(0) != null )
+				if ( $objNodes->item( 0 ) != null )
 				{
-					return $objNodes->item(0)->nodeValue;
-				}
-				else
+					return $objNodes->item( 0 )->nodeValue;
+				} else
 				{
 					return null;
 				}
@@ -504,73 +501,76 @@
 		 * the values. For an action url, "base" and "action" are required as keys.
 		 * Properties will be put in path or query string of url, if pretty-urls are turned on
 		 * in config.xml, as per action configuration in actions.xml.
-     * @param boolean $full Optional, force full absolute url with hostname. 
+		 * @param boolean $full Optional, force full absolute url with hostname. 
 		 *
 		 * @return string url 
 		 */
 		
 		public function url_for($properties, $full = false)
 		{
-			if (! array_key_exists("base", $properties))
+			if ( ! array_key_exists( "base", $properties ) )
 			{
-				throw new Exception("no base/section supplied in url_for.");
+				throw new Exception( "no base/section supplied in url_for." );
 			}
 			
-			$config	= Xerxes_Framework_Registry::getInstance();
-			      
-			$base_path = $config->getConfig('BASE_WEB_PATH', false, ".") . "/";
-      // Should we generate full absolute urls with hostname? Indicated by a
-      // reuqest property, set automatically by snippet embed controllers. 
-      if ( $this->getProperty("gen_full_urls") == 'true' || $full ) {
-        $base_path = $config->getConfig('BASE_URL', true) . "/"; 
-      }
-      
+			$config = Xerxes_Framework_Registry::getInstance();
+			
+			$base_path = $config->getConfig( 'BASE_WEB_PATH', false, "." ) . "/";
+			
+			// should we generate full absolute urls with hostname? indicated by a
+			// reuqest property, set automatically by snippet embed controllers. 
+			
+			if ( $this->getProperty( "gen_full_urls" ) == 'true' || $full )
+			{
+				$base_path = $config->getConfig( 'BASE_URL', true ) . "/";
+			}
+			
 			$extra_path = "";
 			$query_string = "";
 			
 			$base = $properties["base"];
 			$action = null;
 			
-			if ( array_key_exists( "action", $properties))
+			if ( array_key_exists( "action", $properties ) )
 			{
 				$action = $properties["action"];
 			}
 			
-			if ( $config->getConfig('REWRITE', false) )
+			if ( $config->getConfig( 'REWRITE', false ) )
 			{
 				// base in path
 				
-				$extra_path_arr[0] = urlencode($base);
-				unset($properties["base"]);
+				$extra_path_arr[0] = urlencode( $base );
+				unset( $properties["base"] );
 				
 				// action in path
 				
-				if ( array_key_exists("action", $properties))
+				if ( array_key_exists( "action", $properties ) )
 				{
-					$extra_path_arr[1] = urlencode($action);
-					unset($properties["action"]);
+					$extra_path_arr[1] = urlencode( $action );
+					unset( $properties["action"] );
 				}
 				
 				// action-specific stuff
 				
-				foreach ( array_keys($properties) as $property )
+				foreach ( array_keys( $properties ) as $property )
 				{
 					$controller_map = Xerxes_Framework_ControllerMap::getInstance();
 					$index = $controller_map->path_map_obj()->indexForProperty( $base, $action, $property );
 					
 					if ( $index )
 					{
-						$extra_path_arr[$index] = urlencode($properties[$property]);
-						unset($properties[$property]);
+						$extra_path_arr[$index] = urlencode( $properties[$property] );
+						unset( $properties[$property] );
 					}
 				}
 				
-				$extra_path = implode("/", $extra_path_arr);
+				$extra_path = implode( "/", $extra_path_arr );
 			}
 			
 			// everything else, which may be everything if it's ugly uris,
-
-			$query_string = http_build_query($properties, '', '&amp;');
+			
+			$query_string = http_build_query( $properties, '', '&amp;' );
 			$assembled_path = $base_path . $extra_path;
 			
 			if ( $query_string )
@@ -580,7 +580,7 @@
 			
 			return $assembled_path;
 		}
-
+		
 		/**
 		 * Check if the user has explicitly logged in
 		 *
@@ -589,9 +589,9 @@
 		
 		public function hasLoggedInUser()
 		{
-			return Xerxes_Framework_Restrict::isAuthenticatedUser($this);
+			return Xerxes_Framework_Restrict::isAuthenticatedUser( $this );
 		}
-    
+		
 		/**
 		 * Retrieve master XML and all request paramaters
 		 * 
@@ -602,76 +602,81 @@
 		
 		public function toXML($bolHideServer = false)
 		{
-      
+			
 			$objRegistry = Xerxes_Framework_Registry::getInstance();
-      
+			
 			// add the url parameters and session and server global arrays
 			// to the master xml document
 			
-			$objXml = new DOMDocument();
-			$objXml->loadXML("<request />");
+	
+			$objXml = new DOMDocument( );
+			$objXml->loadXML( "<request />" );
 			
 			// session and server global arrays will have parent elements
 			// but querystring and cookie params will be at the root of request
 			
-			$this->addElement($objXml, $objXml->documentElement, $this->arrParams);	
+	
+			$this->addElement( $objXml, $objXml->documentElement, $this->arrParams );
 			
 			// add the session global array
 			
-			$objSession = $objXml->createElement("session");
-			$objXml->documentElement->appendChild($objSession);
-			$this->addElement($objXml, $objSession, $_SESSION);			
-      
+	
+			$objSession = $objXml->createElement( "session" );
+			$objXml->documentElement->appendChild( $objSession );
+			$this->addElement( $objXml, $objSession, $_SESSION );
+			
 			// we might add some calculated thigns to xml that aren't actually
 			// stored in session.
-      
-      // Okay, yeah, we already have group memberships listed from the session,
-      // but it doesn't have all the data we need, plus we need to stick
-      // group memberships by virtue of IP address. 
-      $objAuth = $objXml->createElement("authorization_info");
-      $objXml->documentElement->appendChild($objAuth);
-      // Are they an affiliated user at all, meaning either logged in or
-      // ip recognized?
-      $authUser = Xerxes_Framework_Restrict::isAuthenticatedUser($this);
-      $authIP = Xerxes_Framework_Restrict::isIpAddrInRanges(
-        $this->getServer('REMOTE_ADDR'),
-        $objRegistry->getConfig("local_ip_range"));
-      $objElement = $objXml->createElement("affiliated", ($authUser || $authIP) ? "true" : "false");
-      $objElement->setAttribute("user_account", $authUser ? "true" : "false");
-      $objElement->setAttribute("ip_addr", $authIP ? "true" : "false");
-      $objAuth->appendChild( $objElement );
-
-      //now each group
-      foreach( $objRegistry->userGroups() as $group) {
-        
-        
-        $authUser = array_key_exists("user_groups", $_SESSION) &&
-              is_array( $_SESSION["user_groups"] ) &&
-              in_array($group, $_SESSION["user_groups"]);
-        $authIP = Xerxes_Framework_Restrict::isIpAddrInRanges(
-            $this->getServer('REMOTE_ADDR'),
-            $objRegistry->getGroupLocalIpRanges( $group ));
-        $objElement = $objXml->createElement("group", ($authUser || $authIP) ? "true" : "false");
-        $objElement->setAttribute("id", $group);
-        $objElement->setAttribute("display_name", $objRegistry->getGroupDisplayName($group));
-        $objElement->setAttribute("user_account", $authUser ? "true" : "false");
-        $objElement->setAttribute("ip_addr", $authIP ? "true" : "false");
-        $objAuth->appendChild( $objElement );
-      }
+			
+			// okay, yeah, we already have group memberships listed from the session,
+			// but it doesn't have all the data we need, plus we need to stick
+			// group memberships by virtue of IP address. 
+			
+			$objAuth = $objXml->createElement( "authorization_info" );
+			$objXml->documentElement->appendChild( $objAuth );
+			
+			// are they an affiliated user at all, meaning either logged in or
+			// ip recognized?
+			
+			$authUser = Xerxes_Framework_Restrict::isAuthenticatedUser( $this );
+			$authIP = Xerxes_Framework_Restrict::isIpAddrInRanges( $this->getServer( 'REMOTE_ADDR' ), $objRegistry->getConfig( "local_ip_range" ) );
+			$objElement = $objXml->createElement( "affiliated", ($authUser || $authIP) ? "true" : "false" );
+			$objElement->setAttribute( "user_account", $authUser ? "true" : "false" );
+			$objElement->setAttribute( "ip_addr", $authIP ? "true" : "false" );
+			$objAuth->appendChild( $objElement );
+			
+			// now each group
+			
+			$arrGroups = $objRegistry->userGroups();
+			
+			if ( $arrGroups != null )
+			{
+				foreach ( $objRegistry->userGroups() as $group )
+				{
+					$authUser = array_key_exists( "user_groups", $_SESSION ) && is_array( $_SESSION["user_groups"] ) && in_array( $group, $_SESSION["user_groups"] );
+					$authIP = Xerxes_Framework_Restrict::isIpAddrInRanges( $this->getServer( 'REMOTE_ADDR' ), $objRegistry->getGroupLocalIpRanges( $group ) );
+					$objElement = $objXml->createElement( "group", ($authUser || $authIP) ? "true" : "false" );
+					$objElement->setAttribute( "id", $group );
+					$objElement->setAttribute( "display_name", $objRegistry->getGroupDisplayName( $group ) );
+					$objElement->setAttribute( "user_account", $authUser ? "true" : "false" );
+					$objElement->setAttribute( "ip_addr", $authIP ? "true" : "false" );
+					$objAuth->appendChild( $objElement );
+				}
+			}
 			
 			// add the server global array, but only if the request
 			// asks for it, for security purposes
 			
 			if ( $bolHideServer == true )
 			{
-				$objServer = $objXml->createElement("server");
-				$objXml->documentElement->appendChild($objServer);
-				$this->addElement($objXml, $objServer, $_SERVER);
+				$objServer = $objXml->createElement( "server" );
+				$objXml->documentElement->appendChild( $objServer );
+				$this->addElement( $objXml, $objServer, $_SERVER );
 			}
 			
 			// add to the master xml document
 			
-			$this->addDocument($objXml);
+			$this->addDocument( $objXml );
 			
 			// once added, now return the master xml document
 			
@@ -690,19 +695,19 @@
 		{
 			foreach ( $arrValues as $key => $value )
 			{
-				if ( is_array($value) )
+				if ( is_array( $value ) )
 				{
-					foreach ($value as $strKey => $strValue)
+					foreach ( $value as $strKey => $strValue )
 					{
-            $objElement = $objXml->createElement(strtolower($key), Xerxes_Parser::escapeXml($strValue));
-            $objElement->setAttribute("key", $strKey);
-            $objAppend->appendChild($objElement);
+						$objElement = $objXml->createElement( strtolower( $key ), Xerxes_Parser::escapeXml( $strValue ) );
+						$objElement->setAttribute( "key", $strKey );
+						$objAppend->appendChild( $objElement );
 					}
-				}
+				} 
 				else
 				{
-					$objElement = $objXml->createElement(strtolower($key), Xerxes_Parser::escapeXml($value));
-					$objAppend->appendChild($objElement);
+					$objElement = $objXml->createElement( strtolower( $key ), Xerxes_Parser::escapeXml( $value ) );
+					$objAppend->appendChild( $objElement );
 				}
 			}
 		}
