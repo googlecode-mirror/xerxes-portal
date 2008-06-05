@@ -31,6 +31,7 @@
 	
 	<div style="padding: 20px;">
 		
+    <div id="main_content" style="float:left">
 		<xsl:if test="$quick_search_category != ''">
 			<form action="./" method="get">
 				<input type="hidden" name="base" value="metasearch" />
@@ -94,7 +95,8 @@
 			</table>
 			
 		</div>
-
+    </div>
+    
     <div id="sidebar" class="categories_sidebar">
       <xsl:call-template name="categories_sidebar" />
     </div>	
