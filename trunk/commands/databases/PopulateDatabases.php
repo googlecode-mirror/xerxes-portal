@@ -160,6 +160,8 @@
 			
 			$x = 1;
 			
+			if ( $objCategories->length < 1 ) throw new Exception("Could not find any categories in the Metalib KB");
+			
 			// GET EACH CATEGORY
 			
 			foreach ( $objCategories as $objCategory )
@@ -304,10 +306,11 @@
 			// get just the database info
 			
 			$objSimple = new SimpleXMLElement($strXml);
-      
-			$objDatabases = $objSimple->xpath("//database");
+			$arrDBs = $objSimple->xpath("//database");
 			
-			foreach ( $objDatabases as $objDatabase )
+			if ( count($arrDBs) < 1 ) throw new Exception("Could not find any databases in the Metalib KB");
+			
+			foreach ( $arrDBs as $objDatabase )
 			{
        
 				// populate data object with properties
