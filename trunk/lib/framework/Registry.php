@@ -10,17 +10,20 @@
 	 * @version 1.1
 	 * @package  Xerxes_Framework
 	 */
-
+	
 	class Xerxes_Framework_Registry
 	{
-		private $file = "config/config.xml";	// settings configuration file
-		private $php = "config/config.php";		// settings configuration in a php file
+		private $file = "config/config.xml"; // settings configuration file
+		private $php = "config/config.php"; // settings configuration in a php file
+		private $usergroups = array(); // user groups
+		private $arrConfig = null; // configuration settings
+		private $arrPass = array ( ); // values to pass on to the view
+		private static $instance; // singleton pattern
 		
-		private $arrConfig = null;		// configuration settings
-		private $arrPass = array();		// values to pass on to the view
-		private static $instance;		// singleton pattern
-		
-		private function __construct() {}
+	
+		private function __construct()
+		{
+		}
 		
 		/**
 		 * Get an instance of the file; Singleton to ensure correct data
@@ -30,11 +33,11 @@
 		
 		public static function getInstance()
 		{
-			if ( empty( self::$instance) )
+			if ( empty( self::$instance ) )
 			{
-				self::$instance = new Xerxes_Framework_Registry();
+				self::$instance = new Xerxes_Framework_Registry( );
 			}
-	
+			
 			return self::$instance;
 		}
 		
@@ -54,20 +57,21 @@
 			{
 				$bolUsePHP = false;
 				
-				$this->arrConfig = array();
+				$this->arrConfig = array ( );
 				
 				// there is no xml file
 				
-				if ( ! file_exists($this->file) )
+	
+				if ( ! file_exists( $this->file ) )
 				{
 					// assume we'll use the php file, unless that doesn't exist either,
 					// in which case we need to throw an error
 					
 					$bolUsePHP = true;
 					
-					if (! file_exists($this->php) )
+					if ( ! file_exists( $this->php ) )
 					{
-						throw new Exception("could not find configuration file");
+						throw new Exception( "could not find configuration file" );
 					}
 				}
 				
@@ -75,74 +79,82 @@
 				
 				if ( $bolUsePHP == true )
 				{
-					require_once($this->php);
+					require_once ($this->php);
 					
 					$arrPass = Xerxes_Config::$pass;
 					
-					$class = new ReflectionClass('Xerxes_Config');
+					$class = new ReflectionClass( 'Xerxes_Config' );
 					
 					// add it to the config array
 					
 					foreach ( $class->getConstants() as $key => $text )
 					{
-						$name = strtoupper($key);
-						$value = trim($text);						
-					
+						$name = strtoupper( $key );
+						$value = trim( $text );
+						
 						if ( $value != "" )
 						{
 							//  add it to the config array
 							
 							$this->arrConfig[$name] = $value;
-						
+							
 							// entires that are listed in the 'pass' array will be forwarded
 							// on to the xml layer for use in the view
-						
-							if ( in_array($key, $arrPass) )
+							
+							if ( in_array( $key, $arrPass ) )
 							{
-								$this->arrPass[strtolower($name)] = $value;
+								$this->arrPass[strtolower( $name )] = $value;
 							}
 						}
 					}
-				}
-				else
+				} else
 				{
 					// use the xml file	
-		
-					$xml = simplexml_load_file($this->file);
-						
+					
+					$xml = simplexml_load_file( $this->file );
+					
 					foreach ( $xml->configuration->config as $config )
 					{
-						$name = strtoupper($config["name"]);
-						$value = trim((string) $config);
+						$name = strtoupper( $config["name"] );
+						$value = trim( ( string ) $config );
 						
 						// convert simple xml-encoded values to something easier 
 						// for the client code to digest
 						
-						$value = str_replace("&lt;", "<", $value);
-						$value = str_replace("&gt;", ">",$value);
-						$value = str_replace("&amp;", "&",$value);
+						$value = str_replace( "&lt;", "<", $value );
+						$value = str_replace( "&gt;", ">", $value );
+						$value = str_replace( "&amp;", "&", $value );
 						
 						if ( $value != "" )
 						{
 							// add it to the config array
 							
 							$this->arrConfig[$name] = $value;
-						
+							
 							// types that are listed as 'pass' will be forwarded
 							// on to the xml layer for use in the view
-						
-							if ( (string) $config["pass"] == "true" )
+							
+							if ( ( string ) $config["pass"] == "true" )
 							{
-								$this->arrPass[strtolower($name)] = $value;
+								$this->arrPass[strtolower( $name )] = $value;
 							}
 						}
 					}
-          // Get group information out of config.xml too
-          // We just store actual SimpleXML elements in the $this->usergroups array. 
-          foreach ($xml->configuration->groups->group as $group) {
-            $id = (string) $group["id"];
-            $this->usergroups[$id] = $group; 
-          }
+					
+					// get group information out of config.xml too
+					// we just store actual SimpleXML elements in the 
+					// $this->usergroups array.
+					
+					$groups = $xml->configuration->groups->group;
+					
+					if ( $groups != false )
+					{
+						foreach ( $groups as $group )
+						{
+							$id = ( string ) $group["id"];
+							$this->usergroups[$id] = $group;
+						}
+					}
 				}
 			}
 		}
@@ -157,18 +169,17 @@
 		 */
 		
 		public function getConfig($name, $bolRequired = false, $default = null)
-		{	
-			$name = strtoupper($name);
+		{
+			$name = strtoupper( $name );
 			
 			if ( $this->arrConfig == null )
 			{
 				return null;
-			}
-			elseif ( array_key_exists($name, $this->arrConfig) )
+			} elseif ( array_key_exists( $name, $this->arrConfig ) )
 			{
-				if ( $this->arrConfig[$name] == "true")
+				if ( $this->arrConfig[$name] == "true" )
 				{
-					return true;	
+					return true;
 				}
 				elseif ( $this->arrConfig[$name] == "false" )
 				{
@@ -181,15 +192,18 @@
 			}
 			else
 			{
-				if ( $bolRequired == true ) throw new Exception("required configuration entry $name missing");
+				if ( $bolRequired == true )
+				{
+					throw new Exception( "required configuration entry $name missing" );
+				}
 				
-				if ($default != null)
+				if ( $default != null )
 				{
 					return $default;
 				}
 				else
 				{
-					return null;			
+					return null;
 				}
 			}
 		}
@@ -225,12 +239,12 @@
 		 */
 		
 		public function setConfig($key, $value, $bolPass = false)
-		{		
-			$this->arrConfig[strtoupper($key)] = $value;
+		{
+			$this->arrConfig[strtoupper( $key )] = $value;
 			
 			if ( $bolPass == true )
 			{
-				$this->arrPass[strtolower($key)] = $value;
+				$this->arrPass[strtolower( $key )] = $value;
 			}
 		}
 		
@@ -247,11 +261,12 @@
 			$value = "";
 			$configName = "$class::$key";
 			
-			if ( ! defined($configName) ) throw new Exception("php config file lacks entry for $key");
-	
-			$value = constant($configName);
-				
-			if ( is_bool($value) )
+			if ( ! defined( $configName ) )
+				throw new Exception( "php config file lacks entry for $key" );
+			
+			$value = constant( $configName );
+			
+			if ( is_bool( $value ) )
 			{
 				if ( $value == true )
 				{
@@ -261,34 +276,48 @@
 				{
 					return "false";
 				}
-			}
-			else
+			} else
 			{
 				return $value;
 			}
 		}
-    
-    public function userGroups() {
-      return array_keys($this->usergroups);
-    }
-    
-    public function getGroupDisplayName($id) {
-      if ( array_key_exists($id, $this->usergroups)) {
-        $group = $this->usergroups[$id];
-        return (string) $group->display_name;
-      }
-      else {
-        return $id;
-      }
-    }
-    public function getGroupLocalIpRanges($id) {
-      if ( array_key_exists($id, $this->usergroups)) {
-        $group = $this->usergroups[$id];
-        return (string) $group->local_ip_range;
-      }
-      else {
-        return $id;
-      }
-    }
+		
+		public function userGroups()
+		{
+			if ( $this->usergroups != null )
+			{
+				return array_keys( $this->usergroups );
+			}
+			else
+			{
+				return null;
+			}
+		}
+		
+		public function getGroupDisplayName($id)
+		{
+			if ( array_key_exists( $id, $this->usergroups ) )
+			{
+				$group = $this->usergroups[$id];
+				return ( string ) $group->display_name;
+			}
+			else
+			{
+				return $id;
+			}
+		}
+		
+		public function getGroupLocalIpRanges($id)
+		{
+			if ( array_key_exists( $id, $this->usergroups ) )
+			{
+				$group = $this->usergroups[$id];
+				return ( string ) $group->local_ip_range;
+			}
+			else
+			{
+				return $id;
+			}
+		}
 	}
 ?>
