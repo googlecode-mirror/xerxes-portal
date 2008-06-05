@@ -533,14 +533,34 @@
   
       <tr valign="top">		
         <td>
+          <!-- if the current session can't search this resource, should
+               we show a lock icon? Only if we already have a logged in
+               user or guest user. --> 
+          <xsl:variable name="should_lock_nonsearchable" select=" (/*/request/authorization_info/affiliated[@user_account = 'true'] or /*/request/session/role = 'guest')" />
+          
+          <!-- how many database checkboxes were displayed in this subcategory,
+               before now?
+               Used for seeing if we've reached maximum for default selected
+               dbs. Depends on if we're locking non-searchable or not. -->
+          <xsl:variable name="prev_checkbox_count">
+            <xsl:choose>
+              <xsl:when test="$should_lock_nonsearchable">
+                <xsl:value-of select="count(preceding-sibling::database[searchable_by_user = '1'])" />
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:value-of select="count(preceding-sibling::database[searchable = '1'])" />
+              </xsl:otherwise>
+             </xsl:choose>
+          </xsl:variable>
+                    
+          <!-- Show a checkbox, a disabled checkbox, or a lock icon. If it's a checkbox, default it to checked or not. -->
           <xsl:choose>
             <xsl:when test="not($should_show_checkboxes)">
             <xsl:text> </xsl:text>
             </xsl:when>
             <xsl:when test="searchable = 1">
               <xsl:choose>
-                <!-- <xsl:when test="subscription = '1' and /knowledge_base/request/session/role = 'guest'"> -->
-                <xsl:when test="(/*/request/authorization_info/affiliated[@user_account = 'true'] or /*/request/session/role = 'guest')  and searchable_by_user != '1'" >
+                <xsl:when test="$should_lock_nonsearchable  and searchable_by_user != '1'" >
                   <!-- if we have a logged in user (or a registered guest), but they can't search this, show them a lock. -->                
                   <img src="{$base_url}/images/lock.gif" alt="restricted to campus users only" />
                 </xsl:when>
@@ -552,7 +572,7 @@
                     <xsl:attribute name="id"><xsl:value-of select="metalib_id" /></xsl:attribute>
                     <xsl:attribute name="value"><xsl:value-of select="metalib_id" /></xsl:attribute>
                     <xsl:attribute name="type">checkbox</xsl:attribute>
-                    <xsl:if test="$subcategory = 1 and searchable/@count &lt;= 10">
+                    <xsl:if test="$subcategory = 1 and $prev_checkbox_count &lt; //config/search_limit">
                       <xsl:attribute name="checked">checked</xsl:attribute>
                     </xsl:if>
                   </xsl:element>
