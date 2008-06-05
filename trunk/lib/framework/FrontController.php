@@ -39,13 +39,13 @@ class Xerxes_Framework_FrontController
     // Give our session a name to keep sessions distinct between multiple
     // instances of xerxes on one apache.  Use base_path (preferably) or
     // application_name config directives.
-    $session_name;
-    if ($objRegistry->getConfig("base_web_path")) {
-      $session_name = htmlentities("xerxes_" . $objRegistry->getConfig("base_web_path"));
-    }
-    else {
-      $session_name = htmlentities("xerxes_" . $objRegistry->getConfig("application_name"));
-    }
+    $session_name= "xerxessession__" . 
+      $objRegistry->getConfig("application_name", false) . 
+      "__" . 
+      $path_key = preg_replace('/\W/', 
+                              '_', 
+                              $objRegistry->getConfig("base_web_path", false) 
+                              );    
     session_name( $session_name );
     session_start();
 		
