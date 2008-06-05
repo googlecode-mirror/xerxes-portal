@@ -19,8 +19,6 @@ class Xerxes_Framework_FrontController
 	
 	public static function execute()
 	{
-		session_start();
-		
 		// include the framework files
 		
 
@@ -37,6 +35,13 @@ class Xerxes_Framework_FrontController
 		$objRegistry->init();
 		$objControllerMap = Xerxes_Framework_ControllerMap::getInstance();
 		$objControllerMap->init();
+    
+    // Give our session a name to keep sessions distinct between multiple
+    // instances of xerxes on one apache.  Use base_path (preferably) or
+    // application_name config directives.
+    $session_name = htmlentities("xerxes_" . ($objRegistry->getConfig("base_web_path") || $objRegistry->getConfig("application_name")));      
+    session_name( $session_name );
+    session_start();
 		
 		$objRequest = new Xerxes_Framework_Request( ); // processes the incoming request
 		$objPage = new Xerxes_Framework_Page( ); // assists with basic paging/navigation elements for the view
@@ -53,12 +58,13 @@ class Xerxes_Framework_FrontController
 			#  DISPLAY ERRORS  #
 			####################
 			
-
 			if ( $objRegistry->getConfig( "DISPLAY_ERRORS" ) == true )
 			{
 				error_reporting( E_ALL );
 				ini_set( 'display_errors', '1' );
 			}
+      
+
 			
 			####################
 			#   DEFAULTS       #

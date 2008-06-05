@@ -21,7 +21,7 @@
 		 * Constructor
 		 *
 		 * @param string $configIP				comma-delimeted list of ip ranges
-		 * @param string $configAppName			unique application name 
+		 * @param string $configAppName			unique application name. No longer used at all, not neccesary.  
 		 * @param base address $configBaseURL	base url of the application
 		 * @param string $configReturn			uri to the login page
 		 */
@@ -55,7 +55,7 @@
 
 		public function checkLogin(Xerxes_Framework_Request $objRequest)
 		{
-			if (self::isAuthenticatedUser($objRequest, $this->strAppName));
+			if (self::isAuthenticatedUser($objRequest));
 			{
 				// redirect to authentication page
 					
@@ -66,10 +66,9 @@
 
     // Session has a logged in authenticated user. Not "guest" or "local" role, // both of which imply a temporary session, not an authenticated user. 
     public static function isAuthenticatedUser(Xerxes_Framework_Request $objRequest) {
-      $objRegistry =  Xerxes_Framework_Registry::getInstance(); 
-      $application = $objRegistry->getConfig("BASE_WEB_PATH");      
                   
-      return ( $objRequest->getSession("username") != null && $objRequest->getSession("application") == $application && 
+      return ( $objRequest->getSession("username") != null 
+         && 
 				 $objRequest->getSession("role") != "local" &&
          $objRequest->getSession("role") != "guest" );
     }
