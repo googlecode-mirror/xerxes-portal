@@ -25,9 +25,11 @@
 		{
 			$strUsername = $objRequest->getSession("username");
 			
+			$arrSessionArray = array();
+			
 			if ( $strUsername != "")
 			{
-				// get the format counts for format
+				### FORMATS / TYPES
 				
 				$objData = new Xerxes_DataMap();
 				$arrResults = $objData->getRecordFormats($strUsername);
@@ -42,32 +44,36 @@
 					$objFacetNode = $objXml->createElement("facet", $objFacet->total);
 					$objFacetNode->setAttribute("name", $objFacet->format);
 					
+					$arrParams = array(
+						"base" => "folder",
+						"action" => "home",
+						"username" => $objRequest->getProperty("username"),
+						"type" => $objFacet->format
+					);
+					
+					$objFacetNode->setAttribute("url", $objRequest->url_for($arrParams));
+					
 					$objXml->documentElement->appendChild($objFacetNode);
 				}
 				
 				$objRequest->addDocument($objXml);
-				
-				
-				
-				// get tags and add them too
-				
-				$arrResults = $objData->getRecordTags($strUsername);
 
-				// transform them to XML
 				
-				$objXml = new DOMDocument();
-				$objXml->loadXML("<tags />");
+				
+				### TAGS
+				
+				// we'll store the tags summary in session so that edits can be 
+				// done without round-tripping to the database; xslt can display
+				// the summary by getting it from the request xml
+
+				$arrResults = $objData->getRecordTags($strUsername);
 				
 				foreach ( $arrResults as $objTag )
 				{
-					$objTagNode = $objXml->createElement("tag", $objTag->total);
-					$objTagNode->setAttribute("label", Xerxes_Parser::escapeXml($objTag->label));
-					
-					$objXml->documentElement->appendChild($objTagNode);
+					$arrSessionArray[$objTag->label] = $objTag->total;
 				}
 				
-				$objRequest->addDocument($objXml);
-				
+				$this->setTagsCache($objRequest, $arrSessionArray);
 			}
 			
 			return 1;

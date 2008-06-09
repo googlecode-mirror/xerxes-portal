@@ -37,7 +37,7 @@
 			// get the record from database
 			
 			$objData = new Xerxes_DataMap();
-			$arrResults = $objData->getRecords(null, "full", null, $strID);
+			$arrResults = $objData->getRecordByID($strID);
 			
 			if ( count($arrResults) != 1 ) throw new Exception("cannot find record");
 			

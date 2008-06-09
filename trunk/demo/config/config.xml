@@ -311,9 +311,14 @@
 		<config name="records_per_page" pass="true">10</config>
 		
 		<!-- maximum number of records to show on saved records page: this can go much higher than 'records_per_page', since 
-				 the records are coming out of the local database -->
+				 the records are coming out of the local database, defaults to 10 -->
 		
-		<config name="saved_records_per_page">20</config>
+		<config name="saved_records_per_page" />
+		
+		<!-- maximum number of records that can be exported; setting this higher is untested as of 1.3; defaults to 1000 -->
+		
+		<config name="maximum_record_export_limit" />
+		
 		
 		<!-- add additional marc fields to the brief results; adding fields will incur a slight performance hit; 
 				 enter marc fields as a 5 character string consisting of 3 digit field code and 2 characters for ind1 and ind2;

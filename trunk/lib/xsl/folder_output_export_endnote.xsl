@@ -17,13 +17,13 @@
 <xsl:include href="includes.xsl" />
 <xsl:output method="html" encoding="utf-8" indent="yes" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
 
-<xsl:template match="/folder">
+<xsl:template match="/*">
 	<xsl:call-template name="surround" />
 </xsl:template>
 
 <xsl:template name="main">
 
-	<xsl:variable name="username" 		select="request/session/username" />
+	<xsl:variable name="username" 	select="request/session/username" />
 	<xsl:variable name="sort" 		select="request/sortkeys" />
 
 	<form action="{$base_url}/" method="get">
@@ -33,48 +33,36 @@
 	
 	<div id="folderArea">
 	
-	  	<h2>My Saved Records</h2>
+	  	<xsl:call-template name="folder_header" />
 	  
 	  	<div class="folderOptions">
-	  		
-	  		<xsl:call-template name="folder_options" />
-	  
-	  		<div class="folderOutputOptions">
 		  
-		  		<h3>Endnote</h3>
-		  		
-		  		<table cellpadding="5">
-		  		<tr>
-					<td align="right" valign="top">Export</td>
-					<td>
-					  	<p>
-					  	<input name="items" type="radio" value="all" checked="checked" />
-					  	all of my saved records<br />
-					  	<input name="items" type="radio" value="selected" />
-					  	only the records I have selected below</p>
-					  	<p></p>
-				  	</td>
-				</tr>
-		  		<tr>
-					<td align="right" valign="top">Download</td>
-					<td>
-					  	<p>
-					  	<input name="type" type="radio" value="endnote" checked="checked" />
-					  	directly into Endnote<br />
-					  	<input name="type" type="radio" value="ris" />
-					  	to a file I will import into Endnote</p>
-					  	<p></p>
-				  	</td>
-				</tr>
-				<tr>
-					<td align="right" valign="top"> </td>
-					<td><input type="submit" name="Submit" value="Download" /></td>
-				</tr>	
-				</table>
-	    		</div>
+			<h2 class="folderOptionHeader">Download to Endnote, Zotero, etc.</h2>
+			
+			<xsl:call-template name="folder_export_options" />
+			
+			<fieldset class="folderExportSet">
+			<legend>Download</legend>
+			
+			<ul class="folderExportSelections">
+				<li>
+					<input name="format" type="radio" value="bibliographic" checked="checked" id="bibliographic" />
+					<label for="bibliographic"> directly into Endnote, Zotero, or other citation management application</label>
+				</li>
+				<li>
+					<input name="format" type="radio" value="ris-file" id="ris" />
+					<label for="ris"> to a file I will import myself</label>
+				</li>
+			</ul>
+			
+			</fieldset>
+			
+			<div class="folderExportSubmit">
+				<input type="submit" name="Submit" value="Download" />
+			</div>
+
+		</div>
 		
-	  	</div>
-	  
 		<xsl:call-template name="folder_brief_results" />
 		
 	</div>

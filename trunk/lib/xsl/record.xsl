@@ -235,9 +235,9 @@
                     <div class="recordFullTextOption">
 						<img id="folder_{$result_set}{$record_number}" src="images/folder.gif" width="17" height="15" alt="" border="0" />
 						<xsl:text> </xsl:text>
-						<a onClick="return saveRecord('{$group}', '{$result_set}','{$record_number}');"
+						<a id="link_{$result_set}:{$record_number}"
 							href="./?base=metasearch&amp;action=save-delete&amp;group={$group}&amp;resultSet={$result_set}&amp;startRecord={$record_number}" 
-							class="resultsFullText">Save this record</a>
+							class="saveThisRecord resultsFullText">Save this record</a>
                     </div>
                 </xsl:if>
 			</div>

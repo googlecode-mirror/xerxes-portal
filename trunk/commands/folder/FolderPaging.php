@@ -27,18 +27,16 @@
 			
 			// get parameters and configuration information
 			
-			$strUsername = $objRequest->getSession("username");		
-			$iStart = (int) $objRequest->getProperty("startRecord");	
+			$strUsername = $objRequest->getSession("username");
+			$iStart = (int) $objRequest->getProperty("startRecord");
+			$strLabel = $objRequest->getProperty("label");
+			$strType = $objRequest->getProperty("type");
 			
 			$iMax = $objRegistry->getConfig("SAVED_RECORDS_PER_PAGE", false, 20);
-			$configModRewrite = $objRegistry->getConfig("REWRITE", false, false);
 			
 			// get total number of saved records
 			
-			$objData = new Xerxes_DataMap;
-			$iTotal = $objData->totalRecords($strUsername);
-			
-			
+			$iTotal = $this->getTotal($strUsername, $strLabel, $strType);
 			
 			### create page hit summary element
 		
@@ -51,39 +49,46 @@
 			
 			$strSort = $objRequest->getProperty("sortKeys");
 			if ( $strSort == "" ) $strSort = "id";
+			
+			$arrParams = array(
+				"base" => "folder",
+				"action" => "home",
+				"username" => $strUsername,
+				"startRecord" => 1,
+				"label" => $strLabel,
+				"type" => $strType
+			);
 		
-			$strQueryString = $objRequest->url_for( array( "base" => "folder",
-                                                     "action" => "home",
-                                                     "username" => $strUsername,
-                                                     "startRecord" => 1));;
-
-
+			$strQueryString = $objRequest->url_for($arrParams);
+			
 			$arrSortOptions = array("title" => "title", "author" => "author", "year" => "date", "id" => "most recently added");
 			$objSortXml = $objPage->sortDisplay( $strQueryString, $strSort, $arrSortOptions);
-				
+			
 			$objRequest->addDocument($objSortXml);
 			
 			
-			
-			### create paging element			
+			### create paging element
 
-      $params = array ( "base" => "folder",
-                       "action" => "home",
-                       "username" => $objRequest->getSession("username"),
-                       "sortKeys" => $objRequest->getProperty("sortKeys"));
-	   
-      
-			$objPagerXml = $objPage->pager_dom(  
-        $params,
-				"startRecord",  (int) $objRequest->getProperty("startRecord"), 
+			$params = array (
+				"base" => "folder",
+				"action" => "home",
+				"username" => $objRequest->getSession("username"),
+				"sortKeys" => $objRequest->getProperty("sortKeys"),
+				"label" => $strLabel,
+				"type" => $strType
+			);
+			
+			
+			$objPagerXml = $objPage->pager_dom(
+				$params,
+				"startRecord", (int) $objRequest->getProperty("startRecord"),
 				null,  $iTotal, 
 				$iMax, $objRequest
 			);
 			
 			$objRequest->addDocument($objPagerXml);
-				
+			
 			return 1;
 		}
 	}
-
 ?>
