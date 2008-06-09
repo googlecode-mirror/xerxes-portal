@@ -26,10 +26,9 @@
 	<xsl:variable name="username" 	select="request/session/username" />
 	<xsl:variable name="sort" 		select="request/sortkeys" />
 	
-	<form action="{$base_url}/" method="get">
+	<form action="{$base_url}/" method="get" target="{$link_target}">
     <input type="hidden" name="base" value="folder" />
-	<input type="hidden" name="action" value="export" />
-	<input type="hidden" name="format" value="text-file" />
+	<input type="hidden" name="action" value="refworks-bounce" />
 	<input type="hidden" name="username" value="{$username}" />
 	
 	<div id="folderArea">
@@ -38,12 +37,12 @@
 		
 		<div class="folderOptions">
 	  	
-			<h2 class="folderOptionHeader">Text File</h2>
+			<h2 class="folderOptionHeader">Export to Refworks</h2>
 			
 			<xsl:call-template name="folder_export_options" />
 			
 			<div class="folderExportSubmit">
-				<input type="submit" name="Submit" value="Download" />
+				<input type="submit" name="Submit" value="Export" />
 			</div>
 			
 	  	</div>

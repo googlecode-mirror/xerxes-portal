@@ -1,7 +1,7 @@
 <?php	
 	
 	/**
-	 * Delete a record from the user's saved records
+	 * Delete a record from the user's folder
 	 * 
 	 * @author David Walker
 	 * @copyright 2008 California State University
@@ -14,10 +14,7 @@
 	class Xerxes_Command_FolderDelete extends Xerxes_Command_Folder
 	{
 		/**
-		 * Delete a record from the user's folder, Request params inlcude
-		 * 'username' the username; 'sortkeys' the current sorting option so we 
-		 * can return the user to the list sorted appropriately, 'source' the souce
-		 * id of the record to delete, 'id' the identifier for the record
+		 * Delete a record from the user's folder
 		 *
 		 * @param Xerxes_Framework_Request $objRequest
 		 * @param Xerxes_Framework_Registry $objRegistry
@@ -39,9 +36,52 @@
 			// get request parameters and configuration settings
 			
 			$strUsername = $objRequest->getSession("username");
-			$strSort = $objRequest->getProperty("sortKeys");
 			$strSource = $objRequest->getProperty("source"); 
 			$strID = $objRequest->getProperty("id");
+			
+			// params for deciding where to send the user back
+			
+			$strType = $objRequest->getProperty("type");
+			$strLabel = $objRequest->getProperty("label");
+			$iStart = $objRequest->getProperty("startRecord");	
+			$iTotal = $objRequest->getProperty("total");
+			$iCount = $objRequest->getProperty("recordsPerPage");
+			
+			// ensure we send user back to a page with actual results!
+			
+			if ( $iTotal == 1 && ( $strLabel != "" || $strType != "") )
+			{
+				// if this is the last result in a tag or format grouping, then
+				// simply redirect back to the folder home page
+				
+				$arrParams = array(
+					"base" => "folder",
+					"action" => "home",
+					"username" => $objRequest->getSession("username")
+				);
+			}
+			else
+			{
+				// if the last record in the results is also the last one on
+				// the page (of 10 or whatever), send the user back to an 
+				// earlier page with results on it
+				
+				if ( $iStart > $iCount && $iStart == $iTotal )
+				{
+					$iStart = $iStart - $iCount;
+				}
+				
+				$arrParams = array(
+					"base" => "folder",
+					"action" => "home",
+					"username" => $objRequest->getSession("username"),
+					"type" => $strType,
+					"label" => $strLabel,
+					"startRecord" => $iStart,
+				);				
+			}
+			
+			$strReturn = $objRequest->url_for($arrParams);
 			
 			// delete the record from the database
 			
@@ -55,16 +95,7 @@
 			
 			// send the user back out, so they don't step on this again
 			
-			$arrParams = array(
-				"base" => "folder",
-				"action" => "home",
-				"username" => $strUsername,
-				"sortKeys" =>  $strSort
-			);
-			
-			$url = $objRequest->url_for($arrParams);
-			
-			$objRequest->setRedirect($url);
+			$objRequest->setRedirect($strReturn);
 			
 			return 1;
 		}

@@ -18,32 +18,29 @@
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:php="http://php.net/xsl">
 
-<xsl:output method="html" encoding="utf-8" indent="yes" />
-
 <!-- 
-	GLOBAL VARIABLES
-	Configuration values used throughout the templates. Can over-ride
-  distribution settings if desired. 
+	LOCALIZED GLOBAL VARIABLES
+	Override the value of any of the global variables in lib/xsl/includes.xsl
+	for example, if you don't want username in your logout link? Put whatever you want here 
 -->
 
-<!-- Don't want username in your logout link? Put whatever you want
-     here -->
 <!-- <xsl:variable name="logout_text">Log-out</xsl:variable> -->
 
 
-<!-- Individual named template overrides -->
+<!-- Header -->
 
-<xsl:template name="header_div">
-    <h2 style="margin-top: 0;"><a style="color:white" class="footer" href="{$base_url}">
-    <img src="{$base_url}/images/jhsearch-banner.jpg" >
-      <xsl:attribute name="alt">    
-        <xsl:value-of select="/*/config/application_name" />
-      </xsl:attribute>
-    </img>            
-    </a></h2>
+<xsl:template name="header_div" >
+	<div style="color: #fff; font-weight: bold; font-size: 130%; margin-bottom: 12px"><xsl:value-of select="//config/application_name" /></div>
+	<div style="color:#efefef">Header content. Customize by editing {Xerxes_app}/xsl/includes.xsl to override the template.</div>
 </xsl:template>
 
-<xsl:template name="footer_div">
+<!-- Footer -->
+
+<xsl:template name="footer_div" >
+
+	Footer content. Customize by editing {Xerxes_app}/xsl/includes.xsl to
+	override the template. 
+
     <p><a>
     <xsl:attribute name="href"><xsl:value-of select="navbar/element[@id='database_list']/url" /></xsl:attribute>
     [Database List (A-Z)]</a>
@@ -65,24 +62,20 @@
     </p>
 </xsl:template>
 
-<!-- CSU demo examples
-<xsl:template name="header_div">
-		<a href="{$base_url}"><img src="{$base_include}/images/title.gif" alt="california state university, xerxes library" border="0" /></a>	
-</xsl:template>
+<!-- 
+	Over-ride categories_sidebar if you'd like to put something in the sidebar on the home page. 
+	Here's an example of giving the user their login/authentication details. -->
 
-<xsl:template name="footer_div">
-		<img src="{$base_include}/images/seal.gif" width="147" height="149" />
-</xsl:template>
-
--->
-
-<!-- Over-ride categories_sidebar if you'd like to put something in the sidebar on the home page. Here's an example of giving the user their login/authentication details.
+<!--
 
 <xsl:template name="categories_sidebar">
-<div id="sidebar_content">
-  <xsl:call-template name="session_auth_info" />
-</div>1
+
+	<div id="sidebar_content">
+		<xsl:call-template name="session_auth_info" />
+	</div>
+
 </xsl:template>
+
 -->
 
 </xsl:stylesheet>

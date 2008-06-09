@@ -9,9 +9,6 @@
  link: http://xerxes.calstate.edu
  license: http://www.gnu.org/licenses/
  
- This file includes most of the elements that you will want to change immediately
- for the Xerxes interface: surrounding design, titles, and breadcumbs.
- 
  -->
  
 <xsl:stylesheet version="1.0"
@@ -25,8 +22,8 @@
 
 	<xsl:variable name="base_url"		select="//base_url" />
 	<xsl:variable name="rewrite" 		select="//config/rewrite" />
-	<xsl:variable name="search_limit"	select="//config/search_limit" />	
-	<xsl:variable name="link_target"	select="//config/link_target" />	
+	<xsl:variable name="search_limit"	select="//config/search_limit" />
+	<xsl:variable name="link_target"	select="//config/link_target" />
 	<xsl:variable name="base_include">
 		<xsl:choose>
 			<xsl:when test="//request/server/https">
@@ -35,16 +32,17 @@
 			<xsl:otherwise>
 				<xsl:value-of select="$base_url" />
 			</xsl:otherwise>
-		</xsl:choose>	
+		</xsl:choose>
 	</xsl:variable>
-  <!-- over-ride in local includes.xsl if you'd like different text, not including username for instance.  -->
-  <xsl:variable name="logout_text">
-      Log-out
-      <xsl:text> </xsl:text>
-      <xsl:if test="//request/authorization_info/affiliated[@user_account = 'true']">
-        <xsl:value-of select="//request/session/username" />
-      </xsl:if>
-  </xsl:variable>
+	
+	<!-- override in local includes.xsl if you'd like different text, not including username for instance.	-->
+	<xsl:variable name="logout_text">
+		Log-out
+		<xsl:text> </xsl:text>
+		<xsl:if test="//request/authorization_info/affiliated[@user_account = 'true']">
+			<xsl:value-of select="//request/session/username" />
+		</xsl:if>
+	</xsl:variable>
 
 <!-- 	
 	TEMPLATE: SURROUND
@@ -63,16 +61,13 @@
 	<link href="{$base_include}/css/xerxes-print.css" rel="stylesheet" type="text/css" media="print" />
 	<xsl:call-template name="header" />
 	</head>
-	<body class="xerxes">
-	<xsl:if test="/metasearch">
-		<xsl:attribute name="onLoad">loadFolders()</xsl:attribute>
-	</xsl:if>
+	<body>
 	<xsl:if test="request/action = 'subject'">
 		<xsl:attribute name="onLoad">document.forms.form1.query.focus()</xsl:attribute>
 	</xsl:if>
 	<div id="xerxes_outer_wrapper">
 	<div id="header">
-    <xsl:call-template name="header_div" />
+		<xsl:call-template name="header_div" />
 	</div>
 	<div id="breadcrumb">
 		<div class="trail">
@@ -88,64 +83,65 @@
 	<div id="footer">
 		<xsl:call-template name="footer_div" />
 	</div>
-  </div>
+	</div>
 	</body>
 	</html>
 	
 </xsl:template>
 
 <!-- 	
-	TEMPLATE: header_div
-  Contents of on-screen header. Generally overridden in local stylesheet.
+	TEMPLATE: HEADER_DIV
+	Contents of on-screen header. Generally overridden in local stylesheet.
 -->
+
 <xsl:template name="header_div" >
-    <h2 style="margin-top: 0;"><a style="color:white" class="footer" href="{$base_url}">WELCOME TO <xsl:value-of select="/knowledge_base/config/application_name" /></a></h2>
-    <p style="color:white">Header content. Customize by editing {Xerxes_app}/xsl/includes.xsl to
-  override the template.</p>
+	<h2><a style="color:white" class="footer" href="{$base_url}"><xsl:value-of select="/knowledge_base/config/application_name" /></a></h2>
+	<p style="color:white">Header content. Customize by editing {Xerxes_app}/xsl/includes.xsl to override the template.</p>
 </xsl:template>
 
 <!-- 	
-	TEMPLATE: footer_div
-  Contents of on-screen header. Generally overridden in local stylesheet.
+	TEMPLATE: FOOTER_DIV
+	Contents of on-screen header. Generally overridden in local stylesheet.
 -->
+
 <xsl:template name="footer_div" >
-  Footer content. Customize by editing {Xerxes_app}/xsl/includes.xsl to
-  override the template. 
+	Footer content. Customize by editing {Xerxes_app}/xsl/includes.xsl to
+	override the template. 
 </xsl:template>
 
 
 <!--
-  TEMPLATE: page_name
-  A heading that can be used to label this page. Some views use this for
-  their heading, others don't. 
-  The "title" template always uses this to construct an html title. 
+	TEMPLATE: PAGE_NAME
+	A heading that can be used to label this page. Some views use this for
+	their heading, others don't. The "title" template always uses this to construct an html title. 
 -->
+
 <xsl:template name="page_name">
-  <xsl:variable name="folder">
+	<xsl:variable name="folder">
 		<xsl:text>Saved Records</xsl:text>
 	</xsl:variable>
-  
+	
 	<xsl:choose>
 		<xsl:when test="request/action = 'subject' or request/actions/action = 'subject'">
-	     <xsl:text></xsl:text><xsl:value-of select="//category/@name" />
+			<xsl:text></xsl:text><xsl:value-of select="//category/@name" />
 		</xsl:when>
 		<xsl:when test="request/action = 'alphabetical'">
 			<xsl:text>Databases A-Z</xsl:text>
 		</xsl:when>
-    <xsl:when test="request/base = 'databases' and request/action = 'find'">
-      <xsl:text>Find a Database</xsl:text>
-    </xsl:when>
+		<xsl:when test="request/base = 'databases' and request/action = 'find'">
+			<xsl:text>Find a Database</xsl:text>
+		</xsl:when>
 		<xsl:when test="request/action = 'database'">
 			<xsl:text></xsl:text><xsl:value-of select="//title_display" />
 		</xsl:when>
-    <xsl:when test="request/base = 'embed' and request/action = 'gen_subject'">
-      <xsl:text>Create Snippet for: </xsl:text> 
-      <xsl:value-of select="//category/@name" />
-    </xsl:when>
-    <xsl:when test="request/base = 'embed' and request/action = 'gen_database'">
-      <xsl:text>Create Snippet for: </xsl:text>
-      <xsl:value-of select="//title_display" />
-    </xsl:when>
+		<xsl:when test="request/base = 'embed' and request/action = 'gen_subject'">
+			<xsl:text>Create Snippet for: </xsl:text> 
+		<xsl:value-of select="//category/@name" />
+		</xsl:when>
+		<xsl:when test="request/base = 'embed' and request/action = 'gen_database'">
+			<xsl:text>Create Snippet for: </xsl:text>
+			<xsl:value-of select="//title_display" />
+		</xsl:when>
 		<xsl:when test="request/action = 'hits'">
 			<xsl:value-of select="results/search/context" /><xsl:text>: </xsl:text>
 			<xsl:value-of select="results/search/pair/query" /><xsl:text>: </xsl:text>
@@ -180,9 +176,12 @@
 		<xsl:when test="request/action = 'output_export_text'">
 			<xsl:value-of select="$folder" /><xsl:text>: Download to Text File</xsl:text>
 		</xsl:when>
+		<xsl:when test="request/action = 'output_refworks'">
+			<xsl:text>Export to Refworks</xsl:text>
+		</xsl:when>
 		<xsl:when test="request/action = 'full'">
 			<xsl:value-of select="$folder" /><xsl:text>: Record</xsl:text>
-		</xsl:when>    
+		</xsl:when>	 
 	</xsl:choose>
 	
 </xsl:template>
@@ -190,21 +189,22 @@
 <!-- 	
 	TEMPLATE: TITLE
 	Sets the title ( the one that appears in the browser title bar)
-  Takes the 'header' and adds more stuff to it.  
+	Takes the 'header' and adds more stuff to it.
 -->
+
 <xsl:template name="title">
-    <xsl:variable name="page_title"><xsl:call-template name="page_name" /></xsl:variable>    
-    <xsl:value-of select="config/application_name" />
-    <xsl:if test="$page_title != ''">
-      <xsl:text>: </xsl:text>
-      <xsl:value-of select="$page_title" />
-    </xsl:if>    
+	<xsl:variable name="page_title"><xsl:call-template name="page_name" /></xsl:variable>
+	<xsl:value-of select="config/application_name" />
+	<xsl:if test="$page_title != ''">
+		<xsl:text>: </xsl:text>
+		<xsl:value-of select="$page_title" />
+	</xsl:if>
 </xsl:template>
 
 
 <xsl:template name="title_old">
 	
-  <xsl:variable name="base" select="config/application_name" />
+	<xsl:variable name="base" select="config/application_name" />
 	
 	<xsl:choose>
 		<xsl:when test="request/action = 'categories' or request/actions/action = 'categories'">
@@ -216,9 +216,9 @@
 		<xsl:when test="request/action = 'alphabetical'">
 			<xsl:value-of select="$base" /><xsl:text>: Databases A-Z</xsl:text>
 		</xsl:when>
-    <xsl:when test="request/base = 'databases' and request/action = 'find'">
-      <xsl:value-of select="$base" /><xsl:text>: Find a Database</xsl:text>
-    </xsl:when>
+		<xsl:when test="request/base = 'databases' and request/action = 'find'">
+			<xsl:value-of select="$base" /><xsl:text>: Find a Database</xsl:text>
+		</xsl:when>
 		<xsl:when test="request/action = 'database'">
 			<xsl:value-of select="$base" /><xsl:text>: </xsl:text><xsl:value-of select="//title_display" />
 		</xsl:when>
@@ -262,9 +262,9 @@
 		<xsl:when test="request/action = 'full'">
 			<xsl:value-of select="$folder" /><xsl:text>: Record</xsl:text>
 		</xsl:when>
-    <xsl:otherwise>
-      <xsl:value-of select="$base" />
-    </xsl:otherwise>
+		<xsl:otherwise>
+			<xsl:value-of select="$base" />
+		</xsl:otherwise>
 	</xsl:choose>
 	
 </xsl:template>
@@ -280,15 +280,13 @@
 	<xsl:variable name="context_url" 	select="results/search/context_url" />
 	<xsl:variable name="username"		select="request/session/username" />
 	<xsl:variable name="return"			select="request/return" />
-  <xsl:variable name="return_title" select="request/return_title" />
+	<xsl:variable name="return_title" select="request/return_title" />
 	<xsl:variable name="group"			select="request/group" />
 	<xsl:variable name="resultset" 		select="request/resultset" />
 	<xsl:variable name="start_record" 	select="request/startrecord" />
 	<xsl:variable name="records_per_page" 	select="config/records_per_page" />
-    
+	 
 	<xsl:variable name="folder" select="navbar/element[@id = 'saved_records']/url" />
-	
-  
 	
 	<xsl:choose>
 		<xsl:when test="request/action = 'categories'">
@@ -297,7 +295,7 @@
 		<xsl:otherwise>
 			<a href="{$base_url}">Home</a> &gt; 
 		</xsl:otherwise>
-	</xsl:choose>	
+	</xsl:choose>
 	
 	<xsl:choose>
 		<xsl:when test="request/action = 'login'">
@@ -312,22 +310,20 @@
 		<xsl:when test="request/action = 'alphabetical'">
 			<span class="breadcrumbHere">Databases A-Z</span>
 		</xsl:when>
-    <xsl:when test="request/base = 'databases' and request/action = 'find'">
-      <xsl:call-template name="page_name" />
-    </xsl:when>
+		<xsl:when test="request/base = 'databases' and request/action = 'find'">
+			<xsl:call-template name="page_name" />
+		</xsl:when>
 		<xsl:when test="request/action = 'database'">
-    
-      <xsl:if test="$return != ''">          
-          <a href="{$return}">
-            <xsl:choose>
-              <xsl:when test="$return_title != ''">
-                <xsl:value-of select="$return_title" />
-              </xsl:when>
-              <xsl:otherwise><xsl:text>Databases</xsl:text></xsl:otherwise>
-            </xsl:choose>
-          </a> &gt;
-      </xsl:if>
-    
+			<xsl:if test="$return != ''">			 
+				<a href="{$return}">
+					<xsl:choose>
+						<xsl:when test="$return_title != ''">
+						 <xsl:value-of select="$return_title" />
+						</xsl:when>
+						<xsl:otherwise><xsl:text>Databases</xsl:text></xsl:otherwise>
+					</xsl:choose>
+				</a> &gt;
+			</xsl:if>
 			<span class="breadcrumbHere"><xsl:value-of select="//title_display" /></span>
 		</xsl:when>
 		<xsl:when test="request/action = 'hits'">
@@ -340,11 +336,11 @@
 		</xsl:when>
 		<xsl:when test="request/action = 'facet'">
 			<a href="{$context_url}"><xsl:value-of select="results/search/context" /></a> &gt; 
-			<a href="{$return}"><xsl:value-of select="results/database" /></a> &gt;  
+			<a href="{$return}"><xsl:value-of select="results/database" /></a> &gt;
 			<span class="breadcrumbHere"><xsl:value-of select="results/facet_name" /></span>
 		</xsl:when>
 		<xsl:when test="request/action = 'record'">
- 			<a href="{$context_url}"><xsl:value-of select="results/search/context" /></a> &gt; 
+			<a href="{$context_url}"><xsl:value-of select="results/search/context" /></a> &gt; 
 			
 			<xsl:choose>
 				<xsl:when test="$return != ''">
@@ -356,7 +352,7 @@
 						<xsl:text>/?base=metasearch&amp;action=results&amp;group=</xsl:text><xsl:value-of select="$group" />
 						<xsl:text>&amp;resultSet=</xsl:text><xsl:value-of select="$resultset" />
 						<xsl:text>&amp;startRecord=</xsl:text>
-						<xsl:value-of select="(floor( ($start_record  - 1 ) div $records_per_page) * $records_per_page) + 1" />
+						<xsl:value-of select="(floor( ($start_record	- 1 ) div $records_per_page) * $records_per_page) + 1" />
 					</xsl:variable>
 					
 					<a href="{$parent_resultset}">Results</a> &gt;
@@ -375,6 +371,10 @@
 			<a href="{$folder}">My Saved Records</a> &gt; 
 			<span class="breadcrumbHere">Download to Endnote</span>
 		</xsl:when>
+		<xsl:when test="request/action = 'output_export_endnote'">
+			<a href="{$folder}">My Saved Records</a> &gt; 
+			<span class="breadcrumbHere">Export to Refworks</span>
+		</xsl:when>
 		<xsl:when test="request/action = 'output_export_text'">
 			<a href="{$folder}">My Saved Records</a> &gt; 
 			<span class="breadcrumbHere">Download to Text File</span>
@@ -383,29 +383,29 @@
 			<a href="{$folder}">My Saved Records</a> &gt; 
 			<span class="breadcrumbHere">Record</span>
 		</xsl:when>
-    <xsl:when test="request/base = 'embed' and request/action = 'gen_subject'">
-      <a>
-        <xsl:attribute name="href">
-          <xsl:value-of select="//category/url" />
-        </xsl:attribute>
-        <xsl:value-of select="//category/@name" />
-      </a>
-      &gt;
-      <span class="breadcrumbHere">Create Snippet</span>
-    </xsl:when>
-    <xsl:when test="request/base = 'embed' and request/action = 'gen_database'">
-      <a>
-        <xsl:attribute name="href">
-            <xsl:value-of select="//database/url" />
-        </xsl:attribute>
-        <xsl:value-of select="//title_display" />
-      </a>
-      &gt;
-      <span class="breadcrumbHere">Create Snippet</span>
-    </xsl:when>
-    <xsl:otherwise>
-      <span class="breadcrumbHere"><xsl:call-template name="page_name" /></span>
-    </xsl:otherwise>
+		<xsl:when test="request/base = 'embed' and request/action = 'gen_subject'">
+			<a>
+				<xsl:attribute name="href">
+				 <xsl:value-of select="//category/url" />
+				</xsl:attribute>
+				<xsl:value-of select="//category/@name" />
+			</a>
+			&gt;
+			<span class="breadcrumbHere">Create Snippet</span>
+		</xsl:when>
+		<xsl:when test="request/base = 'embed' and request/action = 'gen_database'">
+			<a>
+				<xsl:attribute name="href">
+					<xsl:value-of select="//database/url" />
+				</xsl:attribute>
+				<xsl:value-of select="//title_display" />
+			</a>
+			&gt;
+			<span class="breadcrumbHere">Create Snippet</span>
+		</xsl:when>
+		<xsl:otherwise>
+		<span class="breadcrumbHere"><xsl:call-template name="page_name" /></span>
+	</xsl:otherwise>
 	</xsl:choose>
 
 </xsl:template>
@@ -425,19 +425,19 @@
 		( <xsl:value-of select="request/session/role" /> )
 	</xsl:comment>
 
-	<div class="sessionOptions" title="login and saved records links">	
+	<div class="sessionOptions" title="login and saved records links">
 		<span class="sessionAction">
 			<xsl:choose>
 			<xsl:when test="request/session/role and request/session/role != 'local'">
 				<a>
-        <xsl:attribute name="href"><xsl:value-of select="navbar/element[@id = 'logout']/url" /></xsl:attribute>
-        <xsl:copy-of select="$logout_text" />        
-        </a>
+			<xsl:attribute name="href"><xsl:value-of select="navbar/element[@id = 'logout']/url" /></xsl:attribute>
+			<xsl:copy-of select="$logout_text" />
+			</a>
 			</xsl:when>
 			<xsl:otherwise>
 				<a>
-        <xsl:attribute name="href"><xsl:value-of select="navbar/element[@id = 'login']/url" /></xsl:attribute>
-        Log-in</a>
+			<xsl:attribute name="href"><xsl:value-of select="navbar/element[@id = 'login']/url" /></xsl:attribute>
+			Log-in</a>
 			</xsl:otherwise>
 			</xsl:choose>
 		</span>
@@ -446,17 +446,17 @@
 			<img src="{$base_include}/images/folder.gif" name="folder" width="17" height="15" border="0" id="folder" alt="folder"/>
 			<xsl:text> </xsl:text>
 			<a>
-      <xsl:attribute name="href"><xsl:value-of select="navbar/element[@id='saved_records']/url" /></xsl:attribute>
-      <xsl:choose>
-        <xsl:when test="request/session/role = 'local' or request/session/role = 'guest'">
-        Temporary Saved Records
-        </xsl:when>
-        <xsl:otherwise>
-          My Saved Records
-        </xsl:otherwise>
-      </xsl:choose>
-      </a>
-		</span>	
+		<xsl:attribute name="href"><xsl:value-of select="navbar/element[@id='saved_records']/url" /></xsl:attribute>
+		<xsl:choose>
+			<xsl:when test="request/session/role = 'local' or request/session/role = 'guest'">
+			Temporary Saved Records
+			</xsl:when>
+			<xsl:otherwise>
+				My Saved Records
+			</xsl:otherwise>
+		</xsl:choose>
+		</a>
+		</span>
 	</div>
 </xsl:template>
 
@@ -465,40 +465,40 @@
 	Search box that appears in the 'hits' and 'results' page, as well as databases_subject.xsl. 
 -->
 
-
 <xsl:template name="search_box">
 	
 	<div class="searchBox">
-    
-			<xsl:variable name="query" select="//search/pair[1]/query" />
-				<label for="field">Search</label><xsl:text> </xsl:text>
-				<select id="field" name="field">
-          <option value="WRD">all fields</option>	
-          <option value="WTI">
-            <xsl:if test="//search/pair[1]/field = 'WTI'">
-              <xsl:attribute name="selected">seleted</xsl:attribute>
-            </xsl:if>
-            title
-          </option>
-          <option value="WAU">
-            <xsl:if test="//search/pair[1]/field = 'WAU'">
-              <xsl:attribute name="selected">selected</xsl:attribute>
-            </xsl:if>
-            author              
-          </option>
-          <option value="WSU">
-            <xsl:if test="//search/pair[1]/field = 'WSU'">
-              <xsl:attribute name="selected">selected</xsl:attribute>
-            </xsl:if>
-            subject
-          </option>          				  
-				</select>
-				<xsl:text> </xsl:text><label for="query">for</label><xsl:text> </xsl:text>
-				<input id="query" name="query" type="text" size="32" value="{$query}" /><xsl:text> </xsl:text>
-
-
-      <input type="submit" name="Submit" value="GO" />
-
+	
+		<xsl:variable name="query" select="//search/pair[1]/query" />
+		
+		<label for="field">Search</label><xsl:text> </xsl:text>
+		
+		<select id="field" name="field">
+			<option value="WRD">all fields</option>
+			<option value="WTI">
+			<xsl:if test="//search/pair[1]/field = 'WTI'">
+				<xsl:attribute name="selected">seleted</xsl:attribute>
+			</xsl:if>
+			title
+			</option>
+			<option value="WAU">
+			<xsl:if test="//search/pair[1]/field = 'WAU'">
+				<xsl:attribute name="selected">selected</xsl:attribute>
+			</xsl:if>
+			author
+			</option>
+			<option value="WSU">
+			<xsl:if test="//search/pair[1]/field = 'WSU'">
+				<xsl:attribute name="selected">selected</xsl:attribute>
+			</xsl:if>
+			subject
+			</option>
+		</select>
+		<xsl:text> </xsl:text><label for="query">for</label><xsl:text> </xsl:text>
+		<input id="query" name="query" type="text" size="32" value="{$query}" /><xsl:text> </xsl:text>
+		
+		<input type="submit" name="Submit" value="GO" />
+		
 		<xsl:if test="results/search/spelling != ''">
 			<xsl:variable name="spell_url" select="results/search/spelling_url" />
 			<p class="errorSpelling">Did you mean: <a href="{$spell_url}"><xsl:value-of select="//spelling" /></a></p>
@@ -514,112 +514,114 @@
 
 </xsl:template>
 
-<!-- TEMPLATE: subject_databases_list
-  used to list databases, generally on a search form, on databases_subject.xsl,
-  and embed_subject.xsl -->
+<!--
+	TEMPLATE: SUBJECT_DATABASES_LIST
+	used to list databases, generally on a search form, on databases_subject.xsl,
+	and embed_subject.xsl 
+-->
+
 <xsl:template name="subject_databases_list">
-    <!-- default to true: -->
-  <xsl:param name="should_show_checkboxes" select="true()" />
-    <!-- specific subcategory only? Default to false meaning, no, all subcats. -->
-  <xsl:param name="show_only_subcategory" select="false()" />
-  
-  <xsl:for-each select="category/subcategory[(not($show_only_subcategory )) or  ($show_only_subcategory = '') or (@id = $show_only_subcategory)]">
-  
-  
-    <fieldset class="subjectSubCategory">
-    <legend><xsl:value-of select="@name" /></legend>
-    
-    <xsl:variable name="subcategory" select="position()" />
-  
-    <table summary="this table lists databases you can search" class="subjectCheckList">
-    <xsl:for-each select="database">
-      <xsl:variable name="id_meta" select="metalib_id" />
-  
-      <tr valign="top">		
-        <td>
-          <!-- if the current session can't search this resource, should
-               we show a lock icon? Only if we already have a logged in
-               user or guest user. --> 
-          <xsl:variable name="should_lock_nonsearchable" select=" (/*/request/authorization_info/affiliated[@user_account = 'true'] or /*/request/session/role = 'guest')" />
-          
-          <!-- how many database checkboxes were displayed in this subcategory,
-               before now?
-               Used for seeing if we've reached maximum for default selected
-               dbs. Depends on if we're locking non-searchable or not. -->
-          <xsl:variable name="prev_checkbox_count">
-            <xsl:choose>
-              <xsl:when test="$should_lock_nonsearchable">
-                <xsl:value-of select="count(preceding-sibling::database[searchable_by_user = '1'])" />
-              </xsl:when>
-              <xsl:otherwise>
-                <xsl:value-of select="count(preceding-sibling::database[searchable = '1'])" />
-              </xsl:otherwise>
-             </xsl:choose>
-          </xsl:variable>
-                    
-          <!-- Show a checkbox, a disabled checkbox, or a lock icon. If it's a checkbox, default it to checked or not. -->
-          <xsl:choose>
-            <xsl:when test="not($should_show_checkboxes)">
-            <xsl:text> </xsl:text>
-            </xsl:when>
-            <xsl:when test="searchable = 1">
-              <xsl:choose>
-                <xsl:when test="$should_lock_nonsearchable  and searchable_by_user != '1'" >
-                  <!-- if we have a logged in user (or a registered guest), but they can't search this, show them a lock. -->                
-                  <img src="{$base_url}/images/lock.gif" alt="restricted to campus users only" />
-                </xsl:when>
-                <xsl:otherwise>
-                  <!-- if no user logged in, or user logged in and they can
-                  search this, show them a checkbox. -->
-                  <xsl:element name="input">
-                    <xsl:attribute name="name">database</xsl:attribute>
-                    <xsl:attribute name="id"><xsl:value-of select="metalib_id" /></xsl:attribute>
-                    <xsl:attribute name="value"><xsl:value-of select="metalib_id" /></xsl:attribute>
-                    <xsl:attribute name="type">checkbox</xsl:attribute>
-                    <xsl:if test="$subcategory = 1 and $prev_checkbox_count &lt; //config/search_limit">
-                      <xsl:attribute name="checked">checked</xsl:attribute>
-                    </xsl:if>
-                  </xsl:element>
-                </xsl:otherwise>
-              </xsl:choose>
-            </xsl:when>
-            <xsl:otherwise>
-              <img src="{$base_url}/images/link-out.gif" alt="non-searchable database" />
-            </xsl:otherwise>
-          </xsl:choose>
-        </td>
-        <td>
-          <xsl:element name="label">
-            <xsl:attribute name="for"><xsl:value-of select="metalib_id" /></xsl:attribute>
-            
-            <xsl:variable name="link_native_home" select="php:function('urlencode', string(link_native_home))" />
-            
-            <a>
-            <xsl:attribute name="href"><xsl:value-of select="xerxes_native_link_url" /></xsl:attribute>
-              <xsl:value-of select="title_display" />
-            </a>
-          </xsl:element>
-        </td>
-        <td>
-          <a>
-            <xsl:attribute name="href"><xsl:value-of select="url" /></xsl:attribute>
-            <img alt="info" src="images/info.gif" >
-              <xsl:attribute name="src"><xsl:value-of select="/*/config/base_url" />/images/info.gif</xsl:attribute>
-            </img>
-          </a>
-        </td>
-      </tr>
-      <xsl:if test="group_restriction">
-        <tr>
-          <td></td>
-          <td colspan="2"><xsl:call-template name="db_restriction_display" /></td>
-        </tr>
-      </xsl:if>
-    </xsl:for-each>	
-    </table>
-    
-    </fieldset>
-  </xsl:for-each>
+
+	<!-- default to true: -->
+	<xsl:param name="should_show_checkboxes" select="true()" />
+	<!-- specific subcategory only? Default to false meaning, no, all subcats. -->
+	<xsl:param name="show_only_subcategory" select="false()" />
+	
+	<xsl:for-each select="category/subcategory[(not($show_only_subcategory )) or ($show_only_subcategory = '') or (@id = $show_only_subcategory)]">
+		<fieldset class="subjectSubCategory">
+		<legend><xsl:value-of select="@name" /></legend>
+		
+		<xsl:variable name="subcategory" select="position()" />
+			<table summary="this table lists databases you can search" class="subjectCheckList">
+			<xsl:for-each select="database">
+			<xsl:variable name="id_meta" select="metalib_id" />
+			<tr valign="top">
+			<td>
+			
+			<!-- if the current session can't search this resource, should we show a lock icon? 
+			Only if we already have a logged in user or guest user. --> 
+			
+			<xsl:variable name="should_lock_nonsearchable" select=" (/*/request/authorization_info/affiliated[@user_account = 'true'] or /*/request/session/role = 'guest')" />
+			
+			<!-- how many database checkboxes were displayed in this subcategory, before now?
+				Used for seeing if we've reached maximum for default selected dbs. Depends on 
+				if we're locking non-searchable or not. -->
+				
+			<xsl:variable name="prev_checkbox_count">
+			<xsl:choose>
+				<xsl:when test="$should_lock_nonsearchable">
+				<xsl:value-of select="count(preceding-sibling::database[searchable_by_user = '1'])" />
+				</xsl:when>
+				<xsl:otherwise>
+				<xsl:value-of select="count(preceding-sibling::database[searchable = '1'])" />
+				</xsl:otherwise>
+			</xsl:choose>
+			</xsl:variable>
+			
+			<!-- Show a checkbox, a disabled checkbox, or a lock icon. If it's a checkbox, default it to checked or not. -->
+			
+			<xsl:choose>
+			<xsl:when test="not($should_show_checkboxes)">
+			<xsl:text> </xsl:text>
+			</xsl:when>
+			<xsl:when test="searchable = 1">
+				<xsl:choose>
+				<xsl:when test="$should_lock_nonsearchable	and searchable_by_user != '1'" >
+				<!-- if we have a logged in user (or a registered guest), but they can't search this, show them a lock. -->			
+				<img src="{$base_url}/images/lock.gif" alt="restricted to campus users only" />
+				</xsl:when>
+				<xsl:otherwise>
+				<!-- if no user logged in, or user logged in and they can
+				search this, show them a checkbox. -->
+				<xsl:element name="input">
+					<xsl:attribute name="name">database</xsl:attribute>
+					<xsl:attribute name="id"><xsl:value-of select="metalib_id" /></xsl:attribute>
+					<xsl:attribute name="value"><xsl:value-of select="metalib_id" /></xsl:attribute>
+					<xsl:attribute name="type">checkbox</xsl:attribute>
+					<xsl:if test="$subcategory = 1 and $prev_checkbox_count &lt; //config/search_limit">
+					<xsl:attribute name="checked">checked</xsl:attribute>
+					</xsl:if>
+				</xsl:element>
+				</xsl:otherwise>
+				</xsl:choose>
+			</xsl:when>
+			<xsl:otherwise>
+				<img src="{$base_url}/images/link-out.gif" alt="non-searchable database" />
+			</xsl:otherwise>
+			</xsl:choose>
+			</td>
+			<td>
+			<xsl:element name="label">
+			<xsl:attribute name="for"><xsl:value-of select="metalib_id" /></xsl:attribute>
+			
+			<xsl:variable name="link_native_home" select="php:function('urlencode', string(link_native_home))" />
+			
+			<a>
+			<xsl:attribute name="href"><xsl:value-of select="xerxes_native_link_url" /></xsl:attribute>
+				<xsl:value-of select="title_display" />
+			</a>
+			</xsl:element>
+			</td>
+			<td>
+			<a>
+			<xsl:attribute name="href"><xsl:value-of select="url" /></xsl:attribute>
+			<img alt="info" src="images/info.gif" >
+				<xsl:attribute name="src"><xsl:value-of select="/*/config/base_url" />/images/info.gif</xsl:attribute>
+			</img>
+			</a>
+			</td>
+		</tr>
+		<xsl:if test="group_restriction">
+			<tr>
+			<td></td>
+			<td colspan="2"><xsl:call-template name="db_restriction_display" /></td>
+			</tr>
+		</xsl:if>
+		</xsl:for-each>
+		</table>
+		
+		</fieldset>
+	</xsl:for-each>
 </xsl:template>
 
 <!-- 
@@ -659,34 +661,35 @@
 	
 </xsl:template>
 
-<!-- TEMPLATE: db_restriction_display 
-     Show access rights for db, including group restrictions. 
-     Either pass in a parameter, or else it assumes that
-     a <database> node is the XSL current() node. -->
-<xsl:template name="db_restriction_display">
-    <xsl:param name="database" select="current()" />
+<!-- 
+	TEMPLATE: DB_RESTRICTION_DISPLAY
+ 	Show access rights for db, including group restrictions. Either pass in a parameter, or else it assumes that
+	a <database> node is the XSL current() node. 
+-->
 
-    <xsl:variable name="group_restrictions" select="$database/group_restriction" />
-    
-    <xsl:if test="$group_restrictions">
-      Only available to
-    </xsl:if>
-    
-    <xsl:for-each select="$group_restrictions">
-      <xsl:value-of select="@display_name" />
-      <xsl:choose>
-        <xsl:when test="count(following-sibling::group_restriction) = 1">
-        and
-        </xsl:when>
-        <xsl:when test="count(following-sibling::group_restriction) > 1">
-        , 
-        </xsl:when>
-      </xsl:choose>
-    </xsl:for-each>
-    <xsl:if test="$group_restrictions">
-    <xsl:text> </xsl:text>
-    users
-    </xsl:if>
+<xsl:template name="db_restriction_display">
+	<xsl:param name="database" select="current()" />
+
+	<xsl:variable name="group_restrictions" select="$database/group_restriction" />
+	
+	<xsl:if test="$group_restrictions">
+		Only available to
+	</xsl:if>
+	
+	<xsl:for-each select="$group_restrictions">
+		<xsl:value-of select="@display_name" />
+		<xsl:choose>
+			<xsl:when test="count(following-sibling::group_restriction) = 1">
+			and
+			</xsl:when>
+			<xsl:when test="count(following-sibling::group_restriction) > 1">
+			, 
+			</xsl:when>
+		</xsl:choose>
+	</xsl:for-each>
+	<xsl:if test="$group_restrictions">
+	<xsl:text>  users</xsl:text>
+	</xsl:if>
 </xsl:template>
 
 
@@ -697,66 +700,149 @@
 
 <xsl:template name="folder_brief_results">
 
-  <xsl:variable name="username" 	select="request/session/username" />
-
-	<table>
-	<xsl:for-each select="results/records/record">	
-		<xsl:variable name="id" select="id" />
-    <xsl:variable name="url"    select="url" />
-
-		<tr valign="top">
-			<td class="folderRecord">
-				<input type="checkbox" name="record" value="{$id}" />
-			</td>
-			<td align="left" class="folderRecord" width="100%">
-				<a href="{$url}" class="resultsTitle">
-					<xsl:value-of select="title" />
-				</a>
-				<br /><xsl:value-of select="author" /> / <xsl:value-of select="format" /> / <xsl:value-of select="year" />
-				
-			</td>
+	<xsl:variable name="username" 	select="request/session/username" />
+	
+	<table summary="">
+	<xsl:for-each select="results/records/record">
+		<tr>
+		<td class="folderRecord">
+			<input type="checkbox" name="record" value="{id}" id="record-{id}" />
+		</td>
+		<td class="folderRecord">
+			<label for="record-{id}">
+				<a href="{url_full}" class="resultsTitle"><xsl:value-of select="title" /></a><br />
+				<xsl:value-of select="author" /> / <xsl:value-of select="format" /> / <xsl:value-of select="year" />
+			</label>
+		</td>
 		</tr>
 	</xsl:for-each>
 	</table>
+</xsl:template>
+
+<!-- 
+	TEMPLATE: FOLDER HEADER 
+	Sets the name of the folder area, dynamically based on roles
+-->
+
+<xsl:template name="folder_header">
+
+	<xsl:variable name="return" 	select="php:function('urlencode', string(request/server/request_uri))" />
+	
+	<div class="folderHeaderArea">
+	
+		<xsl:choose>
+			<xsl:when test="request/session/role = 'local' or request/session/role = 'guest'">
+				<h1>Temporary Saved Records</h1>
+				
+				<xsl:if test="request/session/role = 'local'">
+					<p>( <a href="{$base_url}/?base=authenticate&amp;action=login&amp;return={$return}">Log-in</a> 
+					to save the records beyond this session.)</p>
+				</xsl:if>
+			</xsl:when>
+			<xsl:otherwise>
+				<h1>
+					<xsl:choose>
+						<xsl:when test="request/label or request/type">
+							<a href="./?base=folder" class="folderHomeHeader">My Saved Records</a>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:text>My Saved Records</xsl:text>
+						</xsl:otherwise>
+					</xsl:choose>
+					
+					<xsl:if test="request/label">
+						<xsl:text> / </xsl:text><xsl:value-of select="request/label" />
+					</xsl:if>
+					<xsl:if test="request/type">
+						<xsl:text> / </xsl:text><xsl:value-of select="request/type" />
+					</xsl:if>
+				</h1>
+	
+			</xsl:otherwise>
+		</xsl:choose>
+		
+	</div>
 
 </xsl:template>
 
-<!-- 	
-	TEMPLATE: FOLDER_OPTIONS
-	Export options from the 'My Saved Records' pages
+<!-- 
+	TEMPLATE: TAGS DISPLAY
+	used by a couple of pages in the folder area for displaying tags
 -->
 
-<xsl:template name="folder_options">
+<xsl:template name="tags_display">
 	
-	<xsl:variable name="username" 	select="request/session/username" />
-	 
-	 <div class="folderOutputs">
-		 <table border="0" cellspacing="0" cellpadding="5">
-			  <tr valign="top">
-				<td class="folderOutputOptions">
-					<img src="{$base_include}/images/folder_email.gif" alt="email" />
-				</td>
-				<td>
-					<p><strong><a>
-          <xsl:attribute name="href"><xsl:value-of select='export_functions/export_option[@id="email"]/url' /></xsl:attribute>
-          Email</a></strong> records</p>
-				</td>
-				<td class="folderOutputOptions">
-					<img src="{$base_include}/images/folder_download.gif" alt="download" />
-				</td>
-				<td>
-					<p>Download to: </p>
-					<ul>
-					<li><strong><a>
-          <xsl:attribute name="href"><xsl:value-of select='export_functions/export_option[@id="endnote"]/url' /></xsl:attribute>
-          Endnote</a></strong></li>
-					<li><strong><a>
-          <xsl:attribute name="href"><xsl:value-of select='export_functions/export_option[@id="text"]/url' /></xsl:attribute>
-          Text file</a></strong></li>
-					</ul>
-				</td>
-			  </tr>
-		</table>
+	<h2>Labels</h2>
+	
+	<ul>
+	<xsl:for-each select="tags/tag">
+		<li>
+		<xsl:choose>
+			<xsl:when test="@label = //request/label">
+				<strong><xsl:value-of select="@label" /></strong> ( <xsl:value-of select="@total" /> )
+			</xsl:when>
+			<xsl:otherwise>
+				<a href="{@url}"><xsl:value-of select="@label" /></a> ( <xsl:value-of select="@total" /> )				
+			</xsl:otherwise>
+		</xsl:choose>
+		</li>
+	</xsl:for-each>
+	</ul>
+	
+</xsl:template>
+
+
+<!-- 
+	TEMPLATE: FOLDER EXPORT OPTIONS
+	used within each export to provide selection of items
+-->
+
+<xsl:template name="folder_export_options">
+
+	<div>
+		
+		<fieldset class="folderExportSet">
+		<legend>Export</legend>
+		
+		<ul class="folderExportSelections">
+			<li>
+			
+			<input type="radio" name="items" value="all" id="all" checked="checked" />
+			
+			<xsl:choose>
+				<xsl:when test="//request/label">
+					
+					<label for="all">
+					All of my saved records labeled <strong><xsl:value-of select="//request/label" /></strong>
+					</label>
+					<input type="hidden" name="label" value="{//request/label}" />
+
+				</xsl:when>
+				<xsl:when test="//request/type">
+
+					<label for="all">
+					All of my saved records that are <strong><xsl:value-of select="//request/type" />s</strong>
+					</label>
+					<input type="hidden" name="type" value="{//request/type}" />
+				
+				</xsl:when>
+				<xsl:otherwise>
+					<label for="all">All of my saved records</label>
+				</xsl:otherwise>
+			
+			</xsl:choose>
+
+			</li>
+			
+			<li>
+				<input type="radio" name="items" value="new" id="new" />
+				<label for="new">Only the records I have selected below.</label>
+			</li>
+	
+		</ul>
+		
+		</fieldset>
+		
 	</div>
 
 </xsl:template>
@@ -765,7 +851,6 @@
 <!-- 	
 	TEMPLATE: RESULTS RETURN
 	provides a return mechanism on the saved records page to get back to the results
-	
 -->
 
 <xsl:template name="results_return">
@@ -779,7 +864,7 @@
 
 		<div class="folderReturn">
 			<img src="{$base_include}/images/back.gif" />
-			<span class="folderReturnText">	
+			<span class="folderReturnText">
 				<a href="{$back}">Return to search results</a>
 			</span>
 		</div>
@@ -792,7 +877,6 @@
 <!-- 	
 	TEMPLATE: HEADER
 	header content, such as Javascript functions that should appear on specific page.
-	
 -->
 
 <xsl:template name="header">
@@ -800,52 +884,23 @@
 	<xsl:if test="request/action = 'hits' and results/progress &lt; 10">
 		<meta http-equiv="refresh" content="6" />
 	</xsl:if>
+	<script src="{$base_include}/javascript/onload.js" language="javascript" type="text/javascript"></script>
+	<script src="{$base_include}/javascript/prototype-1.6.0.2.js" language="javascript" type="text/javascript"></script>
+	<script src="{$base_include}/javascript/scriptaculous/scriptaculous.js" language="javascript" type="text/javascript"></script>
+	<script src="{$base_include}/javascript/tags.js" language="javascript" type="text/javascript"></script>
+	<script src="{$base_include}/javascript/save.js" language="javascript" type="text/javascript"></script>
 	
-  <!-- prototype -->
-  <script src="{$base_include}/javascript/prototype-1.6.0.2.js" language="javascript" type="text/javascript"></script>	
-  
-	<script src="{$base_include}/javascript/save.js" language="javascript" type="text/javascript"></script>	
 	<script language="javascript" type="text/javascript">
-
 		var dateSearch = "<xsl:value-of select="results/search/date" />";
-		var xerxesRoot = "<xsl:value-of select="$base_url" />";
 		var iSearchable = "<xsl:value-of select="$search_limit" />";
 	</script>
 
 </xsl:template>
 
-
-<!-- 	
-	TEMPLATE: PROXY LINK
-	Determines whether native link to database should be proxied or not
-	based on subscription flag in the database record, used on a number of pages
--->
-<!-- obsoleted. But left here for a second while until I'm SURE of that. 
-<xsl:template name="proxy_link">
-	
-	<xsl:variable name="link_native_home" select="php:function('urlencode', string(link_native_home))" />
-	
-	<xsl:choose>
-		<xsl:when test="subscription = '1'">
-			<xsl:value-of select="$base_url" />
-			<xsl:text>/</xsl:text>
-			<xsl:text>./?base=databases&amp;action=proxy</xsl:text>
-			<xsl:text>&amp;url=</xsl:text>
-			<xsl:value-of select="$link_native_home" />									
-		</xsl:when>
-		<xsl:otherwise>
-			<xsl:value-of select="link_native_home" />
-		</xsl:otherwise>									
-	</xsl:choose>
-
-
-</xsl:template> -->
-
 <!--
-
 	TEMPLATE: FULL TEXT LINKS
 	Constructs proxied links for full-text links in the results, folder, and full record
-	Assumes that you call from inside a xerxes_record element	
+	Assumes that you call from inside a xerxes_record element
 -->
 
 <xsl:template name="full_text_links">
@@ -853,17 +908,17 @@
 	<xsl:param name="class" />
 	
 	<xsl:variable name="database_code" select="metalib_id" />
-								
+	
 	<xsl:for-each select="links/link[@type != 'none']">
 		
 		<div class="{$class}">
 		
 			<xsl:variable name="url">
 				<xsl:if test="url">
-				 	<xsl:value-of select="php:function('urlencode', string(url))" />
-				 </xsl:if>
+					<xsl:value-of select="php:function('urlencode', string(url))" />
+				</xsl:if>
 			</xsl:variable>
-												
+			
 			<a>
 				<xsl:attribute name="href">
 					<xsl:value-of select="$base_url" /><xsl:text>/</xsl:text>
@@ -879,7 +934,7 @@
 								<xsl:value-of select="@field" />
 								<xsl:text>=</xsl:text>
 								<xsl:value-of select="text()" />
-							</xsl:for-each>													
+							</xsl:for-each>
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:attribute>
@@ -889,13 +944,16 @@
 			
 				<xsl:choose>
 					<xsl:when test="@type = 'pdf'">
-						<img src="{$base_include}/images/pdf.gif" alt="full text pdf" width="16" height="16" border="0" /> Full-Text in PDF
+						<img src="{$base_include}/images/pdf.gif" alt="full text pdf" width="16" height="16" border="0" /> 
+						Full-Text in PDF
 					</xsl:when>
 					<xsl:when test="@type = 'html'">
-						<img src="{$base_include}/images/html.gif" alt="full text html" width="16" height="16" border="0" /> Full-Text in HTML
+						<img src="{$base_include}/images/html.gif" alt="full text html" width="16" height="16" border="0" /> 
+						Full-Text in HTML
 					</xsl:when>
 					<xsl:otherwise>
-						<img src="{$base_include}/images/html.gif" alt="full text online" width="16" height="16" border="0" /> Full-Text Available
+						<img src="{$base_include}/images/html.gif" alt="full text online" width="16" height="16" border="0" /> 
+						Full-Text Available
 					</xsl:otherwise>
 				</xsl:choose>
 			
@@ -907,80 +965,74 @@
 </xsl:template>
 
 <xsl:template name="excluded_db_list">
-  <ul>
-    <xsl:for-each select="//excluded_dbs/database">
-      <li><strong><xsl:value-of select="title_display"/></strong>:
-      <xsl:choose>
-        <xsl:when test="group_restriction">
-          <xsl:call-template name="db_restriction_display" />
-        </xsl:when>
-        <xsl:when test="subscription = '1'">
-          Only available to registered users.
-        </xsl:when>
-        <xsl:otherwise>
-          Available to everyone.
-        </xsl:otherwise>
-      </xsl:choose>      
-      </li>
-    </xsl:for-each>
-  </ul>
+	<ul>
+	<xsl:for-each select="//excluded_dbs/database">
+		<li><strong><xsl:value-of select="title_display"/></strong>:
+		<xsl:choose>
+			<xsl:when test="group_restriction">
+				<xsl:call-template name="db_restriction_display" />
+			</xsl:when>
+			<xsl:when test="subscription = '1'">
+				Only available to registered users.
+			</xsl:when>
+			<xsl:otherwise>
+				Available to everyone.
+			</xsl:otherwise>
+		</xsl:choose>
+		</li>
+	</xsl:for-each>
+	</ul>
 </xsl:template>
 
 <!--
-
-	TEMPLATE: categories_sidebar
-  Override in local includes.xsl if you'd like a sidebar on the home/categories page. Put your content in a div with id="sidebar_content" if you'd like some style. 
+	TEMPLATE: CATEGORIES_SIDEBAR
+	Override in local includes.xsl if you'd like a sidebar on the home/categories page. 
+	Put your content in a div with id="sidebar_content" if you'd like some style. 
 -->
+
 <xsl:template name="categories_sidebar">
-</xsl:template>
 
+</xsl:template>
 
 <!--
-
-	TEMPLATE: session_auth_info
-	
-  Displays a user's authorization crednetials from login and IP. 
-  
-  Useful especially if you are using Metalib usergroup/secondary affiliation
-  access. jrochkind likes to display it on the front page in a sidebar.   
+	TEMPLATE: SESSION_AUTH_INFO
+	Displays a user's authorization crednetials from login and IP.  Useful especially if you are using Metalib 
+	usergroup/secondary affiliation access. jrochkind likes to display it on the front page in a sidebar.
 -->
+
 <xsl:template name="session_auth_info">
-  <div id="session_auth_info">
-  <xsl:choose>
-    <xsl:when test="//request/authorization_info/affiliated[@user_account = 'true']">
-      <p>Welcome,  <xsl:value-of select="//session/user_properties[@key = 'username']" />.</p>       
-    </xsl:when>
-    <xsl:otherwise>
-      <!-- <p>You are not logged in.</p> -->
-    </xsl:otherwise>
-  </xsl:choose>
-  
-  <xsl:if test="//request/authorization_info/group[@user_account = 'true']">
-    <h3>Your Affiliation</h3>
-    <ul>
-    <xsl:for-each select="//request/authorization_info/group[@user_account = 'true']">
-        <li><xsl:value-of select="@display_name" /></li>      
-    </xsl:for-each>
-    </ul>
-  </xsl:if>
-  
-    <h3>Your Location</h3>
-    <ul>
-      <xsl:choose>
-        <xsl:when test="//request/authorization_info/affiliated[@ip_addr = 'true']">
-          <li>On-campus</li>
-        </xsl:when>
-        <xsl:otherwise>
-          <li><strong>Off</strong> campus</li>
-        </xsl:otherwise>
-      </xsl:choose>
-      <xsl:for-each select="//request/authorization_info/group[@ip_addr = 'true']">
-        <li><xsl:value-of select="@display_name" /></li>      
-      </xsl:for-each>
-    </ul>
-  
-  </div>
+	<div id="session_auth_info">
+	<xsl:choose>
+	<xsl:when test="//request/authorization_info/affiliated[@user_account = 'true']">
+	<p>Welcome,	<xsl:value-of select="//session/user_properties[@key = 'username']" />.</p>	 
+	</xsl:when>
+	<xsl:otherwise>
+	<!-- <p>You are not logged in.</p> -->
+	</xsl:otherwise>
+	</xsl:choose>
+		<xsl:if test="//request/authorization_info/group[@user_account = 'true']">
+	<h3>Your Affiliation</h3>
+	<ul>
+	<xsl:for-each select="//request/authorization_info/group[@user_account = 'true']">
+		<li><xsl:value-of select="@display_name" /></li>
+	</xsl:for-each>
+	</ul>
+	</xsl:if>
+		<h3>Your Location</h3>
+	<ul>
+	<xsl:choose>
+		<xsl:when test="//request/authorization_info/affiliated[@ip_addr = 'true']">
+		<li>On-campus</li>
+		</xsl:when>
+		<xsl:otherwise>
+		<li><strong>Off</strong> campus</li>
+		</xsl:otherwise>
+	</xsl:choose>
+	<xsl:for-each select="//request/authorization_info/group[@ip_addr = 'true']">
+		<li><xsl:value-of select="@display_name" /></li>
+	</xsl:for-each>
+	</ul>
+		</div>
 </xsl:template>
-  
-  
+
 </xsl:stylesheet>

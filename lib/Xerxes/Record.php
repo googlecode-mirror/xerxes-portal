@@ -181,6 +181,7 @@
 				
 				$str001 = $this->extractMarcControlField($objXPath, 1);
 				$str003 = $this->extractMarcControlField($objXPath, 3);
+				$str008 = $this->extractMarcControlField($objXPath, 8);
 				$str035 = $this->extractMarcDataField($objXPath, 35, "a");
 				$arrIssn = $this->extractMarcArray($objXPath, 22, "a");
 				$arrIsbn = $this->extractMarcArray($objXPath, 20, "a");
@@ -601,9 +602,9 @@
 						$this->strLanguage = str_ireplace("In ", "", $strLanguageNote);
 					}
 				}
-				elseif ( strlen($strLeader) > 37 )
+				elseif ( strlen($str008) > 37 )
 				{
-					// get the language chars from the leader; need to check to see
+					// get the language chars from the 008; need to check to see
 					// if article databases do this consistently, and don't just hardwire
 					// the characters -- i'm looking at you, ebscohost!
 	
@@ -1260,7 +1261,8 @@
 			$strKev = "url_ver=Z39.88-2004";
 
 			if ( $strResolver != "" ) $strBaseUrl = $strResolver . "?";
-			if ( $strReferer != "" ) $strKev .= "&rfr_id=info:sid/" .  urlencode($strReferer . " ( " . $this->strDatabaseName . ")" );
+			if ( $strReferer != "" ) $strKev .= "&rfr_id=info:sid/" .  urlencode($strReferer);
+			if ( $this->strDatabaseName != "" )  $strKev .= urlencode(" ( " . $this->strDatabaseName . ")");
 			
 			// add simple referrant values
 			

@@ -1,16 +1,12 @@
 /**
  * Xerxes Blue Design July 2007
  *
- *  See also xerxes-blue-embeddable.css, used specifically for embedding a stylesheet with a snippet. 
-
+ *  See also xerxes-blue-embeddable.css, used specifically for embedding a stylesheet with a snippet.
  *
  * @author David Walker
  * @copyright 2007 California State University
  */
 
- 
- 
- 
 /** BASIC ELEMENTS **/
 
 body { font-family: Verdana, Geneva, Arial, helvetica, sans-serif; margin: 0px; padding: 0px; font-size: 12px; height:100%; }
@@ -22,7 +18,7 @@ h2 { font-family: Arial, Verdana, Geneva, Arial, helvetica, sans-serif; color: #
 h3 { font-family: Arial, Verdana, Geneva, Arial, helvetica, sans-serif; color: #000; font-size: 14px; font-weight: bold; margin-bottom: 2px; }
 h4 {font-family: Arial, Verdana, Geneva, Arial, helvetica, sans-serif; color: #000; font-size: 12px; font-weight: bold; margin-bottom: 2px; }
 h5 { font-style:italic; }
- ul { margin:.5em 0 1.25em; padding:0 0px; list-style:none; }
+ul { margin:.5em 0 1.25em; padding:0 0px; list-style:none; }
 ul li {	background:url(../images/icon_arrow_sm.gif) no-repeat 2px .25em; margin:0; padding:0 0 3px 16px; margin-bottom:3px; line-height:1.4em; }
 legend { font-family: Arial, Verdana, Geneva, Arial, helvetica, sans-serif; color: #3366cc; font-size: 14px; font-weight: bold; margin-bottom: 2px; }
 label { margin: 0px; padding: 0px; }
@@ -33,8 +29,6 @@ a:active { color: #FFCC33; text-decoration: none; }
 a:hover { text-decoration: underline; }
 a img{  border: 0px; }
 
-
-
 /** STRUCTURE **/
 
 #skipnav { 
@@ -44,7 +38,7 @@ a img{  border: 0px; }
 #header {
 	background-color: #386ace;
 	margin: 0px;
-	height: 67px;
+	padding: 10px;
 }
 
 #breadcrumb {
@@ -55,11 +49,8 @@ a img{  border: 0px; }
 	color: #666666;
 }
 #container {
-	/*clear:both;
-	width: 900px;*/
 	margin-top: 0px;
 	margin-bottom: 0px;
-	/*background-color: #fff;*/
 	line-height: 130%;
 }
 
@@ -96,7 +87,6 @@ a img{  border: 0px; }
 	clear: both;
 	margin-top: 10px;
 	padding: 20px;
-	width: 80%;
 }
 #resultsOptions {
 	float: right;
@@ -110,7 +100,7 @@ a img{  border: 0px; }
 	clear: both;
 	margin-top: 50px;
 	padding: 20px;
-	background-color: #efefef;
+	color: #999999;
 }
 #citation {
 	float:right; 
@@ -176,7 +166,7 @@ a img{  border: 0px; }
 }
 .subjectCheckList {
 	margin-top: 10px;
-  width: 100%;
+	width: 100%;
 }
 
 .categories {
@@ -430,6 +420,16 @@ a img{  border: 0px; }
 
 /* Folder */
 
+.folderAvailability {
+	margin-top: 10px;
+}
+.folderEmailOptionsTable {
+	padding: 5px;
+}
+.folderEmailAttribute {
+	vertical-align: top;
+	text-align: right;
+}
 .folderEmailSuccess {
 	margin: 20px;
 	font-weight: bold;
@@ -451,13 +451,39 @@ a img{  border: 0px; }
 	border-bottom-color: #CCCCCC;
 	border-left-color: #CCCCCC;
 }
+.folderExportSelections li {
+	background-image: none;
+	list-style: none;
+}
+.folderExportSet {
+	margin-top: 10px;
+}
+.folderExportSubmit {
+	margin-top: 20px; 
+	margin-left: 20px;
+}
+.folderHeaderArea {
+	margin-bottom: 30px;
+}
+.folderHomeHeader, .folderHomeHeader:visited {
+	color: #3366cc; 
+	text-decoration: underline
+}
+.folderLabels {
+	margin-top: 20px; 
+	margin-left: 15px
+}
+.folderLabelsSubmit {
+	padding-left: 5px;
+}
 .folderNoRecords {
 	margin: 20px;
 	margin-bottom: 100px;
 }
-
 .folderOptions {
-	margin: 30px;
+	margin: 20px;
+	margin-top: 30px;
+	width: 600px;
 	padding: 10px;
 	background-color: #f0f0f0;
 	background-image: url(../images/bg-long.gif);
@@ -476,27 +502,19 @@ a img{  border: 0px; }
 	border-bottom-color: #999999;
 	border-left-color: #CCCCCC;
 }
-
+.folderOptionHeader {
+	padding-bottom: 20px;
+}
 .folderOutputs {
-	background-color: #f6f6f3;
-	border-top-width: 1px;
-	border-right-width: 1px;
-	border-bottom-width: 1px;
-	border-left-width: 1px;
-	border-top-style: solid;
-	border-right-style: solid;
-	border-bottom-style: solid;
-	border-left-style: solid;
-	border-top-color: #999999;
-	border-right-color: #CCCCCC;
-	border-bottom-color: #CCCCCC;
-	border-left-color: #CCCCCC;
+	width: 220px; 
+	background-color: #efefef; 
+	padding: 10px; 
+	float: left; 
+	margin-right: 30px;
 }
-.folderOutputOptions
-{
-	padding-left: 20px;
+.folderOutput {
+	margin-bottom: 30px;
 }
-
 .folderRecord {
 	padding-top: 20px;
 	padding-right: 20px;
@@ -509,9 +527,8 @@ a img{  border: 0px; }
 	border-left-color: #CCCCCC;
 }
 .folderResults {
-	
+	margin-left: 270px;
 }
-
 .folderReturn {
 	clear: both;
 	margin-top: 10px;
@@ -519,6 +536,9 @@ a img{  border: 0px; }
 }
 .folderReturnText {
 	margin-left: 5px;
+}
+.tagsSubmit {
+	font-size: 90%;
 }
 
 /* login page */
@@ -606,7 +626,6 @@ a img{  border: 0px; }
   border: 2px solid gray;
   margin: 20px;
 }
-
 
 .optionRow {
   vertical-align: top; 

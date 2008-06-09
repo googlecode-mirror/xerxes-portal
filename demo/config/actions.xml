@@ -207,6 +207,7 @@
 				<mapEntry pathIndex="2" property="username"/>
 			</pathParamMap>
 			<action name="home">
+				<request name="limit">true</request>
 				<command>FolderResults</command>
 				<command directory="availability">AvailabilityInjectFullText</command>
 				<command>FolderTags</command>
@@ -221,6 +222,8 @@
 				<view>xsl/folder_full.xsl</view>
 			</action>
 			<action name="output_email">
+				<request name="view">brief</request>
+				<command>FolderResults</command>
 				<command>FolderTags</command>
 				<view>xsl/folder_output_email.xsl</view>
 			</action>
@@ -231,17 +234,38 @@
 				<view>xsl/folder_output_export_text.xsl</view>
 			</action>
 			<action name="output_export_endnote">
+				<request name="view">brief</request>
+				<command>FolderResults</command>
 				<command>FolderTags</command>
 				<view>xsl/folder_output_export_endnote.xsl</view>
-			</action>	
+			</action>
+			<action name="output_refworks">
+				<request name="view">brief</request>
+				<command>FolderResults</command>
+				<command>FolderTags</command>
+				<view>xsl/folder_output_refworks.xsl</view>
+			</action>>
 			<action name="export">
 				<command>FolderResults</command>
-				<view type="php">custom/folder_export.php</view>
+				<view format="text-file">xsl/citation/basic.xsl</view>
+				<view format="ris-file">xsl/citation/ris.xsl</view>
+				<view format="bibliographic">xsl/citation/ris.xsl</view>
 			</action>
 			<action name="email">
 				<command>FolderResults</command>
 				<command>FolderEmail</command>
-				<view type="php">custom/folder_export.php</view>
+				<view />
+			</action>
+			<action name="refworks-bounce">
+				<request name="view">brief</request>
+				<command>FolderResults</command>
+				<command>FolderRefworksBounce</command>
+				<view />
+			</action>
+			<action name="fetch" restricted="false" login="false">
+				<request name="doNotEnforceLogin">true</request>
+				<command>FolderResults</command>
+				<view format="ris">xsl/citation/ris.xsl</view>
 			</action>
 			<action name="delete">
 				<command>FolderDelete</command>
