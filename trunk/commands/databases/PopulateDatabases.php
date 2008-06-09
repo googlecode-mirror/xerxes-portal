@@ -12,27 +12,7 @@
 	 * @uses Xerxes_Parser
 	 * @uses lib/xslt/marc-to-database.xsl
 	 */
-   
-   /* We need to register a straight function for the XSL to call with php:function. Sorry. */
-   
-   function splitToNodeset($strList, $seperator = ",") {
-      $dom = new domdocument;
-      $dom->loadXML("<list />");
-      $docEl = $dom->documentElement;
-      $arr = split($seperator, $strList);
-      
-      $found = false;
-      
-      foreach ($arr as $item) {
-        if (! empty($item)) {
-          $found = true;
-          $element = $dom->createElement("item", $item);
-          $element->setAttribute("value", $item);
-          $docEl->appendChild($element);
-        }
-      }            
-      return $dom->documentElement;
-   }
+
 
 	class Xerxes_Command_PopulateDatabases extends Xerxes_Command_Databases
 	{
@@ -355,7 +335,7 @@
 				$objData->active = (string) $objDatabase->active;
 				$objData->proxy = (string) $objDatabase->proxy;
 				$objData->searchable = (string) $objDatabase->searchable;
-        $objData->guest_access = (string) $objDatabase->guest_access;
+				$objData->guest_access = (string) $objDatabase->guest_access;
 				$objData->subscription = (string) $objDatabase->subscription;
 				$objData->sfx_suppress = (string) $objDatabase->sfx_suppress;
 				$objData->new_resource_expiry = (string) $objDatabase->new_resource_expiry;
@@ -363,9 +343,10 @@
 				$objData->number_sessions = (int) $objDatabase->number_sessions;
 				
 				// multi-value fields
+				
 				foreach ($objDatabase->group_restrictions->group as $group_restriction) {
-          array_push($objData->group_restrictions, (string) $group_restriction); 
-        }
+					array_push($objData->group_restrictions, (string) $group_restriction); 
+				}
 				foreach ( $objDatabase->keyword as $keyword )
 				{
 					array_push($objData->keywords, substr((string) $keyword, 0, 249));
@@ -432,6 +413,29 @@
 			
 			return $strNormalized;
 		}
+		
+	   	/* We need to register a straight function for the XSL to call with php:function. Sorry. */
+   
+		public static function splitToNodeset($strList, $seperator = ",")
+		{
+	   		$dom = new domdocument;
+	   		$dom->loadXML("<list />");
+	   		$docEl = $dom->documentElement;
+	   		$arr = split($seperator, $strList);
+	   		
+	   		$found = false;
+	   		foreach ($arr as $item)
+	   		{
+	   			if (! empty($item))
+	   			{
+	   				$found = true;
+	   				$element = $dom->createElement("item", $item);
+	   				$element->setAttribute("value", $item);
+	   				$docEl->appendChild($element);
+	   			}
+	   		}
+	   		return $dom->documentElement;
+	   	}
 	}
 
 ?>
