@@ -59,7 +59,6 @@
 	
 		<div id="container">
 		
-    
 			<div id="searchArea">
 				<div class="subject">
 					<h1><xsl:value-of select="$context" /></h1>
@@ -70,15 +69,8 @@
 				</div>
 			</div>
 				
-			<div id="sidebar">
-        <xsl:if test="//excluded_dbs/database">
-          <div class="box">
-            <h3 class="error"><img src="{$base_url}/images/warning.gif" alt="Warning" /> Warning: Databases Left Out</h3>
-            <p>Some selected databases are not available to you, and are not included in the search:</p>
-            <xsl:call-template name="excluded_db_list" />
-          </div>
-        </xsl:if>
-			</div>	
+			<div id="sidebar"> </div>	
+			
 		</div>
 				
 
@@ -157,6 +149,15 @@
 					</tr>
 				</xsl:for-each>
 			</table>
+			
+			<xsl:if test="//excluded_dbs/database">
+				<div class="box">
+					<h3 class="error"><img src="{$base_url}/images/warning.gif" alt="Warning" /> Warning: Databases Left Out</h3>
+					<p>Some selected databases are not available to you, and are not included in the search:</p>
+					<xsl:call-template name="excluded_db_list" />
+				</div>
+			</xsl:if>
+			
 		</div>
 		</form>
 	</xsl:otherwise>
