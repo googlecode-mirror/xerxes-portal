@@ -539,9 +539,9 @@
 			<td>
 			
 			<!-- if the current session can't search this resource, should we show a lock icon? 
-			Only if we already have a logged in user or guest user. --> 
+			We show lock icons for logged in with account users, on campus users, and guest users. Not for off campus not logged in users, because they might be able to search more resources than we can tell now. --> 
 			
-			<xsl:variable name="should_lock_nonsearchable" select=" (/*/request/authorization_info/affiliated[@user_account = 'true'] or /*/request/session/role = 'guest')" />
+			<xsl:variable name="should_lock_nonsearchable" select=" (/*/request/authorization_info/affiliated = 'true' or /*/request/session/role = 'guest')" />
 			
 			<!-- how many database checkboxes were displayed in this subcategory, before now?
 				Used for seeing if we've reached maximum for default selected dbs. Depends on 
