@@ -20,6 +20,9 @@
 			if ( is_string( $user ) )
 			{
 				$user = new Xerxes_User( $user );
+        // Null usergroups means take what's in the db, don't overwrite
+        // with no user groups! 
+        $user->usergroups = null;
 			}
 			
 			// configuration settings
