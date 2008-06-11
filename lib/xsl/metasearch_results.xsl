@@ -26,8 +26,8 @@
 	<xsl:variable name="this_page"			select="php:function('urlencode', string(request/server/request_uri))" />
 	<xsl:variable name="context" 			select="results/search/context" />
 	<xsl:variable name="context_url" 		select="results/search/context_url" />
-	<xsl:variable name="group" 			select="request/group" />
-	<xsl:variable name="this_result_set"		select="request/resultset" />
+	<xsl:variable name="group" 				select="request/group" />
+	<xsl:variable name="this_result_set"	select="request/resultset" />
     
 	<xsl:variable name="facet_return">
 		<xsl:value-of select="php:function('urlencode', concat('./?base=metasearch&amp;action=results&amp;group=', $group, '&amp;resultSet=', $this_result_set))" />
@@ -158,6 +158,23 @@
 						</li>
 					</xsl:if>
 				</xsl:for-each>
+				<xsl:for-each select="//excluded_dbs/database">
+					<li>
+						<xsl:value-of select="title_display"/>
+						<xsl:text> (</xsl:text>
+						ERROR: 
+						<xsl:choose>
+							<xsl:when test="group_restriction">
+								<xsl:call-template name="db_restriction_display" />
+							</xsl:when>
+							<xsl:when test="subscription = '1'">
+								Only available to registered users.
+							</xsl:when>
+						</xsl:choose>
+						<xsl:text>)</xsl:text>
+					</li>
+				</xsl:for-each>
+
 				</ul>
 
 			</div>
@@ -400,12 +417,12 @@
 							</xsl:when>
 							<xsl:when test="//fulltext/issn = standard_numbers/issn">
 								<a href="./?base=metasearch&amp;action=sfx&amp;resultSet={$result_set}&amp;startRecord={$record_number}&amp;fulltext=1" class="resultsFullText"  target="{$link_target}" >
-									<img src="{$base_include}/images/html.gif" alt="full text online" width="16" height="16" border="0" /> Full-Text Online
+									<img src="{$base_include}/images/html.gif" alt="" width="16" height="16" border="0" /> Full-Text Online
 								</a>
 							</xsl:when>
 							<xsl:otherwise>
 								<a href="./?base=metasearch&amp;action=sfx&amp;resultSet={$result_set}&amp;startRecord={$record_number}" class="resultsFullText"  target="{$link_target}" >
-									<img src="{$base_url}/images/sfx.gif" alt="check for availability" /> Check for availability
+									<img src="{$base_url}/images/sfx.gif" alt="" /> Check for availability
 								</a>
 							</xsl:otherwise>
 						</xsl:choose>
@@ -428,36 +445,8 @@
 			
 			<!-- Paging Navigation -->
 			
-			<xsl:if test="pager/page and $merge_bug = 'false'">
-			
-				<table class="resultsPager" align="center" summary="paging navigation">
-					<tr>
-					<xsl:for-each select="pager/page">
-						<td>
-						<xsl:variable name="link" select="@link" />
-						<xsl:choose>
-							<xsl:when test="@here = 'true'">
-								<strong><xsl:value-of select="text()" /></strong>
-							</xsl:when>
-							<xsl:otherwise>
-								<a href="{$link}">
-								<xsl:choose>
-									<xsl:when test="@type = 'next'">
-										<xsl:attribute name="class">resultsPagerNext</xsl:attribute>
-									</xsl:when>
-									<xsl:otherwise>
-										<xsl:attribute name="class">resultsPagerLink</xsl:attribute>
-									</xsl:otherwise>
-								</xsl:choose>
-									<xsl:value-of select="text()" />
-								</a>
-							</xsl:otherwise>
-						</xsl:choose>
-						</td>
-					</xsl:for-each>
-					</tr>
-				</table>
-			
+			<xsl:if test="$merge_bug = 'false'">
+				<xsl:call-template name="paging_navigation" />
 			</xsl:if>
 		</div>
 	</div>

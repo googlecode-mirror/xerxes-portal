@@ -26,7 +26,7 @@
 		<div class="loginBox">
 			<table border="0" cellspacing="0" cellpadding="5">
 			<tr>
-				<td><span class="error"><img src="{$base_url}/images/warning.gif" width="30" height="28" /></span></td>
+				<td><span class="error"><img src="{$base_url}/images/warning.gif" width="30" height="28" alt="" /></span></td>
 				<td><h3 class="error"><xsl:value-of select="//error/heading" /></h3></td>
 			</tr>
 			</table>
@@ -48,7 +48,20 @@
         
       <xsl:if test="//excluded_dbs/database">
         <p>You do not have access to search these included databases:</p>
-        <xsl:call-template name="excluded_db_list" />
+        	<ul>
+			<xsl:for-each select="//excluded_dbs/database">
+				<li><strong><xsl:value-of select="title_display"/></strong>:
+				<xsl:choose>
+					<xsl:when test="group_restriction">
+						<xsl:call-template name="db_restriction_display" />
+					</xsl:when>
+					<xsl:when test="subscription = '1'">
+						Only available to registered users.
+					</xsl:when>
+				</xsl:choose>
+				</li>
+			</xsl:for-each>
+			</ul>
       </xsl:if>
 		</div>    
     

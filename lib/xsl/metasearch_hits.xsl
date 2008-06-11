@@ -27,7 +27,7 @@
 
 	<xsl:variable name="context" 		select="results/search/context" />
 	<xsl:variable name="context_url" 	select="results/search/context_url" />
-	<xsl:variable name="group" 		select="request/group" />
+	<xsl:variable name="group" 			select="request/group" />
 	<xsl:variable name="progress" 		select="results/progress" />
 	
 	<!-- catch a serious search error -->
@@ -72,9 +72,7 @@
 			<div id="sidebar"> </div>	
 			
 		</div>
-				
-
-    
+		
 		<div id="resultsArea">      
 			<xsl:choose>
 				<xsl:when test="$progress = '10'">
@@ -93,25 +91,12 @@
 				<!-- variables -->
 					
 				<xsl:variable name="set_number" select="set_number" />
-				<xsl:variable name="hits" 	select="number(no_of_documents)" />
-				<xsl:variable name="groupID" 	select="//find_group_info_response/@id" />
+				<xsl:variable name="hits" select="number(no_of_documents)" />
+				<xsl:variable name="groupID" select="//find_group_info_response/@id" />
 					
 				<tr>
 					<td>
-						<!--
-							<xsl:choose>
-								<xsl:when test=" ( find_status = 'DONE' or find_status = 'DONE1' or find_status = 'DONE2') 
-													and no_of_documents != '000000000'">
-									<a href="metasearch?action=results&amp;group={$groupID}&amp;resultSet={$set_number}">		
-									<xsl:value-of select="full_name"/></a>
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:value-of select="full_name"/>
-								</xsl:otherwise>
-							</xsl:choose>
-						-->
-						<xsl:value-of select="full_name"/>
-						
+						<xsl:value-of select="full_name"/>						
 					</td>
 					<td>
 							<xsl:choose>		
@@ -148,16 +133,30 @@
 						</td>
 					</tr>
 				</xsl:for-each>
+				
+				<!-- excluded databases -->
+				
+				<xsl:for-each select="//excluded_dbs/database">
+					<tr>
+						<td><xsl:value-of select="title_display"/></td>
+						<td>
+							<span class="error">
+							ERROR: 
+							<xsl:choose>
+								<xsl:when test="group_restriction">
+									<xsl:call-template name="db_restriction_display" />
+								</xsl:when>
+								<xsl:when test="subscription = '1'">
+									Only available to registered users.
+								</xsl:when>
+							</xsl:choose>
+							</span>
+						</td>
+					</tr>
+				</xsl:for-each>
+
 			</table>
-			
-			<xsl:if test="//excluded_dbs/database">
-				<div class="box">
-					<h3 class="error"><img src="{$base_url}/images/warning.gif" alt="Warning" /> Warning: Databases Left Out</h3>
-					<p>Some selected databases are not available to you, and are not included in the search:</p>
-					<xsl:call-template name="excluded_db_list" />
-				</div>
-			</xsl:if>
-			
+
 		</div>
 		</form>
 	</xsl:otherwise>

@@ -9,25 +9,116 @@
 
 /** BASIC ELEMENTS **/
 
-body { font-family: Verdana, Geneva, Arial, helvetica, sans-serif; margin: 0px; padding: 0px; font-size: 12px; height:100%; }
+body { 
+	font-family: Verdana, Geneva, Arial, helvetica, sans-serif; 
+	margin: 0px; 
+	padding: 0px; 
+	font-size: 12px; 
+	height:100%; 
+}
+table {
+	margin: 2px; 
+	padding: 2px;
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+td { 
+	font-family: Verdana, Geneva, Arial, helvetica, sans-serif; 
+	font-size: 12px; 
+	margin: 0px; 
+	padding: 3px;
+}
+th { 
+	font-family: Verdana, Geneva, Arial, helvetica, sans-serif;
+	font-size: 12px;
+	margin: 0px;
+	padding: 2px;
+}
+h1, h2, h3, h4 {
+	font-family: Arial, Verdana, Geneva, Arial, helvetica, sans-serif; 
+	color: #000;
+	font-weight: bold;
+	margin-top: 10px; 
+	margin-bottom: 2px;
+}
+h1 {
+	color: #3366cc;
+	font-size: 22px;
+}
+h2 {
+	font-size: 16px; 
+}
+h3 {
+	font-size: 14px;
+}
+h4 {
+	font-size: 12px; 
+}
+h5 {
+	font-style:italic; 
+}
+p {
+	margin-top: 8px; 
+	margin-bottom: 8px 
+}
+ul {
+	margin:.5em 0 1.25em; 
+	padding:0 0px; 
+	list-style:none;
+}
+ul li {	
+	background:url(../images/icon_arrow_sm.gif) no-repeat 2px .25em; 
+	margin:0; 
+	padding:0 0 3px 16px; 
+	margin-bottom:3px; 
+	line-height:1.4em; 
+}
+form {
+	margin: 0px;
+	padding: 0px;
+}
+legend {
+	font-family: Arial, Verdana, Geneva, Arial, helvetica, sans-serif; 
+	color: #3366cc; 
+	font-size: 14px; 
+	font-weight: bold; 
+	margin-bottom: 2px; 
+	padding: 0px;
+}
+label { 
+	margin: 0px; 
+	padding: 0px;
+}
+fieldset {
+	border: 1px solid #CCCCCC;
+	margin: 0px;
+	padding: 10px;
+}
+strong {
+	font-weight: bold;
+}
+em {
+	font-style: italic;
+}
+input {
+	padding: 3px;
+}
+a { 
+	text-decoration: none;
+}
+a:visited {
+	color: #0000CC; text-decoration: none; 
+}
+a:active {
+	color: #FFCC33; text-decoration: none; 
+}
+a:hover {
+	text-decoration: underline;
+}
+a img{ 
+	border: 0px;
+}
 
-td { font-family: Verdana, Geneva, Arial, helvetica, sans-serif; font-size: 12px;}
-th { font-family: Verdana, Geneva, Arial, helvetica, sans-serif; font-size: 12px;}
-h1 { font-family: Arial, Verdana, Geneva, Arial, helvetica, sans-serif; color: #3366cc; font-size: 22px; font-weight: bold; margin: 2px; }
-h2 { font-family: Arial, Verdana, Geneva, Arial, helvetica, sans-serif; color: #000; font-size: 16px; font-weight: bold; margin-bottom: 2px; }
-h3 { font-family: Arial, Verdana, Geneva, Arial, helvetica, sans-serif; color: #000; font-size: 14px; font-weight: bold; margin-bottom: 2px; }
-h4 {font-family: Arial, Verdana, Geneva, Arial, helvetica, sans-serif; color: #000; font-size: 12px; font-weight: bold; margin-bottom: 2px; }
-h5 { font-style:italic; }
-ul { margin:.5em 0 1.25em; padding:0 0px; list-style:none; }
-ul li {	background:url(../images/icon_arrow_sm.gif) no-repeat 2px .25em; margin:0; padding:0 0 3px 16px; margin-bottom:3px; line-height:1.4em; }
-legend { font-family: Arial, Verdana, Geneva, Arial, helvetica, sans-serif; color: #3366cc; font-size: 14px; font-weight: bold; margin-bottom: 2px; }
-label { margin: 0px; padding: 0px; }
-fieldset { border: 1px solid #CCCCCC; padding: 10px; }
-a { text-decoration: none; }
-a:visited { color: #0000CC; text-decoration: none; }
-a:active { color: #FFCC33; text-decoration: none; }
-a:hover { text-decoration: underline; }
-a img{  border: 0px; }
 
 /** STRUCTURE **/
 
@@ -158,17 +249,30 @@ a img{  border: 0px; }
 .subject {
 	margin-bottom: 30px;
 }
+.subjectCheckList {
+	margin-top: 10px;
+}
+.subjectDatabaseTitle, .subjectDatabaseInfo {
+	display: inline;
+	padding-left: 5px;
+}
+.subjectDatabaseRestriction {
+	color: #333;
+	font-size: 90%;
+	padding-top: 3px;
+	padding-left: 15px;
+	font-style: italic;
+}
 .subjectMetaSearch {
 	width: 500px;
 }
 .subjectSubCategory {
 	margin-top: 20px;
 }
-.subjectCheckList {
-	margin-top: 10px;
-	width: 100%;
-}
 
+#main_content {
+	float:left;
+}
 .categories {
 	margin-top: 30px;  
 }
@@ -325,12 +429,22 @@ a img{  border: 0px; }
 	margin-top: 10px;
 	margin-bottom: 20px;
 }
+
 .resultsPager {
-	padding: 4px;
 	margin-top: 30px;
 	margin-bottom: 20px;
+	text-align: center;
+}
+.resultsPagerList {
+	display: inline;
+	padding: 8px;
 	border: 1px solid #A2C9EF;
 	background-color: #E4F1FD;
+}
+.resultsPager li {
+	display: inline;
+	padding: 3px;
+	background-image: none;
 }
 .resultsPagerNext {
 	padding-left: 20px;
@@ -616,7 +730,6 @@ a img{  border: 0px; }
 
 #example {
   border: 2px solid gray;
-  /*background-color: #EFEFEF;*/
   margin-top: 20px;
   margin-right: 20px;
   margin-bottom: 20px;

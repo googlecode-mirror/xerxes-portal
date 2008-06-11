@@ -31,7 +31,8 @@
 	
 	<div style="padding: 20px;">
 		
-    <div id="main_content" style="float:left">
+    <div id="main_content">
+	
 		<xsl:if test="$quick_search_category != ''">
 			<form action="./" method="get">
 				<input type="hidden" name="base" value="metasearch" />
@@ -40,8 +41,8 @@
 				<input type="hidden" name="context_url" value="{$base_url}" />
 				<input type="hidden" name="field" value="WRD" />        
 				<input type="hidden" name="subject">
-          <xsl:attribute name="value"><xsl:value-of select="category/@normalized" /></xsl:attribute>
-        </input>
+					<xsl:attribute name="value"><xsl:value-of select="category/@normalized" /></xsl:attribute>
+				</input>
 
 				<div id="categories_quicksearch">
 					<h2><xsl:value-of select="$quick_search_category" /></h2>
@@ -98,7 +99,7 @@
     </div>
     
     <div id="sidebar" class="categories_sidebar">
-      <xsl:call-template name="categories_sidebar" />
+		<xsl:call-template name="categories_sidebar" />
     </div>	
     
 	</div>
