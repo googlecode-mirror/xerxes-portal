@@ -35,16 +35,16 @@
 			
 			// values from the url request
 			
-			$strMetalibID = $objRequest->getProperty("database");
-			$strUrl = $objRequest->getProperty("url");
-			$arrParams = $objRequest->getProperty("param", true);
+			$strMetalibID = $objRequest->getProperty("database"); // metalib id
+			$strUrl = $objRequest->getProperty("url"); // a direct url to a site, typically to full text
+			$arrParams = $objRequest->getProperty("param", true); // a series of paramaters that we'll use to constuct a full-text linke
 			
 			// configuration settings
 			
 			$strProxyServer = $objRegistry->getConfig("PROXY_SERVER", false);
 
-			// if the database id is included, this is a metasearch proxy
-			// request and we need to see if it should be proxied or not
+			// if the database id is included, this could have come in off the 
+			// metasearch page, so we need to see if it should be proxied or not
 			// based on database subscription info
 				
 			if ( $strMetalibID != null )
@@ -72,16 +72,23 @@
 						$bolProxy = false;
 					}
 					
-					$strConstructPattern = $objDatabaseData->link_native_record;
-          if ( ! $arrParams ) {
-            //Link straight to native DB
-            $strUrl = $objDatabaseData->link_native_home;
-          }          
+					$strConstructPattern = $objDatabaseData->link_native_record;        
 				}
+				
+				// if no url or construct paramaters were supplied, then this came
+				// from the databases page as a 'short' url (the preferred now)
+				// and so we'll just take the database's native link
+				
+				if ( $arrParams == null && $strUrl == null )
+				{
+            		$strUrl = $objDatabaseData->link_native_home;
+				}  
 			}
 			else
 			{
-				// this came straight-up off the databse page, so proxy
+				// the request is to proxy this no matter what; this is largely depricated
+				// in the system as of 1.3, but could be resurrected for some purpose?
+				
 				$bolProxy = true;
 			}
 			
