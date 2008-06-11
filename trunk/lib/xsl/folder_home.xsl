@@ -197,7 +197,7 @@
 							</xsl:when>
 							<xsl:otherwise>
 								<a href="{../url_open}" class="resultsFullText" target="{$link_target}">
-									<img src="{$base_url}/images/sfx.gif" alt="check for availability" /> Check for availability
+									<img src="{$base_url}/images/sfx.gif" alt="" /> Check for availability
 								</a>
 							</xsl:otherwise>
 							</xsl:choose>
@@ -207,7 +207,7 @@
 						<!--
 						<div class="folderAvailability">
 							<a href="#" class="resultsFullText">
-								<img src="{$base_url}/images/edit.gif" alt="edit" border="0" />
+								<img src="{$base_url}/images/edit.gif" alt="" border="0" />
 								Edit this record
 							 </a>
 						</div>
@@ -215,7 +215,7 @@
 						
 						<div class="folderAvailability">
 							<a class="deleteRecord resultsFullText" href="{../url_delete}">
-								<img src="{$base_url}/images/delete.gif" alt="delete" border="0" />
+								<img src="{$base_url}/images/delete.gif" alt="" border="0" />
 								Delete this record
 							 </a>
 						</div>
@@ -259,40 +259,8 @@
 					</div>
 				</xsl:for-each>
 			</div>
-			
-			<!-- Paging Navigation -->
-			
-			<xsl:if test="pager/page">
-			
-				<table class="resultsPager" align="center" summary="paging navigation">
-					<tr>
-					<xsl:for-each select="pager/page">
-						<td>
-						<xsl:variable name="link" select="@link" />
-						<xsl:choose>
-							<xsl:when test="@here = 'true'">
-								<strong><xsl:value-of select="text()" /></strong>
-							</xsl:when>
-							<xsl:otherwise>
-								<a href="{$link}">
-								<xsl:choose>
-									<xsl:when test="@type = 'next'">
-										<xsl:attribute name="class">resultsPagerNext</xsl:attribute>
-									</xsl:when>
-									<xsl:otherwise>
-										<xsl:attribute name="class">resultsPagerLink</xsl:attribute>
-									</xsl:otherwise>
-								</xsl:choose>
-									<xsl:value-of select="text()" />
-								</a>
-							</xsl:otherwise>
-						</xsl:choose>
-						</td>
-					</xsl:for-each>
-					</tr>
-				</table>
-			
-			</xsl:if>
+						
+			<xsl:call-template name="paging_navigation" />
 	
 		</xsl:when>
 		<xsl:otherwise>

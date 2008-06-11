@@ -321,7 +321,7 @@
 		
 		
 		<!-- add additional marc fields to the brief results; adding fields will incur a slight performance hit; 
-				 enter marc fields as a 5 character string consisting of 3 digit field code and 2 characters for ind1 and ind2;
+			 enter marc fields as a 5 character string consisting of 3 digit field code and 2 characters for ind1 and ind2;
 			 use # as a wildcard, e.g., 245## will fetch the 245, 6#### will fetch all 6XX fields; see 
 			 commands/metasearch/MetasearchResults.php file for the default fields already included -->		
 		

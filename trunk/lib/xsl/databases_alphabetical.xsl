@@ -92,7 +92,7 @@
           <xsl:if test="title_display">
             &amp;nbsp;<a>
             <xsl:attribute name="href"><xsl:value-of select="url" /></xsl:attribute>
-            <img alt="info" src="images/info.gif" >
+            <img alt="more information" src="images/info.gif" >
               <xsl:attribute name="src"><xsl:value-of select="/knowledge_base/config/base_url" />/images/info.gif</xsl:attribute>
             </img>
             </a>

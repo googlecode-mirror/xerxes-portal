@@ -90,7 +90,7 @@
 </xsl:template>
 
 <!-- 	
-	TEMPLATE: HEADER_DIV
+	TEMPLATE: HEADER DIV
 	Contents of on-screen header. Generally overridden in local stylesheet.
 -->
 
@@ -100,7 +100,7 @@
 </xsl:template>
 
 <!-- 	
-	TEMPLATE: FOOTER_DIV
+	TEMPLATE: FOOTER DIV
 	Contents of on-screen header. Generally overridden in local stylesheet.
 -->
 
@@ -111,7 +111,7 @@
 
 
 <!--
-	TEMPLATE: PAGE_NAME
+	TEMPLATE: PAGE NAME
 	A heading that can be used to label this page. Some views use this for
 	their heading, others don't. The "title" template always uses this to construct an html title. 
 -->
@@ -411,7 +411,7 @@
 </xsl:template>
 
 <!-- 	
-	TEMPLATE: METASEARCH_OPTIONS
+	TEMPLATE: METASEARCH OPTIONS
 	Defines a set of options that should appear on all the metasearch pages, such as 
 	the link to the saved records feature, log-in or log-out link, etc.
 -->
@@ -443,7 +443,7 @@
 		</span>
 		|
 		<span class="sessionAction">
-			<img src="{$base_include}/images/folder.gif" name="folder" width="17" height="15" border="0" id="folder" alt="folder"/>
+			<img src="{$base_include}/images/folder.gif" name="folder" width="17" height="15" border="0" id="folder" alt=""/>
 			<xsl:text> </xsl:text>
 			<a>
 		<xsl:attribute name="href"><xsl:value-of select="navbar/element[@id='saved_records']/url" /></xsl:attribute>
@@ -461,7 +461,7 @@
 </xsl:template>
 
 <!-- 	
-	TEMPLATE: SEARCH_BOX
+	TEMPLATE: SEARCH BOX
 	Search box that appears in the 'hits' and 'results' page, as well as databases_subject.xsl. 
 -->
 
@@ -515,7 +515,7 @@
 </xsl:template>
 
 <!--
-	TEMPLATE: SUBJECT_DATABASES_LIST
+	TEMPLATE: SUBJECT DATABASES LIST
 	used to list databases, generally on a search form, on databases_subject.xsl,
 	and embed_subject.xsl 
 -->
@@ -538,85 +538,87 @@
 			<tr valign="top">
 			<td>
 			
-			<!-- if the current session can't search this resource, should we show a lock icon? 
-			We show lock icons for logged in with account users, on campus users, and guest users. Not for off campus not logged in users, because they might be able to search more resources than we can tell now. --> 
-			
-			<xsl:variable name="should_lock_nonsearchable" select=" (/*/request/authorization_info/affiliated = 'true' or /*/request/session/role = 'guest')" />
-			
-			<!-- how many database checkboxes were displayed in this subcategory, before now?
-				Used for seeing if we've reached maximum for default selected dbs. Depends on 
-				if we're locking non-searchable or not. -->
+				<!-- if the current session can't search this resource, should we show a lock icon? 
+				We show lock icons for logged in with account users, on campus users, and guest users. Not for off campus not logged in users, because they might be able to search more resources than we can tell now. --> 
 				
-			<xsl:variable name="prev_checkbox_count">
-			<xsl:choose>
-				<xsl:when test="$should_lock_nonsearchable">
-				<xsl:value-of select="count(preceding-sibling::database[searchable_by_user = '1'])" />
-				</xsl:when>
-				<xsl:otherwise>
-				<xsl:value-of select="count(preceding-sibling::database[searchable = '1'])" />
-				</xsl:otherwise>
-			</xsl:choose>
-			</xsl:variable>
-			
-			<!-- Show a checkbox, a disabled checkbox, or a lock icon. If it's a checkbox, default it to checked or not. -->
-			
-			<xsl:choose>
-			<xsl:when test="not($should_show_checkboxes)">
-			<xsl:text> </xsl:text>
-			</xsl:when>
-			<xsl:when test="searchable = 1">
+				<xsl:variable name="should_lock_nonsearchable" select=" (/*/request/authorization_info/affiliated = 'true' or /*/request/session/role = 'guest')" />
+				
+				<!-- how many database checkboxes were displayed in this subcategory, before now?
+					Used for seeing if we've reached maximum for default selected dbs. Depends on 
+					if we're locking non-searchable or not. -->
+					
+				<xsl:variable name="prev_checkbox_count">
 				<xsl:choose>
-				<xsl:when test="$should_lock_nonsearchable	and searchable_by_user != '1'" >
-				<!-- if we have a logged in user (or a registered guest), but they can't search this, show them a lock. -->			
-				<img src="{$base_url}/images/lock.gif" alt="restricted to campus users only" />
+					<xsl:when test="$should_lock_nonsearchable">
+					<xsl:value-of select="count(preceding-sibling::database[searchable_by_user = '1'])" />
+					</xsl:when>
+					<xsl:otherwise>
+					<xsl:value-of select="count(preceding-sibling::database[searchable = '1'])" />
+					</xsl:otherwise>
+				</xsl:choose>
+				</xsl:variable>
+				
+				<!-- Show a checkbox, a disabled checkbox, or a lock icon. If it's a checkbox, default it to checked or not. -->
+				
+				<xsl:choose>
+				<xsl:when test="not($should_show_checkboxes)">
+				<xsl:text> </xsl:text>
+				</xsl:when>
+				<xsl:when test="searchable = 1">
+					<xsl:choose>
+					<xsl:when test="$should_lock_nonsearchable	and searchable_by_user != '1'" >
+					<!-- if we have a logged in user (or a registered guest), but they can't search this, show them a lock. -->			
+					<img src="{$base_url}/images/lock.gif" alt="restricted to campus users only" />
+					</xsl:when>
+					<xsl:otherwise>
+					<!-- if no user logged in, or user logged in and they can
+					search this, show them a checkbox. -->
+					<xsl:element name="input">
+						<xsl:attribute name="name">database</xsl:attribute>
+						<xsl:attribute name="id"><xsl:value-of select="metalib_id" /></xsl:attribute>
+						<xsl:attribute name="value"><xsl:value-of select="metalib_id" /></xsl:attribute>
+						<xsl:attribute name="type">checkbox</xsl:attribute>
+						<xsl:if test="$subcategory = 1 and $prev_checkbox_count &lt; //config/search_limit">
+						<xsl:attribute name="checked">checked</xsl:attribute>
+						</xsl:if>
+					</xsl:element>
+					</xsl:otherwise>
+					</xsl:choose>
 				</xsl:when>
 				<xsl:otherwise>
-				<!-- if no user logged in, or user logged in and they can
-				search this, show them a checkbox. -->
-				<xsl:element name="input">
-					<xsl:attribute name="name">database</xsl:attribute>
-					<xsl:attribute name="id"><xsl:value-of select="metalib_id" /></xsl:attribute>
-					<xsl:attribute name="value"><xsl:value-of select="metalib_id" /></xsl:attribute>
-					<xsl:attribute name="type">checkbox</xsl:attribute>
-					<xsl:if test="$subcategory = 1 and $prev_checkbox_count &lt; //config/search_limit">
-					<xsl:attribute name="checked">checked</xsl:attribute>
-					</xsl:if>
-				</xsl:element>
+					<img src="{$base_url}/images/link-out.gif" alt="non-searchable database" />
 				</xsl:otherwise>
 				</xsl:choose>
-			</xsl:when>
-			<xsl:otherwise>
-				<img src="{$base_url}/images/link-out.gif" alt="non-searchable database" />
-			</xsl:otherwise>
-			</xsl:choose>
 			</td>
 			<td>
-			<xsl:element name="label">
-			<xsl:attribute name="for"><xsl:value-of select="metalib_id" /></xsl:attribute>
-			
-			<xsl:variable name="link_native_home" select="php:function('urlencode', string(link_native_home))" />
-			
-			<a>
-			<xsl:attribute name="href"><xsl:value-of select="xerxes_native_link_url" /></xsl:attribute>
-				<xsl:value-of select="title_display" />
-			</a>
-			</xsl:element>
-			</td>
-			<td>
-			<a>
-			<xsl:attribute name="href"><xsl:value-of select="url" /></xsl:attribute>
-			<img alt="info" src="images/info.gif" >
-				<xsl:attribute name="src"><xsl:value-of select="/*/config/base_url" />/images/info.gif</xsl:attribute>
-			</img>
-			</a>
+				<div class="subjectDatabaseTitle">
+					<xsl:element name="label">
+					<xsl:attribute name="for"><xsl:value-of select="metalib_id" /></xsl:attribute>
+					
+					<xsl:variable name="link_native_home" select="php:function('urlencode', string(link_native_home))" />
+					
+					<a>
+					<xsl:attribute name="href"><xsl:value-of select="xerxes_native_link_url" /></xsl:attribute>
+						<xsl:value-of select="title_display" />
+					</a>
+					</xsl:element>
+				</div>
+					
+				<div class="subjectDatabaseInfo">
+					<a>
+					<xsl:attribute name="href"><xsl:value-of select="url" /></xsl:attribute>
+					<img alt="more information" src="images/info.gif" >
+						<xsl:attribute name="src"><xsl:value-of select="/*/config/base_url" />/images/info.gif</xsl:attribute>
+					</img>
+					</a>
+				</div>
+				
+				<xsl:if test="group_restriction">
+					<div class="subjectDatabaseRestriction"><xsl:call-template name="db_restriction_display" /></div>
+				</xsl:if>
+				
 			</td>
 		</tr>
-		<xsl:if test="group_restriction">
-			<tr>
-			<td></td>
-			<td colspan="2"><xsl:call-template name="db_restriction_display" /></td>
-			</tr>
-		</xsl:if>
 		</xsl:for-each>
 		</table>
 		
@@ -625,7 +627,7 @@
 </xsl:template>
 
 <!-- 
-	TEMPLATE: DATABASES_SEARCH_BOX
+	TEMPLATE: DATABASES SEARCH BOX
 	Search box that appears sometimes on databases_alphabetical.xsl. May
 	appear other places eventually.
 -->
@@ -662,7 +664,7 @@
 </xsl:template>
 
 <!-- 
-	TEMPLATE: DB_RESTRICTION_DISPLAY
+	TEMPLATE: DB RESTRICTION DISPLAY
  	Show access rights for db, including group restrictions. Either pass in a parameter, or else it assumes that
 	a <database> node is the XSL current() node. 
 -->
@@ -694,7 +696,7 @@
 
 
 <!-- 	
-	TEMPLATE: FOLDER_BRIEF_RESULTS
+	TEMPLATE: FOLDER BRIEF RESULTS
 	Brief results list that appears on many of the export options pages.
 -->
 
@@ -863,7 +865,7 @@
 			contains(request/session/saved_return,'action=record')">
 
 		<div class="folderReturn">
-			<img src="{$base_include}/images/back.gif" />
+			<img src="{$base_include}/images/back.gif" alt="" />
 			<span class="folderReturnText">
 				<a href="{$back}">Return to search results</a>
 			</span>
@@ -944,15 +946,15 @@
 			
 				<xsl:choose>
 					<xsl:when test="@type = 'pdf'">
-						<img src="{$base_include}/images/pdf.gif" alt="full text pdf" width="16" height="16" border="0" /> 
+						<img src="{$base_include}/images/pdf.gif" alt="" width="16" height="16" border="0" /> 
 						Full-Text in PDF
 					</xsl:when>
 					<xsl:when test="@type = 'html'">
-						<img src="{$base_include}/images/html.gif" alt="full text html" width="16" height="16" border="0" /> 
+						<img src="{$base_include}/images/html.gif" alt="" width="16" height="16" border="0" /> 
 						Full-Text in HTML
 					</xsl:when>
 					<xsl:otherwise>
-						<img src="{$base_include}/images/html.gif" alt="full text online" width="16" height="16" border="0" /> 
+						<img src="{$base_include}/images/html.gif" alt="" width="16" height="16" border="0" /> 
 						Full-Text Available
 					</xsl:otherwise>
 				</xsl:choose>
@@ -964,28 +966,8 @@
 	</xsl:for-each>
 </xsl:template>
 
-<xsl:template name="excluded_db_list">
-	<ul>
-	<xsl:for-each select="//excluded_dbs/database">
-		<li><strong><xsl:value-of select="title_display"/></strong>:
-		<xsl:choose>
-			<xsl:when test="group_restriction">
-				<xsl:call-template name="db_restriction_display" />
-			</xsl:when>
-			<xsl:when test="subscription = '1'">
-				Only available to registered users.
-			</xsl:when>
-			<xsl:otherwise>
-				Available to everyone.
-			</xsl:otherwise>
-		</xsl:choose>
-		</li>
-	</xsl:for-each>
-	</ul>
-</xsl:template>
-
 <!--
-	TEMPLATE: CATEGORIES_SIDEBAR
+	TEMPLATE: CATEGORIES SIDEBAR
 	Override in local includes.xsl if you'd like a sidebar on the home/categories page. 
 	Put your content in a div with id="sidebar_content" if you'd like some style. 
 -->
@@ -995,7 +977,7 @@
 </xsl:template>
 
 <!--
-	TEMPLATE: SESSION_AUTH_INFO
+	TEMPLATE: SESSION AUTH INFO
 	Displays a user's authorization crednetials from login and IP.  Useful especially if you are using Metalib 
 	usergroup/secondary affiliation access. jrochkind likes to display it on the front page in a sidebar.
 -->
@@ -1033,6 +1015,47 @@
 	</xsl:for-each>
 	</ul>
 		</div>
+</xsl:template>
+
+
+<!-- 
+	TEMPLATE PAGING NAVIGATION	
+	Provides the visual display for moving through a set of results
+-->
+
+<xsl:template name="paging_navigation">
+
+	<xsl:if test="pager/page">
+		<div class="resultsPager">
+
+			<ul class="resultsPagerList">
+			<xsl:for-each select="pager/page">
+				<li>
+				<xsl:variable name="link" select="@link" />
+				<xsl:choose>
+					<xsl:when test="@here = 'true'">
+						<strong><xsl:value-of select="text()" /></strong>
+					</xsl:when>
+					<xsl:otherwise>
+						<a href="{$link}">
+						<xsl:choose>
+							<xsl:when test="@type = 'next'">
+								<xsl:attribute name="class">resultsPagerNext</xsl:attribute>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:attribute name="class">resultsPagerLink</xsl:attribute>
+							</xsl:otherwise>
+						</xsl:choose>
+							<xsl:value-of select="text()" />
+						</a>
+					</xsl:otherwise>
+				</xsl:choose>
+				</li>
+			</xsl:for-each>
+			</ul>
+		</div>
+	</xsl:if>
+
 </xsl:template>
 
 </xsl:stylesheet>
