@@ -34,10 +34,10 @@
 	
 	<xsl:choose>
 	<xsl:when test="$progress = '10' and //error_code = '2007'">
-		<div class="loginBox" style="width: 400px">
+		<div class="loginBox longBox">
 			<p class="error">Sorry, we're having technical difficulties right now.</p>
 			<p>You can still search each database individually by following the links below.</p>
-			<ul style="margin: 20px">
+			<ul>
 				<xsl:for-each select="//database_links/database[link_native_home != '']">
 				<xsl:variable name="metalib_id" select="@metalib_id" />
 				<li>
@@ -76,7 +76,7 @@
 		<div id="resultsArea">      
 			<xsl:choose>
 				<xsl:when test="$progress = '10'">
-					<p class="error" style="margin: 30px">Sorry, your search did not match any records</p>
+					<p class="error errorPad">Sorry, your search did not match any records</p>
 				</xsl:when>
 				<xsl:otherwise>
 					<h3>Searching</h3>

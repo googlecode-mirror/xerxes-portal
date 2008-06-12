@@ -57,19 +57,26 @@
 		
 		<config name="ip_address"></config>
 		
-    <!-- Metalib user groups (aka 'secondary affiliations'). Extra info for
-       display and use of them. Metalib user groups are ordinarily in all caps.
-       <group id="metalib_code">  : id is the group code used in Metalib. 
-       <display_name>    : What to call this group to users       
-       <local_ip_range>  : 		IPs to be considered as local to this group, qualifying for this group even without user account user group qualification.  Enter as either 144.37.*.*, with * as wildcard, or as 144.37.0.0-144.37.255.255, seperate mutliple entries by comma -->
-       <!-- example:
-       
-       <groups>
-        <group id="science">
-          <display_name>Science Library</display_name>
-          <local_ip_range>201.2.4.*</local_ip_range>
-        </group>
-       </groups> -->
+		<!-- Metalib user groups (aka 'secondary affiliations'). -->
+		
+		<!-- Extra info for display and use.
+		
+			<group id="metalib_code"> : group code id used in Metalib, ordinarily in all caps.
+			<display_name> : What to call this group of users       
+			<local_ip_range>: IP range(s) associated with this group.  Users coming from this ip range will be able 
+			to search this group's resources without first having to login. Enter as either 144.37.*.*, with * as 
+			wildcard, or as 144.37.0.0-144.37.255.255, seperate mutliple entries by comma -->
+		
+		<!-- example:
+		
+		<groups>
+		<group id="SCIENCE">
+		<display_name>Science Library</display_name>
+		<local_ip_range>201.2.4.*</local_ip_range>
+		</group>
+		</groups> 
+		
+		-->
     
 	<!-- LOCAL DATABASE -->
 	
@@ -171,7 +178,8 @@
 		
 		<!-- CAS -->
 		
-		<!--	cas_version = either '1.0' or '2.0'
+		<!--
+			cas_version = either '1.0' or '2.0'
 			cas_login = full url to the login service, typically with https://
 			cas_validate = the full url to the validate service, typically with https:// 
 		 -->
@@ -180,44 +188,19 @@
 		<config name="cas_login" />
 		<config name="cas_validate" />
 
-		<!-- Shibboleth	-->
+
+		<!-- SHIBBOLETH	-->
 		
-		<!-- Shibboleth assumes a Shibboleth SP installed on your host, and
-		 an apache configured to support Shibboleth auth. Setting up the
-		 SP is out of the scope of this document, but we will note that for
-		 security you should allow only https shibboleth connections, and
-		 use cookieProps in your shibboleth.xml to set cookies to be required
-		 'secure'.
-
-     If you have forced shib connections to be secure like this, you should set
-     Xerxes config 'secure_login', above, to true. 
-		 
-		 Xerxes Shib logic assumes you have Xerxes config "rewrite" true, it
-		 won't work if you don't. (It could probably be modified to do so,
-		 but isn't yet). 
-		 
-		 In your apache conf for your 443/ssl apache, include this to
-		 force shib authentication for Xerxes (you MAY be able to put
-		 this in your .htaccess instead):
-		 
-			<Location /path/to/xerxes/authenticate/login>
-				AuthType shibboleth
-				ShibRequireSession On
-				require valid-user
-			</Location>
-
-		 If you would like to control access to Xerxes beyond any valid shib
-		 user, you can do it either with apache directives to the shibboleth 
-		 plugin, OR in Xerxes code  by editing the file found in your Xerxes app 
-		 directory (ie demo)/config/shibboleth/shib_map.php. This file can also be 
-		 used to map shib-provided attributes to Xerxes user attributes, to fill 
-		 out the Xerxes user db. -->
+		<!-- For more information on setting-up Shib with Xerxes see the wiki at:
+		     		
+		 -->
 				 
-		<!--	shib_username_header is the HTTP header that xerxes will expect
-			to find the username in. Defaults to REMOTE_USER, which seems
-			to be what the Shib SP normally does. Can customize if needed. 
-			For even more flexible customization, see your
-			xerxes_app/config/shibboleth/shib_map.php file. --> 
+		<!-- shib username header -->
+		
+			<!--  the HTTP header that xerxes will expect to find the username in. Defaults to REMOTE_USER, which seems
+			to be what the Shib SP normally does. Can customize if needed. For even more flexible customization, see your
+			shibboleth/shib_map.php file. --> 
+			
 		<!-- <config name="shib_username_header">REMOTE_USER</config> -->
 		
 		

@@ -36,7 +36,7 @@
 	<div id="container">
 		<div class="loginBox">
 			<h2>Login</h2>
-			<p style="margin-bottom: 30px">This resource is restricted.  
+			<p class="loginNote">This resource is restricted.  
 			Please login with the <strong>demo</strong> user account.</p>
 			
 			<xsl:choose>
@@ -77,7 +77,7 @@
 				<input name="return" type="hidden" value="{$return}" />
 				<input name="postback" type="hidden" value="true" />
 				<h2>. . . or Gest Login</h2>
-				<p style="margin-bottom: 30px">Allows you to access and search the Library's publically available databases.</p>
+				<p class="loginNote">Allows you to access and search the Library's publically available databases.</p>
 				<p><input type="submit" name="Submit2" value="Guest Login" /></p>
 			
 			</form>
