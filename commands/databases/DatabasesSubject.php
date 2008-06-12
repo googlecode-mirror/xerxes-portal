@@ -1,86 +1,81 @@
-<?php	
-	
+<?php
 
+/**
+ * Display a single 'subject' in Xerxes, which is an inlined display of a subcategories
+ * 
+ * @author David Walker
+ * @copyright 2008 California State University
+ * @link http://xerxes.calstate.edu
+ * @license http://www.gnu.org/licenses/
+ * @version 1.1
+ * @package Xerxes
+ */
+
+class Xerxes_Command_DatabasesSubject extends Xerxes_Command_Databases
+{
 	/**
-	 * Display a single 'subject' in Xerxes, which is an inlined display of a subcategories
-	 * 
-	 * @author David Walker
-	 * @copyright 2008 California State University
-	 * @link http://xerxes.calstate.edu
-	 * @license http://www.gnu.org/licenses/
-	 * @version 1.1
-	 * @package Xerxes
+	 * Fetch a single top-level category and inline its subcategories as XML;
+	 * Request param should be 'subject', the normalized name of the subject as
+	 * created by PopulateDatabases
+	 *
+	 * @param Xerxes_Framework_Request $objRequest
+	 * @param Xerxes_Framework_Registry $objRegistry
+	 * @return int status
 	 */
 	
-	class Xerxes_Command_DatabasesSubject extends Xerxes_Command_Databases
+	public function doExecute(Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry)
 	{
-		/**
-		 * Fetch a single top-level category and inline its subcategories as XML;
-		 * Request param should be 'subject', the normalized name of the subject as
-		 * created by PopulateDatabases
-		 *
-		 * @param Xerxes_Framework_Request $objRequest
-		 * @param Xerxes_Framework_Registry $objRegistry
-		 * @return int status
-		 */
+		$objXml = new DOMDOcument( );
+		$objXml->loadXML( "<category />" );
 		
-		public function doExecute( Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry )
+		$strOld = $objRequest->getProperty( "category" );
+		$strSubject = $objRequest->getProperty( "subject" );
+		
+		$objData = new Xerxes_DataMap( );
+		$objCategoryData = $objData->getSubject( $strSubject, $strOld );
+		
+		$y = 1;
+		
+		if ( $objCategoryData != null )
 		{
-			$objXml = new DOMDOcument();
-			$objXml->loadXML("<category />");
-
-			$strOld = $objRequest->getProperty("category");
-			$strSubject = $objRequest->getProperty("subject");
+			$objXml->documentElement->setAttribute( "name", $objCategoryData->name );
+			$objXml->documentElement->setAttribute( "normalized", $objCategoryData->normalized );
 			
-			$objData = new Xerxes_DataMap();
-			$objCategoryData = $objData->getSubject($strSubject, $strOld);
+			// standard url for the category 
+			       
+			$arrParams = array ("base" => "databases", "action" => "subject", "subject" => $objCategoryData->normalized );
+			$url = Xerxes_Parser::escapeXml( $objRequest->url_for( $arrParams ) );
+			$objElement = $objXml->createElement( "url", $url );
+			$objXml->documentElement->appendChild( $objElement );
 			
-			$y = 1;
+			// the attributes of the subcategories
+			$db_list_index = 1;
 			
-			if ( $objCategoryData != null )
+			foreach ( $objCategoryData->subcategories as $objSubData )
 			{
-				$objXml->documentElement->setAttribute("name", $objCategoryData->name);
-        $objXml->documentElement->setAttribute("normalized", $objCategoryData->normalized );
+				$objSubCategory = $objXml->createElement( "subcategory" );
+				$objSubCategory->setAttribute( "name", $objSubData->name );
+				$objSubCategory->setAttribute( "position", $y );
+				$objSubCategory->setAttribute( "id", $objSubData->id );
 				
-        // Standard URL for the category        
-        $arrParams = array(
-          "base" => "databases",
-          "action" => "subject",
-          "subject" => $objCategoryData->normalized
-        );					
-        $url = Xerxes_Parser::escapeXml($objRequest->url_for($arrParams));					
-        $objElement = $objXml->createElement("url", $url); 
-        $objXml->documentElement->appendChild($objElement);
-      
-				// the attributes of the subcategories
-				$db_list_index = 1;
-      
-				foreach ( $objCategoryData->subcategories as $objSubData )
-				{
-          
-          
-					$objSubCategory = $objXml->createElement("subcategory");
-					$objSubCategory->setAttribute("name", $objSubData->name);
-					$objSubCategory->setAttribute("position", $y);
-					$objSubCategory->setAttribute("id", $objSubData->id);
-          
-					$y++;
-					
-					// the database information
-										
-					foreach ( $objSubData->databases as $objDatabaseData )
-					{
-            $objDatabase = self::databaseToNodeset($objDatabaseData, $objRequest, $objRegistry, $db_list_index);
-            $objDatabase = $objXml->importNode( $objDatabase, true );
-            $objSubCategory->appendChild($objDatabase);
-					}					
-					$objXml->documentElement->appendChild($objSubCategory);
-				}
-			}
+				$y ++;
+				
+				// the database information
 
-			$objRequest->addDocument($objXml);
+				foreach ( $objSubData->databases as $objDatabaseData )
+				{
+					$objDatabase = Xerxes_Helper::databaseToNodeset( $objDatabaseData, $objRequest, $objRegistry, $db_list_index );
+					$objDatabase = $objXml->importNode( $objDatabase, true );
+					$objSubCategory->appendChild( $objDatabase );
+				}
 				
-			return 1;
+				$objXml->documentElement->appendChild( $objSubCategory );
+			}
 		}
-	}	
+		
+		$objRequest->addDocument( $objXml );
+		
+		return 1;
+	}
+}
 ?>

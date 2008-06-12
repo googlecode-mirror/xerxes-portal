@@ -11,12 +11,12 @@ DROP TABLE IF EXISTS xerxes_users;
 DROP TABLE IF EXISTS xerxes_records;
 
 CREATE TABLE xerxes_users (
-	username       	VARCHAR(50),
+	username VARCHAR(50),
 	last_login	DATE,
 	suspended	INTEGER(1),
-  first_name VARCHAR(50),
-  last_name VARCHAR(50),
-  email_addr VARCHAR(120),
+	first_name	VARCHAR(50),
+	last_name	VARCHAR(50),
+	email_addr	VARCHAR(120),
 
 	PRIMARY KEY (username)
 );
@@ -24,16 +24,16 @@ CREATE TABLE xerxes_users (
 CREATE INDEX xerxes_users_username_idx ON xerxes_users(username);
 
 CREATE TABLE xerxes_user_usergroups (
-	username    		VARCHAR(50),
-	usergroup			  VARCHAR(50),
+	username	VARCHAR(50),
+	usergroup	VARCHAR(50),
 
 	PRIMARY KEY (username, usergroup),
 	FOREIGN KEY (username) REFERENCES xerxes_users(username) ON DELETE CASCADE
 );
 
 CREATE TABLE xerxes_sfx (
-	issn       	VARCHAR(8),
-	title       	VARCHAR(100),
+	issn 		VARCHAR(8),
+	title		VARCHAR(100),
 	startdate	INTEGER(4),
 	enddate		INTEGER(4),
 	embargo		INTEGER(5),
@@ -44,8 +44,8 @@ CREATE TABLE xerxes_sfx (
 CREATE INDEX xerxes_sfx_issn_idx ON xerxes_sfx(issn);
 
 CREATE TABLE xerxes_refereed (
-	issn       	VARCHAR(8),
-	title       	VARCHAR(150),
+	issn		VARCHAR(8),
+	title		VARCHAR(150),
 	subtitle	VARCHAR(200),
 	title_normal	VARCHAR(150)
 );
@@ -57,7 +57,7 @@ CREATE TABLE xerxes_records (
 	source 		VARCHAR(10),
 	original_id 	VARCHAR(100),
 	timestamp 	DATE,
-	username 	VARCHAR(35),
+	username 	VARCHAR(50),
 	nonsort 	VARCHAR(5),
 	title 		VARCHAR(255),
 	author 		VARCHAR (150),
