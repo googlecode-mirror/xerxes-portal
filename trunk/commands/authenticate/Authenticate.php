@@ -20,9 +20,9 @@
 			if ( is_string( $user ) )
 			{
 				$user = new Xerxes_User( $user );
-        // Null usergroups means take what's in the db, don't overwrite
-        // with no user groups! 
-        $user->usergroups = null;
+		        // Null usergroups means take what's in the db, don't overwrite
+		        // with no user groups! 
+		        $user->usergroups = null;
 			}
 			
 			// configuration settings
@@ -50,7 +50,7 @@
 			 
 			$user = $objData->touchUser( $user );
 			
-			// Set properties in session
+			// set properties in session
 			
 			$_SESSION["username"] = $user->username;
 			$_SESSION["role"] = $strRole;
@@ -60,7 +60,9 @@
 			// controller, and included in xml for views. 
 			
 			$_SESSION["user_properties"] = $user->properties();
-			//Groups too. Empty array not null please. 
+			
+			//groups too. empty array not null please. 
+			
 			$_SESSION["user_groups"] = $user->usergroups;
 		}
 	}

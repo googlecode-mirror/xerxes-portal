@@ -371,7 +371,7 @@
 			<a href="{$folder}">My Saved Records</a> &gt; 
 			<span class="breadcrumbHere">Download to Endnote</span>
 		</xsl:when>
-		<xsl:when test="request/action = 'output_export_endnote'">
+		<xsl:when test="request/action = 'output_refworks'">
 			<a href="{$folder}">My Saved Records</a> &gt; 
 			<span class="breadcrumbHere">Export to Refworks</span>
 		</xsl:when>
@@ -887,7 +887,7 @@
 		<meta http-equiv="refresh" content="6" />
 	</xsl:if>
 	<script src="{$base_include}/javascript/onload.js" language="javascript" type="text/javascript"></script>
-	<script src="{$base_include}/javascript/prototype-1.6.0.2.js" language="javascript" type="text/javascript"></script>
+	<script src="{$base_include}/javascript/prototype.js" language="javascript" type="text/javascript"></script>
 	<script src="{$base_include}/javascript/scriptaculous/scriptaculous.js" language="javascript" type="text/javascript"></script>
 	<script src="{$base_include}/javascript/tags.js" language="javascript" type="text/javascript"></script>
 	<script src="{$base_include}/javascript/save.js" language="javascript" type="text/javascript"></script>

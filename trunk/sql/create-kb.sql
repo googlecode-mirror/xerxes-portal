@@ -22,7 +22,7 @@ CREATE TABLE xerxes_databases(
 	institute		VARCHAR(5),
 	filter			VARCHAR(50),
 	searchable		INTEGER(1),
-  guest_access  INTEGER(1),
+	guest_access  		INTEGER(1),
 	subscription		INTEGER(1),
 	proxy 			INTEGER(1),
 	active			VARCHAR(10),
@@ -115,7 +115,6 @@ CREATE TABLE xerxes_database_group_restrictions (
 	PRIMARY KEY (id),
 	FOREIGN KEY (database_id) REFERENCES xerxes_databases(metalib_id) ON DELETE CASCADE
 );
-
 
 CREATE TABLE xerxes_categories(
 	id 			MEDIUMINT NOT NULL AUTO_INCREMENT,

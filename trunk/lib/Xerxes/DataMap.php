@@ -1199,7 +1199,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 			$update_values[":" . $key] = $value;
 		}
 		
-		//don't use usergroups though. 
+		// don't use usergroups though. 
 		
 		unset( $update_values[":usergroups"] );
 		$update_values[":last_login"] = date( "Y-m-d H:i:s" );
@@ -1212,7 +1212,6 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		if ( count( $arrResults ) == 1 )
 		{
 			// user already exists in database, so update the last_login time and
-
 			// use any data specified in our Xerxes_User record to overwrite. Start
 			// with what's already there, overwrite with anything provided in
 			// the Xerxes_User object. 
@@ -1255,6 +1254,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		if ( is_null( $user->usergroups ) )
 		{
 			//fetch what's in the db and use that please.
+			
 			$fetched = $this->select( "SELECT usergroup FROM xerxes_user_usergroups WHERE username = :username", array (":username" => $user->username ) );
 			if ( count( $fetched ) )
 			{
