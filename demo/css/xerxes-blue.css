@@ -244,7 +244,7 @@ a img{
 	margin-right: 10px;
 }
 
-/* subject and categories */
+/* subject page */
 
 .subject {
 	margin-bottom: 30px;
@@ -270,6 +270,12 @@ a img{
 	margin-top: 20px;
 }
 
+/* categories page */
+
+.homePage {
+	padding: 20px;
+}
+
 #main_content {
 	float:left;
 }
@@ -284,24 +290,25 @@ a img{
   width: 500px;   
 }
 
-/* databases full and a-z list? */
+/* databases full and a-z list */
 
+.databasesAttribute {
+	font-weight: bold;
+	text-align: right;
+}
+.databasesDescription {
+	margin-top: 30px;
+	margin-bottom: 20px;
+	line-height: 150%;
+}
 .databasesMoreInfo {
 	font-family: Arial;
 	font-size: 85%;
 	padding-left: 13px;
 	color: #666;
 }
-
-.databasesDescription {
-	margin-top: 30px;
-	margin-bottom: 20px;
-	line-height: 150%;
-}
-
-.databasesAttribute {
-	font-weight: bold;
-	text-align: right;
+.databasesReturn {
+	margin-top: 20px;
 }
 .databasesTable td {
 	padding: 5px;
@@ -658,7 +665,7 @@ a img{
 /* login page */
 
 .loginBox {
-    	margin-top: 50px;
+    margin-top: 50px;
 	margin-left: 50px;
 	padding: 15px;
 	width: 300px;
@@ -679,9 +686,18 @@ a img{
 	border-bottom-color: #999999;
 	border-left-color: #CCCCCC;
 }
+.longBox {
+	width: 400px;
+}
+.loginNote {
+	margin-bottom: 30px;
+}
 .error {
 	color: #990000;
 	font-weight: bold;
+}
+.errorPad {
+	margin: 30px;
 }
 
 /* citation */

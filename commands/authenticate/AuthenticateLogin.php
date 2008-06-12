@@ -277,7 +277,8 @@ class Xerxes_Command_AuthenticateLogin extends Xerxes_Command_Authenticate
 			$this->register( $strUsername, $role );
 			
 			$objRequest->setRedirect( "http://" . $objRequest->getServer( 'SERVER_NAME' ) . $strReturn );
-		} else
+		}
+		else
 		{
 			// failed the login, so present a message to the user
 			// whether this is authentication or authorization error

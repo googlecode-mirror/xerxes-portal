@@ -29,7 +29,7 @@
 	
 	<xsl:variable name="quick_search_category" select="category/@name" />
 	
-	<div style="padding: 20px;">
+	<div class="homePage">
 		
     <div id="main_content">
 	

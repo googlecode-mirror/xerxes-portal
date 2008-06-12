@@ -651,7 +651,7 @@
 			<input type="submit" value="GO" />
 		</div>
 		
-		<div style="margin-top: 20px;">
+		<div class="databasesReturn">
 			<xsl:if test="request/action != 'alphabetical'">
 				<a>
 				<xsl:attribute name="href"><xsl:value-of select="navbar/element[@id='database_list']/url" /></xsl:attribute>
