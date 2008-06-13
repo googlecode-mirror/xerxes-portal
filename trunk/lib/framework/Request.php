@@ -602,24 +602,20 @@
 		
 		public function toXML($bolHideServer = false)
 		{
-			
 			$objRegistry = Xerxes_Framework_Registry::getInstance();
 			
 			// add the url parameters and session and server global arrays
 			// to the master xml document
-			
 	
 			$objXml = new DOMDocument( );
 			$objXml->loadXML( "<request />" );
 			
 			// session and server global arrays will have parent elements
 			// but querystring and cookie params will be at the root of request
-			
 	
 			$this->addElement( $objXml, $objXml->documentElement, $this->arrParams );
 			
 			// add the session global array
-			
 	
 			$objSession = $objXml->createElement( "session" );
 			$objXml->documentElement->appendChild( $objSession );
@@ -695,18 +691,23 @@
 		{
 			foreach ( $arrValues as $key => $value )
 			{
+				// need to make sure the xml element has a valid name
+				// and not something crazy with spaces or commas, etc.
+				
+				$strSafeKey = strtolower(preg_replace( '/\W/', '_', $key));
+				
 				if ( is_array( $value ) )
 				{
 					foreach ( $value as $strKey => $strValue )
 					{
-						$objElement = $objXml->createElement( strtolower( $key ), Xerxes_Parser::escapeXml( $strValue ) );
+						$objElement = $objXml->createElement( $strSafeKey, Xerxes_Parser::escapeXml( $strValue ) );
 						$objElement->setAttribute( "key", $strKey );
 						$objAppend->appendChild( $objElement );
 					}
 				} 
 				else
 				{
-					$objElement = $objXml->createElement( strtolower( $key ), Xerxes_Parser::escapeXml( $value ) );
+					$objElement = $objXml->createElement( $strSafeKey, Xerxes_Parser::escapeXml( $value ) );
 					$objAppend->appendChild( $objElement );
 				}
 			}
