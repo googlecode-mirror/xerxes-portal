@@ -24,7 +24,7 @@
 			}
 		}
 		
-		// diable all the 'tagsSubmit' buttons
+		// disable all the 'tagsSubmit' buttons
 		
 		for ( i = 0; i < inputs.length; i++)
 		{
@@ -44,7 +44,9 @@
 				inputs[i].onfocus = function () {
 					activateButton(this)
 				}
-
+				inputs[i].onkeypress = function () {
+					activateButton(this)
+				}
 				inputs[i].onblur = function () {
 					deactivateButton(this)
 				}
