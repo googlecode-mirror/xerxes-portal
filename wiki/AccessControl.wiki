@@ -57,11 +57,11 @@ login=true
 
 If login is set to true, then the user must be logged into an authenticated account, *or* have a temporary session-account in their session ("local" or "guest"). If the user has no account (temporary session or real) in their session, they will be presented with a login screen when trying to use the action. 
 
-= Controller based security =
+= Command/Controller based security =
 
 You may have noted that this action-based control, in addition to not being actually secure, doesn't allow restriction based on the particular restrictions of particular Metalib resources (restricted to authorized users; restricted to certain groups; vs. publically accessible). 
 
-Controllers can provide secure protection based on access to individual database(s) by calling certain methods defined in the Xerxes_Framework_Restrict and Xerxes_Helper classes. 
+Controller (ie Command) code can provide secure protection based on access to individual database(s) by calling certain methods defined in the Xerxes_Framework_Restrict and Xerxes_Helper classes. 
 
 == high level ==
 
@@ -83,3 +83,9 @@ Those functions in Xerxes_Helper are usually adequate for controllers, but they 
   * isIpAddrInRange
 
 == examples ==
+
+The MetasearchSearch command calls checkDbListSearchableByUser and catches the exception thrown. If any dbs were not searchable, they are removed from the search list, but added to another list so the user can be warned that they were excluded. 
+
+This provides true security matching the restrictions of the individual databases (group-based restrictions, as well as whether the resoruce should be searchable by 'guest') users, taking account of 'guest' and 'local' sessions etc. 
+
+The MetasearchHits and MetasearchResults commands also both call checkDbListSearchableByUser against the db search list, but doesn't bother catching the exception---it percolates up to FrontController where it results in an access denied message. The purpose of the protection in these commands is to prevent a user from sharing search results with someone else that was NOT authorized to see them by giving the the URL. With this protection, even if someone else has the direct URL to the results, their session will be checked for access and possibly denied. 
