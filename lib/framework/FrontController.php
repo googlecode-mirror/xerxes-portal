@@ -39,9 +39,8 @@ class Xerxes_Framework_FrontController
 		// application_name config directives.
 		
 		$path_key = preg_replace( '/\W/', '_', $objRegistry->getConfig( "base_web_path", false ) );
-		$path_app = preg_replace( '/\W/', '_', $objRegistry->getConfig( "application_name", false ) );
 		
-		$session_name = "xerxessession__" . $path_key . "__" . $path_app;
+		$session_name = "xerxessession_" . $path_key;
 		
 		session_name( $session_name );
 		session_start();
