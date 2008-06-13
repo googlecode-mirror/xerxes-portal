@@ -15,8 +15,8 @@ This stuff is a bit confusing, but we'll try to break it down.
 A given session can have a 'user', or not. If the session has a 'user', then there's a 'username' set in the session. However, this is a bit confusing, because a 'user' can be an actual authenticated user from the Xerxes_User database table *or* can be a temporary fake user created just for the session. 
 
 This is determined by the session property 'role'.  If the 'role' is 'named', then this is an actual authenticated user which should be in the Xerxes_User database. Two other values of 'role' are possible:
-* 'guest'  --  A temporary session 'user' which does not have access to protected resources (only publically available ones).  A 'guest' session can be created by accessing the authenticate/guest action. 
-* 'local' -- A temporary session 'user' which DOES have access to protected resources. This is intended to be used for on-campus IP addresses, and is created by the action-based 'restricted' control (see below). 
+  * 'guest'  --  A temporary session 'user' which does not have access to protected resources (only publically available ones).  A 'guest' session can be created by accessing the authenticate/guest action. 
+  * 'local' -- A temporary session 'user' which DOES have access to protected resources. This is intended to be used for on-campus IP addresses, and is created by the action-based 'restricted' control (see below). 
 
 Temporary session 'users' can save records in the Saved Records area, but they will only be accessible for the current session. 
 
@@ -25,8 +25,8 @@ Temporary session 'users' can save records in the Saved Records area, but they w
 Metalib's user groups (aka 'secondary affiliations') can also be used by Xerxes by defining a <groups> section in the config.xml.  
 
 A session can belong to a given group by:
-* having an authenticated user who is registered in the db as belonging to the group
-* having a client IP address that belongs to the range defined for the group (this can give a session access even if there is an authenticated user who does *not* belong to the group!)
+  * having an authenticated user who is registered in the db as belonging to the group
+  * having a client IP address that belongs to the range defined for the group (this can give a session access even if there is an authenticated user who does *not* belong to the group!)
 
 == info in Xerxes XML ==
 
@@ -79,7 +79,7 @@ This exception can be caught by the controller, or just left to be caught by Fro
 
 Those functions in Xerxes_Helper are usually adequate for controllers, but they are defined in terms of some lower-level functions in Xerxes_Framework_Restrict, including:
 
-* isAuthenticatedUser
-* isIpAddrInRange
+  * isAuthenticatedUser
+  * isIpAddrInRange
 
 == examples ==
