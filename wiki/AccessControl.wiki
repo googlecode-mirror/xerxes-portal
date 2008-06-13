@@ -65,15 +65,11 @@ Controller (ie Command) code can provide secure protection based on access to in
 
 == high level ==
 
-=== Xerxes_Helper::dbSearchableByUser   ===
+ * Xerxes_Helper::dbSearchableByUser : Checks a single database, returns true or false if it's searchable by the given session. Takes into account restrictions on the given db, and the nature of the current session. Should take into account user groups, guests, and everything else. 
 
-Checks a single database, returns true or false if it's searchable by the given session. Takes into account restrictions on the given db, and the nature of the current session. Should take into account user groups, guests, and everything else. 
+  * Xerxes_Helper::checkDbListSearchableByUser : Checks a whole list of databases, and throws a Xerxes_DatabasesDeniedException if any one of them is not accessible. Function will only return (boolean true) if all databases are searchable, otherwise an exception will be thrown. The exception includes information on exactly which dbs were problems. 
 
-=== Xerxes_Helper::checkDbListSearchableByUser ===
-
-Checks a whole list of databases, and throws a Xerxes_DatabasesDeniedException if any one of them is not accessible. Function will only return (boolean true) if all databases are searchable, otherwise an exception will be thrown. The exception includes information on exactly which dbs were problems. 
-
-This exception can be caught by the controller, or just left to be caught by FrontController. If an access denied exception makes it up to front controller, an access denied error message will be shown to the user.  (So any controller can always throw this action manually to prevent access, if convenient). 
+  This exception can be caught by the controller, or just left to be caught by FrontController. If an access denied exception makes it up to front controller, an access denied error message will be shown to the user.  (So any controller can always throw this action manually to prevent access, if convenient). 
 
 == low level ==
 
