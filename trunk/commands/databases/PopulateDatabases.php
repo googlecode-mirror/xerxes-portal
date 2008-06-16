@@ -34,7 +34,7 @@
 			// set a higher than normal memory limit to account for 
 			// pulling down large knowledgebases
 			
-			ini_set("memory_limit","20M");
+			ini_set("memory_limit","30M");
 			
 			echo "\n\nMETALIB KNOWLEDGEBASE PULL \n\n";
 			

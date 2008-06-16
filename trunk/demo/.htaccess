@@ -37,9 +37,3 @@ RewriteRule ^(css|images|javascript)/(.*)$ $1/$2 [L]
 
 # Everything else goes to index.php
 RewriteRule ^.*$ index.php
-
-
-
-
-
-

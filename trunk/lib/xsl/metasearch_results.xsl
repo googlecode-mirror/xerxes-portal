@@ -429,7 +429,7 @@
 							
 						<!-- Save Facility -->
 							
-						<span class="resultsAvailableOption">
+						<span class="resultsAvailableOption" id="saveRecordOption">
 							<img id="folder_{$result_set}{$record_number}" src="images/folder.gif" width="17" height="15" alt="" border="0" />
 							<xsl:text> </xsl:text>
 							<a id="link_{$result_set}:{$record_number}"

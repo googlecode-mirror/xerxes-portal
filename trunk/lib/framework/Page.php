@@ -253,7 +253,7 @@ class Xerxes_Framework_Page
 	 * @return DOMDocument 			paging navigation
 	 */
 	
-	function sortDisplay($strSortQuery, $strSortKeys, $arrOptions)
+	public function sortDisplay($strSortQuery, $strSortKeys, $arrOptions)
 	{
 		
 		$objXml = new DOMDocument( );
