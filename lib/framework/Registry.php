@@ -107,7 +107,8 @@
 							}
 						}
 					}
-				} else
+				} 
+				else
 				{
 					// use the xml file	
 					

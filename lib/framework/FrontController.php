@@ -120,7 +120,6 @@ class Xerxes_Framework_FrontController
 			####################
 			#  ACCESS CONTROL  #
 			####################
-			
 
 			// if this part of the application is restricted to a local ip range, or requires a named login, then the
 			// Restrict class will check the user's ip address or if they have logged in; failure stops the flow 
@@ -197,7 +196,7 @@ class Xerxes_Framework_FrontController
 			
 			foreach ( $objRegistry->getPass() as $key => $value )
 			{
-				$objElement = $objConfigXml->createElement( $key, $value );
+				$objElement = $objConfigXml->createElement( $key, Xerxes_Parser::escapeXml($value) );
 				$objConfigXml->documentElement->appendChild( $objElement );
 			}
 			
@@ -330,7 +329,6 @@ class Xerxes_Framework_FrontController
 			} 
 			else
 			{
-			
 				// VIEW CODE
 				//
 				// ControllerMap contains instructions on what file to include for the view; typically
@@ -346,7 +344,7 @@ class Xerxes_Framework_FrontController
 				{
 					$output = $objPage->transform( $objXml, $objControllerMap->getView(), null, true );
 					
-					// EMBEEDED JAVASCRIPT DISPLAY
+					// EMBEDED JAVASCRIPT DISPLAY
 					//
 					// you can append 'format=embed_html_js' to the querystring to output 
 					// the content as a javascript source document with everything wrapped in 

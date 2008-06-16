@@ -111,10 +111,10 @@
 				<command>DatabasesCategories</command>
 				<view type="php">custom/databases_old-subject.php</view>
 			</action>
-			<!-- <action name="metasearch">
+			<action name="metasearch">
 				<command>DatabasesSubject</command>
 				<view>xsl/databases_metasearch.xsl</view>
-			</action> -->
+			</action>
 			<action name="jump">
 				<command>DatabasesSubject</command>
 				<view type="php">custom/databases_jump.php</view>

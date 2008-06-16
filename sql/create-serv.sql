@@ -1,8 +1,9 @@
-CREATE DATABASE IF NOT EXISTS xerxes;
+﻿CREATE DATABASE IF NOT EXISTS xerxes;
 USE xerxes;
 
 SET storage_engine = INNODB;
 
+DROP TABLE IF EXISTS xerxes_user_usergroups;
 DROP TABLE IF EXISTS xerxes_cache;
 DROP TABLE IF EXISTS xerxes_tags;
 DROP TABLE IF EXISTS xerxes_sfx;
