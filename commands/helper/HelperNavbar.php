@@ -10,24 +10,12 @@ class Xerxes_Command_HelperNavbar extends Xerxes_Command_Helper
 		// saved records link
 		$this->addNavbarElement( $objXml, $objRequest, "saved_records", array ("base" => "folder", "return" => $objRequest->getServer( "REQUEST_URI" ) ) );
 		
-		// login or logout, just include appropriate one. 
-		$auth_action_params = array ("base" => "authenticate", "return" => $objRequest->getServer( "REQUEST_URI" ) );
+    
+    //loging
+    $this->addNavbarElement( $objXml, $objRequest, "login", array ("base" => "authenticate", "action" => "login", "return" => $objRequest->getServer( "REQUEST_URI" ) ) );
 		
-		$element_id = "";
-
-		if ( $objRequest->hasLoggedInUser() || $objRequest->getSession( "role" ) == "guest" )
-		{
-			$element_id = "logout";
-			$auth_action_params["action"] = "logout";
-		} 
-		else
-		{
-			$element_id = "login";
-			$auth_action_params["action"] = "login";
-		}
-		
-		// login or logout
-		$this->addNavbarElement( $objXml, $objRequest, $element_id, $auth_action_params );
+    //logout
+    $this->addNavbarElement( $objXml, $objRequest, "logout", array ("base" => "authenticate", "action" => "logout", "return" => $objRequest->getServer( "REQUEST_URI" ) ) );
 		
 		// db alphbetical list
 		$this->addNavbarElement( $objXml, $objRequest, "database_list", array ("base" => "databases", "action" => "alphabetical" ) );
