@@ -19,13 +19,23 @@
 	xmlns:php="http://php.net/xsl">
 
 <!-- 
-	LOCALIZED GLOBAL VARIABLES
-	Override the value of any of the global variables in lib/xsl/includes.xsl
-	for example, if you don't want username in your logout link? Put whatever you want here 
+	LOCALIZED TEXT LABELS / GLOBAL VARIABLES
+	Override the value of any of the global variables in lib/xsl/includes.xsl.  This also
+	includes text labels used throughout the system.
 -->
 
-<!-- <xsl:variable name="logout_text">Log-out</xsl:variable> -->
+<!-- 
 
+<xsl:variable name="text_header_logout">Log-out</xsl:variable>
+
+<xsl:variable name="text_header_savedrecords">
+	<xsl:choose>
+	<xsl:when test="//request/session/role = 'local' or //request/session/role = 'guest'">Temporary Saved Records</xsl:when>
+	<xsl:otherwise>My Saved Records</xsl:otherwise>
+	</xsl:choose>
+</xsl:variable>
+
+-->
 
 
 <!-- Header -->

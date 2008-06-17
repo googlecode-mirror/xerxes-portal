@@ -35,7 +35,17 @@
 		</xsl:choose>
 	</xsl:variable>
 	
-	<xsl:variable name="logout_text">
+	
+<!-- 
+	TEXT LABELS 
+	These are global variables that provide the text for the system.  We'll be slowly
+	replacing the text in the templates with these starting with version 1.3.  Variable
+	names should follow the pattern of: text_{location}_{unique-name}
+-->
+	
+	<xsl:variable name="text_breadcrumb_seperator"> &gt; </xsl:variable>
+	
+	<xsl:variable name="text_header_logout">
 		Log-out
 		<xsl:text> </xsl:text>
 		<xsl:if test="//request/authorization_info/affiliated[@user_account = 'true']">
@@ -43,8 +53,7 @@
 		</xsl:if>
 	</xsl:variable>
 	
-	<xsl:variable name="breadcrumb_seperator"> &gt; </xsl:variable>
-
+	<xsl:variable name="text_header_savedrecords">My Saved Records</xsl:variable>
 
 
 <!-- 	
@@ -286,7 +295,7 @@
 			<span class="breadcrumbHere">Home</span>
 		</xsl:when>
 		<xsl:otherwise>
-			<a href="{$base_url}">Home</a> <xsl:value-of select="$breadcrumb_seperator" />  
+			<a href="{$base_url}">Home</a> <xsl:value-of select="$text_breadcrumb_seperator" />  
 		</xsl:otherwise>
 	</xsl:choose>
 
@@ -338,29 +347,29 @@
 						</xsl:when>
 						<xsl:otherwise><xsl:text>Databases</xsl:text></xsl:otherwise>
 					</xsl:choose>
-				</a> <xsl:value-of select="$breadcrumb_seperator" /> 
+				</a> <xsl:value-of select="$text_breadcrumb_seperator" /> 
 			</xsl:if>
 			<span class="breadcrumbHere"><xsl:value-of select="//title_display" /></span>
 		</xsl:when>
 		<xsl:when test="request/action = 'hits'">
-			<a href="{$context_url}"><xsl:value-of select="results/search/context" /></a> <xsl:value-of select="$breadcrumb_seperator" /> 
+			<a href="{$context_url}"><xsl:value-of select="results/search/context" /></a> <xsl:value-of select="$text_breadcrumb_seperator" /> 
 			<span class="breadcrumbHere">Searching</span>
 		</xsl:when>
 		<xsl:when test="request/action = 'results'">
-			<a href="{$context_url}"><xsl:value-of select="results/search/context" /></a> <xsl:value-of select="$breadcrumb_seperator" /> 
+			<a href="{$context_url}"><xsl:value-of select="results/search/context" /></a> <xsl:value-of select="$text_breadcrumb_seperator" /> 
 			<span class="breadcrumbHere"><xsl:value-of select="results/database" /></span>
 		</xsl:when>
 		<xsl:when test="request/action = 'facet'">
-			<a href="{$context_url}"><xsl:value-of select="results/search/context" /></a> <xsl:value-of select="$breadcrumb_seperator" /> 
-			<a href="{$return}"><xsl:value-of select="results/database" /></a> <xsl:value-of select="$breadcrumb_seperator" />
+			<a href="{$context_url}"><xsl:value-of select="results/search/context" /></a> <xsl:value-of select="$text_breadcrumb_seperator" /> 
+			<a href="{$return}"><xsl:value-of select="results/database" /></a> <xsl:value-of select="$text_breadcrumb_seperator" />
 			<span class="breadcrumbHere"><xsl:value-of select="results/facet_name" /></span>
 		</xsl:when>
 		<xsl:when test="request/action = 'record'">
-			<a href="{$context_url}"><xsl:value-of select="results/search/context" /></a> <xsl:value-of select="$breadcrumb_seperator" /> 
+			<a href="{$context_url}"><xsl:value-of select="results/search/context" /></a> <xsl:value-of select="$text_breadcrumb_seperator" /> 
 			
 			<xsl:choose>
 				<xsl:when test="$return != ''">
-					<a href="{$return}">Results</a> <xsl:value-of select="$breadcrumb_seperator" />
+					<a href="{$return}">Results</a> <xsl:value-of select="$text_breadcrumb_seperator" />
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:variable name="parent_resultset">
@@ -371,7 +380,7 @@
 						<xsl:value-of select="(floor( ($start_record	- 1 ) div $records_per_page) * $records_per_page) + 1" />
 					</xsl:variable>
 					
-					<a href="{$parent_resultset}">Results</a> <xsl:value-of select="$breadcrumb_seperator" />
+					<a href="{$parent_resultset}">Results</a> <xsl:value-of select="$text_breadcrumb_seperator" />
 				</xsl:otherwise>
 			</xsl:choose>
 			<span class="breadcrumbHere">Record</span>
@@ -380,23 +389,23 @@
 			<span class="breadcrumbHere">My Saved Records</span>
 		</xsl:when>
 		<xsl:when test="request/action = 'output_email'">
-			<a href="{$folder}">My Saved Records</a> <xsl:value-of select="$breadcrumb_seperator" /> 
+			<a href="{$folder}">My Saved Records</a> <xsl:value-of select="$text_breadcrumb_seperator" /> 
 			<span class="breadcrumbHere">Email</span>
 		</xsl:when>
 		<xsl:when test="request/action = 'output_export_endnote'">
-			<a href="{$folder}">My Saved Records</a> <xsl:value-of select="$breadcrumb_seperator" /> 
+			<a href="{$folder}">My Saved Records</a> <xsl:value-of select="$text_breadcrumb_seperator" /> 
 			<span class="breadcrumbHere">Download to Endnote</span>
 		</xsl:when>
 		<xsl:when test="request/action = 'output_refworks'">
-			<a href="{$folder}">My Saved Records</a> <xsl:value-of select="$breadcrumb_seperator" /> 
+			<a href="{$folder}">My Saved Records</a> <xsl:value-of select="$text_breadcrumb_seperator" /> 
 			<span class="breadcrumbHere">Export to Refworks</span>
 		</xsl:when>
 		<xsl:when test="request/action = 'output_export_text'">
-			<a href="{$folder}">My Saved Records</a> <xsl:value-of select="$breadcrumb_seperator" /> 
+			<a href="{$folder}">My Saved Records</a> <xsl:value-of select="$text_breadcrumb_seperator" /> 
 			<span class="breadcrumbHere">Download to Text File</span>
 		</xsl:when>
 		<xsl:when test="request/action = 'full'">
-			<a href="{$folder}">My Saved Records</a> <xsl:value-of select="$breadcrumb_seperator" /> 
+			<a href="{$folder}">My Saved Records</a> <xsl:value-of select="$text_breadcrumb_seperator" /> 
 			<span class="breadcrumbHere">Record</span>
 		</xsl:when>
 		<xsl:when test="request/base = 'embed' and request/action = 'gen_subject'">
@@ -406,7 +415,7 @@
 				</xsl:attribute>
 				<xsl:value-of select="//category/@name" />
 			</a>
-			<xsl:value-of select="$breadcrumb_seperator" />
+			<xsl:value-of select="$text_breadcrumb_seperator" />
 			<span class="breadcrumbHere">Create Snippet</span>
 		</xsl:when>
 		<xsl:when test="request/base = 'embed' and request/action = 'gen_database'">
@@ -416,7 +425,7 @@
 				</xsl:attribute>
 				<xsl:value-of select="//title_display" />
 			</a>
-			<xsl:value-of select="$breadcrumb_seperator" />
+			<xsl:value-of select="$text_breadcrumb_seperator" />
 			<span class="breadcrumbHere">Create Snippet</span>
 		</xsl:when>
 		<xsl:otherwise>
@@ -447,7 +456,7 @@
 			<xsl:when test="request/session/role and request/session/role != 'local'">
 				<a>
 			<xsl:attribute name="href"><xsl:value-of select="navbar/element[@id = 'logout']/url" /></xsl:attribute>
-			<xsl:copy-of select="$logout_text" />
+			<xsl:value-of select="$text_header_logout" />
 			</a>
 			</xsl:when>
 			<xsl:otherwise>
@@ -463,7 +472,7 @@
 			<xsl:text> </xsl:text>
 			<a>
 		<xsl:attribute name="href"><xsl:value-of select="navbar/element[@id='saved_records']/url" /></xsl:attribute>
-			<xsl:text>My Saved Records</xsl:text>
+			<xsl:value-of select="$text_header_savedrecords" />
 		</a>
 		</span>
 	</div>
