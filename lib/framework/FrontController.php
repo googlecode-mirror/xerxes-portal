@@ -310,7 +310,7 @@ class Xerxes_Framework_FrontController
 			
 			$bolShowServer = true;
 			
-			if ( $format == "xerxes-xml" )
+			if ( $format == "xerxes" )
 			{
 				$bolShowServer = false;
 			}
@@ -323,7 +323,7 @@ class Xerxes_Framework_FrontController
 			// you can append 'format=xerxes-xml' to the querystring to have this controller spit back
 			// the response in plain xml, which can be useful in some cases, like maybe AJAX?
 
-			if ( $format == "xerxes-xml" )
+			if ( $format == "xerxes" )
 			{
 				echo $objXml->saveXML();
 			} 
@@ -426,17 +426,27 @@ class Xerxes_Framework_FrontController
 	
 	private function setHeader($format)
 	{
-		$arrFormats = array (
-
-		// basic types
-		
-
-		"javascript" => "Content-type: application/javascript", "json" => "Content-type: application/json", "pdf" => "Content-type: application/pdf", "text" => "Content-type: text/plain", "xml" => "Content-type: text/xml", 
-
-		// types that are more complex
-		
-
-		"atom" => "Content-type: text/xml", "bibliographic" => "Content-type: application/x-research-info-systems", "embed_html_js" => "Content-type: application/javascript", "ris" => "Content-type: text/plain", "rss" => "Content-type: text/xml", "xerxes-xml" => "Content-type: text/xml", "text-file" => "Content-Disposition: attachment; Content-type: text/plain; filename=download.txt", "ris-file" => "Content-Disposition: attachment; Content-type: text/plain; filename=download.ris" );
+		$arrFormats = array 
+		(
+			// basic types
+	
+			"javascript" => "Content-type: application/javascript", 
+			"json" => "Content-type: application/json", 
+			"pdf" => "Content-type: application/pdf", 
+			"text" => "Content-type: text/plain", 
+			"xml" => "Content-type: text/xml", 
+	
+			// complex types
+	
+			"atom" => "Content-type: text/xml", 
+			"bibliographic" => "Content-type: application/x-research-info-systems", 
+			"embed_html_js" => "Content-type: application/javascript", 
+			"ris" => "Content-type: text/plain", 
+			"rss" => "Content-type: text/xml", 
+			"xerxes" => "Content-type: text/xml", 
+			"text-file" => "Content-Disposition: attachment; Content-type: text/plain; filename=download.txt", 
+			"ris-file" => "Content-Disposition: attachment; Content-type: text/plain; filename=download.ris" 
+		);
 		
 		if ( array_key_exists( $format, $arrFormats ) )
 		{

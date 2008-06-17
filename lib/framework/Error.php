@@ -104,7 +104,7 @@ class Xerxes_Framework_Error
 				$objError->documentElement->appendChild( $childNode );
 			}
 			
-			if ( $objRequest->getProperty( "format" ) == "xerxes-xml" )
+			if ( $objRequest->getProperty( "format" ) == "xerxes" )
 			{
 				header( 'Content-type: text/xml' );
 				echo $objError->saveXML();
