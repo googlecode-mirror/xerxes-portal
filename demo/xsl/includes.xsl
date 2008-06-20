@@ -71,6 +71,14 @@
 <xsl:template name="categories_sidebar">
 
 	<div id="sidebar_content">
+	
+		<!-- Here's an example of giving the user their login/authentication details. -->
+		
+		<xsl:call-template name="session_auth_info" />		
+	
+		<!-- see, there is an a-z list too! -->
+	
+		<h2>Additional Options</h2>
 		<ul>
 			<li>
 				<a>
@@ -78,8 +86,13 @@
 				Database List (A-Z)
 				</a>
 			</li>
+			<li>Example</li>
+			<li>Example</li>
 		</ul>
+	
 	</div>
+	
+	
 </xsl:template>
 
 

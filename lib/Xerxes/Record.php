@@ -193,8 +193,8 @@
 				
 				// call number
 				
-				$strCallNumber = $this->extractMarcDataField($objXPath, 50, "a");
-				$strCallNumberLocal = $this->extractMarcDataField($objXPath, 90, "a");
+				$strCallNumber = $this->extractMarcDataField($objXPath, 50, "*");
+				$strCallNumberLocal = $this->extractMarcDataField($objXPath, 90, "*");
 				
 				if ( $strCallNumber != null )
 				{
@@ -959,7 +959,11 @@
 	
 					$this->arrIsbn[$x] = str_replace("-", "", $this->arrIsbn[$x]);
 					
-					if ( preg_match("/[0-9]{9,12}[0-9]{0,1}X{0,1}/", $this->arrIsbn[$x], $arrIsbnExtract) != 0 )
+					if ( preg_match("/[0-9]{12,13}X{0,1}/", $this->arrIsbn[$x], $arrIsbnExtract) != 0 )
+					{
+						$this->arrIsbn[$x] = $arrIsbnExtract[0];
+					}
+					elseif ( preg_match("/[0-9]{9,10}X{0,1}/", $this->arrIsbn[$x], $arrIsbnExtract) != 0 )
 					{
 						$this->arrIsbn[$x] = $arrIsbnExtract[0];
 					}

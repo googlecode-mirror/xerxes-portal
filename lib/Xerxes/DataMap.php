@@ -907,7 +907,10 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		// set the start record, limit and offset; mysql off-set is zero-based
 		
 		if ( $iStart == null )
+		{
 			$iStart = 1;
+		}
+		
 		$iStart --;
 		
 		// we'll only apply a limit if there was a count

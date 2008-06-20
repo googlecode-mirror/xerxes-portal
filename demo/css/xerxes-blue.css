@@ -131,7 +131,6 @@ a img{
 	margin: 0px;
 	padding: 10px;
 }
-
 #breadcrumb {
 	padding: 10px;
 	padding-left: 20px;
@@ -144,25 +143,17 @@ a img{
 	margin-bottom: 0px;
 	line-height: 130%;
 }
-
 #databasesAlpha {
 	margin: 30px;
 }
-
 #sidebar {
-  padding: 20px 10px 10px 10px;
-  margin-left: 545px;
+	padding: 20px 10px 10px 10px;
+	margin-left: 545px;
 }
-
 #sidebar_content {
-  min-width: 150px;
-  max-width: 320px;
-  margin-bottom: 20px;
-	padding:10px;
-	line-height:1.5em;
-	background-color: #EFEFEF;  
+	min-width: 150px;
+	max-width: 320px;
 }
-
 #searchArea {
 	float: left;
 	width: 500px;
@@ -173,7 +164,6 @@ a img{
 	margin-top: 10px;
 	padding: 20px;
 }
-
 #folderArea {
 	clear: both;
 	margin-top: 10px;
@@ -206,6 +196,35 @@ a img{
 }
 
 /** SIDEBAR STYLES **/
+
+/* session info */
+
+#sessionAuthInfo {
+	margin-bottom: 40px;
+}
+#sessionAuthInfo h2 {
+	margin-bottom: 12px;
+}
+#sessionAuthInfo h3 {
+	font-size: 12px;
+	margin: 0;
+	padding: 0;
+	display: inline;
+	font-weight: normal;
+}
+#sessionAuthInfo ul, #sessionAuthInfo li {
+	display: inline;
+	background-image: none;
+	margin: 0;
+	padding: 0;
+}
+#sessionAuthSection {
+	margin-left: 10px;
+	margin-bottom: 3px;
+}
+#sessionAuthSection strong {
+	font-weight: normal;
+}
 
 /* librarian */
 
