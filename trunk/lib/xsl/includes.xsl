@@ -999,38 +999,48 @@
 -->
 
 <xsl:template name="session_auth_info">
-	<div id="session_auth_info">
-	<xsl:choose>
-	<xsl:when test="//request/authorization_info/affiliated[@user_account = 'true']">
-	<p>Welcome,	<xsl:value-of select="//session/user_properties[@key = 'username']" />.</p>	 
-	</xsl:when>
-	<xsl:otherwise>
-	<!-- <p>You are not logged in.</p> -->
-	</xsl:otherwise>
-	</xsl:choose>
-		<xsl:if test="//request/authorization_info/group[@user_account = 'true']">
-	<h3>Your Affiliation</h3>
-	<ul>
-	<xsl:for-each select="//request/authorization_info/group[@user_account = 'true']">
-		<li><xsl:value-of select="@display_name" /></li>
-	</xsl:for-each>
-	</ul>
-	</xsl:if>
-		<h3>Your Location</h3>
-	<ul>
-	<xsl:choose>
-		<xsl:when test="//request/authorization_info/affiliated[@ip_addr = 'true']">
-		<li>On-campus</li>
-		</xsl:when>
-		<xsl:otherwise>
-		<li><strong>Off</strong> campus</li>
-		</xsl:otherwise>
-	</xsl:choose>
-	<xsl:for-each select="//request/authorization_info/group[@ip_addr = 'true']">
-		<li><xsl:value-of select="@display_name" /></li>
-	</xsl:for-each>
-	</ul>
+	<div id="sessionAuthInfo">
+
+		<xsl:choose>
+			<xsl:when test="//request/authorization_info/affiliated[@user_account = 'true']">
+				<h2 class="sessionLoggedIn">Welcome, <xsl:value-of select="//session/user_properties[@key = 'username']" />.</h2>	 
+			</xsl:when>
+			<xsl:otherwise>
+				<h2 class="sessionLoggedOut">Welcome</h2>	
+			</xsl:otherwise>
+		</xsl:choose>
+		
+		<div id="sessionAuthSection">
+			<xsl:if test="//request/authorization_info/group[@user_account = 'true']">
+				<h3 class="sessionAuthAttribute">Your Affiliation: </h3>
+				<ul class="sessionAuthValue">
+					<xsl:for-each select="//request/authorization_info/group[@user_account = 'true']">
+						<li><xsl:value-of select="@display_name" /></li>
+					</xsl:for-each>
+				</ul>
+			</xsl:if>
 		</div>
+		
+		<div id="sessionAuthSection">
+			<h3 class="sessionAuthAttribute">Your Location:</h3>
+			<ul class="sessionAuthValue">
+			<xsl:choose>
+				<xsl:when test="//request/authorization_info/group[@ip_addr = 'true']">
+					<xsl:for-each select="//request/authorization_info/group[@ip_addr = 'true']">
+						<li><xsl:value-of select="@display_name" /></li>
+					</xsl:for-each>	
+				</xsl:when>			
+				<xsl:when test="//request/authorization_info/affiliated[@ip_addr = 'true']">
+					<li>On-campus</li>
+				</xsl:when>
+				<xsl:otherwise>
+					<li><strong>Off</strong> campus</li>
+				</xsl:otherwise>
+			</xsl:choose>
+			</ul>
+		</div>
+
+	</div>
 </xsl:template>
 
 

@@ -1,6 +1,19 @@
-USE xerxes;
+﻿USE sonoma;
 
-# support usergroup/'secondary affiliation' access control. 
+# new tagging feature
+
+DROP TABLE IF EXISTS xerxes_tags;
+
+CREATE TABLE xerxes_tags (
+	username	VARCHAR(50),
+  	record_id	MEDIUMINT,
+   	tag 		VARCHAR(100),
+
+ 	FOREIGN KEY (username) REFERENCES xerxes_users(username) ON DELETE CASCADE,
+	FOREIGN KEY (record_id) REFERENCES xerxes_records(id) ON DELETE CASCADE
+);
+
+# support usergroup/'secondary affiliation' access control.
 
 ALTER TABLE xerxes_users ADD first_name VARCHAR(50);
 ALTER TABLE xerxes_users ADD last_name VARCHAR(50);
