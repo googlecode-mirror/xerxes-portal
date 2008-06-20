@@ -1012,8 +1012,8 @@
 		
 		<div id="sessionAuthSection">
 			<xsl:if test="//request/authorization_info/group[@user_account = 'true']">
-				<h3 class="sessionAuthAttribute">Your Affiliation: </h3>
-				<ul class="sessionAuthValue">
+				<h3>Your Affiliation: </h3>
+				<ul>
 					<xsl:for-each select="//request/authorization_info/group[@user_account = 'true']">
 						<li><xsl:value-of select="@display_name" /></li>
 					</xsl:for-each>
@@ -1022,8 +1022,8 @@
 		</div>
 		
 		<div id="sessionAuthSection">
-			<h3 class="sessionAuthAttribute">Your Location:</h3>
-			<ul class="sessionAuthValue">
+			<h3>Your Location: </h3>
+			<ul>
 			<xsl:choose>
 				<xsl:when test="//request/authorization_info/group[@ip_addr = 'true']">
 					<xsl:for-each select="//request/authorization_info/group[@ip_addr = 'true']">
