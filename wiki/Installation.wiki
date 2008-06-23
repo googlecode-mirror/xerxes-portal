@@ -1,4 +1,4 @@
-#summary Manual installation
+#summary 2. Manual installation
 
 ==1. Download the code==
  
