@@ -67,16 +67,15 @@
 </xsl:template>
 
 <!-- Override categories_sidebar if you'd like to put something in the sidebar on the home page.  -->
-
+<!-- 
+	session_auth_info provides an example of giving the user their login/authentication details.
+	The 'additional options' list below also provides a link to the a-z database list.
+	
 <xsl:template name="categories_sidebar">
 
 	<div id="sidebar_content">
-	
-		<!-- Here's an example of giving the user their login/authentication details. -->
 		
-		<xsl:call-template name="session_auth_info" />		
-	
-		<!-- see, there is an a-z list too! -->
+		<xsl:call-template name="session_auth_info" />
 	
 		<h2>Additional Options</h2>
 		<ul>
@@ -86,14 +85,15 @@
 				Database List (A-Z)
 				</a>
 			</li>
+			<li>Ask a Librarian</li>
 			<li>Example</li>
-			<li>Example</li>
+			<li>Another Example</li>
 		</ul>
 	
 	</div>
 	
-	
 </xsl:template>
+-->
 
 
 </xsl:stylesheet>

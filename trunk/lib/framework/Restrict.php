@@ -26,7 +26,7 @@ class Xerxes_Framework_Restrict
 	 * @param string $configReturn			uri to the login page
 	 */
 	
-	public function __construct($configIP, $configAppName, $configBaseURL, $configReturn)
+	public function __construct($configIP, $configAppName, $configAuthPage)
 	{
 		$this->strIPRange = $configIP;
 		$this->strAppName = $configAppName;
@@ -34,13 +34,13 @@ class Xerxes_Framework_Restrict
 		// if the return url has a querystring mark in it, then append
 		// return url to other params, otherwise it is sole param
 
-		if ( strstr( $configReturn, "?" ) )
+		if ( strstr( $configAuthPage, "?" ) )
 		{
-			$this->strReturn = "$configBaseURL/$configReturn&return=";
+			$this->strReturn = "$configAuthPage&return=";
 		}
 		else
 		{
-			$this->strReturn = "$configBaseURL/$configReturn?return=";
+			$this->strReturn = "$configAuthPage?return=";
 		}
 	}
 	
