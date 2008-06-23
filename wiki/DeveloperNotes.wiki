@@ -2,7 +2,7 @@ Some useful developer hints
 
 == Request XML for page==
 
-Add format=xml url param to any page. 
+Add format=xerxes url param to any page. 
 
 == Caching in Xerxes ==
 
