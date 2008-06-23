@@ -1,0 +1,63 @@
+/* CSS stylesheet. 
+
+  This stylesheet is used for embeddable snippets, when the snippet is configured to embed a stylesheet. It is written with selectors that will
+  only apply to embedded snippet, not other content on hosting page. 
+  
+  */
+
+#xerxes_outer_wrapper a { text-decoration: none; }
+#xerxes_outer_wrapper a:visited { color: #0000CC; text-decoration: none; }
+#xerxes_outer_wrapper a:active { color: #FFCC33; text-decoration: none; }
+#xerxes_outer_wrapper a:hover { text-decoration: underline; }
+#xerxes_outer_wrapper a img{  border: 0px; }
+
+#xerxes_outer_wrapper .heading {
+	margin-bottom: 30px;
+  margin-top: 0;
+}
+
+#xerxes_outer_wrapper .heading h3 { 
+  font-family: Arial, Verdana, Geneva, Arial, helvetica, sans-serif; 
+  color: #000; 
+  font-size: 14px; 
+  font-weight: bold; 
+  margin-bottom: 2px; 
+  margin-top: 0;
+}
+
+
+#xerxes_outer_wrapper #searchArea {
+	float: left;
+	width: 500px;
+	padding: 20px;
+}
+
+#xerxes_outer_wrapper .searchBox {
+	padding: 20px;
+	margin: 0px;
+	background-color: #fff;
+	background-image: url(../images/bg.gif);
+	background-repeat: repeat-x;
+	background-position: bottom;
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 2px;
+	border-left-width: 1px;
+	border-top-style: solid;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-left-style: solid;
+	border-top-color: #CCCCCC;
+	border-right-color: #CCCCCC;
+	border-bottom-color: #999999;
+	border-left-color: #CCCCCC;
+}
+
+#xerxes_outer_wrapper .subjectSubCategory {
+  border: 1px solid #CCCCCC; 
+  padding: 10px; 
+	margin-top: 20px;
+}
+
+#xerxes_outer_wrapper .subjectSubcategory legend { font-family: Arial, Verdana, Geneva, Arial, helvetica, sans-serif; color: #3366cc; font-size: 14px; font-weight: bold; margin-bottom: 2px; }
+
