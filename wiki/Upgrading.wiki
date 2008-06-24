@@ -1,0 +1,224 @@
+#summary 3. Upgrading between versions
+
+= Introduction =
+
+Here are the basic steps for upgrading between versions of Xerxes.
+
+==1. Download and update the PHP and XSLT files==
+ 
+This will give you the latest code and interface templates.  You can either download the code from the download section or check it out from the svn repository.
+ 
+==2. In MySQL, execute sql/create-kb.sql==
+ 
+Every time you upgrade, you should execute the latest sql/create-kb.sql file.  This will drop and recreate (with any new definitions) the tables that Xerxes uses to cache the Metalib knowledgebase. Do that in MySQL and then run the Xerxes populate databases command from the command line.  In that way, Xerxes will refresh its cache.
+ 
+==3. In MySQL, execute sql/migrate/migrate-1.2-to-1.3.sql==
+ 
+_substitute 1.2 and 1.3 above with the actual version number_. This will update the other tables Xerxes uses.  Since these other tables include data that cannot be easily recreated (e.g., your users' saved records), you should *always* run the migrate sql rather than the create-serv.sql, since the latter will drop your tables.
+
+
+
+
+= Accumulated list of file changes =
+
+== version 1.3  (r 122) 2008-06-23 ==
+{{{
+	sql/migrate/migrate-1.1-to-1.2.sql => Added
+	sql/migrate/migrate-1.2-to-1.3.sql => Added
+	sql/migrate => Added
+	sql/create-kb.sql => Modified
+	sql/create-serv.sql => Modified
+	commands/helper/HelperNavbar.php => Modified
+	commands/databases/DatabasesProxy.php => Modified
+	commands/databases/DatabasesRedirectOneResult.php => Added
+	commands/databases/DatabasesDatabase.php => Modified
+	commands/databases/PopulateDatabases.php => Modified
+	commands/databases/Databases.php => Modified
+	commands/databases/DatabasesSubject.php => Modified
+	commands/folder/FolderTags.php => Modified
+	commands/folder/FolderRefworksBounce.php => Added
+	commands/folder/Folder.php => Modified
+	commands/folder/FolderRedirect.php => Modified
+	commands/folder/FolderResults.php => Modified
+	commands/folder/FolderDelete.php => Modified
+	commands/folder/FolderTagsEdit.php => Added
+	commands/folder/FolderPaging.php => Modified
+	commands/metasearch/MetasearchResults.php => Modified
+	commands/metasearch/MetasearchSearch.php => Modified
+	commands/metasearch/MetasearchHits.php => Modified
+	commands/embed/EmbedGenDatabase.php => Added
+	commands/embed/Embed.php => Added
+	commands/embed/EmbedGenSubject.php => Added
+	commands/embed => Added
+	commands/authenticate/Authenticate.php => Modified
+	commands/authenticate/AuthenticateLogin.php => Modified
+	commands/authenticate/AuthenticateLogout.php => Modified
+	demo/config/actions.xml => Modified
+	demo/config/shibboleth/shib_map.php => Added
+	demo/config/shibboleth => Added
+	demo/config/config.xml => Modified
+	demo/images/edit.gif => Added
+	demo/images/delete.gif => Added
+	demo/javascript/scriptaculous/builder.js => Added
+	demo/javascript/scriptaculous/effects.js => Added
+	demo/javascript/scriptaculous/scriptaculous.js => Added
+	demo/javascript/scriptaculous/dragdrop.js => Added
+	demo/javascript/scriptaculous/slider.js => Added
+	demo/javascript/scriptaculous/controls.js => Added
+	demo/javascript/scriptaculous => Added
+	demo/javascript/prototype.js => Added
+	demo/javascript/onload.js => Added
+	demo/javascript/save.js => Modified
+	demo/javascript/tags.js => Added
+	demo/javascript/embed-gen-update.js => Added
+	demo/xsl/includes.xsl => Modified
+	demo/css/local.css => Added
+	demo/css/xerxes.css => Modified
+	demo/css/xerxes-embeddable.css => Added
+	demo/css/reset.css => Added
+	demo/css/xerxes-blue.css => Modified
+	demo/css/xerxes-blue-embeddable.css => Added
+	demo/custom/folder_export.php => Deleted
+	demo/.htaccess => Modified
+	lib/xsl/databases_database.xsl => Modified
+	lib/xsl/folder_output_refworks.xsl => Added
+	lib/xsl/record.xsl => Modified
+	lib/xsl/databases_alphabetical.xsl => Modified
+	lib/xsl/folder_home.xsl => Modified
+	lib/xsl/dynamic_skeleton.xsl => Modified
+	lib/xsl/error.xsl => Modified
+	lib/xsl/databases_categories.xsl => Modified
+	lib/xsl/metasearch_results.xsl => Modified
+	lib/xsl/folder_tags_edit.xsl => Added
+	lib/xsl/utility/marc-to-database.xsl => Modified
+	lib/xsl/folder_output_export_text.xsl => Modified
+	lib/xsl/folder_tags_edit_ajax.xsl => Added
+	lib/xsl/folder_output_email.xsl => Modified
+	lib/xsl/metasearch_hits.xsl => Modified
+	lib/xsl/authenticate_login.xsl => Modified
+	lib/xsl/databases_subject.xsl => Modified
+	lib/xsl/includes.xsl => Modified
+	lib/xsl/embed/embed_subject.xsl => Added
+	lib/xsl/embed/embed_database.xsl => Added
+	lib/xsl/embed/embed_gen_subject.xsl => Added
+	lib/xsl/embed/embed_gen_database.xsl => Added
+	lib/xsl/embed => Added
+	lib/xsl/folder_output_export_endnote.xsl => Modified
+	lib/framework/Error.php => Modified
+	lib/framework/FrontController.php => Modified
+	lib/framework/Page.php => Modified
+	lib/framework/Parser.php => Modified
+	lib/framework/Restrict.php => Modified
+	lib/framework/ControllerMap.php => Modified
+	lib/framework/DataMap.php => Modified
+	lib/framework/Registry.php => Modified
+	lib/framework/Request.php => Modified
+	lib/Xerxes/Cookie.php => Modified
+	lib/Xerxes/MetaSearch.php => Modified
+	lib/Xerxes/Record.php => Modified
+	lib/Xerxes/Helper.php => Added
+	lib/Xerxes/Exceptions.php => Added
+	lib/Xerxes/DataMap.php => Modified
+}}}
+
+==version 1.2  (r 47) 2008-05-01==
+
+{{{
+	sql/create-kb.sql => Modified
+	sql/create-serv.sql => Modified
+	commands/helper/HelperNavbar.php => Added
+	commands/helper/Helper.php => Added
+	commands/helper => Added
+	commands/databases/DatabasesProxy.php => Modified
+	commands/databases/DatabasesDatabase.php => Modified
+	commands/databases/DatabasesCategories.php => Modified
+	commands/databases/PopulateDatabases.php => Modified
+	commands/databases/DatabasesSubject.php => Modified
+	commands/availability/AvailabilityInjectRefereed.php => Added
+	commands/availability/AvailabilityRefereed.php => Modified
+	commands/availability/AvailabilityInjectFullText.php => Added
+	commands/availability/AvailabilityFulltext.php => Modified
+	commands/folder/FolderTags.php => Added
+	commands/folder/Folder.php => Modified
+	commands/folder/FolderRedirect.php => Modified
+	commands/folder/FolderResults.php => Modified
+	commands/folder/FolderDelete.php => Modified
+	commands/folder/FolderPaging.php => Modified
+	commands/folder/FolderEmail.php => Modified
+	commands/metasearch/MetasearchResults.php => Modified
+	commands/metasearch/MetasearchSearch.php => Modified
+	commands/metasearch/MetasearchHits.php => Modified
+	demo/config/actions.xml => Modified
+	demo/config/config.xml => Modified
+	demo/images/Thumbs.db => Deleted
+	demo/images/refereed_hat.gif => Added
+	demo/images/info.gif => Added
+	demo/javascript/save.js => Modified
+	demo/xsl/metasearch_record.xsl => Deleted
+	demo/xsl/databases_database.xsl => Deleted
+	demo/xsl/record.xsl => Deleted
+	demo/xsl/databases_alphabetical.xsl => Deleted
+	demo/xsl/folder_home.xsl => Deleted
+	demo/xsl/error.xsl => Deleted
+	demo/xsl/metasearch_save-delete.xsl => Deleted
+	demo/xsl/databases_categories.xsl => Deleted
+	demo/xsl/folder_full.xsl => Deleted
+	demo/xsl/metasearch_results.xsl => Deleted
+	demo/xsl/folder_output_export_text.xsl => Deleted
+	demo/xsl/folder_output_email.xsl => Deleted
+	demo/xsl/metasearch_hits.xsl => Deleted
+	demo/xsl/citation => Deleted
+	demo/xsl/databases_subject.xsl => Deleted
+	demo/xsl/authenticate_login.xsl => Deleted
+	demo/xsl/authenticate_logout.xsl => Deleted
+	demo/xsl/folder_output_export_endnote.xsl => Deleted
+	demo/xsl/includes.xsl => Deleted
+	demo/xsl/includes.xsl => Added
+	demo/css/xerxes-blue.css => Modified
+	demo/custom/databases_old-subject.php => Modified
+	demo/.htaccess => Modified
+	lib/xsl/MARC21slimUtils.xsl => Deleted
+	lib/xsl/marc-to-database.xsl => Deleted
+	lib/xsl/marc-to-mods31.xsl => Deleted
+	lib/xsl/facets-slim.xsl => Deleted
+	lib/xsl/metasearch_record.xsl => Added
+	lib/xsl/databases_database.xsl => Added
+	lib/xsl/record.xsl => Added
+	lib/xsl/databases_alphabetical.xsl => Added
+	lib/xsl/folder_home.xsl => Added
+	lib/xsl/dynamic_skeleton.xsl => Added
+	lib/xsl/error.xsl => Added
+	lib/xsl/metasearch_save-delete.xsl => Added
+	lib/xsl/databases_categories.xsl => Added
+	lib/xsl/folder_full.xsl => Added
+	lib/xsl/metasearch_results.xsl => Added
+	lib/xsl/utility/marc-to-database.xsl => Added
+	lib/xsl/utility/facets-slim.xsl => Added
+	lib/xsl/utility => Added
+	lib/xsl/folder_output_export_text.xsl => Added
+	lib/xsl/folder_output_email.xsl => Added
+	lib/xsl/metasearch_hits.xsl => Added
+	lib/xsl/citation/ris.xsl => Added
+	lib/xsl/citation/utils.xsl => Added
+	lib/xsl/citation/basic.xsl => Added
+	lib/xsl/citation/styles.xsl => Added
+	lib/xsl/citation => Added
+	lib/xsl/authenticate_login.xsl => Added
+	lib/xsl/databases_subject.xsl => Added
+	lib/xsl/includes.xsl => Added
+	lib/xsl/authenticate_logout.xsl => Added
+	lib/xsl/folder_output_export_endnote.xsl => Added
+	lib/framework/Error.php => Modified
+	lib/framework/FrontController.php => Modified
+	lib/framework/Page.php => Modified
+	lib/framework/Parser.php => Modified
+	lib/framework/ControllerMap.php => Modified
+	lib/framework/Request.php => Modified
+	lib/Xerxes/Record.php => Modified
+	lib/Xerxes/CAS.php => Modified
+	lib/Xerxes/DataMap.php => Modified
+}}}
+
+==version 1.1  (r 1)==
+
+This was the first publicly available version.  All versions prior to this one are considered beta, and we've made no attempt here to track those changes.
