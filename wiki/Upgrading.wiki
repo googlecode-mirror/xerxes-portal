@@ -1,6 +1,6 @@
 #summary 3. Upgrading between versions
 
-= Introduction =
+= Upgrading between versions =
 
 Here are the basic steps for upgrading between versions of Xerxes.
 
@@ -19,9 +19,18 @@ _substitute 1.2 and 1.3 above with the actual version number_. This will update 
 
 
 
-= Accumulated list of file changes =
+= Accumulated list of changes =
 
 == version 1.3  (r 122) 2008-06-23 ==
+
+  * Number of bug fixes
+  * Revamped 'My Saved Records' area, with tagging and refworks export
+  * Database A-Z list can now be searched (off by default)
+  * Can now restrict resources using  Metalib group affiliations
+  * Snippet generator
+
+=== Changed files ===
+
 {{{
 	sql/migrate/migrate-1.1-to-1.2.sql => Added
 	sql/migrate/migrate-1.2-to-1.3.sql => Added
@@ -122,6 +131,13 @@ _substitute 1.2 and 1.3 above with the actual version number_. This will update 
 }}}
 
 ==version 1.2  (r 47) 2008-05-01==
+
+  * Number of bug fixes
+  * New 'pretty url' scheme that allows for simplified urls in browser window.  Replaces older, ad-hoc mod_rewrite scheme.
+  * New server-side methods for generating peer-reviewed flags and doing SFX full-text pre-lookup.
+  * New 'master xslt' scheme that creates a central set of xslt that are overwritten by a local copy only when customization is needed.
+
+=== Changed files ===
 
 {{{
 	sql/create-kb.sql => Modified
