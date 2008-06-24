@@ -1,4 +1,4 @@
-#Some useful developer hints
+#summary Some useful developer hints
 
 == Request XML for page==
 
