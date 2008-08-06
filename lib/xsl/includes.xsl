@@ -482,54 +482,190 @@
 	TEMPLATE: SEARCH BOX
 	Search box that appears in the 'hits' and 'results' page, as well as databases_subject.xsl. 
 -->
-
 <xsl:template name="search_box">
-	
-	<div class="searchBox">
-	
-		<xsl:variable name="query" select="//search/pair[1]/query" />
-		
-		<label for="field">Search</label><xsl:text> </xsl:text>
-		
-		<select id="field" name="field">
-			<option value="WRD">all fields</option>
-			<option value="WTI">
-			<xsl:if test="//search/pair[1]/field = 'WTI'">
-				<xsl:attribute name="selected">seleted</xsl:attribute>
-			</xsl:if>
-			title
-			</option>
-			<option value="WAU">
-			<xsl:if test="//search/pair[1]/field = 'WAU'">
-				<xsl:attribute name="selected">selected</xsl:attribute>
-			</xsl:if>
-			author
-			</option>
-			<option value="WSU">
-			<xsl:if test="//search/pair[1]/field = 'WSU'">
-				<xsl:attribute name="selected">selected</xsl:attribute>
-			</xsl:if>
-			subject
-			</option>
-		</select>
-		<xsl:text> </xsl:text><label for="query">for</label><xsl:text> </xsl:text>
-		<input id="query" name="query" type="text" size="32" value="{$query}" /><xsl:text> </xsl:text>
-		
-		<input type="submit" name="Submit" value="GO" />
-		
-		<xsl:if test="results/search/spelling != ''">
-			<xsl:variable name="spell_url" select="results/search/spelling_url" />
-			<p class="errorSpelling">Did you mean: <a href="{$spell_url}"><xsl:value-of select="//spelling" /></a></p>
-		</xsl:if>
-	</div>
-	
-	<xsl:for-each select="//base_info">
+
+
+      <!-- split contents into seperate template to make partial AJAX loading
+       easier -->
+      <div class="searchBox" id="searchBox">
+        <!-- "base" url used for switching search modes. Defaults to just
+             our current url, but for embed purposes may be provided 
+             differently. -->
+        <xsl:param name="full_page_url" select="/*/request/server/request_uri"/>
+    
+        <!-- pull out any already existing query entries -->
+        
+        <xsl:variable name="query" select="/*/results/search/pair[@position = '1']/query" />
+        <xsl:variable name="query2" select="/*/results/search/pair[@position = '2']/query" />
+        
+        <xsl:variable name="find_operator" select="/*/results/search/operator[@position = '1']" />
+        
+        <xsl:variable name="field" select="/*/results/search/pair[@position ='1']/field"/>
+        <xsl:variable name="field2" select="/*/results/search/pair[2]/field"/>
+    
+    
+        <xsl:variable name="advanced_mode" select="(/*/request/metasearch_input_mode = 'advanced') or ($query2 != '') or $field = 'ISSN' or $field = 'ISBN' or $field = 'WYR' " />
+          
+        <!-- javascript to ajaxy toggle the advanced search input mode.
+           Have to set advancedMode global for toggle scripts. -->
+        <script type="text/javascript">
+          advancedMode = <xsl:value-of select="$advanced_mode" />; 
+        </script>
+        <script src="{$base_include}/javascript/toggle_metasearch_advanced.js" language="javascript" type="text/javascript"></script>
+    
+        
+        <div id="searchLabel">
+          <label for="field">Search</label>
+        </div>
+        
+        <div id="searchInputs">
+          <xsl:call-template name="metasearch_input_pair">
+            <xsl:with-param name="field_selected" select="$field" />
+            <xsl:with-param name="query_entered" select="$query" />
+            <xsl:with-param name="advanced_mode" select="$advanced_mode" />
+          </xsl:call-template>
+
+          <!-- advanced search stuff is output even if we are
+               in simple mode, but with display:none. Javascriptiness may
+               easily toggle without reload that way. -->
+          <xsl:text> </xsl:text>
+          <select id="find_operator1" name="find_operator1">
+            <xsl:if test="not($advanced_mode)">
+              <xsl:attribute name="style">display:none;</xsl:attribute>
+            </xsl:if>
+            <option value="AND">
+              <xsl:if test="$find_operator = 'AND'">
+                <xsl:attribute name="selected">selected</xsl:attribute>
+              </xsl:if>
+              And
+            </option>
+            <option value="OR">
+              <xsl:if test="$find_operator = 'OR'">
+                <xsl:attribute name="selected">selected</xsl:attribute>
+              </xsl:if>
+              Or
+            </option>
+            <option value="NOT">
+              <xsl:if test="$find_operator = 'NOT'">
+                <xsl:attribute name="selected">selected</xsl:attribute>
+              </xsl:if>
+              Without
+            </option>
+          </select>
+          
+          <br id="searchBox_advanced_newline">
+            <xsl:if test="not($advanced_mode)">
+              <xsl:attribute name="style">display:none;</xsl:attribute>
+            </xsl:if>
+          </br>
+          <span id="searchBox_advanced_pair">
+            <xsl:if test="not($advanced_mode)">
+              <xsl:attribute name="style">display:none;</xsl:attribute>
+            </xsl:if>
+            <xsl:call-template name="metasearch_input_pair">
+              <xsl:with-param name="field_selected" select="$field2" />
+              <xsl:with-param name="query_entered" select="$query2" />
+              <xsl:with-param name="advanced_mode" select="$advanced_mode" />
+              <xsl:with-param name="input_name_suffix" select="2" />
+            </xsl:call-template>
+            <xsl:text> </xsl:text>
+          </span>
+          <input type="submit" name="Submit" value="GO" />
+        </div>
+          
+          
+        <xsl:if test="results/search/spelling != ''">
+          <xsl:variable name="spell_url" select="results/search/spelling_url" />
+          <p class="errorSpelling">Did you mean: <a href="{$spell_url}"><xsl:value-of select="//spelling" /></a></p>
+        </xsl:if>
+        
+        <div id="metasearch_input_toggle">
+          <xsl:choose>
+            <xsl:when test="$advanced_mode">
+              <a id="searchBox_toggle" onClick="toggleSearchMode(); return false;">
+                <xsl:attribute name="href">
+                  <xsl:value-of select="php:functionString('setParamInUrl', $full_page_url, 'metasearch_input_mode', 'simple')"/>
+                </xsl:attribute>
+              Fewer options
+              </a>
+            </xsl:when>
+            <xsl:otherwise>
+              <a id="searchBox_toggle" onClick="toggleSearchMode(); return false;">
+                <xsl:attribute name="href">
+                  <xsl:value-of select="php:functionString('setParamInUrl', $full_page_url, 'metasearch_input_mode', 'advanced')"/>
+                </xsl:attribute>
+              More options
+              </a>
+            </xsl:otherwise>
+          </xsl:choose>      
+        </div>
+
+      </div>
+      
+    <xsl:for-each select="//base_info">
 		<xsl:if test="base_001">
 			<xsl:variable name="database" select="base_001" />
 			<input type="hidden" name="database" value="{$database}" />
 		</xsl:if>
 	</xsl:for-each>
+</xsl:template>
 
+<xsl:template name="search_box_contents">
+    	
+</xsl:template>
+
+<xsl:template name="metasearch_input_pair">
+    <xsl:param name="field_selected" />
+    <xsl:param name="query_entered" />
+    <xsl:param name="advanced_search" select="false" />
+    <xsl:param name="input_name_suffix" select ="''" />
+
+		<select id="field{$input_name_suffix}" name="field{$input_name_suffix}">
+			<option value="WRD">all fields</option>
+			<option value="WTI">
+			<xsl:if test="$field_selected = 'WTI'">
+				<xsl:attribute name="selected">seleted</xsl:attribute>
+			</xsl:if>
+			title
+			</option>
+			<option value="WAU">
+			<xsl:if test="$field_selected = 'WAU'">
+				<xsl:attribute name="selected">selected</xsl:attribute>
+			</xsl:if>
+			author
+			</option>
+			<option value="WSU">
+			<xsl:if test="$field_selected = 'WSU'">
+				<xsl:attribute name="selected">selected</xsl:attribute>
+			</xsl:if>
+			subject
+			</option>
+      
+      <!-- Include advanced mode options? We don't just try to hide,
+           doesn't work in IE, javascript will need to actually add/remove. -->
+      <xsl:if test="$advanced_mode">
+        <option value="ISSN">
+          <xsl:if test="$field_selected = 'ISSN'">
+            <xsl:attribute name="selected">selected</xsl:attribute>
+          </xsl:if>
+          ISSN
+        </option>
+        <option value="ISBN">
+          <xsl:if test="$field_selected = 'ISBN'">
+            <xsl:attribute name="selected">selected</xsl:attribute>
+          </xsl:if>
+          ISBN
+        </option>
+        <option value="WYR">
+          <xsl:if test="$field_selected = 'WYR'">
+            <xsl:attribute name="selected">selected</xsl:attribute>
+          </xsl:if>
+          year
+        </option>
+      </xsl:if>
+		</select>
+		<xsl:text> </xsl:text><label for="query{$input_name_suffix}">for</label><xsl:text> </xsl:text>
+		<input id="query{$input_name_suffix}" name="query{$input_name_suffix}" type="text" size="32" value="{$query_entered}" />
 </xsl:template>
 
 <!--

@@ -45,7 +45,11 @@
         
         <xsl:if test="$disp_show_search">    
           <div id="search">  
-            <xsl:call-template name="search_box" />
+            <xsl:call-template name="search_box">
+              <!-- if they switch search modes in embedded mode, and don't have
+                   ajax available, send them to the full subject page -->
+               <xsl:with-param name="full_page_url"><xsl:value-of select="/*/embed_info/direct_url"/></xsl:with-param>
+            </xsl:call-template>
           </div>
         </xsl:if>
         
