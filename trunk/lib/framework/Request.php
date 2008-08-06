@@ -18,6 +18,7 @@
 		private $method = ""; // request method: GET, POST, COMMAND
 		private $arrParams = array ( ); // request paramaters
 		private $arrSession = array ( ); // session array for command line, unused right now
+    private $arrCookieSetParams = array( ); // cookies that will be set with response. value is array of args to php set_cookie. 
 		private $xml = null; // main xml document for holding data from commands
 		private $strRedirect = ""; // redirect url
 		private $path_elements = null; // http path tranlsated into array of elements.
@@ -392,6 +393,36 @@
 				}
 			}
 		}
+    
+   /**
+		 * Include some cookies in response
+		 *
+		 * Parameters match those of the PHP function setCookie.
+     * Except if path is left blank, will be set to Xerxes base dir.
+		 */
+     public function setCookie($name) {
+        $cookieParams = func_get_args(); 
+        if (! $cookieParams[3] ) {
+          // No path? PHP default is current path, which won't work well
+          // in pretty url style. 
+          $cookieParams[3] =  $config->getConfig( 'BASE_WEB_PATH', false, "." ) . "/";
+          // Pad other args if neccesary
+          if ( ! $cookieParams[2] ) {
+            //expire, use 0 to pad
+            $cookieParams[2] = 0;
+          }
+          if ( ! $cookieParams[1] ) {
+            //value, use blank to pad. Why would you want a blank value?
+            // who knows. 
+            $cookieParams[1] = "";
+          }
+        }
+        $this->arrCookieSetParams[$name] = $cookieParams;
+     }
+     // Called by FrontController, nobody else should need it. 
+     public function cookieSetParams() {
+       return $this->arrCookieSetParams;
+     }
 		
 		/**
 		 * Set the URL for redirect
@@ -712,6 +743,7 @@
 				}
 			}
 		}
+    
 	}
 
 ?>

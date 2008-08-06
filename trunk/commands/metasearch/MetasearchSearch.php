@@ -33,7 +33,11 @@ class Xerxes_Command_MetasearchSearch extends Xerxes_Command_Metasearch
 		// params from the request
 		
 		$strQuery = $objRequest->getProperty( "query" );
+    $strQuery2 = $objRequest->getProperty("query2");
 		$strField = $objRequest->getProperty( "field" );
+    $strField2 = $objRequest->getProperty("field2");
+    $strFindOperator = $objRequest->getProperty("find_operator1");
+    
 		$arrDatabases = $objRequest->getProperty( "database", true );
 		$strSubject = $objRequest->getProperty( "subject" );
 		$strSpell = $objRequest->getProperty( "spell" );
@@ -94,6 +98,15 @@ class Xerxes_Command_MetasearchSearch extends Xerxes_Command_Metasearch
 		{
 			$strField = "WRD";
 		}
+    if ( $strField2 == "")
+    {
+      $strField2 = "WRD";
+    }
+    if ( $strFindOperator == "")
+    {
+      $strFindOperator = "AND";
+    }
+      
 			
 		// load datamap, we need it now, and later. 
 		
@@ -178,16 +191,29 @@ class Xerxes_Command_MetasearchSearch extends Xerxes_Command_Metasearch
 		
 		if ( $configNormalize == true )
 		{
+      //normalize query option  is still experimental (2008-01-09)
 			$strNormalizedQuery = $objQueryParser->normalize( $strField, $strQuery );
+      if ( $strQuery2 ) {
+        $strNormalizedQuery2 = $objQueryParser->normalize( $strField2, $strQuery2);
+      }
 		} 
 		else
 		{
 			$strNormalizedQuery = "$strField=($strQuery)";
+      if ( $strQuery2) {
+        $strNormalizedQuery2 = "$strField2=($strQuery2)"; 
+      }
 		}
-		
+    $strFullQuery = $strNormalizedQuery;
+    // Do we have an advanced search we need to add more stuff onto?
+    if ( $strQuery2 ) 
+    {      
+      $strFullQuery .= " $strFindOperator $strNormalizedQuery2"; 
+    }
+    
 		// initiate search with Metalib
 		
-		$strGroup = $objSearch->search( $strNormalizedQuery, $arrDatabases );
+		$strGroup = $objSearch->search( $strFullQuery, $arrDatabases );
 		
 		// something went wrong, yo!
 		
@@ -201,12 +227,34 @@ class Xerxes_Command_MetasearchSearch extends Xerxes_Command_Metasearch
 			// check spelling
 			
 			$strSpellCorrect = $objQueryParser->checkSpelling( $strQuery, $configYahooID );
-			
-			if ( $strSpellCorrect != "" )
+      $strSpellCorrect2;      
+      if ( $strQuery2 ) {
+        $strSpellCorrect2 = $objQueryParser->checkSpelling( $strQuery2, $configYahooID );
+      }
+	
+			if ( $strSpellCorrect != ""  || $strSpellCorrect2 != "" )
 			{
 				// construct spell check return url with spelling suggestion
-				
-				$strSpellUrl = "./?base=metasearch&action=search&spell=1&query=" . urlencode( $strSpellCorrect ) . "&field=" . $strField;
+        // If both search fields were used (advanced search), spell corrections
+        // may be in first, second, or both. 
+				$strNewQuery = $strQuery;
+        $arrSuggestions = array();
+        if ( $strSpellCorrect ) {
+          $strNewQuery = $strSpellCorrect;
+          array_push($arrSuggestions, $strSpellCorrect);
+        }
+        $strNewQuery2 = $strQuery2;
+        if ( $strSpellCorrect2 ) {
+          $strNewQuery2 = $strSpellCorrect2;
+          array_push($arrSuggestions, $strSpellCorrect2);
+        }
+        $strSpellSuggestions = join(" ", $arrSuggestions); 
+        
+        
+				$strSpellUrl = "./?base=metasearch&action=search&spell=1&query=" . urlencode( $strNewQuery ) . "&field=" . $strField;
+        if ( $strNewQuery2 ) {
+          $strSpellUrl .= "&query2=" . urlencode($strNewQuery2) . "&field2=" . $strField2;
+        }
 				$strSpellUrl .= "&context=" . urlencode( $strContext );
 				$strSpellUrl .= "&context_url=" . urlencode( $strContextUrl );
 				
@@ -224,8 +272,10 @@ class Xerxes_Command_MetasearchSearch extends Xerxes_Command_Metasearch
 		
 		$arrSearch = array ( );
 		$arrSearch["date"] = date( "Y-m-d" );
-		$arrSearch["spelling"] = $strSpellCorrect;
-		$arrSearch["spelling_url"] = $strSpellUrl;
+      
+    $arrSearch["spelling"] = $strSpellSuggestions;  
+    $arrSearch["spelling_url"] = $strSpellUrl;
+    
 		$arrSearch["context"] = $strContext;
 		$arrSearch["context_url"] = $strContextUrl;
 		
@@ -235,9 +285,6 @@ class Xerxes_Command_MetasearchSearch extends Xerxes_Command_Metasearch
 			$objXml->documentElement->appendChild( $objElement );
 		}
 		
-		// for now we're only using one search box, still need to consider if we want to offer
-		// two, and thus include code in this command to catch that, or use one box and hijack
-		// the second one for the normalize query option above, which is still experimental (2008-01-09)
 
 		$objPair = $objXml->createElement( "pair" );
 		$objPair->setAttribute( "position", 1 );
@@ -253,6 +300,32 @@ class Xerxes_Command_MetasearchSearch extends Xerxes_Command_Metasearch
 			$objElement = $objXml->createElement( $key, Xerxes_Parser::escapeXml( $value ) );
 			$objPair->appendChild( $objElement );
 		}
+    
+    //Add second pair if present. 
+    if ( $strQuery2 )            
+    {
+      $objOperator = $objXml->createElement("operator", $strFindOperator);
+      $objOperator->setAttribute("position", 1);  
+      $objXml->documentElement->appendChild( $objOperator );
+      
+      $objPair = $objXml->createElement( "pair" );
+      $objPair->setAttribute( "position", 2 );
+      $objXml->documentElement->appendChild( $objPair );
+      
+      $arrQuery = array ( );
+      $arrQuery["query"] = $strQuery2;
+      $arrQuery["normalized"] = $strNormalizedQuery2;
+      $arrQuery["field"] = $strField2;
+      
+      foreach ( $arrQuery as $key => $value )
+      {
+        $objElement = $objXml->createElement( $key, Xerxes_Parser::escapeXml( $value ) );
+        $objPair->appendChild( $objElement );
+      }
+ 
+    }
+      
+      
 		
 		// get links from ird records for those databases that have been included in the search and 
 		// store it here so we can get at this information easily on any subsequent page without having

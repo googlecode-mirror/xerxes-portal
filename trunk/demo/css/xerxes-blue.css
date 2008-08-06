@@ -347,6 +347,20 @@ a img{
 }
 
 /* search box */
+#searchLabel {
+  float:left; 
+  padding-top: .6em;
+}
+
+#searchInputs {
+  margin-left: 4.3em;
+}
+
+#metasearch_input_toggle {
+  text-align:right; 
+  margin-top: 1em; 
+  font-weight: bold;
+}
 
 .errorSpelling {
 	color: #990000;

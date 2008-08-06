@@ -32,6 +32,21 @@
 	padding: 20px;
 }
 
+#xerxes_outer_wrapper #searchLabel {
+  float:left; 
+  padding-top: .6em;
+}
+
+#xerxes_outer_wrapper #searchInputs {
+  margin-left: 4.3em;
+}
+
+#xerxes_outer_wrapper #metasearch_input_toggle {
+  text-align:right; 
+  margin-top: 1em; 
+  font-weight: bold;
+}
+
 #xerxes_outer_wrapper .searchBox {
 	padding: 20px;
 	margin: 0px;
