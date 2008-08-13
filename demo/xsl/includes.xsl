@@ -37,6 +37,11 @@
 
 -->
 
+<!-- Don't want searchable icon on database list? Uncomment. -->
+<!-- <xsl:variable name="show_db_searchable_icon" select="false()" /> -->
+
+<!-- Don't want a search box on the database detail page? Uncomment. -->
+<!--   <xsl:variable name="show_db_detail_search" select="false()" /> -->
 
 <!-- Header -->
 

@@ -17,24 +17,64 @@
 <xsl:include href="includes.xsl" />
 <xsl:output method="html" encoding="utf-8" indent="yes" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
 
+  <!-- show database search box where available? You can override in a local
+       xsl to false if you don't want to -->
+  <xsl:variable name="show_db_detail_search" select="true()" />
+
 <xsl:template match="/knowledge_base">
 	<xsl:call-template name="surround" />
 </xsl:template>
 
 <xsl:template name="main">
 
+
+
 	<xsl:variable name="request_uri"	select="//request/server/request_uri" />
 	
+
 	<div id="container">
-		
 		<div id="searchArea">
 			<xsl:for-each select="//database">
 			
 				<xsl:variable name="native_link" select="php:function('urlencode', string(link_native_home))" />
 				<xsl:variable name="id_meta" select="metalib_id" />
 				
-				<h2><xsl:value-of select="title_display" /></h2>
-				
+        
+				<h2 class="database_detail_title" style="margin-bottom: 30px;"><xsl:value-of select="title_display" /></h2>
+        
+        <!-- show a search box if: 
+            1) config is set to show search boxes on db detail page
+            2) The db is searchable by the current user/session, OR
+            2a) the db is searchable in general, and user is not logged in or on campus. 
+            ( Ie, if they are logged in or on campus and we know they can't search, don't show search box. )
+         -->
+         <xsl:if test="$show_db_detail_search and searchable = '1'">
+          <xsl:choose>
+          <xsl:when test="searchable_by_user = '1' or /*/request/authorization_info/affiliated = 'false'">
+            <form name="form1" method="get" action="{$base_url}/" onSubmit="return databaseLimit(this)">
+              <input type="hidden" name="base" value="metasearch" />
+              <input type="hidden" name="action" value="search" />
+              <input type="hidden" name="context">
+                <xsl:attribute name="value"><xsl:value-of select="title_display"/></xsl:attribute>
+              </input>
+              <input type="hidden" name="context_url" value="{$request_uri}" />
+              <div id="search">
+                <!-- defined in includes.xsl -->
+                <xsl:call-template name="search_box" />      
+              </div>
+              <!-- include hidden field for this particular db -->
+              <input type="hidden" name="database">
+                <xsl:attribute name="id"><xsl:value-of select="metalib_id"/></xsl:attribute>
+                <xsl:attribute name="value"><xsl:value-of select="metalib_id"/></xsl:attribute>
+              </input>
+           </form>
+          </xsl:when>
+          <xsl:otherwise>
+            <i><img src="{$base_url}/images/famfamfam/magnifier.png" />Search <xsl:call-template name="db_restriction_display" />.</i>
+          </xsl:otherwise>
+          </xsl:choose>
+				</xsl:if>
+        
 				<div class="databasesDescription">
 					<xsl:value-of select="translate(description,'#', '')" />			
 				</div>
