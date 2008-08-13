@@ -342,6 +342,11 @@ a img{
 .alphaTitle a {
 	font-weight: bold;
 }
+
+.alphaTitle .mini_icon {
+  vertical-align: middle;
+}
+
 .alphaDescription {
 	line-height: 130%;
 }
