@@ -610,9 +610,6 @@
 	</xsl:for-each>
 </xsl:template>
 
-<xsl:template name="search_box_contents">
-    	
-</xsl:template>
 
 <xsl:template name="metasearch_input_pair">
     <xsl:param name="field_selected" />
