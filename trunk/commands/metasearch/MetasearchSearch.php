@@ -221,17 +221,16 @@ class Xerxes_Command_MetasearchSearch extends Xerxes_Command_Metasearch
 			throw new Exception( "Could not initiate search with Metalib server" );
 			
 		// check spelling unless this is a return submission from a previous spell correction
-		
+		$strSpellSuggestions = null;
 		if ( $strSpell == null )
 		{
 			// check spelling
 			
 			$strSpellCorrect = $objQueryParser->checkSpelling( $strQuery, $configYahooID );
-      $strSpellCorrect2;      
+      $strSpellCorrect2 = null;      
       if ( $strQuery2 ) {
         $strSpellCorrect2 = $objQueryParser->checkSpelling( $strQuery2, $configYahooID );
       }
-	
 			if ( $strSpellCorrect != ""  || $strSpellCorrect2 != "" )
 			{
 				// construct spell check return url with spelling suggestion

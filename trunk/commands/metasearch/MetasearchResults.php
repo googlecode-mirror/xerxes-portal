@@ -131,7 +131,8 @@ class Xerxes_Command_MetasearchResults extends Xerxes_Command_Metasearch
 				array_push( $arrResults, $objRecord );
 			}
 			
-			// this will also convert the marc-xml to xerxes_record
+			// this will also convert the marc-xml to xerxes_record, and check for an already
+      // saved record
 
 			$objXml = $this->addRecords( $objXml, $arrResults, $configIncludeMarcRecord );
 		}

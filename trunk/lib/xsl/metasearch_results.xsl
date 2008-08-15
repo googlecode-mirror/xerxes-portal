@@ -430,15 +430,33 @@
 						<!-- Save Facility -->
 							
 						<span class="resultsAvailableOption" id="saveRecordOption">
-							<img id="folder_{$result_set}{$record_number}" src="images/folder.gif" width="17" height="15" alt="" border="0" />
+							<img id="folder_{$result_set}{$record_number}"  width="17" height="15" alt="" border="0" >
+							<xsl:attribute name="src">
+								<xsl:choose> 
+									<xsl:when test="../saved">images/folder_on.gif</xsl:when>
+								  <xsl:otherwise>images/folder.gif</xsl:otherwise>
+								</xsl:choose>
+							</xsl:attribute>
+							</img>
+
 							<xsl:text> </xsl:text>
 							<a id="link_{$result_set}:{$record_number}"
-								href="./?base=metasearch&amp;action=save-delete&amp;group={$group}&amp;resultSet={$result_set}&amp;startRecord={$record_number}" 
-								class="saveThisRecord resultsFullText">Save this record</a>
+								href="./?base=metasearch&amp;action=save-delete&amp;group={$group}&amp;resultSet={$result_set}&amp;startRecord={$record_number}">
+                  <!-- 'saved' class used as a tag by ajaxy stuff -->
+                  <xsl:attribute name="class">
+										saveThisRecord resultsFulltext <xsl:if test="../saved">saved</xsl:if>
+									</xsl:attribute>
+                  <xsl:choose>
+										<xsl:when test="../saved">Record saved</xsl:when>
+										<xsl:otherwise>Save this record</xsl:otherwise>
+									</xsl:choose>
+							</a>
 						</span>
 						
 					</div>
-			
+			    <div class="results_label resultsFullText" id="label_{$result_set}:{$record_number}" style="display:none;"> 
+						Label me
+					</div>
 				</div>
 				
 			</xsl:for-each>

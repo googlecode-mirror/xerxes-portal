@@ -1283,14 +1283,15 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 	}
 	
 	/**
-	 * Add a record to the user's saved record space
+	 * Add a record to the user's saved record space. $objXerxesRecord will be
+   * updated with internal db id and original id.. 
 	 *
 	 * @param string $username					username to save the record under
 	 * @param string $source					name of the source database
 	 * @param string $id						identifier for the record
 	 * @param Xerxes_Record $objXerxesRecord	xerxes record object to save
-	 * @return int status
-	 */
+	 * @return int  status
+ */
 	
 	public function addRecord($username, $source, $id, Xerxes_Record $objXerxesRecord)
 	{
@@ -1337,7 +1338,18 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		$arrValues[":refereed"] = $iRefereed;
 		$arrValues[":marc"] = $objXerxesRecord->getMarcXMLString();
 		
-		return $this->insert( $strSQL, $arrValues );
+		$status = $this->insert( $strSQL, $arrValues );
+
+		//Get the internal xerxes record id for the saved record, and fill record
+    // with it, so caller can use. 
+    $getIDSql = "SELECT id FROM xerxes_records WHERE original_id = :original_id";
+    $getIDParam = array(":original_id" => $id);
+    $getIDResults = $this->select( $getIDSql, $getIDParam);
+    $objXerxesRecord->id = $getIDResults[0]["id"];
+
+    $objXerxesRecord->original_id = $id;
+		
+		return $status;
 	}
 	
 	/**

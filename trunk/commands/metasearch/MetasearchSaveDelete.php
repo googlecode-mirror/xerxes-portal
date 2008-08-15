@@ -32,7 +32,8 @@
 			$strGroup =	$objRequest->getProperty("group");
 			$strResultSet =	$objRequest->getProperty("resultSet");
 			$iStartRecord =	(int) $objRequest->getProperty("startRecord");
-			
+     
+
 			// get the search start date
 			
 			$objSearchXml = $this->getCache($strGroup, "search", "SimpleXML");
@@ -47,18 +48,18 @@
 			$strID .= str_pad($iStartRecord, 6, "0", STR_PAD_LEFT);
 			
 			// the save and delete action come in on the same onClick event from the search results page,
-			// so we have to check here to see if it is a delete or save based on the cookie
+			// so we have to check here to see if it is a delete or save based on the session. This is a
+      // bit dangerous, since maybe the session got out of sync? Oh well, it'll do for now, since
+      // that's what was done with the previous cookie implementation. 
 			
-			$objCookie = new Xerxes_Cookie("saves");
 			$objData = new Xerxes_DataMap();
 			
-			$bolAdd = $objCookie->isAdd($strID);
-			
+			$bolAdd = ! $this->isMarkedSaved($strResultSet, $iStartRecord);
 			if ( $bolAdd == true )
 			{
 				// add command
 				
-				// get record from metalib
+				// get record from metalib result set
 				
 				$objXerxesRecord = new Xerxes_Record();
 				$objXerxesRecord->loadXML($this->getRecord($objRequest, $objRegistry));
@@ -66,19 +67,19 @@
 				// add to database
 					
 				$objData->addRecord($strUsername, "metalib", $strID, $objXerxesRecord);
+
+				// Mark saved for feedback on search results
+        $this->markSaved($objXerxesRecord);
 			}
 			else
 			{
 				// delete command
-				
+	
 				$objData->deleteRecordBySource($strUsername, "metalib", $strID);			
-				
+	
+        $this->unmarkSaved($strResultSet, $iStartRecord);	
 			}
-			
-			// update cookie
-			
-			$objCookie->updateCookie($strID, "&");
-			
+
 			// build a response
 			
 			$objXml = new DOMDocument();

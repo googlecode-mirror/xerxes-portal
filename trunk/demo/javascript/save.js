@@ -1,15 +1,19 @@
 	/**
 	 * FUNCTIONS FOR SAVING RECORDS
 	 */
+
+  /* CALLER REQUIREMENTS:
+       set a global js variable called numSavedRecords to the current number of records
+       in saved records area. Used to determine when to toggle saved records icon to
+       indicate presence of records */
 	
-	addEvent(window, 'load', loadFolders);
-	addEvent(window, 'load', findFolders);
+	addEvent(window, 'load', addAjaxToSaveLinks);
 	
 	/**
 	 * Add onClick event to save records
 	 */
 	
-	function findFolders()
+	function addAjaxToSaveLinks()
 	{
 		// add onClick event to save the record
 		
@@ -42,148 +46,51 @@
 	
 	function updateRecord( id )
 	{
+
 		arrID = id.split(/_|:/);
 		resultSet = arrID[1]; 
 		recordNumber = arrID[2];
 					
-		var iRecordsCookie = recordsInCookie();
+    // Should be set by main page in global js variable, if not we set.
+    if (typeof(window["numSavedRecords"]) == "undefined") {
+       numSavedRecords = 0;
+    }
 		var url = $(id).readAttribute('href');
-
-		// change the item folder image
-
-		var objImage = $('folder_' + resultSet + recordNumber).src;
 		
-		if ( objImage.indexOf("folder_on.gif") != -1 )
-		{
-			iRecordsCookie--;
-			$('folder_' + resultSet + recordNumber).src = "images/folder.gif";
-			$(id).update("Save this record");
-		}
-		else
-		{
-			iRecordsCookie++;
-			$('folder_' + resultSet + recordNumber).src = "images/folder_on.gif";
-			$(id).update("Record saved");
-		}
-	
-		// change the master folder image
+		// do it! Update our icons only after success please! Then we're only
+    // telling them they have saved a record if they really have! Hooray
+    // for javascript closures. 
 		
-		if ( iRecordsCookie == 0 )
-		{
-			$('folder').src = "images/folder.gif";
-		}
-		else
-		{
-			$('folder').src ="images/folder_on.gif";
-		}
-		
-		// do it!
-		
-		new Ajax.Request(url);	
+		new Ajax.Request(url, {"onFailure": function(ajaxRequest) {
+		alert('Sorry, an error occured, your record was not saved.');
+          },
+			"onSuccess": function (ajaxRequest) {
+	    if ( $(id).hasClassName("saved") )
+			{
+  	    numSavedRecords--;
+    	  $('folder_' + resultSet + recordNumber).src = "images/folder.gif";
+      	$(id).update("Save this record");
+      	$(id).removeClassName("saved");
+			}
+    	else
+    	{
+      	numSavedRecords++;
+      	$('folder_' + resultSet + recordNumber).src = "images/folder_on.gif";
+      	$(id).update("Record saved");
+      	$(id).addClassName("saved");
+    	}
+      // Change master folder image
+      if ( numSavedRecords > 0 ) {
+			  $('folder').src = 'images/folder_on.gif';
+      }
+			else {
+				$('folder').src = 'images/folder.gif';
+			}
+		}});	
 
 		return false;
 	}
 	
-	/**
-	 * Simple method to return number of records currently saved in cookie
-	 *
-	 * @return int 		number of records in the cookie
-	 */
-	
-	function recordsInCookie()
-	{	
-		var test_pat = new RegExp("&","g");
-		var strSaves = getCookie("saves");
-		
-		if (strSaves != null )
-		{
-			if ( strSaves.match(/&/) )
-			{
-				results = strSaves.match(test_pat);
-				return results.length;
-			}
-			else
-			{
-				return 0;
-			}
-		}
-		else
-		{
-			return 0;
-		}
-	}
-	
-	/**
-	 * Simple method to get specific cookie
-	 *
-	 * @return string		cookie data
-	 */
-	
-	function getCookie( name )
-	{
-		var dc = document.cookie;
-		var prefix = name + "=";
-		var begin = dc.indexOf("; " + prefix);
-		
-		if (begin == -1)
-		{
-			begin = dc.indexOf(prefix);
-			if (begin != 0) return null;
-		}
-		else
-		{
-			begin += 2;
-		}
-		
-		var end = document.cookie.indexOf(";", begin);
-		
-		if (end == -1)
-		{
-			end = dc.length;
-		}
-		
-		return unescape(dc.substring(begin + prefix.length, end));
-	}
-	
-	/**
-	 * On any given page, sets the individual folder items and the 
-	 * 'my records' images and text to 'on' if already selected. 
-	 */
-	
-	function loadFolders()
-	{		
-		// for records that are already saved
-		
-		var objCookie = getCookie("saves");
-		var savedRecordsCookie = recordsInCookie();
-		
-		// set the master 'my records' image
-
-		if ( savedRecordsCookie > 0 ) 
-		{	
-			document.getElementById('folder').src = "images/folder_on.gif";
-			
-			// set the individual folder images
-		
-			var arrRecords = objCookie.split("&");
-			
-			for ( var i = 0; i < arrRecords.length; i++ )
-			{
-				if ( arrRecords[i] != "" )
-				{
-					var arrResultSet = arrRecords[i].split(":");
-					var resultSet = arrResultSet[1];
-					var recordNumber = arrResultSet[2];
-					
-					if ( document.getElementById('folder_' + resultSet + recordNumber) )
-					{
-						$('folder_' + resultSet + recordNumber).src = "images/folder_on.gif";
-						$('link_' + resultSet + ":" + recordNumber).update("Record saved");
-					}
-				}
-			}
-		}
-	}
 	
 	/**
 	 * Checks to see if user has selected more databases than is allowed or none
