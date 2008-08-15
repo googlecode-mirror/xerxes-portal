@@ -88,10 +88,10 @@
 			$objData = new Xerxes_DataMap();
 			$objData->deleteRecordBySource($strUsername, $strSource, $strID);
 			
-			// update the cookie
-			
-			$objCookie = new Xerxes_Cookie("saves");
-			$objCookie->updateCookie($strID, "&", true);
+			// update the session
+      // Sorry this gets a bit confusing, the api hasn't stayed entirely consistent.
+      list($date, $resultSet, $recordNumber) = split(':',$strID);
+      Xerxes_Command_Helper::unmarkSaved($resultSet, $recordNumber);
 			
 			// send the user back out, so they don't step on this again
 			

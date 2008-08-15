@@ -468,7 +468,14 @@
 		</span>
 		|
 		<span class="sessionAction">
-			<img src="{$base_include}/images/folder.gif" name="folder" width="17" height="15" border="0" id="folder" alt=""/>
+			<img name="folder" width="17" height="15" border="0" id="folder" alt="">
+      <xsl:attribute name="src">
+				<xsl:choose>
+				<xsl:when test="navbar/element[@id='saved_records']/@numSessionSavedRecords &gt; 0"><xsl:value-of select="$base_include" />/images/folder_on.gif</xsl:when>
+				<xsl:otherwise><xsl:value-of select="$base_include"/>/images/folder.gif</xsl:otherwise>
+				</xsl:choose>
+			</xsl:attribute>
+      </img>
 			<xsl:text> </xsl:text>
 			<a>
 		<xsl:attribute name="href"><xsl:value-of select="navbar/element[@id='saved_records']/url" /></xsl:attribute>
@@ -1038,6 +1045,11 @@
 	<script src="{$base_include}/javascript/prototype.js" language="javascript" type="text/javascript"></script>
 	<script src="{$base_include}/javascript/scriptaculous/scriptaculous.js" language="javascript" type="text/javascript"></script>
 	<script src="{$base_include}/javascript/tags.js" language="javascript" type="text/javascript"></script>
+  <script type="text/javascript">
+    // change numSessionSavedRecords to numSavedRecords if you prefer the folder icon to change
+    // if there are any records at all in saved records. Also fix initial display in navbar.
+		numSavedRecords = 0<xsl:value-of select="navbar/element[@id='saved_records']/@numSessionSavedRecords" />;
+  </script>
 	<script src="{$base_include}/javascript/save.js" language="javascript" type="text/javascript"></script>
 	
 	<script language="javascript" type="text/javascript">

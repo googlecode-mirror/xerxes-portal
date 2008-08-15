@@ -730,7 +730,11 @@
 				if ( is_array( $value ) )
 				{
 					foreach ( $value as $strKey => $strValue )
-					{
+					{ 
+            # Multi-dimensional arrays sometimes too. strValue isn't always a string
+            # for now, skip and just don't include it if it's not. 
+            if (! is_string( $strValue )) continue;
+
 						$objElement = $objXml->createElement( $strSafeKey, Xerxes_Parser::escapeXml( $strValue ) );
 						$objElement->setAttribute( "key", $strKey );
 						$objAppend->appendChild( $objElement );

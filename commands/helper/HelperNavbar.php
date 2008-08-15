@@ -8,9 +8,13 @@ class Xerxes_Command_HelperNavbar extends Xerxes_Command_Helper
 		$objXml->loadXML( "<navbar />" );
 		
 		// saved records link
-		$this->addNavbarElement( $objXml, $objRequest, "saved_records", array ("base" => "folder", "return" => $objRequest->getServer( "REQUEST_URI" ) ) );
-		
-    
+		$savedRecordsLink = $this->addNavbarElement( $objXml, $objRequest, "saved_records", array ("base" => "folder", "return" => $objRequest->getServer( "REQUEST_URI" ) ) );
+	  // add numSavedRecords  and sessionSavedRecords for proper icon display
+    $objData = new Xerxes_DataMap;
+    $num = $objData->totalRecords($objRequest->getSession("username"));
+    $savedRecordsLink->setAttribute("numSavedRecords", (string) $num);	
+    $savedRecordsLink->setAttribute("numSessionSavedRecords", Xerxes_Command_Helper::numMarkedSaved());
+ 
     //loging
     $this->addNavbarElement( $objXml, $objRequest, "login", array ("base" => "authenticate", "action" => "login", "return" => $objRequest->getServer( "REQUEST_URI" ) ) );
 		
@@ -32,6 +36,7 @@ class Xerxes_Command_HelperNavbar extends Xerxes_Command_Helper
 		$url = $objXml->createElement( 'url', $objRequest->url_for( $url_params ) );
 		$element->appendChild( $url );
 		$objXml->documentElement->appendChild( $element );
+    return $element;
 	}
 
 }

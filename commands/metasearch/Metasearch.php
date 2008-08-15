@@ -243,7 +243,8 @@ abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
 	
 	/**
 	 * Converts records from marc to xerxes_record and adds them to the master xml response
-	 *
+	 * Also adds info on whether the record has already been saved this session. 
+   *
 	 * @param DOMDOcument $objXml		master xml document
 	 * @param array $arrRecords			an array of marc records
 	 * @param bool $configMarcResults	whether to append the original marc records to the response
@@ -276,8 +277,20 @@ abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
 				$objImportRecord = $objXml->importNode($objMarcRecord->getElementsByTagName("record")->item(0), true);
 				$objRecordContainer->appendChild($objImportRecord);
 			}
-		}
-			
+
+			// Check if this hit has been saved in my records this session
+			// Include info if it has. 
+     	$strResultSet = $objXerxesRecord->getResultSet();
+     	$strRecordNumber = $objXerxesRecord->getRecordNumber();
+      $key = (string) (int) $strResultSet . ":" . (string) (int) $strRecordNumber;
+
+     	if ( array_key_exists('resultsSaved', $_SESSION) &&
+          array_key_exists($key, $_SESSION['resultsSaved'])) {
+					$objSavedRecord = $objXml->createElement("saved");
+					$objSavedRecord->setAttribute("id", $_SESSION['resultsSaved'][$key]['xerxes_record_id']);
+					$objRecordContainer->appendChild($objSavedRecord);
+			}
+		} 
 		$objXml->documentElement->appendChild($objRecords);
 		
 		return $objXml;
@@ -340,6 +353,21 @@ abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
 		
 		return $objSearch->retrieve( $strResultSet, $iStartRecord, 1, null, "customize", $arrFields );
 	}
+
+
+  # Functions for saving saved record state from a result set. Just convenience
+  #, call to helper. 
+  protected function markSaved($objRecord) {
+      return Xerxes_Command_Helper::markSaved($objRecord);
+  }
+  protected function unmarkSaved($strResultSet, $strRecordNumber) {
+  		return Xerxes_Command_Helper::unmarkSaved($strResultSet, $strRecordNumber);
+  }
+	protected function isMarkedSaved($strResultSet, $strRecordNumber) {
+			return Xerxes_Command_Helper::isMarkedSaved($strResultSet, $strRecordNumber);
+  }
+
+
 }
 
 ?>

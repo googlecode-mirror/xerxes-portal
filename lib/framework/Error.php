@@ -44,6 +44,11 @@ class Xerxes_Framework_Error
 		}
 		else
 		{
+			// first output to apache error log
+			error_log("Xerxes error: " . $e->getMessage() . ": " . $e->getTraceAsString());
+
+			//set proper http response code
+ 
 			$resultStatus = 500;
 			
 			if ( $e instanceof Xerxes_AccessDeniedException )
