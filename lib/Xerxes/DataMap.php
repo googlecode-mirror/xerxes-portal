@@ -612,7 +612,8 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		elseif ( $query != null )
 		{
 			// string query for databases.
-			// we match title, descrition, or keywords. 
+			// we match title, descrition, or keywords.
+      // MySQL specific REGEXP commands. 
 			
 			$strSQL .= "WHERE xerxes_databases.title_display REGEXP :query1 OR xerxes_databases.title_full REGEXP :query2 OR xerxes_databases.description REGEXP :query3 OR xerxes_database_keywords.keyword REGEXP :query4 ";
 			$strSQL .= " ORDER BY UPPER(title_display) ";
