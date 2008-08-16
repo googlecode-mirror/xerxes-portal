@@ -56,11 +56,16 @@
        numSavedRecords = 0;
     }
 		var url = $(id).readAttribute('href');
-		
+	
+    if ( $(id).hasClassName("disabled")) {
+			return false;
+		}
+	
 		// do it! Update our icons only after success please! Then we're only
     // telling them they have saved a record if they really have! Hooray
     // for javascript closures. 
-		
+	  $(id).update("Working...");
+    $(id).addClassName("disabled"); 	
 		new Ajax.Request(url, {"onFailure": function(ajaxRequest) {
 		alert('Sorry, an error occured, your record was not saved.');
           },
@@ -79,6 +84,7 @@
       	$(id).update("Record saved");
       	$(id).addClassName("saved");
     	}
+      $(id).removeClassName("disabled");
       // Change master folder image
       if ( numSavedRecords > 0 ) {
 			  $('folder').src = 'images/folder_on.gif';
