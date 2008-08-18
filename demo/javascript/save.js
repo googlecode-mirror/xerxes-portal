@@ -5,7 +5,11 @@
   /* CALLER REQUIREMENTS:
        set a global js variable called numSavedRecords to the current number of records
        in saved records area. Used to determine when to toggle saved records icon to
-       indicate presence of records */
+       indicate presence of records 
+
+			set a global js variable isTemporarySession (boolean), used to determine whether to
+      ajax add a tagging input on save or not. 
+	*/
 	
 	addEvent(window, 'load', addAjaxToSaveLinks);
 	
@@ -55,9 +59,17 @@
     if (typeof(window["numSavedRecords"]) == "undefined") {
        numSavedRecords = 0;
     }
+    if (typeof(window["isTemporarySession"]) == "undefined") {
+			 isTemporarySession = true;
+		}
 		var url = $(id).readAttribute('href');
-	
-    if ( $(id).hasClassName("disabled")) {
+    // we want an ajax-json response from Xerxes
+    base = url.split('?')[0]
+    queryParams = url.toQueryParams();	
+    queryParams["format"] = "json";
+    url = base + '?' + $H(queryParams).toQueryString();
+    
+		if ( $(id).hasClassName("disabled")) {
 			return false;
 		}
 	
@@ -70,21 +82,65 @@
 		alert('Sorry, an error occured, your record was not saved.');
           },
 			"onSuccess": function (ajaxRequest) {
-	    if ( $(id).hasClassName("saved") )
-			{
-  	    numSavedRecords--;
-    	  $('folder_' + resultSet + recordNumber).src = "images/folder.gif";
-      	$(id).update("Save this record");
-      	$(id).removeClassName("saved");
-			}
-    	else
-    	{
-      	numSavedRecords++;
-      	$('folder_' + resultSet + recordNumber).src = "images/folder_on.gif";
-      	$(id).update("Record saved");
-      	$(id).addClassName("saved");
-    	}
-      $(id).removeClassName("disabled");
+
+        // Add tag input form. First need to get saved Record ID out
+        // of AJAX response. 
+    	  responseData = ajaxRequest.responseText.evalJSON(true);
+        savedID = responseData.savedRecordID;
+
+		    if ( $(id).hasClassName("saved") )
+				{
+  		    numSavedRecords--;
+    		  $('folder_' + resultSet + recordNumber).src = "images/folder.gif";
+      		$(id).update("Save this record");
+      		$(id).removeClassName("saved");
+
+					// remove label input
+          label_input = $('label_' + resultSet + ':' + recordNumber);
+					if (label_input) label_input.remove();
+				}
+    		else
+    		{
+      		numSavedRecords++;
+      		$('folder_' + resultSet + recordNumber).src = "images/folder_on.gif";
+      		$(id).update("Record saved");
+      		$(id).addClassName("saved");
+
+          // Add tag input
+          if ( ! isTemporarySession && savedID) {
+						input_div = $('template_tag_input').cloneNode(true);
+						new_form = input_div.down('form');
+
+          	// take the template for a tag input and set it up for this particular
+          	// record
+          	input_div.id = "label_" + resultSet + ":" + recordNumber; 
+          	new_form.record.value = savedID;
+          	new_form.tagsShaddow.id = 'shadow-' + savedID; 
+          	new_form.tags.id = 'tags-' + savedID;
+          	new_form.tags.onfocus = function () {
+          		activateButton(this)
+        		}
+        		new_form.tags.onkeypress = function () {
+          		activateButton(this)
+        		}
+        		new_form.tags.onblur = function () {
+          		deactivateButton(this)
+        		}
+          	new_form.submitButton.id = 'submit-' + savedID;
+          	new_form.submitButton.disabled = true;
+						new_form.onsubmit = function () {
+          		return updateTags(this);
+        		}
+           
+          	//Add it to the page, now that it's all set up.
+          	$(id).up('.resultsMain').insert(input_div);
+          	input_div.show();
+					}
+    		}
+
+
+      	$(id).removeClassName("disabled");
+
       // Change master folder image
       if ( numSavedRecords > 0 ) {
 			  $('folder').src = 'images/folder_on.gif';
@@ -96,7 +152,6 @@
 
 		return false;
 	}
-	
 	
 	/**
 	 * Checks to see if user has selected more databases than is allowed or none

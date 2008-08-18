@@ -221,38 +221,9 @@
 						</div>
 						
 						<xsl:if test="$temporarySession != 'true'">
-						
-							<div class="folderLabels">
-								<form action="./" method="get" class="tags">
-								
-									<!-- note that if this event is fired with ajax, the javascript changes
-									the action element here to 'tags_edit_ajax' so the server knows to display a 
-									different view, which the javascript captures and uses to updates the totals above. -->
-									
-									<input type="hidden" name="base" value="folder" />
-									<input type="hidden" name="action" value="tags_edit" />
-									<input type="hidden" name="record" value="{$id}" />
-									
-									<xsl:variable name="tag_list">
-										<xsl:for-each select="../tag">
-											<xsl:value-of select="text()" />
-											<xsl:if test="following-sibling::tag">
-												<xsl:text>, </xsl:text>
-											</xsl:if>
-										</xsl:for-each>
-									</xsl:variable>
-									
-									<input type="hidden" name="tagsShaddow" id="shadow-{$id}" value="{$tag_list}" />
-									
-									<label for="tags-{$id}">Labels: </label>
-									
-									<input type="text" name="tags" id="tags-{$id}" class="tagsInput" value="{$tag_list}" />
-									
-									<span class="folderLabelsSubmit">
-										<input id="submit-{$id}" type="submit" name="submitButton" value="Update" class="tagsSubmit" />
-									</span>
-								</form>
-							</div>
+							<xsl:call-template name="tag_input">
+								<xsl:with-param name="record" select=".."/>
+							</xsl:call-template>
 							
 						</xsl:if>	
 							

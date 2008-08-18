@@ -42,22 +42,26 @@
 	
 	</xsl:variable>
 
-	<form action="./" method="get">
-    	<input type="hidden" name="base" value="metasearch" />
-	<input type="hidden" name="action" value="search" />
-	<input type="hidden" name="context" value="{$context}" />
-	<input type="hidden" name="context_url" value="{$context_url}" />
 	
 	<div id="container">
 	
 		<div id="searchArea">
-			<div class="subject">
-				<h1><xsl:value-of select="$context" /></h1>
-			</div>
+
+			<form action="./" method="get">
+    		<input type="hidden" name="base" value="metasearch" />
+				<input type="hidden" name="action" value="search" />
+				<input type="hidden" name="context" value="{$context}" />
+				<input type="hidden" name="context_url" value="{$context_url}" />
+	
+
+				<div class="subject">
+					<h1><xsl:value-of select="$context" /></h1>
+				</div>
 			
-			<div id="search">
-				<xsl:call-template name="search_box" />
-			</div>
+				<div id="search">
+					<xsl:call-template name="search_box" />
+				</div>
+			</form>
 		</div>
 			
 		<div id="sidebar">
@@ -444,7 +448,7 @@
 								href="./?base=metasearch&amp;action=save-delete&amp;group={$group}&amp;resultSet={$result_set}&amp;startRecord={$record_number}">
                   <!-- 'saved' class used as a tag by ajaxy stuff -->
                   <xsl:attribute name="class">
-										saveThisRecord resultsFulltext <xsl:if test="../saved">saved</xsl:if>
+										saveThisRecord resultsFullText <xsl:if test="../saved">saved</xsl:if>
 									</xsl:attribute>
                   <xsl:choose>
 										<xsl:when test="../saved">Record saved</xsl:when>
@@ -454,9 +458,16 @@
 						</span>
 						
 					</div>
-			    <div class="results_label resultsFullText" id="label_{$result_set}:{$record_number}" style="display:none;"> 
-						Label me
-					</div>
+
+					<!-- label/tag input for saved records, if record is saved and it's not a temporary session -->
+          <xsl:if test="../saved and not(/*/request/session/role = 'guest' or /*/request/session/role = 'local')">
+			    	<div class="results_label resultsFullText" id="label_{$result_set}:{$record_number}" > 
+					  	<xsl:call-template name="tag_input">
+								<xsl:with-param name="record" select="../saved" />
+                <xsl:with-param name="context" select="'the results page'" />
+							</xsl:call-template>	
+						</div>
+					</xsl:if>
 				</div>
 				
 			</xsl:for-each>
@@ -468,8 +479,29 @@
 			</xsl:if>
 		</div>
 	</div>
-	
-	</form>
+
+	<!-- include a hidden template copy of the label/tab input form. Used by AJAX to add
+       a tag input form after record is saved -->
+  <div id="template_tag_input" class="results_label resultsFullText" style="display:none;">
+		<xsl:call-template name="tag_input">
+      <xsl:with-param name="id" select="'template'" />
+		</xsl:call-template> 
+	</div>
+
+  <!-- Label list display in a hidden div. We include this for javascript purposes
+       for two reasons:
+       1) The AJAX label code we are re-purposing from folder home expects it, and errors
+          if it's not there. But even more importantly...
+       2) The AJAX autocompleter logic will use this to build the autocomplete possibilities,
+          which we also want on this page. 
+
+      So we include it hidden, because the user doesn't need to see it on this page, but we
+      include it.
+  -->
+
+	<div id="labelsMaster" class="folderOutput" style="display: none">
+		<xsl:call-template name="tags_display" />
+	</div>
 	
 </xsl:template>
 
@@ -510,6 +542,7 @@
 		</li>
 		
 	</xsl:if>
+
 </xsl:template>
 
 </xsl:stylesheet>

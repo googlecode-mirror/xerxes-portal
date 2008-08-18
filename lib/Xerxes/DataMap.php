@@ -864,7 +864,16 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 	
 	public function getRecordByID($strID)
 	{
-		return $this->getRecordsByID( array($strID) );
+		$arrResults = $this->getRecordsByID( array($strID) );
+    if ( count($arrResults) == 0 ) {
+			return null;
+		}
+		elseif ( count($arrResults) == 1 ) {
+			return $arrResults[0];
+		}
+		else {
+			throw new Exception("More than one saved record found for id $strID !");
+		}	
 	}
 	
 	public function getRecordsByID($arrID, $strOrder = null)
