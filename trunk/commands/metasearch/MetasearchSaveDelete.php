@@ -55,6 +55,8 @@
 			$objData = new Xerxes_DataMap();
 			
 			$bolAdd = ! $this->isMarkedSaved($strResultSet, $iStartRecord);
+
+      $strInsertedId = null;
 			if ( $bolAdd == true )
 			{
 				// add command
@@ -67,6 +69,7 @@
 				// add to database
 					
 				$objData->addRecord($strUsername, "metalib", $strID, $objXerxesRecord);
+        $strInsertedId = $objXerxesRecord->id;
 
 				// Mark saved for feedback on search results
         $this->markSaved($objXerxesRecord);
@@ -93,6 +96,11 @@
 				$objDelete = $objXml->createElement("delete", "1");
 				$objXml->documentElement->appendChild($objDelete);
 			}
+			else {
+				//add inserted id for ajax response
+        $objInsertedId = $objXml->createElement("savedRecordID", $strInsertedId);
+				$objXml->documentElement->appendChild($objInsertedId);
+			}	
 			
 			$objRequest->addDocument($objXml);
 			

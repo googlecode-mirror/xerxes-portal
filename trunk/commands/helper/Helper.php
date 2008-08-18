@@ -42,7 +42,7 @@ abstract class Xerxes_Command_Helper extends Xerxes_Framework_Command
 		}    
 		return $num;
   }  
-  private static function savedRecordKey($strResultSet, $strRecordNumber) {
+  public static function savedRecordKey($strResultSet, $strRecordNumber) {
 		# key based on result set and record number in search results. Save id
 		# of saved xerxes_record. Normalize number strings remove initial 0s. 
     $key = (string) (int) $strResultSet . ":" . (string) (int) $strRecordNumber;

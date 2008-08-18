@@ -499,7 +499,7 @@
              our current url, but for embed purposes may be provided 
              differently. -->
         <xsl:param name="full_page_url" select="/*/request/server/request_uri"/>
-    
+   
         <!-- pull out any already existing query entries -->
         
         <xsl:variable name="query" select="/*/results/search/pair[@position = '1']/query" />
@@ -671,6 +671,56 @@
 		<xsl:text> </xsl:text><label for="query{$input_name_suffix}">for</label><xsl:text> </xsl:text>
 		<input id="query{$input_name_suffix}" name="query{$input_name_suffix}" type="text" size="32" value="{$query_entered}" />
 </xsl:template>
+
+<!-- TEMPLATE: LABEL INPUT
+     used to enter labels/tags for saved record, on both folder page and search results
+     page (for saved records only) 
+
+   one of record (usually) or id (unusually) are required. 
+
+		parameter: record  =>   XSL node representing a savedRecord with a child <id> and optional children <tags>
+    parameter: id => pass a string id instead of a record in nodeset. Used for the 'template' form for ajax label input adder. 
+-->
+
+<xsl:template name="tag_input">
+	<xsl:param name="record" select="."/>
+  <xsl:param name="id" select="$record/id"/> 
+  <xsl:param name="context" select="'the saved records page'" />
+
+							<div class="folderLabels" id="tag_input_div-{$id}">
+								<form action="./" method="get" class="tags">
+									<!-- note that if this event is fired with ajax, the javascript changes
+									the action element here to 'tags_edit_ajax' so the server knows to display a 
+									different view, which the javascript captures and uses to updates the totals above. -->
+									
+									<input type="hidden" name="base" value="folder" />
+									<input type="hidden" name="action" value="tags_edit" />
+									<input type="hidden" name="record" value="{$id}" />
+									<input type="hidden" name="context" value="{$context}" />							
+	
+									<xsl:variable name="tag_list">
+										<xsl:for-each select="$record/tag">
+											<xsl:value-of select="text()" />
+											<xsl:if test="following-sibling::tag">
+												<xsl:text>, </xsl:text>
+											</xsl:if>
+										</xsl:for-each>
+									</xsl:variable>
+									
+									<input type="hidden" name="tagsShaddow" id="shadow-{$id}" value="{$tag_list}" />
+									
+									<label for="tags-{$id}">Labels: </label>
+									
+									<input type="text" name="tags" id="tags-{$id}" class="tagsInput" value="{$tag_list}" />
+									
+									<span class="folderLabelsSubmit">
+										<input id="submit-{$id}" type="submit" name="submitButton" value="Update" class="tagsSubmit" />
+									</span>
+								</form>
+							</div>
+							
+</xsl:template>
+
 
 <!--
 	TEMPLATE: SUBJECT DATABASES LIST
@@ -1049,6 +1099,7 @@
     // change numSessionSavedRecords to numSavedRecords if you prefer the folder icon to change
     // if there are any records at all in saved records. Also fix initial display in navbar.
 		numSavedRecords = 0<xsl:value-of select="navbar/element[@id='saved_records']/@numSessionSavedRecords" />;
+    isTemporarySession = <xsl:choose><xsl:when test="request/session/role = 'guest' or request/session/role = 'local'">true</xsl:when><xsl:otherwise>false</xsl:otherwise></xsl:choose>
   </script>
 	<script src="{$base_include}/javascript/save.js" language="javascript" type="text/javascript"></script>
 	

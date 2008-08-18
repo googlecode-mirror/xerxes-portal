@@ -253,6 +253,10 @@ abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
 	
 	protected function addRecords($objXml, $arrRecords, $configMarcResults)
 	{
+		// used to fetch info on already saved records, if any
+    $objData = new Xerxes_DataMap();
+
+
 		$objRecords = $objXml->createElement("records");
 				
 		foreach( $arrRecords as $objRecord )
@@ -282,13 +286,26 @@ abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
 			// Include info if it has. 
      	$strResultSet = $objXerxesRecord->getResultSet();
      	$strRecordNumber = $objXerxesRecord->getRecordNumber();
-      $key = (string) (int) $strResultSet . ":" . (string) (int) $strRecordNumber;
+      $key = Xerxes_Helper::savedRecordKey($strResultSet, $strRecordNumber);
 
-     	if ( array_key_exists('resultsSaved', $_SESSION) &&
-          array_key_exists($key, $_SESSION['resultsSaved'])) {
-					$objSavedRecord = $objXml->createElement("saved");
-					$objSavedRecord->setAttribute("id", $_SESSION['resultsSaved'][$key]['xerxes_record_id']);
-					$objRecordContainer->appendChild($objSavedRecord);
+
+     	if ( Xerxes_Helper::isMarkedSaved($strResultSet, $strRecordNumber)) {
+					$objSavedRecordXml = $objXml->createElement("saved");
+
+          // id
+          $strSavedID = $_SESSION['resultsSaved'][$key]['xerxes_record_id'];
+					$objSavedRecordXml->setAttribute("id", $strSavedID);
+          $objIDXml = $objXml->createElement("id", $strSavedID);
+          $objSavedRecordXml->appendChild( $objIDXml );
+
+					// labels
+          $objSavedRecord = $objData->getRecordByID($strSavedID);
+          foreach ( $objSavedRecord->tags as $tag ) {
+             $objTagXml = $objXml->createElement("tag", Xerxes_Parser::escapeXml($tag));
+             $objSavedRecordXml->appendChild( $objTagXml ); 
+					}
+
+					$objRecordContainer->appendChild($objSavedRecordXml);
 			}
 		} 
 		$objXml->documentElement->appendChild($objRecords);
@@ -358,13 +375,13 @@ abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
   # Functions for saving saved record state from a result set. Just convenience
   #, call to helper. 
   protected function markSaved($objRecord) {
-      return Xerxes_Command_Helper::markSaved($objRecord);
+      return Xerxes_Helper::markSaved($objRecord);
   }
   protected function unmarkSaved($strResultSet, $strRecordNumber) {
-  		return Xerxes_Command_Helper::unmarkSaved($strResultSet, $strRecordNumber);
+  		return Xerxes_Helper::unmarkSaved($strResultSet, $strRecordNumber);
   }
 	protected function isMarkedSaved($strResultSet, $strRecordNumber) {
-			return Xerxes_Command_Helper::isMarkedSaved($strResultSet, $strRecordNumber);
+			return Xerxes_Helper::isMarkedSaved($strResultSet, $strRecordNumber);
   }
 
 

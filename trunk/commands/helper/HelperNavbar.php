@@ -13,7 +13,7 @@ class Xerxes_Command_HelperNavbar extends Xerxes_Command_Helper
     $objData = new Xerxes_DataMap;
     $num = $objData->totalRecords($objRequest->getSession("username"));
     $savedRecordsLink->setAttribute("numSavedRecords", (string) $num);	
-    $savedRecordsLink->setAttribute("numSessionSavedRecords", Xerxes_Command_Helper::numMarkedSaved());
+    $savedRecordsLink->setAttribute("numSessionSavedRecords", Xerxes_Helper::numMarkedSaved());
  
     //loging
     $this->addNavbarElement( $objXml, $objRequest, "login", array ("base" => "authenticate", "action" => "login", "return" => $objRequest->getServer( "REQUEST_URI" ) ) );
