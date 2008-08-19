@@ -51,9 +51,9 @@
 	function updateRecord( id )
 	{
 
-		arrID = id.split(/_|:/);
-		resultSet = arrID[1]; 
-		recordNumber = arrID[2];
+		var arrID = id.split(/_|:/);
+		var resultSet = arrID[1]; 
+		var recordNumber = arrID[2];
 					
     // Should be set by main page in global js variable, if not we set.
     if (typeof(window["numSavedRecords"]) == "undefined") {
@@ -64,8 +64,8 @@
 		}
 		var url = $(id).readAttribute('href');
     // we want an ajax-json response from Xerxes
-    base = url.split('?')[0]
-    queryParams = url.toQueryParams();	
+    var base = url.split('?')[0]
+    var queryParams = url.toQueryParams();	
     queryParams["format"] = "json";
     url = base + '?' + $H(queryParams).toQueryString();
     
@@ -79,14 +79,13 @@
 	  $(id).update("Working...");
     $(id).addClassName("disabled"); 	
 		new Ajax.Request(url, {"onFailure": function(ajaxRequest) {
-		alert('Sorry, an error occured, your record was not saved.');
-          },
+        alert('Sorry, an error occured, your record was not saved.');
+      },
 			"onSuccess": function (ajaxRequest) {
-
         // Add tag input form. First need to get saved Record ID out
         // of AJAX response. 
-    	  responseData = ajaxRequest.responseText.evalJSON(true);
-        savedID = responseData.savedRecordID;
+    	  var responseData = ajaxRequest.responseText.evalJSON(true);
+        var savedID = responseData.savedRecordID;
 
 		    if ( $(id).hasClassName("saved") )
 				{
@@ -96,7 +95,7 @@
       		$(id).removeClassName("saved");
 
 					// remove label input
-          label_input = $('label_' + resultSet + ':' + recordNumber);
+          var label_input = $('label_' + resultSet + ':' + recordNumber);
 					if (label_input) label_input.remove();
 				}
     		else
@@ -108,8 +107,8 @@
 
           // Add tag input
           if ( ! isTemporarySession && savedID) {
-						input_div = $('template_tag_input').cloneNode(true);
-						new_form = input_div.down('form');
+						var input_div = $('template_tag_input').cloneNode(true);
+						var new_form = input_div.down('form');
 
           	// take the template for a tag input and set it up for this particular
           	// record
@@ -126,6 +125,7 @@
         		new_form.tags.onblur = function () {
           		deactivateButton(this)
         		}
+
           	new_form.submitButton.id = 'submit-' + savedID;
           	new_form.submitButton.disabled = true;
 						new_form.onsubmit = function () {
@@ -134,22 +134,23 @@
            
           	//Add it to the page, now that it's all set up.
           	$(id).up('.resultsMain').insert(input_div);
-          	input_div.show();
-					}
-    		}
+            // and add the autocompleter
+            addAutoCompleterToID(new_form.tags.id);
+            
+            input_div.show();
+					}          
+        }
+        $(id).removeClassName("disabled");
 
-
-      	$(id).removeClassName("disabled");
-
-      // Change master folder image
-      if ( numSavedRecords > 0 ) {
-			  $('folder').src = 'images/folder_on.gif';
+        // Change master folder image
+        if ( numSavedRecords > 0 ) {
+          $('folder').src = 'images/folder_on.gif';
+        }
+        else {
+          $('folder').src = 'images/folder.gif';
+        }
       }
-			else {
-				$('folder').src = 'images/folder.gif';
-			}
-		}});	
-
+    });	
 		return false;
 	}
 	

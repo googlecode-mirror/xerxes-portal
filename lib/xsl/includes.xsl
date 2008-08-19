@@ -672,7 +672,7 @@
 		<input id="query{$input_name_suffix}" name="query{$input_name_suffix}" type="text" size="32" value="{$query_entered}" />
 </xsl:template>
 
-<!-- TEMPLATE: LABEL INPUT
+<!-- TEMPLATE: TAG_INPUT tab/label input form
      used to enter labels/tags for saved record, on both folder page and search results
      page (for saved records only) 
 
@@ -980,16 +980,15 @@
 <xsl:template name="tags_display">
 	
 	<h2>Labels</h2>
-	
 	<ul>
 	<xsl:for-each select="tags/tag">
 		<li>
 		<xsl:choose>
 			<xsl:when test="@label = //request/label">
-				<strong><xsl:value-of select="@label" /></strong> ( <xsl:value-of select="@total" /> )
+				<strong><span class="label_list_item"><xsl:value-of select="@label" /></span></strong> ( <xsl:value-of select="@total" /> )
 			</xsl:when>
 			<xsl:otherwise>
-				<a href="{@url}"><xsl:value-of select="@label" /></a> ( <xsl:value-of select="@total" /> )				
+				<a href="{@url}"><span class="label_list_item"><xsl:value-of select="@label" /></span></a> ( <xsl:value-of select="@total" /> )				
 			</xsl:otherwise>
 		</xsl:choose>
 		</li>

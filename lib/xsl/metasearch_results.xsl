@@ -42,6 +42,9 @@
 	
 	</xsl:variable>
 
+
+  <!-- hidden div to be used for autocompletion suggestions -->
+  <div id="tag_suggestions" class="autocomplete" style="display:none;"></div>
 	
 	<div id="container">
 	
