@@ -77,13 +77,15 @@
 		
 	}	
 
+
+  
   function loadTagSuggestions() {
     // don't ever create a new array, always use the array that's there, so
     // the autocompleter will keep using it--if we had assigned the variable to a new
     // array, then we would lose the connection with the existing autocompleters..
 
 		// create new array only if we don't already have one
-    if (typeof(window["tag_suggestions"]) == "undefined") tag_suggestions = array();
+    if (typeof(window["tag_suggestions"]) == "undefined") tag_suggestions = new Array();
 
     //remove all elements from the array
     tag_suggestions.splice(0, tag_suggestions.length);
@@ -95,7 +97,12 @@
 		}  
 }
 
-  function addAutoCompleters() {     
+  function addAutoCompleters() {
+    //make sure the tag suggestions global variable is defined,
+    //so we can share the same array reference that loadTagSuggestions
+    //will use. 
+    if (typeof(window["tag_suggestions"]) == "undefined") tag_suggestions = new Array();
+    
      inputs = $$('.tagsInput');
      for ( i = 0; i < inputs.length ; i++ ) {
        addAutoCompleterToID( inputs[i].id );
