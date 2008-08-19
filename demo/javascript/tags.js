@@ -83,7 +83,7 @@
     // array, then we would lose the connection with the existing autocompleters..
 
 		// create new array only if we don't already have one
-    if (tag_suggestions == undefined) tag_suggestions = array();
+    if (typeof(window["tag_suggestions"]) == "undefined") tag_suggestions = array();
 
     //remove all elements from the array
     tag_suggestions.splice(0, tag_suggestions.length);
