@@ -1,0 +1,793 @@
+/**
+ * Xerxes Blue Design July 2007
+ *
+ *  See also xerxes-blue-embeddable.css, used specifically for embedding a stylesheet with a snippet.
+ *
+ * @author David Walker
+ * @copyright 2007 California State University
+ */
+
+/** BASIC ELEMENTS **/
+
+body { 
+	font-family: Verdana, Geneva, Arial, helvetica, sans-serif; 
+	margin: 0px; 
+	padding: 0px; 
+	font-size: 12px; 
+	height:100%; 
+}
+table {
+	margin: 2px; 
+	padding: 2px;
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+td { 
+	font-family: Verdana, Geneva, Arial, helvetica, sans-serif; 
+	font-size: 12px; 
+	margin: 0px; 
+	padding: 3px;
+}
+th { 
+	font-family: Verdana, Geneva, Arial, helvetica, sans-serif;
+	font-size: 12px;
+	margin: 0px;
+	padding: 2px;
+}
+h1, h2, h3, h4 {
+	font-family: Arial, Verdana, Geneva, Arial, helvetica, sans-serif; 
+	color: #000;
+	font-weight: bold;
+	margin-top: 10px; 
+	margin-bottom: 2px;
+}
+h1 {
+	color: #3366cc;
+	font-size: 22px;
+}
+h2 {
+	font-size: 16px; 
+}
+h3 {
+	font-size: 14px;
+}
+h4 {
+	font-size: 12px; 
+}
+h5 {
+	font-style:italic; 
+}
+p {
+	margin-top: 8px; 
+	margin-bottom: 8px 
+}
+ul {
+	margin:.5em 0 1.25em; 
+	padding:0 0px; 
+	list-style:none;
+}
+ul li {	
+	background:url(../images/icon_arrow_sm.gif) no-repeat 2px .25em; 
+	margin:0; 
+	padding:0 0 3px 16px; 
+	margin-bottom:3px; 
+	line-height:1.4em; 
+}
+form {
+	margin: 0px;
+	padding: 0px;
+}
+legend {
+	font-family: Arial, Verdana, Geneva, Arial, helvetica, sans-serif; 
+	color: #3366cc; 
+	font-size: 14px; 
+	font-weight: bold; 
+	margin-bottom: 2px; 
+	padding: 0px;
+}
+label { 
+	margin: 0px; 
+	padding: 0px;
+}
+fieldset {
+	border: 1px solid #CCCCCC;
+	margin: 0px;
+	padding: 10px;
+}
+strong {
+	font-weight: bold;
+}
+em {
+	font-style: italic;
+}
+input {
+	padding: 3px;
+}
+a { 
+	text-decoration: none;
+}
+a:visited {
+	color: #0000CC; text-decoration: none; 
+}
+a:active {
+	color: #FFCC33; text-decoration: none; 
+}
+a:hover {
+	text-decoration: underline;
+}
+a img{ 
+	border: 0px;
+}
+
+
+/** STRUCTURE **/
+
+#skipnav { 
+	position: absolute; 
+	top: -1000px; 
+}
+#header {
+	background-color: #386ace;
+	margin: 0px;
+	padding: 10px;
+}
+#breadcrumb {
+	padding: 10px;
+	padding-left: 20px;
+	background-color: #EFEFEF;
+	font-size: 90%;
+	color: #666666;
+}
+#container {
+	margin-top: 0px;
+	margin-bottom: 0px;
+	line-height: 130%;
+}
+#databasesAlpha {
+	margin: 30px;
+}
+#sidebar {
+	padding: 20px 10px 10px 10px;
+	margin-left: 545px;
+}
+#sidebar_content {
+	min-width: 150px;
+	max-width: 320px;
+}
+#searchArea {
+	float: left;
+	width: 500px;
+	padding: 20px;
+}
+#resultsArea {
+	clear: both;
+	margin-top: 10px;
+	padding: 20px;
+}
+#folderArea {
+	clear: both;
+	margin-top: 10px;
+	padding: 20px;
+}
+#resultsOptions {
+	float: right;
+	width: 339px;
+	font-size:97%;
+	line-height:1.5em;
+	margin: 20px;
+	margin-top: 30px;
+}
+#footer {
+	clear: both;
+	margin-top: 50px;
+	padding: 20px;
+	color: #999999;
+}
+#citation {
+	float:right; 
+	width: 300px; 
+	padding: 10px; 
+	margin: 20px; 
+	background-color: #efefef;
+}
+
+#record { 
+	margin-top: 20px;
+}
+
+/** SIDEBAR STYLES **/
+
+/* session info */
+
+#sessionAuthInfo {
+	margin-bottom: 40px;
+}
+#sessionAuthInfo h2 {
+	margin-bottom: 12px;
+}
+#sessionAuthInfo h3 {
+	font-size: 12px;
+	margin: 0;
+	padding: 0;
+	display: inline;
+	font-weight: normal;
+}
+#sessionAuthInfo ul, #sessionAuthInfo li {
+	display: inline;
+	background-image: none;
+	margin: 0;
+	padding: 0;
+}
+#sessionAuthSection {
+	margin-left: 10px;
+	margin-bottom: 3px;
+}
+#sessionAuthSection strong {
+	font-weight: normal;
+}
+
+/* librarian */
+
+.librarian {
+	border: 1px solid #FFCC33;
+}
+.librarian td {
+	padding: 10px;
+	vertical-align: top;
+}
+.librarianName {
+	font-family: Arial, Verdana, Geneva, Arial, helvetica, sans-serif; 
+	color: #3366cc; font-size: 14px; 
+	font-weight: bold;
+}
+.librarianTitle {
+	margin-bottom: 6px;
+}
+.librarianChat td {
+	padding: 0px;
+	padding-right: 3px;
+	vertical-align: middle;
+}
+
+/** CONTENT STYLES **/
+
+
+/* breadcrumb */
+
+.trail {
+	float: left;
+	width: 50%;
+}
+.sessionOptions {
+	text-align: right;
+	margin-right: 10px;
+}
+
+/* subject page */
+
+.subject {
+	margin-bottom: 30px;
+}
+.subjectCheckList {
+	margin-top: 10px;
+}
+.subjectDatabaseTitle, .subjectDatabaseInfo {
+	display: inline;
+	padding-left: 5px;
+}
+.subjectDatabaseRestriction {
+	color: #333;
+	font-size: 90%;
+	padding-top: 3px;
+	padding-left: 15px;
+	font-style: italic;
+}
+.subjectMetaSearch {
+	width: 500px;
+}
+.subjectSubCategory {
+	margin-top: 20px;
+}
+
+/* categories page */
+
+.homePage {
+	padding: 20px;
+}
+
+#main_content {
+	float:left;
+}
+.categories {
+	margin-top: 30px;  
+}
+.categoriesTable td {
+	padding-right: 15px;
+}
+
+#categories_quicksearch {
+  width: 500px;   
+}
+
+/* databases full and a-z list */
+
+.databasesAttribute {
+	font-weight: bold;
+	text-align: right;
+}
+.databasesDescription {
+	margin-top: 30px;
+	margin-bottom: 20px;
+	line-height: 150%;
+}
+.databasesMoreInfo {
+	font-family: Arial;
+	font-size: 85%;
+	padding-left: 13px;
+	color: #666;
+}
+.databasesReturn {
+	margin-top: 20px;
+}
+.databasesTable td {
+	padding: 5px;
+	vertical-align: top;
+}
+.alphaDatabase {
+	margin-top: 20px;
+}
+.alphaTitle {
+	margin-bottom: 5px;
+}
+.alphaTitle a {
+	font-weight: bold;
+}
+.alphaDescription {
+	line-height: 130%;
+}
+
+/* search box */
+
+.errorSpelling {
+	color: #990000;
+	font-weight: bold;
+}
+.searchBox {
+	padding: 20px;
+	margin: 0px;
+	background-color: #fff;
+	background-image: url(../images/bg.gif);
+	background-repeat: repeat-x;
+	background-position: bottom;
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 2px;
+	border-left-width: 1px;
+	border-top-style: solid;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-left-style: solid;
+	border-top-color: #CCCCCC;
+	border-right-color: #CCCCCC;
+	border-bottom-color: #999999;
+	border-left-color: #CCCCCC;
+}
+
+/* results options */
+
+.box {
+	width:339px;
+	margin-bottom: 20px;
+	padding:10px;
+	line-height:1.5em;
+	background-color: #f0f0f0;
+	background-image: url(../images/bg-long-light.gif);
+	background-repeat: repeat-x;
+	background-position: top;
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 2px;
+	border-left-width: 1px;
+	border-top-style: solid;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-left-style: solid;
+	border-top-color: #CCCCCC;
+	border-right-color: #CCCCCC;
+	border-bottom-color: #999999;
+	border-left-color: #CCCCCC;
+}
+
+.sidebar-title {
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	margin:0;
+	padding:0 0 .2em;
+	border-bottom:1px dotted #fa0;
+	font-size:115%;
+	line-height:1.5em;
+	color:#333;
+}
+
+
+/* results */
+
+.resultsAbstract {
+	margin-bottom: 10px;
+	line-height: 140%;
+	color: #333;
+}
+.resultsAuthor {
+	padding-right: 10px;
+}
+.resultsAvailability {
+	padding-top: 5px;
+} 
+.resultsAvailableOption {
+	padding-left: 6px;
+}
+.resultsFacetNav {
+	margin-top: 20px;
+}
+.resultsFullTextOption {
+	display: inline;
+	padding-right: 3px;
+}
+.resultsFullText {
+	color: #009900;
+}
+.resultsFullText:link {
+	color: #009900;
+	text-decoration:none;
+}
+.resultsFullText:visited {
+	color: #009900;
+	text-decoration:none;
+}
+.resultsLanguage {
+	color: #990000;
+	font-weight: bold;
+}
+.resultsMain {
+	padding-bottom:23px;
+	padding-top:23px;
+}
+.resultsPageOptions {
+	margin-top: 10px;
+	margin-bottom: 20px;
+}
+
+.resultsPager {
+	margin-top: 30px;
+	margin-bottom: 20px;
+	text-align: center;
+}
+.resultsPagerList {
+	display: inline;
+	padding: 8px;
+	border: 1px solid #A2C9EF;
+	background-color: #E4F1FD;
+}
+.resultsPager li {
+	display: inline;
+	padding: 3px;
+	background-image: none;
+}
+.resultsPagerNext {
+	padding-left: 20px;
+}
+.resultsPageSummary {
+	width: 200px;
+}
+.resultsPublishing {
+	padding-right: 10px;
+}
+.resultsSearchLink {
+	margin: 20px;
+}
+.resultsSorting {
+	text-align: right;
+	float: right;
+}
+.resultsTitle:link {
+	font-size: 12px;
+	font-weight: bold;
+}
+.resultsTitle:visited {
+	font-size: 12px;
+	font-weight: bold;
+}
+.resultsTitle:hover {
+	font-size: 12px;
+	font-weight: bold;
+	text-decoration: underline;
+}
+.resultsType {
+	font-weight: bold;
+	padding-top: 5px;
+	padding-bottom: 8px;
+}
+.resultsYear {
+	padding-right: 10px;
+}
+/* Record */
+
+.recordAbstract {
+	line-height:14pt;
+}
+.recordBasicTable {
+	margin-top: 10px;
+}
+.recordBasicTable td {
+	padding: 3px;
+}
+.recordAttribute {
+	vertical-align: top;
+	font-weight: bold;
+	text-align: left;
+	white-space: nowrap;
+}
+.recordFullText {
+	margin: 30px; 
+	padding: 20px;
+	width: 400px;
+	background-image: url(../images/bg.gif);
+	background-repeat: repeat-x;
+	background-position: bottom;
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 2px;
+	border-left-width: 1px;
+	border-top-style: solid;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-left-style: solid;
+	border-top-color: #CCCCCC;
+	border-right-color: #CCCCCC;
+	border-bottom-color: #999999;
+	border-left-color: #CCCCCC;
+}
+.recordFullTextOption {
+	margin-bottom: 10px; 
+}
+.recordNoFullText {
+	margin-bottom: 15px; 
+	color: #000; 
+	font-weight: bold;
+}
+.recordTitle {
+	font-size: 22px;
+}
+
+/* Folder */
+
+.folderAvailability {
+	margin-top: 10px;
+}
+.folderEmailOptionsTable {
+	padding: 5px;
+}
+.folderEmailAttribute {
+	vertical-align: top;
+	text-align: right;
+}
+.folderEmailSuccess {
+	margin: 20px;
+	font-weight: bold;
+	color: #006600;
+	padding: 20px;
+	width: 300px;
+	
+	background-color: #f6f6f3;
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-top-style: solid;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-left-style: solid;
+	border-top-color: #999999;
+	border-right-color: #CCCCCC;
+	border-bottom-color: #CCCCCC;
+	border-left-color: #CCCCCC;
+}
+.folderExportSelections li {
+	background-image: none;
+	list-style: none;
+}
+.folderExportSet {
+	margin-top: 10px;
+}
+.folderExportSubmit {
+	margin-top: 20px; 
+	margin-left: 20px;
+}
+.folderHeaderArea {
+	margin-bottom: 30px;
+}
+.folderHomeHeader, .folderHomeHeader:visited {
+	color: #3366cc; 
+	text-decoration: underline
+}
+.folderLabels {
+	margin-top: 20px; 
+	margin-left: 15px
+}
+.folderLabelsSubmit {
+	padding-left: 5px;
+}
+.folderNoRecords {
+	margin: 20px;
+	margin-bottom: 100px;
+}
+.folderOptions {
+	margin: 20px;
+	margin-top: 30px;
+	width: 600px;
+	padding: 10px;
+	background-color: #f0f0f0;
+	background-image: url(../images/bg-long.gif);
+	background-repeat: repeat-x;
+	background-position: bottom;
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 2px;
+	border-left-width: 1px;
+	border-top-style: solid;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-left-style: solid;
+	border-top-color: #CCCCCC;
+	border-right-color: #CCCCCC;
+	border-bottom-color: #999999;
+	border-left-color: #CCCCCC;
+}
+.folderOptionHeader {
+	padding-bottom: 20px;
+}
+.folderOutputs {
+	width: 220px; 
+	background-color: #efefef; 
+	padding: 10px; 
+	float: left; 
+	margin-right: 30px;
+}
+.folderOutput {
+	margin-bottom: 30px;
+}
+.folderRecord {
+	padding-top: 20px;
+	padding-right: 20px;
+	padding-bottom: 10px;
+	border-top-width: 1px;
+	border-top-style: dashed;
+	border-top-color: #CCCCCC;
+	border-right-color: #CCCCCC;
+	border-bottom-color: #CCCCCC;
+	border-left-color: #CCCCCC;
+}
+.folderResults {
+	margin-left: 270px;
+}
+.folderReturn {
+	clear: both;
+	margin-top: 10px;
+	margin-left: 20px;
+}
+.folderReturnText {
+	margin-left: 5px;
+}
+.tagsSubmit {
+	font-size: 90%;
+}
+
+/* login page */
+
+.loginBox {
+    margin-top: 50px;
+	margin-left: 50px;
+	padding: 15px;
+	width: 300px;
+	background-color: #f0f0f0;
+	background-image: url(../images/bg-long.gif);
+	background-repeat: repeat-x;
+	background-position: bottom;
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 2px;
+	border-left-width: 1px;
+	border-top-style: solid;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-left-style: solid;
+	border-top-color: #CCCCCC;
+	border-right-color: #CCCCCC;
+	border-bottom-color: #999999;
+	border-left-color: #CCCCCC;
+}
+.longBox {
+	width: 400px;
+}
+.loginNote {
+	margin-bottom: 30px;
+}
+.error {
+	color: #990000;
+	font-weight: bold;
+}
+.errorPad {
+	margin: 30px;
+}
+
+/* citation */
+
+.citations {
+	margin-left: 20px;
+}
+
+.citationStyle {
+	margin-left: 20px; 
+	line-height: 1.3em; 
+	text-indent: -20px; 
+	margin-top: 3px;
+}
+.citationNote {
+	margin-top: 20px; 
+	border: 1px solid #ccc; 
+	padding: 10px; 
+	font-size: 80%; 
+	color: #333
+}
+
+/* options: Used on embed generators and generated embeds */
+
+
+#headingBox {
+  margin: 20px;
+}
+
+#snippet_option_column {
+  float:left; 
+  width:400px;
+}
+
+#options {
+  border: 2px solid gray;
+  margin-right: 20px;
+  margin-left: 20px;
+  margin-top: 0px; // Weird float issues
+  margin-bottom: 20px;
+}
+
+#example_container {
+  overflow:scroll;
+}
+
+#example {
+  border: 2px solid gray;
+  margin-top: 20px;
+  margin-right: 20px;
+  margin-bottom: 20px;
+  margin-left: 0;
+}
+#embedding_instructions {
+  border: 2px solid gray;
+  margin: 20px;
+}
+
+.optionRow {
+  vertical-align: top; 
+}
+.optionRow h4 {
+  margin: 0;
+  padding: 0;
+}
+#snippet_generator .optionInfo {
+  margin-left: 20px;
+}
+#snippet_generator .displayTextbox {
+  margin-left: 5%;
+  width:70%; 
+  height: 5em;
+  background-color: #FFFBD3;
+}
