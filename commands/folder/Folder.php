@@ -8,6 +8,9 @@
 abstract class Xerxes_Command_Folder extends Xerxes_Framework_Command
 {
 	
+  const DEFAULT_RECORDS_PER_PAGE = 20; 
+
+  
 	private $iTotal = "";			// total number of saved recods, kept here for caching
 	
 	/**

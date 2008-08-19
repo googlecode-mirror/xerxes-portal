@@ -32,7 +32,7 @@
 			$strLabel = $objRequest->getProperty("label");
 			$strType = $objRequest->getProperty("type");
 			
-			$iMax = $objRegistry->getConfig("SAVED_RECORDS_PER_PAGE", false, 20);
+			$iMax = $objRegistry->getConfig("SAVED_RECORDS_PER_PAGE", false, self::DEFAULT_RECORDS_PER_PAGE);
 			
 			// get total number of saved records
 			
