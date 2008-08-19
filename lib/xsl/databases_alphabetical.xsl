@@ -18,10 +18,6 @@
 <xsl:include href="includes.xsl" />
 <xsl:output method="html" encoding="utf-8" indent="yes" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
 
-<!-- override in local xsl to false if you don't want the little magnifier glass
-     icon next to searchable resources -->
-<xsl:variable name="show_db_searchable_icon" select="true()" />
-
 <!-- certain operational parameters, given in request. -->
 <!-- default to true -->
 <xsl:variable name="show_alpha_links" select="not(/knowledge_base/request/show_alpha_links) or /knowledge_base/request/show_alpha_links != 'false'" />
@@ -96,20 +92,10 @@
           <xsl:if test="title_display">
             &amp;nbsp;<a>
             <xsl:attribute name="href"><xsl:value-of select="url" /></xsl:attribute>
-            <img alt="more information" src="images/info.gif" class="mini_icon">
+            <img alt="more information" src="images/info.gif" >
               <xsl:attribute name="src"><xsl:value-of select="/knowledge_base/config/base_url" />/images/info.gif</xsl:attribute>
             </img>
-            
-            <xsl:if test="searchable and $show_db_searchable_icon">
-            <xsl:text> </xsl:text>
-            <img class="mini_icon" alt="searchable" src="{$base_url}/images/famfamfam/magnifier.png"/>
-            </xsl:if>
-            
             </a>
-            
-
-            
-            
             <xsl:if test="count(group_restriction) > 0" >
               <xsl:text> </xsl:text>(<xsl:call-template name="db_restriction_display" />)
             </xsl:if>

@@ -1,23 +1,15 @@
 	/**
 	 * FUNCTIONS FOR SAVING RECORDS
 	 */
-
-  /* CALLER REQUIREMENTS:
-       set a global js variable called numSavedRecords to the current number of records
-       in saved records area. Used to determine when to toggle saved records icon to
-       indicate presence of records 
-
-			set a global js variable isTemporarySession (boolean), used to determine whether to
-      ajax add a tagging input on save or not. 
-	*/
 	
-	addEvent(window, 'load', addAjaxToSaveLinks);
+	addEvent(window, 'load', loadFolders);
+	addEvent(window, 'load', findFolders);
 	
 	/**
 	 * Add onClick event to save records
 	 */
 	
-	function addAjaxToSaveLinks()
+	function findFolders()
 	{
 		// add onClick event to save the record
 		
@@ -50,108 +42,147 @@
 	
 	function updateRecord( id )
 	{
-
-		var arrID = id.split(/_|:/);
-		var resultSet = arrID[1]; 
-		var recordNumber = arrID[2];
+		arrID = id.split(/_|:/);
+		resultSet = arrID[1]; 
+		recordNumber = arrID[2];
 					
-    // Should be set by main page in global js variable, if not we set.
-    if (typeof(window["numSavedRecords"]) == "undefined") {
-       numSavedRecords = 0;
-    }
-    if (typeof(window["isTemporarySession"]) == "undefined") {
-			 isTemporarySession = true;
-		}
+		var iRecordsCookie = recordsInCookie();
 		var url = $(id).readAttribute('href');
-    // we want an ajax-json response from Xerxes
-    var base = url.split('?')[0]
-    var queryParams = url.toQueryParams();	
-    queryParams["format"] = "json";
-    url = base + '?' + $H(queryParams).toQueryString();
-    
-		if ( $(id).hasClassName("disabled")) {
-			return false;
+
+		// change the item folder image
+
+		var objImage = $('folder_' + resultSet + recordNumber).src;
+		
+		if ( objImage.indexOf("folder_on.gif") != -1 )
+		{
+			iRecordsCookie--;
+			$('folder_' + resultSet + recordNumber).src = "images/folder.gif";
+			$(id).update("Save this record");
+		}
+		else
+		{
+			iRecordsCookie++;
+			$('folder_' + resultSet + recordNumber).src = "images/folder_on.gif";
+			$(id).update("Record saved");
 		}
 	
-		// do it! Update our icons only after success please! Then we're only
-    // telling them they have saved a record if they really have! Hooray
-    // for javascript closures. 
-	  $(id).update("Working...");
-    $(id).addClassName("disabled"); 	
-		new Ajax.Request(url, {"onFailure": function(ajaxRequest) {
-        alert('Sorry, an error occured, your record was not saved.');
-      },
-			"onSuccess": function (ajaxRequest) {
-        // Add tag input form. First need to get saved Record ID out
-        // of AJAX response. 
-    	  var responseData = ajaxRequest.responseText.evalJSON(true);
-        var savedID = responseData.savedRecordID;
+		// change the master folder image
+		
+		if ( iRecordsCookie == 0 )
+		{
+			$('folder').src = "images/folder.gif";
+		}
+		else
+		{
+			$('folder').src ="images/folder_on.gif";
+		}
+		
+		// do it!
+		
+		new Ajax.Request(url);	
 
-		    if ( $(id).hasClassName("saved") )
-				{
-  		    numSavedRecords--;
-    		  $('folder_' + resultSet + recordNumber).src = "images/folder.gif";
-      		$(id).update("Save this record");
-      		$(id).removeClassName("saved");
-
-					// remove label input
-          var label_input = $('label_' + resultSet + ':' + recordNumber);
-					if (label_input) label_input.remove();
-				}
-    		else
-    		{
-      		numSavedRecords++;
-      		$('folder_' + resultSet + recordNumber).src = "images/folder_on.gif";
-      		$(id).update("Record saved");
-      		$(id).addClassName("saved");
-
-          // Add tag input
-          if ( ! isTemporarySession && savedID) {
-						var input_div = $('template_tag_input').cloneNode(true);
-						var new_form = input_div.down('form');
-
-          	// take the template for a tag input and set it up for this particular
-          	// record
-          	input_div.id = "label_" + resultSet + ":" + recordNumber; 
-          	new_form.record.value = savedID;
-          	new_form.tagsShaddow.id = 'shadow-' + savedID; 
-          	new_form.tags.id = 'tags-' + savedID;
-          	new_form.tags.onfocus = function () {
-          		activateButton(this)
-        		}
-        		new_form.tags.onkeypress = function () {
-          		activateButton(this)
-        		}
-        		new_form.tags.onblur = function () {
-          		deactivateButton(this)
-        		}
-
-          	new_form.submitButton.id = 'submit-' + savedID;
-          	new_form.submitButton.disabled = true;
-						new_form.onsubmit = function () {
-          		return updateTags(this);
-        		}
-           
-          	//Add it to the page, now that it's all set up.
-          	$(id).up('.resultsMain').insert(input_div);
-            // and add the autocompleter
-            addAutoCompleterToID(new_form.tags.id);
-            
-            input_div.show();
-					}          
-        }
-        $(id).removeClassName("disabled");
-
-        // Change master folder image
-        if ( numSavedRecords > 0 ) {
-          $('folder').src = 'images/folder_on.gif';
-        }
-        else {
-          $('folder').src = 'images/folder.gif';
-        }
-      }
-    });	
 		return false;
+	}
+	
+	/**
+	 * Simple method to return number of records currently saved in cookie
+	 *
+	 * @return int 		number of records in the cookie
+	 */
+	
+	function recordsInCookie()
+	{	
+		var test_pat = new RegExp("&","g");
+		var strSaves = getCookie("saves");
+		
+		if (strSaves != null )
+		{
+			if ( strSaves.match(/&/) )
+			{
+				results = strSaves.match(test_pat);
+				return results.length;
+			}
+			else
+			{
+				return 0;
+			}
+		}
+		else
+		{
+			return 0;
+		}
+	}
+	
+	/**
+	 * Simple method to get specific cookie
+	 *
+	 * @return string		cookie data
+	 */
+	
+	function getCookie( name )
+	{
+		var dc = document.cookie;
+		var prefix = name + "=";
+		var begin = dc.indexOf("; " + prefix);
+		
+		if (begin == -1)
+		{
+			begin = dc.indexOf(prefix);
+			if (begin != 0) return null;
+		}
+		else
+		{
+			begin += 2;
+		}
+		
+		var end = document.cookie.indexOf(";", begin);
+		
+		if (end == -1)
+		{
+			end = dc.length;
+		}
+		
+		return unescape(dc.substring(begin + prefix.length, end));
+	}
+	
+	/**
+	 * On any given page, sets the individual folder items and the 
+	 * 'my records' images and text to 'on' if already selected. 
+	 */
+	
+	function loadFolders()
+	{		
+		// for records that are already saved
+		
+		var objCookie = getCookie("saves");
+		var savedRecordsCookie = recordsInCookie();
+		
+		// set the master 'my records' image
+
+		if ( savedRecordsCookie > 0 ) 
+		{	
+			document.getElementById('folder').src = "images/folder_on.gif";
+			
+			// set the individual folder images
+		
+			var arrRecords = objCookie.split("&");
+			
+			for ( var i = 0; i < arrRecords.length; i++ )
+			{
+				if ( arrRecords[i] != "" )
+				{
+					var arrResultSet = arrRecords[i].split(":");
+					var resultSet = arrResultSet[1];
+					var recordNumber = arrResultSet[2];
+					
+					if ( document.getElementById('folder_' + resultSet + recordNumber) )
+					{
+						$('folder_' + resultSet + recordNumber).src = "images/folder_on.gif";
+						$('link_' + resultSet + ":" + recordNumber).update("Record saved");
+					}
+				}
+			}
+		}
 	}
 	
 	/**

@@ -243,8 +243,7 @@ abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
 	
 	/**
 	 * Converts records from marc to xerxes_record and adds them to the master xml response
-	 * Also adds info on whether the record has already been saved this session. 
-   *
+	 *
 	 * @param DOMDOcument $objXml		master xml document
 	 * @param array $arrRecords			an array of marc records
 	 * @param bool $configMarcResults	whether to append the original marc records to the response
@@ -253,10 +252,6 @@ abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
 	
 	protected function addRecords($objXml, $arrRecords, $configMarcResults)
 	{
-		// used to fetch info on already saved records, if any
-    $objData = new Xerxes_DataMap();
-
-
 		$objRecords = $objXml->createElement("records");
 				
 		foreach( $arrRecords as $objRecord )
@@ -281,33 +276,8 @@ abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
 				$objImportRecord = $objXml->importNode($objMarcRecord->getElementsByTagName("record")->item(0), true);
 				$objRecordContainer->appendChild($objImportRecord);
 			}
-
-			// Check if this hit has been saved in my records this session
-			// Include info if it has. 
-     	$strResultSet = $objXerxesRecord->getResultSet();
-     	$strRecordNumber = $objXerxesRecord->getRecordNumber();
-      $key = Xerxes_Helper::savedRecordKey($strResultSet, $strRecordNumber);
-
-
-     	if ( Xerxes_Helper::isMarkedSaved($strResultSet, $strRecordNumber)) {
-					$objSavedRecordXml = $objXml->createElement("saved");
-
-          // id
-          $strSavedID = $_SESSION['resultsSaved'][$key]['xerxes_record_id'];
-					$objSavedRecordXml->setAttribute("id", $strSavedID);
-          $objIDXml = $objXml->createElement("id", $strSavedID);
-          $objSavedRecordXml->appendChild( $objIDXml );
-
-					// labels
-          $objSavedRecord = $objData->getRecordByID($strSavedID);
-          foreach ( $objSavedRecord->tags as $tag ) {
-             $objTagXml = $objXml->createElement("tag", Xerxes_Parser::escapeXml($tag));
-             $objSavedRecordXml->appendChild( $objTagXml ); 
-					}
-
-					$objRecordContainer->appendChild($objSavedRecordXml);
-			}
-		} 
+		}
+			
 		$objXml->documentElement->appendChild($objRecords);
 		
 		return $objXml;
@@ -370,21 +340,6 @@ abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
 		
 		return $objSearch->retrieve( $strResultSet, $iStartRecord, 1, null, "customize", $arrFields );
 	}
-
-
-  # Functions for saving saved record state from a result set. Just convenience
-  #, call to helper. 
-  protected function markSaved($objRecord) {
-      return Xerxes_Helper::markSaved($objRecord);
-  }
-  protected function unmarkSaved($strResultSet, $strRecordNumber) {
-  		return Xerxes_Helper::unmarkSaved($strResultSet, $strRecordNumber);
-  }
-	protected function isMarkedSaved($strResultSet, $strRecordNumber) {
-			return Xerxes_Helper::isMarkedSaved($strResultSet, $strRecordNumber);
-  }
-
-
 }
 
 ?>

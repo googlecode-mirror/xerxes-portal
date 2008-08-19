@@ -37,10 +37,11 @@
 			// get the record from database
 			
 			$objData = new Xerxes_DataMap();
-			$objDataRecord = $objData->getRecordByID($strID);
+			$arrResults = $objData->getRecordByID($strID);
 			
-			if ( $objDataRecord == null  ) throw new Exception("cannot find record");
+			if ( count($arrResults) != 1 ) throw new Exception("cannot find record");
 			
+			$objDataRecord = $arrResults[0];
 			$objRecord = $objDataRecord->xerxes_record;
 			
 			// redirect to the resource based on type

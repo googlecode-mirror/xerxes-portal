@@ -63,16 +63,13 @@
 					
 					// override the behavior if proxy flag specifically set
 					
-					if ( $objDatabaseData->proxy != null )
+					if ( $objDatabaseData->proxy == 1 )
 					{
-						if ( $objDatabaseData->proxy == 1 )
-						{
-							$bolProxy = true;
-						}
-						elseif ( $objDatabaseData->proxy == 0 )
-						{
-							$bolProxy = false;
-						}
+						$bolProxy = true;
+					}
+					elseif ( $objDatabaseData->proxy == 0 )
+					{
+						$bolProxy = false;
 					}
 					
 					$strConstructPattern = $objDatabaseData->link_native_record;        

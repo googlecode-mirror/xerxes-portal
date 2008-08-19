@@ -320,8 +320,6 @@
 				<command directory="availability">AvailabilityInjectRefereed</command>
 				<command directory="availability">AvailabilityInjectFullText</command>
 				<command>MetasearchPaging</command>
-        <!-- used for autocomplete, and to keep tag update ajax happy -->
-        <command directory="folder">FolderTags</command>
 				<pathParamMap>
 					<mapEntry pathIndex="2" property="group"/>
 					<mapEntry pathIndex="3" property="resultSet"/>
@@ -346,7 +344,6 @@
 			<action name="save-delete">
 				<command>MetasearchSaveDelete</command>
 				<view>xsl/metasearch_save-delete.xsl</view>
-        <view format="json">xsl/metasearch_save-delete_ajax.xsl</view>
 			</action>
 			<action name="record">
 				<command>MetasearchRecord</command>

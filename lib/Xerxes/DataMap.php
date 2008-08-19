@@ -612,8 +612,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		elseif ( $query != null )
 		{
 			// string query for databases.
-			// we match title, descrition, or keywords.
-      // MySQL specific REGEXP commands. 
+			// we match title, descrition, or keywords. 
 			
 			$strSQL .= "WHERE xerxes_databases.title_display REGEXP :query1 OR xerxes_databases.title_full REGEXP :query2 OR xerxes_databases.description REGEXP :query3 OR xerxes_database_keywords.keyword REGEXP :query4 ";
 			$strSQL .= " ORDER BY UPPER(title_display) ";
@@ -864,16 +863,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 	
 	public function getRecordByID($strID)
 	{
-		$arrResults = $this->getRecordsByID( array($strID) );
-    if ( count($arrResults) == 0 ) {
-			return null;
-		}
-		elseif ( count($arrResults) == 1 ) {
-			return $arrResults[0];
-		}
-		else {
-			throw new Exception("More than one saved record found for id $strID !");
-		}	
+		return $this->getRecordsByID( array($strID) );
 	}
 	
 	public function getRecordsByID($arrID, $strOrder = null)
@@ -1292,15 +1282,14 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 	}
 	
 	/**
-	 * Add a record to the user's saved record space. $objXerxesRecord will be
-   * updated with internal db id and original id.. 
+	 * Add a record to the user's saved record space
 	 *
 	 * @param string $username					username to save the record under
 	 * @param string $source					name of the source database
 	 * @param string $id						identifier for the record
 	 * @param Xerxes_Record $objXerxesRecord	xerxes record object to save
-	 * @return int  status
- */
+	 * @return int status
+	 */
 	
 	public function addRecord($username, $source, $id, Xerxes_Record $objXerxesRecord)
 	{
@@ -1347,18 +1336,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		$arrValues[":refereed"] = $iRefereed;
 		$arrValues[":marc"] = $objXerxesRecord->getMarcXMLString();
 		
-		$status = $this->insert( $strSQL, $arrValues );
-
-		//Get the internal xerxes record id for the saved record, and fill record
-    // with it, so caller can use. 
-    $getIDSql = "SELECT id FROM xerxes_records WHERE original_id = :original_id";
-    $getIDParam = array(":original_id" => $id);
-    $getIDResults = $this->select( $getIDSql, $getIDParam);
-    $objXerxesRecord->id = $getIDResults[0]["id"];
-
-    $objXerxesRecord->original_id = $id;
-		
-		return $status;
+		return $this->insert( $strSQL, $arrValues );
 	}
 	
 	/**

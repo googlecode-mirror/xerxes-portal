@@ -342,30 +342,11 @@ a img{
 .alphaTitle a {
 	font-weight: bold;
 }
-
-.alphaTitle .mini_icon {
-  vertical-align: middle;
-}
-
 .alphaDescription {
 	line-height: 130%;
 }
 
 /* search box */
-#searchLabel {
-  float:left; 
-  padding-top: .6em;
-}
-
-#searchInputs {
-  margin-left: 4.3em;
-}
-
-#metasearch_input_toggle {
-  text-align:right; 
-  margin-top: 1em; 
-  font-weight: bold;
-}
 
 .errorSpelling {
 	color: #990000;
@@ -699,39 +680,6 @@ a img{
 .tagsSubmit {
 	font-size: 90%;
 }
-
-/* Autocomplete styling, used by tag entry right now */
-
-
-div.autocomplete {
-  margin:0px;  
-  padding:0px;  
-  width:250px;
-  background:#fff;
-  border:1px solid #888;
-  position:absolute;
-}
-
-div.autocomplete ul {
-  margin:0px;
-  padding:0px;
-  list-style-type:none;
-}
-
-div.autocomplete ul li.selected { 
-  background-color:#B0E0E6;
-}
-
-div.autocomplete ul li {
-  margin:0;
-  padding:2px;
-  height:1.2em;
-  display:block;
-  list-style-type:none;
-  cursor:pointer;
-  background: none;
-}
-
 
 /* login page */
 

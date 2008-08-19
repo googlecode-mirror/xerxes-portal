@@ -28,10 +28,10 @@
 	<div id="resultsArea">
 		<xsl:choose>
 			<xsl:when test="results/delete = '1'">
-				<h2>Record successfully removed from saved records</h2>
+				<h2>Record successfully deleted</h2>
 			</xsl:when>
 			<xsl:otherwise>
-				<h2>Record successfully added to saved records</h2>
+				<h2>Record successfully added</h2>
 			</xsl:otherwise>
 		</xsl:choose>
 		
