@@ -253,5 +253,7 @@
 		</xsl:choose>
 	</div>
 	
+<!-- hidden div that will be used by autocompleter -->
+<div class="autocomplete" id="tag_suggestions" style="display:none"></div>
 </xsl:template>
 </xsl:stylesheet>
