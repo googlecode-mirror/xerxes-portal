@@ -140,7 +140,7 @@
 			
 			onFailure: function(transport)
 			{
-				alert(transport.responseText);
+				alert('Sorry, there was an error, your labels could not be updated.');
 			} 
 		});
 		
