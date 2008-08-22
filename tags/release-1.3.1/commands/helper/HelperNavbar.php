@@ -8,14 +8,37 @@ class Xerxes_Command_HelperNavbar extends Xerxes_Command_Helper
 		$objXml->loadXML( "<navbar />" );
 		
 		// saved records link
-		$this->addNavbarElement( $objXml, $objRequest, "saved_records", array ("base" => "folder", "return" => $objRequest->getServer( "REQUEST_URI" ) ) );
 		
-    
-    //loging
-    $this->addNavbarElement( $objXml, $objRequest, "login", array ("base" => "authenticate", "action" => "login", "return" => $objRequest->getServer( "REQUEST_URI" ) ) );
+		$arrLink = array ("base" => "folder");
 		
-    //logout
-    $this->addNavbarElement( $objXml, $objRequest, "logout", array ("base" => "authenticate", "action" => "logout", "return" => $objRequest->getServer( "REQUEST_URI" ) ) );
+		// make sure there is no return if coming from login to prevent a spider
+		// from thinking this is a different page
+		
+		if ( $objRequest->getProperty("base") != "authenticate")
+		{
+			$arrLink["return"] = $objRequest->getServer( "REQUEST_URI" );
+		}
+		
+		$this->addNavbarElement( $objXml, $objRequest, "saved_records", $arrLink );
+		
+		// login or logout, just include appropriate one. 
+		$auth_action_params = array ("base" => "authenticate", "return" => $objRequest->getServer( "REQUEST_URI" ) );
+		
+		$element_id = "";
+
+		if ( $objRequest->hasLoggedInUser() || $objRequest->getSession( "role" ) == "guest" )
+		{
+			$element_id = "logout";
+			$auth_action_params["action"] = "logout";
+		} 
+		else
+		{
+			$element_id = "login";
+			$auth_action_params["action"] = "login";
+		}
+		
+		// login or logout
+		$this->addNavbarElement( $objXml, $objRequest, $element_id, $auth_action_params );
 		
 		// db alphbetical list
 		$this->addNavbarElement( $objXml, $objRequest, "database_list", array ("base" => "databases", "action" => "alphabetical" ) );
