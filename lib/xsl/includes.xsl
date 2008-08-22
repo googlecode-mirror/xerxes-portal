@@ -68,10 +68,10 @@
 	<head>
 	<title><xsl:call-template name="title" /></title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<xsl:call-template name="header" />
 	<base href="{$base_include}/" />
 	<link href="{$base_include}/css/xerxes.css" rel="stylesheet" type="text/css" />
 	<link href="{$base_include}/css/xerxes-print.css" rel="stylesheet" type="text/css" media="print" />
-	<xsl:call-template name="header" />
 	</head>
 	<body>
 	<xsl:if test="request/action = 'subject'">
@@ -134,16 +134,31 @@
 	</xsl:variable>
 	
 	<xsl:choose>
-		<xsl:when test="request/action = 'subject' or request/actions/action = 'subject'">
+	        <!-- mango -->
+	        
+	        <xsl:when test="request/base = 'books' and request/action = 'results'">
+			<xsl:text>Results: </xsl:text>
+			<xsl:value-of select="//request/query" />
+			<xsl:if test="//request/startRecord">
+				( <xsl:value-of select="//request/startRecord" /> )
+			</xsl:if>
+		</xsl:when>
+	        <xsl:when test="request/base = 'books' and request/action = 'record'">
+			<xsl:value-of select="//results/records/record/xerxes_record/title_normalized" />
+		</xsl:when>
+		
+		<!-- xerxes -->
+		
+		<xsl:when test="request/base = 'databases' and (request/action = 'subject' or request/actions/action = 'subject')">
 			<xsl:text></xsl:text><xsl:value-of select="//category/@name" />
 		</xsl:when>
-		<xsl:when test="request/action = 'alphabetical'">
+		<xsl:when test="request/base = 'databases' and request/action = 'alphabetical'">
 			<xsl:text>Databases A-Z</xsl:text>
 		</xsl:when>
 		<xsl:when test="request/base = 'databases' and request/action = 'find'">
 			<xsl:text>Find a Database</xsl:text>
 		</xsl:when>
-		<xsl:when test="request/action = 'database'">
+		<xsl:when test="request/base = 'databases' and request/action = 'database'">
 			<xsl:text></xsl:text><xsl:value-of select="//title_display" />
 		</xsl:when>
 		<xsl:when test="request/base = 'embed' and request/action = 'gen_subject'">
@@ -154,23 +169,23 @@
 			<xsl:text>Create Snippet for: </xsl:text>
 			<xsl:value-of select="//title_display" />
 		</xsl:when>
-		<xsl:when test="request/action = 'hits'">
+		<xsl:when test="request/base = 'metasearch' and request/action = 'hits'">
 			<xsl:value-of select="results/search/context" /><xsl:text>: </xsl:text>
 			<xsl:value-of select="results/search/pair/query" /><xsl:text>: </xsl:text>
 			<xsl:text>Searching</xsl:text>
 		</xsl:when>
-		<xsl:when test="request/action = 'results' or request/action = 'facet'">
+		<xsl:when test="request/base = 'metasearch' and ( request/action = 'results' or request/action = 'facet')">
 			<xsl:value-of select="results/search/context" /><xsl:text>: </xsl:text>
 			<xsl:value-of select="results/search/pair/query" /><xsl:text>: </xsl:text>
 			<xsl:text>Results </xsl:text>
 			( <xsl:value-of select="summary/range" /> )
 		</xsl:when>
-		<xsl:when test="request/action = 'record'">
+		<xsl:when test="request/base = 'metasearch' and request/action = 'record'">
 			<xsl:value-of select="results/search/context" /><xsl:text>: </xsl:text>
 			<xsl:value-of select="results/search/pair/query" /><xsl:text>: </xsl:text>
 			<xsl:text>Record</xsl:text>
 		</xsl:when>
-		<xsl:when test="request/action = 'home'">
+		<xsl:when test="request/base = 'folder' and request/action = 'home'">
 			<xsl:value-of select="$folder" />
 		</xsl:when>
 		<xsl:when test="request/action = 'login'">
@@ -179,21 +194,21 @@
 		<xsl:when test="request/action = 'logout'">
 			<xsl:text>Logout</xsl:text>
 		</xsl:when>
-		<xsl:when test="request/action = 'output_email'">
+		<xsl:when test="request/base = 'folder' and request/action = 'output_email'">
 			<xsl:text>Email</xsl:text>
 		</xsl:when>
-		<xsl:when test="request/action = 'output_export_endnote'">
+		<xsl:when test="request/base = 'folder' and request/action = 'output_export_endnote'">
 			<xsl:text>Download to Endnote</xsl:text>
 		</xsl:when>
-		<xsl:when test="request/action = 'output_export_text'">
+		<xsl:when test="request/base = 'folder' and request/action = 'output_export_text'">
 			<xsl:value-of select="$folder" /><xsl:text>: Download to Text File</xsl:text>
 		</xsl:when>
-		<xsl:when test="request/action = 'output_refworks'">
+		<xsl:when test="request/base = 'folder' and request/action = 'output_refworks'">
 			<xsl:text>Export to Refworks</xsl:text>
 		</xsl:when>
-		<xsl:when test="request/action = 'full'">
+		<xsl:when test="request/base = 'folder' and request/action = 'full'">
 			<xsl:value-of select="$folder" /><xsl:text>: Record</xsl:text>
-		</xsl:when>	 
+		</xsl:when>
 	</xsl:choose>
 	
 </xsl:template>
@@ -219,41 +234,41 @@
 	<xsl:variable name="base" select="config/application_name" />
 	
 	<xsl:choose>
-		<xsl:when test="request/action = 'categories' or request/actions/action = 'categories'">
+		<xsl:when test="request/base = 'databases' and (request/action = 'categories' or request/actions/action = 'categories')">
 			<xsl:value-of select="$base" />
 		</xsl:when>
-		<xsl:when test="request/action = 'subject' or request/actions/action = 'subject'">
+		<xsl:when test="request/base = 'databases' and (request/action = 'subject' or request/actions/action = 'subject')">
 			<xsl:value-of select="$base" /><xsl:text>: </xsl:text><xsl:value-of select="//category/@name" />
 		</xsl:when>
-		<xsl:when test="request/action = 'alphabetical'">
+		<xsl:when test="request/base = 'databases' and request/action = 'alphabetical'">
 			<xsl:value-of select="$base" /><xsl:text>: Databases A-Z</xsl:text>
 		</xsl:when>
 		<xsl:when test="request/base = 'databases' and request/action = 'find'">
 			<xsl:value-of select="$base" /><xsl:text>: Find a Database</xsl:text>
 		</xsl:when>
-		<xsl:when test="request/action = 'database'">
+		<xsl:when test="request/base = 'databases' and request/action = 'database'">
 			<xsl:value-of select="$base" /><xsl:text>: </xsl:text><xsl:value-of select="//title_display" />
 		</xsl:when>
-		<xsl:when test="request/action = 'hits'">
+		<xsl:when test="request/base = 'metasearch' and request/action = 'hits'">
 			<xsl:value-of select="$base" /><xsl:text>: </xsl:text>
 			<xsl:value-of select="results/search/context" /><xsl:text>: </xsl:text>
 			<xsl:value-of select="results/search/pair/query" /><xsl:text>: </xsl:text>
 			<xsl:text>Searching</xsl:text>
 		</xsl:when>
-		<xsl:when test="request/action = 'results' or request/action = 'facet'">
+		<xsl:when test="request/base = 'metasearch' and (request/action = 'results' or request/action = 'facet')">
 			<xsl:value-of select="$base" /><xsl:text>: </xsl:text>
 			<xsl:value-of select="results/search/context" /><xsl:text>: </xsl:text>
 			<xsl:value-of select="results/search/pair/query" /><xsl:text>: </xsl:text>
 			<xsl:text>Results </xsl:text>
 			( <xsl:value-of select="summary/range" /> )
 		</xsl:when>
-		<xsl:when test="request/action = 'record'">
+		<xsl:when test="request/base = 'metasearch' and request/action = 'record'">
 			<xsl:value-of select="$base" /><xsl:text>: </xsl:text>
 			<xsl:value-of select="results/search/context" /><xsl:text>: </xsl:text>
 			<xsl:value-of select="results/search/pair/query" /><xsl:text>: </xsl:text>
 			<xsl:text>Record</xsl:text>
 		</xsl:when>
-		<xsl:when test="request/action = 'home'">
+		<xsl:when test="request/base = 'folder' and request/action = 'home'">
 			<xsl:value-of select="$folder" />
 		</xsl:when>
 		<xsl:when test="request/action = 'login'">
@@ -262,16 +277,16 @@
 		<xsl:when test="request/action = 'logout'">
 			<xsl:value-of select="$base" /><xsl:text>: Logout</xsl:text>
 		</xsl:when>
-		<xsl:when test="request/action = 'output_email'">
+		<xsl:when test="request/base = 'folder' and request/action = 'output_email'">
 			<xsl:value-of select="$base" /><xsl:text>: Email</xsl:text>
 		</xsl:when>
-		<xsl:when test="request/action = 'output_export_endnote'">
+		<xsl:when test="request/base = 'folder' and request/action = 'output_export_endnote'">
 			<xsl:value-of select="$folder" /><xsl:text>: Download to Endnote</xsl:text>
 		</xsl:when>
-		<xsl:when test="request/action = 'output_export_text'">
+		<xsl:when test="request/base = 'folder' and request/action = 'output_export_text'">
 			<xsl:value-of select="$folder" /><xsl:text>: Download to Text File</xsl:text>
 		</xsl:when>
-		<xsl:when test="request/action = 'full'">
+		<xsl:when test="request/base = 'folder' and request/action = 'full'">
 			<xsl:value-of select="$folder" /><xsl:text>: Record</xsl:text>
 		</xsl:when>
 		<xsl:otherwise>
@@ -323,22 +338,37 @@
 	<xsl:call-template name="breadcrumb_start" />
 	
 	<xsl:choose>
+
+		<!-- rss and mango -->
+		
+        	<xsl:when test="request/base = 'books' and request/action = 'results'">
+			<span class="breadcrumbHere">Results</span>
+		</xsl:when>
+		<xsl:when test="request/base = 'books' and request/action = 'record'">
+			<span class="breadcrumbHere">Record</span>
+		</xsl:when>
+		<xsl:when test="request/base = 'rss'">
+			<span class="breadcrumbHere">RSS prototype</span>
+		</xsl:when>
+		
+		<!-- metasearch -->
+		
 		<xsl:when test="request/action = 'login'">
 			<span class="breadcrumbHere">Login</span>
 		</xsl:when>
 		<xsl:when test="request/action = 'logout'">
 			<span class="breadcrumbHere">Logout</span>
 		</xsl:when>
-		<xsl:when test="request/action = 'subject' or request/actions/action = 'subject'">
+		<xsl:when test="request/base = 'databases' and (request/action = 'subject' or request/actions/action = 'subject')">
 			<span class="breadcrumbHere"><xsl:value-of select="//category/@name" /></span>
 		</xsl:when>
-		<xsl:when test="request/action = 'alphabetical'">
+		<xsl:when test="request/base = 'databases' and request/action = 'alphabetical'">
 			<span class="breadcrumbHere">Databases A-Z</span>
 		</xsl:when>
 		<xsl:when test="request/base = 'databases' and request/action = 'find'">
 			<xsl:call-template name="page_name" />
 		</xsl:when>
-		<xsl:when test="request/action = 'database'">
+		<xsl:when test="request/base = 'databases' and request/action = 'database'">
 			<xsl:if test="$return != ''">			 
 				<a href="{$return}">
 					<xsl:choose>
@@ -351,20 +381,20 @@
 			</xsl:if>
 			<span class="breadcrumbHere"><xsl:value-of select="//title_display" /></span>
 		</xsl:when>
-		<xsl:when test="request/action = 'hits'">
+		<xsl:when test="request/base = 'metasearch' and request/action = 'hits'">
 			<a href="{$context_url}"><xsl:value-of select="results/search/context" /></a> <xsl:value-of select="$text_breadcrumb_seperator" /> 
 			<span class="breadcrumbHere">Searching</span>
 		</xsl:when>
-		<xsl:when test="request/action = 'results'">
+		<xsl:when test="request/base = 'metasearch' and request/action = 'results'">
 			<a href="{$context_url}"><xsl:value-of select="results/search/context" /></a> <xsl:value-of select="$text_breadcrumb_seperator" /> 
 			<span class="breadcrumbHere"><xsl:value-of select="results/database" /></span>
 		</xsl:when>
-		<xsl:when test="request/action = 'facet'">
+		<xsl:when test="request/base = 'metasearch' and request/action = 'facet'">
 			<a href="{$context_url}"><xsl:value-of select="results/search/context" /></a> <xsl:value-of select="$text_breadcrumb_seperator" /> 
 			<a href="{$return}"><xsl:value-of select="results/database" /></a> <xsl:value-of select="$text_breadcrumb_seperator" />
 			<span class="breadcrumbHere"><xsl:value-of select="results/facet_name" /></span>
 		</xsl:when>
-		<xsl:when test="request/action = 'record'">
+		<xsl:when test="request/base = 'metasearch' and request/action = 'record'">
 			<a href="{$context_url}"><xsl:value-of select="results/search/context" /></a> <xsl:value-of select="$text_breadcrumb_seperator" /> 
 			
 			<xsl:choose>
@@ -385,29 +415,38 @@
 			</xsl:choose>
 			<span class="breadcrumbHere">Record</span>
 		</xsl:when>
-		<xsl:when test="request/action = 'home'">
-			<span class="breadcrumbHere">My Saved Records</span>
+		<xsl:when test="request/base = 'folder' and request/action = 'home'">
+			<xsl:choose>
+				<xsl:when test="request/label or request/type">
+					<a href="{$folder}">My Saved Records</a> <xsl:value-of select="$text_breadcrumb_seperator" />
+					<span class="breadcrumbHere"><xsl:value-of select="request/label|request/type" /></span>
+				</xsl:when>
+				<xsl:otherwise>
+					<span class="breadcrumbHere">My Saved Records</span>
+				</xsl:otherwise>
+			</xsl:choose>
 		</xsl:when>
-		<xsl:when test="request/action = 'output_email'">
+		<xsl:when test="request/base = 'folder' and request/action = 'output_email'">
 			<a href="{$folder}">My Saved Records</a> <xsl:value-of select="$text_breadcrumb_seperator" /> 
 			<span class="breadcrumbHere">Email</span>
 		</xsl:when>
-		<xsl:when test="request/action = 'output_export_endnote'">
+		<xsl:when test="request/base = 'folder' and request/action = 'output_export_endnote'">
 			<a href="{$folder}">My Saved Records</a> <xsl:value-of select="$text_breadcrumb_seperator" /> 
 			<span class="breadcrumbHere">Download to Endnote</span>
 		</xsl:when>
-		<xsl:when test="request/action = 'output_refworks'">
+		<xsl:when test="request/base = 'folder' and request/action = 'output_refworks'">
 			<a href="{$folder}">My Saved Records</a> <xsl:value-of select="$text_breadcrumb_seperator" /> 
 			<span class="breadcrumbHere">Export to Refworks</span>
 		</xsl:when>
-		<xsl:when test="request/action = 'output_export_text'">
+		<xsl:when test="request/base = 'folder' and request/action = 'output_export_text'">
 			<a href="{$folder}">My Saved Records</a> <xsl:value-of select="$text_breadcrumb_seperator" /> 
 			<span class="breadcrumbHere">Download to Text File</span>
 		</xsl:when>
-		<xsl:when test="request/action = 'full'">
+		<xsl:when test="request/base = 'folder' and request/action = 'full'">
 			<a href="{$folder}">My Saved Records</a> <xsl:value-of select="$text_breadcrumb_seperator" /> 
 			<span class="breadcrumbHere">Record</span>
-		</xsl:when>
+		</xsl:when>	
+		
 		<xsl:when test="request/base = 'embed' and request/action = 'gen_subject'">
 			<a>
 				<xsl:attribute name="href">
@@ -429,8 +468,8 @@
 			<span class="breadcrumbHere">Create Snippet</span>
 		</xsl:when>
 		<xsl:otherwise>
-		<span class="breadcrumbHere"><xsl:call-template name="page_name" /></span>
-	</xsl:otherwise>
+			<span class="breadcrumbHere"><xsl:call-template name="page_name" /></span>
+		</xsl:otherwise>
 	</xsl:choose>
 
 </xsl:template>
@@ -451,6 +490,7 @@
 	</xsl:comment>
 
 	<div class="sessionOptions" title="login and saved records links">
+		<xsl:if test="request/base != 'authenticate'">
 		<span class="sessionAction">
 			<xsl:choose>
 			<xsl:when test="request/session/role and request/session/role != 'local'">
@@ -467,6 +507,7 @@
 			</xsl:choose>
 		</span>
 		|
+		</xsl:if>
 		<span class="sessionAction">
 			<img src="{$base_include}/images/folder.gif" name="folder" width="17" height="15" border="0" id="folder" alt=""/>
 			<xsl:text> </xsl:text>
@@ -624,7 +665,7 @@
 					<a>
 					<xsl:attribute name="href"><xsl:value-of select="url" /></xsl:attribute>
 					<img alt="more information" src="images/info.gif" >
-						<xsl:attribute name="src"><xsl:value-of select="/*/config/base_url" />/images/info.gif</xsl:attribute>
+						<xsl:attribute name="src"><xsl:value-of select="//config/base_url" />/images/info.gif</xsl:attribute>
 					</img>
 					</a>
 				</div>
@@ -748,39 +789,42 @@
 	
 	<div class="folderHeaderArea">
 	
+	<h1>
 		<xsl:choose>
-			<xsl:when test="request/session/role = 'local' or request/session/role = 'guest'">
-				<h1>Temporary Saved Records</h1>
-				
-				<xsl:if test="request/session/role = 'local'">
-					<p>( <a href="{$base_url}/?base=authenticate&amp;action=login&amp;return={$return}">Log-in</a> 
-					to save the records beyond this session.)</p>
-				</xsl:if>
+			<xsl:when test="request/label or request/type">
+				<a href="./?base=folder" class="folderHomeHeader"><xsl:call-template name="folder_header_label" /></a>
 			</xsl:when>
 			<xsl:otherwise>
-				<h1>
-					<xsl:choose>
-						<xsl:when test="request/label or request/type">
-							<a href="./?base=folder" class="folderHomeHeader">My Saved Records</a>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:text>My Saved Records</xsl:text>
-						</xsl:otherwise>
-					</xsl:choose>
-					
-					<xsl:if test="request/label">
-						<xsl:text> / </xsl:text><xsl:value-of select="request/label" />
-					</xsl:if>
-					<xsl:if test="request/type">
-						<xsl:text> / </xsl:text><xsl:value-of select="request/type" />
-					</xsl:if>
-				</h1>
-	
+				<xsl:call-template name="folder_header_label" />
 			</xsl:otherwise>
 		</xsl:choose>
 		
+		<xsl:if test="request/label">
+			<xsl:text> / </xsl:text><xsl:value-of select="request/label" />
+		</xsl:if>
+		<xsl:if test="request/type">
+			<xsl:text> / </xsl:text><xsl:value-of select="request/type" />
+		</xsl:if>
+	</h1>
+	
+	<xsl:if test="request/session/role = 'local'">
+		<p>( <a href="{$base_url}/?base=authenticate&amp;action=login&amp;return={$return}">Log-in</a> 
+		to save the records beyond this session.)</p>
+	</xsl:if>
+		
 	</div>
 
+</xsl:template>
+
+<xsl:template name="folder_header_label">
+	<xsl:choose>
+		<xsl:when test="request/session/role = 'local' or request/session/role = 'guest'">
+			<xsl:text>Temporary Saved Records</xsl:text>
+		</xsl:when>
+		<xsl:otherwise>
+			<xsl:text>My Saved Records</xsl:text>
+		</xsl:otherwise>
+	</xsl:choose>
 </xsl:template>
 
 <!-- 

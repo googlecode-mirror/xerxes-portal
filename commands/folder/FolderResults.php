@@ -158,6 +158,7 @@
 						"label" => $strLabel,
 						"startRecord" => $iStart,
 						"total" => $iTotal,
+						"sortKeys" => $strOrder,
 						"recordsPerPage" => $iCount,
 					);
 					
