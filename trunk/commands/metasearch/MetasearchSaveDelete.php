@@ -32,7 +32,6 @@
 			$strGroup =	$objRequest->getProperty("group");
 			$strResultSet =	$objRequest->getProperty("resultSet");
 			$iStartRecord =	(int) $objRequest->getProperty("startRecord");
-     
 
 			// get the search start date
 			
@@ -46,63 +45,66 @@
 			$strID = $strDate . ":";
 			$strID .= $strResultSet . ":";
 			$strID .= str_pad($iStartRecord, 6, "0", STR_PAD_LEFT);
-			
+		
 			// the save and delete action come in on the same onClick event from the search results page,
 			// so we have to check here to see if it is a delete or save based on the session. This is a
-      // bit dangerous, since maybe the session got out of sync? Oh well, it'll do for now, since
-      // that's what was done with the previous cookie implementation. 
+			// bit dangerous, since maybe the session got out of sync? Oh well, it'll do for now, since
+			// that's what was done with the previous cookie implementation. 
+	
+			$objData = new Xerxes_DataMap( );
 			
-			$objData = new Xerxes_DataMap();
+			$bolAdd = ! $this->isMarkedSaved( $strResultSet, $iStartRecord );
 			
-			$bolAdd = ! $this->isMarkedSaved($strResultSet, $iStartRecord);
-
-      $strInsertedId = null;
+			$strInsertedId = null;
+			
 			if ( $bolAdd == true )
 			{
 				// add command
-				
+	
 				// get record from metalib result set
 				
-				$objXerxesRecord = new Xerxes_Record();
-				$objXerxesRecord->loadXML($this->getRecord($objRequest, $objRegistry));
+				$objXerxesRecord = new Xerxes_Record( );
+				$objXerxesRecord->loadXML( $this->getRecord( $objRequest, $objRegistry ) );
 				
 				// add to database
-					
-				$objData->addRecord($strUsername, "metalib", $strID, $objXerxesRecord);
-        $strInsertedId = $objXerxesRecord->id;
-
-				// Mark saved for feedback on search results
-        $this->markSaved($objXerxesRecord);
-			}
+	
+				$objData->addRecord( $strUsername, "metalib", $strID, $objXerxesRecord );
+				$strInsertedId = $objXerxesRecord->id;
+				
+				// mark saved for feedback on search results
+				
+				$this->markSaved( $objXerxesRecord );
+			} 
 			else
 			{
 				// delete command
 	
-				$objData->deleteRecordBySource($strUsername, "metalib", $strID);			
-	
-        $this->unmarkSaved($strResultSet, $iStartRecord);	
+				$objData->deleteRecordBySource( $strUsername, "metalib", $strID );
+				$this->unmarkSaved( $strResultSet, $iStartRecord );
 			}
-
-			// build a response
 			
-			$objXml = new DOMDocument();
-			$objXml->loadXML("<results />");
+			// build a response
+	
+			$objXml = new DOMDocument( );
+			$objXml->loadXML( "<results />" );
 			
 			if ( $bolAdd == false )
 			{
 				// flag this as being a delete comand in the view, in the event
 				// user has javascript turned off and we need to show them an actual page
+	
+				$objDelete = $objXml->createElement( "delete", "1" );
+				$objXml->documentElement->appendChild( $objDelete );
+			} 
+			else
+			{
+				// add inserted id for ajax response
 				
-				$objDelete = $objXml->createElement("delete", "1");
-				$objXml->documentElement->appendChild($objDelete);
+				$objInsertedId = $objXml->createElement( "savedRecordID", $strInsertedId );
+				$objXml->documentElement->appendChild( $objInsertedId );
 			}
-			else {
-				//add inserted id for ajax response
-        $objInsertedId = $objXml->createElement("savedRecordID", $strInsertedId);
-				$objXml->documentElement->appendChild($objInsertedId);
-			}	
 			
-			$objRequest->addDocument($objXml);
+			$objRequest->addDocument( $objXml );
 			
 			return 1;
 		}

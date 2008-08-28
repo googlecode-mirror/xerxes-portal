@@ -35,7 +35,7 @@ class Xerxes_Helper
 		$objDatabase = $objDom->documentElement;
 		
 		// single value fields
-
+		
 		foreach ( $objDatabaseData->properties() as $key => $value )
 		{
 			if ( $value != null )
@@ -45,6 +45,7 @@ class Xerxes_Helper
 				
 				// sometimes we're asked to track and record index.
 				
+
 				if ( ! is_null( $index ) && $key == "searchable" && $value == "1" )
 				{
 					$objElement->setAttribute( "count", $index );
@@ -83,22 +84,25 @@ class Xerxes_Helper
 		
 		// is the particular user allowed to search this?
 		
+
 		$objElement = $objDom->createElement( "searchable_by_user", self::dbSearchableForUser( $objDatabaseData, $objRequest, $objRegistry ) );
 		$objDatabase->appendChild( $objElement );
 		
 		//add an element for url to xerxes detail page for this db
 		
+
 		$objElement = $objDom->createElement( "url", $objRequest->url_for( array ("base" => "databases", "action" => "database", "id" => htmlentities( $objDatabaseData->metalib_id ) ) ) );
 		$objDatabase->appendChild( $objElement );
 		
 		//add an element for url to xerxes-mediated direct link to db. 
+		
 
 		$objElement = $objDom->createElement( "xerxes_native_link_url", $objRequest->url_for( array ("base" => "databases", "action" => "proxy", "database" => htmlentities( $objDatabaseData->metalib_id ) ) ) );
 		$objDatabase->appendChild( $objElement );
 		
 		return $objDatabase;
 	}
-
+	
 	/**
 	 * Checks to see if any of the databases currently being searched are restricted
 	 * to the user, throws Xerxes_DatabasesDeniedException if one is not
@@ -111,26 +115,27 @@ class Xerxes_Helper
 	
 	public static function checkDbListSearchableByUser($objSearchXml, $objRequest, $objRegistry)
 	{
-		$search_xml = simplexml_import_dom($objSearchXml->documentElement);
+		$search_xml = simplexml_import_dom( $objSearchXml->documentElement );
 		
 		$deniedList = array ( );
 		
-		foreach ( $search_xml->xpath("//database_links/database") as $database )
+		foreach ( $search_xml->xpath( "//database_links/database" ) as $database )
 		{
 			// extract the database info held in the cache and convert it here
 			// to a data value object so we can feed it to dbSearchableForUser()
 			// which is expecting that
 			
-			$db = new Xerxes_Data_Database();
-			$db->title_display = (string) $database->title_display;
-			$db->searchable = (string) $database->searchable;
-			$db->guest_access = (string) $database->guest_access;
+
+			$db = new Xerxes_Data_Database( );
+			$db->title_display = ( string ) $database->title_display;
+			$db->searchable = ( string ) $database->searchable;
+			$db->guest_access = ( string ) $database->guest_access;
 			
-			if ( count($database->group_restrictions) > 0 )
+			if ( count( $database->group_restrictions ) > 0 )
 			{
-				foreach ( $database->group_restrictions->group_restriction as $restriction)
+				foreach ( $database->group_restrictions->group_restriction as $restriction )
 				{
-					array_push($db->group_restrictions, (string) $restriction );
+					array_push( $db->group_restrictions, ( string ) $restriction );
 				}
 			}
 			
@@ -143,14 +148,13 @@ class Xerxes_Helper
 		}
 		
 		// if any one of them doesn't match, kill this thing!
-		
+
 		if ( count( $deniedList ) > 0 )
 		{
 			$e = new Xerxes_DatabasesDeniedException( );
 			$e->setDeniedDatabases( $deniedList );
 			throw $e;
-		} 
-		else
+		} else
 		{
 			return true;
 		}
@@ -184,13 +188,14 @@ class Xerxes_Helper
 			// they have to be authenticated, and in a group that is included
 			// in the restrictions, or in an ip address associated with a
 			// restricted group.
-			
+
 			$allowed = (Xerxes_Framework_Restrict::isAuthenticatedUser( $objRequest ) && array_intersect( $_SESSION["user_groups"], $db->group_restrictions ));
 			
 			if ( ! $allowed )
 			{
 				// not by virtue of a login, but now check for ip address
 				
+
 				$ranges = array ( );
 				foreach ( $db->group_restrictions as $group )
 				{
@@ -199,15 +204,13 @@ class Xerxes_Helper
 				
 				$allowed = Xerxes_Framework_Restrict::isIpAddrInRanges( $objRequest->getServer( 'REMOTE_ADDR' ), implode( ",", $ranges ) );
 			}
-		}
+		} 
 		else
 		{
 			// ordinary generally restricted resource.  they need to be 
 			// an authenticated user, or in the local ip range. 
 
-			if ( Xerxes_Framework_Restrict::isAuthenticatedUser( $objRequest ) || 
-				Xerxes_Framework_Restrict::isIpAddrInRanges( $objRequest->getServer('REMOTE_ADDR'), 
-					$objRegistry->getConfig("LOCAL_IP_RANGE") ))
+			if ( Xerxes_Framework_Restrict::isAuthenticatedUser( $objRequest ) || Xerxes_Framework_Restrict::isIpAddrInRanges( $objRequest->getServer( 'REMOTE_ADDR' ), $objRegistry->getConfig( "LOCAL_IP_RANGE" ) ) )
 			{
 				$allowed = true;
 			}
@@ -216,49 +219,51 @@ class Xerxes_Helper
 		return $allowed;
 	}
 	
-
-
-
-
-  # Functions for saving saved record state from a result set in session
-  # This is used for knowing whether to add or delete on a 'toggle' command
-  # (MetasearchSaveDelete), and also used for knowing whether to display
-  # a result line as saved or not. 
-  public static function markSaved($objRecord) {
-      $key = self::savedRecordKey($objRecord->getResultSet(), $objRecord->getRecordNumber()); 
-		  $_SESSION['resultsSaved'][$key]['xerxes_record_id'] = $objRecord->id; 
-
-  }
-  public static function unmarkSaved($strResultSet, $strRecordNumber) {
-    $key = self::savedRecordKey($strResultSet, $strRecordNumber);
-
-    if ( array_key_exists("resultsSaved", $_SESSION) &&
-         array_key_exists($key, $_SESSION["resultsSaved"])) {
-				unset($_SESSION['resultsSaved'][$key]);
+	// Functions for saving saved record state from a result set in session
+	// This is used for knowing whether to add or delete on a 'toggle' command
+	// (MetasearchSaveDelete), and also used for knowing whether to display
+	// a result line as saved or not. 
+	
+	public static function markSaved($objRecord)
+	{
+		$key = self::savedRecordKey( $objRecord->getResultSet(), $objRecord->getRecordNumber() );
+		$_SESSION['resultsSaved'][$key]['xerxes_record_id'] = $objRecord->id;
+	}
+	
+	public static function unmarkSaved($strResultSet, $strRecordNumber)
+	{
+		$key = self::savedRecordKey( $strResultSet, $strRecordNumber );
+		
+		if ( array_key_exists( "resultsSaved", $_SESSION ) && array_key_exists( $key, $_SESSION["resultsSaved"] ) )
+		{
+			unset( $_SESSION['resultsSaved'][$key] );
 		}
-  }
-	public static function isMarkedSaved($strResultSet, $strRecordNumber) {
-    $key = self::savedRecordKey($strResultSet, $strRecordNumber);
-		return ( array_key_exists("resultsSaved", $_SESSION) &&
-             array_key_exists($key, $_SESSION["resultsSaved"]));
-
-  }
-  public static function numMarkedSaved() {
-    $num = 0;
-    if ( array_key_exists("resultsSaved", $_SESSION) ) {
-			$num = count($_SESSION["resultsSaved"]);
-		}    
+	}
+	
+	public static function isMarkedSaved($strResultSet, $strRecordNumber)
+	{
+		$key = self::savedRecordKey( $strResultSet, $strRecordNumber );
+		return (array_key_exists( "resultsSaved", $_SESSION ) && array_key_exists( $key, $_SESSION["resultsSaved"] ));
+	}
+	
+	public static function numMarkedSaved()
+	{
+		$num = 0;
+		if ( array_key_exists( "resultsSaved", $_SESSION ) )
+		{
+			$num = count( $_SESSION["resultsSaved"] );
+		}
 		return $num;
-  }  
-  public static function savedRecordKey($strResultSet, $strRecordNumber) {
-		# key based on result set and record number in search results. Save id
-		# of saved xerxes_record. Normalize number strings remove initial 0s. 
-    $key = (string) (int) $strResultSet . ":" . (string) (int) $strRecordNumber;
-    return $key;
-  } 
-
-
-
+	}
+	
+	public static function savedRecordKey($strResultSet, $strRecordNumber)
+	{
+		// key based on result set and record number in search results. Save id
+		// of saved xerxes_record. Normalize number strings remove initial 0s.
+		
+		$key = ( string ) ( int ) $strResultSet . ":" . ( string ) ( int ) $strRecordNumber;
+		return $key;
+	}
 
 }
 ?>
