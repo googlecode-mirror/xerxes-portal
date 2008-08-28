@@ -32,6 +32,8 @@ _substitute 1.2 and 1.3 above with the actual version number_. This will update 
 	commands/folder/FolderDelete.php => Modified
 	commands/folder/FolderResults.php => Modified
 	commands/helper/HelperNavbar.php => Modified
+	demo/javascript/scriptaculous/sounds.js => Added
+	demo/javascript/scriptaculous/unittest.js => Added
 	lib/xsl/authenticate_login.xsl => Modified
 	lib/xsl/includes.xsl => Modified
 }}}
