@@ -307,6 +307,7 @@
 		</section>
 		
 		<section name="metasearch" directory="metasearch" namespace="Xerxes" documentElement="metasearch" restricted="true">	
+			
 			<action name="search">
 				<command>MetasearchSearch</command>
 				<view />
@@ -320,8 +321,7 @@
 				<command directory="availability">AvailabilityInjectRefereed</command>
 				<command directory="availability">AvailabilityInjectFullText</command>
 				<command>MetasearchPaging</command>
-        <!-- used for autocomplete, and to keep tag update ajax happy -->
-        <command directory="folder">FolderTags</command>
+				<command directory="folder">FolderTags</command>
 				<pathParamMap>
 					<mapEntry pathIndex="2" property="group"/>
 					<mapEntry pathIndex="3" property="resultSet"/>
@@ -346,7 +346,7 @@
 			<action name="save-delete">
 				<command>MetasearchSaveDelete</command>
 				<view>xsl/metasearch_save-delete.xsl</view>
-        <view format="json">xsl/metasearch_save-delete_ajax.xsl</view>
+				<view format="json">xsl/metasearch_save-delete_ajax.xsl</view>
 			</action>
 			<action name="record">
 				<command>MetasearchRecord</command>
@@ -355,5 +355,86 @@
 			</action>
 		</section>
 		
+		<!-- mango and rss are experimental in 1.4 -->
+
+		<section name="books" directory="mango" namespace="Mango" documentElement="metasearch" restricted="true">	
+			<include>lib/Mango/</include>
+			<action name="home">
+				<view>xsl/mango_home.xsl</view>
+			</action>
+			<action name="search">
+				<command>MangoSearch</command>
+				<view />
+			</action>
+			<action name="combine">
+				<command>MangoCombine</command>
+				<view />
+			</action>
+			<action name="results">
+				<pathParamMap>
+					<mapEntry pathIndex="2" property="source"/>
+					<mapEntry pathIndex="3" property="query"/>
+				</pathParamMap>
+				<command>MangoResults</command>
+				<command>MangoLookupInject</command>
+				<command>MangoPaging</command>
+				<view>xsl/mango_results.xsl</view>
+			</action>
+			<action name="lookup">
+				<command>MangoLookup</command>
+				<view>xsl/mango_lookup.xsl</view>
+			</action>
+			<action name="ill">
+				<command>MangoILL</command>
+				<view />
+			</action>
+			<action name="missing">
+				<request name="content-type">text/xml</request>
+				<command>MangoMissing</command>
+				<view>xsl/mango_missing.xsl</view>
+			</action>
+			<action name="record">
+				<pathParamMap>
+					<mapEntry pathIndex="2" property="oclc"/>
+				</pathParamMap>
+				<command>MangoRecord</command>
+				<command>MangoAmazon</command>
+				<command>MangoRecommend</command>
+				<command>MangoLookup</command>
+				<view>xsl/mango_record.xsl</view>
+				<view format="marc">xsl/marc-display.xsl</view>
+			</action>
+			<action name="update" cli="true">
+				<command>MangoUpdateHoldings</command>
+			</action>
+		</section>
+
+		<section name="rss" directory="rss" namespace="Xerxes" documentElement="xerxes" restricted="true">	
+			<include>lib/RSS/</include>
+			<action name="search">
+				<command>RSSSearch</command>
+				<view>xsl/rss_results.xsl</view>
+			</action>
+			<action name="load" cli="true">
+				<command>RSSLoad</command>
+				<view />
+			</action>
+			<action name="enhance" cli="true">
+				<command>RSSEnhance</command>
+				<view />
+			</action>
+			<action name="index" cli="true">
+				<command>RSSIndex</command>
+				<view />
+			</action>
+			<action name="feed">
+				<request name="format">rss</request>
+				<pathParamMap>
+					<mapEntry pathIndex="2" property="id"/>
+				</pathParamMap>
+				<command>RSSCreate</command>
+				<view>xsl/utility/xerxes-to-rss.xsl</view>
+			</action>
+		</section>		
 	</commands>
 </xerxes>

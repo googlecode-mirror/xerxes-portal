@@ -44,7 +44,6 @@
 			$objRequest->addDocument($objSummaryXml);
 			
 			
-			
 			### create sorting element
 			
 			$strSort = $objRequest->getProperty("sortKeys");

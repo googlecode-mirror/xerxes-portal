@@ -89,16 +89,21 @@
 		 *
 		 * @param string $strQuery		metalib formatted query 
 		 * @param mixed $arrDatabases	[array if multiple or string for single] selected databases
-		 * @return string 				group number
+		 * @param bool $bolWait		    [optional] whether to wait until results are availble (default false)
+		 * @return mixed 				if wait = false, returns group number as string; else search progress as DOMDocument
 		 */
 
-		public function search( $strQuery, $arrDatabases ) 
+		public function search( $strQuery, $arrDatabases, $bolWait = false) 
 		{
-			$strWaitFlag = "N";			// waitflag
+			$strWaitFlag = "N";			// wait flag
 			$strDatabaseList = "";		// string list of databases
 			
-			// expects databases as an array,
-			// so catch here if only one supplied
+			if ( $bolWait == true )
+			{
+				$strWaitFlag = "Y";
+			}
+			
+			// expects databases as an array, so catch here if only one supplied
 						
 			if ( ! is_array($arrDatabases) ) $arrDatabases = array($arrDatabases);
 
@@ -123,11 +128,23 @@
 			$this->xml->load($this->url);
 			
 			// check for errors
+			
 			$this->errorCheck( $this->xml );
 			
-			// extract group ID
-			$objGroup = $this->xml->getElementsByTagName("group_number")->item(0);
-			return $objGroup->nodeValue;
+			
+			if ( $bolWait == true)
+			{
+				// return search response
+				return $this->xml;
+			
+			}
+			else
+			{
+				// extract group id if this was the non-wait flag
+
+				$objGroup = $this->xml->getElementsByTagName("group_number")->item(0);
+				return $objGroup->nodeValue;
+			}
 		}
 		
 		/**

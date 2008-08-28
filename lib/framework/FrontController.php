@@ -10,28 +10,7 @@
  * @link http://xerxes.calstate.edu
  * @license http://www.gnu.org/licenses/
  */
-/* We define some functions here in the global scope that will be available
-   for the XSLT to call. */ 
-   
-   /* Take a url, and set a particular key/value in the url parameters.
-      Replace existing value if neccesary; works whether or not url
-      to begin with has a query string component. */
-   function setParamInUrl($url, $key, $value) {
-     $queryPos = strpos($url, '?');
-     if ( $queryPos ) {
-         $base = substr($url, 0, $queryPos + 1);
-         $queryString = substr($url, $queryPos + 1);
-         parse_str($queryString, $queryHash);
-     }
-     else {
-        $base = $url . '?';
-        $queryHash = array();
-     }
-     $queryHash[$key] = $value;
-     return $base . http_build_query($queryHash);
-   }
- 
-/* Now the actual class definition */
+
 class Xerxes_Framework_FrontController
 {
 	/**
@@ -230,6 +209,8 @@ class Xerxes_Framework_FrontController
 				$strDirectory = $arrCommand[0]; // directory where the command class is located
 				$strNamespace = $arrCommand[1]; // prefix namespace of the command class
 				$strClassFile = $arrCommand[2]; // suffix name of the command class
+				
+				// echo "<h3>$strClassFile</h3>";
 
 				// first, include any parent class, assuming that the parent class will
 				// follow the naming convention of having the same name as the directory
@@ -283,16 +264,18 @@ class Xerxes_Framework_FrontController
 			{
 				exit();
 			}
-      
-      ####################
+				
+			####################
 			#     COOKIES      #
 			####################
-      
-      // Any cookies specified in the reuqest object? If so, set em now. 
-      $cookieSetParams = $objRequest->cookieSetParams();
-      foreach ($cookieSetParams as $cookieParams ) {
-        set_cookie($cookieParams[0], $cookieParams[1], $cookieParams[2], $cookieParams[3], $cookieParams[4], $cookieParams[5]); 
-      }
+
+			// any cookies specified in the reuqest object? if so, set em now.
+
+			$cookieSetParams = $objRequest->cookieSetParams();
+			foreach ( $cookieSetParams as $cookieParams )
+			{
+				set_cookie( $cookieParams[0], $cookieParams[1], $cookieParams[2], $cookieParams[3], $cookieParams[4], $cookieParams[5] );
+			}
       
 			
 			####################
@@ -368,7 +351,7 @@ class Xerxes_Framework_FrontController
 				} 
 				else
 				{
-					$output = $objPage->transform( $objXml, $objControllerMap->getView(), null, true );
+					$output = $objPage->transform( $objXml, $objControllerMap->getView(), null );
 					
 					// EMBEDED JAVASCRIPT DISPLAY
 					//

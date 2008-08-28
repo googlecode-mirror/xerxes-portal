@@ -27,6 +27,7 @@
 		private $strDatabaseName = "";		// database name
 		
 		private $strFormat = "";			// format
+		private $strTechnology ="";			// technology/system format
 		
 		private $strOCLC = "";				// oclc number
 		private $strGovDoc = "";			// gov doc number
@@ -70,6 +71,7 @@
 		private $strLanguage = "";			// primary language of the record
 		private $arrNotes = array();		// notes that are not the abstract, language, or table of contents
 		private $arrSubjects = array();		// subjects
+		private $arrEngSubjects = array();  // subjects that are english only
 		private $strTOC = "";				// table of contents note
 		
 		private $arrLinks = array();		// all supplied links in the record both full text and non
@@ -209,6 +211,7 @@
 	
 				$arrFormat = $this->extractMarcArray($objXPath, 513, "a");
 				$strTitleFormat = $this->extractMarcDataField($objXPath, 245, "k");
+				$this->strTechnology = $this->extractMarcDataField($objXPath, 538, "a");
 				
 				if ( $strTitleFormat != null ) array_push($arrFormat, $strTitleFormat);				
 				
@@ -308,7 +311,20 @@
 				// we'll exclude the numeric subfields since they contain information about the
 				// source of the subject terms, which are probably not needed for display?
 				
-				$this->arrSubjects = $this->extractMarcArray($objXPath, "600-700", "abcdefghijklmnopqrstuvwxyz");
+				$this->arrSubjects = $this->extractMarcArray($objXPath, "600-669", "abcdefghijklmnopqrstuvwxyz");
+				
+				// english terms?
+				
+				$objSubjects = $objXPath->query("//marc:datafield[@tag >= 600 and @tag <= 699 and (@ind2 = '0' or @ind2 = '' or @ind2 = ' ')]");
+				
+				foreach ( $objSubjects as $objSubject )
+				{
+					$strEnglishSubject = $objSubject->nodeValue;
+					$strEnglishSubject = str_replace("\n", " ", $strEnglishSubject);
+					$strEnglishSubject = trim($strEnglishSubject);
+					
+					array_push($this->arrEngSubjects, $strEnglishSubject);
+				}
 				
 				// full-text
 				
@@ -713,6 +729,7 @@
 					// wiley interscience: wiley does not limit full-text links only to your subscription (4/29/08)
 					// oxford: only include the links that are free, otherwise just a link to abstract (5/7/08)
 					// gale: only has full-text if 'text available' note in 500 field (9/7/07)
+					// catalog: any catalog record that links to loc toc without $3, bad catalogers! (7/18/08)
 
 					
 					if ( stristr($strUrl, "$3") || 	
@@ -723,7 +740,8 @@
 					     stristr($this->strSource, "EVII") || 
 					     stristr($this->strSource, "WILEY_IS") || 
 					     ( stristr($this->strSource, "OXFORD_JOU") && ! strstr($strUrl, "content/full/") ) ||
-					     ( strstr($this->strSource, "GALE") && ! in_array("Text available", $this->arrNotes) ) )
+					     ( strstr($this->strSource, "GALE") && ! in_array("Text available", $this->arrNotes) ) ||
+					     stristr($strUrl, "www.loc.gov/catdir") )
 					{
 						$bolToc = true;
 					}
@@ -799,7 +817,6 @@
 					$this->strOCLC = $strJustOclcNumber;
 				}
 				
-				
 				### summary
 				
 				// abstract
@@ -835,7 +852,6 @@
 						}
 					}
 				}
-				
 				
 				### journal title
 				
@@ -947,7 +963,10 @@
 				{
 					$this->strEdition = $arrEdition[0];
 				}
-				
+				elseif ( substr($this->strEdition, -4) == " ed." )
+				{
+					$this->strEdition = substr($this->strEdition, 0, -4);
+				}
 				
 				### isbn
 				
@@ -1033,7 +1052,6 @@
 					$this->strDate = $this->extractYear($strThesis);
 				}
 				
-				
 				### title
 				
 				$this->strNonSort = strip_tags($this->strNonSort);
@@ -1085,9 +1103,6 @@
 						$this->strTitle = substr($this->strTitle, 3);						
 					}
 				}
-				
-
-				
 				
 				### year
 				
@@ -1231,6 +1246,7 @@
 				$this->strShortTitle = $this->stripEndPunctuation($this->strShortTitle, "./;,:" );
 				$this->strJournalTitle = $this->stripEndPunctuation($this->strJournalTitle, "./;,:" );
 				$this->strSeriesTitle = $this->stripEndPunctuation($this->strSeriesTitle, "./;,:" );
+				$this->strTechnology = $this->stripEndPunctuation($this->strTechnology, "./;,:" );
 				
 				$this->strPlace = $this->stripEndPunctuation($this->strPlace, "./;,:" );
 				$this->strPublisher = $this->stripEndPunctuation($this->strPublisher, "./;,:" );
@@ -1242,6 +1258,16 @@
 					{
 						$this->arrAuthors[$x][$key] = $this->stripEndPunctuation($value, "./;,:" );
 					}
+				}
+
+				for ( $s = 0; $s < count($this->arrEngSubjects); $s++ )
+				{
+					$this->arrEngSubjects[$s] = $this->stripEndPunctuation($this->arrEngSubjects[$s], "./;,:" );
+				}
+				
+				for ( $s = 0; $s < count($this->arrSubjects); $s++ )
+				{
+					$this->arrSubjects[$s] = $this->stripEndPunctuation($this->arrSubjects[$s], "./;,:" );
 				}
 			}
 		}
@@ -1452,6 +1478,7 @@
 			$arrIssn = $this->getAllISSN();
 			$arrIsbn = $this->getAllISBN();
 			$arrSubjects = $this->getSubjects();
+			$arrNotes = $this->getNotes();
 			
 			// simple elements
 			
@@ -1462,6 +1489,7 @@
 			if ($this->getResultSet() != null ) $objRecord->appendChild($objXml->createElement("result_set", $this->escapeXML($this->getResultSet()))); 
 			if ($this->getRecordNumber() != null ) $objRecord->appendChild($objXml->createElement("record_number", $this->escapeXML($this->getRecordNumber()))); 
 			if ($this->getFormat() != null ) $objRecord->appendChild($objXml->createElement("format", $this->escapeXML($this->getFormat()))); 
+			if ($this->getTechnology()!= null ) $objRecord->appendChild($objXml->createElement("technology", $this->escapeXML($this->getTechnology())));
 			if ($this->getNonSort() != null ) $objRecord->appendChild($objXml->createElement("non_sort", $this->escapeXML($this->getNonSort())));
 			if ($this->getMainTitle() != null ) $objRecord->appendChild($objXml->createElement("title", $this->escapeXML($this->getMainTitle()))); 
 			if ($this->getSubTitle() != null ) $objRecord->appendChild($objXml->createElement("sub_title", $this->escapeXML($this->getSubTitle())));
@@ -1626,6 +1654,11 @@
 				{
 					$objSubject = $objXml->createElement("subject", $this->escapeXml($strSubject));
 					$objSubjects->appendChild($objSubject);
+					
+					if ( !in_array($strSubject, $this->arrEngSubjects))
+					{
+						$objSubject->setAttribute("thesaurus", "foreign");
+					}
 				}
 				
 				$objRecord->appendChild($objSubjects);
@@ -1633,7 +1666,7 @@
 			
 			// notes
 			
-			if ( count($this->arrNotes) > 0 )
+			if ( count($arrNotes) > 0 )
 			{
 				$objNotes = $objXml->createElement("notes");
 				
@@ -2988,82 +3021,119 @@
 			return $bolFullText;
 		}
 		
-		public function getFullText($strType, $bolArray = false)
+		public function getFullText($bolFullText = false)
 		{
-			$strLink = "";
-			$arrFinalLinks = array();
+			// limit to only full-text links
 			
-			foreach($this->arrLinks as $arrLink )
+			if ( $bolFullText == true )
 			{
-				if ( $arrLink[2] == $strType)
+				$arrFinal = array();
+				
+				foreach ( $this->arrLinks as $arrLink )
 				{
-					if ( $bolArray == true )
+					if ( $arrLink[2] != "none")
 					{
-						array_push($arrFinalLinks, $arrLink[1]);
-					}
-					else
-					{
-						$strLink = $arrLink[1];
+						array_push($arrFinal, $arrLink);
 					}
 				}
+				
+				return $arrFinal;
 			}
-			if ( $bolArray == true )
-			{
-				return $arrFinalLinks;
-			}
-			else 
-			{
-				return $strLink;		
+			else
+			{	
+				// all the links
+				
+				return $this->arrLinks;
 			}
 		}
 		
-		public function getPrimaryAuthor($bolReverse = false) 
+		public function getPrimaryAuthor($bolReverse = false)
 		{
-			$strAuthor = "";
+			$arrPrimaryAuthor = $this->getAuthors(true, true, $bolReverse);
 			
-			if ( count( $this->arrAuthors ) > 0 )
+			if ( count($arrPrimaryAuthor) > 0 )
 			{
-				$arrAuthor = $this->arrAuthors[0];
-				$strLast = "";
-				$strFirst = "";
-				$strInit = "";
-				$strName = "";
-				
-				if ( array_key_exists("first", $arrAuthor)) $strFirst = $arrAuthor["first"];
-				if ( array_key_exists("last", $arrAuthor)) $strLast = $arrAuthor["last"];
-				if ( array_key_exists("init", $arrAuthor)) $strInit = $arrAuthor["init"];
-				if ( array_key_exists("name", $arrAuthor)) $strName = $arrAuthor["name"];
-				
-				if ( $strName != "" )
-				{
-					$strAuthor = $strName;
-				}
-				else
-				{		
-					if ( $bolReverse == false )
-					{
-						$strAuthor = $strFirst . " ";
-						
-						if ( $strInit != "")
-						{ 
-							$strAuthor .= $strInit . " ";
-						}  
-						
-						$strAuthor .= $strLast;
-					}
-					else
-					{
-						$strAuthor = $strLast  . ", " . $strFirst. " ". $strInit;
-					}
-				}
+				return $arrPrimaryAuthor[0];
 			}
 			elseif ( $this->strAuthorFromTitle != "" )
 			{
-				$strAuthor = $this->strAuthorFromTitle;
+				return trim($this->strAuthorFromTitle);
+			}
+			else
+			{
+				return null;
+			}
+		}
+		
+		/**
+		 * Return authors.  Authors will return as array, with each author name optionally formatted
+		 * as a string ('first last' or 'last, first') or as an associative array in parts, based on
+		 * paramaters listed below.
+		 *
+		 * @param bool $bolPrimary		[optional] return just the primary author, default false
+		 * @param bool $bolFormat		[optional] return the author names as strings (otherwise as name parts in array), default false
+		 * @param bool $bolReverse		[optional] return author names as strings, last name first
+		 * @return array
+		 */
+		
+		public function getAuthors($bolPrimary = false, $bolFormat = false, $bolReverse = false) 
+		{			
+			$arrFinal = array();
+			
+			foreach ( $this->arrAuthors as $arrAuthor)
+			{
+				if ( $bolFormat == true )
+				{
+					$strAuthor = ""; // author name formatted
+					$strLast = ""; // last name
+					$strFirst = ""; // first name
+					$strInit = ""; // middle initial
+					$strName = ""; // full name, not personal
+					
+					if ( array_key_exists("first", $arrAuthor)) $strFirst = $arrAuthor["first"];
+					if ( array_key_exists("last", $arrAuthor)) $strLast = $arrAuthor["last"];
+					if ( array_key_exists("init", $arrAuthor)) $strInit = $arrAuthor["init"];
+					if ( array_key_exists("name", $arrAuthor)) $strName = $arrAuthor["name"];
+					
+					if ( $strName != "" )
+					{
+						$strAuthor = $strName;
+					}
+					else
+					{		
+						if ( $bolReverse == false )
+						{
+							$strAuthor = $strFirst . " ";
+							
+							if ( $strInit != "")
+							{ 
+								$strAuthor .= $strInit . " ";
+							}  
+							
+							$strAuthor .= $strLast;
+						}
+						else
+						{
+							$strAuthor = $strLast  . ", " . $strFirst. " ". $strInit;
+						}
+					}
+					
+					array_push($arrFinal, $strAuthor);
+				}
+				else
+				{
+					array_push($arrFinal, $arrAuthor);
+				}
+				
+				if ( $bolPrimary == true )
+				{
+					break;
+				}
 			}
 			
-			return trim($strAuthor);
+			return $arrFinal;
 		}
+		
 		public function getTitle($bolTitleCase = false)
 		{
 			$strTitle = "";
@@ -3169,11 +3239,10 @@
 		public function getMetalibID() { return $this->strMetalibID; }
 		public function getResultSet() { return $this->strResultSet; }
 		public function getRecordNumber() { return $this->strRecordNumber; }
-		
-		public function getAuthors() { return $this->arrAuthors; }
+
 		public function isEditor() { return $this->bolEditor; }
-		
 		public function getFormat() { return $this->strFormat; }
+		public function getTechnology() { return $this->strTechnology; }
 
 		public function getNonSort() { return $this->strNonSort; }
 		public function getMainTitle() { return $this->strTitle; }
@@ -3182,7 +3251,6 @@
 				
 		public function getAbstract() { return $this->strAbstract; }
 		public function getSummary() { return $this->strSummary; }
-		public function getSubjects() { return $this->arrSubjects; }
 		public function getLanguage() { return $this->strLanguage; }
 		public function getTOC() { return $this->strTOC; }
 		
@@ -3197,6 +3265,20 @@
 		public function getEndPage() { return $this->strEndPage; }
 		
 		public function getDatabaseName() { return $this->strDatabaseName; }
+		
+		public function getNotes() { return $this->arrNotes; }
+		
+		public function getSubjects($bolEnglish = false) 
+		{
+			if ( $bolEnglish == true )
+			{
+				return $this->arrEngSubjects;
+			}
+			else
+			{
+				return $this->arrSubjects;
+			}
+		}
 		
 		public function getInstitution()
 		{

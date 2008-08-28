@@ -21,11 +21,12 @@
 		 * 								local app location for documents, and combine them so local over-rides library 
 		 * 								templates, if neccesary. 
 		 * @param array $arrParams		[optional] array of parameters to pass to stylesheet
-		 * @return string				newly formatted document
+		 * @param bool $bolDoc			[optional] return result as DOMDocument (default false)
+		 * @return mixed				newly formatted document as string or DOMDocument
 		 * @static 
 		 */ 
 					
-		public static function transform ( $xml, $strXsltPath, $arrParams = null )
+		public static function transform ( $xml, $strXsltPath, $arrParams = null, $bolDoc = false )
 		{
 			if ( $strXsltPath == "") throw new Exception("no stylesheet supplied");
 			
@@ -53,9 +54,17 @@
 			}
 				
 			// transform
+			
 			$objXsl = $objProcessor->importStylesheet($objXsl);
 				
-			return $objProcessor->transformToXml($xml);
+			if ($bolDoc == true)
+			{
+				return $objProcessor->transformToDoc($xml);
+			}
+			else 
+			{
+				return $objProcessor->transformToXml($xml);
+			}
 		}
 
 		/**
@@ -193,7 +202,7 @@
 		 * @static 
 		 */ 
 
-		private function toTitleCase( $strInput )
+		public static function toTitleCase( $strInput )
 		{
 			// NOTE: if you make a change to this function, make a corresponding change 
 			// in the Xerxes_Parser class, since this one here is a duplicate function 
@@ -379,7 +388,78 @@
 			
 			return $string;
 		}
-		
+
+		/**
+		 * Send an http post request
+		 *
+		 * @param string $url the location of the server
+		 * @param string $data the data to send
+		 * @return string data returned from the server
+		 * @static 
+		 */
+
+		public static function postRequest($url, $data, $content_type = null, $bolEncode = false)
+		{
+			$arrMatches = array();
+			$host = "";
+			$port = 80;
+			$path = "";
+			$buf = "";
+			
+			if ( $content_type == null )
+			{
+				$content_type = "application/x-www-form-urlencoded";
+			}
+			
+			// split the host from the path
+			
+			if ( preg_match("/http:\/\/([^\/]*)(\/.*)/", $url, $arrMatches) != false )
+			{
+				$host = $arrMatches[1];
+				$path = $arrMatches[2];
+			}
+			
+			// extract the port number, if present
+			
+			if ( strstr($host, ":") )
+			{
+				$port = (int) self::removeLeft($host, ":");
+				$host = self::removeRight($host, ":");
+			}
+						
+			$fp = fsockopen($host, $port);
+			
+			if ( ! $fp )
+			{
+				throw new Exception("could not connect to server");
+			}
+			
+			if ( $bolEncode == true )
+			{
+				$data = urlencode($data);
+			}
+			
+			fputs($fp, "POST $path HTTP/1.1\r\n");
+			fputs($fp, "Host: $host\r\n");
+			fputs($fp, "Content-type: $content_type\r\n");
+			fputs($fp, "Content-length: " . strlen($data) . "\r\n");
+			fputs($fp, "Connection: close\r\n\r\n");
+			fputs($fp, $data);
+			
+			while (!feof($fp))
+			{
+				$buf .= fgets($fp,128);
+			}
+			
+			fclose($fp);
+			
+			if ( ! strstr($buf, "200 OK") )
+			{
+				throw new Exception("Error in response, $buf");
+			}
+			
+			return $buf;
+		}
 	}
 	
 ?>
