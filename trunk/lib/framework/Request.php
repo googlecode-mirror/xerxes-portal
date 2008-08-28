@@ -780,17 +780,18 @@ class Xerxes_Framework_Request
 			{
 				foreach ( $value as $strKey => $strValue )
 				{
-					// multi-dimensional arrays sometimes too
-					
+					$objElement = $objXml->createElement( $strSafeKey );
+					$objElement->setAttribute( "key", $strKey );
+					$objAppend->appendChild( $objElement );
+
 					if ( is_array( $strValue ) )
 					{
-						$this->addElement($objXml, $objAppend, $strValue);
+						// multi-dimensional arrays will be recursively added
+						$this->addElement($objXml, $objElement, $strValue);
 					}
 					else
 					{
-						$objElement = $objXml->createElement( $strSafeKey, Xerxes_Parser::escapeXml( $strValue ) );
-						$objElement->setAttribute( "key", $strKey );
-						$objAppend->appendChild( $objElement );
+						$objElement->nodeValue = Xerxes_Parser::escapeXml( $strValue );
 					}
 				}
 			}
