@@ -137,7 +137,7 @@
 				
 				$bolProxy = false;
 			}
-			elseif ( strstr($strUrl, $strProxyServer) )
+			elseif ( stristr($strUrl, $strProxyServer) )
 			{
 				// EZProxy
 				

@@ -24,7 +24,7 @@
 <xsl:template name="main">
 
 	<xsl:variable name="return" 	select="request/return" />
-	<xsl:variable name="local" 		select="request/local" />
+	<xsl:variable name="local" 	select="request/local" />
 
 	<xsl:variable name="username">
 		<xsl:if test="not(contains(request/session/username,'local@')) and not(contains(request/session/username,'guest@'))">
@@ -41,7 +41,7 @@
 			
 			<xsl:choose>
 				<xsl:when test="error = 'authentication'">
-					<p class="error">Sorry, your username of password was incorrect.</p>
+					<p class="error">Sorry, your username or password was incorrect.</p>
 				</xsl:when>
 				<xsl:when test="error = 'authorization'">
 					<p class="error">Sorry, you are not allowed to use this feature.</p>				

@@ -76,7 +76,7 @@
 		// do it! Update our icons only after success please! Then we're only
     // telling them they have saved a record if they really have! Hooray
     // for javascript closures. 
-	  $(id).update("Working...");
+	  $(id).update("Saving...");
     $(id).addClassName("disabled"); 	
 		new Ajax.Request(url, {"onFailure": function(ajaxRequest) {
         alert('Sorry, an error occured, your record was not saved.');

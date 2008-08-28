@@ -68,10 +68,10 @@
 	<head>
 	<title><xsl:call-template name="title" /></title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<xsl:call-template name="header" />
 	<base href="{$base_include}/" />
 	<link href="{$base_include}/css/xerxes.css" rel="stylesheet" type="text/css" />
 	<link href="{$base_include}/css/xerxes-print.css" rel="stylesheet" type="text/css" media="print" />
-	<xsl:call-template name="header" />
 	</head>
 	<body>
 	<xsl:if test="request/action = 'subject'">
@@ -134,16 +134,31 @@
 	</xsl:variable>
 	
 	<xsl:choose>
-		<xsl:when test="request/action = 'subject' or request/actions/action = 'subject'">
+		<!-- mango -->
+		
+		<xsl:when test="request/base = 'books' and request/action = 'results'">
+			<xsl:text>Results: </xsl:text>
+			<xsl:value-of select="//request/query" />
+			<xsl:if test="//request/startRecord">
+				( <xsl:value-of select="//request/startRecord" /> )
+			</xsl:if>
+		</xsl:when>
+		<xsl:when test="request/base = 'books' and request/action = 'record'">
+			<xsl:value-of select="//results/records/record/xerxes_record/title_normalized" />
+		</xsl:when>
+		
+		<!-- xerxes -->
+		
+		<xsl:when test="request/base = 'databases' and (request/action = 'subject' or request/actions/action = 'subject')">
 			<xsl:text></xsl:text><xsl:value-of select="//category/@name" />
 		</xsl:when>
-		<xsl:when test="request/action = 'alphabetical'">
+		<xsl:when test="request/base = 'databases' and request/action = 'alphabetical'">
 			<xsl:text>Databases A-Z</xsl:text>
 		</xsl:when>
 		<xsl:when test="request/base = 'databases' and request/action = 'find'">
 			<xsl:text>Find a Database</xsl:text>
 		</xsl:when>
-		<xsl:when test="request/action = 'database'">
+		<xsl:when test="request/base = 'databases' and request/action = 'database'">
 			<xsl:text></xsl:text><xsl:value-of select="//title_display" />
 		</xsl:when>
 		<xsl:when test="request/base = 'embed' and request/action = 'gen_subject'">
@@ -154,23 +169,23 @@
 			<xsl:text>Create Snippet for: </xsl:text>
 			<xsl:value-of select="//title_display" />
 		</xsl:when>
-		<xsl:when test="request/action = 'hits'">
+		<xsl:when test="request/base = 'metasearch' and request/action = 'hits'">
 			<xsl:value-of select="results/search/context" /><xsl:text>: </xsl:text>
 			<xsl:value-of select="results/search/pair/query" /><xsl:text>: </xsl:text>
 			<xsl:text>Searching</xsl:text>
 		</xsl:when>
-		<xsl:when test="request/action = 'results' or request/action = 'facet'">
+		<xsl:when test="request/base = 'metasearch' and ( request/action = 'results' or request/action = 'facet')">
 			<xsl:value-of select="results/search/context" /><xsl:text>: </xsl:text>
 			<xsl:value-of select="results/search/pair/query" /><xsl:text>: </xsl:text>
 			<xsl:text>Results </xsl:text>
 			( <xsl:value-of select="summary/range" /> )
 		</xsl:when>
-		<xsl:when test="request/action = 'record'">
+		<xsl:when test="request/base = 'metasearch' and request/action = 'record'">
 			<xsl:value-of select="results/search/context" /><xsl:text>: </xsl:text>
 			<xsl:value-of select="results/search/pair/query" /><xsl:text>: </xsl:text>
 			<xsl:text>Record</xsl:text>
 		</xsl:when>
-		<xsl:when test="request/action = 'home'">
+		<xsl:when test="request/base = 'folder' and request/action = 'home'">
 			<xsl:value-of select="$folder" />
 		</xsl:when>
 		<xsl:when test="request/action = 'login'">
@@ -179,21 +194,21 @@
 		<xsl:when test="request/action = 'logout'">
 			<xsl:text>Logout</xsl:text>
 		</xsl:when>
-		<xsl:when test="request/action = 'output_email'">
+		<xsl:when test="request/base = 'folder' and request/action = 'output_email'">
 			<xsl:text>Email</xsl:text>
 		</xsl:when>
-		<xsl:when test="request/action = 'output_export_endnote'">
+		<xsl:when test="request/base = 'folder' and request/action = 'output_export_endnote'">
 			<xsl:text>Download to Endnote</xsl:text>
 		</xsl:when>
-		<xsl:when test="request/action = 'output_export_text'">
+		<xsl:when test="request/base = 'folder' and request/action = 'output_export_text'">
 			<xsl:value-of select="$folder" /><xsl:text>: Download to Text File</xsl:text>
 		</xsl:when>
-		<xsl:when test="request/action = 'output_refworks'">
+		<xsl:when test="request/base = 'folder' and request/action = 'output_refworks'">
 			<xsl:text>Export to Refworks</xsl:text>
 		</xsl:when>
-		<xsl:when test="request/action = 'full'">
+		<xsl:when test="request/base = 'folder' and request/action = 'full'">
 			<xsl:value-of select="$folder" /><xsl:text>: Record</xsl:text>
-		</xsl:when>	 
+		</xsl:when>
 	</xsl:choose>
 	
 </xsl:template>
@@ -219,41 +234,41 @@
 	<xsl:variable name="base" select="config/application_name" />
 	
 	<xsl:choose>
-		<xsl:when test="request/action = 'categories' or request/actions/action = 'categories'">
+		<xsl:when test="request/base = 'databases' and (request/action = 'categories' or request/actions/action = 'categories')">
 			<xsl:value-of select="$base" />
 		</xsl:when>
-		<xsl:when test="request/action = 'subject' or request/actions/action = 'subject'">
+		<xsl:when test="request/base = 'databases' and (request/action = 'subject' or request/actions/action = 'subject')">
 			<xsl:value-of select="$base" /><xsl:text>: </xsl:text><xsl:value-of select="//category/@name" />
 		</xsl:when>
-		<xsl:when test="request/action = 'alphabetical'">
+		<xsl:when test="request/base = 'databases' and request/action = 'alphabetical'">
 			<xsl:value-of select="$base" /><xsl:text>: Databases A-Z</xsl:text>
 		</xsl:when>
 		<xsl:when test="request/base = 'databases' and request/action = 'find'">
 			<xsl:value-of select="$base" /><xsl:text>: Find a Database</xsl:text>
 		</xsl:when>
-		<xsl:when test="request/action = 'database'">
+		<xsl:when test="request/base = 'databases' and request/action = 'database'">
 			<xsl:value-of select="$base" /><xsl:text>: </xsl:text><xsl:value-of select="//title_display" />
 		</xsl:when>
-		<xsl:when test="request/action = 'hits'">
+		<xsl:when test="request/base = 'metasearch' and request/action = 'hits'">
 			<xsl:value-of select="$base" /><xsl:text>: </xsl:text>
 			<xsl:value-of select="results/search/context" /><xsl:text>: </xsl:text>
 			<xsl:value-of select="results/search/pair/query" /><xsl:text>: </xsl:text>
 			<xsl:text>Searching</xsl:text>
 		</xsl:when>
-		<xsl:when test="request/action = 'results' or request/action = 'facet'">
+		<xsl:when test="request/base = 'metasearch' and (request/action = 'results' or request/action = 'facet')">
 			<xsl:value-of select="$base" /><xsl:text>: </xsl:text>
 			<xsl:value-of select="results/search/context" /><xsl:text>: </xsl:text>
 			<xsl:value-of select="results/search/pair/query" /><xsl:text>: </xsl:text>
 			<xsl:text>Results </xsl:text>
 			( <xsl:value-of select="summary/range" /> )
 		</xsl:when>
-		<xsl:when test="request/action = 'record'">
+		<xsl:when test="request/base = 'metasearch' and request/action = 'record'">
 			<xsl:value-of select="$base" /><xsl:text>: </xsl:text>
 			<xsl:value-of select="results/search/context" /><xsl:text>: </xsl:text>
 			<xsl:value-of select="results/search/pair/query" /><xsl:text>: </xsl:text>
 			<xsl:text>Record</xsl:text>
 		</xsl:when>
-		<xsl:when test="request/action = 'home'">
+		<xsl:when test="request/base = 'folder' and request/action = 'home'">
 			<xsl:value-of select="$folder" />
 		</xsl:when>
 		<xsl:when test="request/action = 'login'">
@@ -262,16 +277,16 @@
 		<xsl:when test="request/action = 'logout'">
 			<xsl:value-of select="$base" /><xsl:text>: Logout</xsl:text>
 		</xsl:when>
-		<xsl:when test="request/action = 'output_email'">
+		<xsl:when test="request/base = 'folder' and request/action = 'output_email'">
 			<xsl:value-of select="$base" /><xsl:text>: Email</xsl:text>
 		</xsl:when>
-		<xsl:when test="request/action = 'output_export_endnote'">
+		<xsl:when test="request/base = 'folder' and request/action = 'output_export_endnote'">
 			<xsl:value-of select="$folder" /><xsl:text>: Download to Endnote</xsl:text>
 		</xsl:when>
-		<xsl:when test="request/action = 'output_export_text'">
+		<xsl:when test="request/base = 'folder' and request/action = 'output_export_text'">
 			<xsl:value-of select="$folder" /><xsl:text>: Download to Text File</xsl:text>
 		</xsl:when>
-		<xsl:when test="request/action = 'full'">
+		<xsl:when test="request/base = 'folder' and request/action = 'full'">
 			<xsl:value-of select="$folder" /><xsl:text>: Record</xsl:text>
 		</xsl:when>
 		<xsl:otherwise>
@@ -317,28 +332,42 @@
 	<xsl:variable name="resultset" 		select="request/resultset" />
 	<xsl:variable name="start_record" 	select="request/startrecord" />
 	<xsl:variable name="records_per_page" 	select="config/records_per_page" />
-	 
 	<xsl:variable name="folder" select="navbar/element[@id = 'saved_records']/url" />
 	
 	<xsl:call-template name="breadcrumb_start" />
 	
 	<xsl:choose>
+
+		<!-- rss and mango -->
+		
+		<xsl:when test="request/base = 'books' and request/action = 'results'">
+			<span class="breadcrumbHere">Results</span>
+		</xsl:when>
+		<xsl:when test="request/base = 'books' and request/action = 'record'">
+			<span class="breadcrumbHere">Record</span>
+		</xsl:when>
+		<xsl:when test="request/base = 'rss'">
+			<span class="breadcrumbHere">RSS prototype</span>
+		</xsl:when>
+		
+		<!-- metasearch -->
+		
 		<xsl:when test="request/action = 'login'">
 			<span class="breadcrumbHere">Login</span>
 		</xsl:when>
 		<xsl:when test="request/action = 'logout'">
 			<span class="breadcrumbHere">Logout</span>
 		</xsl:when>
-		<xsl:when test="request/action = 'subject' or request/actions/action = 'subject'">
+		<xsl:when test="request/base = 'databases' and (request/action = 'subject' or request/actions/action = 'subject')">
 			<span class="breadcrumbHere"><xsl:value-of select="//category/@name" /></span>
 		</xsl:when>
-		<xsl:when test="request/action = 'alphabetical'">
+		<xsl:when test="request/base = 'databases' and request/action = 'alphabetical'">
 			<span class="breadcrumbHere">Databases A-Z</span>
 		</xsl:when>
 		<xsl:when test="request/base = 'databases' and request/action = 'find'">
 			<xsl:call-template name="page_name" />
 		</xsl:when>
-		<xsl:when test="request/action = 'database'">
+		<xsl:when test="request/base = 'databases' and request/action = 'database'">
 			<xsl:if test="$return != ''">			 
 				<a href="{$return}">
 					<xsl:choose>
@@ -351,20 +380,20 @@
 			</xsl:if>
 			<span class="breadcrumbHere"><xsl:value-of select="//title_display" /></span>
 		</xsl:when>
-		<xsl:when test="request/action = 'hits'">
+		<xsl:when test="request/base = 'metasearch' and request/action = 'hits'">
 			<a href="{$context_url}"><xsl:value-of select="results/search/context" /></a> <xsl:value-of select="$text_breadcrumb_seperator" /> 
 			<span class="breadcrumbHere">Searching</span>
 		</xsl:when>
-		<xsl:when test="request/action = 'results'">
+		<xsl:when test="request/base = 'metasearch' and request/action = 'results'">
 			<a href="{$context_url}"><xsl:value-of select="results/search/context" /></a> <xsl:value-of select="$text_breadcrumb_seperator" /> 
 			<span class="breadcrumbHere"><xsl:value-of select="results/database" /></span>
 		</xsl:when>
-		<xsl:when test="request/action = 'facet'">
+		<xsl:when test="request/base = 'metasearch' and request/action = 'facet'">
 			<a href="{$context_url}"><xsl:value-of select="results/search/context" /></a> <xsl:value-of select="$text_breadcrumb_seperator" /> 
 			<a href="{$return}"><xsl:value-of select="results/database" /></a> <xsl:value-of select="$text_breadcrumb_seperator" />
 			<span class="breadcrumbHere"><xsl:value-of select="results/facet_name" /></span>
 		</xsl:when>
-		<xsl:when test="request/action = 'record'">
+		<xsl:when test="request/base = 'metasearch' and request/action = 'record'">
 			<a href="{$context_url}"><xsl:value-of select="results/search/context" /></a> <xsl:value-of select="$text_breadcrumb_seperator" /> 
 			
 			<xsl:choose>
@@ -385,29 +414,38 @@
 			</xsl:choose>
 			<span class="breadcrumbHere">Record</span>
 		</xsl:when>
-		<xsl:when test="request/action = 'home'">
-			<span class="breadcrumbHere">My Saved Records</span>
+		<xsl:when test="request/base = 'folder' and request/action = 'home'">
+			<xsl:choose>
+				<xsl:when test="request/label or request/type">
+					<a href="{$folder}">My Saved Records</a> <xsl:value-of select="$text_breadcrumb_seperator" />
+					<span class="breadcrumbHere"><xsl:value-of select="request/label|request/type" /></span>
+				</xsl:when>
+				<xsl:otherwise>
+					<span class="breadcrumbHere">My Saved Records</span>
+				</xsl:otherwise>
+			</xsl:choose>
 		</xsl:when>
-		<xsl:when test="request/action = 'output_email'">
+		<xsl:when test="request/base = 'folder' and request/action = 'output_email'">
 			<a href="{$folder}">My Saved Records</a> <xsl:value-of select="$text_breadcrumb_seperator" /> 
 			<span class="breadcrumbHere">Email</span>
 		</xsl:when>
-		<xsl:when test="request/action = 'output_export_endnote'">
+		<xsl:when test="request/base = 'folder' and request/action = 'output_export_endnote'">
 			<a href="{$folder}">My Saved Records</a> <xsl:value-of select="$text_breadcrumb_seperator" /> 
 			<span class="breadcrumbHere">Download to Endnote</span>
 		</xsl:when>
-		<xsl:when test="request/action = 'output_refworks'">
+		<xsl:when test="request/base = 'folder' and request/action = 'output_refworks'">
 			<a href="{$folder}">My Saved Records</a> <xsl:value-of select="$text_breadcrumb_seperator" /> 
 			<span class="breadcrumbHere">Export to Refworks</span>
 		</xsl:when>
-		<xsl:when test="request/action = 'output_export_text'">
+		<xsl:when test="request/base = 'folder' and request/action = 'output_export_text'">
 			<a href="{$folder}">My Saved Records</a> <xsl:value-of select="$text_breadcrumb_seperator" /> 
 			<span class="breadcrumbHere">Download to Text File</span>
 		</xsl:when>
-		<xsl:when test="request/action = 'full'">
+		<xsl:when test="request/base = 'folder' and request/action = 'full'">
 			<a href="{$folder}">My Saved Records</a> <xsl:value-of select="$text_breadcrumb_seperator" /> 
 			<span class="breadcrumbHere">Record</span>
-		</xsl:when>
+		</xsl:when>	
+		
 		<xsl:when test="request/base = 'embed' and request/action = 'gen_subject'">
 			<a>
 				<xsl:attribute name="href">
@@ -429,8 +467,8 @@
 			<span class="breadcrumbHere">Create Snippet</span>
 		</xsl:when>
 		<xsl:otherwise>
-		<span class="breadcrumbHere"><xsl:call-template name="page_name" /></span>
-	</xsl:otherwise>
+			<span class="breadcrumbHere"><xsl:call-template name="page_name" /></span>
+		</xsl:otherwise>
 	</xsl:choose>
 
 </xsl:template>
@@ -451,6 +489,7 @@
 	</xsl:comment>
 
 	<div class="sessionOptions" title="login and saved records links">
+		<xsl:if test="request/base != 'authenticate'">
 		<span class="sessionAction">
 			<xsl:choose>
 			<xsl:when test="request/session/role and request/session/role != 'local'">
@@ -467,15 +506,16 @@
 			</xsl:choose>
 		</span>
 		|
+		</xsl:if>
 		<span class="sessionAction">
 			<img name="folder" width="17" height="15" border="0" id="folder" alt="">
-      <xsl:attribute name="src">
+			<xsl:attribute name="src">
 				<xsl:choose>
 				<xsl:when test="navbar/element[@id='saved_records']/@numSessionSavedRecords &gt; 0"><xsl:value-of select="$base_include" />/images/folder_on.gif</xsl:when>
 				<xsl:otherwise><xsl:value-of select="$base_include"/>/images/folder.gif</xsl:otherwise>
 				</xsl:choose>
 			</xsl:attribute>
-      </img>
+			</img>
 			<xsl:text> </xsl:text>
 			<a>
 		<xsl:attribute name="href"><xsl:value-of select="navbar/element[@id='saved_records']/url" /></xsl:attribute>
@@ -491,233 +531,231 @@
 -->
 <xsl:template name="search_box">
 
+	<!-- split contents into seperate template to make partial AJAX loading easier -->
+	<div class="searchBox" id="searchBox">
+	
+		<!-- "base" url used for switching search modes. Defaults to just our current url, but for embed purposes 
+		may be provided differently. -->
+	
+		<xsl:param name="full_page_url" select="//request/server/request_uri"/>
+	
+		<!-- pull out any already existing query entries -->
+		
+		<xsl:variable name="query" select="//results/search/pair[@position = '1']/query" />
+		<xsl:variable name="query2" select="//results/search/pair[@position = '2']/query" />
+		
+		<xsl:variable name="find_operator" select="//results/search/operator[@position = '1']" />
+		
+		<xsl:variable name="field" select="//results/search/pair[@position ='1']/field"/>
+		<xsl:variable name="field2" select="//results/search/pair[2]/field"/>
+		
+		<xsl:variable name="advanced_mode" select="(//request/metasearch_input_mode = 'advanced') or ($query2 != '') or $field = 'ISSN' or $field = 'ISBN' or $field = 'WYR' " />
+		
+		<!-- javascript to ajaxy toggle the advanced search input mode. Have to set advancedMode global for toggle scripts. -->
+		<script type="text/javascript">
+			advancedMode = <xsl:value-of select="$advanced_mode" />;
+		</script>
+		<script src="{$base_include}/javascript/toggle_metasearch_advanced.js" language="javascript" type="text/javascript"></script>
+		
+		<div id="searchLabel">
+			<label for="field">Search</label>
+		</div>
+		
+		<div id="searchInputs">
+			<xsl:call-template name="metasearch_input_pair">
+				<xsl:with-param name="field_selected" select="$field" />
+				<xsl:with-param name="query_entered" select="$query" />
+				<xsl:with-param name="advanced_mode" select="$advanced_mode" />
+			</xsl:call-template>
 
-      <!-- split contents into seperate template to make partial AJAX loading
-       easier -->
-      <div class="searchBox" id="searchBox">
-        <!-- "base" url used for switching search modes. Defaults to just
-             our current url, but for embed purposes may be provided 
-             differently. -->
-        <xsl:param name="full_page_url" select="/*/request/server/request_uri"/>
-   
-        <!-- pull out any already existing query entries -->
-        
-        <xsl:variable name="query" select="/*/results/search/pair[@position = '1']/query" />
-        <xsl:variable name="query2" select="/*/results/search/pair[@position = '2']/query" />
-        
-        <xsl:variable name="find_operator" select="/*/results/search/operator[@position = '1']" />
-        
-        <xsl:variable name="field" select="/*/results/search/pair[@position ='1']/field"/>
-        <xsl:variable name="field2" select="/*/results/search/pair[2]/field"/>
-    
-    
-        <xsl:variable name="advanced_mode" select="(/*/request/metasearch_input_mode = 'advanced') or ($query2 != '') or $field = 'ISSN' or $field = 'ISBN' or $field = 'WYR' " />
-          
-        <!-- javascript to ajaxy toggle the advanced search input mode.
-           Have to set advancedMode global for toggle scripts. -->
-        <script type="text/javascript">
-          advancedMode = <xsl:value-of select="$advanced_mode" />; 
-        </script>
-        <script src="{$base_include}/javascript/toggle_metasearch_advanced.js" language="javascript" type="text/javascript"></script>
-    
-        
-        <div id="searchLabel">
-          <label for="field">Search</label>
-        </div>
-        
-        <div id="searchInputs">
-          <xsl:call-template name="metasearch_input_pair">
-            <xsl:with-param name="field_selected" select="$field" />
-            <xsl:with-param name="query_entered" select="$query" />
-            <xsl:with-param name="advanced_mode" select="$advanced_mode" />
-          </xsl:call-template>
-
-          <!-- advanced search stuff is output even if we are
-               in simple mode, but with display:none. Javascriptiness may
-               easily toggle without reload that way. -->
-          <xsl:text> </xsl:text>
-          <select id="find_operator1" name="find_operator1">
-            <xsl:if test="not($advanced_mode)">
-              <xsl:attribute name="style">display:none;</xsl:attribute>
-            </xsl:if>
-            <option value="AND">
-              <xsl:if test="$find_operator = 'AND'">
-                <xsl:attribute name="selected">selected</xsl:attribute>
-              </xsl:if>
-              And
-            </option>
-            <option value="OR">
-              <xsl:if test="$find_operator = 'OR'">
-                <xsl:attribute name="selected">selected</xsl:attribute>
-              </xsl:if>
-              Or
-            </option>
-            <option value="NOT">
-              <xsl:if test="$find_operator = 'NOT'">
-                <xsl:attribute name="selected">selected</xsl:attribute>
-              </xsl:if>
-              Without
-            </option>
-          </select>
-          
-          <br id="searchBox_advanced_newline">
-            <xsl:if test="not($advanced_mode)">
-              <xsl:attribute name="style">display:none;</xsl:attribute>
-            </xsl:if>
-          </br>
-          <span id="searchBox_advanced_pair">
-            <xsl:if test="not($advanced_mode)">
-              <xsl:attribute name="style">display:none;</xsl:attribute>
-            </xsl:if>
-            <xsl:call-template name="metasearch_input_pair">
-              <xsl:with-param name="field_selected" select="$field2" />
-              <xsl:with-param name="query_entered" select="$query2" />
-              <xsl:with-param name="advanced_mode" select="$advanced_mode" />
-              <xsl:with-param name="input_name_suffix" select="2" />
-            </xsl:call-template>
-            <xsl:text> </xsl:text>
-          </span>
-          <input type="submit" name="Submit" value="GO" />
-        </div>
-          
-          
-        <xsl:if test="results/search/spelling != ''">
-          <xsl:variable name="spell_url" select="results/search/spelling_url" />
-          <p class="errorSpelling">Did you mean: <a href="{$spell_url}"><xsl:value-of select="//spelling" /></a></p>
-        </xsl:if>
-        
-        <div id="metasearch_input_toggle">
-          <xsl:choose>
-            <xsl:when test="$advanced_mode">
-              <a id="searchBox_toggle" onClick="toggleSearchMode(); return false;">
-                <xsl:attribute name="href">
-                  <xsl:value-of select="php:functionString('setParamInUrl', $full_page_url, 'metasearch_input_mode', 'simple')"/>
-                </xsl:attribute>
-              Fewer options
-              </a>
-            </xsl:when>
-            <xsl:otherwise>
-              <a id="searchBox_toggle" onClick="toggleSearchMode(); return false;">
-                <xsl:attribute name="href">
-                  <xsl:value-of select="php:functionString('setParamInUrl', $full_page_url, 'metasearch_input_mode', 'advanced')"/>
-                </xsl:attribute>
-              More options
-              </a>
-            </xsl:otherwise>
-          </xsl:choose>      
-        </div>
-
-      </div>
-      
-    <xsl:for-each select="//base_info">
+			<!-- advanced search stuff is output even if we are in simple mode, but with display:none. 
+			Javascriptiness may easily toggle without reload that way. -->
+			<xsl:text> </xsl:text>
+			<select id="find_operator1" name="find_operator1">
+				<xsl:if test="not($advanced_mode)">
+					<xsl:attribute name="style">display:none;</xsl:attribute>
+				</xsl:if>
+				<option value="AND">
+					<xsl:if test="$find_operator = 'AND'">
+						<xsl:attribute name="selected">selected</xsl:attribute>
+					</xsl:if>
+					And
+				</option>
+				<option value="OR">
+					<xsl:if test="$find_operator = 'OR'">
+						<xsl:attribute name="selected">selected</xsl:attribute>
+					</xsl:if>
+				Or
+				</option>
+				<option value="NOT">
+					<xsl:if test="$find_operator = 'NOT'">
+						<xsl:attribute name="selected">selected</xsl:attribute>
+					</xsl:if>
+				Without
+				</option>
+			</select>
+		
+			<br id="searchBox_advanced_newline">
+				<xsl:if test="not($advanced_mode)">
+					<xsl:attribute name="style">display:none;</xsl:attribute>
+				</xsl:if>
+			</br>
+			<span id="searchBox_advanced_pair">
+				<xsl:if test="not($advanced_mode)">
+				<xsl:attribute name="style">display:none;</xsl:attribute>
+				</xsl:if>
+				<xsl:call-template name="metasearch_input_pair">
+					<xsl:with-param name="field_selected" select="$field2" />
+					<xsl:with-param name="query_entered" select="$query2" />
+					<xsl:with-param name="advanced_mode" select="$advanced_mode" />
+					<xsl:with-param name="input_name_suffix" select="2" />
+				</xsl:call-template>
+				<xsl:text> </xsl:text>
+			</span>
+			<input type="submit" name="Submit" value="GO" />
+		</div>
+		<xsl:if test="results/search/spelling != ''">
+			<xsl:variable name="spell_url" select="results/search/spelling_url" />
+			<p class="errorSpelling">Did you mean: <a href="{$spell_url}"><xsl:value-of select="//spelling" /></a></p>
+		</xsl:if>
+	
+		<div id="metasearch_input_toggle">
+			<xsl:choose>
+			<xsl:when test="$advanced_mode">
+				<a id="searchBox_toggle" onClick="toggleSearchMode(); return false;">
+				<xsl:attribute name="href">
+					<xsl:value-of select="php:functionString('Xerxes_Framework_Request::setParamInUrl', $full_page_url, 'metasearch_input_mode', 'simple')"/>
+				</xsl:attribute>
+				Fewer options
+				</a>
+			</xsl:when>
+			<xsl:otherwise>
+				<a id="searchBox_toggle" onClick="toggleSearchMode(); return false;">
+				<xsl:attribute name="href">
+					<xsl:value-of select="php:functionString('Xerxes_Framework_Request::setParamInUrl', $full_page_url, 'metasearch_input_mode', 'advanced')"/>
+				</xsl:attribute>
+				More options
+				</a>
+			</xsl:otherwise>
+		</xsl:choose>
+		</div>
+	</div>
+	
+	<xsl:for-each select="//base_info">
 		<xsl:if test="base_001">
 			<xsl:variable name="database" select="base_001" />
 			<input type="hidden" name="database" value="{$database}" />
 		</xsl:if>
 	</xsl:for-each>
+	
 </xsl:template>
 
+<!--
+	TEMPLATE: METASEARCH INPUT PAIR
+	Two search box form
+-->
 
 <xsl:template name="metasearch_input_pair">
-    <xsl:param name="field_selected" />
-    <xsl:param name="query_entered" />
-    <xsl:param name="advanced_search" select="false" />
-    <xsl:param name="input_name_suffix" select ="''" />
-
-		<select id="field{$input_name_suffix}" name="field{$input_name_suffix}">
-			<option value="WRD">all fields</option>
-			<option value="WTI">
-			<xsl:if test="$field_selected = 'WTI'">
-				<xsl:attribute name="selected">seleted</xsl:attribute>
-			</xsl:if>
-			title
-			</option>
-			<option value="WAU">
-			<xsl:if test="$field_selected = 'WAU'">
+	<xsl:param name="field_selected" />
+	<xsl:param name="query_entered" />
+	<xsl:param name="advanced_search" select="false" />
+	<xsl:param name="input_name_suffix" select ="''" />
+	
+	<select id="field{$input_name_suffix}" name="field{$input_name_suffix}">
+		<option value="WRD">all fields</option>
+		<option value="WTI">
+		<xsl:if test="$field_selected = 'WTI'">
+			<xsl:attribute name="selected">seleted</xsl:attribute>
+		</xsl:if>
+		title
+		</option>
+		<option value="WAU">
+		<xsl:if test="$field_selected = 'WAU'">
+			<xsl:attribute name="selected">selected</xsl:attribute>
+		</xsl:if>
+		author
+		</option>
+		<option value="WSU">
+		<xsl:if test="$field_selected = 'WSU'">
+			<xsl:attribute name="selected">selected</xsl:attribute>
+		</xsl:if>
+		subject
+		</option>
+		
+		<!-- Include advanced mode options? We don't just try to hide,
+		doesn't work in IE, javascript will need to actually add/remove. -->
+		
+		<xsl:if test="$advanced_mode">
+			<option value="ISSN">
+			<xsl:if test="$field_selected = 'ISSN'">
 				<xsl:attribute name="selected">selected</xsl:attribute>
 			</xsl:if>
-			author
+			ISSN
 			</option>
-			<option value="WSU">
-			<xsl:if test="$field_selected = 'WSU'">
+			<option value="ISBN">
+			<xsl:if test="$field_selected = 'ISBN'">
 				<xsl:attribute name="selected">selected</xsl:attribute>
 			</xsl:if>
-			subject
+			ISBN
 			</option>
-      
-      <!-- Include advanced mode options? We don't just try to hide,
-           doesn't work in IE, javascript will need to actually add/remove. -->
-      <xsl:if test="$advanced_mode">
-        <option value="ISSN">
-          <xsl:if test="$field_selected = 'ISSN'">
-            <xsl:attribute name="selected">selected</xsl:attribute>
-          </xsl:if>
-          ISSN
-        </option>
-        <option value="ISBN">
-          <xsl:if test="$field_selected = 'ISBN'">
-            <xsl:attribute name="selected">selected</xsl:attribute>
-          </xsl:if>
-          ISBN
-        </option>
-        <option value="WYR">
-          <xsl:if test="$field_selected = 'WYR'">
-            <xsl:attribute name="selected">selected</xsl:attribute>
-          </xsl:if>
-          year
-        </option>
-      </xsl:if>
-		</select>
-		<xsl:text> </xsl:text><label for="query{$input_name_suffix}">for</label><xsl:text> </xsl:text>
-		<input id="query{$input_name_suffix}" name="query{$input_name_suffix}" type="text" size="32" value="{$query_entered}" />
+			<option value="WYR">
+			<xsl:if test="$field_selected = 'WYR'">
+				<xsl:attribute name="selected">selected</xsl:attribute>
+			</xsl:if>
+			year
+			</option>
+		</xsl:if>
+	</select>
+	<xsl:text> </xsl:text><label for="query{$input_name_suffix}">for</label><xsl:text> </xsl:text>
+	<input id="query{$input_name_suffix}" name="query{$input_name_suffix}" type="text" size="32" value="{$query_entered}" />
+	
 </xsl:template>
 
-<!-- TEMPLATE: TAG_INPUT tab/label input form
-     used to enter labels/tags for saved record, on both folder page and search results
-     page (for saved records only) 
-
-   one of record (usually) or id (unusually) are required. 
-
-		parameter: record  =>   XSL node representing a savedRecord with a child <id> and optional children <tags>
-    parameter: id => pass a string id instead of a record in nodeset. Used for the 'template' form for ajax label input adder. 
+<!--
+	TEMPLATE: TAG INPUT
+	tab/label input form used to enter labels/tags for saved record, on both folder page and search results
+	page (for saved records only) one of record (usually) or id (unusually) are required. 
+	parameter: record  =>  XSL node representing a savedRecord with a child <id> and optional children <tags>
+	parameter: id => pass a string id instead of a record in nodeset. Used for the 'template' form for ajax 
+	label input adder. 
 -->
 
 <xsl:template name="tag_input">
 	<xsl:param name="record" select="."/>
-  <xsl:param name="id" select="$record/id"/> 
-  <xsl:param name="context" select="'the saved records page'" />
+	<xsl:param name="id" select="$record/id"/> 
+	<xsl:param name="context" select="'the saved records page'" />
 
-							<div class="folderLabels" id="tag_input_div-{$id}">
-								<form action="./" method="get" class="tags">
-									<!-- note that if this event is fired with ajax, the javascript changes
-									the action element here to 'tags_edit_ajax' so the server knows to display a 
-									different view, which the javascript captures and uses to updates the totals above. -->
-									
-									<input type="hidden" name="base" value="folder" />
-									<input type="hidden" name="action" value="tags_edit" />
-									<input type="hidden" name="record" value="{$id}" />
-									<input type="hidden" name="context" value="{$context}" />							
-	
-									<xsl:variable name="tag_list">
-										<xsl:for-each select="$record/tag">
-											<xsl:value-of select="text()" />
-											<xsl:if test="following-sibling::tag">
-												<xsl:text>, </xsl:text>
-											</xsl:if>
-										</xsl:for-each>
-									</xsl:variable>
-									
-									<input type="hidden" name="tagsShaddow" id="shadow-{$id}" value="{$tag_list}" />
-									
-									<label for="tags-{$id}">Labels: </label>
-									
-									<input type="text" name="tags" id="tags-{$id}" class="tagsInput" value="{$tag_list}" />
-									
-									<span class="folderLabelsSubmit">
-										<input id="submit-{$id}" type="submit" name="submitButton" value="Update" class="tagsSubmit" />
-									</span>
-								</form>
-							</div>
+	<div class="folderLabels" id="tag_input_div-{$id}">
+		<form action="./" method="get" class="tags">
+			<!-- note that if this event is fired with ajax, the javascript changes
+			the action element here to 'tags_edit_ajax' so the server knows to display a 
+			different view, which the javascript captures and uses to updates the totals above. -->
+			
+			<input type="hidden" name="base" value="folder" />
+			<input type="hidden" name="action" value="tags_edit" />
+			<input type="hidden" name="record" value="{$id}" />
+			<input type="hidden" name="context" value="{$context}" />
+			
+			<xsl:variable name="tag_list">
+				<xsl:for-each select="$record/tag">
+					<xsl:value-of select="text()" />
+					<xsl:if test="following-sibling::tag">
+						<xsl:text>, </xsl:text>
+					</xsl:if>
+				</xsl:for-each>
+			</xsl:variable>
+			
+			<input type="hidden" name="tagsShaddow" id="shadow-{$id}" value="{$tag_list}" />
+			
+			<label for="tags-{$id}">Labels: </label>
+			
+			<input type="text" name="tags" id="tags-{$id}" class="tagsInput" value="{$tag_list}" />
+			
+			<span class="folderLabelsSubmit">
+				<input id="submit-{$id}" type="submit" name="submitButton" value="Update" class="tagsSubmit" />
+			</span>
+		</form>
+	</div>
 							
 </xsl:template>
 
@@ -749,7 +787,7 @@
 				<!-- if the current session can't search this resource, should we show a lock icon? 
 				We show lock icons for logged in with account users, on campus users, and guest users. Not for off campus not logged in users, because they might be able to search more resources than we can tell now. --> 
 				
-				<xsl:variable name="should_lock_nonsearchable" select=" (/*/request/authorization_info/affiliated = 'true' or /*/request/session/role = 'guest')" />
+				<xsl:variable name="should_lock_nonsearchable" select=" (//request/authorization_info/affiliated = 'true' or //request/session/role = 'guest')" />
 				
 				<!-- how many database checkboxes were displayed in this subcategory, before now?
 					Used for seeing if we've reached maximum for default selected dbs. Depends on 
@@ -814,7 +852,7 @@
 					<a>
 					<xsl:attribute name="href"><xsl:value-of select="url" /></xsl:attribute>
 					<img alt="more information" src="images/info.gif" >
-						<xsl:attribute name="src"><xsl:value-of select="/*/config/base_url" />/images/info.gif</xsl:attribute>
+						<xsl:attribute name="src"><xsl:value-of select="//config/base_url" />/images/info.gif</xsl:attribute>
 					</img>
 					</a>
 				</div>
@@ -938,38 +976,48 @@
 	
 	<div class="folderHeaderArea">
 	
+	<h1>
 		<xsl:choose>
-			<xsl:when test="request/session/role = 'local' or request/session/role = 'guest'">
-				<h1>Temporary Saved Records</h1>
-				<xsl:if test="request/session/role = 'local'">
-					<p>( <a><xsl:attribute name="href"><xsl:value-of select="navbar/element[@id='login']/url"/></xsl:attribute>Log-in</a> 
-					to save the records beyond this session.)</p>
-				</xsl:if>
+			<xsl:when test="request/label or request/type">
+				<a href="./?base=folder" class="folderHomeHeader"><xsl:call-template name="folder_header_label" /></a>
 			</xsl:when>
 			<xsl:otherwise>
-				<h1>
-					<xsl:choose>
-						<xsl:when test="request/label or request/type">
-							<a href="./?base=folder" class="folderHomeHeader">My Saved Records</a>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:text>My Saved Records</xsl:text>
-						</xsl:otherwise>
-					</xsl:choose>
-					
-					<xsl:if test="request/label">
-						<xsl:text> / </xsl:text><xsl:value-of select="request/label" />
-					</xsl:if>
-					<xsl:if test="request/type">
-						<xsl:text> / </xsl:text><xsl:value-of select="request/type" />
-					</xsl:if>
-				</h1>
-	
+				<xsl:call-template name="folder_header_label" />
 			</xsl:otherwise>
 		</xsl:choose>
 		
+		<xsl:if test="request/label">
+			<xsl:text> / </xsl:text><xsl:value-of select="request/label" />
+		</xsl:if>
+		<xsl:if test="request/type">
+			<xsl:text> / </xsl:text><xsl:value-of select="request/type" />
+		</xsl:if>
+	</h1>
+	
+	<xsl:if test="request/session/role = 'local'">
+		<p>( <a href="{navbar/element[@id='login']/url}">Log-in</a> 
+		to save the records beyond this session.)</p>
+	</xsl:if>
+		
 	</div>
 
+</xsl:template>
+
+<!-- 
+	TEMPLATE: FOLDER HEADER LABEL
+	Whether this is 'temporary' or 'my' saved records
+-->
+
+
+<xsl:template name="folder_header_label">
+	<xsl:choose>
+		<xsl:when test="request/session/role = 'local' or request/session/role = 'guest'">
+			<xsl:text>Temporary Saved Records</xsl:text>
+		</xsl:when>
+		<xsl:otherwise>
+			<xsl:text>My Saved Records</xsl:text>
+		</xsl:otherwise>
+	</xsl:choose>
 </xsl:template>
 
 <!-- 
@@ -988,7 +1036,7 @@
 				<strong><span class="label_list_item"><xsl:value-of select="@label" /></span></strong> ( <xsl:value-of select="@total" /> )
 			</xsl:when>
 			<xsl:otherwise>
-				<a href="{@url}"><span class="label_list_item"><xsl:value-of select="@label" /></span></a> ( <xsl:value-of select="@total" /> )				
+				<a href="{@url}"><span class="label_list_item"><xsl:value-of select="@label" /></span></a> ( <xsl:value-of select="@total" /> )
 			</xsl:otherwise>
 		</xsl:choose>
 		</li>
@@ -1094,12 +1142,12 @@
 	<script src="{$base_include}/javascript/prototype.js" language="javascript" type="text/javascript"></script>
 	<script src="{$base_include}/javascript/scriptaculous/scriptaculous.js" language="javascript" type="text/javascript"></script>
 	<script src="{$base_include}/javascript/tags.js" language="javascript" type="text/javascript"></script>
-  <script type="text/javascript">
-    // change numSessionSavedRecords to numSavedRecords if you prefer the folder icon to change
-    // if there are any records at all in saved records. Also fix initial display in navbar.
+	<script type="text/javascript">
+		// change numSessionSavedRecords to numSavedRecords if you prefer the folder icon to change
+		// if there are any records at all in saved records. Also fix initial display in navbar.
 		numSavedRecords = 0<xsl:value-of select="navbar/element[@id='saved_records']/@numSessionSavedRecords" />;
-    isTemporarySession = <xsl:choose><xsl:when test="request/session/role = 'guest' or request/session/role = 'local'">true</xsl:when><xsl:otherwise>false</xsl:otherwise></xsl:choose>
-  </script>
+		isTemporarySession = <xsl:choose><xsl:when test="request/session/role = 'guest' or request/session/role = 'local'">true</xsl:when><xsl:otherwise>false</xsl:otherwise></xsl:choose>
+	</script>
 	<script src="{$base_include}/javascript/save.js" language="javascript" type="text/javascript"></script>
 	
 	<script language="javascript" type="text/javascript">

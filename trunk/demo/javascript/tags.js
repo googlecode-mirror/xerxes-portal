@@ -45,7 +45,7 @@
 		
 		// add onFocus event to 'tagsInput' text boxes to 
 		// activate the submit button again
-    // Add js local autocompleter to tag input boxes. 
+		// Add js local autocompleter to tag input boxes. 
 		for ( i = 0; i < inputs.length; i++)
 		{
 			if( /tagsInput/.test(inputs[i].className) )

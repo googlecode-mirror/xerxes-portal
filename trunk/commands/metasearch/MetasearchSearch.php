@@ -31,12 +31,12 @@ class Xerxes_Command_MetasearchSearch extends Xerxes_Command_Metasearch
 		$objSearch = $this->getSearchObject( $objRequest, $objRegistry );
 		
 		// params from the request
-		
+
 		$strQuery = $objRequest->getProperty( "query" );
-    $strQuery2 = $objRequest->getProperty("query2");
+		$strQuery2 = $objRequest->getProperty( "query2" );
 		$strField = $objRequest->getProperty( "field" );
-    $strField2 = $objRequest->getProperty("field2");
-    $strFindOperator = $objRequest->getProperty("find_operator1");
+		$strField2 = $objRequest->getProperty( "field2" );
+		$strFindOperator = $objRequest->getProperty( "find_operator1" );
     
 		$arrDatabases = $objRequest->getProperty( "database", true );
 		$strSubject = $objRequest->getProperty( "subject" );
@@ -51,15 +51,18 @@ class Xerxes_Command_MetasearchSearch extends Xerxes_Command_Metasearch
 		$configYahooID = $objRegistry->getConfig( "YAHOO_ID", false, "calstate" );
 		$configSearchLimit = $objRegistry->getConfig( "SEARCH_LIMIT", true );
 		
+		// database communications object
+		
+		$objData = new Xerxes_DataMap();
+		
 		// if subject is given but not databases, automatically find
 		// databases for subject, from first sub-category.
 		
-		if ( $strSubject && ! $arrDatabases )
+		if ( $strSubject != null && count($arrDatabases) == 0 )
 		{
 			$search_limit = $objRegistry->getConfig( "SEARCH_LIMIT", true );
 			
 			$arrDatabases = array ( );
-			$objData = new Xerxes_DataMap( );
 			$objSubject = $objData->getSubject( $strSubject );
 			
 			// did we find a subject that has subcategories?
@@ -98,20 +101,18 @@ class Xerxes_Command_MetasearchSearch extends Xerxes_Command_Metasearch
 		{
 			$strField = "WRD";
 		}
-    if ( $strField2 == "")
-    {
-      $strField2 = "WRD";
-    }
-    if ( $strFindOperator == "")
-    {
-      $strFindOperator = "AND";
-    }
-      
+		if ( $strField2 == "" )
+		{
+			$strField2 = "WRD";
+		}
+		if ( $strFindOperator == "" )
+		{
+			$strFindOperator = "AND";
+		}
 			
-		// load datamap, we need it now, and later. 
+		// get databases
 		
-		$objDataMap = new Xerxes_DataMap( );
-		$arrDB = $objDataMap->getDatabases( $arrDatabases );
+		$arrDB = $objData->getDatabases( $arrDatabases );
 		
 		// start out database information xml object. 
 		
@@ -162,6 +163,7 @@ class Xerxes_Command_MetasearchSearch extends Xerxes_Command_Metasearch
 				$excluded_xml->appendChild( $element );
 			}
 		}
+		
 		// ensure correct number of databases selected
 		
 		if ( count( $arrDatabases ) < 1 && count( $excludedDbs ) > 0 )
@@ -191,25 +193,31 @@ class Xerxes_Command_MetasearchSearch extends Xerxes_Command_Metasearch
 		
 		if ( $configNormalize == true )
 		{
-      //normalize query option  is still experimental (2008-01-09)
+			//normalize query option is still experimental (2008-01-09)
+			
 			$strNormalizedQuery = $objQueryParser->normalize( $strField, $strQuery );
-      if ( $strQuery2 ) {
-        $strNormalizedQuery2 = $objQueryParser->normalize( $strField2, $strQuery2);
-      }
+			if ( $strQuery2 )
+			{
+				$strNormalizedQuery2 = $objQueryParser->normalize( $strField2, $strQuery2 );
+			}
 		} 
 		else
 		{
 			$strNormalizedQuery = "$strField=($strQuery)";
-      if ( $strQuery2) {
-        $strNormalizedQuery2 = "$strField2=($strQuery2)"; 
-      }
+			if ( $strQuery2 )
+			{
+				$strNormalizedQuery2 = "$strField2=($strQuery2)";
+			}
 		}
-    $strFullQuery = $strNormalizedQuery;
-    // Do we have an advanced search we need to add more stuff onto?
-    if ( $strQuery2 ) 
-    {      
-      $strFullQuery .= " $strFindOperator $strNormalizedQuery2"; 
-    }
+		
+		$strFullQuery = $strNormalizedQuery;
+		
+		// do we have an advanced search we need to add more stuff onto?
+		
+		if ( $strQuery2 )
+		{
+			$strFullQuery .= " $strFindOperator $strNormalizedQuery2";
+		}
     
 		// initiate search with Metalib
 		
@@ -218,42 +226,58 @@ class Xerxes_Command_MetasearchSearch extends Xerxes_Command_Metasearch
 		// something went wrong, yo!
 		
 		if ( $strGroup == "" )
+		{
 			throw new Exception( "Could not initiate search with Metalib server" );
+		}
 			
 		// check spelling unless this is a return submission from a previous spell correction
+		
 		$strSpellSuggestions = null;
+		
 		if ( $strSpell == null )
 		{
 			// check spelling
-			
+
 			$strSpellCorrect = $objQueryParser->checkSpelling( $strQuery, $configYahooID );
-      $strSpellCorrect2 = null;      
-      if ( $strQuery2 ) {
-        $strSpellCorrect2 = $objQueryParser->checkSpelling( $strQuery2, $configYahooID );
-      }
-			if ( $strSpellCorrect != ""  || $strSpellCorrect2 != "" )
+			$strSpellCorrect2 = null;
+
+			if ( $strQuery2 )
+			{
+				$strSpellCorrect2 = $objQueryParser->checkSpelling( $strQuery2, $configYahooID );
+			}
+			
+			if ( $strSpellCorrect != "" || $strSpellCorrect2 != "" )
 			{
 				// construct spell check return url with spelling suggestion
-        // If both search fields were used (advanced search), spell corrections
-        // may be in first, second, or both. 
+				// If both search fields were used (advanced search), spell corrections
+				// may be in first, second, or both. 
+				
 				$strNewQuery = $strQuery;
-        $arrSuggestions = array();
-        if ( $strSpellCorrect ) {
-          $strNewQuery = $strSpellCorrect;
-          array_push($arrSuggestions, $strSpellCorrect);
-        }
-        $strNewQuery2 = $strQuery2;
-        if ( $strSpellCorrect2 ) {
-          $strNewQuery2 = $strSpellCorrect2;
-          array_push($arrSuggestions, $strSpellCorrect2);
-        }
-        $strSpellSuggestions = join(" ", $arrSuggestions); 
-        
-        
+				$arrSuggestions = array ( );
+				
+				if ( $strSpellCorrect )
+				{
+					$strNewQuery = $strSpellCorrect;
+					array_push( $arrSuggestions, $strSpellCorrect );
+				}
+				
+				$strNewQuery2 = $strQuery2;
+				
+				if ( $strSpellCorrect2 )
+				{
+					$strNewQuery2 = $strSpellCorrect2;
+					array_push( $arrSuggestions, $strSpellCorrect2 );
+				}
+				
+				$strSpellSuggestions = join( " ", $arrSuggestions );
+				
 				$strSpellUrl = "./?base=metasearch&action=search&spell=1&query=" . urlencode( $strNewQuery ) . "&field=" . $strField;
-        if ( $strNewQuery2 ) {
-          $strSpellUrl .= "&query2=" . urlencode($strNewQuery2) . "&field2=" . $strField2;
-        }
+				
+				if ( $strNewQuery2 )
+				{
+					$strSpellUrl .= "&query2=" . urlencode( $strNewQuery2 ) . "&field2=" . $strField2;
+				}
+				
 				$strSpellUrl .= "&context=" . urlencode( $strContext );
 				$strSpellUrl .= "&context_url=" . urlencode( $strContextUrl );
 				
@@ -271,9 +295,9 @@ class Xerxes_Command_MetasearchSearch extends Xerxes_Command_Metasearch
 		
 		$arrSearch = array ( );
 		$arrSearch["date"] = date( "Y-m-d" );
-      
-    $arrSearch["spelling"] = $strSpellSuggestions;  
-    $arrSearch["spelling_url"] = $strSpellUrl;
+		
+		$arrSearch["spelling"] = $strSpellSuggestions;
+		$arrSearch["spelling_url"] = $strSpellUrl;
     
 		$arrSearch["context"] = $strContext;
 		$arrSearch["context_url"] = $strContextUrl;
@@ -283,7 +307,6 @@ class Xerxes_Command_MetasearchSearch extends Xerxes_Command_Metasearch
 			$objElement = $objXml->createElement( $key, Xerxes_Parser::escapeXml( $value ) );
 			$objXml->documentElement->appendChild( $objElement );
 		}
-		
 
 		$objPair = $objXml->createElement( "pair" );
 		$objPair->setAttribute( "position", 1 );
@@ -299,32 +322,30 @@ class Xerxes_Command_MetasearchSearch extends Xerxes_Command_Metasearch
 			$objElement = $objXml->createElement( $key, Xerxes_Parser::escapeXml( $value ) );
 			$objPair->appendChild( $objElement );
 		}
-    
-    //Add second pair if present. 
-    if ( $strQuery2 )            
-    {
-      $objOperator = $objXml->createElement("operator", $strFindOperator);
-      $objOperator->setAttribute("position", 1);  
-      $objXml->documentElement->appendChild( $objOperator );
-      
-      $objPair = $objXml->createElement( "pair" );
-      $objPair->setAttribute( "position", 2 );
-      $objXml->documentElement->appendChild( $objPair );
-      
-      $arrQuery = array ( );
-      $arrQuery["query"] = $strQuery2;
-      $arrQuery["normalized"] = $strNormalizedQuery2;
-      $arrQuery["field"] = $strField2;
-      
-      foreach ( $arrQuery as $key => $value )
-      {
-        $objElement = $objXml->createElement( $key, Xerxes_Parser::escapeXml( $value ) );
-        $objPair->appendChild( $objElement );
-      }
- 
-    }
-      
-      
+			
+		// add second pair if present.
+		 
+		if ( $strQuery2 )
+		{
+			$objOperator = $objXml->createElement( "operator", $strFindOperator );
+			$objOperator->setAttribute( "position", 1 );
+			$objXml->documentElement->appendChild( $objOperator );
+			
+			$objPair = $objXml->createElement( "pair" );
+			$objPair->setAttribute( "position", 2 );
+			$objXml->documentElement->appendChild( $objPair );
+			
+			$arrQuery = array ( );
+			$arrQuery["query"] = $strQuery2;
+			$arrQuery["normalized"] = $strNormalizedQuery2;
+			$arrQuery["field"] = $strField2;
+			
+			foreach ( $arrQuery as $key => $value )
+			{
+				$objElement = $objXml->createElement( $key, Xerxes_Parser::escapeXml( $value ) );
+				$objPair->appendChild( $objElement );
+			}
+		}
 		
 		// get links from ird records for those databases that have been included in the search and 
 		// store it here so we can get at this information easily on any subsequent page without having

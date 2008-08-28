@@ -91,8 +91,9 @@
 		public function setAction( $strSection, $strAction, $xerxes_request  )
 		{
 			// get include files and directories for the entire application
+			// as well as those for specific sections
 			
-			$includes = $this->xml->commands->include;
+			$includes = $this->xml->xpath("//commands/include|//section[@name='$strSection']/include");
 			
 			if ( $includes != false )
 			{

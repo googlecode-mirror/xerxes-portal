@@ -19,7 +19,6 @@ class Xerxes_Command_AuthenticateLogin extends Xerxes_Command_Authenticate
 	public function doExecute(Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry)
 	{
 		$bolAuthenticated = false; // user is an authenticated  user
-		$bolAuthorized = true; // user is an authorized user, true unless authorization source included
 		$bolDemo = false; // user is a demo user
 
 		// values from the request
@@ -38,7 +37,6 @@ class Xerxes_Command_AuthenticateLogin extends Xerxes_Command_Authenticate
 		// configuration settings
 
 		$configAuthenticationSource = $objRegistry->getConfig( "AUTHENTICATION_SOURCE", false, "demo" );
-		$configAuthorizeSource = $objRegistry->getConfig( "AUTHORIZATION_SOURCE", false );
 		$configDemoUsers = $objRegistry->getConfig( "DEMO_USERS", false );
 		$configHttps = $objRegistry->getConfig( "SECURE_LOGIN", false, false );
 		
@@ -126,42 +124,33 @@ class Xerxes_Command_AuthenticateLogin extends Xerxes_Command_Authenticate
 		{
 			// skip authentication against a directory
 		} 
+		elseif ( $configAuthenticationSource == "custom" )
+		{
+			// custom authentication
+			
+			$local_auth_file = "config/authentication/custom.php";
+				
+			if ( file_exists( $local_auth_file ) )
+			{
+				require_once ($local_auth_file);
+				
+				$objCustomAuth = new Xerxes_CustomAuth();
+				$bolAuthenticated = $objCustomAuth->authenticate($objRequest, $objRegistry);
+			}
+			else
+			{
+				throw new Exception("authentication source set to custom, but no custom auth file found");
+			}
+		}
 		elseif ( $configAuthenticationSource == "ldap" )
 		{
+			// see if user can bind to directory server with supplied credentials
+			
 			$configDirectoryServer = $objRegistry->getConfig( "DIRECTORY_SERVER", true );
 			$configDomain = $objRegistry->getConfig( "DOMAIN", true );
-			$configLdapSearchBase = $objRegistry->getConfig( "LDAP_SEARCH_BASE", false );
 			
 			$objAuth = new Xerxes_LDAP( $configDirectoryServer );
 			
-			// this is a search look-up for the uid, get the uid
-
-			if ( $configLdapSearchBase != null )
-			{
-				// search criteria
-				
-				$configLdapSearchFilter = $objRegistry->getConfig( "LDAP_SEACH_FILTER", true );
-				$configLdapSearchUID = $objRegistry->getConfig( "LDAP_SEACH_UID", true );
-				$configLdapSuperUser = $objRegistry->getConfig( "LDAP_SUPER_USER", false );
-				$configLdapSuperPass = $objRegistry->getConfig( "LDAP_SUPER_PASS", false );
-				$configLdapCannonical = $objRegistry->getConfig( "LDAP_CANNONICALIZE_USER", false, false );
-				
-				// extract the cannonical user id
-
-				$strUID = $objAuth->getUID( $configLdapSearchBase, $configLdapSearchFilter, $configLdapSearchUID, $strUsername, $configLdapSuperUser, $configLdapSuperPass );
-				
-				// the username, which was an alias, should be converted to the uid so
-				// users have one cannonical username internally within xerxes
-
-				if ( $configLdapCannonical !== false )
-				{
-					$strUsername = $strUID;
-				}
-			}
-			
-			// see if user can bind to directory server 
-			// with supplied credentials
-
 			if ( $objAuth->authenticate( $configDomain, $strUID, $strPassword ) == true )
 			{
 				$bolAuthenticated = true;
@@ -183,57 +172,6 @@ class Xerxes_Command_AuthenticateLogin extends Xerxes_Command_Authenticate
 		else
 		{
 			throw new Exception( "unsupported authentication source" );
-		}
-		
-		### AUTHORIZATION ###
-		
-
-		// if authorization is necessary, add it here; only one currently
-		// is innovative patron api
-
-		if ( $bolAuthenticated == true && $configAuthorizeSource != null )
-		{
-			$bolAuthorized = false; // now must pass authorization test as well
-
-			if ( $configAuthorizeSource == "innovative" )
-			{
-				$configPatronTypes = $objRegistry->getConfig( "INNOVATIVE_PATRON_API", false );
-				$configPatronApi = $objRegistry->getConfig( "INNOVATIVE_PATRON_API", true );
-				
-				$objAuth = new Xerxes_InnovativePatron( $configPatronApi );
-				
-				// if config requires authorization based on the user's
-				// patron type code
-
-				if ( $configPatronTypes != "" )
-				{
-					// get the user's patron type
-
-					$arrData = $objAuth->getData( $strUID );
-					$iUserType = ( int ) $arrData["P TYPE"];
-					
-					// get the list of approved types
-					
-					$arrPatronTypes = explode( ",", $configPatronTypes );
-					
-					// compare them
-					
-					foreach ( $arrPatronTypes as $strPtype )
-					{
-						$strPtype = trim( $strPtype );
-						$iPtype = ( int ) $strPtype;
-						
-						if ( $iUserType == $iPtype )
-						{
-							$bolAuthorized = true;
-						}
-					}
-				} 
-				else
-				{
-					$bolAuthorized = true;
-				}
-			}
 		}
 		
 		### DEMO USER ###
@@ -268,7 +206,7 @@ class Xerxes_Command_AuthenticateLogin extends Xerxes_Command_Authenticate
 		
 		### REGISTER THE USER ####
 		
-		if ( ($bolAuthenticated == true && $bolAuthorized == true) || $bolDemo == true )
+		if ( $bolAuthenticated == true || $bolDemo == true )
 		{
 			// assign role appropriately
 			

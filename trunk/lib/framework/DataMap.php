@@ -82,6 +82,8 @@
 		
 		public function select($strSQL, $arrValues = null)
 		{
+			$this->echoSQL($strSQL);
+			
 			$this->strSQL = $strSQL;
 				
 			$objStatement = $this->objPDO->prepare($strSQL);
@@ -109,6 +111,8 @@
 		
 		public function update($strSQL, $arrValues = null)
 		{
+			$this->echoSQL($strSQL);
+			
 			$this->strSQL = $strSQL;
 			
 			$objStatement = $this->objPDO->prepare($this->strSQL);
@@ -148,6 +152,11 @@
 		protected function delete($strSQL, $arrValues = null)
 		{
 			$this->update($strSQL, $arrValues);
+		}
+		
+		private function echoSQL($strSQL)
+		{
+			// echo "<p>" . $strSQL . "</p>";
 		}
 	}
 

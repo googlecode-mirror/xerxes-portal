@@ -118,19 +118,16 @@
 	
 		<!-- the source against which you will authenticate users; valid values include:
 		
-			* 'ldap' for an ldap-enabled directory server, including Active Directory
+			* 'ldap' for a simple bind to an ldap-enabled directory server, including Active Directory
 			* 'innovative' for authentication against the Innovative patron api
 			* 'cas' for authentication against a central authentication source server
 			* 'demo' for a simple demo set-up when you don't want to configure a directory
-			* 'shibboleth' for Shibboleth authentication using a local configured shibd. 
-			
+			* 'shibboleth' for Shibboleth authentication using a local configured shibd.
+			* 'custom' to use the script in demo/config/authentication/custom.php, where you can write
+			  you own authentication code
 		 -->
 		
 		<config name="authentication_source">demo</config>
-		
-		<!-- a second-pass authorization, valid values include 'innovative' for patron api -->
-		
-		<config name="authorization_source" />
 		
 		<!-- setting this to 'true' will cause xerxes to force all logins thru https:// -->
 		
@@ -143,26 +140,6 @@
 		
 		<config name="directory_server"></config>
 		<config name="domain"></config>
-		
-		<!-- default ldap authentication behavior is to attempt a bind to the directory server with the user's 
-		username and password.	if you need to do a search of the directory for a user, typically
-		because the user might have entered an alias, then use the options below -->
-		
-		<config name="ldap_seach_base" />
-		<config name="ldap_seach_filter" />
-		<config name="ldap_seach_uid" />
-		
-		<!-- if the directory does not allow an anonymous bind for the look-up, then enter a username and password
-		here for an account with the approproate prividges -->
-		
-		<config name="ldap_super_user" />
-		<config name="ldap_super_pass" />
-		
-		<!-- setting this to 'true' will cause xerxes to register the user under their uid rather than the alias
-		they supplied -->
-		
-		<config name="ldap_cannonicalize_user" />
-		
 		
 		<!-- INNOVATIVE PATRON API -->
 		

@@ -46,6 +46,7 @@
 			$iStart = $objRequest->getProperty("startRecord");	
 			$iTotal = $objRequest->getProperty("total");
 			$iCount = $objRequest->getProperty("recordsPerPage");
+			$strSort = $objRequest->getProperty("sortKeys");
 			
 			// ensure we send user back to a page with actual results!
 			
@@ -57,7 +58,9 @@
 				$arrParams = array(
 					"base" => "folder",
 					"action" => "home",
+					"sortKeys" => $strSort,
 					"username" => $objRequest->getSession("username")
+					
 				);
 			}
 			else
@@ -77,7 +80,8 @@
 					"username" => $objRequest->getSession("username"),
 					"type" => $strType,
 					"label" => $strLabel,
-					"startRecord" => $iStart,
+					"sortKeys" => $strSort,
+					"startRecord" => $iStart
 				);				
 			}
 			
