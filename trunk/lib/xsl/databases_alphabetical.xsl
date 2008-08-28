@@ -94,7 +94,7 @@
             <xsl:value-of select="title_display" />
           </a>
           <xsl:if test="title_display">
-            &amp;nbsp;<a>
+            &#160;<a>
             <xsl:attribute name="href"><xsl:value-of select="url" /></xsl:attribute>
             <img alt="more information" src="images/info.gif" class="mini_icon">
               <xsl:attribute name="src"><xsl:value-of select="/knowledge_base/config/base_url" />/images/info.gif</xsl:attribute>
