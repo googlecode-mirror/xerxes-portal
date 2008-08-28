@@ -780,16 +780,20 @@ class Xerxes_Framework_Request
 			{
 				foreach ( $value as $strKey => $strValue )
 				{
-					# Multi-dimensional arrays sometimes too. strValue isn't always a string
-					# for now, skip and just don't include it if it's not. 
-					if ( ! is_string( $strValue ) )
-						continue;
+					// multi-dimensional arrays sometimes too
 					
-					$objElement = $objXml->createElement( $strSafeKey, Xerxes_Parser::escapeXml( $strValue ) );
-					$objElement->setAttribute( "key", $strKey );
-					$objAppend->appendChild( $objElement );
+					if ( is_array( $strValue ) )
+					{
+						$this->addElement($objXml, $objAppend, $strValue);
+					}
+					else
+					{
+						$objElement = $objXml->createElement( $strSafeKey, Xerxes_Parser::escapeXml( $strValue ) );
+						$objElement->setAttribute( "key", $strKey );
+						$objAppend->appendChild( $objElement );
+					}
 				}
-			} 
+			}
 			else
 			{
 				$objElement = $objXml->createElement( $strSafeKey, Xerxes_Parser::escapeXml( $value ) );

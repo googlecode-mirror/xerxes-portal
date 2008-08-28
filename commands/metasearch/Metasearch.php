@@ -6,9 +6,9 @@
 
 abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
 {
-	private $objSearch = null;			// metalib search object
-	private $objCache = null;			// cache object
-	
+	private $objSearch = null; // metalib search object
+	private $objCache = null; // cache object
+
 	/**
 	 * Seperate here so we can set a cache object for all commands
 	 *
@@ -16,10 +16,10 @@ abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
 	 * @param Xerxes_Framework_Registry $objRegistry
 	 */
 	
-	public function execute( Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry )
+	public function execute(Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry)
 	{
-		$this->objCache = new Xerxes_Cache();
-		$this->status = $this->doExecute($objRequest, $objRegistry);
+		$this->objCache = new Xerxes_Cache( );
+		$this->status = $this->doExecute( $objRequest, $objRegistry );
 	}
 	
 	/**
@@ -31,21 +31,21 @@ abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
 	 * @return Xerxes_Metasearch object
 	 */
 	
-	protected function getSearchObject( Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry )
+	protected function getSearchObject(Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry)
 	{
-		$configMetalibAddress = $objRegistry->getConfig("METALIB_ADDRESS");
-		$configMetalibUsername = $objRegistry->getConfig("METALIB_USERNAME");
-		$configMetalibPassword = $objRegistry->getConfig("METALIB_PASSWORD");
-
+		$configMetalibAddress = $objRegistry->getConfig( "METALIB_ADDRESS" );
+		$configMetalibUsername = $objRegistry->getConfig( "METALIB_USERNAME" );
+		$configMetalibPassword = $objRegistry->getConfig( "METALIB_PASSWORD" );
+		
 		// re-up the metalib session if it has gone dead
 		// first, check to see if the session id and expiry date are set
-			
-		$strSession = $objRequest->getSession("metalib_session_id");
-		$datReconnect = (int) $objRequest->getSession("metalib_session_expires");
-			
+
+		$strSession = $objRequest->getSession( "metalib_session_id" );
+		$datReconnect = ( int ) $objRequest->getSession( "metalib_session_expires" );
+		
 		// use the stored metalib session id if less than 20 minutes since the last 
 		// request; otherwise set it to null to force a new session
-			
+
 		if ( time() > $datReconnect )
 		{
 			$strSession = null;
@@ -53,16 +53,15 @@ abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
 		
 		// set the next expiry time to 20 minutes from now
 
-		$datReconnect = time() + 1200;			
-		$objRequest->setSession("metalib_session_expires", $datReconnect);
-			
+		$datReconnect = time() + 1200;
+		$objRequest->setSession( "metalib_session_expires", $datReconnect );
+		
 		// create metalib search object
-			
-		$this->objSearch = new Xerxes_MetaSearch($configMetalibAddress, $configMetalibUsername, 
-			$configMetalibPassword, $strSession);
-	
-		$objRequest->setSession("metalib_session_id", $this->objSearch->getSession());
-			
+		
+		$this->objSearch = new Xerxes_MetaSearch( $configMetalibAddress, $configMetalibUsername, $configMetalibPassword, $strSession );
+		
+		$objRequest->setSession( "metalib_session_id", $this->objSearch->getSession() );
+		
 		return $this->objSearch;
 	}
 	
@@ -75,14 +74,14 @@ abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
 	protected function documentElement()
 	{
 		// the wrapper for this part of the response
-		
-		$objXml = new DOMDocument();
-		$objXml->loadXML("<results />");
+
+		$objXml = new DOMDocument( );
+		$objXml->loadXML( "<results />" );
 		
 		// add in the original metalib url for debugging
 		
-		$objMetalibUrl = $objXml->createElement("metalib_url", Xerxes_Parser::escapeXml($this->objSearch->getUrl()));
-		$objXml->documentElement->appendChild($objMetalibUrl);
+		$objMetalibUrl = $objXml->createElement( "metalib_url", Xerxes_Parser::escapeXml( $this->objSearch->getUrl() ) );
+		$objXml->documentElement->appendChild( $objMetalibUrl );
 		
 		return $objXml;
 	}
@@ -98,13 +97,13 @@ abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
 	protected function addSearchInfo($objXml, $strGroup)
 	{
 		// information about the search, stored in cache
-			
-		$objSearchXml = $this->getCache($strGroup, "search", "DOMDocument");
+		
+		$objSearchXml = $this->getCache( $strGroup, "search", "DOMDocument" );
 		
 		if ( $objSearchXml->documentElement != null )
 		{
-			$objImport = $objXml->importNode($objSearchXml->documentElement, true);
-			$objXml->documentElement->appendChild($objImport);
+			$objImport = $objXml->importNode( $objSearchXml->documentElement, true );
+			$objXml->documentElement->appendChild( $objImport );
 		}
 		
 		return $objXml;
@@ -117,68 +116,71 @@ abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
 	 * @param DOMDocument $objXml		base xml document
 	 * @param string $strGroup			group number
 	 * @return DOMDOocument				base xml document with search status added
-	 */	
-	
+	 */
 	
 	protected function addStatus($objXml, $strGroup, $strResultSet = null, $iTotalHits = null)
-	{			
+	{
 		// status of the search, stored in cache
-			
-		$objGroupXml = $this->getCache($strGroup, "group", "DOMDocument");
+		
+
+		$objGroupXml = $this->getCache( $strGroup, "group", "DOMDocument" );
 		
 		if ( $objGroupXml->documentElement != null )
 		{
 			// append the search status xml to the response
 			
-			$objImport = $objXml->importNode($objGroupXml->getElementsByTagName("find_group_info_response")->item(0), true);
-			$objXml->documentElement->appendChild($objImport);
+
+			$objImport = $objXml->importNode( $objGroupXml->getElementsByTagName( "find_group_info_response" )->item( 0 ), true );
+			$objXml->documentElement->appendChild( $objImport );
 			
 			// extract these elements for convenience
+			
 
 			if ( $strResultSet != null )
 			{
-				$strSort = "";				// last set sort order
-				$strDatabaseTitle = "";		// database title
-					
-				$objSimple = simplexml_import_dom($objGroupXml);
-		
-				foreach ( $objSimple->xpath("//base_info") as $base_info )
+				$strSort = ""; // last set sort order
+				$strDatabaseTitle = ""; // database title
+				
+
+				$objSimple = simplexml_import_dom( $objGroupXml );
+				
+				foreach ( $objSimple->xpath( "//base_info" ) as $base_info )
 				{
 					if ( $base_info->set_number == $strResultSet )
 					{
-						$strSort = (string) $base_info->sort;
+						$strSort = ( string ) $base_info->sort;
 						
 						$strTotalHits = $base_info->no_of_documents;
 						
-						if ( $strTotalHits == "888888888")
+						if ( $strTotalHits == "888888888" )
 						{
 							$iTotalHits = 1;
-						}
-						elseif ( $iTotalHits == null)
+						} elseif ( $iTotalHits == null )
 						{
-							$iTotalHits = (int) $strTotalHits;
+							$iTotalHits = ( int ) $strTotalHits;
 						}
 						
-						$strDatabaseTitle = (string) $base_info->full_name;
+						$strDatabaseTitle = ( string ) $base_info->full_name;
 						
 						// metalib 3.x had a missing line error for combined set name,
 						// we will always convert the name to 'top results' for consistency
 						// name can be overriden in the interface 
 						
-						if ( $strDatabaseTitle == "Combined Set" || $strDatabaseTitle == "0170 Missing line")
+
+						if ( $strDatabaseTitle == "Combined Set" || $strDatabaseTitle == "0170 Missing line" )
 						{
 							$strDatabaseTitle = "Top Results";
 						}
 					}
 				}
 				
-				$objDatabase = $objXml->createElement("database", Xerxes_Parser::escapeXml($strDatabaseTitle) );
-				$objHits = $objXml->createElement("hits", $iTotalHits );
-				$objSort = $objXml->createElement("sort", $strSort );
+				$objDatabase = $objXml->createElement( "database", Xerxes_Parser::escapeXml( $strDatabaseTitle ) );
+				$objHits = $objXml->createElement( "hits", $iTotalHits );
+				$objSort = $objXml->createElement( "sort", $strSort );
 				
-				$objXml->documentElement->appendChild($objDatabase);
-				$objXml->documentElement->appendChild($objHits);
-				$objXml->documentElement->appendChild($objSort);
+				$objXml->documentElement->appendChild( $objDatabase );
+				$objXml->documentElement->appendChild( $objHits );
+				$objXml->documentElement->appendChild( $objSort );
 			}
 		}
 		
@@ -191,19 +193,19 @@ abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
 	 * @param DOMDocument $objXml		base xml document
 	 * @param string $strProgress		progress indicator
 	 * @return DOMDOocument				base xml document with search progress data added
-	 */	
+	 */
 	
 	protected function addProgress($objXml, $strProgress)
 	{
 		if ( $strProgress != null )
 		{
-			$objProgress = $objXml->createElement("progress", $strProgress);
-			$objXml->documentElement->appendChild($objProgress);
+			$objProgress = $objXml->createElement( "progress", $strProgress );
+			$objXml->documentElement->appendChild( $objProgress );
 		}
 		
 		return $objXml;
 	}
-
+	
 	/**
 	 * Fetch slimmed-down facet data from cache and add to master xml document
 	 *
@@ -211,30 +213,31 @@ abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
 	 * @param string $strGroup			group number
 	 * @param bool	$bolFacets			[optional] whether facets should be required
 	 * @return DOMDOocument				base xml document with facet info added
-	 */	
+	 */
 	
 	protected function addFacets($objXml, $strGroup, $bolFacets = false)
 	{
 		// facets, stored in cache
-			
+		
+
 		try
 		{
-			$objFacetXml = $this->getCache($strGroup, "facets-slim", "DOMDocument");
+			$objFacetXml = $this->getCache( $strGroup, "facets-slim", "DOMDocument" );
 			
 			if ( $objFacetXml->documentElement != null )
 			{
-				$objImport = $objXml->importNode($objFacetXml->getElementsByTagName("cluster_facet_response")->item(0), true);
-				$objXml->documentElement->appendChild($objImport);
+				$objImport = $objXml->importNode( $objFacetXml->getElementsByTagName( "cluster_facet_response" )->item( 0 ), true );
+				$objXml->documentElement->appendChild( $objImport );
 			}
-		}
-		catch ( Exception $e)
+		} catch ( Exception $e )
 		{
 			if ( $bolFacets == true )
 			{
 				// since a missing facet is not a fatal thing, we'll just warn
 				// here in case there is a problem
-			
-				error_log($e->getMessage());
+				
+
+				error_log( $e->getMessage() );
 			}
 		}
 		
@@ -244,7 +247,7 @@ abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
 	/**
 	 * Converts records from marc to xerxes_record and adds them to the master xml response
 	 * Also adds info on whether the record has already been saved this session. 
-   *
+	 *
 	 * @param DOMDOcument $objXml		master xml document
 	 * @param array $arrRecords			an array of marc records
 	 * @param bool $configMarcResults	whether to append the original marc records to the response
@@ -254,61 +257,66 @@ abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
 	protected function addRecords($objXml, $arrRecords, $configMarcResults)
 	{
 		// used to fetch info on already saved records, if any
-    $objData = new Xerxes_DataMap();
-
-
-		$objRecords = $objXml->createElement("records");
-				
-		foreach( $arrRecords as $objRecord )
+		$objData = new Xerxes_DataMap( );
+		
+		$objRecords = $objXml->createElement( "records" );
+		
+		foreach ( $arrRecords as $objRecord )
 		{
-			$objXerxesRecord = new Xerxes_Record();
-			$objXerxesRecord->loadXml($objRecord);
-					
-			$objRecordContainer = $objXml->createElement("record");
-			$objRecords->appendChild($objRecordContainer);
-				
-			// import xerxes xml
-					
-			$objXerxesXml = $objXerxesRecord->toXML();
-			$objImportRecord = $objXml->importNode($objXerxesXml->documentElement, true);
-			$objRecordContainer->appendChild($objImportRecord);
-					
-			// optionally import marc-xml
+			$objXerxesRecord = new Xerxes_Record( );
+			$objXerxesRecord->loadXml( $objRecord );
 			
+			$objRecordContainer = $objXml->createElement( "record" );
+			$objRecords->appendChild( $objRecordContainer );
+			
+			// import xerxes xml
+			
+			$objXerxesXml = $objXerxesRecord->toXML();
+			$objImportRecord = $objXml->importNode( $objXerxesXml->documentElement, true );
+			$objRecordContainer->appendChild( $objImportRecord );
+			
+			// optionally import marc-xml
+
 			if ( $configMarcResults == true )
 			{
 				$objMarcRecord = $objXerxesRecord->getMarcXML();
-				$objImportRecord = $objXml->importNode($objMarcRecord->getElementsByTagName("record")->item(0), true);
-				$objRecordContainer->appendChild($objImportRecord);
+				$objImportRecord = $objXml->importNode( $objMarcRecord->getElementsByTagName( "record" )->item( 0 ), true );
+				$objRecordContainer->appendChild( $objImportRecord );
 			}
-
-			// Check if this hit has been saved in my records this session
-			// Include info if it has. 
-     	$strResultSet = $objXerxesRecord->getResultSet();
-     	$strRecordNumber = $objXerxesRecord->getRecordNumber();
-      $key = Xerxes_Helper::savedRecordKey($strResultSet, $strRecordNumber);
-
-
-     	if ( Xerxes_Helper::isMarkedSaved($strResultSet, $strRecordNumber)) {
-					$objSavedRecordXml = $objXml->createElement("saved");
-
-          // id
-          $strSavedID = $_SESSION['resultsSaved'][$key]['xerxes_record_id'];
-					$objSavedRecordXml->setAttribute("id", $strSavedID);
-          $objIDXml = $objXml->createElement("id", $strSavedID);
-          $objSavedRecordXml->appendChild( $objIDXml );
-
-					// labels
-          $objSavedRecord = $objData->getRecordByID($strSavedID);
-          foreach ( $objSavedRecord->tags as $tag ) {
-             $objTagXml = $objXml->createElement("tag", Xerxes_Parser::escapeXml($tag));
-             $objSavedRecordXml->appendChild( $objTagXml ); 
-					}
-
-					$objRecordContainer->appendChild($objSavedRecordXml);
+			
+			// check if this hit has been saved in my records this session
+			// include info if it has. 
+			
+			$strResultSet = $objXerxesRecord->getResultSet();
+			$strRecordNumber = $objXerxesRecord->getRecordNumber();
+			$key = Xerxes_Helper::savedRecordKey( $strResultSet, $strRecordNumber );
+			
+			if ( Xerxes_Helper::isMarkedSaved( $strResultSet, $strRecordNumber ) )
+			{
+				$objSavedRecordXml = $objXml->createElement( "saved" );
+				
+				// id
+				
+				$strSavedID = $_SESSION['resultsSaved'][$key]['xerxes_record_id'];
+				$objSavedRecordXml->setAttribute( "id", $strSavedID );
+				$objIDXml = $objXml->createElement( "id", $strSavedID );
+				$objSavedRecordXml->appendChild( $objIDXml );
+				
+				// labels
+				
+				$objSavedRecord = $objData->getRecordByID( $strSavedID );
+				
+				foreach ( $objSavedRecord->tags as $tag )
+				{
+					$objTagXml = $objXml->createElement( "tag", Xerxes_Parser::escapeXml( $tag ) );
+					$objSavedRecordXml->appendChild( $objTagXml );
+				}
+				
+				$objRecordContainer->appendChild( $objSavedRecordXml );
 			}
-		} 
-		$objXml->documentElement->appendChild($objRecords);
+		}
+		
+		$objXml->documentElement->appendChild( $objRecords );
 		
 		return $objXml;
 	}
@@ -323,8 +331,8 @@ abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
 	 */
 	
 	protected function setCache($strGroup, $strType, $xml)
-	{	
-		return $this->objCache->setCache($strGroup, $strType, $xml);
+	{
+		return $this->objCache->setCache( $strGroup, $strType, $xml );
 	}
 	
 	/**
@@ -337,8 +345,8 @@ abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
 	 */
 	
 	protected function getCache($strGroup, $strType, $strResponseType = null)
-	{		
-		return $this->objCache->getCache($strGroup, $strType, $strResponseType);
+	{
+		return $this->objCache->getCache( $strGroup, $strType, $strResponseType );
 	}
 	
 	/**
@@ -351,39 +359,41 @@ abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
 	 * @return DOMDocument 		marc-xml response from metalib
 	 */
 	
-	protected function getRecord( Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry )
+	protected function getRecord(Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry)
 	{
-		$objSearch = $this->getSearchObject($objRequest, $objRegistry); // metalib search object
-			
+		$objSearch = $this->getSearchObject( $objRequest, $objRegistry ); // metalib search object
+		
 		// parameters from request
-			
-		$strResultSet =	$objRequest->getProperty("resultSet");
-		$iStartRecord =	(int) $objRequest->getProperty("startRecord");
-			
+		
+		$strResultSet = $objRequest->getProperty( "resultSet" );
+		$iStartRecord = ( int ) $objRequest->getProperty( "startRecord" );
+		
 		// marc fields
-			
+
 		$strMarcFields = "#####, OPURL";
-		$configResultsFields = $objRegistry->getConfig("MARC_FIELDS_FULL", false, $strMarcFields);
-		$arrFields = split(",", $configResultsFields );
+		$configResultsFields = $objRegistry->getConfig( "MARC_FIELDS_FULL", false, $strMarcFields );
+		$arrFields = split( ",", $configResultsFields );
 		
 		// fetch record from metalib
-		
+
 		return $objSearch->retrieve( $strResultSet, $iStartRecord, 1, null, "customize", $arrFields );
 	}
+	
+	// Functions for saving saved record state from a result set. Just convenience
+	// call to helper. 
 
-
-  # Functions for saving saved record state from a result set. Just convenience
-  #, call to helper. 
-  protected function markSaved($objRecord) {
-      return Xerxes_Helper::markSaved($objRecord);
-  }
-  protected function unmarkSaved($strResultSet, $strRecordNumber) {
-  		return Xerxes_Helper::unmarkSaved($strResultSet, $strRecordNumber);
-  }
-	protected function isMarkedSaved($strResultSet, $strRecordNumber) {
-			return Xerxes_Helper::isMarkedSaved($strResultSet, $strRecordNumber);
-  }
-
+	protected function markSaved($objRecord)
+	{
+		return Xerxes_Helper::markSaved( $objRecord );
+	}
+	protected function unmarkSaved($strResultSet, $strRecordNumber)
+	{
+		return Xerxes_Helper::unmarkSaved( $strResultSet, $strRecordNumber );
+	}
+	protected function isMarkedSaved($strResultSet, $strRecordNumber)
+	{
+		return Xerxes_Helper::isMarkedSaved( $strResultSet, $strRecordNumber );
+	}
 
 }
 
