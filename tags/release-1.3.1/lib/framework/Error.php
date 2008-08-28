@@ -44,6 +44,11 @@ class Xerxes_Framework_Error
 		}
 		else
 		{
+			// first output to apache error log
+			error_log("Xerxes error: " . $e->getMessage() . ": " . $e->getTraceAsString());
+
+			//set proper http response code
+ 
 			$resultStatus = 500;
 			
 			if ( $e instanceof Xerxes_AccessDeniedException )
@@ -77,7 +82,7 @@ class Xerxes_Framework_Error
 			// set the base url for the error.xsl file's benefit; don't want to assume that 
 			// the earlier code to this effect was executed before an exception, so this is redundant
 
-			$objBaseURL = $objError->createElement( "base_url", $objRegistry->getConfig( 'BASE_WEB_PATH', true ) );
+			$objBaseURL = $objError->createElement( "base_url", "http://" . $objRequest->getServer( 'SERVER_NAME' ) . $objRegistry->getConfig( 'BASE_WEB_PATH', true ) );
 			$objError->documentElement->appendChild( $objBaseURL );
 			
 			// if it's a db denied exception, include info on dbs. 
