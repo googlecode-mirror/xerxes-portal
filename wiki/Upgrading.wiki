@@ -34,6 +34,7 @@ Bug fixes
 	commands/helper/HelperNavbar.php => Modified
 	demo/javascript/scriptaculous/sounds.js => Added
 	demo/javascript/scriptaculous/unittest.js => Added
+	lib/framework/Error.php => Modified
 	lib/xsl/authenticate_login.xsl => Modified
 	lib/xsl/includes.xsl => Modified
 }}}
