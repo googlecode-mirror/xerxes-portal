@@ -1,6 +1,9 @@
 /*  Prototype JavaScript framework, version 1.6.0.2
  *  (c) 2005-2008 Sam Stephenson
  *
+ *  WARNING: File has been patched by Xerxes project to try and workaround
+ *  prototype/scriptaculous bugs. Look for Xerxes in comments. 
+ *
  *  Prototype is freely distributable under the terms of an MIT-style license.
  *  For details, see the Prototype web site: http://www.prototypejs.org/
  *
@@ -2235,7 +2238,11 @@ else if (Prototype.Browser.IE) {
         if (position !== 'static') return proceed(element);
         // Trigger hasLayout on the offset parent so that IE6 reports
         // accurate offsetTop and offsetLeft values for position: fixed.
-        var offsetParent = element.getOffsetParent();
+        // Xerxes Patch. IE fix, was causing a problem with autocompleter.
+        // Don't really understand what I did, or if this patch works,
+        // but it seems to. See.
+        // http://prototype.lighthouseapp.com/projects/8887-script-aculo-us/tickets/32-ajax-autocomplete-in-ie-with-doctype
+        var offsetParent = (element.parent) ? element.getOffsetParent() : undefined;
         if (offsetParent && offsetParent.getStyle('position') === 'fixed')
           offsetParent.setStyle({ zoom: 1 });
         element.setStyle({ position: 'relative' });
