@@ -410,7 +410,7 @@
 						</span>
 					</xsl:if>
 					
-					<div class="resultsAvailability">
+					<div class="resultsAvailability recordOptions">
 						
 						<!-- Full-Text -->
 						
@@ -435,7 +435,7 @@
 						</xsl:choose>
 							
 						<!-- Save Facility -->
-							
+					
 						<span class="resultsAvailableOption" id="saveRecordOption">
 							<img id="folder_{$result_set}{$record_number}"  width="17" height="15" alt="" border="0" >
 							<xsl:attribute name="src">

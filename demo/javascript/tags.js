@@ -129,7 +129,8 @@
 				// and show the newly calculated totals on the side nav
 				
 				form.tagsShaddow.value = form.tags.value;
-				$('labelsMaster').update(transport.responseText);
+        labelsMaster = $('labelsMaster');
+				if (labelsMaster) labelsMaster.update(transport.responseText);
 
 				// highlight that something happended
 				highlightTagUpdate(form.submitButton);

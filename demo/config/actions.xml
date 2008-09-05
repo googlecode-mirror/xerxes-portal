@@ -219,6 +219,8 @@
 					<mapEntry pathIndex="3" property="record" />
 				</pathParamMap>			
 				<command>FolderResults</command>
+        <!-- FolderTags for tag autocomplete --> 
+        <command directory="folder">FolderTags</command>
 				<view>xsl/folder_full.xsl</view>
 			</action>
 			<action name="output_email">
@@ -350,6 +352,8 @@
 			</action>
 			<action name="record">
 				<command>MetasearchRecord</command>
+        <!-- FolderTags for tag autocomplete --> 
+        <command directory="folder">FolderTags</command>
 				<command directory="availability">AvailabilityInjectRefereed</command>
 				<view>xsl/metasearch_record.xsl</view>
 			</action>

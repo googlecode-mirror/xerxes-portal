@@ -50,7 +50,6 @@
 	
 	function updateRecord( id )
 	{
-
 		var arrID = id.split(/_|:/);
 		var resultSet = arrID[1]; 
 		var recordNumber = arrID[2];
@@ -72,7 +71,6 @@
 		if ( $(id).hasClassName("disabled")) {
 			return false;
 		}
-	
 		// do it! Update our icons only after success please! Then we're only
     // telling them they have saved a record if they really have! Hooray
     // for javascript closures. 
@@ -107,11 +105,14 @@
 
           // Add tag input
           if ( ! isTemporarySession && savedID) {
+
+
 						var input_div = $('template_tag_input').cloneNode(true);
 						var new_form = input_div.down('form');
 
           	// take the template for a tag input and set it up for this particular
           	// record
+
           	input_div.id = "label_" + resultSet + ":" + recordNumber; 
           	new_form.record.value = savedID;
           	new_form.tagsShaddow.id = 'shadow-' + savedID; 
@@ -133,11 +134,15 @@
         		}
            
           	//Add it to the page, now that it's all set up.
-          	$(id).up('.resultsMain').insert(input_div);
-            // and add the autocompleter
-            addAutoCompleterToID(new_form.tags.id);
-            
-            input_div.show();
+            var parentBlock = $(id).up('.recordOptions');  
+          	if (parentBlock) {
+                parentBlock.insert(input_div);
+                // and add the autocompleter
+
+                addAutoCompleterToID(new_form.tags.id);
+
+                input_div.show();
+            }
 					}          
         }
         $(id).removeClassName("disabled");
