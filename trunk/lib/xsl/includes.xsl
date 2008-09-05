@@ -1145,7 +1145,7 @@
 	<script type="text/javascript">
 		// change numSessionSavedRecords to numSavedRecords if you prefer the folder icon to change
 		// if there are any records at all in saved records. Also fix initial display in navbar.
-		numSavedRecords = 0<xsl:value-of select="navbar/element[@id='saved_records']/@numSessionSavedRecords" />;
+		numSavedRecords = parseInt('0<xsl:value-of select="navbar/element[@id='saved_records']/@numSessionSavedRecords" />', 10);
 		isTemporarySession = <xsl:choose><xsl:when test="request/session/role = 'guest' or request/session/role = 'local'">true</xsl:when><xsl:otherwise>false</xsl:otherwise></xsl:choose>
 	</script>
 	<script src="{$base_include}/javascript/save.js" language="javascript" type="text/javascript"></script>
