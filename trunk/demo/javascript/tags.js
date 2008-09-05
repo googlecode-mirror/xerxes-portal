@@ -85,15 +85,15 @@
     // array, then we would lose the connection with the existing autocompleters..
 
 		// create new array only if we don't already have one
-    if (typeof(window["tag_suggestions"]) == "undefined") tag_suggestions = new Array();
+    if (typeof(window["tag_suggestion_list"]) == "undefined") tag_suggestion_list = new Array();
 
     //remove all elements from the array
-    tag_suggestions.splice(0, tag_suggestions.length);
+    tag_suggestion_list.clear();
 
     // re-add current list
     var list = $$('.label_list_item');
 		for( i=0; i<list.length; i++) {
-			tag_suggestions.push( list[i].innerHTML );
+			tag_suggestion_list.push( list[i].innerHTML );
 		}  
 }
 
@@ -101,7 +101,7 @@
     //make sure the tag suggestions global variable is defined,
     //so we can share the same array reference that loadTagSuggestions
     //will use. 
-    if (typeof(window["tag_suggestions"]) == "undefined") tag_suggestions = new Array();
+    if (typeof(window["tag_suggestion_list"]) == "undefined") tag_suggestion_list = new Array();
     
      inputs = $$('.tagsInput');
      for ( i = 0; i < inputs.length ; i++ ) {
@@ -109,7 +109,7 @@
 		 }
 	}
   function addAutoCompleterToID(id) {
-     new Autocompleter.Local(id, 'tag_suggestions', tag_suggestions, {'partialSearch': false, 'tokens': [',']});
+     new Autocompleter.Local(id, 'tag_suggestions', tag_suggestion_list, {'partialSearch': false, 'tokens': [',']});
   }
 	
 	function updateTags(form)
