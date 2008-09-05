@@ -27,6 +27,8 @@
 	<div id="resultsArea">		
 		<xsl:call-template name="record" />
 	</div>
+  
+
 	
 </xsl:template>
 </xsl:stylesheet>
