@@ -1,5 +1,8 @@
 // script.aculo.us controls.js v1.8.1, Thu Jan 03 22:07:12 -0500 2008
 
+// NOTE: Patched to take care of some bugs. Search for "Xerxes" in comments
+// to find patches. 
+
 // Copyright (c) 2005-2007 Thomas Fuchs (http://script.aculo.us, http://mir.aculo.us)
 //           (c) 2005-2007 Ivan Krstic (http://blogs.law.harvard.edu/ivan)
 //           (c) 2005-2007 Jon Tirsen (http://www.tirsen.com)
@@ -213,13 +216,23 @@ Autocompleter.Base = Class.create({
   markPrevious: function() {
     if(this.index > 0) this.index--
       else this.index = this.entryCount-1;
-    this.getEntry(this.index).scrollIntoView(true);
+    // XERXES: Patched to comment out, causes unneccesary
+    // undesirable jumpiness. See 
+    // http://prototype.lighthouseapp.com/projects/8887/tickets/44-autocompleter-scroll-problem
+    // and
+    // http://groups.google.com/group/rubyonrails-spinoffs/msg/95c47819dcc95f17
+    //this.getEntry(this.index).scrollIntoView(true);
   },
   
   markNext: function() {
     if(this.index < this.entryCount-1) this.index++
       else this.index = 0;
-    this.getEntry(this.index).scrollIntoView(false);
+    // XERXES: Patched to comment out, causes unneccesary
+    // undesirable jumpiness. See 
+    // http://prototype.lighthouseapp.com/projects/8887/tickets/44-autocompleter-scroll-problem
+    // and
+    // http://groups.google.com/group/rubyonrails-spinoffs/msg/95c47819dcc95f17
+    //this.getEntry(this.index).scrollIntoView(false);
   },
   
   getEntry: function(index) {
