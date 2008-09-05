@@ -40,8 +40,17 @@
 			</div>
 				
 			<div id="search">
-        <!-- defined in includes.xsl -->
-				<xsl:call-template name="search_box" />      
+        <xsl:variable name="should_lock_nonsearchable" select=" (/*/request/authorization_info/affiliated = 'true' or /*/request/session/role = 'guest')" />
+      
+        <!-- do we have any searchable databases? If we have any that are
+             searchable by the particular session user, or if we aren't locking
+             non-searchable dbs and have any that are searchable at all -->
+        <xsl:if test="count(/*/category/subcategory/database/searchable_by_user[. = '1']) &gt; 0 or (not($should_lock_nonsearchable) and   count(/*/category/subcategory/database/searchable[. = '1']) &gt; 0)">
+      
+          <!-- defined in includes.xsl -->
+          <xsl:call-template name="search_box" />
+          
+       </xsl:if>
 			</div>
 			
 			<div class="subjectDatabases">
