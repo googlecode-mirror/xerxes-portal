@@ -2241,7 +2241,8 @@ else if (Prototype.Browser.IE) {
         // Xerxes Patch. IE fix, was causing a problem with autocompleter.
         // Don't really understand what I did, or if this patch works,
         // but it seems to. See.
-        // http://prototype.lighthouseapp.com/projects/8887-script-aculo-us/tickets/32-ajax-autocomplete-in-ie-with-doctype
+        // +http://prototype.lighthouseapp.com/projects/8887-script-aculo-us/tickets/32-ajax-autocomplete-in-ie-with-doctype
+        // was var offsetParent = element.getOffsetParent();
         var offsetParent = (element.parent) ? element.getOffsetParent() : undefined;
         if (offsetParent && offsetParent.getStyle('position') === 'fixed')
           offsetParent.setStyle({ zoom: 1 });
