@@ -130,6 +130,17 @@
         View snippet source
         </a>
         
+        <xsl:variable name="appName" select="/*/config/application_name"/>
+        <xsl:variable name="passThroughURL" select="/*/databases/database[1]/xerxes_native_link_url"/>
+        <h3>4. Pass-through URL</h3>
+        <p class="optionInfo">Alternately, take care of the HTML yourself, but link to the resource via <xsl:value-of select="$appName"/>, using this URL. Even if the destination URL is changed in <xsl:value-of select="$appName"/>, this pass-through URL will not need to be changed on your web pages. When using this pass-through URL, <xsl:value-of select="$appName"/> will send the user through a local proxy if so configured.  
+        </p>
+        <p class="optionInfo">Pass-through URL: <a href="{$passThroughURL}">link</a></p> 
+            <textarea id="passthrough_url_display" class="displayTextbox" readonly="yes">
+            <xsl:value-of select="$passThroughURL" />
+            </textarea>
+        
+        
       </fieldset>    
     </form>
 
