@@ -160,6 +160,10 @@
 				<view>xsl/embed/embed_gen_subject.xsl</view>
 			</action>
 			<action name="gen_database">
+        <!-- cheesy easy way to get the reported pass-through URL to be
+             an absolute url is to set this request var -->
+        <request name="gen_full_urls">true</request>
+
 				<pathParamMap>
 					<mapEntry pathIndex="2" property="id"/>
 				</pathParamMap>
