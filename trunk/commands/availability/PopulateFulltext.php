@@ -34,9 +34,13 @@
 			if ( $strInstance != "" ) $strInstance = "-" . $strInstance;
 			
 			// construct the address to Google Scholar institutional 
-			// holdings file on SFX
+			// holdings file on SFX. Either SFX specific config, or
+      // general link resolver config. 
 			
-			$configSfx = $objRegistry->getConfig("LINK_RESOLVER_ADDRESS", true);
+			$configSfx = $objRegistry->getConfig("SFX_RESOLVER_ADDRESS", false, $objRegistry->getConfig("LINK_RESOLVER_ADDRESS", false));
+      if ( ! $configSfx ) {
+        throw new Exception("Can not run populate action, no link resolver address configured. Need config sfx_resolver_address or link_resolver_address."); 
+      }
 			
 			$strUrl = $configSfx . "/cgi/public/get_file.cgi?file=institutional_holding" . $strInstance . ".xml";
 			
@@ -60,7 +64,7 @@
 			}
 			catch (Exception $e)
 			{
-				throw new Exception("cannot get institutional holding file from sfx: '$strUrl'");
+				throw new Exception("cannot get institutional holding file from sfx: '$strUrl'. If this is the correct SFX server address, make sure your SFX allows access to institutional holding file from this IP address in config/get_file_restriction.config on SFX server.");
 			}
 			
 			echo "done.\n";

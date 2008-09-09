@@ -92,6 +92,10 @@
 		<!-- base open url to link resolver -->
 		
 		<config name="link_resolver_address"></config>
+    
+    <!--  If you want to do the SFX 'populate' action from another link
+          resolver, perhaps because your main one is not SFX, configure this -->
+    <!-- <config name="sfx_resolver_address"></config>-->  
 		
 		<!-- the sid that will be passed to the link resolver, xerxes will also append the name 
 		of the database to the sid -->
