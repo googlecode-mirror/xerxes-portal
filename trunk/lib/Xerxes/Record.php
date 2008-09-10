@@ -734,7 +734,7 @@
 
 					
 					if ( stristr($strUrl, "$3") || 	
-						 stristr($this->strSource, "EBSCO_BZH") ||
+						 stristr($this->strSource, "EBSCO_RZH") ||
 						 stristr($this->strSource, "CABI") || 
 					     stristr($this->strSource, "GOOGLE_SCH") || 
 					     stristr($this->strSource, "AMAZON") || 
