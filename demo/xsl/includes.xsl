@@ -71,10 +71,14 @@
 
 </xsl:template>
 
-<!-- Override categories_sidebar if you'd like to put something in the sidebar on the home page.  -->
 <!-- 
+	Override categories_sidebar if you'd like to put something in the sidebar on the home page. 
+
 	session_auth_info provides an example of giving the user their login/authentication details.
 	The 'additional options' list below also provides a link to the a-z database list.
+-->
+
+<!--
 	
 <xsl:template name="categories_sidebar">
 
@@ -98,7 +102,7 @@
 	</div>
 	
 </xsl:template>
--->
 
+-->
 
 </xsl:stylesheet>
