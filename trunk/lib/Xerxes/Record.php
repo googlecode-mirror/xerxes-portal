@@ -720,6 +720,7 @@
 					// records that have 856s, but are not always for full-text; in that case, specify them
 					// as being TOCs, which makes the 'none' links
 					//
+					// cinahl (bzh): not only is 856 bad, but link missing http://  bah! thanks greg at upacific! (9/10/08)
 					// wilson: if it has '$3' in the URL not full-text, since these are improperly parsed out (3/26/07) 
 					// cabi: just point back to site (10/30/07)
 					// google scholar: just point back to site (3/26/07) 
@@ -733,6 +734,7 @@
 
 					
 					if ( stristr($strUrl, "$3") || 	
+						 stristr($this->strSource, "EBSCO_BZH") ||
 						 stristr($this->strSource, "CABI") || 
 					     stristr($this->strSource, "GOOGLE_SCH") || 
 					     stristr($this->strSource, "AMAZON") || 
