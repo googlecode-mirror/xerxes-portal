@@ -3239,9 +3239,13 @@
 		}
 		
 		public function getMetalibID() { return $this->strMetalibID; }
+		
 		public function getResultSet() { return $this->strResultSet; }
+		public function setResultSet($data) { $this->strResultSet = $data; }
+		
 		public function getRecordNumber() { return $this->strRecordNumber; }
-
+		public function setRecordNumber($data) { $this->strRecordNumber = $data; }
+		
 		public function isEditor() { return $this->bolEditor; }
 		public function getFormat() { return $this->strFormat; }
 		public function getTechnology() { return $this->strTechnology; }

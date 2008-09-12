@@ -256,9 +256,6 @@ abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
 	
 	protected function addRecords($objXml, $arrRecords, $configMarcResults)
 	{
-		// used to fetch info on already saved records, if any
-		$objData = new Xerxes_DataMap( );
-		
 		$objRecords = $objXml->createElement( "records" );
 		
 		foreach ( $arrRecords as $objRecord )
@@ -282,37 +279,6 @@ abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
 				$objMarcRecord = $objXerxesRecord->getMarcXML();
 				$objImportRecord = $objXml->importNode( $objMarcRecord->getElementsByTagName( "record" )->item( 0 ), true );
 				$objRecordContainer->appendChild( $objImportRecord );
-			}
-			
-			// check if this hit has been saved in my records this session
-			// include info if it has. 
-			
-			$strResultSet = $objXerxesRecord->getResultSet();
-			$strRecordNumber = $objXerxesRecord->getRecordNumber();
-			$key = Xerxes_Helper::savedRecordKey( $strResultSet, $strRecordNumber );
-			
-			if ( Xerxes_Helper::isMarkedSaved( $strResultSet, $strRecordNumber ) )
-			{
-				$objSavedRecordXml = $objXml->createElement( "saved" );
-				
-				// id
-				
-				$strSavedID = $_SESSION['resultsSaved'][$key]['xerxes_record_id'];
-				$objSavedRecordXml->setAttribute( "id", $strSavedID );
-				$objIDXml = $objXml->createElement( "id", $strSavedID );
-				$objSavedRecordXml->appendChild( $objIDXml );
-				
-				// labels
-				
-				$objSavedRecord = $objData->getRecordByID( $strSavedID );
-				
-				foreach ( $objSavedRecord->tags as $tag )
-				{
-					$objTagXml = $objXml->createElement( "tag", Xerxes_Parser::escapeXml( $tag ) );
-					$objSavedRecordXml->appendChild( $objTagXml );
-				}
-				
-				$objRecordContainer->appendChild( $objSavedRecordXml );
 			}
 		}
 		

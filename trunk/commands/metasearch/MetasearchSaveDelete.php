@@ -31,7 +31,7 @@
 			$strUsername = $objRequest->getSession("username");
 			$strGroup =	$objRequest->getProperty("group");
 			$strResultSet =	$objRequest->getProperty("resultSet");
-			$iStartRecord =	(int) $objRequest->getProperty("startRecord");
+			$iStartRecord =	$objRequest->getProperty("startRecord");
 
 			// get the search start date
 			

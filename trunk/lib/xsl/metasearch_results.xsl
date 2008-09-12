@@ -28,7 +28,7 @@
 	<xsl:variable name="context_url" 		select="results/search/context_url" />
 	<xsl:variable name="group" 				select="request/group" />
 	<xsl:variable name="this_result_set"	select="request/resultset" />
-    
+		
 	<xsl:variable name="facet_return">
 		<xsl:value-of select="php:function('urlencode', concat('./?base=metasearch&amp;action=results&amp;group=', $group, '&amp;resultSet=', $this_result_set))" />
 	</xsl:variable>
@@ -43,15 +43,15 @@
 	</xsl:variable>
 
 
-  <!-- hidden div to be used for autocompletion suggestions -->
-  <div id="tag_suggestions" class="autocomplete" style="display:none;"></div>
+	<!-- hidden div to be used for autocompletion suggestions -->
+	<div id="tag_suggestions" class="autocomplete" style="display:none;"></div>
 	
 	<div id="container">
 	
 		<div id="searchArea">
 
 			<form action="./" method="get">
-    		<input type="hidden" name="base" value="metasearch" />
+				<input type="hidden" name="base" value="metasearch" />
 				<input type="hidden" name="action" value="search" />
 				<input type="hidden" name="context" value="{$context}" />
 				<input type="hidden" name="context_url" value="{$context_url}" />
@@ -271,14 +271,14 @@
 								</xsl:choose>
 								<xsl:if test="following-sibling::option">
 									<xsl:text> | </xsl:text>
-								</xsl:if>					
+								</xsl:if>
 							</xsl:for-each>
 						</div>
 					</xsl:if>
 					<div class="resultsPageSummary">
 						Results <strong><xsl:value-of select="summary/range" /></strong> of 
 						<strong><xsl:value-of select="summary/total" /></strong>
-					</div>			
+					</div>
 				</div>
 			</xsl:if>
 			
@@ -329,6 +329,9 @@
 				<xsl:variable name="year" 		select="year" />
 				<xsl:variable name="result_set" 	select="result_set" />
 				<xsl:variable name="record_number" 	select="record_number" />
+				<xsl:variable name="record_id">
+					<xsl:value-of select="$result_set" />:<xsl:value-of select="$record_number" />
+				</xsl:variable>
 
 				<xsl:variable name="this_start_number">
 					<xsl:choose>
@@ -343,7 +346,7 @@
 				<div class="resultsMain">
 					
 					<!-- keep the url in the current result set, unless this is a facet, in which
-					     case we'll link to the record by original resultset, plus return param -->
+							 case we'll link to the record by original resultset, plus return param -->
 					<xsl:choose>
 						<xsl:when test="//request/action = 'facet'">
 							<a href="./?base=metasearch&amp;action=record&amp;group={$group}&amp;resultSet={$result_set}&amp;startRecord={$record_number}&amp;return={$this_page}" class="resultsTitle">
@@ -423,12 +426,12 @@
 									
 							</xsl:when>
 							<xsl:when test="//fulltext/issn = standard_numbers/issn">
-								<a href="./?base=metasearch&amp;action=sfx&amp;resultSet={$result_set}&amp;startRecord={$record_number}&amp;fulltext=1" class="resultsFullText"  target="{$link_target}" >
+								<a href="./?base=metasearch&amp;action=sfx&amp;resultSet={$result_set}&amp;startRecord={$record_number}&amp;fulltext=1" class="resultsFullText" target="{$link_target}" >
 									<img src="{$base_include}/images/html.gif" alt="" width="16" height="16" border="0" /> Full-Text Online
 								</a>
 							</xsl:when>
 							<xsl:otherwise>
-								<a href="./?base=metasearch&amp;action=sfx&amp;resultSet={$result_set}&amp;startRecord={$record_number}" class="resultsFullText"  target="{$link_target}" >
+								<a href="./?base=metasearch&amp;action=sfx&amp;resultSet={$result_set}&amp;startRecord={$record_number}" class="resultsFullText" target="{$link_target}" >
 									<img src="{$base_url}/images/sfx.gif" alt="" /> Check for availability
 								</a>
 							</xsl:otherwise>
@@ -437,11 +440,11 @@
 						<!-- Save Facility -->
 					
 						<span class="resultsAvailableOption" id="saveRecordOption">
-							<img id="folder_{$result_set}{$record_number}"  width="17" height="15" alt="" border="0" >
+							<img id="folder_{$result_set}{$record_number}"	width="17" height="15" alt="" border="0" >
 							<xsl:attribute name="src">
 								<xsl:choose> 
-									<xsl:when test="../saved">images/folder_on.gif</xsl:when>
-								  <xsl:otherwise>images/folder.gif</xsl:otherwise>
+									<xsl:when test="//request/session/resultssaved[@key = $record_id]">images/folder_on.gif</xsl:when>
+									<xsl:otherwise>images/folder.gif</xsl:otherwise>
 								</xsl:choose>
 							</xsl:attribute>
 							</img>
@@ -449,25 +452,25 @@
 							<xsl:text> </xsl:text>
 							<a id="link_{$result_set}:{$record_number}"
 								href="./?base=metasearch&amp;action=save-delete&amp;group={$group}&amp;resultSet={$result_set}&amp;startRecord={$record_number}">
-                  <!-- 'saved' class used as a tag by ajaxy stuff -->
-                  <xsl:attribute name="class">
-										saveThisRecord resultsFullText <xsl:if test="../saved">saved</xsl:if>
-									</xsl:attribute>
-                  <xsl:choose>
-										<xsl:when test="../saved">Record saved</xsl:when>
-										<xsl:otherwise>Save this record</xsl:otherwise>
-									</xsl:choose>
+								<!-- 'saved' class used as a tag by ajaxy stuff -->
+								<xsl:attribute name="class">
+									saveThisRecord resultsFullText <xsl:if test="//request/session/resultssaved[@key = $record_id]">saved</xsl:if>
+								</xsl:attribute>
+								<xsl:choose>
+									<xsl:when test="//request/session/resultssaved[@key = $record_id]">Record saved</xsl:when>
+									<xsl:otherwise>Save this record</xsl:otherwise>
+								</xsl:choose>
 							</a>
 						</span>
 						
 					</div>
 
 					<!-- label/tag input for saved records, if record is saved and it's not a temporary session -->
-          <xsl:if test="../saved and not(/*/request/session/role = 'guest' or /*/request/session/role = 'local')">
-			    	<div class="results_label resultsFullText" id="label_{$result_set}:{$record_number}" > 
-					  	<xsl:call-template name="tag_input">
-								<xsl:with-param name="record" select="../saved" />
-                <xsl:with-param name="context" select="'the results page'" />
+					<xsl:if test="//request/session/resultssaved[@key = $record_id] and not(//request/session/role = 'guest' or //request/session/role = 'local')">
+						<div class="results_label resultsFullText" id="label_{$result_set}:{$record_number}" > 
+							<xsl:call-template name="tag_input">
+								<xsl:with-param name="record" select="//saved_records/saved[@id = $record_id]" />
+								<xsl:with-param name="context" select="'the results page'" />
 							</xsl:call-template>	
 						</div>
 					</xsl:if>
@@ -484,23 +487,23 @@
 	</div>
 
 	<!-- include a hidden template copy of the label/tab input form. Used by AJAX to add
-       a tag input form after record is saved -->
-  <div id="template_tag_input" class="results_label resultsFullText" style="display:none;">
+			 a tag input form after record is saved -->
+	<div id="template_tag_input" class="results_label resultsFullText" style="display:none;">
 		<xsl:call-template name="tag_input">
-      <xsl:with-param name="id" select="'template'" />
+			<xsl:with-param name="id" select="'template'" />
 		</xsl:call-template> 
 	</div>
 
-  <!-- Label list display in a hidden div. We include this for javascript purposes
-       for two reasons:
-       1) The AJAX label code we are re-purposing from folder home expects it, and errors
-          if it's not there. But even more importantly...
-       2) The AJAX autocompleter logic will use this to build the autocomplete possibilities,
-          which we also want on this page. 
+	<!-- Label list display in a hidden div. We include this for javascript purposes  for two reasons:
+		
+		 1) The AJAX label code we are re-purposing from folder home expects it, and errors
+			if it's not there. But even more importantly...
+		 2) The AJAX autocompleter logic will use this to build the autocomplete possibilities,
+			which we also want on this page. 
 
-      So we include it hidden, because the user doesn't need to see it on this page, but we
-      include it.
-  -->
+		So we include it hidden, because the user doesn't need to see it on this page, but we
+		include it.
+	-->
 
 	<div id="labelsMaster" class="folderOutput" style="display: none">
 		<xsl:call-template name="tags_display" />
