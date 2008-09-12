@@ -721,8 +721,8 @@
 -->
 
 <xsl:template name="tag_input">
-	<xsl:param name="record" select="."/>
-	<xsl:param name="id" select="$record/id"/> 
+	<xsl:param name="record" select="." />
+	<xsl:param name="id" select="$record/id" /> 
 	<xsl:param name="context" select="'the saved records page'" />
 
 	<div class="folderLabels" id="tag_input_div-{$id}">
@@ -1324,6 +1324,253 @@
 		</div>
 	</xsl:if>
 
+</xsl:template>
+
+
+<xsl:template name="mango-searchbox">
+
+	<xsl:variable name="query"				select="request/query" />
+	
+	<form action="./" method="get">
+
+		<input type="hidden" name="base" value="books" />
+		<input type="hidden" name="action" value="search" />
+		<input type="hidden" name="source" value="local" />
+
+		<label for="field">Search</label><xsl:text> </xsl:text>
+	
+		<select id="field" name="field">
+			<option value="">keyword</option>
+			<option value="title">
+			<xsl:if test="request/field = 'title'">
+				<xsl:attribute name="selected">seleted</xsl:attribute>
+			</xsl:if>
+			title
+			</option>
+			<option value="author">
+			<xsl:if test="request/field = 'author'">
+				<xsl:attribute name="selected">selected</xsl:attribute>
+			</xsl:if>
+			author
+			</option>
+			<option value="subject">
+			<xsl:if test="request/field = 'subject'">
+				<xsl:attribute name="selected">selected</xsl:attribute>
+			</xsl:if>
+			subject
+			</option>
+		</select>
+		<xsl:text> </xsl:text><label for="query">for</label><xsl:text> </xsl:text>
+		<input id="query" name="query" type="text" size="32" value="{$query}" /><xsl:text> </xsl:text>
+		
+		<input type="submit" name="Submit" value="GO" />
+	
+	</form>	
+
+</xsl:template>
+
+<!-- 	
+	TEMPLATE: REAL-TIME HOLDINGS LOOKUP
+-->
+
+<xsl:template name="holdings_lookup">
+	<xsl:param name="isbn" />
+	<xsl:param name="oclc" />
+	<xsl:param name="type" />
+	
+	<xsl:choose>
+		<xsl:when test="$type = 'summary'">
+			<xsl:call-template name="holdings_lookup_summary">
+				<xsl:with-param name="isbn" select="$isbn" />
+				<xsl:with-param name="oclc" select="$oclc" />
+			</xsl:call-template>			
+		</xsl:when>
+		<xsl:otherwise>
+			<xsl:call-template name="holdings_lookup_full">
+				<xsl:with-param name="isbn" select="$isbn" />
+				<xsl:with-param name="oclc" select="$oclc" />
+			</xsl:call-template>
+		</xsl:otherwise>
+	</xsl:choose>
+				
+</xsl:template>
+
+<!-- 	
+	TEMPLATE: HOLDINGS LOOKUP SUMMARY
+	A summary view of the holdings information
+-->
+
+<xsl:template name="holdings_lookup_summary">
+	<xsl:param name="isbn" />
+	<xsl:param name="oclc" />	
+
+	<ul class="mangoAvailabilitySummary">
+	
+	<xsl:call-template name="holdings_full_text">
+		<xsl:with-param name="element">li</xsl:with-param>
+		<xsl:with-param name="class">resultsHoldings</xsl:with-param>
+		<xsl:with-param name="oclc"><xsl:value-of select="$oclc" /></xsl:with-param>
+		<xsl:with-param name="isbn"><xsl:value-of select="$isbn" /></xsl:with-param>
+	</xsl:call-template>
+	
+	<xsl:choose>
+		<xsl:when test="count(//lookup/summary/number[(@isbn = $isbn and $isbn != '') or (@oclc = $oclc and $oclc != '')]/location[@available != '0']) = 0">
+			<xsl:if test="//request/source = 'local'">
+				<li class="mangoAvailabilityMissing"><img src="images/book-out.gif" alt="" />&#160; No Copies Available</li>
+			</xsl:if>
+			<xsl:call-template name="ill_option">
+				<xsl:with-param name="element">li</xsl:with-param>
+				<xsl:with-param name="class">resultsHoldings</xsl:with-param>
+				<xsl:with-param name="oclc"><xsl:value-of select="$oclc" /></xsl:with-param>
+				<xsl:with-param name="isbn"><xsl:value-of select="$isbn" /></xsl:with-param>
+			</xsl:call-template>
+		</xsl:when>
+		<xsl:otherwise>
+			<xsl:for-each select="//lookup/summary/number[(@isbn = $isbn and $isbn != '') or (@oclc = $oclc and $oclc != '')]/location[@name != 'ONLINE']">
+				<li>
+					<xsl:choose>
+						<xsl:when test="@available = '0'"><img src="images/book-out.gif" alt="" />&#160; No copies available at <xsl:value-of select="@name" /></xsl:when>
+						<xsl:when test="@available = '1'"><img src="images/book.gif" alt="" />&#160; 1 copy available at <xsl:value-of select="@name" /></xsl:when>
+						<xsl:otherwise><img src="images/book.gif" alt="" />&#160; <xsl:value-of select="@available" /> copies available at <xsl:value-of select="@name" /></xsl:otherwise>
+					</xsl:choose>
+				</li>
+			</xsl:for-each>
+		</xsl:otherwise>
+	</xsl:choose>
+	</ul>
+	
+</xsl:template>
+
+<!-- 	
+	TEMPLATE: HOLDINGS LOOKUP FULL
+	A full table-view of the (print) holdings information, with full-text below
+-->
+
+<xsl:template name="holdings_lookup_full">
+	<xsl:param name="isbn" />
+	<xsl:param name="oclc" />
+	
+	<xsl:choose>
+		<xsl:when test="//lookup/library[held = 1 and location != 'ONLINE' and ( isbn = $isbn  or oclc = $oclc)]">
+		
+			<div class="mangoAvailable">		
+				<table id="holdingsTable">
+				<tr>
+					<th>Location</th>
+					<th>Call Number</th>
+					<th>Status</th>
+				</tr>
+				<xsl:for-each select="//lookup/library[held = 1 and location != 'ONLINE' and ( isbn = $isbn  or oclc = $oclc)]">
+					<tr>
+						<td><xsl:value-of select="location" /></td>
+						<td><xsl:value-of select="call_number" /></td>
+						<td><xsl:value-of select="status" /></td>
+					</tr>
+				</xsl:for-each>
+				</table>
+			</div>
+		</xsl:when>
+	</xsl:choose>		
+			
+	<xsl:call-template name="holdings_full_text">
+		<xsl:with-param name="element">span</xsl:with-param>
+		<xsl:with-param name="class">resultsAvailability</xsl:with-param>
+		<xsl:with-param name="oclc"><xsl:value-of select="$oclc" /></xsl:with-param>
+		<xsl:with-param name="isbn"><xsl:value-of select="$isbn" /></xsl:with-param>
+	</xsl:call-template>
+
+	<xsl:call-template name="ill_option">
+		<xsl:with-param name="element">span</xsl:with-param>
+		<xsl:with-param name="class">resultsAvailability</xsl:with-param>
+		<xsl:with-param name="oclc"><xsl:value-of select="$oclc" /></xsl:with-param>
+		<xsl:with-param name="isbn"><xsl:value-of select="$isbn" /></xsl:with-param>
+	</xsl:call-template>
+
+	<xsl:call-template name="mango_save_record">
+		<xsl:with-param name="element">span</xsl:with-param>
+		<xsl:with-param name="class">resultsAvailability</xsl:with-param>
+		<xsl:with-param name="oclc"><xsl:value-of select="$oclc" /></xsl:with-param>
+	</xsl:call-template>
+
+</xsl:template>
+
+<!-- 	
+	TEMPLATE: HOLDINGS FULL TEXT
+	just the full-text on a holdings lookup
+-->
+
+<xsl:template name="holdings_full_text">
+	<xsl:param name="element" />
+	<xsl:param name="class" />
+	<xsl:param name="oclc" />
+	<xsl:param name="isbn" />
+				
+	<xsl:for-each select="//lookup/library[location = 'ONLINE' and ( isbn = $isbn  or oclc = $oclc)]">
+		<xsl:element name="{$element}">
+			<xsl:attribute name="class"><xsl:value-of select="$class" /></xsl:attribute>
+			<a href="{link}" class="resultsFullText"  target="" >
+				<img src="{$base_include}/images/html.gif" alt="" width="16" height="16" border="0" /> Full-Text Online
+			</a>
+		</xsl:element>
+	</xsl:for-each>
+		
+</xsl:template>
+
+<!-- 	
+	TEMPLATE: ILL OPTION
+	just the ill link on a holdings lookup
+-->
+
+<xsl:template name="ill_option">
+	<xsl:param name="element" />
+	<xsl:param name="class" />
+	<xsl:param name="oclc" />
+	<xsl:param name="isbn" />
+	
+	<xsl:variable name="source"  select="//request/source"/>
+
+	<xsl:if test="not(//lookup/library[held = 1 and ( isbn = $isbn  or oclc = $oclc)]/@available = 'true')">
+		<xsl:element name="{$element}">
+			<xsl:attribute name="class"><xsl:value-of select="$class" /></xsl:attribute>
+			<img src="images/ill.gif" alt="" class="mangoILL" /> 
+			<a target="_blank" href="./?base=books&amp;action=ill&amp;oclc={$oclc}" style="color: green">
+				<xsl:text>We'll get a copy for you </xsl:text>
+				<xsl:choose>
+					<xsl:when test="$source = 'regional'">
+						<xsl:text> in 3-5 days</xsl:text>
+					</xsl:when>
+					<xsl:when test="$source = 'world'">
+						<xsl:text> in 5-10 days</xsl:text>
+					</xsl:when>
+				</xsl:choose>
+			
+			</a>
+		</xsl:element>
+	</xsl:if>
+		
+</xsl:template>
+		
+<!-- 	
+	TEMPLATE: MANGO SAVE RECORD
+	for mango
+-->
+
+<xsl:template name="mango_save_record">
+	<xsl:param name="element" />
+	<xsl:param name="class" />
+	<xsl:param name="oclc" />
+	
+	<!--
+	
+	<xsl:element name="{$element}">
+		<xsl:attribute name="class"><xsl:value-of select="$class" /></xsl:attribute>
+		<img id="folder_{$oclc}" src="images/folder.gif" width="17" height="15" alt="" border="0" />
+		<xsl:text> </xsl:text>
+		<a id="link_{$oclc}" href="" class="saveThisRecord resultsFullText">Save this record</a>
+	</xsl:element>
+	
+	-->
+		
 </xsl:template>
 
 </xsl:stylesheet>

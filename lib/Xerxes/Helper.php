@@ -259,11 +259,11 @@ class Xerxes_Helper
 	public static function savedRecordKey($strResultSet, $strRecordNumber)
 	{
 		// key based on result set and record number in search results. Save id
-		// of saved xerxes_record. Normalize number strings remove initial 0s.
+		// of saved xerxes_record. 
 		
-		$key = ( string ) ( int ) $strResultSet . ":" . ( string ) ( int ) $strRecordNumber;
+		$key = $strResultSet . ":" . $strRecordNumber;
+		
 		return $key;
 	}
-
 }
 ?>

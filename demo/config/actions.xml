@@ -160,9 +160,9 @@
 				<view>xsl/embed/embed_gen_subject.xsl</view>
 			</action>
 			<action name="gen_database">
-        <!-- cheesy easy way to get the reported pass-through URL to be
-             an absolute url is to set this request var -->
-        <request name="gen_full_urls">true</request>
+				<!-- cheesy easy way to get the reported pass-through URL to be
+				     an absolute url is to set this request var -->
+				<request name="gen_full_urls">true</request>
 
 				<pathParamMap>
 					<mapEntry pathIndex="2" property="id"/>
@@ -223,8 +223,8 @@
 					<mapEntry pathIndex="3" property="record" />
 				</pathParamMap>			
 				<command>FolderResults</command>
-        <!-- FolderTags for tag autocomplete --> 
-        <command directory="folder">FolderTags</command>
+				<!-- FolderTags for tag autocomplete --> 
+				<command directory="folder">FolderTags</command>
 				<view>xsl/folder_full.xsl</view>
 			</action>
 			<action name="output_email">
@@ -294,9 +294,9 @@
 		<section name="availability" directory="availability" namespace="Xerxes" documentElement="xerxes">
 
 			<!-- fulltext and refereed are depricated since version 1.2 in favor of the 'inject'
-					 equivalent commands, which are included now as part of actions in metasearch
-					 and folder sections -->
-					 
+				equivalent commands, which are included now as part of actions in metasearch
+				and folder sections -->
+			
 			<action name="fulltext">
 				<command>AvailabilityFulltext</command>
 				<view />
@@ -326,8 +326,9 @@
 				<command>MetasearchResults</command>
 				<command directory="availability">AvailabilityInjectRefereed</command>
 				<command directory="availability">AvailabilityInjectFullText</command>
-				<command>MetasearchPaging</command>
+				<command>MetasearchCheckSaved</command>
 				<command directory="folder">FolderTags</command>
+				<command>MetasearchPaging</command>
 				<pathParamMap>
 					<mapEntry pathIndex="2" property="group"/>
 					<mapEntry pathIndex="3" property="resultSet"/>
@@ -356,9 +357,10 @@
 			</action>
 			<action name="record">
 				<command>MetasearchRecord</command>
-        <!-- FolderTags for tag autocomplete --> 
-        <command directory="folder">FolderTags</command>
+				<!-- FolderTags for tag autocomplete --> 
+				<command directory="folder">FolderTags</command>
 				<command directory="availability">AvailabilityInjectRefereed</command>
+				<command>MetasearchCheckSaved</command>
 				<view>xsl/metasearch_record.xsl</view>
 			</action>
 		</section>
@@ -385,7 +387,9 @@
 				</pathParamMap>
 				<command>MangoResults</command>
 				<command>MangoLookupInject</command>
+				<command namespace="Xerxes" directory="metasearch">MetasearchCheckSaved</command>
 				<command>MangoPaging</command>
+				<command namespace="Xerxes" directory="folder">FolderTags</command>
 				<view>xsl/mango_results.xsl</view>
 			</action>
 			<action name="lookup">
@@ -409,8 +413,14 @@
 				<command>MangoAmazon</command>
 				<command>MangoRecommend</command>
 				<command>MangoLookup</command>
+				<command namespace="Xerxes" directory="metasearch">MetasearchCheckSaved</command>
 				<view>xsl/mango_record.xsl</view>
 				<view format="marc">xsl/marc-display.xsl</view>
+			</action>
+			<action name="save-delete">
+				<command>MangoSaveDelete</command>
+				<view>xsl/metasearch_save-delete.xsl</view>
+				<view format="json">xsl/metasearch_save-delete_ajax.xsl</view>
 			</action>
 			<action name="update" cli="true">
 				<command>MangoUpdateHoldings</command>

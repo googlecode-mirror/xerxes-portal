@@ -1,17 +1,17 @@
 	/**
 	 * FUNCTIONS FOR MANGING TAGS
-   *
-   * CALLER REQUIREMENTS:
-   *  For autocomplete, you need a div on your page id="tag_suggestions",
-   *  class="autocomplete".  It can (and should) be set to css display:none.
-   *  The autocompleter will take it's suggestions from things on the page
-   *  wrapped with <span class="label_list_item"></span>. These can be in a
-   *  hidden div, or displayed, just on the page somewhere. 
+	 *
+	 * CALLER REQUIREMENTS:
+	 *	For autocomplete, you need a div on your page id="tag_suggestions",
+	 *	class="autocomplete".	It can (and should) be set to css display:none.
+	 *	The autocompleter will take it's suggestions from things on the page
+	 *	wrapped with <span class="label_list_item"></span>. These can be in a
+	 *	hidden div, or displayed, just on the page somewhere. 
 	 */
 
 	addEvent(window, 'load', findTagElements);
-  addEvent(window, 'load', loadTagSuggestions);
-  addEvent(window, 'load', addAutoCompleters);
+	addEvent(window, 'load', loadTagSuggestions);
+	addEvent(window, 'load', addAutoCompleters);
 
 	function findTagElements()
 	{		
@@ -78,65 +78,69 @@
 	}	
 
 
-  
-  function loadTagSuggestions() {
-    // don't ever create a new array, always use the array that's there, so
-    // the autocompleter will keep using it--if we had assigned the variable to a new
-    // array, then we would lose the connection with the existing autocompleters..
+	
+	function loadTagSuggestions() {
+		// don't ever create a new array, always use the array that's there, so
+		// the autocompleter will keep using it--if we had assigned the variable to a new
+		// array, then we would lose the connection with the existing autocompleters..
 
 		// create new array only if we don't already have one
-    if (typeof(window["tag_suggestion_list"]) == "undefined") tag_suggestion_list = new Array();
+		if (typeof(window["tag_suggestion_list"]) == "undefined") tag_suggestion_list = new Array();
 
-    //remove all elements from the array
-    tag_suggestion_list.clear();
+		//remove all elements from the array
+		tag_suggestion_list.clear();
 
-    // re-add current list
-    var list = $$('.label_list_item');
+		// re-add current list
+		var list = $$('.label_list_item');
 		for( i=0; i<list.length; i++) {
 			tag_suggestion_list.push( list[i].innerHTML );
-		}  
+		}	
 }
 
-  function addAutoCompleters() {
-    //make sure the tag suggestions global variable is defined,
-    //so we can share the same array reference that loadTagSuggestions
-    //will use. 
-    if (typeof(window["tag_suggestion_list"]) == "undefined") tag_suggestion_list = new Array();
-    
-     inputs = $$('.tagsInput');
-     for ( i = 0; i < inputs.length ; i++ ) {
-       addAutoCompleterToID( inputs[i].id );
+	function addAutoCompleters() {
+		//make sure the tag suggestions global variable is defined,
+		//so we can share the same array reference that loadTagSuggestions
+		//will use. 
+		if (typeof(window["tag_suggestion_list"]) == "undefined") tag_suggestion_list = new Array();
+		
+		 inputs = $$('.tagsInput');
+		 for ( i = 0; i < inputs.length ; i++ ) {
+			 addAutoCompleterToID( inputs[i].id );
 		 }
 	}
-  function addAutoCompleterToID(id) {
-     new Autocompleter.Local(id, 'tag_suggestions', tag_suggestion_list, {'partialSearch': false, 'tokens': [',']});
-  }
+	
+	function addAutoCompleterToID(id) {
+		 new Autocompleter.Local(id, 'tag_suggestions', tag_suggestion_list, {'partialSearch': false, 'tokens': [',']});
+	}
 	
 	function updateTags(form)
 	{
 		// we'll switch the action here to one different from the one set in html
-		// so that we can handle ajax-originated requests differently.  server will
+		// so that we can handle ajax-originated requests differently.	server will
 		// perform same command, but view will spit back the newly calculated totals
 		// which we will update in the interface
 		
 		$(form).action.value = "tags_edit_ajax";
 		
 		$(form).request(
-		{
+		{			
 			onSuccess: function(transport)
 			{			
 				// update the shadow copy of the tags to the new value
 				// and show the newly calculated totals on the side nav
 				
 				form.tagsShaddow.value = form.tags.value;
-        labelsMaster = $('labelsMaster');
-				if (labelsMaster) labelsMaster.update(transport.responseText);
+
+				if ($('labelsMaster'))
+				{
+					$('labelsMaster').update(transport.responseText);
+				}
 
 				// highlight that something happended
 				highlightTagUpdate(form.submitButton);
 
-        //reload autocompleter suggestions 
-        loadTagSuggestions(); 
+				//reload autocompleter suggestions 
+				loadTagSuggestions(); 
 			},
 			
 			onFailure: function(transport)
