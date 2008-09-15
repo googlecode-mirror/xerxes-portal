@@ -30,13 +30,13 @@
 				<xsl:when test="position() = 1">
 					<xsl:text>&#013;&#010;</xsl:text><xsl:text>A1  - </xsl:text>
 					<xsl:call-template name="author">
-						<xsl:with-param name="type" value="last" />
+						<xsl:with-param name="type">last</xsl:with-param>
 					</xsl:call-template>
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:text>&#013;&#010;</xsl:text><xsl:text>A2  - </xsl:text>
 					<xsl:call-template name="author">
-						<xsl:with-param name="type" value="last" />
+						<xsl:with-param name="type">last</xsl:with-param>
 					</xsl:call-template>
 				</xsl:otherwise>
 			</xsl:choose>
