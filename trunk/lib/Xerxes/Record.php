@@ -720,6 +720,7 @@
 					// records that have 856s, but are not always for full-text; in that case, specify them
 					// as being TOCs, which makes the 'none' links
 					//
+					// springer (metapress): does not distinguish between things in your subscription or not (9/16/08) 
 					// cinahl (bzh): not only is 856 bad, but link missing http://  bah! thanks greg at upacific! (9/10/08)
 					// wilson: if it has '$3' in the URL not full-text, since these are improperly parsed out (3/26/07) 
 					// cabi: just point back to site (10/30/07)
@@ -734,6 +735,7 @@
 
 					
 					if ( stristr($strUrl, "$3") || 	
+						 stristr($this->strSource, "METAPRESS_XML") ||
 						 stristr($this->strSource, "EBSCO_RZH") ||
 						 stristr($this->strSource, "CABI") || 
 					     stristr($this->strSource, "GOOGLE_SCH") || 
@@ -2051,6 +2053,11 @@
 				{
 					$strLast = trim(substr($strAuthor, 0, $iComma));
 					$strFirst = trim(substr($strAuthor, $iComma + 1));
+				}
+				elseif ( preg_match("/ ([A-Z]{1,3})$/", $strAuthor, $arrMatch) != 0 )
+				{
+					$strFirst = $arrMatch[1];
+					$strLast = str_replace($arrMatch[0], "", $strAuthor);
 				}
 				else
 				{
