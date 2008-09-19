@@ -37,6 +37,9 @@ class Xerxes_Command_DatabasesDatabase extends Xerxes_Command_Databases
 		if ( $strID )
 		{
 			$arrResults = $objData->getDatabases( $strID );
+      if (count($arrResults) == 0) {
+        throw new Xerxes_NotFoundException("Can not find database with id $strID");
+      }
 		}
 		elseif ( $strQuery )
 		{
