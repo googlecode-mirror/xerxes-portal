@@ -55,8 +55,8 @@ class Xerxes_Framework_Error
 			{
 				$resultStatus = 403;
 			}
-      else if ( $e instanceof Xerxes_NotFoundException ) {
-        $resultSTatus = 404;
+      else if ( $e instanceof Xerxes_NotFoundException ) {        
+        $resultStatus = 404;
       }
 			
 			header( ' ', true, $resultStatus ); // send back http status as internal server error or other specified status
