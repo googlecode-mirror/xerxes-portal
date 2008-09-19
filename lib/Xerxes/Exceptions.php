@@ -18,6 +18,15 @@ class Xerxes_Exception extends Exception {
   }
 }
 
+class Xerxes_NotFoundException extends Xerxes_Exception {
+    //New default heading. 
+    public function __construct($message, $heading = "Not Found")
+    {
+      parent::__construct($message, $heading);
+      $this->heading = $heading;
+    }   
+}
+
 class Xerxes_AccessDeniedException extends Xerxes_Exception { 
   
     //New default heading. 
