@@ -1231,7 +1231,8 @@
 -->
 
 <xsl:template name="categories_sidebar">
-
+</xsl:template>
+<xsl:template name="categories_sidebar_alt">
 </xsl:template>
 
 <!--
@@ -1252,7 +1253,7 @@
 			</xsl:otherwise>
 		</xsl:choose>
 		
-		<div id="sessionAuthSection">
+		<div class="sessionAuthSection">
 			<xsl:if test="//request/authorization_info/group[@user_account = 'true']">
 				<h3>Your Affiliation: </h3>
 				<ul>
@@ -1263,7 +1264,7 @@
 			</xsl:if>
 		</div>
 		
-		<div id="sessionAuthSection">
+		<div class="sessionAuthSection">
 			<h3>Your Location: </h3>
 			<ul>
 			<xsl:choose>
