@@ -150,6 +150,10 @@ a img{
 	padding: 20px 10px 10px 10px;
 	margin-left: 545px;
 }
+#sidebar_alt {
+	padding: 0px 10px 10px 0px;
+	margin-left: 545px;
+}
 #sidebar_content {
 	min-width: 150px;
 	max-width: 320px;
@@ -203,7 +207,7 @@ a img{
 	margin-bottom: 40px;
 }
 #sessionAuthInfo h2 {
-	margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 #sessionAuthInfo h3 {
 	font-size: 12px;
@@ -218,7 +222,7 @@ a img{
 	margin: 0;
 	padding: 0;
 }
-#sessionAuthSection {
+.sessionAuthSection {
 	margin-left: 10px;
 	margin-bottom: 3px;
 }
@@ -300,13 +304,16 @@ a img{
 }
 .categories {
 	margin-top: 30px;  
+  clear: both;
 }
 .categoriesTable td {
 	padding-right: 15px;
 }
 
 #categories_quicksearch {
-  width: 500px;   
+  width: 500px; 
+  float: left;  
+  margin-bottom: 20px;
 }
 
 /* databases full and a-z list */

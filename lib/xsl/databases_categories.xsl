@@ -58,6 +58,9 @@
 			</form>
 		</xsl:if>
 		
+    <div id="sidebar_alt" class="categories_sidebar">
+		  <xsl:call-template name="categories_sidebar_alt" />
+    </div>	
     
 		<div class="categories">
 
@@ -99,7 +102,7 @@
     </div>
     
     <div id="sidebar" class="categories_sidebar">
-		<xsl:call-template name="categories_sidebar" />
+		  <xsl:call-template name="categories_sidebar" />
     </div>	
     
 	</div>
