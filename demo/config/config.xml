@@ -56,6 +56,31 @@
 		so that Metalib knows which knowledgebase to associate with this implementation of Xerxes. -->
 		
 		<config name="ip_address"></config>
+    
+    
+    <!-- Can db description fields include HTML? Default Metalib is to allow
+     some HTML, but strip others (details undocumented). Default Xerxes
+     is to not allow any HTML, escaping all HTML chars. 
+       
+     db_description_html  values:
+        escape:  Escape all HTML so it shows up as source. Xerxes default.
+        allow: Allow all HTML through as code. NOT reccommended. Suggest
+              you use strip with some tags in db_description_allow_tags
+              instead. 
+        strip:  Strip out all HTML tags. May be used in combination with
+              db_description_allow_tags below. 
+                  
+      <config name="db_description_html">strip</config>
+       
+      db_description_allow_tags:  Only used with db_description_html=strip.
+              Tags listed here (comma seperated) will NOT be stripped, but
+              will be allowed--they are a whitelist. All other tags will
+              be stripped.
+                
+      <config name="db_description_allow_tags">b,i,strong,em,a</config>
+       
+     -->
+    
 		
 		<!-- Metalib user groups (aka 'secondary affiliations'). -->
 		

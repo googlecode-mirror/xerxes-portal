@@ -117,7 +117,7 @@
         </div>
         
         <div class="alphaDescription">
-          <xsl:value-of select="translate(description,'#','')" />
+          <xsl:value-of select="description" disable-output-escaping="yes"/>
         </div>
       </div>
 
