@@ -74,9 +74,10 @@
           </xsl:otherwise>
           </xsl:choose>
 				</xsl:if>
+                
         
 				<div class="databasesDescription">
-					<xsl:value-of select="translate(description,'#', '')" />			
+					<xsl:value-of disable-output-escaping="yes" select="description" />			
 				</div>
 				
 				<table class="databasesTable">
