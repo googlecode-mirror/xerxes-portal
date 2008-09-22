@@ -74,7 +74,7 @@
        
       db_description_allow_tags:  Only used with db_description_html=strip.
               Tags listed here (comma seperated) will NOT be stripped, but
-              will be allowed--they are a whitelist. All other tags will
+              will be allowedi - they are a whitelist. All other tags will
               be stripped.
                 
       <config name="db_description_allow_tags">b,i,strong,em,a</config>
