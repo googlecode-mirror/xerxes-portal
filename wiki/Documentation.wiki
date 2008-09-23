@@ -1,4 +1,4 @@
-# Other assorted useful documentation, not just for developers
+#summary Other assorted useful documentation, not just for developers
 
 
 
