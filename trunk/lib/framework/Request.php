@@ -172,8 +172,13 @@ class Xerxes_Framework_Request
 			
 			// get the path by stripping off base url + querystring
 
-			$configBase = $objRegistry->getConfig( 'BASE_WEB_PATH', true );
-			$request_uri = str_replace( $configBase . "/", "", $request_uri );
+			$configBase = $objRegistry->getConfig( 'BASE_WEB_PATH', false, "" );
+      # remove base path, which might be simply '/'
+      if (substr($request_uri, 0, strlen($configBase) +1) == $configBase . "/") {
+        #$request_uri = str_replace( $configBase . "/", "", $request_uri );
+        $request_uri = substr_replace( $request_uri, '', 0, strlen($configBase) + 1);
+      }
+      # remove query string
 			$request_uri = Xerxes_Parser::removeRight( $request_uri, "?" );
 			
 			// now get the elements

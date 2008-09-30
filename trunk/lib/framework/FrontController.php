@@ -96,7 +96,7 @@ class Xerxes_Framework_FrontController
 			
 			// full web path
 			
-			$base_path = $objRegistry->getConfig( 'BASE_WEB_PATH', true );
+			$base_path = $objRegistry->getConfig( 'BASE_WEB_PATH', false, "" );
 			$web = "http://" . $objRequest->getServer( 'SERVER_NAME' ) . $base_path;
 			
 			// register these values
