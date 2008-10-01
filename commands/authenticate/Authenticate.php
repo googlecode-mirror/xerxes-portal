@@ -28,7 +28,7 @@
 			// configuration settings
 			
 			$objRegistry = Xerxes_Framework_Registry::getInstance();
-			$configApplication = $objRegistry->getConfig( "BASE_WEB_PATH", false, "xerxes" );
+			$configApplication = $objRegistry->getConfig( "BASE_WEB_PATH", false, "" );
 			
 			// data map
 			
