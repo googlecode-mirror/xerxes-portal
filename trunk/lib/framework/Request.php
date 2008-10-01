@@ -599,10 +599,10 @@ class Xerxes_Framework_Request
 		
 		$config = Xerxes_Framework_Registry::getInstance();
 		
-		$base_path = $config->getConfig( 'BASE_WEB_PATH', false, "." ) . "/";
+		$base_path = $config->getConfig( 'BASE_WEB_PATH', false, "" ) . "/";
 		
 		// should we generate full absolute urls with hostname? indicated by a
-		// reuqest property, set automatically by snippet embed controllers. 
+		// request property, set automatically by snippet embed controllers. 
 		
 
 		if ( $this->getProperty( "gen_full_urls" ) == 'true' || $full )

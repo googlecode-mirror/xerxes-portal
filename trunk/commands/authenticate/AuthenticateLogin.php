@@ -18,6 +18,7 @@ class Xerxes_Command_AuthenticateLogin extends Xerxes_Command_Authenticate
 	
 	public function doExecute(Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry)
 	{
+    
 		$bolAuthenticated = false; // user is an authenticated  user
 		$bolDemo = false; // user is a demo user
 
@@ -31,7 +32,7 @@ class Xerxes_Command_AuthenticateLogin extends Xerxes_Command_Authenticate
 		if ( $strReturn == null )
 		{
 			// default to home page
-			$strReturn = $objRegistry->getConfig( "BASE_WEB_PATH", true );
+			$strReturn = $objRegistry->getConfig( "BASE_WEB_PATH", false, "/" );
 		}
 		
 		// configuration settings
@@ -40,6 +41,8 @@ class Xerxes_Command_AuthenticateLogin extends Xerxes_Command_Authenticate
 		$configDemoUsers = $objRegistry->getConfig( "DEMO_USERS", false );
 		$configHttps = $objRegistry->getConfig( "SECURE_LOGIN", false, false );
 		
+
+    
 		### REDIRECT TO SECURE if neccesary ###
 
 		// if secure login is required, then force the user back thru https
@@ -73,7 +76,6 @@ class Xerxes_Command_AuthenticateLogin extends Xerxes_Command_Authenticate
 		if ( $configAuthenticationSource == "shibboleth" )
 		{
 			// get username header from configged name
-
 			$username_header = $objRegistry->getConfig( "shib_username_header", false, "REMOTE_USER" );
 			$strUsername = null;
 			if ( array_key_exists( $username_header, $_SERVER ) )
@@ -101,6 +103,8 @@ class Xerxes_Command_AuthenticateLogin extends Xerxes_Command_Authenticate
 				$this->register( $user, "named" );
 				
 				$objRequest->setRedirect( "http://" . $objRequest->getServer( 'SERVER_NAME' ) . $strReturn );
+        
+        
 				return 1;
 			}
 		}
