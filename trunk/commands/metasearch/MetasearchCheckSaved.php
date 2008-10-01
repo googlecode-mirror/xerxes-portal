@@ -23,65 +23,77 @@
 			
 			$objRecords = $objRequest->getData("//xerxes_record", null, "DOMNodeList");
 			
-			foreach ( $objRecords as $objXerxesRecord)
+			if ( $objRecords->length > 0 )
 			{
-				$strResultSet = $objXerxesRecord->getElementsByTagName("result_set")->item(0)->nodeValue;
-				$strRecordNumber = $objXerxesRecord->getElementsByTagName("record_number")->item(0)->nodeValue;
-				
-				// see if it's listed in session as being saved
-				
-				if ( Xerxes_Helper::isMarkedSaved( $strResultSet, $strRecordNumber ) )
-				{	
-					$key = Xerxes_Helper::savedRecordKey( $strResultSet, $strRecordNumber );
-					$id = $_SESSION['resultsSaved'][$key]['xerxes_record_id'];
-
-					array_push($arrSaved, $id);
-					$arrMatch[$id] = $strResultSet . ":" . $strRecordNumber;
-				}
-			}
-			
-			if ( count ($arrSaved) == 0 )
-			{
-				return 0;
-			}
-			
-			// fetch all the saved records on this page in one query to the database 
-			
-			$arrResults = $objData->getRecordsByID($arrSaved);
-			
-			if ( count($arrResults) == 0 )
-			{
-				return 0;
-			}
-			else
-			{
-				$objXml = new DOMDocument();
-				$objXml->loadXML("<saved_records />");
-				
-				foreach ( $arrResults as $objSavedRecord )
+				foreach ( $objRecords as $objXerxesRecord)
 				{
-					// id
+					$strResultSet = "";
+					$strRecordNumber = "";
 					
-					$objSavedRecordXml = $objXml->createElement( "saved" );
-					$objSavedRecordXml->setAttribute( "id", $arrMatch[$objSavedRecord->id] );
-
-					$objIDXml = $objXml->createElement( "id", $objSavedRecord->id );
-					$objSavedRecordXml->appendChild( $objIDXml );
+					$objResultSet = $objXerxesRecord->getElementsByTagName("result_set")->item(0);
+					$objRecordNumber = $objXerxesRecord->getElementsByTagName("record_number")->item(0);
 					
-					// labels
+					if ( $objResultSet != null ) $strResultSet = $objResultSet->nodeValue;
+					if ( $objRecordNumber != null ) $strRecordNumber = $objRecordNumber->nodeValue;
 					
-					foreach ( $objSavedRecord->tags as $tag )
+					if ( $strRecordNumber != "" && $strResultSet != "" )
 					{
-						$objTagXml = $objXml->createElement( "tag", Xerxes_Parser::escapeXml( $tag ) );
-						$objSavedRecordXml->appendChild( $objTagXml );
-					}
+						// see if it's listed in session as being saved
 						
-					$objXml->documentElement->appendChild( $objSavedRecordXml );
+						if ( Xerxes_Helper::isMarkedSaved( $strResultSet, $strRecordNumber ) )
+						{	
+							$key = Xerxes_Helper::savedRecordKey( $strResultSet, $strRecordNumber );
+							$id = $_SESSION['resultsSaved'][$key]['xerxes_record_id'];
+		
+							array_push($arrSaved, $id);
+							$arrMatch[$id] = $strResultSet . ":" . $strRecordNumber;
+						}
+					}
 				}
 				
-				$objRequest->addDocument($objXml);
+				if ( count ($arrSaved) == 0 )
+				{
+					return 0;
+				}
 				
-				return 1;
+				// fetch all the saved records on this page in one query to the database 
+				
+				$arrResults = $objData->getRecordsByID($arrSaved);
+				
+				if ( count($arrResults) == 0 )
+				{
+					return 0;
+				}
+				else
+				{
+					$objXml = new DOMDocument();
+					$objXml->loadXML("<saved_records />");
+					
+					foreach ( $arrResults as $objSavedRecord )
+					{
+						// id
+						
+						$objSavedRecordXml = $objXml->createElement( "saved" );
+						$objSavedRecordXml->setAttribute( "id", $arrMatch[$objSavedRecord->id] );
+	
+						$objIDXml = $objXml->createElement( "id", $objSavedRecord->id );
+						$objSavedRecordXml->appendChild( $objIDXml );
+						
+						// labels
+						
+						foreach ( $objSavedRecord->tags as $tag )
+						{
+							$objTagXml = $objXml->createElement( "tag", Xerxes_Parser::escapeXml( $tag ) );
+							$objSavedRecordXml->appendChild( $objTagXml );
+						}
+							
+						$objXml->documentElement->appendChild( $objSavedRecordXml );
+					}
+					
+					$objRequest->addDocument($objXml);
+					
+					return 1;
+				}
 			}
 		}
 	}
