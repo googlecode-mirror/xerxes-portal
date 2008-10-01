@@ -2054,8 +2054,13 @@
 					$strLast = trim(substr($strAuthor, 0, $iComma));
 					$strFirst = trim(substr($strAuthor, $iComma + 1));
 				}
+				
+				// some databases like CINAHL put names as 'last first' but first 
+				// is just initials 'Walker DS' so we can catch this scenario?
+				
 				elseif ( preg_match("/ ([A-Z]{1,3})$/", $strAuthor, $arrMatch) != 0 )
 				{
+					
 					$strFirst = $arrMatch[1];
 					$strLast = str_replace($arrMatch[0], "", $strAuthor);
 				}
