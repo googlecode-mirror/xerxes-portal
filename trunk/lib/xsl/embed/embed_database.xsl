@@ -46,7 +46,7 @@
         
         <xsl:if test="$disp_show_desc">
           <div class="alphaDescription">
-            <xsl:value-of select="translate(description,'#', '')" />			
+            <xsl:value-of select="translate(description,'#', '')" disable-output-escaping="yes"/>			
           </div>
         </xsl:if>        
         
