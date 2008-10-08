@@ -607,7 +607,7 @@
 				<xsl:call-template name="metasearch_input_pair">
 					<xsl:with-param name="field_selected" select="$field2" />
 					<xsl:with-param name="query_entered" select="$query2" />
-					<xsl:with-param name="advanced_mode" select="$advanced_mode" />
+					<xsl:with-param name="advanced_mode" select="true()" />
 					<xsl:with-param name="input_name_suffix" select="2" />
 				</xsl:call-template>
 				<xsl:text> </xsl:text>
