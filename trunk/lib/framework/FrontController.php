@@ -347,7 +347,18 @@ class Xerxes_Framework_FrontController
 			
 				if ( $objControllerMap->getViewType() != "xsl" && $objControllerMap->getViewType() != null )
 				{
-					require_once ($objControllerMap->getView());
+          $file = $objControllerMap->getView();
+          $distro_file = $objRegistry->getConfig("PATH_PARENT_DIRECTORY", true)."/lib/$file";
+          
+          if ( file_exists($file)) {
+            require_once ($file);
+          }
+          elseif ( file_exists( $distro_file )) {
+            require_once( $distro_file );
+          }
+          else {
+            throw new Exception("Could not find non-xsl view specified to include: $file");
+          }
 				} 
 				else
 				{
