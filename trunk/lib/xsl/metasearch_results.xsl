@@ -380,9 +380,17 @@
 							<xsl:when test="string-length(summary) &gt; 300">
 								<xsl:value-of select="substring(summary, 1, 300)" /> . . .
 							</xsl:when>
-							<xsl:otherwise>
+							<xsl:when test="summary">
 								<xsl:value-of select="summary" />
-							</xsl:otherwise>
+							</xsl:when>
+              <!-- try some marc 900 embeddedText, if present. This
+              is a crazy predicate xpath that tries to find a paragraph
+              of full text that actually has some useful text in it. More than 20 chars that aren't spaces or dashes. Then we take just the first 300 chars of it if neccesary. -->
+              <xsl:when test="embeddedText">
+                <xsl:variable name="usefulContent" select="embeddedText/paragraph[ string-length(translate(text(), '- ', '')) &gt; 20]" />
+                <xsl:value-of select="substring($usefulContent, 1, 300)" />
+                <xsl:if test="string-length($usefulContent) &gt; 300">. . . </xsl:if>
+              </xsl:when>
 						</xsl:choose>
 					</div>
 					

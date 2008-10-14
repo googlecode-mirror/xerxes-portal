@@ -50,7 +50,7 @@ class Xerxes_Command_MetasearchResults extends Xerxes_Command_Metasearch
 
 		$strMarcFields = "LDR, 001, 007, 008, 016##, 020##, 022##, 035##, 072##, 100##, " . 
 			"24###, 260##, 500##, 505##, 513##, 514##, 520##, 546##, 6####, 773##, " . 
-			"856##, ERI##, SID, YR";
+			"856##, 900##, ERI##, SID, YR";
 		
 		// configuration options
 
@@ -133,7 +133,8 @@ class Xerxes_Command_MetasearchResults extends Xerxes_Command_Metasearch
 			
 			// this will also convert the marc-xml to xerxes_record, and check for an already
       // saved record
-
+      
+      
 			$objXml = $this->addRecords( $objXml, $arrResults, $configIncludeMarcRecord );
 		}
 		
