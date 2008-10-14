@@ -615,7 +615,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 			// we match title, descrition, or keywords.
       // MySQL specific REGEXP commands. 
 			
-			$strSQL .= "WHERE xerxes_databases.title_display REGEXP :query1 OR xerxes_databases.title_full REGEXP :query2 OR xerxes_databases.description REGEXP :query3 OR xerxes_database_keywords.keyword REGEXP :query4 ";
+			$strSQL .= "WHERE xerxes_databases.title_display REGEXP :query1 OR xerxes_databases.title_full REGEXP :query2 OR xerxes_databases.description REGEXP :query3 OR xerxes_database_keywords.keyword REGEXP :query4 OR xerxes_database_alternate_titles.alt_title REGEXP :query5 ";
 			$strSQL .= " ORDER BY UPPER(title_display) ";
 			
 			$sqlQuery = '[[:<:]]' . $query . '[[:>:]]';
@@ -623,6 +623,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 			$arrParams[":query2"] = $sqlQuery;
 			$arrParams[":query3"] = $sqlQuery;
 			$arrParams[":query4"] = $sqlQuery;
+      $arrParams[":query5"] = $sqlQuery;
 			
 			$arrResults = $this->select( $strSQL, $arrParams );
 		} else
