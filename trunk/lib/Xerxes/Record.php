@@ -68,6 +68,7 @@
 		
 		private $strAbstract = "";			// abstract
 		private $strSummary = "";			// summary
+    private $arrEmbeddedText = array();          // full text
 		private $strLanguage = "";			// primary language of the record
 		private $arrNotes = array();		// notes that are not the abstract, language, or table of contents
 		private $arrSubjects = array();		// subjects
@@ -91,7 +92,8 @@
 		public function loadXML( $xml )
 		{
 			// type check
-			
+
+      
 			if ( ! ( is_string($xml) || get_class($xml) == "DOMDocument" || get_class($xml) == "DOMElement" ) )
 				throw new Exception("param 1 must be XML of type string, DOMDocument, or DOMElement");
 						
@@ -157,8 +159,9 @@
 				// we'll save these as member variables so other functions might use them
 			
 				$this->objMarcXML = $xml;
-				$this->objXPath = $objXPath;
-				
+				$this->objXPath = $objXPath;        
+        
+        
 				### process record
 
 				$strPrimaryAuthor = "";
@@ -303,6 +306,9 @@
 				$this->strTOC = $this->extractMarcDataField($objXPath, 505, "agrt");				
 				$arrAbstract = $this->extractMarcArray($objXPath, 520, "a");
 				$strLanguageNote = $this->extractMarcDataField($objXPath, 546, "a");
+        
+        // actual text is sometimes embedded in the MARC
+        $this->arrEmbeddedText = $this->extractMarcArray($objXPath, 900, "a");
 				
 				$this->arrNotes = $this->extractMarcArray($objXPath, null, "*", 
 					"//marc:datafield[@tag >= 500 and @tag < 600 and @tag != 505 and @tag != 520 and @tag != 546]");
@@ -678,7 +684,7 @@
 				// examine the 856s present in the record to see if they are in
 				// fact to full-text, and not to a table of contents or something
 				// stupid like that, by checking for existence of subfield code 3
-								
+
 				foreach ( $objFullTextList as $objFullText)
 				{
 					$strUrl = "";
@@ -708,7 +714,7 @@
 							$bolToc = true;
 						}
 					}
-					
+
 					// empty link, skip to next foreach entry
 					
 					if ( $strUrl == "")
@@ -730,10 +736,10 @@
 					// engineering village (evii): has unreliable full-text links in a consortium environment (4/1/08)
 					// wiley interscience: wiley does not limit full-text links only to your subscription (4/29/08)
 					// oxford: only include the links that are free, otherwise just a link to abstract (5/7/08)
-					// gale: only has full-text if 'text available' note in 500 field (9/7/07)
+					// gale: only has full-text if 'text available' note in 500 field (9/7/07) BUT: Not true of Gale virtual reference library (GALE_GVRL). 10/14/08 jrochkind. 
 					// catalog: any catalog record that links to loc toc without $3, bad catalogers! (7/18/08)
 
-					
+
 					if ( stristr($strUrl, "$3") || 	
 						 stristr($this->strSource, "METAPRESS_XML") ||
 						 stristr($this->strSource, "EBSCO_RZH") ||
@@ -744,15 +750,18 @@
 					     stristr($this->strSource, "EVII") || 
 					     stristr($this->strSource, "WILEY_IS") || 
 					     ( stristr($this->strSource, "OXFORD_JOU") && ! strstr($strUrl, "content/full/") ) ||
-					     ( strstr($this->strSource, "GALE") && ! in_array("Text available", $this->arrNotes) ) ||
+					     ( strstr($this->strSource, "GALE") && ! $this->strSource == "GALE_GVRL" && ! in_array("Text available", $this->arrNotes)  ) ||
 					     stristr($strUrl, "www.loc.gov/catdir") )
 					{
 						$bolToc = true;
 					}
 
+          
 					
 					if ( $bolToc == false )
 					{
+            
+            
 						// ebsco html
 						// there is (a) an indicator from ebsco that the record has full-text, or 
 						// (b) an abberant 856 link that doesn't work, but the construct link will work, 
@@ -1483,6 +1492,7 @@
 			$arrIsbn = $this->getAllISBN();
 			$arrSubjects = $this->getSubjects();
 			$arrNotes = $this->getNotes();
+      $arrEmbeddedText = $this->getEmbeddedText();
 			
 			// simple elements
 			
@@ -1517,6 +1527,16 @@
 			if ($this->getEdition() != null ) $objRecord->appendChild($objXml->createElement("edition", $this->escapeXML($this->getEdition()))); 
 			if ($this->getCallNumber() != null ) $objRecord->appendChild($objXml->createElement("call_number", $this->escapeXML($this->getCallNumber()))); 
 			
+      // embedded text, seperated into paragraphs
+      if (count($arrEmbeddedText) > 0 ) {
+        $objEmbeddedText = $objXml->createElement("embeddedText");
+        foreach ( $arrEmbeddedText as $paragraph) {
+          $objParagraph = $objXml->createelement("paragraph", Xerxes_Parser::escapeXml(trim($paragraph)));
+          $objEmbeddedText->appendChild($objParagraph);
+        }
+        $objRecord->appendChild($objEmbeddedText);
+      }
+      
 			// table of contents
 			
 			if ($this->getTOC() != null )
@@ -3269,6 +3289,7 @@
 				
 		public function getAbstract() { return $this->strAbstract; }
 		public function getSummary() { return $this->strSummary; }
+    public function getEmbeddedText() { return $this->arrEmbeddedText; }
 		public function getLanguage() { return $this->strLanguage; }
 		public function getTOC() { return $this->strTOC; }
 		
