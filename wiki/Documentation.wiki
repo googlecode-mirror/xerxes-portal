@@ -9,7 +9,9 @@ You may have noticed that the links to "get" a record found in Xerxes sometimes 
 === Link to resource discovered directly from resource via Metalib ===
 
 1. Full-Text in HTML -- direct link to HTML
+
 2. Full-Text in PDF -- direct link to PDF
+
 3. Full-Text Available -- direct link, but format is unknown
 
 === Link to link resolver (SFX) ===
