@@ -347,6 +347,9 @@
 				<xsl:for-each select="standard_numbers/govdoc">
 					<li><strong>Gov Doc Number</strong>: <xsl:value-of select="text()" /></li>
 				</xsl:for-each>
+        <xsl:for-each select="standard_numbers/oclc">
+          <li><strong>OCLC number</strong>: <xsl:value-of select="text()" /></li>
+        </xsl:for-each>
 				</ul>
 			</xsl:if>
       
