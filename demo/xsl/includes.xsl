@@ -43,6 +43,10 @@
 <!-- Don't want a search box on the database detail page? Uncomment. -->
 <!--   <xsl:variable name="show_db_detail_search" select="false()" /> -->
 
+<!-- Want details provided on the page for the home page default search?
+     Uncomment. -->
+<!--  <xsl:variable name="homepage_search_details" select="true()" /> -->
+
 <!-- Header -->
 
 <xsl:template name="header_div" >
