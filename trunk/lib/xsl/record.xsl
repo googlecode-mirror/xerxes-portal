@@ -362,9 +362,9 @@
       
       <!-- Actual text embedded only if we have no links to full text-->
       <xsl:if test="count(links/link[@type != 'none']) = 0 and embeddedText">
-        <h4>Text:</h4>
+        <h4>Text</h4>
         <xsl:for-each select="embeddedText/paragraph">
-          <p><xsl:value-of select="text()" /></p>
+          <p class="recordAbstract"><xsl:value-of select="text()" /></p>
         </xsl:for-each>
       </xsl:if>
 
