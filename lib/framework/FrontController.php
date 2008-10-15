@@ -344,6 +344,11 @@ class Xerxes_Framework_FrontController
 				// this will be an xslt file, but could be a php file if the xslt does not
 				// provide enough flexibility; php page will inherit the xml dom document and
 				// can go from there
+        
+        if ( $objControllerMap->getView() == "") {
+          // No view specified, no view will be executed. 
+          return;
+        }
 			
 				if ( $objControllerMap->getViewType() != "xsl" && $objControllerMap->getViewType() != null )
 				{
