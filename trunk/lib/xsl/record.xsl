@@ -219,18 +219,25 @@
 				
 				</xsl:if>
 				
-				<div class="recordFullTextOption">
+        <div class="recordFullTextOption">
+          <xsl:variable name="db_metalib_id" select="metalib_id" />
+          <xsl:variable name="link_resolver_allowed" select="//database_links/database[@metalib_id = $db_metalib_id]/sfx_suppress != '1'" />
+          
 					<xsl:choose>
 						<xsl:when test="/metasearch">
-							<a href="{$base_url}/./?base=metasearch&amp;action=sfx&amp;resultSet={$result_set}&amp;startRecord={$record_number}" class="resultsFullText"	target="{$link_target}" >
-								<img src="{$base_url}/images/sfx.gif" alt="" /> Check for availability
-							</a>
+              <xsl:if test="$link_resolver_allowed">
+                <a href="{$base_url}/./?base=metasearch&amp;action=sfx&amp;resultSet={$result_set}&amp;startRecord={$record_number}" class="resultsFullText"	target="{$link_target}" >
+                  <img src="{$base_url}/images/sfx.gif" alt="" /> Check for availability
+                </a>
+              </xsl:if>
 						</xsl:when>
 						<xsl:when test="/folder">
 							<xsl:variable name="id" select="../id" />
-							<a href="{$base_url}/?base=folder&amp;action=redirect&amp;type=openurl&amp;id={$id}" class="resultsFullText"	target="{$link_target}" >
-								<img src="{$base_url}/images/sfx.gif" alt="" /> Check for availability
-							</a>
+              <xsl:if test="$link_resolver_allowed">
+                <a href="{$base_url}/?base=folder&amp;action=redirect&amp;type=openurl&amp;id={$id}" class="resultsFullText"	target="{$link_target}" >
+                  <img src="{$base_url}/images/sfx.gif" alt="" /> Check for availability
+                </a>
+              </xsl:if>
 							
 							<!-- label/tag input, we know record is saved because we
 									 are in folder section. -->
