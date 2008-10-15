@@ -329,6 +329,7 @@
 				<xsl:variable name="year" 		select="year" />
 				<xsl:variable name="result_set" 	select="result_set" />
 				<xsl:variable name="record_number" 	select="record_number" />
+        <xsl:variable name="metalib_db_id" select="metalib_id" />
 				<xsl:variable name="record_id">
 					<xsl:value-of select="$result_set" />:<xsl:value-of select="$record_number" />
 				</xsl:variable>
@@ -347,6 +348,13 @@
 					
 					<!-- keep the url in the current result set, unless this is a facet, in which
 							 case we'll link to the record by original resultset, plus return param -->
+          <xsl:variable name="record_link">
+            <xsl:choose>
+              <xsl:when test="//request/action = 'facet'">./?base=metasearch&amp;action=record&amp;group=<xsl:value-of select="$group"/>&amp;resultSet=<xsl:value-of select="$result_set"/>&amp;startRecord=<xsl:value-of select="$record_number"/>&amp;return=<xsl:value-of select="$this_page"/></xsl:when>
+              <xsl:otherwise>./?base=metasearch&amp;action=record&amp;group=<xsl:value-of select="$group"/>&amp;resultSet=<xsl:value-of select="$this_result_set"/>&amp;startRecord=<xsl:value-of select="$this_record_number"/></xsl:otherwise>
+            </xsl:choose>
+          </xsl:variable>
+          
 					<xsl:choose>
 						<xsl:when test="//request/action = 'facet'">
 							<a href="./?base=metasearch&amp;action=record&amp;group={$group}&amp;resultSet={$result_set}&amp;startRecord={$record_number}&amp;return={$this_page}" class="resultsTitle">
@@ -424,7 +432,7 @@
 					<div class="resultsAvailability recordOptions">
 						
 						<!-- Full-Text -->
-						
+						<xsl:variable name="link_resolver_allowed" select="/*/results/search/database_links/database[@id = $metalib_db_id]/sfx_suppress != 1" />
 						<xsl:choose>
 							<xsl:when test="full_text_bool">
 				
@@ -433,16 +441,24 @@
 								</xsl:call-template>
 									
 							</xsl:when>
-							<xsl:when test="//fulltext/issn = standard_numbers/issn">
+							<xsl:when test="$link_resolver_allowed and //fulltext/issn = standard_numbers/issn">
 								<a href="./?base=metasearch&amp;action=sfx&amp;resultSet={$result_set}&amp;startRecord={$record_number}&amp;fulltext=1" class="resultsFullText" target="{$link_target}" >
 									<img src="{$base_include}/images/html.gif" alt="" width="16" height="16" border="0" /> Full-Text Online
 								</a>
 							</xsl:when>
-							<xsl:otherwise>
+							<xsl:when test="$link_resolver_allowed">
 								<a href="./?base=metasearch&amp;action=sfx&amp;resultSet={$result_set}&amp;startRecord={$record_number}" class="resultsFullText" target="{$link_target}" >
 									<img src="{$base_url}/images/sfx.gif" alt="" /> Check for availability
 								</a>
-							</xsl:otherwise>
+							</xsl:when>
+              <!-- if we have no direct link and link resolver isn't allowed,
+                   but we DO have text in the record, tell them so. -->
+              <xsl:when test="embeddedText/paragraph">
+                  <a href="{$record_link}" class="resultsFulltext">
+                    <img src="{$base_url}/images/famfamfam/page_go.png" alt="" />
+                    Text in <xsl:value-of select="/*/config/application_name"/> record
+                  </a>
+              </xsl:when>
 						</xsl:choose>
 							
 						<!-- Save Facility -->

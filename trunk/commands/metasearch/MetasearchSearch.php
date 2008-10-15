@@ -363,7 +363,7 @@ class Xerxes_Command_MetasearchSearch extends Xerxes_Command_Metasearch
 			$objDatabaseLinks->appendChild( $objNodeDatabase );
 			
 			// attach all the links, database name, and restriction info
-			
+      
 			foreach ( $objDatabase->properties() as $key => $value )
 			{
 				if ( $value != "")
@@ -372,7 +372,8 @@ class Xerxes_Command_MetasearchSearch extends Xerxes_Command_Metasearch
 						strstr( $key, "link_" ) || 
 						$key == "title_display" ||
 						$key == "searchable" ||
-						$key == "guest_access"
+						$key == "guest_access" ||
+            $key == "sfx_suppress"
 						)
 					{
 						$objElement = $objXml->createElement( $key, Xerxes_Parser::escapeXml( $value ) );
@@ -381,6 +382,7 @@ class Xerxes_Command_MetasearchSearch extends Xerxes_Command_Metasearch
 				}
 			}
 			
+      
 			if ( count($objDatabase->group_restrictions) > 0 )
 			{
 				$objRestictions  = 	$objXml->createElement( "group_restrictions");
@@ -414,7 +416,6 @@ class Xerxes_Command_MetasearchSearch extends Xerxes_Command_Metasearch
 		// redirect to hits page
 
 		$objRequest->setRedirect( $configBaseUrl . "/?base=metasearch&action=hits&group=$strGroup" );
-		
 		return 1;
 	}
 }
