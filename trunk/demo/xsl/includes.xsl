@@ -47,6 +47,11 @@
      Uncomment. -->
 <!--  <xsl:variable name="homepage_search_details" select="true()" /> -->
 
+<!-- Should the full metasearch form be used on the home page, 
+     instead of a smaller simpler one?  If you'd like the full one,
+     uncomment. -->
+<!--  <xsl:variable name="homepage_use_simple_search" select="false()" /> -->
+
 <!-- Header -->
 
 <xsl:template name="header_div" >

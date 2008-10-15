@@ -22,6 +22,13 @@
      xsl includes.xsl or databases_categories.xsl -->
 <xsl:variable name="homepage_search_details" select="false()" />
 
+<!-- Should the full metasearch form be used, instead a smaller
+     simpler one? Defaults to a simpler one, override to false()
+     in local xsl includes.xsl or database_categories.xsl if you
+     want the full one. -->
+<xsl:variable name="homepage_use_simple_search" select="true()" />
+
+
 
 <xsl:template match="/knowledge_base">
 	<xsl:call-template name="surround" />
@@ -72,11 +79,18 @@
           </xsl:choose>
           </p>
 					<div id="search">
-						<div class="searchBox">
-							<label for="category">Search</label> <xsl:text>: </xsl:text>
-							<input id="query" name="query" type="text" size="30" /><xsl:text> </xsl:text>
-							<input name="submit" type="submit" value="GO" />
-						</div>
+            <xsl:choose>
+              <xsl:when test="$homepage_use_simple_search">
+                <div class="searchBox">
+                  <label for="category">Search</label> <xsl:text>: </xsl:text>
+                  <input id="query" name="query" type="text" size="30" /><xsl:text> </xsl:text>
+                  <input name="submit" type="submit" value="GO" />
+                </div>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:call-template name="search_box" />
+              </xsl:otherwise>
+            </xsl:choose>
 					</div>
 				</div>
 			</form>
