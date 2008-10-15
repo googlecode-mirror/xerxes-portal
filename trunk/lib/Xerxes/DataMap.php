@@ -212,7 +212,8 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 	public function addDatabase(Xerxes_Data_Database $objDatabase)
 	{
 		// clean-up metalib types
-		
+		// basic single-value fields
+    
 		$objDatabase->proxy = $this->convertMetalibBool( $objDatabase->proxy );
 		$objDatabase->searchable = $this->convertMetalibBool( $objDatabase->searchable );
 		$objDatabase->guest_access = $this->convertMetalibBool( $objDatabase->guest_access );
@@ -221,8 +222,10 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		$objDatabase->new_resource_expiry = $this->convertMetalibDate( $objDatabase->new_resource_expiry );
 		$objDatabase->updated = $this->convertMetalibDate( $objDatabase->updated );
 		
-		// basic single-value fields
-		
+    
+
+    
+
 		$this->doSimpleInsert( "xerxes_databases", $objDatabase );
 		
 		// keywords
@@ -355,17 +358,17 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 	/**
 	 * Convert metalib boolean values to 1 or 0
 	 *
-	 * @param string $strValue	'yes' will become 1, all others 0
-	 * @return int				1 or 0
+	 * @param string $strValue	'yes' or 'Y' will become 1. "no" or "N" will become 0. All others null. 
+	 * @return int				1 or 0 or null
 	 */
 	
 	private function convertMetalibBool($strValue)
 	{
-		if ( $strValue == "yes" )
+		if ( $strValue == "yes" || $strValue == "Y")
 		{
 			return 1;
 		}
-		elseif ( $strValue == "no" )
+		elseif ( $strValue == "no" || $strValue == "N")
 		{
 			return 0;
 		} 
