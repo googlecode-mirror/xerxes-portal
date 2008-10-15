@@ -516,7 +516,19 @@
 						array_push($arrFormat, $strMatch);
 					}
 				}
-						
+        
+        // Encyclopedia Britannica, full text is in summary field, swap them. 
+        if ($this->strSource == "BRITANNICA_ENCY") {
+            if (count($this->getEmbeddedText()) == 0 && $arrAbstract) {              
+              $text = join(" ", $this->extractMarcArray($objXPath, 520, "a"));
+              $text = str_replace('^' , '', $text);              
+              
+              $this->arrEmbeddedText = array($text);
+              $arrAbstract = array();
+
+
+            }
+        }
 				
 				############################
 				##  end database-specific ##
