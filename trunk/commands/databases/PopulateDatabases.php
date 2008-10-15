@@ -31,6 +31,9 @@
 		
 		public function doExecute( Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry )
 		{
+      // in case this is being called from the web, plaintext
+      header("Content-type: text/plain");
+      
 			// set a higher than normal memory limit to account for 
 			// pulling down large knowledgebases
 			
@@ -291,7 +294,7 @@
 			if ( count($arrDBs) < 1 ) throw new Exception("Could not find any databases in the Metalib KB");
 			
 			foreach ( $arrDBs as $objDatabase )
-			{
+			{       
        
 				// populate data object with properties
 
