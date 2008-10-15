@@ -807,9 +807,8 @@
 				// or in the 035$a -- either way, we'll get just the number itself
         // But if the number starts with something OTHER than an OCLC prefix,
         // it ain't an OCLC number. All OCLC prefixes start with 'oc' or 'OC' or sometimes (OC.
-        
 				if ( $str001 != "" && 
-                ( ($str003 == "" && preg_match('/^\(?([Oo][Cc])|\d/', $str001))  
+                ( ($str003 == "" && preg_match('/^\(?(([Oo][Cc])|\d)/', $str001))  
                 || $str003 == "OCoLC" ) )
 				{
 					$this->strOCLC = $str001;
