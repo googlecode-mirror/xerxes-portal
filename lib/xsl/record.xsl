@@ -221,7 +221,7 @@
 				
         <div class="recordFullTextOption">
           <xsl:variable name="db_metalib_id" select="metalib_id" />
-          <xsl:variable name="link_resolver_allowed" select="//database_links/database[@metalib_id = $db_metalib_id]/sfx_suppress != '1'" />
+          <xsl:variable name="link_resolver_allowed" select="not(//database_links/database[@metalib_id = $db_metalib_id]/sfx_suppress) or //database_links/database[@metalib_id = $db_metalib_id]/sfx_suppress != '1'" />
           
 					<xsl:choose>
 						<xsl:when test="/metasearch">
