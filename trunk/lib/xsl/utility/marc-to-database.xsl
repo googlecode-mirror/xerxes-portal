@@ -84,14 +84,16 @@
 		
 		<filter><xsl:value-of select="marc:datafield[@tag='FTL']/marc:subfield[@code='a']" /></filter>
 		
-		<xsl:if test="marc:datafield[@tag='TAR']/marc:subfield[@code='a']">
+    <!-- TAR$f='n' means 'link to configuration active' has been set to 'no'
+         in metalib admin. We consider that not searchable. -->
+		<xsl:if test="marc:datafield[@tag='TAR']/marc:subfield[@code='a'] and not (marc:datafield[@tag='TAR']/marc:subfield[@code='f'] = 'N')">
 			<searchable>yes</searchable>
 		</xsl:if>
-
+    
 		<xsl:if test="marc:datafield[@tag=594]/marc:subfield[@code='a'] = 'SUBSCRIPTION'">
 			<subscription>yes</subscription>
 		</xsl:if>
-		
+
 		<xsl:choose>
 			<xsl:when test="marc:datafield[@tag='PXY']/marc:subfield[@code='a'] = 'N'">
 				<proxy>no</proxy>
