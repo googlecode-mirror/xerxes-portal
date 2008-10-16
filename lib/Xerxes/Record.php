@@ -68,7 +68,7 @@
 		
 		private $strAbstract = "";			// abstract
 		private $strSummary = "";			// summary
-    private $arrEmbeddedText = array();          // full text
+    	private $arrEmbeddedText = array(); // full text
 		private $strLanguage = "";			// primary language of the record
 		private $arrNotes = array();		// notes that are not the abstract, language, or table of contents
 		private $arrSubjects = array();		// subjects
@@ -177,10 +177,17 @@
 				// source database
 				
 				$this->strMetalibID = $this->extractMarcDataField($objXPath, "SID", "d");
-				$this->strSource = $this->extractMarcDataField($objXPath, "SID", "b");
 				$this->strRecordNumber = $this->extractMarcDataField($objXPath, "SID", "j");
 				$this->strResultSet = $this->extractMarcDataField($objXPath, "SID", "s");
 				$this->strDatabaseName = $this->extractMarcDataField($objXPath, "SID", "t");
+				
+				// source may have been explicitly set in the calling code, so make sure
+				// there is no value here before we extract it from the marc record
+				
+				if ( $this->strSource == "")
+				{
+					$this->strSource = $this->extractMarcDataField($objXPath, "SID", "b");
+				}
 				
 				// control and standard numbers
 				
@@ -306,9 +313,9 @@
 				$this->strTOC = $this->extractMarcDataField($objXPath, 505, "agrt");				
 				$arrAbstract = $this->extractMarcArray($objXPath, 520, "a");
 				$strLanguageNote = $this->extractMarcDataField($objXPath, 546, "a");
-        
-        // actual text is sometimes embedded in the MARC
-        $this->arrEmbeddedText = $this->extractMarcArray($objXPath, 900, "a");
+				
+				// actual text is sometimes embedded in the marc
+				$this->arrEmbeddedText = $this->extractMarcArray( $objXPath, 900, "a" );
 				
 				$this->arrNotes = $this->extractMarcArray($objXPath, null, "*", 
 					"//marc:datafield[@tag >= 500 and @tag < 600 and @tag != 505 and @tag != 520 and @tag != 546]");
@@ -317,7 +324,7 @@
 				// we'll exclude the numeric subfields since they contain information about the
 				// source of the subject terms, which are probably not needed for display?
 				
-				$this->arrSubjects = $this->extractMarcArray($objXPath, "600-669", "abcdefghijklmnopqrstuvwxyz");
+				$this->arrSubjects = $this->extractMarcArray($objXPath, "600-669", "abcdfghijklmnopqrstuvwxyz");
 				
 				// english terms?
 				
@@ -325,10 +332,17 @@
 				
 				foreach ( $objSubjects as $objSubject )
 				{
-					$strEnglishSubject = $objSubject->nodeValue;
-					$strEnglishSubject = str_replace("\n", " ", $strEnglishSubject);
-					$strEnglishSubject = trim($strEnglishSubject);
+					$strEnglishSubject = "";
 					
+					foreach ( $objSubject->getElementsByTagName("subfield") as $objSubjectSubField )
+					{
+						if ( $objSubjectSubField->getAttribute("code") != "e")
+						{
+							$strEnglishSubject .= " " . $objSubjectSubField->nodeValue;
+						}
+					}
+					
+					$strEnglishSubject = trim($strEnglishSubject);
 					array_push($this->arrEngSubjects, $strEnglishSubject);
 				}
 				
@@ -516,19 +530,21 @@
 						array_push($arrFormat, $strMatch);
 					}
 				}
-        
-        // Encyclopedia Britannica, full text is in summary field, swap them. 
-        if ($this->strSource == "BRITANNICA_ENCY") {
-            if (count($this->getEmbeddedText()) == 0 && $arrAbstract) {              
-              $text = join(" ", $this->extractMarcArray($objXPath, 520, "a"));
-              $text = str_replace('^' , '', $text);              
-              
-              $this->arrEmbeddedText = array($text);
-              $arrAbstract = array();
-
-
-            }
-        }
+				
+				// encyclopedia britannica, full text is in summary field, swap them. 
+				
+				if ( $this->strSource == "BRITANNICA_ENCY" )
+				{
+					if ( count( $this->getEmbeddedText() ) == 0 && $arrAbstract )
+					{
+						$text = join( " ", $this->extractMarcArray( $objXPath, 520, "a" ) );
+						$text = str_replace( '^', '', $text );
+						
+						$this->arrEmbeddedText = array ($text );
+						$arrAbstract = array ( );
+					
+					}
+				}
 				
 				############################
 				##  end database-specific ##
@@ -537,8 +553,8 @@
 				
 				### issue and volume
 				
-				// for some reason Metalib misses these sometimes, so we'll parse them out here
-				// and take them over the context object
+				// for some reason Metalib misses these sometimes, so we'll parse them out here;
+				// only taking a value in the context object over it
 				
 				$this->strIssue = $this->extractMarcDataField($objXPath, "ISS", "a");
 				$this->strVolume= $this->extractMarcDataField($objXPath, "VOL", "a");
@@ -556,8 +572,8 @@
 				$objISBN = $objXPath->query("//rft:isbn")->item(0);
 				
 				if ( $objSTitle != null ) $strStitle = $objSTitle->nodeValue;
-				if ( $objVolume != null && $this->strVolume == null) $this->strVolume = $objVolume->nodeValue;
-				if ( $objIssue != null && $this->strIssue == null) $this->strIssue = $objIssue->nodeValue;
+				if ( $objVolume != null ) $this->strVolume = $objVolume->nodeValue;
+				if ( $objIssue != null ) $this->strIssue = $objIssue->nodeValue;
 				if ( $objStartPage != null ) $this->strStartPage = $objStartPage->nodeValue;
 				if ( $objEndPage != null ) $this->strEndPage = $objEndPage->nodeValue;
 				if ( $this->strJournalTitle == "" && $objTitle != null ) $this->strJournalTitle =  $objTitle->nodeValue;
@@ -815,13 +831,14 @@
 				
 				### oclc number
 				
-				// oclc number can be either in the 001 (unless 003 says otherwise)
-				// or in the 035$a -- either way, we'll get just the number itself
-        // But if the number starts with something OTHER than an OCLC prefix,
-        // it ain't an OCLC number. All OCLC prefixes start with 'oc' or 'OC' or sometimes (OC.
+				// oclc number can be either in the 001 or in the 035$a
+				// make sure 003 says 001 is oclc number or 001 includes an oclc prefix, 
+				// unless this is worldcat, in which case 001 is by definition an oclc number
+				
 				if ( $str001 != "" && 
-                ( ($str003 == "" && preg_match('/^\(?([Oo][Cc])/', $str001))  
-                || $str003 == "OCoLC" ) )
+				( ( $str003 == "" && preg_match('/^\(?([Oo][Cc])/', $str001) ) || 
+				  $str003 == "OCoLC" || 
+				  stristr($this->strSource, "WORLDCAT") ) )
 				{
 					$this->strOCLC = $str001;
 				}
@@ -928,7 +945,6 @@
 						$this->strStartPage = $arrRegExJournal["spage"];
 					}
 				}
-				
 				
 				// end page
 				
@@ -1507,7 +1523,7 @@
 			$arrIsbn = $this->getAllISBN();
 			$arrSubjects = $this->getSubjects();
 			$arrNotes = $this->getNotes();
-      $arrEmbeddedText = $this->getEmbeddedText();
+			$arrEmbeddedText = $this->getEmbeddedText();
 			
 			// simple elements
 			
@@ -1540,17 +1556,19 @@
 			if ($this->getDegree() != null ) $objRecord->appendChild($objXml->createElement("degree", $this->escapeXML($this->getDegree()))); 
 			if ($this->getDatabaseName() != null ) $objRecord->appendChild($objXml->createElement("database_name", $this->escapeXML($this->getDatabaseName()))); 
 			if ($this->getEdition() != null ) $objRecord->appendChild($objXml->createElement("edition", $this->escapeXML($this->getEdition()))); 
-			if ($this->getCallNumber() != null ) $objRecord->appendChild($objXml->createElement("call_number", $this->escapeXML($this->getCallNumber()))); 
+			if ($this->getCallNumber() != null ) $objRecord->appendChild($objXml->createElement("call_number", $this->escapeXML($this->getCallNumber())));
 			
-      // embedded text, seperated into paragraphs
-      if (count($arrEmbeddedText) > 0 ) {
-        $objEmbeddedText = $objXml->createElement("embeddedText");
-        foreach ( $arrEmbeddedText as $paragraph) {
-          $objParagraph = $objXml->createelement("paragraph", Xerxes_Parser::escapeXml(trim($paragraph)));
-          $objEmbeddedText->appendChild($objParagraph);
-        }
-        $objRecord->appendChild($objEmbeddedText);
-      }
+			// embedded text, seperated into paragraphs
+			if ( count( $arrEmbeddedText ) > 0 )
+			{
+				$objEmbeddedText = $objXml->createElement( "embeddedText" );
+				foreach ( $arrEmbeddedText as $paragraph )
+				{
+					$objParagraph = $objXml->createelement( "paragraph", Xerxes_Parser::escapeXml( trim( $paragraph ) ) );
+					$objEmbeddedText->appendChild( $objParagraph );
+				}
+				$objRecord->appendChild( $objEmbeddedText );
+			}
       
 			// table of contents
 			
@@ -1688,7 +1706,7 @@
 			if ( count($arrSubjects) > 0 )
 			{
 				$objSubjects = $objXml->createElement("subjects");
-			
+				
 				foreach ( $arrSubjects as $strSubject )
 				{
 					$objSubject = $objXml->createElement("subject", $this->escapeXml($strSubject));
@@ -1934,7 +1952,7 @@
 		
 		private function parseFormat( $strSource, $strTitle, $strJournal, $arrFormat , $strLeader, $strEric, $strThesis, $arrIsbn, $arrIssn )
 		{			
-			$strReturn = "";
+			$strReturn = "Unkown";
 			
 			$chrLeader6 = "";
 			$chrLeader7 = "";
@@ -3044,6 +3062,11 @@
 		
 
 		### PROPERTIES ###
+		
+		public function setSource($value)
+		{
+			$this->strSource = $value;
+		}
 
 		public function getMarcXML()
 		{
@@ -3304,7 +3327,7 @@
 				
 		public function getAbstract() { return $this->strAbstract; }
 		public function getSummary() { return $this->strSummary; }
-    public function getEmbeddedText() { return $this->arrEmbeddedText; }
+		public function getEmbeddedText() { return $this->arrEmbeddedText; }
 		public function getLanguage() { return $this->strLanguage; }
 		public function getTOC() { return $this->strTOC; }
 		
