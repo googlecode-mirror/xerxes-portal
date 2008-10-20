@@ -8,6 +8,11 @@ Xerxes offers a function to automatically create a "best guess" EZProxy config f
 
 If there are particular databases you want to exclude from the EZProxy config, because they do need more complex manual configuration, specific IRDs (database records) can be excluded from the export with a Xerxes config variable (ezp_exp_resourceid_omit). Several other Xerxes config variables are available. 
 
+The export is output by the databases/ezproxy-export action. In many cases, it is useful and sufficient to have this available at the URL for that action. You can also run this from the php command line and save to disk if you like:
+{{{
+php /path/to/your/xerxes/index.php base=databases action=ezproxy-export > my_ezproxy_config.txt
+}}}
+
 For more information on the EZProxy config file format, see:
  * http://www.oclc.org/us/en/support/documentation/ezproxy/cfg/database.htm
  * http://www.oclc.org/us/en/support/documentation/ezproxy/cfg/groups.htm
@@ -105,7 +110,7 @@ However, you can set the Xerxes config variable *ezp_exp_default_group* to anoth
 
 If you have some databases set in Metalib with further restrictions using the Metalib "seconedary affiliation" feature, that will be respected in the EZProxy export. 
 
-The EZProxy domain entries will be put into groups sharing the same secondary affilationm and each of these clusters will be output together, with a Group heading. 
+The EZProxy domain entries will be put into groups sharing the same secondary affilationm and each of these clusters will be output together, with a Group heading. If more than one secondary affiliation is listed, they will both be included in the Group statement, seperated by the "+" delimiter EZProxy uses in Group statements. 
 
 By default, the Group heading for a particular 'secondary affiliation' uses the name of the Metalib secondary affiliation. However, you can map a Metalib secondary affiliation to a particular EZProxy group name as part of a Xerxes config group tag:
 
