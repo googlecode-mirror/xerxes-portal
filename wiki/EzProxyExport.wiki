@@ -13,6 +13,6 @@ If there are particular databases you want to exclude from the EZProxy config, b
 
 Any record that has it's Proxy flag set to "Yes" in the Metalib IRD admin will be included in the EZProxy export *unless* you have included it in the *ezp_exp_resourceid_omit* Xerxes config variable. This takes a comma-delimited list of Metalib IRD IDs. Example:
 
-<pre>
-foo
-</pre>
+{{{code
+
+multi-line}}}
