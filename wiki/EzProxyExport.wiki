@@ -9,8 +9,8 @@ Xerxes offers a function to automatically create a "best guess" EZProxy config f
 If there are particular databases you want to exclude from the EZProxy config, because they do need more complex manual configuration, specific IRDs (database records) can be excluded from the export with a Xerxes config variable (ezp_exp_resourceid_omit). Several other Xerxes config variables are available. 
 
 For more information on the EZProxy config file format, see:
-http://www.oclc.org/us/en/support/documentation/ezproxy/cfg/database.htm
-http://www.oclc.org/us/en/support/documentation/ezproxy/cfg/groups.htm
+* http://www.oclc.org/us/en/support/documentation/ezproxy/cfg/database.htm
+* http://www.oclc.org/us/en/support/documentation/ezproxy/cfg/groups.htm
 
 
 == Which databases (IRDs) in the KB are included? ==
