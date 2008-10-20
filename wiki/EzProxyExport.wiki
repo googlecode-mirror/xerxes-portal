@@ -2,7 +2,17 @@
 
 = Introduction =
 
-Xerxes offers a feature
+The Metalib KB, imported into Xerxes, is a list of a lot of licensed databases. Those with EZProxy often need to list all these databases in the EZProxy config file. 
+
+Xerxes offers a function to automatically create a "best guess" EZProxy config file from the Metalib/Xerxes KB. This process is definitely not perfect, as sometimes manual customization is needed in an EZProxy config. This feature just produces a sort of stock default best guess config.  Nonetheless, some institutions have found it useful.  The export does take account of Metalib "secondary affiliation" and maps those to EZProxy proxy groups as desired, for restricting access to a subset of your users. 
+
+If there are particular databases you want to exclude from the EZProxy config, because they do need more complex manual configuration, specific IRDs (database records) can be excluded from the export with a Xerxes config variable (ezp_exp_resourceid_omit). Several other Xerxes config variables are available. 
 
 
-= Details =
+= Which databases (IRDs) in the KB are included? =
+
+Any record that has it's Proxy flag set to "Yes" in the Metalib IRD admin will be included in the EZProxy export *unless* you have included it in the *ezp_exp_resourceid_omit* Xerxes config variable. This takes a comma-delimited list of Metalib IRD IDs. Example:
+
+<pre>
+foo
+</pre>
