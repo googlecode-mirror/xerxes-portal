@@ -104,7 +104,8 @@ class Xerxes_Framework_FrontController
 			$objRegistry->setConfig( "PATH_PARENT_DIRECTORY", $path_to_parent );
 			$objRegistry->setConfig( "APP_DIRECTORY", $working_dir );
 			$objRegistry->setConfig( "BASE_URL", $web, true );
-			
+
+      
 			####################
 			#   INSTRUCTIONS   #
 			####################
@@ -162,7 +163,7 @@ class Xerxes_Framework_FrontController
 			{
 				throw new Exception( "cannot run command from web" );
 			}
-			
+
 			####################
 			#     INCLUDES     #
 			####################
@@ -258,12 +259,14 @@ class Xerxes_Framework_FrontController
 			#   COMMANDLINE    #
 			####################
 
-			// command line scripts should exit without calling a view? 
+			// command line scripts should exit without calling a view? NO!
+      // Now we have some command line with a view. And if no view,
+      // FrontController will now silently be happy to have no view. 
 
-			if ( $objRequest->isCommandLine() )
+			/*if ( $objRequest->isCommandLine() )
 			{
 				exit();
-			}
+			}*/
 				
 			####################
 			#     COOKIES      #
@@ -352,6 +355,7 @@ class Xerxes_Framework_FrontController
 			
 				if ( $objControllerMap->getViewType() != "xsl" && $objControllerMap->getViewType() != null )
 				{
+          
           $file = $objControllerMap->getView();
           $distro_file = $objRegistry->getConfig("PATH_PARENT_DIRECTORY", true)."/lib/$file";
           
