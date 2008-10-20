@@ -320,5 +320,15 @@
 				return $id;
 			}
 		}
+    
+    // Returns a simple xml object from the config
+    public function getGroupXml($id) {
+      if (array_key_exists( $id, $this->usergroups)) {
+        return $this->usergroups[$id];
+      }
+      else {
+        return null;
+      }
+    }
 	}
 ?>
