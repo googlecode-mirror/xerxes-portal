@@ -148,6 +148,11 @@
 				<command>PopulateDatabases</command>
 				<view />
 			</action>
+      <!-- See http://code.google.com/p/xerxes-portal/wiki/EzProxyExport -->
+      <action name="ezproxy-export">
+        <command>DatabasesDatabase</command>
+        <view type="php">php-views/ezproxy-export.php</view>
+      </action>
 		</section>
 		
 		<section name="embed" directory="embed" namespace="Xerxes" documentElement="xerxes">
