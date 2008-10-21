@@ -29,7 +29,7 @@ class Xerxes_Framework_Error
 		$strErrorType = get_class( $e );
 		
 		// might be a sub-class, reset so view will catch. 
-		
+
 		if ( $e instanceof PDOException )
 		{
 			$strErrorType = "PDOException";
@@ -41,23 +41,25 @@ class Xerxes_Framework_Error
 		if ( $objRequest->isCommandLine() )
 		{
 			throw $e;
-		}
+		} 
 		else
 		{
 			// first output to apache error log
-			error_log("Xerxes error: " . $e->getMessage() . ": " . $e->getTraceAsString());
-
+			
+			error_log( "Xerxes error: " . $e->getMessage() . ": " . $e->getTraceAsString() );
+			
 			//set proper http response code
- 
+
 			$resultStatus = 500;
 			
 			if ( $e instanceof Xerxes_AccessDeniedException )
 			{
 				$resultStatus = 403;
+			} 
+			else if ( $e instanceof Xerxes_NotFoundException )
+			{
+				$resultStatus = 404;
 			}
-      else if ( $e instanceof Xerxes_NotFoundException ) {        
-        $resultStatus = 404;
-      }
 			
 			header( ' ', true, $resultStatus ); // send back http status as internal server error or other specified status
 			
@@ -84,12 +86,27 @@ class Xerxes_Framework_Error
 			
 			// set the base url for the error.xsl file's benefit; don't want to assume that 
 			// the earlier code to this effect was executed before an exception, so this is redundant
-
-			$objBaseURL = $objError->createElement( "base_url", "http://" . $objRequest->getServer( 'SERVER_NAME' ) . $objRegistry->getConfig( 'BASE_WEB_PATH', false, "" ) );
+			
+			$this_server_name = "";
+			
+			// check to see if xerxes is running behind a reverse proxy and set
+			// the web path accordingly
+			
+			if ( $objRequest->getServer( 'HTTP_X_FORWARDED_HOST' ) != null )
+			{
+				$this_server_name = $objRequest->getServer( 'HTTP_X_FORWARDED_HOST' );
+			}
+			else
+			{
+				$this_server_name = $objRequest->getServer( 'SERVER_NAME' );
+			}
+						
+			$objBaseURL = $objError->createElement( "base_url", "http://" . $this_server_name . $objRegistry->getConfig( 'BASE_WEB_PATH', false, "" ) );
 			$objError->documentElement->appendChild( $objBaseURL );
 			
 			// if it's a db denied exception, include info on dbs. 
 			
+
 			if ( $e instanceof Xerxes_DatabasesDeniedException )
 			{
 				$excluded_xml = $objError->createElement( "excluded_dbs" );
@@ -104,6 +121,7 @@ class Xerxes_Framework_Error
 			
 			// add in the request object's stuff
 			
+
 			$request_xml = $objRequest->toXML();
 			
 			$imported = $objError->importNode( $request_xml->documentElement, true );
@@ -116,12 +134,12 @@ class Xerxes_Framework_Error
 			{
 				header( 'Content-type: text/xml' );
 				echo $objError->saveXML();
-			} 
-			else
+			} else
 			{
 				// display it to the user. Transform will pick up local
 				// xsl for error page too, great.
 				
+
 				echo Xerxes_Parser::transform( $objError, "xsl/error.xsl" );
 			}
 		}

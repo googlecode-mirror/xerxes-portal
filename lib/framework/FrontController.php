@@ -95,9 +95,29 @@ class Xerxes_Framework_FrontController
 			$working_dir = str_replace( "\\", "/", $working_dir );
 			
 			// full web path
+			//
+			// NOTE :if you change this code  make sure you make a corresponding
+			// change in lib/framework/Error.php, since there is redundant code
+			// there in case something goes horribly wrong and we need to set the
+			// web path for proper display of a (friendly) error page 
 			
 			$base_path = $objRegistry->getConfig( 'BASE_WEB_PATH', false, "" );
-			$web = "http://" . $objRequest->getServer( 'SERVER_NAME' ) . $base_path;
+			
+			$this_server_name = "";
+			
+			// check to see if xerxes is running behind a reverse proxy and set
+			// the web path accordingly
+			
+			if ( $objRequest->getServer( 'HTTP_X_FORWARDED_HOST' ) != null )
+			{
+				$this_server_name = $objRequest->getServer( 'HTTP_X_FORWARDED_HOST' );
+			}
+			else
+			{
+				$this_server_name = $objRequest->getServer( 'SERVER_NAME' );
+			}
+						
+			$web = "http://" . $this_server_name . $base_path;
 			
 			// register these values
 
