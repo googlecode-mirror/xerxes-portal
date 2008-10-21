@@ -237,8 +237,10 @@ class Xerxes_Command_MetasearchSearch extends Xerxes_Command_Metasearch
 		if ( $strSpell == null )
 		{
 			// check spelling
+			
+			$strAltYahoo = $objRegistry->getConfig("ALTERNATE_YAHOO_LOCATION", false);
 
-			$strSpellCorrect = $objQueryParser->checkSpelling( $strQuery, $configYahooID );
+			$strSpellCorrect = $objQueryParser->checkSpelling( $strQuery, $configYahooID, $strAltYahoo );
 			$strSpellCorrect2 = null;
 
 			if ( $strQuery2 )

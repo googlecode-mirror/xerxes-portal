@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xerxes version="1.1">
+<xerxes version="1.4">
 
 	<!-- <configuration> includes basic values and settings specific to metalib and other systems.
 			
@@ -56,31 +56,29 @@
 		so that Metalib knows which knowledgebase to associate with this implementation of Xerxes. -->
 		
 		<config name="ip_address"></config>
-    
-    
-    <!-- Can db description fields include HTML? Default Metalib is to allow
-     some HTML, but strip others (details undocumented). Default Xerxes
-     is to not allow any HTML, escaping all HTML chars. 
-       
-     db_description_html  values:
-        escape:  Escape all HTML so it shows up as source. Xerxes default.
-        allow: Allow all HTML through as code. NOT reccommended. Suggest
-              you use strip with some tags in db_description_allow_tags
-              instead. 
-        strip:  Strip out all HTML tags. May be used in combination with
-              db_description_allow_tags below. 
-                  
-      <config name="db_description_html">strip</config>
-       
-      db_description_allow_tags:  Only used with db_description_html=strip.
-              Tags listed here (comma seperated) will NOT be stripped, but
-              will be allowedi - they are a whitelist. All other tags will
-              be stripped.
-                
-      <config name="db_description_allow_tags">b,i,strong,em,a</config>
-       
-     -->
-    
+
+		<!-- Strip out HTML tags in database descriptiona
+		
+		Default Metalib is to allow some HTML, but strip others (details undocumented). Default Xerxes
+		is to not allow any HTML, escaping all HTML chars. 
+		
+		db_description_html  values:
+		
+		escape:	Escape all HTML so it shows up as source. Xerxes default.
+		allow:	Allow all HTML through as code. NOT reccommended. Suggest you use strip with some 
+			tags in db_description_allow_tags instead. 
+		strip:  Strip out all HTML tags. May be used in combination with db_description_allow_tags below. 
+		
+		<config name="db_description_html">strip</config>
+		
+		db_description_allow_tags:  Only used with db_description_html=strip.
+		Tags listed here (comma seperated) will NOT be stripped, but
+		will be allowed - they are a whitelist. All other tags will
+		be stripped.
+		
+		<config name="db_description_allow_tags">b,i,strong,em,a</config>
+		
+		-->
 		
 		<!-- Metalib user groups (aka 'secondary affiliations'). -->
 		
@@ -104,7 +102,7 @@
 		</groups> 
 		
 		-->
-    
+	
 	<!-- LOCAL DATABASE -->
 	
 		<!-- Connection string, username, and password for local database: Xerxes uses PDO for database access, 
@@ -119,10 +117,10 @@
 		<!-- base open url to link resolver -->
 		
 		<config name="link_resolver_address"></config>
-    
-    <!--  If you want to do the SFX 'populate' action from another link
-          resolver, perhaps because your main one is not SFX, configure this -->
-    <!-- <config name="sfx_resolver_address"></config>-->  
+		
+		<!--  If you want to do the SFX 'populate' action from another link
+			resolver, perhaps because your main one is not SFX, configure this -->
+		<!-- <config name="sfx_resolver_address"></config>-->  
 		
 		<!-- the sid that will be passed to the link resolver, xerxes will also append the name 
 		of the database to the sid -->
@@ -328,6 +326,8 @@
 		
 		<config name="maximum_record_export_limit" />
 		
+		<!-- display inline full-text; some databases include the full-text inline with the MARC record.  
+			to show this to users, simply add 900## to the configuration below -->
 		
 		<!-- add additional marc fields to the brief results; adding fields will incur a slight performance hit; 
 			 enter marc fields as a 5 character string consisting of 3 digit field code and 2 characters for ind1 and ind2;
@@ -337,10 +337,17 @@
 		<config name="marc_fields_brief" />
 		
 		<!-- whether to include the original marc record in the xml response, can be used to get at fields not currently
-				 processed by xerxes in order to display them in the interface -->
+			processed by xerxes in order to display them in the interface -->
 		
 		<config name="xerxes_brief_include_marc">false</config>
+		
 		<config name="xerxes_full_include_marc">false</config>
+		
+		<!-- location of an alternate relay script for the yahoo api.  if you host multiple xerxes instances
+			on one box, you may find it advantageous to have some use a relay to the yahoo spell check on a 
+			seperate server so that you can slpit the spell checking between multiple ip addresses -->
+			
+		<!-- <config name="alternate_yahoo_location">http://your.library.edu/yahoo/relay_script.php</config> -->
 		
 	</configuration>
 	

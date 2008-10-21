@@ -26,15 +26,23 @@
 		 *
 		 * @param string $strQuery		supplied query
 		 * @param string $strYahooId	yahoo access id
+		 * @param string $strAltLocation an alternate location for the Yahoo spell check, in case you need to balanace
 		 * @return string				spelling suggesting
 		 */
 		
-		public function checkSpelling( $strQuery, $strYahooId )
+		public function checkSpelling( $strQuery, $strYahooId, $strAltLocation = "" )
 		{
 			$objSpelling = new DOMDocument();
 			
-			$this->url = "http://api.search.yahoo.com/WebSearchService/V1/spellingSuggestion?appid=" . 
+			if ( $strAltLocation != "" )
+			{
+				$this->url = $strAltLocation . "?appid=" . $strYahooId . "&query=" . urlencode($strQuery);
+			}
+			else
+			{
+				$this->url = "http://api.search.yahoo.com/WebSearchService/V1/spellingSuggestion?appid=" . 
 				$strYahooId . "&query=" . urlencode($strQuery);
+			}
 				
 			$objSpelling->load($this->url);
 				
