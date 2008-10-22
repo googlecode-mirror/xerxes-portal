@@ -797,7 +797,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 	 * @return int					SQL status code
 	 */
 	
-	public function clearCache($source = "", $timestamp = "")
+	public function pruneCache($source = "", $timestamp = "")
 	{
 		$arrParams = array();
 		
