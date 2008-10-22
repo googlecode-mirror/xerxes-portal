@@ -1,4 +1,4 @@
-﻿CREATE DATABASE IF NOT EXISTS xerxes;
+CREATE DATABASE IF NOT EXISTS xerxes;
 USE xerxes;
 
 SET storage_engine = INNODB;
@@ -89,3 +89,6 @@ CREATE TABLE xerxes_cache (
 	timestamp	INTEGER,
 	expiry		INTEGER
 );
+
+CREATE INDEX xerxes_cache_grouping_idx ON xerxes_cache(grouping);
+

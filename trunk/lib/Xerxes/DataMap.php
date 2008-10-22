@@ -789,6 +789,37 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		return $arrCache;
 	}
 	
+	/**
+	 * Clear out old items in the cache
+	 *
+	 * @param string $source		[optional] clear only objects from a named source
+	 * @param int $timestamp		[optional] clear only objects older than a given timestamp
+	 * @return int					SQL status code
+	 */
+	
+	public function clearCache($source = "", $timestamp = "")
+	{
+		$arrParams = array();
+		
+		if ( $timestamp == null )
+		{
+			// default timestamp is two days previous
+			$timestamp = time() - (2 * 24 * 60 * 60);
+		}
+		
+		$arrParams[":timestamp"] = $timestamp;
+		
+		$strSQL = " DELETE FROM xerxes_cache WHERE timestamp < :timestamp ";
+		
+		if ( $source != "" )
+		{
+			$strSQL .= " AND source = :source";
+			$arrParams[":source"] = $source;
+		}
+		
+		return $this->delete($strSQL, $arrParams);
+	}
+	
 	### SAVED RECORD FUNCTIONS ###
 	
 

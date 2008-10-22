@@ -138,7 +138,7 @@
 		
 		public function insert($strSQL, $arrValues = null)
 		{
-			$this->update($strSQL, $arrValues);
+			return $this->update($strSQL, $arrValues);
 		}
 		
 		/**
@@ -151,7 +151,7 @@
 		
 		protected function delete($strSQL, $arrValues = null)
 		{
-			$this->update($strSQL, $arrValues);
+			return $this->update($strSQL, $arrValues);
 		}
 		
 		private function echoSQL($strSQL)

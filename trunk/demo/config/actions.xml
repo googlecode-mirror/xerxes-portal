@@ -148,11 +148,11 @@
 				<command>PopulateDatabases</command>
 				<view />
 			</action>
-      <!-- See http://code.google.com/p/xerxes-portal/wiki/EzProxyExport -->
-      <action name="ezproxy-export">
-        <command>DatabasesDatabase</command>
-        <view type="php">php-views/ezproxy-export.php</view>
-      </action>
+			<!-- See http://code.google.com/p/xerxes-portal/wiki/EzProxyExport -->
+			<action name="ezproxy-export">
+				<command>DatabasesDatabase</command>
+				<view type="php">php-views/ezproxy-export.php</view>
+			</action>
 		</section>
 		
 		<section name="embed" directory="embed" namespace="Xerxes" documentElement="xerxes">
@@ -367,6 +367,9 @@
 				<command directory="availability">AvailabilityInjectRefereed</command>
 				<command>MetasearchCheckSaved</command>
 				<view>xsl/metasearch_record.xsl</view>
+			</action>
+			<action name="prune" cli="true">
+				<command>PruneCache</command>
 			</action>
 		</section>
 		
