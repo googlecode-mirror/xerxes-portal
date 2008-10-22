@@ -51,31 +51,34 @@
 			}
 			else
 			{
-				$strUrl = "";
+				$strUrl = $configBaseUrl . "/?base=databases&action=proxy";
 				
 				if ( $strType == "html" || $strType == "pdf" || $strType == "online" || $strType == "construct")
 				{
-					$link = $objRecord->getFullText($strType);
+					$link = $objRecord->getFullText(true);
 					
-					// see if this is a construct link, in which case pass it back thru
-					// proxy for construction
-					
-					$strUrl = $configBaseUrl . "/?base=databases&action=proxy";
-					
-					if ( is_array($link) )
+					foreach ( $link as $arrLink )
 					{
-						foreach ( $link as $strField => $strValue )
+						if ( $arrLink[2] == $strType)
 						{
-							$strUrl .= "&param=$strField=$strValue";
-						}						
+							// see if this is a construct link, in which case pass it back thru
+							// proxy for construction
+							
+							if ( is_array($arrLink[1]) )
+							{
+								foreach ( $arrLink[1] as $strField => $strValue )
+								{
+									$strUrl .= "&param=$strField=$strValue";
+								}						
+							}
+							else
+							{
+								$strUrl .= "&url=" . urlencode($arrLink[1]);	
+							}
+							
+							$strUrl .= "&database=" .  $objRecord->getMetalibID();								
+						}
 					}
-					else
-					{
-						$strUrl .= "&url=" . urlencode($link);	
-					}
-					
-					$strUrl .= "&database=" .  $objRecord->getMetalibID();
-
 				}
 				else
 				{
