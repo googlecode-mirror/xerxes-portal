@@ -227,7 +227,9 @@
 						<xsl:when test="/metasearch">
               <xsl:if test="$link_resolver_allowed">
                 <a href="{$base_url}/./?base=metasearch&amp;action=sfx&amp;resultSet={$result_set}&amp;startRecord={$record_number}" class="resultsFullText"	target="{$link_target}" >
-                  <img src="{$base_url}/images/sfx.gif" alt="" /> Check for availability
+                  <img src="{$base_url}/images/sfx.gif" alt="" />
+                  <xsl:text> </xsl:text>
+                  <xsl:value-of select="$text_link_resolver_check" />
                 </a>
               </xsl:if>
 						</xsl:when>
@@ -235,7 +237,9 @@
 							<xsl:variable name="id" select="../id" />
               <xsl:if test="$link_resolver_allowed">
                 <a href="{$base_url}/?base=folder&amp;action=redirect&amp;type=openurl&amp;id={$id}" class="resultsFullText"	target="{$link_target}" >
-                  <img src="{$base_url}/images/sfx.gif" alt="" /> Check for availability
+                  <img src="{$base_url}/images/sfx.gif" alt="" />
+                  <xsl:text> </xsl:text>
+                  <xsl:value-of select="$text_link_resolver_check" />
                 </a>
               </xsl:if>
 							

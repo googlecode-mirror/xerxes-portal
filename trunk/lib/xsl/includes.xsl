@@ -55,6 +55,9 @@
 	
 	<xsl:variable name="text_header_savedrecords">My Saved Records</xsl:variable>
 
+ <xsl:variable name="text_link_resolver_available">Full text available</xsl:variable>
+ <xsl:variable name="text_link_resolver_check">Check for availability</xsl:variable>
+
 
 <!-- 	
 	TEMPLATE: SURROUND

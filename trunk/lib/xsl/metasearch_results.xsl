@@ -445,12 +445,16 @@
 							</xsl:when>
 							<xsl:when test="$link_resolver_allowed and //fulltext/issn = standard_numbers/issn">
 								<a href="./?base=metasearch&amp;action=sfx&amp;resultSet={$result_set}&amp;startRecord={$record_number}&amp;fulltext=1" class="resultsFullText" target="{$link_target}" >
-									<img src="{$base_include}/images/html.gif" alt="" width="16" height="16" border="0" /> Full-Text Online
+									<img src="{$base_include}/images/html.gif" alt="" width="16" height="16" border="0" />
+                  <xsl:text> </xsl:text>
+                  <xsl:value-of select="$text_link_resolver_available" />
 								</a>
 							</xsl:when>
 							<xsl:when test="$link_resolver_allowed">
 								<a href="./?base=metasearch&amp;action=sfx&amp;resultSet={$result_set}&amp;startRecord={$record_number}" class="resultsFullText" target="{$link_target}" >
-									<img src="{$base_url}/images/sfx.gif" alt="" /> Check for availability
+									<img src="{$base_url}/images/sfx.gif" alt="" />
+                  <xsl:text> </xsl:text>
+                  <xsl:value-of select="$text_link_resolver_check" />
 								</a>
 							</xsl:when>
               <!-- if we have no direct link and link resolver isn't allowed,
