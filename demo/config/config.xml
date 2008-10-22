@@ -3,9 +3,9 @@
 
 	<!-- <configuration> includes basic values and settings specific to metalib and other systems.
 			
-			 <config> individual configuration entry
-		 	@name [required] = the name of the configuration entry, should be lowercase
-			@pass [optional] = indicates this entry should be passed in the xml to the xslt to assist with display logic
+		<config> individual configuration entry
+		@name [required] = the name of the configuration entry, should be lowercase
+		@pass [optional] = indicates this entry should be passed in the xml to the xslt to assist with display logic
 	 -->
 	 
 	<configuration>
@@ -31,7 +31,6 @@
 		 seperate mutliple entries by comma -->
 			 
 		<config name="local_ip_range"></config>
-		
 		
 		<!-- the uri to the authentication page; here just in case you need to change it for some reason -->
 		
@@ -89,8 +88,8 @@
 			<local_ip_range>: IP range(s) associated with this group.  Users coming from this ip range will be able 
 			to search this group's resources without first having to login. Enter as either 144.37.*.*, with * as 
 			wildcard, or as 144.37.0.0-144.37.255.255, seperate mutliple entries by comma
-      <ezp_exp_group> For use with EZProxy export function, ezproxy config group to output for this Metalib secondary affiliation. See:
-      http://code.google.com/p/xerxes-portal/wiki/EzProxyExport?-->
+			<ezp_exp_group> For use with EZProxy export function, ezproxy config group to output for this Metalib 
+			secondary affiliation. See: http://code.google.com/p/xerxes-portal/wiki/EzProxyExport?-->
 		
 		<!-- example:
 		
@@ -137,24 +136,24 @@
 		 -->
 		
 		<config name="proxy_server"></config>
-    
-    <!-- EZPROXY EXPORT
-    
-         config to customize the ezproxy export. See 
-         http://code.google.com/p/xerxes-portal/wiki/EzProxyExport
-            -->
-    <!-- domains that should not excluded as "Domain" config in the EZProxy
-         export, even if ordinary rules would include them -->
-    <!-- <config name="ezp_exp_domain_avoid">youruniv.edu</config> -->
-    
-    <!-- Particular databases that should be excluded from the EZProxy
-         export, even if ordinary rules would include them. -->
-    <!-- <config name="ezp_exp_resourceid_omit"></config> -->
-    <!-- "Group" statement to output for ordinary default KB resources. -->
-    <!-- <config name="ezp_exp_default_group">EzP_Group</config> -->
-
-    
-    
+		
+		<!-- EZPROXY EXPORT
+		config to customize the ezproxy export. See 
+		http://code.google.com/p/xerxes-portal/wiki/EzProxyExport
+		-->
+		
+		<!-- domains that should not excluded as "Domain" config in the EZProxy
+		export, even if ordinary rules would include them -->
+		<!-- <config name="ezp_exp_domain_avoid">youruniv.edu</config> -->
+		
+		<!-- Particular databases that should be excluded from the EZProxy
+		export, even if ordinary rules would include them. -->
+		
+		<!-- <config name="ezp_exp_resourceid_omit"></config> -->
+		
+		<!-- "Group" statement to output for ordinary default KB resources. -->
+		
+		<!-- <config name="ezp_exp_default_group">EzP_Group</config> -->
 		
 		<!-- for spell check api, doesn't hurt to leave this as 'calstate', since the usage limits are 
 		based on ip address, but better to get your own key from Yahoo -->
@@ -236,9 +235,9 @@
 		<config name="demo_users"></config>
 		
 	<!-- DISPLAY AND BEHAVIOR -->
-
+	
 		<!-- mod_rewrite scheme
-
+		
 			You have the option to run Xerxes together with Apache's mod_rewrite module or with one 
 			 of the various mod_rewite-like ISAPI modules available for IIS. This option will
 			 create simpler URLs for thing like the categories and databases pages, 'my saved records' and links sent
@@ -309,7 +308,7 @@
 				* 'year'
 				* 'database'
 		 -->
-						
+		
 		<config name="sort_order_primary">rank</config>
 		<config name="sort_order_secondary">year</config>
 		
