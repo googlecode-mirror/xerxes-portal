@@ -31,13 +31,13 @@
 		
 		public function doExecute( Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry )
 		{
-      // in case this is being called from the web, plaintext
-      header("Content-type: text/plain");
+			// in case this is being called from the web, plaintext
+			header("Content-type: text/plain");
       
 			// set a higher than normal memory limit to account for 
 			// pulling down large knowledgebases
 			
-			ini_set("memory_limit","30M");
+			ini_set("memory_limit","50M");
 			
 			echo "\n\nMETALIB KNOWLEDGEBASE PULL \n\n";
 			
@@ -57,6 +57,24 @@
 			// data map
 			
 			$objData = new Xerxes_DataMap();
+			
+			// clear the cache, while we're at it
+			
+			echo "   Pruning cache table . . . ";
+			
+				$status = $objData->pruneCache();
+				
+				if ( $status != 1 )
+				{
+					throw new Exception("could not prune cache");
+				}
+				else
+				{
+					echo "done\n";
+				}
+			
+			// now the real kb stuff
+			
 			$objData->beginTransaction();
 			
 			$arrSubjects = array();			// array of category and subcategory value objects

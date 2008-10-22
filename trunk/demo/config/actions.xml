@@ -368,9 +368,6 @@
 				<command>MetasearchCheckSaved</command>
 				<view>xsl/metasearch_record.xsl</view>
 			</action>
-			<action name="prune" cli="true">
-				<command>PruneCache</command>
-			</action>
 		</section>
 		
 		<!-- mango and rss are experimental in 1.4 -->
