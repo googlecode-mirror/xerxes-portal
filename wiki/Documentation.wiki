@@ -16,9 +16,9 @@ You may have noticed that the links to "get" a record found in Xerxes sometimes 
 
 === Link to link resolver (SFX) ===
 
-4. Full-Text Online -- Link to link resolver, but pre-check suggests link resolver will have it:
+4. Full-Text Online -- Link to link resolver, but pre-check suggests link resolver will have it. (This label can be localized with XSL variable text_link_resolver_available)
 
-5. Check for availability -- Link to link resolver, availability unknown (but presumably there is no full-text otherwise link would have changed to the above--unless it's not an ISSN-bearing citation, in which case the pre-check often fails).
+5. Check for availability -- Link to link resolver, availability unknown (but presumably there is no full-text otherwise link would have changed to the above--unless it's not an ISSN-bearing citation, in which case the pre-check often fails). (This label can be localized with XSL variable text_link_resolver_check)
 
 === Display of links ===
 
