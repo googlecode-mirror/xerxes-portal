@@ -685,7 +685,7 @@
 				
 				if ( stristr($this->strSource, "FACTIVA"))
 				{
-					array_push($this->arrLinks, array("Full-Text Online", array("035_a" => $str035), "online"));
+					array_push($this->arrLinks, array("Full-Text Available", array("035_a" => $str035), "online"));
 				}
 				
 				// eric -- document is recent enough to likely contain full-text;
@@ -1819,9 +1819,14 @@
 			if ( count($this->arrIssn) > 0 ) $arrReferant["rft.issn"] = $this->arrIssn[0];
 			
 			// rft.ed_number not an actual openurl 1.0 standard element, 
-			// but sfx recognizes it
-			
-			$arrReferant["rft.ed_number"] = $this->strEric;
+			// but sfx recognizes it. But only add if the eric type
+      // is ED, adding an EJ or other as an ED just confuses SFX. 
+			if ($this->strEric ) {
+        $strEricType = substr($this->strEric, 0, 2);
+        if ($strEricType == "ED") {
+          $arrReferant["rft.ed_number"] = $this->strEric;
+        }        
+      }
 			$arrReferant["rft.series"] = $this->strSeriesTitle;
 			$arrReferant["rft.place"] = $this->strPlace;
 			$arrReferant["rft.pub"] = $this->strPublisher;
