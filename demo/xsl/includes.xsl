@@ -35,6 +35,10 @@
 	</xsl:choose>
 </xsl:variable>
 
+  <xsl:variable name="text_link_resolver_available">Full-Text via Find It</xsl:variable>
+  
+  <xsl:variable name="text_link_resolver_check">Check availability via Find It</xsl:variable>
+
 -->
 
 <!-- Don't want searchable icon on database list? Uncomment. -->
