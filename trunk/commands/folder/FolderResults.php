@@ -50,7 +50,7 @@
 			
 			// configuration settings
 			
-			$iCount = $objRegistry->getConfig("SAVED_RECORDS_PER_PAGE", false, self::DEFAULT_RECORDS_PER_PAGE);
+			$iCount = $objRegistry->getConfig("SAVED_RECORDS_PER_PAGE", false, $objRegistry->getConfig("DEFAULT_RECORDS_PER_PAGE"));
 			$iCountExport = $objRegistry->getConfig("MAXIMUM_RECORD_EXPORT_LIMIT", false, 1000);
 			$configMarcBrief = $objRegistry->getConfig("XERXES_BRIEF_INCLUDE_MARC", false, false);
 			$configMarcFull = $objRegistry->getConfig("XERXES_FULL_INCLUDE_MARC", false, false);
