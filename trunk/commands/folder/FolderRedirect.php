@@ -29,6 +29,7 @@
 			
 			$strID = $objRequest->getProperty("id");
 			$strType = $objRequest->getProperty("type");
+			$doNotRedirect = $objRequest->getProperty("printRedirect");
       
 			$configLinkResolver = $objRegistry->getConfig("LINK_RESOLVER_ADDRESS", true);
 			$configSID = $objRegistry->getConfig("APPLICATION_SID", false, "calstate.edu:xerxes");
@@ -86,6 +87,12 @@
 				}
 				
 				$objRequest->setRedirect($strUrl);
+			}
+			
+			if ($doNotRedirect == true )
+			{
+				echo $objRequest->getRedirect();
+				exit;
 			}
 			
 			return 1;					
