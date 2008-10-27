@@ -139,7 +139,7 @@
           </tr>
           
           <tr class="optionRow">
-          <td><h4><label for="disp_embed_css">Include Stylesheet in embed?</label></h4><p class="optionInfo">If you have the technical capability, it's preferable to define CSS styles yourself in your external context for the classes and elements used in the embedded content. Including Stylesheet in embed works imperfectly.</p></td>
+          <td><h4><label for="disp_embed_css">Include Stylesheet in embed?</label></h4></td>
           <td><select id="disp_embed_css" name="disp_embed_css">
             <option value="true">
             <xsl:if test="request/disp_embed_css = 'true'">
@@ -155,7 +155,7 @@
             </option>
           </select></td>
           </tr>
-
+          <tr><td colspan="2"><div class="optionInfo">If you have the technical capability, it's preferable to define CSS styles yourself in your external context for the classes and elements used in the embedded content. Including Stylesheet in embed works imperfectly.</div></td></tr>
         </table>
         <p><input type="submit" value="refresh" /></p>      
       </fieldset>
