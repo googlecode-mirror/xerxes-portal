@@ -10,6 +10,9 @@
   // 2) OPTIONAL variable "snip_noscript_content", used to supply some noscript
   //    content to generated javascript widget for snippet. 
  
+    addEvent(window, 'load', addTextAreaAutoSelect);
+
+  
      function updateExample() {
       
         var query_hash = Form.serialize($("generator"), true);
@@ -57,4 +60,13 @@
       Event.observe(window, 'load', function() {
         new Form.EventObserver($("generator"), updateExample);
       });
+      
+      function addTextAreaAutoSelect() {
+        var textareas = document.getElementsByClassName('displayTextbox');
+        for ( i = 0; i < textareas.length; i++) {
+          textareas[i].onclick = function() {
+            this.select(); 
+            };           
+        }
+      }
  // -->
