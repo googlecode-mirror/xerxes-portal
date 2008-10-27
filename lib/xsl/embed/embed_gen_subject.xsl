@@ -167,7 +167,7 @@
       <fieldset id="embedding_instructions">
         <legend>Include Instructions</legend>
         <p>You have several options for including. </p>
-        <h3>1. Server side include url</h3>
+        <h3>1. Server-side include url</h3>
         <p class="optionInfo">Preferred method of inclusion if your web page environment or content management system supports any kind of server-side include.</p>  
     
         <textarea id="direct_url_content" class="displayTextbox" readonly="yes"><xsl:value-of select="embed_info/embed_direct_url" /></textarea> 
