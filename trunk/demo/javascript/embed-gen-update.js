@@ -22,12 +22,17 @@
         //var complete_url = '<xsl:value-of select="embed_info/raw_embedded_action_url" />&amp;disp_embed=true&amp;' + query_string;
         var complete_url = snip_base_url + '&amp;disp_embed=true&amp;' + query_string;
         
+;
+        
         // Update the content
-        new Ajax.Updater('example_content',complete_url, 
+        new Ajax.Updater('example_content', complete_url, 
         { method:'get'});
         
+    
         // Update our instruction urls
         $("direct_url_content").update( complete_url );
+        
+
         
         js_widget_content = 
           '&lt;script type="text/javascript" charset="utf-8" src="' + complete_url + 
@@ -37,8 +42,17 @@
             js_widget_content += 
               '\n&lt;noscript&gt;'+ snip_noscript_content + '&lt;/noscript&gt;';
         }
-        $("js_widget_content").update(js_widget_content);
+        
+        
+        // Don't use prototype update, because it will execute the
+        // js that we want as source!
+        $("js_widget_content").inner_html = js_widget_content;
+        
+
+        
         $("view_source_link").href = complete_url + "&amp;format=text";
+        
+  
       }
       Event.observe(window, 'load', function() {
         new Form.EventObserver($("generator"), updateExample);
