@@ -119,8 +119,11 @@
           </tr>
     
           <tr class="optionRow">
-          <td><h4><label for="disp_only_subcategory">Show specific section?</label></h4></td> 
-          <td>
+          <td colspan="2"><h4><label for="disp_only_subcategory">Show specific section?</label></h4></td>
+          </tr>
+          <tr class="optionRow">
+          <td colspan="2">
+            <div class="optionInfo">
             <select name="disp_only_subcategory" id="disp_only_subcategory">
               <option value="">ALL</option>
               <xsl:for-each select="//subcategory">
@@ -135,6 +138,7 @@
                 </option>
               </xsl:for-each>
             </select>
+            </div>
           </td>
           </tr>
           
