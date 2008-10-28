@@ -96,13 +96,14 @@
           <xsl:if test="title_display">
             &#160;<a>
             <xsl:attribute name="href"><xsl:value-of select="url" /></xsl:attribute>
-            <img alt="more information" src="images/info.gif" class="mini_icon">
+            <img alt="more information" title="more information" src="images/info.gif" class="mini_icon">
               <xsl:attribute name="src"><xsl:value-of select="/knowledge_base/config/base_url" />/images/info.gif</xsl:attribute>
             </img>
             
             <xsl:if test="searchable and $show_db_searchable_icon">
             <xsl:text> </xsl:text>
-            <img class="mini_icon" alt="searchable" src="{$base_url}/images/famfamfam/magnifier.png"/>
+            <xsl:variable name="application_name" select="/*/config/application_name" />
+            <img class="mini_icon" alt="searchable by {$application_name}" title="searchable by {$application_name}" src="{$base_url}/images/famfamfam/magnifier.png"/>
             </xsl:if>
             
             </a>
