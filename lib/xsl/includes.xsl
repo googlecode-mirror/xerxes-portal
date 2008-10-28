@@ -835,7 +835,7 @@
 					</xsl:choose>
 				</xsl:when>
 				<xsl:otherwise>
-					<img src="{$base_url}/images/link-out.gif" alt="non-searchable database" />
+					<img src="{$base_url}/images/link-out.gif" alt="Click database title to search individually" title="Click database title to search individually"/>
 				</xsl:otherwise>
 				</xsl:choose>
 			</td>
