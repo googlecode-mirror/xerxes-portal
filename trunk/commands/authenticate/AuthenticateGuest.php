@@ -19,6 +19,9 @@ class Xerxes_Command_AuthenticateGuest extends Xerxes_Command_Authenticate
 	public function doExecute( Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry )
 	{
 		$strReturn = $objRequest->getProperty("return");
+    if ($strReturn == "") {
+      $strReturn = $objRegistry->getConfig("base_web_path");
+    }
 		
 		$this->register("guest@" . session_id(), "guest");
 		$objRequest->setRedirect( "http://" . $objRequest->getServer('SERVER_NAME') . $strReturn );
