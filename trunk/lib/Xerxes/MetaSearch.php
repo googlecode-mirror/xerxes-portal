@@ -198,6 +198,7 @@
 				"&secondary_sort_key=" . $strSecondarySort .
 				"&session_id=" . $this->session;
 
+        
 			// get merge_response from Metalib
 
 			$this->xml = new DOMDocument();
@@ -391,7 +392,7 @@
 			}
 	
 			// get present_response from Metalib
-
+      
 			$this->xml = new DOMDocument();
 			$this->xml->recover = true;			
 			$this->xml->load($this->url);
