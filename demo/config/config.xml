@@ -55,6 +55,10 @@
 		so that Metalib knows which knowledgebase to associate with this implementation of Xerxes. -->
 		
 		<config name="ip_address"></config>
+       
+    <!-- subject/category ID to use on the home page (the "categories" page)
+         for a quicksearch search box. -->
+    <config name="categories_quicksearch">quick-search</config>
 
 		<!-- Strip out HTML tags in database descriptiona
 		

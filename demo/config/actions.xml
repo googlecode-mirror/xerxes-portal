@@ -96,8 +96,8 @@
 			
 			<action name="categories">
 				<command>DatabasesCategories</command>
+        <request name="use_categories_quicksearch">true</request>
 				<command>DatabasesSubject</command>
-				<request name="subject">quick-search</request>
 				<view>xsl/databases_categories.xsl</view>
 			</action>
 			<action name="subject">
