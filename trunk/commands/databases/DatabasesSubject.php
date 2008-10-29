@@ -30,6 +30,12 @@ class Xerxes_Command_DatabasesSubject extends Xerxes_Command_Databases
 		
 		$strOld = $objRequest->getProperty( "category" );
 		$strSubject = $objRequest->getProperty( "subject" );
+    // Look up home page default subject from config if no subject
+    // was specified, and we were instructed to look it up with
+    // use_categories_quicksearch=true
+    if ($strSubject == "" && $objRequest->getProperty("use_categories_quicksearch") == "true") {
+      $strSubject =  $objRegistry->getConfig("categories_quicksearch", false, "quick-search");
+    }
 		
 		$objData = new Xerxes_DataMap( );
 		$objCategoryData = $objData->getSubject( $strSubject, $strOld );
