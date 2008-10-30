@@ -43,6 +43,7 @@ class Xerxes_Command_MetasearchSearch extends Xerxes_Command_Metasearch
 		$strSpell = $objRequest->getProperty( "spell" );
 		$strContext = $objRequest->getProperty( "context" );
 		$strContextUrl = $objRequest->getProperty( "context_url" );
+    
 		
 		// configuration options
 		
@@ -63,6 +64,7 @@ class Xerxes_Command_MetasearchSearch extends Xerxes_Command_Metasearch
 			$search_limit = $objRegistry->getConfig( "SEARCH_LIMIT", true );
 			
 			$arrDatabases = array ( );
+        
 			$objSubject = $objData->getSubject( $strSubject );
 			
 			// did we find a subject that has subcategories?
@@ -90,6 +92,18 @@ class Xerxes_Command_MetasearchSearch extends Xerxes_Command_Metasearch
 				}
 			}
 		}
+    
+    // If we have a subject, but no context/contexturl, look
+    // them up for the subject. Allows convenient defaults
+    // for direct-linking into search results. 
+    if ( $strContext == "" && $strSubject != "") {
+       // Look up the subject if we haven't already, to get the name.
+       if (! isset($objSubject)) $objSubject = $objData->getSubject( $strSubject );
+       $strContext = $objSubject->name;
+    }
+    if ( $strContextUrl == "" && $strSubject != "") {
+       $strContextUrl = $objRequest->url_for(array("base" => "databases", "action" => "subject", "subject" => $strSubject));
+    }
 		
 		// ensure a query and field
 
@@ -280,6 +294,7 @@ class Xerxes_Command_MetasearchSearch extends Xerxes_Command_Metasearch
 					$strSpellUrl .= "&query2=" . urlencode( $strNewQuery2 ) . "&field2=" . $strField2;
 				}
 				
+        
 				$strSpellUrl .= "&context=" . urlencode( $strContext );
 				$strSpellUrl .= "&context_url=" . urlencode( $strContextUrl );
 				
