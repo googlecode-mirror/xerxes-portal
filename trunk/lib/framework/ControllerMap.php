@@ -188,13 +188,6 @@
 				$actions = array();
 				$actions = $section->xpath($xpath);
 				
-				// no actions found in the actions.xml file
-				
-				if ( $actions == false )
-				{
-					throw new Exception("no action defined for '$strAction'");
-				}
-
 				// if action was empty, we'll also need to grab the name out of the 
 				// resulting xpath query
 				
@@ -202,6 +195,34 @@
 				{
 					$action = (string) $actions[0]["name"];
 					$this->addRequest("action", $action);
+				}
+				
+				// didn't find anything, so let's just set some defaults to allow for 
+				// simple convention
+				
+				if ( $actions == false )
+				{
+					// command follows the name of the section plus name of the action, 
+					// with the first letter of each capitalized.  if there is a dash or 
+					// underscore, remove those and also capitalize the fist letter
+					 
+					$strDefaultCommand = strtoupper(substr($strDirectory,0,1) ) . substr($strDirectory,1);
+					
+					$arrActionParts = split("-|_", $strAction);
+					
+					foreach ( $arrActionParts as $strActionPart )
+					{
+						$strDefaultCommand .= strtoupper(substr($strActionPart,0,1) ) . substr($strActionPart,1);
+					}
+					
+					$arrCommand = array($strDirectory, $strNamespace, $strDefaultCommand);
+					$this->addCommand($arrCommand);
+					
+					// view is similar but remains lower-case, and flip any dashes to underscore
+					
+					$strActionFile = str_replace("-", "_", $strAction);
+					
+					$this->strViewFile = "xsl/" . $strDirectory . "_" . $strActionFile . ".xsl";
 				}
 				
 				foreach ( $actions as $action )
