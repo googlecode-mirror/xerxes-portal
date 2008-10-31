@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xerxes version="1.3">
+<xerxes version="1.4">
 
 	<!-- <commands> define the basic behaviors of the system, mapping actions specified in the url or from the 
 			 command line to command classes that fetch or update data as well as files for displaying the results 
@@ -96,7 +96,7 @@
 			
 			<action name="categories">
 				<command>DatabasesCategories</command>
-        <request name="use_categories_quicksearch">true</request>
+				<request name="use_categories_quicksearch">true</request>
 				<command>DatabasesSubject</command>
 				<view>xsl/databases_categories.xsl</view>
 			</action>
@@ -377,14 +377,6 @@
 			<action name="home">
 				<view>xsl/mango_home.xsl</view>
 			</action>
-			<action name="search">
-				<command>MangoSearch</command>
-				<view />
-			</action>
-			<action name="combine">
-				<command>MangoCombine</command>
-				<view />
-			</action>
 			<action name="results">
 				<pathParamMap>
 					<mapEntry pathIndex="2" property="source"/>
@@ -397,18 +389,13 @@
 				<command namespace="Xerxes" directory="folder">FolderTags</command>
 				<view>xsl/mango_results.xsl</view>
 			</action>
-			<action name="lookup">
-				<command>MangoLookup</command>
-				<view>xsl/mango_lookup.xsl</view>
-			</action>
 			<action name="ill">
 				<command>MangoILL</command>
 				<view />
 			</action>
 			<action name="missing">
-				<request name="content-type">text/xml</request>
 				<command>MangoMissing</command>
-				<view>xsl/mango_missing.xsl</view>
+				<view format="rss">xsl/mango_missing.xsl</view>
 			</action>
 			<action name="record">
 				<pathParamMap>
