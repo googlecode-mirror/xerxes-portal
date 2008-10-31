@@ -21,6 +21,7 @@
 -->
 
 	<xsl:variable name="base_url"		select="//base_url" />
+  <xsl:variable name="app_name"   select="/*/config/application_name" />
 	<xsl:variable name="rewrite" 		select="//config/rewrite" />
 	<xsl:variable name="search_limit"	select="//config/search_limit" />
 	<xsl:variable name="link_target"	select="//config/link_target" />
@@ -58,6 +59,9 @@
  <xsl:variable name="text_link_resolver_available">Full text available</xsl:variable>
  <xsl:variable name="text_link_resolver_check">Check for availability</xsl:variable>
 
+ <!-- Other configurable variables -->
+ 
+ <xsl:variable name="app_mini_icon_url"><xsl:value-of select="$base_url" />/images/famfamfam/page_find.png</xsl:variable>
 
 <!-- 	
 	TEMPLATE: SURROUND
@@ -75,6 +79,16 @@
 	<base href="{$base_include}/" />
 	<link href="{$base_include}/css/xerxes.css" rel="stylesheet" type="text/css" />
 	<link href="{$base_include}/css/xerxes-print.css" rel="stylesheet" type="text/css" media="print" />
+  <!--opensearch autodiscovery -->
+  <xsl:if test="/*/category">
+     <xsl:variable name="subject_name" select="/*/category[1]/@name" />
+     <xsl:variable name="subject_id" select="/*/category[1]/@normalized" />
+       <link rel="search" href="http://static.unto.net/opensearchdescription.xml" type="application/opensearchdescription+xml" title="Unto.net" />
+     <link rel="search"
+       type="application/opensearchdescription+xml" 
+       href="{$base_url}?base=databases&amp;action=subject-opensearch&amp;subject={$subject_id}"
+       title="unto.net 222" />
+  </xsl:if>
 	</head>
 	<body>
 	<xsl:if test="request/action = 'subject'">
