@@ -1157,6 +1157,13 @@
 		var dateSearch = "<xsl:value-of select="results/search/date" />";
 		var iSearchable = "<xsl:value-of select="$search_limit" />";
 	</script>
+	
+	<!-- mango stuff -->
+	
+	<xsl:if test="request/base = 'books'">
+		<script src="{$base_include}/javascript/availability.js" language="javascript" type="text/javascript"></script>
+		<link href="{$base_include}/css/mango.css" rel="stylesheet" type="text/css" />
+	</xsl:if>
 
 </xsl:template>
 
