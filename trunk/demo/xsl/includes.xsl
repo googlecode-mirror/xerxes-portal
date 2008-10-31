@@ -38,8 +38,14 @@
   <xsl:variable name="text_link_resolver_available">Full-Text via Find It</xsl:variable>
   
   <xsl:variable name="text_link_resolver_check">Check availability via Find It</xsl:variable>
-
+  
+  
 -->
+
+<!-- want a custom mini icon for your app, used in OpenSearch and potentially
+     other places?  Should be 16x16. 
+     <xsl:variable name="app_mini_icon_url">http://university.edu/mini_logo.gif</xsl:variable> -->
+
 
 <!-- Don't want searchable icon on database list? Uncomment. -->
 <!-- <xsl:variable name="show_db_searchable_icon" select="false()" /> -->
