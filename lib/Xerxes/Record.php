@@ -1533,7 +1533,6 @@
 			if ($this->getMetalibID() != null ) $objRecord->appendChild($objXml->createElement("metalib_id", $this->escapeXML($this->getMetalibID()))); 
 			if ($this->getResultSet() != null ) $objRecord->appendChild($objXml->createElement("result_set", $this->escapeXML($this->getResultSet()))); 
 			if ($this->getRecordNumber() != null ) $objRecord->appendChild($objXml->createElement("record_number", $this->escapeXML($this->getRecordNumber()))); 
-			if ($this->getFormat() != null ) $objRecord->appendChild($objXml->createElement("format", $this->escapeXML($this->getFormat()))); 
 			if ($this->getTechnology()!= null ) $objRecord->appendChild($objXml->createElement("technology", $this->escapeXML($this->getTechnology())));
 			if ($this->getNonSort() != null ) $objRecord->appendChild($objXml->createElement("non_sort", $this->escapeXML($this->getNonSort())));
 			if ($this->getMainTitle() != null ) $objRecord->appendChild($objXml->createElement("title", $this->escapeXML($this->getMainTitle()))); 
@@ -1558,7 +1557,16 @@
 			if ($this->getEdition() != null ) $objRecord->appendChild($objXml->createElement("edition", $this->escapeXML($this->getEdition()))); 
 			if ($this->getCallNumber() != null ) $objRecord->appendChild($objXml->createElement("call_number", $this->escapeXML($this->getCallNumber())));
 			
+			$strFormat = $this->getFormat();
+			
+			if ( $strFormat != null && ! stristr($strFormat,"unknown") )
+			{
+				$objRecord->appendChild($objXml->createElement("format", $this->escapeXML($strFormat))); 
+			}
+			
+			
 			// embedded text, seperated into paragraphs
+
 			if ( count( $arrEmbeddedText ) > 0 )
 			{
 				$objEmbeddedText = $objXml->createElement( "embeddedText" );
@@ -1957,7 +1965,7 @@
 		
 		private function parseFormat( $strSource, $strTitle, $strJournal, $arrFormat , $strLeader, $strEric, $strThesis, $arrIsbn, $arrIssn )
 		{			
-			$strReturn = "Unkown";
+			$strReturn = "Unknown";
 			
 			$chrLeader6 = "";
 			$chrLeader7 = "";
