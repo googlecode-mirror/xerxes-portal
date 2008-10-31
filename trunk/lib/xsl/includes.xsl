@@ -83,11 +83,10 @@
   <xsl:if test="/*/category">
      <xsl:variable name="subject_name" select="/*/category[1]/@name" />
      <xsl:variable name="subject_id" select="/*/category[1]/@normalized" />
-       <link rel="search" href="http://static.unto.net/opensearchdescription.xml" type="application/opensearchdescription+xml" title="Unto.net" />
      <link rel="search"
        type="application/opensearchdescription+xml" 
        href="{$base_url}?base=databases&amp;action=subject-opensearch&amp;subject={$subject_id}"
-       title="unto.net 222" />
+       title="{$app_name} {$subject_name} search" />
   </xsl:if>
 	</head>
 	<body>
