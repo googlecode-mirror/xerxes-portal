@@ -49,9 +49,14 @@
 	<xsl:variable name="text_header_logout">
 		Log-out
 		<xsl:text> </xsl:text>
-		<xsl:if test="//request/authorization_info/affiliated[@user_account = 'true']">
-			<xsl:value-of select="//request/session/username" />
-		</xsl:if>
+    <xsl:choose>
+      <xsl:when test="//request/authorization_info/affiliated[@user_account = 'true']">
+        <xsl:value-of select="//request/session/username" />
+      </xsl:when>
+      <xsl:when test="//session/role = 'guest'">
+        Guest
+      </xsl:when>
+    </xsl:choose>
 	</xsl:variable>
 	
 	<xsl:variable name="text_header_savedrecords">My Saved Records</xsl:variable>
@@ -1277,14 +1282,19 @@
 		</xsl:choose>
 		
 		<div class="sessionAuthSection">
-			<xsl:if test="//request/authorization_info/group[@user_account = 'true']">
-				<h3>Your Affiliation: </h3>
-				<ul>
-					<xsl:for-each select="//request/authorization_info/group[@user_account = 'true']">
-						<li><xsl:value-of select="@display_name" /></li>
-					</xsl:for-each>
-				</ul>
-			</xsl:if>
+      <xsl:choose>
+        <xsl:when test="//request/authorization_info/group[@user_account = 'true']">
+          <h3>Your Affiliation: </h3>
+          <ul>
+            <xsl:for-each select="//request/authorization_info/group[@user_account = 'true']">
+              <li><xsl:value-of select="@display_name" /></li>
+            </xsl:for-each>
+          </ul>
+        </xsl:when>
+        <xsl:when test="//session/role = 'guest'">
+          <h3>Your Affiliation: Guest</h3>
+        </xsl:when>
+      </xsl:choose>
 		</div>
 		
 		<div class="sessionAuthSection">
