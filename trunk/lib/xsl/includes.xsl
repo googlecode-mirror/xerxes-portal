@@ -46,12 +46,37 @@
 <!-- 
 	TEXT LABELS 
 	These are global variables that provide the text for the system.  We'll be slowly
-	replacing the text in the templates with these starting with version 1.3.  Variable
-	names should follow the pattern of: text_{location}_{unique-name}
+	replacing the text in the templates with these starting with version 1.3.
+	
+	Variable names should follow the pattern of: text_{location}_{unique-name}
+	Keep them in alphabetical order!!
 -->
+	
+	<xsl:variable name="text_ada_version">For best results, click this link for accessible version</xsl:variable>
 	
 	<xsl:variable name="text_breadcrumb_seperator"> &gt; </xsl:variable>
 	
+	<xsl:variable name="text_databases_access_available">Only available to </xsl:variable>
+	<xsl:variable name="text_databases_access_group_and">and</xsl:variable>
+	<xsl:variable name="text_databases_access_users">users</xsl:variable>
+	
+	<xsl:variable name="text_databases_az_search">List databases matching: </xsl:variable>
+	<xsl:variable name="text_databases_az_breadcrumb_all">All databases</xsl:variable>
+	<xsl:variable name="text_databases_az_breadcrumb_matching">Databases matching</xsl:variable>
+
+	<xsl:variable name="text_folder_export_records_all">All of my saved records </xsl:variable>
+	<xsl:variable name="text_folder_export_records_labeled">All of my saved records labeled </xsl:variable>
+	<xsl:variable name="text_folder_export_records_selected">Only the records I have selected below.</xsl:variable>
+	<xsl:variable name="text_folder_export_records_type">All of my saved records of the type </xsl:variable>
+
+	<xsl:variable name="text_folder_header_my">My Saved Records</xsl:variable>
+	<xsl:variable name="text_folder_header_temporary">Temporary Saved Records</xsl:variable>	
+	<xsl:variable name="text_folder_login_beyond">to save records beyond this session</xsl:variable>
+	<xsl:variable name="text_folder_login">Log-in</xsl:variable>
+	<xsl:variable name="text_folder_options_tags">Labels</xsl:variable>
+	<xsl:variable name="text_folder_return">Return to search results</xsl:variable>
+	
+	<xsl:variable name="text_header_login">Log-in</xsl:variable>
 	<xsl:variable name="text_header_logout">
 		<xsl:text>Log-out </xsl:text>
 		<xsl:choose>
@@ -63,10 +88,32 @@
 			</xsl:when>
 		</xsl:choose>
 	</xsl:variable>
-	
 	<xsl:variable name="text_header_savedrecords">My Saved Records</xsl:variable>
+	
 	<xsl:variable name="text_link_resolver_available">Full text available</xsl:variable>
 	<xsl:variable name="text_link_resolver_check">Check for availability</xsl:variable>
+	
+	<xsl:variable name="text_searchbox_ada_boolean">Boolean operator: </xsl:variable>
+	<xsl:variable name="text_searchbox_boolean_and">And</xsl:variable>
+	<xsl:variable name="text_searchbox_boolean_or">Or</xsl:variable>
+	<xsl:variable name="text_searchbox_boolean_without">Without</xsl:variable>
+	<xsl:variable name="text_searchbox_field_keyword">all fields</xsl:variable>
+	<xsl:variable name="text_searchbox_field_title">title</xsl:variable>
+	<xsl:variable name="text_searchbox_field_author">author</xsl:variable>
+	<xsl:variable name="text_searchbox_field_subject">subject</xsl:variable>
+	<xsl:variable name="text_searchbox_field_year">year</xsl:variable>
+	<xsl:variable name="text_searchbox_field_issn">ISSN</xsl:variable>
+	<xsl:variable name="text_searchbox_field_isbn">ISBN</xsl:variable>
+	<xsl:variable name="text_searchbox_search">Search</xsl:variable>
+	<xsl:variable name="text_searchbox_spelling_error">Did you mean: </xsl:variable>	
+	<xsl:variable name="text_searchbox_options_fewer">Fewer Options</xsl:variable>
+	<xsl:variable name="text_searchbox_options_more">More Options</xsl:variable>
+	
+	<xsl:variable name="text_records_fulltext_pdf">Full-Text in PDF</xsl:variable>
+	<xsl:variable name="text_records_fulltext_html">Full-Text in HTML</xsl:variable>
+	<xsl:variable name="text_records_fulltext_available">Full-Text Available</xsl:variable>
+	
+	<xsl:variable name="text_records_tags">Labels: </xsl:variable>
 
 	<!-- Other configurable variables -->
 	
@@ -93,33 +140,37 @@
 	<xsl:if test="request/action = 'subject'">
 		<xsl:attribute name="onLoad">document.forms.form1.query.focus()</xsl:attribute>
 	</xsl:if>
+	
 	<div class="ada">
 		<xsl:if test="not(request/session/ada)">
 			<xsl:variable name="return_url" select="php:function('urlencode', string(request/server/request_uri))" />
 			<a href="{$base_url}/?base=databases&amp;action=accessible&amp;return={$return_url}">
-				For best results, click this link for accessible version 
+				<xsl:value-of select="$text_ada_version" /> 
 			</a>
 		</xsl:if>
 	</div>
+	
 	<div id="xerxes_outer_wrapper">
-	<div id="header">
-		<xsl:call-template name="header_div" />
-	</div>
-	<div id="breadcrumb">
-		<div class="trail">
-			<xsl:call-template name="breadcrumb" />
+	
+		<div id="header">
+			<xsl:call-template name="header_div" />
 		</div>
 		
-		<xsl:call-template name="metasearch_options" />
+		<div id="breadcrumb">
+			<div class="trail">
+				<xsl:call-template name="breadcrumb" />
+			</div>
+			<xsl:call-template name="metasearch_options" />	
+		</div>
+		
+		<xsl:call-template name="main" />
+		
+		<div id="footer">
+			<xsl:call-template name="footer_div" />
+		</div>
 		
 	</div>
 	
-	<xsl:call-template name="main" />
-	
-	<div id="footer">
-		<xsl:call-template name="footer_div" />
-	</div>
-	</div>
 	</body>
 	</html>
 	
@@ -251,7 +302,6 @@
 		<xsl:value-of select="$page_title" />
 	</xsl:if>
 </xsl:template>
-
 
 <xsl:template name="title_old">
 	
@@ -525,7 +575,7 @@
 			<xsl:otherwise>
 				<a>
 			<xsl:attribute name="href"><xsl:value-of select="navbar/element[@id = 'login']/url" /></xsl:attribute>
-			Log-in</a>
+			<xsl:value-of select="$text_header_login" /></a>
 			</xsl:otherwise>
 			</xsl:choose>
 		</span>
@@ -576,7 +626,7 @@
 		<xsl:variable name="advanced_mode" select="$global_advanced_mode" />
 		
 		<div id="searchLabel">
-			<label for="field">Search</label>
+			<label for="field"><xsl:value-of select="$text_searchbox_search" /></label>
 		</div>
 		
 		<div id="searchInputs">
@@ -590,7 +640,7 @@
 			<!-- advanced search stuff is output even if we are in simple mode, but with display:none. 
 			Javascriptiness may easily toggle without reload that way. -->
 			
-			<label for="find_operator1" class="ada">boolean operator: </label>
+			<label for="find_operator1" class="ada"><xsl:value-of select="$text_searchbox_ada_boolean" /></label>
 			
 			<xsl:text> </xsl:text>
 
@@ -602,19 +652,19 @@
 					<xsl:if test="$find_operator = 'AND'">
 						<xsl:attribute name="selected">selected</xsl:attribute>
 					</xsl:if>
-					And
+					<xsl:value-of select="$text_searchbox_boolean_and" />
 				</option>
 				<option value="OR">
 					<xsl:if test="$find_operator = 'OR'">
 						<xsl:attribute name="selected">selected</xsl:attribute>
 					</xsl:if>
-				Or
+				<xsl:value-of select="$text_searchbox_boolean_or" />
 				</option>
 				<option value="NOT">
 					<xsl:if test="$find_operator = 'NOT'">
 						<xsl:attribute name="selected">selected</xsl:attribute>
 					</xsl:if>
-				Without
+				<xsl:value-of select="$text_searchbox_boolean_without" />
 				</option>
 			</select>
 		
@@ -624,7 +674,7 @@
 				</xsl:if>
 			</br>
 			
-			<label for="field2" class="ada">Search: </label>
+			<label for="field2" class="ada"><xsl:value-of select="$text_searchbox_search" /></label>
 			
 			<span id="searchBox_advanced_pair">
 				<xsl:if test="not($advanced_mode)">
@@ -643,7 +693,8 @@
 		
 		<xsl:if test="results/search/spelling != ''">
 			<xsl:variable name="spell_url" select="results/search/spelling_url" />
-			<p class="errorSpelling">Did you mean: <a href="{$spell_url}"><xsl:value-of select="//spelling" /></a></p>
+			<p class="errorSpelling"><xsl:value-of select="$text_searchbox_spelling_error" />
+			<a href="{$spell_url}"><xsl:value-of select="//spelling" /></a></p>
 		</xsl:if>
 	
 		<div id="metasearch_input_toggle">
@@ -653,7 +704,7 @@
 				<xsl:attribute name="href">
 					<xsl:value-of select="php:functionString('Xerxes_Framework_Request::setParamInUrl', $full_page_url, 'metasearch_input_mode', 'simple')"/>
 				</xsl:attribute>
-				Fewer options
+				<xsl:value-of select="$text_searchbox_options_fewer" />
 				</a>
 			</xsl:when>
 			<xsl:otherwise>
@@ -661,7 +712,7 @@
 				<xsl:attribute name="href">
 					<xsl:value-of select="php:functionString('Xerxes_Framework_Request::setParamInUrl', $full_page_url, 'metasearch_input_mode', 'advanced')"/>
 				</xsl:attribute>
-				More options
+				<xsl:value-of select="$text_searchbox_options_more" />
 				</a>
 			</xsl:otherwise>
 		</xsl:choose>
@@ -689,24 +740,24 @@
 	<xsl:param name="input_name_suffix" select ="''" />
 	
 	<select id="field{$input_name_suffix}" name="field{$input_name_suffix}">
-		<option value="WRD">all fields</option>
+		<option value="WRD"><xsl:value-of select="$text_searchbox_field_keyword" /></option>
 		<option value="WTI">
 		<xsl:if test="$field_selected = 'WTI'">
 			<xsl:attribute name="selected">seleted</xsl:attribute>
 		</xsl:if>
-		title
+		<xsl:value-of select="$text_searchbox_field_title" />
 		</option>
 		<option value="WAU">
 		<xsl:if test="$field_selected = 'WAU'">
 			<xsl:attribute name="selected">selected</xsl:attribute>
 		</xsl:if>
-		author
+		<xsl:value-of select="$text_searchbox_field_author" />
 		</option>
 		<option value="WSU">
 		<xsl:if test="$field_selected = 'WSU'">
 			<xsl:attribute name="selected">selected</xsl:attribute>
 		</xsl:if>
-		subject
+		<xsl:value-of select="$text_searchbox_field_subject" />
 		</option>
 		
 		<!-- Include advanced mode options? We don't just try to hide,
@@ -717,19 +768,19 @@
 			<xsl:if test="$field_selected = 'ISSN'">
 				<xsl:attribute name="selected">selected</xsl:attribute>
 			</xsl:if>
-			ISSN
+			<xsl:value-of select="$text_searchbox_field_issn" />
 			</option>
 			<option value="ISBN">
 			<xsl:if test="$field_selected = 'ISBN'">
 				<xsl:attribute name="selected">selected</xsl:attribute>
 			</xsl:if>
-			ISBN
+			<xsl:value-of select="$text_searchbox_field_isbn" />
 			</option>
 			<option value="WYR">
 			<xsl:if test="$field_selected = 'WYR'">
 				<xsl:attribute name="selected">selected</xsl:attribute>
 			</xsl:if>
-			year
+			<xsl:value-of select="$text_searchbox_field_year" />
 			</option>
 		</xsl:if>
 	</select>
@@ -774,7 +825,7 @@
 			
 			<input type="hidden" name="tagsShaddow" id="shadow-{$id}" value="{$tag_list}" />
 			
-			<label for="tags-{$id}">Labels: </label>
+			<label for="tags-{$id}"><xsl:value-of select="$text_records_tags" /></label>
 			
 			<input type="text" name="tags" id="tags-{$id}" class="tagsInput" value="{$tag_list}" />
 			
@@ -819,7 +870,6 @@
 			<xsl:variable name="id_meta" select="metalib_id" />
 			<tr valign="top">
 			<td>
-
 				<!-- how many database checkboxes were displayed in this subcategory, before now?
 					Used for seeing if we've reached maximum for default selected dbs. Depends on 
 					if we're locking non-searchable or not. -->
@@ -870,7 +920,7 @@
 			<td>
 				<div class="subjectDatabaseTitle">
 					<xsl:choose>
-						<xsl:when test="not($should_lock_nonsearchable	and searchable_by_user != '1')">						
+						<xsl:when test="not($should_lock_nonsearchable and searchable_by_user != '1')">						
 							<xsl:element name="label">
 							<xsl:attribute name="for"><xsl:value-of select="metalib_id" /></xsl:attribute>
 							<a>
@@ -926,7 +976,7 @@
 			<input type="hidden" name="base" value="databases" />
 			<input type="hidden" name="action" value="find" />
 			
-			<label for="query">List databases matching: </label> 
+			<label for="query"><xsl:value-of select="$text_databases_az_search" /></label> 
 			
 			<input id="query" name="query" type="text" size="32">
 				<xsl:attribute name="value"><xsl:value-of select="request/query" /></xsl:attribute>
@@ -939,7 +989,8 @@
 			<xsl:if test="request/action != 'alphabetical'">
 				<a>
 				<xsl:attribute name="href"><xsl:value-of select="navbar/element[@id='database_list']/url" /></xsl:attribute>
-				All Databases</a> &gt; Databases matching "<xsl:value-of select="request/query" />"
+				<xsl:value-of select="$text_databases_az_breadcrumb_all" /></a> <xsl:value-of select="$text_breadcrumb_seperator" />
+				<xsl:value-of select="$text_databases_az_breadcrumb_matching" /> "<xsl:value-of select="request/query" />"
 			</xsl:if>
 		</div>
 		
@@ -959,14 +1010,14 @@
 	<xsl:variable name="group_restrictions" select="$database/group_restriction" />
 	
 	<xsl:if test="$group_restrictions">
-		Only available to
+		<xsl:value-of select="$text_databases_access_available" />
 	</xsl:if>
 	
 	<xsl:for-each select="$group_restrictions">
 		<xsl:value-of select="@display_name" />
 		<xsl:choose>
 			<xsl:when test="count(following-sibling::group_restriction) = 1">
-			and
+			<xsl:value-of select="$text_databases_access_group_and" />
 			</xsl:when>
 			<xsl:when test="count(following-sibling::group_restriction) > 1">
 			, 
@@ -974,7 +1025,7 @@
 		</xsl:choose>
 	</xsl:for-each>
 	<xsl:if test="$group_restrictions">
-	<xsl:text>  users</xsl:text>
+	<xsl:text>  </xsl:text><xsl:value-of select="$text_databases_access_users" />
 	</xsl:if>
 </xsl:template>
 
@@ -1035,8 +1086,8 @@
 	</h1>
 	
 	<xsl:if test="request/session/role = 'local'">
-		<p>( <a href="{navbar/element[@id='login']/url}">Log-in</a> 
-		to save the records beyond this session.)</p>
+		<p>( <a href="{navbar/element[@id='login']/url}"><xsl:value-of select="$text_folder_login" /><xsl:text>  </xsl:text></a> 
+		<xsl:value-of select="$text_folder_login_beyond" />.)</p>
 	</xsl:if>
 		
 	</div>
@@ -1052,10 +1103,10 @@
 <xsl:template name="folder_header_label">
 	<xsl:choose>
 		<xsl:when test="request/session/role = 'local' or request/session/role = 'guest'">
-			<xsl:text>Temporary Saved Records</xsl:text>
+			<xsl:value-of select="$text_folder_header_temporary" />
 		</xsl:when>
 		<xsl:otherwise>
-			<xsl:text>My Saved Records</xsl:text>
+			<xsl:value-of select="$text_folder_header_my" />
 		</xsl:otherwise>
 	</xsl:choose>
 </xsl:template>
@@ -1067,7 +1118,7 @@
 
 <xsl:template name="tags_display">
 	
-	<h2>Labels</h2>
+	<h2><xsl:value-of select="$text_folder_options_tags" /></h2>
 	<ul>
 	<xsl:for-each select="tags/tag">
 		<li>
@@ -1107,7 +1158,7 @@
 				<xsl:when test="//request/label">
 					
 					<label for="all">
-					All of my saved records labeled <strong><xsl:value-of select="//request/label" /></strong>
+					<xsl:value-of select="$text_folder_export_records_labeled" /> <strong><xsl:value-of select="//request/label" /></strong>
 					</label>
 					<input type="hidden" name="label" value="{//request/label}" />
 
@@ -1115,13 +1166,13 @@
 				<xsl:when test="//request/type">
 
 					<label for="all">
-					All of my saved records that are <strong><xsl:value-of select="//request/type" />s</strong>
+					<xsl:value-of select="$text_folder_export_records_type" /> <strong><xsl:value-of select="//request/type" /></strong>
 					</label>
 					<input type="hidden" name="type" value="{//request/type}" />
 				
 				</xsl:when>
 				<xsl:otherwise>
-					<label for="all">All of my saved records</label>
+					<label for="all"><xsl:value-of select="$text_folder_export_records_all" /></label>
 				</xsl:otherwise>
 			
 			</xsl:choose>
@@ -1130,7 +1181,8 @@
 			
 			<li>
 				<input type="radio" name="items" value="new" id="new" />
-				<label for="new">Only the records I have selected below.</label>
+				<label for="new"><xsl:value-of select="$text_folder_export_records_selected" /></label>
+
 			</li>
 	
 		</ul>
@@ -1159,7 +1211,7 @@
 		<div class="folderReturn">
 			<img src="{$base_include}/images/back.gif" alt="" />
 			<span class="folderReturnText">
-				<a href="{$back}">Return to search results</a>
+				<a href="{$back}"><xsl:value-of select="$text_folder_return" /></a>
 			</span>
 		</div>
 		
@@ -1287,18 +1339,17 @@
 				<xsl:choose>
 					<xsl:when test="@type = 'pdf'">
 						<img src="{$base_include}/images/pdf.gif" alt="" width="16" height="16" border="0" /> 
-						Full-Text in PDF
+						<xsl:value-of select="$text_records_fulltext_pdf" />
 					</xsl:when>
 					<xsl:when test="@type = 'html'">
 						<img src="{$base_include}/images/html.gif" alt="" width="16" height="16" border="0" /> 
-						Full-Text in HTML
+						<xsl:value-of select="$text_records_fulltext_html" />
 					</xsl:when>
 					<xsl:otherwise>
 						<img src="{$base_include}/images/html.gif" alt="" width="16" height="16" border="0" /> 
-						Full-Text Available
+						<xsl:value-of select="$text_records_fulltext_available" />
 					</xsl:otherwise>
 				</xsl:choose>
-			
 			</a>
 		
 		</div>
