@@ -21,7 +21,7 @@
 -->
 
 	<xsl:variable name="base_url"		select="//base_url" />
-  <xsl:variable name="app_name"   select="/*/config/application_name" />
+	<xsl:variable name="app_name"		select="//config/application_name" />
 	<xsl:variable name="rewrite" 		select="//config/rewrite" />
 	<xsl:variable name="search_limit"	select="//config/search_limit" />
 	<xsl:variable name="link_target"	select="//config/link_target" />
@@ -35,7 +35,13 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
-	
+
+	<xsl:variable name="global_advanced_mode" 
+		select="(//request/metasearch_input_mode = 'advanced') or 
+		( //results/search/pair[@position = '2']/query != '' ) or 
+		//results/search/pair[@position ='1']/field = 'ISSN' or 
+		//results/search/pair[@position ='1']/field = 'ISBN' or 
+		//results/search/pair[@position ='1']/field = 'WYR'" />
 	
 <!-- 
 	TEXT LABELS 
@@ -47,26 +53,24 @@
 	<xsl:variable name="text_breadcrumb_seperator"> &gt; </xsl:variable>
 	
 	<xsl:variable name="text_header_logout">
-		Log-out
-		<xsl:text> </xsl:text>
-    <xsl:choose>
-      <xsl:when test="//request/authorization_info/affiliated[@user_account = 'true']">
-        <xsl:value-of select="//request/session/username" />
-      </xsl:when>
-      <xsl:when test="//session/role = 'guest'">
-        Guest
-      </xsl:when>
-    </xsl:choose>
+		<xsl:text>Log-out </xsl:text>
+		<xsl:choose>
+			<xsl:when test="//request/authorization_info/affiliated[@user_account = 'true']">
+				<xsl:value-of select="//request/session/username" />
+			</xsl:when>
+			<xsl:when test="//session/role = 'guest'">
+				<xsl:text>Guest</xsl:text>
+			</xsl:when>
+		</xsl:choose>
 	</xsl:variable>
 	
 	<xsl:variable name="text_header_savedrecords">My Saved Records</xsl:variable>
+	<xsl:variable name="text_link_resolver_available">Full text available</xsl:variable>
+	<xsl:variable name="text_link_resolver_check">Check for availability</xsl:variable>
 
- <xsl:variable name="text_link_resolver_available">Full text available</xsl:variable>
- <xsl:variable name="text_link_resolver_check">Check for availability</xsl:variable>
-
- <!-- Other configurable variables -->
- 
- <xsl:variable name="app_mini_icon_url"><xsl:value-of select="$base_url" />/images/famfamfam/page_find.png</xsl:variable>
+	<!-- Other configurable variables -->
+	
+	<xsl:variable name="app_mini_icon_url"><xsl:value-of select="$base_url" />/images/famfamfam/page_find.png</xsl:variable>
 
 <!-- 	
 	TEMPLATE: SURROUND
@@ -84,20 +88,19 @@
 	<base href="{$base_include}/" />
 	<link href="{$base_include}/css/xerxes.css" rel="stylesheet" type="text/css" />
 	<link href="{$base_include}/css/xerxes-print.css" rel="stylesheet" type="text/css" media="print" />
-  <!--opensearch autodiscovery -->
-  <xsl:if test="/*/category">
-     <xsl:variable name="subject_name" select="/*/category[1]/@name" />
-     <xsl:variable name="subject_id" select="/*/category[1]/@normalized" />
-     <link rel="search"
-       type="application/opensearchdescription+xml" 
-       href="{$base_url}?base=databases&amp;action=subject-opensearch&amp;subject={$subject_id}"
-       title="{$app_name} {$subject_name} search" />
-  </xsl:if>
 	</head>
 	<body>
 	<xsl:if test="request/action = 'subject'">
 		<xsl:attribute name="onLoad">document.forms.form1.query.focus()</xsl:attribute>
 	</xsl:if>
+	<div style="position: absolute; left: -500px; top: -5000px">
+		<xsl:if test="not(request/session/ada)">
+			<xsl:variable name="return_url" select="php:function('urlencode', string(request/server/request_uri))" />
+			<a href="{$base_url}/?base=databases&amp;action=accessible&amp;return={$return_url}">
+				For best results, click this link for accessible version 
+			</a>
+		</xsl:if>
+	</div>
 	<div id="xerxes_outer_wrapper">
 	<div id="header">
 		<xsl:call-template name="header_div" />
@@ -106,13 +109,13 @@
 		<div class="trail">
 			<xsl:call-template name="breadcrumb" />
 		</div>
-
+		
 		<xsl:call-template name="metasearch_options" />
-
+		
 	</div>
-
+	
 	<xsl:call-template name="main" />
-
+	
 	<div id="footer">
 		<xsl:call-template name="footer_div" />
 	</div>
@@ -389,7 +392,7 @@
 			<xsl:call-template name="page_name" />
 		</xsl:when>
 		<xsl:when test="request/base = 'databases' and request/action = 'database'">
-			<xsl:if test="$return != ''">			 
+			<xsl:if test="$return != ''">
 				<a href="{$return}">
 					<xsl:choose>
 						<xsl:when test="$return_title != ''">
@@ -397,7 +400,7 @@
 						</xsl:when>
 						<xsl:otherwise><xsl:text>Databases</xsl:text></xsl:otherwise>
 					</xsl:choose>
-				</a> <xsl:value-of select="$text_breadcrumb_seperator" /> 
+				</a> <xsl:value-of select="$text_breadcrumb_seperator" />
 			</xsl:if>
 			<span class="breadcrumbHere"><xsl:value-of select="//title_display" /></span>
 		</xsl:when>
@@ -570,13 +573,7 @@
 		<xsl:variable name="field" select="//results/search/pair[@position ='1']/field"/>
 		<xsl:variable name="field2" select="//results/search/pair[2]/field"/>
 		
-		<xsl:variable name="advanced_mode" select="(//request/metasearch_input_mode = 'advanced') or ($query2 != '') or $field = 'ISSN' or $field = 'ISBN' or $field = 'WYR' " />
-		
-		<!-- javascript to ajaxy toggle the advanced search input mode. Have to set advancedMode global for toggle scripts. -->
-		<script type="text/javascript">
-			advancedMode = <xsl:value-of select="$advanced_mode" />;
-		</script>
-		<script src="{$base_include}/javascript/toggle_metasearch_advanced.js" language="javascript" type="text/javascript"></script>
+		<xsl:variable name="advanced_mode" select="$global_advanced_mode" />
 		
 		<div id="searchLabel">
 			<label for="field">Search</label>
@@ -777,7 +774,7 @@
 			</span>
 		</form>
 	</div>
-							
+	
 </xsl:template>
 
 
@@ -1156,31 +1153,66 @@
 
 <xsl:template name="header">
 	
+	<!-- metasearch refresh -->
+	
 	<xsl:if test="request/action = 'hits' and results/progress &lt; 10">
 		<meta http-equiv="refresh" content="6" />
 	</xsl:if>
-	<script src="{$base_include}/javascript/onload.js" language="javascript" type="text/javascript"></script>
-	<script src="{$base_include}/javascript/prototype.js" language="javascript" type="text/javascript"></script>
-	<script src="{$base_include}/javascript/scriptaculous/scriptaculous.js" language="javascript" type="text/javascript"></script>
-	<script src="{$base_include}/javascript/tags.js" language="javascript" type="text/javascript"></script>
-	<script type="text/javascript">
-		// change numSessionSavedRecords to numSavedRecords if you prefer the folder icon to change
-		// if there are any records at all in saved records. Also fix initial display in navbar.
-		numSavedRecords = parseInt('0<xsl:value-of select="navbar/element[@id='saved_records']/@numSessionSavedRecords" />', 10);
-		isTemporarySession = <xsl:choose><xsl:when test="request/session/role = 'guest' or request/session/role = 'local'">true</xsl:when><xsl:otherwise>false</xsl:otherwise></xsl:choose>
-	</script>
-	<script src="{$base_include}/javascript/save.js" language="javascript" type="text/javascript"></script>
+
+	<!--opensearch autodiscovery -->
 	
-	<script language="javascript" type="text/javascript">
-		var dateSearch = "<xsl:value-of select="results/search/date" />";
-		var iSearchable = "<xsl:value-of select="$search_limit" />";
-	</script>
+	<xsl:if test="//category">
+		<xsl:variable name="subject_name" select="//category[1]/@name" />
+		<xsl:variable name="subject_id" select="//category[1]/@normalized" />
+		<link rel="search"
+			type="application/opensearchdescription+xml" 
+			href="{$base_url}?base=databases&amp;action=subject-opensearch&amp;subject={$subject_id}"
+			title="{$app_name} {$subject_name} search" />
+	</xsl:if>
 	
-	<!-- mango stuff -->
+	<!-- only include javascript when the user has not chosen the ada compliant version -->
+
+	<xsl:if test="not(request/session/ada)">
 	
-	<xsl:if test="request/base = 'books'">
-		<script src="{$base_include}/javascript/availability.js" language="javascript" type="text/javascript"></script>
-		<link href="{$base_include}/css/mango.css" rel="stylesheet" type="text/css" />
+		<script src="{$base_include}/javascript/onload.js" language="javascript" type="text/javascript"></script>
+		<script src="{$base_include}/javascript/prototype.js" language="javascript" type="text/javascript"></script>
+		<script src="{$base_include}/javascript/scriptaculous/scriptaculous.js" language="javascript" type="text/javascript"></script>
+		
+		<!-- controls the adding and editing of tags -->
+		
+		<script src="{$base_include}/javascript/tags.js" language="javascript" type="text/javascript"></script>
+		
+		<!-- controls the toggle of the 'more options' in the search box -->
+		
+		<script type="text/javascript">
+			advancedMode = <xsl:value-of select="$global_advanced_mode" />;
+		</script>
+		
+		<script src="{$base_include}/javascript/toggle_metasearch_advanced.js" language="javascript" type="text/javascript"></script>
+		
+		<!-- controls the saving and tracking of saved records -->
+		
+		<script type="text/javascript">
+			// change numSessionSavedRecords to numSavedRecords if you prefer the folder icon to change
+			// if there are any records at all in saved records. Also fix initial display in navbar.
+			numSavedRecords = parseInt('0<xsl:value-of select="navbar/element[@id='saved_records']/@numSessionSavedRecords" />', 10);
+			isTemporarySession = <xsl:choose><xsl:when test="request/session/role = 'guest' or request/session/role = 'local'">true</xsl:when><xsl:otherwise>false</xsl:otherwise></xsl:choose>
+		</script>
+		
+		<script src="{$base_include}/javascript/save.js" language="javascript" type="text/javascript"></script>
+		
+		<script language="javascript" type="text/javascript">
+			var dateSearch = "<xsl:value-of select="results/search/date" />";
+			var iSearchable = "<xsl:value-of select="$search_limit" />";
+		</script>
+		
+		<!-- mango stuff -->
+		
+		<xsl:if test="request/base = 'books'">
+			<script src="{$base_include}/javascript/availability.js" language="javascript" type="text/javascript"></script>
+			<link href="{$base_include}/css/mango.css" rel="stylesheet" type="text/css" />
+		</xsl:if>
+		
 	</xsl:if>
 
 </xsl:template>
@@ -1282,19 +1314,19 @@
 		</xsl:choose>
 		
 		<div class="sessionAuthSection">
-      <xsl:choose>
-        <xsl:when test="//request/authorization_info/group[@user_account = 'true']">
-          <h3>Your Affiliation: </h3>
-          <ul>
-            <xsl:for-each select="//request/authorization_info/group[@user_account = 'true']">
-              <li><xsl:value-of select="@display_name" /></li>
-            </xsl:for-each>
-          </ul>
-        </xsl:when>
-        <xsl:when test="//session/role = 'guest'">
-          <h3>Your Affiliation: Guest</h3>
-        </xsl:when>
-      </xsl:choose>
+			<xsl:choose>
+				<xsl:when test="//request/authorization_info/group[@user_account = 'true']">
+					<h3>Your Affiliation: </h3>
+					<ul>
+						<xsl:for-each select="//request/authorization_info/group[@user_account = 'true']">
+							<li><xsl:value-of select="@display_name" /></li>
+						</xsl:for-each>
+					</ul>
+				</xsl:when>
+				<xsl:when test="//session/role = 'guest'">
+					<h3>Your Affiliation: Guest</h3>
+				</xsl:when>
+			</xsl:choose>
 		</div>
 		
 		<div class="sessionAuthSection">
