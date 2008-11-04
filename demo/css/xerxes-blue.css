@@ -371,7 +371,6 @@ a img{
 #metasearch_input_toggle {
   text-align:right; 
   margin-top: 1em; 
-  font-weight: bold;
 }
 
 .errorSpelling {
@@ -849,4 +848,10 @@ div.autocomplete ul li {
   width:70%; 
   height: 5em;
   background-color: #FFFBD3;
+}
+
+.ada {
+	position: absolute; 
+	left: -500px; 
+	top: -5000px
 }

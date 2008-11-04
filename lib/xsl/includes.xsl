@@ -93,7 +93,7 @@
 	<xsl:if test="request/action = 'subject'">
 		<xsl:attribute name="onLoad">document.forms.form1.query.focus()</xsl:attribute>
 	</xsl:if>
-	<div style="position: absolute; left: -500px; top: -5000px">
+	<div class="ada">
 		<xsl:if test="not(request/session/ada)">
 			<xsl:variable name="return_url" select="php:function('urlencode', string(request/server/request_uri))" />
 			<a href="{$base_url}/?base=databases&amp;action=accessible&amp;return={$return_url}">
@@ -580,6 +580,7 @@
 		</div>
 		
 		<div id="searchInputs">
+		
 			<xsl:call-template name="metasearch_input_pair">
 				<xsl:with-param name="field_selected" select="$field" />
 				<xsl:with-param name="query_entered" select="$query" />
@@ -588,7 +589,11 @@
 
 			<!-- advanced search stuff is output even if we are in simple mode, but with display:none. 
 			Javascriptiness may easily toggle without reload that way. -->
+			
+			<label for="find_operator1" class="ada">boolean operator: </label>
+			
 			<xsl:text> </xsl:text>
+
 			<select id="find_operator1" name="find_operator1">
 				<xsl:if test="not($advanced_mode)">
 					<xsl:attribute name="style">display:none;</xsl:attribute>
@@ -618,6 +623,9 @@
 					<xsl:attribute name="style">display:none;</xsl:attribute>
 				</xsl:if>
 			</br>
+			
+			<label for="field2" class="ada">Search: </label>
+			
 			<span id="searchBox_advanced_pair">
 				<xsl:if test="not($advanced_mode)">
 				<xsl:attribute name="style">display:none;</xsl:attribute>
@@ -632,6 +640,7 @@
 			</span>
 			<input type="submit" name="Submit" value="GO" />
 		</div>
+		
 		<xsl:if test="results/search/spelling != ''">
 			<xsl:variable name="spell_url" select="results/search/spelling_url" />
 			<p class="errorSpelling">Did you mean: <a href="{$spell_url}"><xsl:value-of select="//spelling" /></a></p>
@@ -640,7 +649,7 @@
 		<div id="metasearch_input_toggle">
 			<xsl:choose>
 			<xsl:when test="$advanced_mode">
-				<a id="searchBox_toggle" onClick="toggleSearchMode(); return false;">
+				<a id="searchBox_toggle">
 				<xsl:attribute name="href">
 					<xsl:value-of select="php:functionString('Xerxes_Framework_Request::setParamInUrl', $full_page_url, 'metasearch_input_mode', 'simple')"/>
 				</xsl:attribute>
@@ -648,7 +657,7 @@
 				</a>
 			</xsl:when>
 			<xsl:otherwise>
-				<a id="searchBox_toggle" onClick="toggleSearchMode(); return false;">
+				<a id="searchBox_toggle">
 				<xsl:attribute name="href">
 					<xsl:value-of select="php:functionString('Xerxes_Framework_Request::setParamInUrl', $full_page_url, 'metasearch_input_mode', 'advanced')"/>
 				</xsl:attribute>
@@ -794,19 +803,23 @@
 	<xsl:for-each select="category/subcategory[(not($show_only_subcategory )) or ($show_only_subcategory = '') or (@id = $show_only_subcategory)]">
 		<fieldset class="subjectSubCategory">
 		<legend><xsl:value-of select="@name" /></legend>
-		
-		<xsl:variable name="subcategory" select="position()" />
+
+			<!-- if the current session can't search this resource, should we show a lock icon? 
+			We show lock icons for logged in with account users, on campus users, and guest users. 
+			Not for off campus not logged in users, because they might be able to search more 
+			resources than we can tell now. --> 
+				
+			<xsl:variable name="should_lock_nonsearchable" select=" (//request/authorization_info/affiliated = 'true' 
+				or //request/session/role = 'guest')" />
+			
+			<xsl:variable name="subcategory" select="position()" />
+
 			<table summary="this table lists databases you can search" class="subjectCheckList">
 			<xsl:for-each select="database">
 			<xsl:variable name="id_meta" select="metalib_id" />
 			<tr valign="top">
 			<td>
-			
-				<!-- if the current session can't search this resource, should we show a lock icon? 
-				We show lock icons for logged in with account users, on campus users, and guest users. Not for off campus not logged in users, because they might be able to search more resources than we can tell now. --> 
-				
-				<xsl:variable name="should_lock_nonsearchable" select=" (//request/authorization_info/affiliated = 'true' or //request/session/role = 'guest')" />
-				
+
 				<!-- how many database checkboxes were displayed in this subcategory, before now?
 					Used for seeing if we've reached maximum for default selected dbs. Depends on 
 					if we're locking non-searchable or not. -->
@@ -856,14 +869,23 @@
 			</td>
 			<td>
 				<div class="subjectDatabaseTitle">
-					<xsl:element name="label">
-					<xsl:attribute name="for"><xsl:value-of select="metalib_id" /></xsl:attribute>
-					
-					<a>
-					<xsl:attribute name="href"><xsl:value-of select="xerxes_native_link_url" /></xsl:attribute>
-						<xsl:value-of select="title_display" />
-					</a>
-					</xsl:element>
+					<xsl:choose>
+						<xsl:when test="not($should_lock_nonsearchable	and searchable_by_user != '1')">						
+							<xsl:element name="label">
+							<xsl:attribute name="for"><xsl:value-of select="metalib_id" /></xsl:attribute>
+							<a>
+							<xsl:attribute name="href"><xsl:value-of select="xerxes_native_link_url" /></xsl:attribute>
+								<xsl:value-of select="title_display" />
+							</a>
+							</xsl:element>
+						</xsl:when>
+						<xsl:otherwise>
+							<a>
+							<xsl:attribute name="href"><xsl:value-of select="xerxes_native_link_url" /></xsl:attribute>
+								<xsl:value-of select="title_display" />
+							</a>						
+						</xsl:otherwise>
+					</xsl:choose>
 				</div>
 					
 				<div class="subjectDatabaseInfo">
