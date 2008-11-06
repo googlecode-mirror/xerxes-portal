@@ -47,6 +47,10 @@
   font-weight: bold;
 }
 
+#xerxes_outer_wrapper #query,#xerxes_outer_wrapper #query2 {
+  width: 206px;
+}
+
 #xerxes_outer_wrapper .searchBox {
 	padding: 20px;
 	margin: 0px;

@@ -373,6 +373,10 @@ a img{
   margin-top: 1em; 
 }
 
+#query,#query2 {
+  width: 206px;
+}
+
 .errorSpelling {
 	color: #990000;
 	font-weight: bold;
