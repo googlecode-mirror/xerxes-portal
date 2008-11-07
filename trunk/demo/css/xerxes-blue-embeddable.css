@@ -80,3 +80,9 @@
 
 #xerxes_outer_wrapper .subjectSubcategory legend { font-family: Arial, Verdana, Geneva, Arial, helvetica, sans-serif; color: #3366cc; font-size: 14px; font-weight: bold; margin-bottom: 2px; }
 
+#xerxes_outer_wrapper .ada {
+	position: absolute; 
+	left: -500px; 
+	top: -5000px
+}
+
