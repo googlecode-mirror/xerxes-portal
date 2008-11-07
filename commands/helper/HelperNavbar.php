@@ -28,8 +28,11 @@ class Xerxes_Command_HelperNavbar extends Xerxes_Command_Helper
 		$savedRecordsLink->setAttribute( "numSavedRecords", ( string ) $num );
 		$savedRecordsLink->setAttribute( "numSessionSavedRecords", Xerxes_Helper::numMarkedSaved() );
 		
-		//login
-		$this->addNavbarElement( $objXml, $objRequest, "login", array ("base" => "authenticate", "action" => "login", "return" => $objRequest->getServer( "REQUEST_URI" ) ) );
+		//login. Tell it to force an https url if so configured. 
+    $force_secure_login = false;
+    if ($objRegistry->getConfig("secure_login", false) == "true") $force_secure_login = true;
+    
+		$this->addNavbarElement( $objXml, $objRequest, "login", array ("base" => "authenticate", "action" => "login", "return" => $objRequest->getServer( "REQUEST_URI" ) ), $force_secure_login );
 		
 		//logout
 		$this->addNavbarElement( $objXml, $objRequest, "logout", array ("base" => "authenticate", "action" => "logout", "return" => $objRequest->getServer( "REQUEST_URI" ) ) );
@@ -42,11 +45,11 @@ class Xerxes_Command_HelperNavbar extends Xerxes_Command_Helper
 		return 1;
 	}
 	
-	protected function addNavbarElement($objXml, $objRequest, $element_id, $url_params)
+	protected function addNavbarElement($objXml, $objRequest, $element_id, $url_params, $force_secure = false)
 	{
 		$element = $objXml->createElement( "element" );
 		$element->setAttribute( "id", $element_id );
-		$url = $objXml->createElement( 'url', $objRequest->url_for( $url_params ) );
+		$url = $objXml->createElement( 'url', $objRequest->url_for( $url_params, false, $force_secure ) );
 		$element->appendChild( $url );
 		$objXml->documentElement->appendChild( $element );
 		return $element;
