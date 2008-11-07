@@ -590,12 +590,15 @@ class Xerxes_Framework_Request
 	 * @return string url 
 	 */
 	
-	public function url_for($properties, $full = false)
+	public function url_for($properties, $full = false, $force_secure = false)
 	{
 		if ( ! array_key_exists( "base", $properties ) )
 		{
 			throw new Exception( "no base/section supplied in url_for." );
 		}
+    if ( $force_secure ) {
+      $full = true;
+    }
 		
 		$config = Xerxes_Framework_Registry::getInstance();
 		
@@ -608,6 +611,9 @@ class Xerxes_Framework_Request
 		if ( $this->getProperty( "gen_full_urls" ) == 'true' || $full )
 		{
 			$base_path = $config->getConfig( 'BASE_URL', true ) . "/";
+      if ( $force_secure ) {
+        $base_path = ereg_replace("^http\:\/\/", "https://", $base_path);  
+      }
 		}
 		
 		$extra_path = "";
