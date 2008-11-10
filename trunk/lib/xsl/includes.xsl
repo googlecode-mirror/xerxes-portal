@@ -19,7 +19,10 @@
 	GLOBAL VARIABLES
 	Configuration values used throughout the templates
 -->
-
+  <!-- version used to to prevent css caching, and possibly other
+       places to advertise version -->
+  <xsl:variable name="xerxes_version" select="'1.4'" />     
+    
 	<xsl:variable name="base_url"		select="//base_url" />
 	<xsl:variable name="app_name"		select="//config/application_name" />
 	<xsl:variable name="rewrite" 		select="//config/rewrite" />
@@ -133,8 +136,9 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<xsl:call-template name="header" />
 	<base href="{$base_include}/" />
-	<link href="{$base_include}/css/xerxes.css" rel="stylesheet" type="text/css" />
-	<link href="{$base_include}/css/xerxes-print.css" rel="stylesheet" type="text/css" media="print" />
+
+  <xsl:call-template name="css_include" />
+
 	</head>
 	<body>
 	<xsl:if test="request/action = 'subject'">
@@ -174,6 +178,18 @@
 	</body>
 	</html>
 	
+</xsl:template>
+
+<!-- TEMPLATE: CSS_INCLUDE 
+-->
+<xsl:template name="css_include">
+  <link href="{$base_include}/css/reset.css?xerxes_version={$xerxes_version}" rel="stylesheet" type="text/css" />
+  <link href="{$base_include}/css/xerxes-blue.css?xerxes_version={$xerxes_version}" rel="stylesheet" type="text/css" />
+  <link href="{$base_include}/css/local.css?xerxes_version={$xerxes_version}" rel="stylesheet" type="text/css" />
+
+  <!-- print media overrides -->
+	<link href="{$base_include}/css/xerxes-print.css?xerxes_version={$xerxes_version}" rel="stylesheet" type="text/css" media="print" />
+
 </xsl:template>
 
 <!-- 	
