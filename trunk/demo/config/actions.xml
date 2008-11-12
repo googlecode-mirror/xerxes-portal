@@ -107,14 +107,14 @@
 				</pathParamMap>
 				<view>xsl/databases_subject.xsl</view>
 			</action>
-      <action name="subject-opensearch">
-        <request name="format">xml</request>
-        <command>DatabasesSubject</command>
-        <pathParamMap>
+			<action name="subject-opensearch">
+				<request name="format">xml</request>
+				<command>DatabasesSubject</command>
+				<pathParamMap>
 					<mapEntry pathIndex="2" property="subject"/>
 				</pathParamMap>
-        <view>xsl/databases_subject-opensearch.xsl</view>
-      </action>
+				<view>xsl/databases_subject-opensearch.xsl</view>
+			</action>
 			<action name="old-subject">
 				<command>DatabasesCategories</command>
 				<view type="php">custom/databases_old-subject.php</view>
@@ -412,7 +412,7 @@
 				<command>MangoRecord</command>
 				<command>MangoAmazon</command>
 				<command>MangoRecommend</command>
-				<command>MangoLookup</command>
+				<command>MangoLookupInject</command>
 				<command namespace="Xerxes" directory="metasearch">MetasearchCheckSaved</command>
 				<view>xsl/mango_record.xsl</view>
 				<view format="marc">xsl/marc-display.xsl</view>

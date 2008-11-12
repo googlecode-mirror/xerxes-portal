@@ -21,7 +21,8 @@
 -->
   <!-- version used to to prevent css caching, and possibly other
        places to advertise version -->
-  <xsl:variable name="xerxes_version" select="'1.4'" />     
+	
+	<xsl:variable name="xerxes_version" select="'1.4'" />     
     
 	<xsl:variable name="base_url"		select="//base_url" />
 	<xsl:variable name="app_name"		select="//config/application_name" />
@@ -66,6 +67,12 @@
 	<xsl:variable name="text_databases_az_search">List databases matching: </xsl:variable>
 	<xsl:variable name="text_databases_az_breadcrumb_all">All databases</xsl:variable>
 	<xsl:variable name="text_databases_az_breadcrumb_matching">Databases matching</xsl:variable>
+	
+	<xsl:variable name="text_databases_category_quick_desc">
+		Search <xsl:value-of select="count(//category[1]/subcategory[1]/database)"/> of our most popular databases
+	</xsl:variable>
+	<xsl:variable name="text_databases_category_subject">Search by Subject</xsl:variable>
+	<xsl:variable name="text_databases_category_subject_desc">Search databases specific to your area of study.</xsl:variable>
 
 	<xsl:variable name="text_folder_export_records_all">All of my saved records </xsl:variable>
 	<xsl:variable name="text_folder_export_records_labeled">All of my saved records labeled </xsl:variable>
@@ -608,7 +615,7 @@
 			</img>
 			<xsl:text> </xsl:text>
 			<a>
-		<xsl:attribute name="href"><xsl:value-of select="navbar/element[@id='saved_records']/url" /></xsl:attribute>
+			<xsl:attribute name="href"><xsl:value-of select="navbar/element[@id='saved_records']/url" /></xsl:attribute>
 			<xsl:value-of select="$text_header_savedrecords" />
 		</a>
 		</span>
@@ -1115,7 +1122,6 @@
 	Whether this is 'temporary' or 'my' saved records
 -->
 
-
 <xsl:template name="folder_header_label">
 	<xsl:choose>
 		<xsl:when test="request/session/role = 'local' or request/session/role = 'guest'">
@@ -1492,6 +1498,10 @@
 		<input type="hidden" name="action" value="search" />
 		<input type="hidden" name="source" value="local" />
 
+		<xsl:if test="request/sortkeys">
+			<input type="hidden" name="sortKeys" value="{request/sortkeys}" />
+		</xsl:if>
+
 		<label for="field">Search</label><xsl:text> </xsl:text>
 	
 		<select id="field" name="field">
@@ -1532,12 +1542,20 @@
 	<xsl:param name="isbn" />
 	<xsl:param name="oclc" />
 	<xsl:param name="type" />
+	<xsl:param name="nosave" />
 	
 	<xsl:choose>
+		<xsl:when test="$type = 'none'">
+			<xsl:call-template name="holdings_lookup_none">
+				<xsl:with-param name="isbn" select="$isbn" />
+				<xsl:with-param name="oclc" select="$oclc" />
+			</xsl:call-template>			
+		</xsl:when>
 		<xsl:when test="$type = 'summary'">
 			<xsl:call-template name="holdings_lookup_summary">
 				<xsl:with-param name="isbn" select="$isbn" />
 				<xsl:with-param name="oclc" select="$oclc" />
+				<xsl:with-param name="nosave" select="$nosave" />
 			</xsl:call-template>			
 		</xsl:when>
 		<xsl:otherwise>
@@ -1550,6 +1568,21 @@
 				
 </xsl:template>
 
+
+<xsl:template name="holdings_lookup_none">
+	<xsl:param name="isbn" />
+	<xsl:param name="oclc" />
+	
+	<xsl:call-template name="ill_option">
+		<xsl:with-param name="element">div</xsl:with-param>
+		<xsl:with-param name="class">resultsAvailability</xsl:with-param>
+		<xsl:with-param name="oclc"><xsl:value-of select="$oclc" /></xsl:with-param>
+		<xsl:with-param name="isbn"><xsl:value-of select="$isbn" /></xsl:with-param>
+	</xsl:call-template>	
+
+		
+</xsl:template>
+
 <!-- 	
 	TEMPLATE: HOLDINGS LOOKUP SUMMARY
 	A summary view of the holdings information
@@ -1557,7 +1590,8 @@
 
 <xsl:template name="holdings_lookup_summary">
 	<xsl:param name="isbn" />
-	<xsl:param name="oclc" />	
+	<xsl:param name="oclc" />
+	<xsl:param name="nosave" />
 
 	<ul class="mangoAvailabilitySummary">
 	
@@ -1641,12 +1675,6 @@
 		<xsl:with-param name="isbn"><xsl:value-of select="$isbn" /></xsl:with-param>
 	</xsl:call-template>
 
-	<xsl:call-template name="mango_save_record">
-		<xsl:with-param name="element">span</xsl:with-param>
-		<xsl:with-param name="class">resultsAvailability</xsl:with-param>
-		<xsl:with-param name="oclc"><xsl:value-of select="$oclc" /></xsl:with-param>
-	</xsl:call-template>
-
 </xsl:template>
 
 <!-- 	
@@ -1664,7 +1692,8 @@
 		<xsl:element name="{$element}">
 			<xsl:attribute name="class"><xsl:value-of select="$class" /></xsl:attribute>
 			<a href="{link}" class="resultsFullText"  target="" >
-				<img src="{$base_include}/images/html.gif" alt="" width="16" height="16" border="0" /> Full-Text Online
+				<img src="{$base_include}/images/html.gif" alt="" width="16" height="16" border="0" /> 
+				<xsl:value-of select="$text_records_fulltext_available" />
 			</a>
 		</xsl:element>
 	</xsl:for-each>
@@ -1686,19 +1715,18 @@
 
 	<xsl:if test="not(//lookup/library[held = 1 and ( isbn = $isbn  or oclc = $oclc)]/@available = 'true')">
 		<xsl:element name="{$element}">
-			<xsl:attribute name="class"><xsl:value-of select="$class" /></xsl:attribute>
-			<img src="images/ill.gif" alt="" class="mangoILL" /> 
+			<xsl:attribute name="class"><xsl:value-of select="$class" /></xsl:attribute> 
 			<a target="_blank" href="./?base=books&amp;action=ill&amp;oclc={$oclc}" style="color: green">
-				<xsl:text>We'll get a copy for you </xsl:text>
 				<xsl:choose>
-					<xsl:when test="$source = 'regional'">
-						<xsl:text> in 3-5 days</xsl:text>
+					<xsl:when test="//mango_groups/group[@id = $source]/lookup/ill_text">
+						<img src="images/ill.gif" alt="" class="mangoILL" border="0" />
+						<xsl:value-of select="//mango_groups/group[@id = $source]/lookup/ill_text" />
 					</xsl:when>
-					<xsl:when test="$source = 'world'">
-						<xsl:text> in 5-10 days</xsl:text>
-					</xsl:when>
+					<xsl:otherwise>
+						<img src="images/sfx.gif" alt="" class="mangoILL" border="0" />
+						<xsl:text>Check for availability </xsl:text>
+					</xsl:otherwise>
 				</xsl:choose>
-			
 			</a>
 		</xsl:element>
 	</xsl:if>
@@ -1715,17 +1743,46 @@
 	<xsl:param name="class" />
 	<xsl:param name="oclc" />
 	
-	<!--
-	
-	<xsl:element name="{$element}">
-		<xsl:attribute name="class"><xsl:value-of select="$class" /></xsl:attribute>
-		<img id="folder_{$oclc}" src="images/folder.gif" width="17" height="15" alt="" border="0" />
-		<xsl:text> </xsl:text>
-		<a id="link_{$oclc}" href="" class="saveThisRecord resultsFullText">Save this record</a>
-	</xsl:element>
-	
-	-->
+	<xsl:variable name="record_id">worldcat:<xsl:value-of select="$oclc" /></xsl:variable>
 		
+	<xsl:element name="{$element}">
+	
+		<xsl:attribute name="class"><xsl:value-of select="$class" /> recordOptions</xsl:attribute>
+
+		<img id="folder_worldcat{$oclc}" width="17" height="15" alt="" border="0" >
+		<xsl:attribute name="src">
+			<xsl:choose> 
+				<xsl:when test="//request/session/resultssaved[@key = $record_id]">images/folder_on.gif</xsl:when>
+				<xsl:otherwise>images/folder.gif</xsl:otherwise>
+			</xsl:choose>
+		</xsl:attribute>
+		</img>
+
+		<xsl:text> </xsl:text>
+		<a id="link_worldcat:{$oclc}" 
+			href="{../save_url}">
+			<xsl:attribute name="class">
+				saveThisRecord resultsFullText <xsl:if test="//request/session/resultssaved[@key = $record_id]">saved</xsl:if>
+			</xsl:attribute>
+			<xsl:choose>
+				<xsl:when test="//request/session/resultssaved[@key = $record_id]">Record saved</xsl:when>
+				<xsl:otherwise>Save this record</xsl:otherwise>
+			</xsl:choose>
+		</a>
+
+		<!-- label/tag input for saved records, if record is saved and it's not a temporary session -->
+									
+		<xsl:if test="//request/session/resultssaved[@key = $record_id] and not(//request/session/role = 'guest' or //request/session/role = 'local')">
+			<div class="results_label resultsFullText" id="label_{$record_id}" > 
+				<xsl:call-template name="tag_input">
+					<xsl:with-param name="record" select="//saved_records/saved[@id = $record_id]" />
+					<xsl:with-param name="context" select="'the results page'" />
+				</xsl:call-template>	
+			</div>
+		</xsl:if>
+			
+	</xsl:element>
+			
 </xsl:template>
 
 </xsl:stylesheet>
