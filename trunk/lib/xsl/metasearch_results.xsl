@@ -462,7 +462,7 @@
               <xsl:when test="embeddedText/paragraph">
                   <a href="{$record_link}" class="resultsFulltext">
                     <img src="{$base_url}/images/famfamfam/page_go.png" alt="" />
-                    Text in <xsl:value-of select="/*/config/application_name"/> record
+                    Text in <xsl:value-of select="//config/application_name"/> record
                   </a>
               </xsl:when>
 						</xsl:choose>
@@ -558,11 +558,12 @@
 
 <xsl:template name="facet_display">
 
-	<xsl:variable name="node_pos" select="@position" />
 	<xsl:param name="group" />
 	<xsl:param name="this_result_set" />
 	<xsl:param name="facet_number" />
 	<xsl:param name="facet_return" />
+
+	<xsl:variable name="node_pos" select="@position" />
 
 	<xsl:if test="@node_level = 1">
 		<li>
