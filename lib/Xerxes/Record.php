@@ -66,6 +66,7 @@
 		private $strDegree = "";			// thesis degree conferred
 		private $strInstitution = "";		// thesis granting institution
 		
+		private $strDescription = "";		// physical description
 		private $strAbstract = "";			// abstract
 		private $strSummary = "";			// summary
     	private $arrEmbeddedText = array(); // full text
@@ -292,10 +293,11 @@
 				$objLeader = $objXPath->query("//marc:leader")->item(0);
 				$strLeaderMetalib =  $this->extractMarcControlField($objXPath, "LDR");
 	
-				// edition and extent
+				// edition, extent, description
 				
 				$this->strEdition = $this->extractMarcDataField($objXPath, 250, "a");			
 				$this->strTPages = $this->extractMarcDataField($objXPath, 300, "a");
+				$this->strDescription = $this->extractMarcDataField($objXPath, 300, "*");
 				
 				// publisher
 				
@@ -1539,6 +1541,7 @@
 			if ($this->getSeriesTitle() != null ) $objRecord->appendChild($objXml->createElement("series_title", $this->escapeXML($this->getSeriesTitle())));
 			if ($this->getAbstract() != null ) $objRecord->appendChild($objXml->createElement("abstract", $this->escapeXML($this->getAbstract()))); 
 			if ($this->getSummary() != null ) $objRecord->appendChild($objXml->createElement("summary", $this->escapeXML($this->getSummary()))); 
+			if ($this->getDescription() != null ) $objRecord->appendChild($objXml->createElement("description", $this->escapeXML($this->getDescription())));
 			if ($this->getLanguage() != null ) $objRecord->appendChild($objXml->createElement("language", $this->escapeXML($this->getLanguage()))); 
 			if ($this->getPlace() != null ) $objRecord->appendChild($objXml->createElement("place", $this->escapeXML($this->getPlace()))); 
 			if ($this->getPublisher() != null ) $objRecord->appendChild($objXml->createElement("publisher", $this->escapeXML($this->getPublisher()))); 
@@ -3345,6 +3348,8 @@
 				
 		public function getAbstract() { return $this->strAbstract; }
 		public function getSummary() { return $this->strSummary; }
+		public function getDescription() { return $this->strDescription; }
+		
 		public function getEmbeddedText() { return $this->arrEmbeddedText; }
 		public function getLanguage() { return $this->strLanguage; }
 		public function getTOC() { return $this->strTOC; }
