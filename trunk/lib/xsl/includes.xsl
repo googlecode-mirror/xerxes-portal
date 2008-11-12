@@ -663,7 +663,12 @@
 			<!-- advanced search stuff is output even if we are in simple mode, but with display:none. 
 			Javascriptiness may easily toggle without reload that way. -->
 			
-			<label for="find_operator1" class="ada"><xsl:value-of select="$text_searchbox_ada_boolean" /></label>
+			<label id="find_operator1label" for="find_operator1" class="ada">
+				<xsl:if test="not($advanced_mode)">
+					<xsl:attribute name="style">display:none;</xsl:attribute>
+				</xsl:if>
+				<xsl:value-of select="$text_searchbox_ada_boolean" />
+			</label>
 			
 			<xsl:text> </xsl:text>
 
@@ -697,7 +702,12 @@
 				</xsl:if>
 			</br>
 			
-			<label for="field2" class="ada"><xsl:value-of select="$text_searchbox_search" /></label>
+			<label id="field2label" for="field2" class="ada">
+				<xsl:if test="not($advanced_mode)">
+					<xsl:attribute name="style">display:none;</xsl:attribute>
+				</xsl:if>
+				<xsl:value-of select="$text_searchbox_search" />
+			</label>
 			
 			<span id="searchBox_advanced_pair">
 				<xsl:if test="not($advanced_mode)">

@@ -43,6 +43,10 @@
 			
 		$("find_operator1").enable();
 		$("find_operator1").show();
+		
+		// ada labels
+		$("find_operator1label").show();
+		$("field2label").show();
 
 		$("searchBox_advanced_newline").show();
 		
@@ -73,6 +77,10 @@
 		
 		$("searchBox_advanced_newline").hide();
 		
+		// ada labels
+		$("find_operator1label").hide();
+		$("field2label").hide();
+
 		$("searchBox_advanced_pair").hide();
 		$("query2").disable();
 		$("field2").disable();		
