@@ -17,18 +17,12 @@
 <xsl:include href="includes.xsl" />
 <xsl:output method="html" encoding="utf-8" indent="yes" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
 
-<!-- If you'd like details provided for the home page database search (what
-     databases are included, etc. Override this to true() in your local
-     xsl includes.xsl or databases_categories.xsl -->
-<xsl:variable name="homepage_search_details" select="false()" />
-
 <!-- Should the full metasearch form be used, instead a smaller
      simpler one? Defaults to a simpler one, override to false()
      in local xsl includes.xsl or database_categories.xsl if you
      want the full one. -->
+	 
 <xsl:variable name="homepage_use_simple_search" select="true()" />
-
-
 
 <xsl:template match="/knowledge_base">
 	<xsl:call-template name="surround" />
@@ -58,26 +52,7 @@
 					
 					<div id="categories_quicksearch">
 						<h2><xsl:value-of select="$quick_search_category" /></h2>
-						<p>
-							Search <xsl:value-of select="count(//category[1]/subcategory[1]/database)"/> of our most popular 
-							databases<xsl:choose>
-								<xsl:when test="$homepage_search_details">:	
-									<xsl:for-each select="//category[1]/subcategory[1]/database">
-										<a>
-										<xsl:attribute name="href"><xsl:value-of select="url"/></xsl:attribute>
-										<xsl:value-of select="title_display"/>
-										</a><xsl:if test="position() != last()">
-										<xsl:text>, </xsl:text>
-										</xsl:if>
-									</xsl:for-each>.
-									See all <a>
-									<xsl:attribute name="href"><xsl:value-of select="//category[1]/url"/></xsl:attribute>
-									<xsl:value-of select="//category[1]/@name"/> databases.
-									</a>
-								</xsl:when>
-								<xsl:otherwise>.</xsl:otherwise>
-							</xsl:choose>
-						</p>
+						<p><xsl:value-of select="$text_databases_category_quick_desc" /></p>
 						<div id="search">
 							<xsl:choose>
 								<xsl:when test="$homepage_use_simple_search">
@@ -101,8 +76,8 @@
 			</div>
 			
 			<div class="categories">
-				<h2>Search by Subject</h2>
-				<p>Search databases specific to your area of study.</p>
+				<h2><xsl:value-of select="$text_databases_category_subject" /></h2>
+				<p><xsl:value-of select="$text_databases_category_subject_desc" /></p>
 				<xsl:variable name="total" select="count(categories/category)" />
 				
 				<table class="categoriesTable">

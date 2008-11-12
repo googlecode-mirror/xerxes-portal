@@ -92,7 +92,6 @@
 		public function loadXML( $xml )
 		{
 			// type check
-
       
 			if ( ! ( is_string($xml) || get_class($xml) == "DOMDocument" || get_class($xml) == "DOMElement" ) )
 				throw new Exception("param 1 must be XML of type string, DOMDocument, or DOMElement");
@@ -1551,6 +1550,7 @@
 			if ($this->getIssue() != null ) $objRecord->appendChild($objXml->createElement("issue", $this->escapeXML($this->getIssue()))); 
 			if ($this->getStartPage() != null ) $objRecord->appendChild($objXml->createElement("start_page", $this->escapeXML($this->getStartPage()))); 
 			if ($this->getEndPage() != null ) $objRecord->appendChild($objXml->createElement("end_page", $this->escapeXML($this->getEndPage()))); 
+			if ($this->getExtent()!= null ) $objRecord->appendChild($objXml->createElement("extent", $this->escapeXML($this->getExtent())));
 			if ($this->getInstitution() != null ) $objRecord->appendChild($objXml->createElement("institution", $this->escapeXML($this->getInstitution()))); 
 			if ($this->getDegree() != null ) $objRecord->appendChild($objXml->createElement("degree", $this->escapeXML($this->getDegree()))); 
 			if ($this->getDatabaseName() != null ) $objRecord->appendChild($objXml->createElement("database_name", $this->escapeXML($this->getDatabaseName()))); 
@@ -1828,13 +1828,18 @@
 			
 			// rft.ed_number not an actual openurl 1.0 standard element, 
 			// but sfx recognizes it. But only add if the eric type
-      // is ED, adding an EJ or other as an ED just confuses SFX. 
-			if ($this->strEric ) {
-        $strEricType = substr($this->strEric, 0, 2);
-        if ($strEricType == "ED") {
-          $arrReferant["rft.ed_number"] = $this->strEric;
-        }        
-      }
+			// is ED, adding an EJ or other as an ED just confuses SFX. 
+			
+			if ( $this->strEric )
+			{
+				$strEricType = substr( $this->strEric, 0, 2 );
+				
+				if ( $strEricType == "ED" )
+				{
+					$arrReferant["rft.ed_number"] = $this->strEric;
+				}
+			}
+			
 			$arrReferant["rft.series"] = $this->strSeriesTitle;
 			$arrReferant["rft.place"] = $this->strPlace;
 			$arrReferant["rft.pub"] = $this->strPublisher;
@@ -3353,6 +3358,7 @@
 		public function getIssue() { return $this->strIssue; }
 		public function getStartPage() { return $this->strStartPage; }
 		public function getEndPage() { return $this->strEndPage; }
+		public function getExtent() { return  $this->strTPages; }
 		
 		public function getDatabaseName() { return $this->strDatabaseName; }
 		
