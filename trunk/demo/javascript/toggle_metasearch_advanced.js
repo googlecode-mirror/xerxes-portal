@@ -6,7 +6,7 @@
 	* true or false in parent page, depending on initially displayed mode. 
 	*/
 	
-	addEvent(window, 'load', addToggle);
+	addEvent(window, 'load', addToggle); 
 	
 	function addToggle()
 	{
@@ -15,10 +15,14 @@
 			$('searchBox_toggle').onclick = function () {
 				return toggleSearchMode();
 			}
+
 		}
 	}
 
 	function toggleSearchMode() {
+    /* Guess at advancedMode if it hasn't been set */
+    ensureSetAdvancedMode();
+    
 		if ( advancedMode ) {
 		hideAdvancedFeatures();
 		advancedMode = false;
@@ -31,6 +35,14 @@
 		return false;
 
 	}
+  
+  /* If advancedMode hasn't been set in global js variable, guess and
+     set it. */
+  function ensureSetAdvancedMode() {
+    if (typeof(window['advancedMode']) == "undefined") {
+      advancedMode = ($("find_operator1") && $("find_operator1").getStyle('display') != 'none' );
+    }
+  }
 	
 	function showAdvancedFeatures() {
 		// Add options for advanced, preserve selection. 
