@@ -1,0 +1,43 @@
+#summary Tips when you have control over host page for snippets
+
+= Introduction =
+
+You can use the Xerxes 'snippet generators' to embed certain Xerxes content on another HTML page. Currently this includes portions of a Xerxes 'subject' page, or a database detail page. 
+
+Even if you have very little control over the environment you will be embedding the snippet, this can still work reasonably well. 
+
+But when you DO have control of the environment, there are a few things you can do to make it work even better. 
+
+
+= Styling the look =
+
+The subject snippet generator lets you decide whether to include CSS styles with your snippet. However, this is off by default because the way it works is a bit wonky, it's a last resort. 
+
+Better, if you have control over the host page and are not scared of HTML (or have a web admin you can share this info with who meets those criteria), is to link on the host page to the proper CSS files to make the embedded snippets look just like they do in Xerxes. 
+
+In the <head> section of your HTML, include a <link> element to the Xerxes stylesheet:
+
+{{{
+ <link href="http://yourxerxes.university.edu/css/reset.css?xerxes_version=1.4"  rel="stylesheet" type="text/css">
+}}}
+
+If you'd like to customize the look and feel on your particular host page, the best way is to include that line, then AFTER that line, include some more style definitions over-riding certain aspects there. 
+
+Even if you have multiple Xerxes embed snippets on a page, you only need to include this content once on your page. 
+
+= Activating the javascript =
+
+You'll notice in Xerxes, if the browser has javascript enabled, clicking on 'more options' on a search box adds more options without a page reload. But in your embedded content on a host page, clicking 'more options' just sends you to a Xerxes page. 
+
+Would you like the 'more options' to seamlessly add more options right there on your host page, without a page reload?  Simply reference some Xerxes javascript files in the <head> section of your page:
+
+{{{
+<script src="http://jhsearch.library.jhu.edu/javascript/prototype.js" language="javascript" type="text/javascript"></script>
+<script xmlns="" src="http://jhsearch.library.jhu.edu/javascript/scriptaculous/scriptaculous.js" language="javascript" type="text/javascript"></script>
+<script src="http://jhsearch.library.jhu.edu/javascript/onload.js" language="javascript" type="text/javascript"></script>
+<script xmlns="" src="http://jhsearch.library.jhu.edu/javascript/toggle_metasearch_advanced.js" language="javascript" type="text/javascript"></script>}}}
+}}}
+
+If you don't have access to the <head> portion of the page, this should also work in the <body>. 
+
+Even if you have multiple Xerxes embed snippets on a page, you only need to include this content once on your page. 
