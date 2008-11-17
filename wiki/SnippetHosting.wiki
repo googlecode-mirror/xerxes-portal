@@ -15,7 +15,7 @@ The subject snippet generator lets you decide whether to include CSS styles with
 
 Better, if you have control over the host page and are not scared of HTML (or have a web admin you can share this info with who meets those criteria), is to link on the host page to the proper CSS files to make the embedded snippets look just like they do in Xerxes. 
 
-In the <head> section of your HTML, include a <link> element to the Xerxes stylesheet:
+In the 'head' section of your HTML, include a 'link' element to the Xerxes stylesheet:
 
 {{{
  <link href="http://yourxerxes.university.edu/css/reset.css?xerxes_version=1.4"  rel="stylesheet" type="text/css">
@@ -29,7 +29,7 @@ Even if you have multiple Xerxes embed snippets on a page, you only need to incl
 
 You'll notice in Xerxes, if the browser has javascript enabled, clicking on 'more options' on a search box adds more options without a page reload. But in your embedded content on a host page, clicking 'more options' just sends you to a Xerxes page. 
 
-Would you like the 'more options' to seamlessly add more options right there on your host page, without a page reload?  Simply reference some Xerxes javascript files in the <head> section of your page:
+Would you like the 'more options' to seamlessly add more options right there on your host page, without a page reload?  Simply reference some Xerxes javascript files in the 'head' section of your page:
 
 {{{
 <script src="http://jhsearch.library.jhu.edu/javascript/prototype.js" language="javascript" type="text/javascript"></script>
@@ -38,6 +38,6 @@ Would you like the 'more options' to seamlessly add more options right there on 
 <script xmlns="" src="http://jhsearch.library.jhu.edu/javascript/toggle_metasearch_advanced.js" language="javascript" type="text/javascript"></script>}}}
 }}}
 
-If you don't have access to the <head> portion of the page, this should also work in the <body>. 
+If you don't have access to the 'head' portion of the page, this should also work in the 'body'. 
 
 Even if you have multiple Xerxes embed snippets on a page, you only need to include this content once on your page. 
