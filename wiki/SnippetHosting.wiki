@@ -8,6 +8,10 @@ Even if you have very little control over the environment you will be embedding 
 
 But when you DO have control of the environment, there are a few things you can do to make it work even better. 
 
+In the example below, replace "http://yourxerxes.university.edu/" with your particular base path to Xerxes, which depending on how you've set up xerxes, might have another path compontent too, eg:
+
+* http://xerxes.university.edu/xerxes
+
 
 = Styling the look =
 
@@ -32,10 +36,10 @@ You'll notice in Xerxes, if the browser has javascript enabled, clicking on 'mor
 Would you like the 'more options' to seamlessly add more options right there on your host page, without a page reload?  Simply reference some Xerxes javascript files in the 'head' section of your page:
 
 {{{
-<script src="http://jhsearch.library.jhu.edu/javascript/prototype.js" language="javascript" type="text/javascript"></script>
-<script xmlns="" src="http://jhsearch.library.jhu.edu/javascript/scriptaculous/scriptaculous.js" language="javascript" type="text/javascript"></script>
-<script src="http://jhsearch.library.jhu.edu/javascript/onload.js" language="javascript" type="text/javascript"></script>
-<script xmlns="" src="http://jhsearch.library.jhu.edu/javascript/toggle_metasearch_advanced.js" language="javascript" type="text/javascript"></script>}}}
+<script src="http://yourxerxes.university.edu/javascript/prototype.js" language="javascript" type="text/javascript"></script>
+<script xmlns="" src="http://yourxerxes.university.edu/javascript/scriptaculous/scriptaculous.js" language="javascript" type="text/javascript"></script>
+<script src="http://yourxerxes.university.edu/javascript/onload.js" language="javascript" type="text/javascript"></script>
+<script xmlns="" src="http://yourxerxes.university.edu/javascript/toggle_metasearch_advanced.js" language="javascript" type="text/javascript"></script>}}}
 }}}
 
 If you don't have access to the 'head' portion of the page, this should also work in the 'body'. 
