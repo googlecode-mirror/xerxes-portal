@@ -52,7 +52,7 @@
 					
 					<div id="categories_quicksearch">
 						<h2><xsl:value-of select="$quick_search_category" /></h2>
-						<p><xsl:value-of select="$text_databases_category_quick_desc" /></p>
+						<p><xsl:copy-of select="$text_databases_category_quick_desc" /></p>
 						<div id="search">
 							<xsl:choose>
 								<xsl:when test="$homepage_use_simple_search">
