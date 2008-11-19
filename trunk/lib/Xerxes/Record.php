@@ -1825,7 +1825,7 @@
 			
 			$arrReferant["rft.genre"] = $this->convertGenreOpenURL($this->strFormat);
 			
-			if ( $this->strOCLC != "" ) $arrReferant["rfr_id"] = "info:oclcnum/" . $this->strOCLC;
+			if ( $this->strOCLC != "" ) $arrReferant["rft_id"] = "info:oclcnum/" . $this->strOCLC;
 			if ( count($this->arrIsbn) > 0 ) $arrReferant["rft.isbn"] = $this->arrIsbn[0];
 			if ( count($this->arrIssn) > 0 ) $arrReferant["rft.issn"] = $this->arrIssn[0];
 			
