@@ -36,10 +36,10 @@ But in the Metalib KB, all we have is URLs for native interfaces. To group by do
 
 To calculate the domain, first the hostname is extracted from the native interface URL. If the hostname can not be extracted (perhaps the URL is mal-formed), a warning is output and the particular db is skipped. Otherwise, to find the domain:
 
-# If the hostname is given as a numeric IP address, then the hostname is the domain
-# If the hostname has only two components (ie, "university.edu" rather than "machine.university.edu"), then the hostname is the domain. 
-# If the hostname has at least three components, then take off the least significant component to make the hostname (ie, "machine.vendor.com" turns to "university.edu", and "machine.sub.vendor.com" turns to "sub.vendor.com)
-# If the domain you end up with by above is included in the Xerxes config variable "ezp_exp_domain_avoid" (comma-delimited list of domains), then use the hostname as above. If the hostname too is in included in ezp_exp_domain_avoid, then omit this database, and print a warning. 
+  # If the hostname is given as a numeric IP address, then the hostname is the domain
+  # If the hostname has only two components (ie, "university.edu" rather than "machine.university.edu"), then the hostname is the domain. 
+  # If the hostname has at least three components, then take off the least significant component to make the hostname (ie, "machine.vendor.com" turns to "university.edu", and "machine.sub.vendor.com" turns to "sub.vendor.com)
+  # If the domain you end up with by above is included in the Xerxes config variable "ezp_exp_domain_avoid" (comma-delimited list of domains), then use the hostname as above. If the hostname too is in included in ezp_exp_domain_avoid, then omit this database, and print a warning. 
 
 == Output of a Domain Group ==
 
