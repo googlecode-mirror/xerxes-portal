@@ -76,8 +76,8 @@
 			</div>
 			
 			<div class="categories">
-				<h2><xsl:value-of select="$text_databases_category_subject" /></h2>
-				<p><xsl:value-of select="$text_databases_category_subject_desc" /></p>
+				<h2><xsl:copy-of select="$text_databases_category_subject" /></h2>
+				<p><xsl:copy-of select="$text_databases_category_subject_desc" /></p>
 				<xsl:variable name="total" select="count(categories/category)" />
 				
 				<table class="categoriesTable">

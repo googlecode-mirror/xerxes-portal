@@ -194,14 +194,14 @@
 								<a href="{../url_open}" class="resultsFullText" target="{$link_target}">
 									<img src="{$base_include}/images/html.gif" alt="full text online" width="16" height="16" border="0" />
                   <xsl:text> </xsl:text>
-                  <xsl:value-of select="$text_link_resolver_available" />
+                  <xsl:copy-of select="$text_link_resolver_available" />
 								</a>
 							</xsl:when>
 							<xsl:otherwise>
 								<a href="{../url_open}" class="resultsFullText" target="{$link_target}">
 									<img src="{$base_url}/images/sfx.gif" alt="" />
                   <xsl:text> </xsl:text>
-                  <xsl:value-of select="$text_link_resolver_check" />
+                  <xsl:copy-of select="$text_link_resolver_check" />
 								</a>
 							</xsl:otherwise>
 							</xsl:choose>

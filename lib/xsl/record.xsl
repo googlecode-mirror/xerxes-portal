@@ -229,7 +229,7 @@
                 <a href="{$base_url}/./?base=metasearch&amp;action=sfx&amp;resultSet={$result_set}&amp;startRecord={$record_number}" class="resultsFullText"	target="{$link_target}" >
                   <img src="{$base_url}/images/sfx.gif" alt="" />
                   <xsl:text> </xsl:text>
-                  <xsl:value-of select="$text_link_resolver_check" />
+                  <xsl:copy-of select="$text_link_resolver_check" />
                 </a>
               </xsl:if>
 						</xsl:when>
@@ -239,7 +239,7 @@
                 <a href="{$base_url}/?base=folder&amp;action=redirect&amp;type=openurl&amp;id={$id}" class="resultsFullText"	target="{$link_target}" >
                   <img src="{$base_url}/images/sfx.gif" alt="" />
                   <xsl:text> </xsl:text>
-                  <xsl:value-of select="$text_link_resolver_check" />
+                  <xsl:copy-of select="$text_link_resolver_check" />
                 </a>
               </xsl:if>
 							

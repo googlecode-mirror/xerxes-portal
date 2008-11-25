@@ -141,11 +141,9 @@
 	<head>
 	<title><xsl:call-template name="title" /></title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<xsl:call-template name="css_include" />
 	<xsl:call-template name="header" />
 	<base href="{$base_include}/" />
-
-  <xsl:call-template name="css_include" />
-
 	</head>
 	<body>
 	<xsl:if test="request/action = 'subject'">
@@ -156,7 +154,7 @@
 		<xsl:if test="not(request/session/ada)">
 			<xsl:variable name="return_url" select="php:function('urlencode', string(request/server/request_uri))" />
 			<a href="{$base_url}/?base=databases&amp;action=accessible&amp;return={$return_url}">
-				<xsl:value-of select="$text_ada_version" /> 
+				<xsl:copy-of select="$text_ada_version" /> 
 			</a>
 		</xsl:if>
 	</div>
@@ -190,11 +188,13 @@
 <!-- TEMPLATE: CSS_INCLUDE 
 -->
 <xsl:template name="css_include">
-  <link href="{$base_include}/css/reset.css?xerxes_version={$xerxes_version}" rel="stylesheet" type="text/css" />
-  <link href="{$base_include}/css/xerxes-blue.css?xerxes_version={$xerxes_version}" rel="stylesheet" type="text/css" />
-  <link href="{$base_include}/css/local.css?xerxes_version={$xerxes_version}" rel="stylesheet" type="text/css" />
 
-  <!-- print media overrides -->
+	<link href="{$base_include}/css/reset.css?xerxes_version={$xerxes_version}" rel="stylesheet" type="text/css" />
+	<link href="{$base_include}/css/xerxes-blue.css?xerxes_version={$xerxes_version}" rel="stylesheet" type="text/css" />
+	<link href="{$base_include}/css/local.css?xerxes_version={$xerxes_version}" rel="stylesheet" type="text/css" />
+
+	<!-- print media overrides -->
+	
 	<link href="{$base_include}/css/xerxes-print.css?xerxes_version={$xerxes_version}" rel="stylesheet" type="text/css" media="print" />
 
 </xsl:template>
@@ -407,7 +407,7 @@
 			<span class="breadcrumbHere">Home</span>
 		</xsl:when>
 		<xsl:otherwise>
-			<a href="{$base_url}">Home</a> <xsl:value-of select="$text_breadcrumb_seperator" />  
+			<a href="{$base_url}">Home</a> <xsl:copy-of select="$text_breadcrumb_seperator" />  
 		</xsl:otherwise>
 	</xsl:choose>
 
@@ -473,29 +473,29 @@
 						</xsl:when>
 						<xsl:otherwise><xsl:text>Databases</xsl:text></xsl:otherwise>
 					</xsl:choose>
-				</a> <xsl:value-of select="$text_breadcrumb_seperator" />
+				</a> <xsl:copy-of select="$text_breadcrumb_seperator" />
 			</xsl:if>
 			<span class="breadcrumbHere"><xsl:value-of select="//title_display" /></span>
 		</xsl:when>
 		<xsl:when test="request/base = 'metasearch' and request/action = 'hits'">
-			<a href="{$context_url}"><xsl:value-of select="results/search/context" /></a> <xsl:value-of select="$text_breadcrumb_seperator" /> 
+			<a href="{$context_url}"><xsl:value-of select="results/search/context" /></a> <xsl:copy-of select="$text_breadcrumb_seperator" /> 
 			<span class="breadcrumbHere">Searching</span>
 		</xsl:when>
 		<xsl:when test="request/base = 'metasearch' and request/action = 'results'">
-			<a href="{$context_url}"><xsl:value-of select="results/search/context" /></a> <xsl:value-of select="$text_breadcrumb_seperator" /> 
+			<a href="{$context_url}"><xsl:value-of select="results/search/context" /></a> <xsl:copy-of select="$text_breadcrumb_seperator" /> 
 			<span class="breadcrumbHere"><xsl:value-of select="results/database" /></span>
 		</xsl:when>
 		<xsl:when test="request/base = 'metasearch' and request/action = 'facet'">
-			<a href="{$context_url}"><xsl:value-of select="results/search/context" /></a> <xsl:value-of select="$text_breadcrumb_seperator" /> 
-			<a href="{$return}"><xsl:value-of select="results/database" /></a> <xsl:value-of select="$text_breadcrumb_seperator" />
+			<a href="{$context_url}"><xsl:value-of select="results/search/context" /></a> <xsl:copy-of select="$text_breadcrumb_seperator" /> 
+			<a href="{$return}"><xsl:value-of select="results/database" /></a> <xsl:copy-of select="$text_breadcrumb_seperator" />
 			<span class="breadcrumbHere"><xsl:value-of select="results/facet_name" /></span>
 		</xsl:when>
 		<xsl:when test="request/base = 'metasearch' and request/action = 'record'">
-			<a href="{$context_url}"><xsl:value-of select="results/search/context" /></a> <xsl:value-of select="$text_breadcrumb_seperator" /> 
+			<a href="{$context_url}"><xsl:value-of select="results/search/context" /></a> <xsl:copy-of select="$text_breadcrumb_seperator" /> 
 			
 			<xsl:choose>
 				<xsl:when test="$return != ''">
-					<a href="{$return}">Results</a> <xsl:value-of select="$text_breadcrumb_seperator" />
+					<a href="{$return}">Results</a> <xsl:copy-of select="$text_breadcrumb_seperator" />
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:variable name="parent_resultset">
@@ -506,7 +506,7 @@
 						<xsl:value-of select="(floor( ($start_record	- 1 ) div $records_per_page) * $records_per_page) + 1" />
 					</xsl:variable>
 					
-					<a href="{$parent_resultset}">Results</a> <xsl:value-of select="$text_breadcrumb_seperator" />
+					<a href="{$parent_resultset}">Results</a> <xsl:copy-of select="$text_breadcrumb_seperator" />
 				</xsl:otherwise>
 			</xsl:choose>
 			<span class="breadcrumbHere">Record</span>
@@ -514,7 +514,7 @@
 		<xsl:when test="request/base = 'folder' and request/action = 'home'">
 			<xsl:choose>
 				<xsl:when test="request/label or request/type">
-					<a href="{$folder}">My Saved Records</a> <xsl:value-of select="$text_breadcrumb_seperator" />
+					<a href="{$folder}">My Saved Records</a> <xsl:copy-of select="$text_breadcrumb_seperator" />
 					<span class="breadcrumbHere"><xsl:value-of select="request/label|request/type" /></span>
 				</xsl:when>
 				<xsl:otherwise>
@@ -523,23 +523,23 @@
 			</xsl:choose>
 		</xsl:when>
 		<xsl:when test="request/base = 'folder' and request/action = 'output_email'">
-			<a href="{$folder}">My Saved Records</a> <xsl:value-of select="$text_breadcrumb_seperator" /> 
+			<a href="{$folder}">My Saved Records</a> <xsl:copy-of select="$text_breadcrumb_seperator" /> 
 			<span class="breadcrumbHere">Email</span>
 		</xsl:when>
 		<xsl:when test="request/base = 'folder' and request/action = 'output_export_endnote'">
-			<a href="{$folder}">My Saved Records</a> <xsl:value-of select="$text_breadcrumb_seperator" /> 
+			<a href="{$folder}">My Saved Records</a> <xsl:copy-of select="$text_breadcrumb_seperator" /> 
 			<span class="breadcrumbHere">Download to Endnote</span>
 		</xsl:when>
 		<xsl:when test="request/base = 'folder' and request/action = 'output_refworks'">
-			<a href="{$folder}">My Saved Records</a> <xsl:value-of select="$text_breadcrumb_seperator" /> 
+			<a href="{$folder}">My Saved Records</a> <xsl:copy-of select="$text_breadcrumb_seperator" /> 
 			<span class="breadcrumbHere">Export to Refworks</span>
 		</xsl:when>
 		<xsl:when test="request/base = 'folder' and request/action = 'output_export_text'">
-			<a href="{$folder}">My Saved Records</a> <xsl:value-of select="$text_breadcrumb_seperator" /> 
+			<a href="{$folder}">My Saved Records</a> <xsl:copy-of select="$text_breadcrumb_seperator" /> 
 			<span class="breadcrumbHere">Download to Text File</span>
 		</xsl:when>
 		<xsl:when test="request/base = 'folder' and request/action = 'full'">
-			<a href="{$folder}">My Saved Records</a> <xsl:value-of select="$text_breadcrumb_seperator" /> 
+			<a href="{$folder}">My Saved Records</a> <xsl:copy-of select="$text_breadcrumb_seperator" /> 
 			<span class="breadcrumbHere">Record</span>
 		</xsl:when>	
 		
@@ -550,7 +550,7 @@
 				</xsl:attribute>
 				<xsl:value-of select="//category/@name" />
 			</a>
-			<xsl:value-of select="$text_breadcrumb_seperator" />
+			<xsl:copy-of select="$text_breadcrumb_seperator" />
 			<span class="breadcrumbHere">Create Snippet</span>
 		</xsl:when>
 		<xsl:when test="request/base = 'embed' and request/action = 'gen_database'">
@@ -560,7 +560,7 @@
 				</xsl:attribute>
 				<xsl:value-of select="//title_display" />
 			</a>
-			<xsl:value-of select="$text_breadcrumb_seperator" />
+			<xsl:copy-of select="$text_breadcrumb_seperator" />
 			<span class="breadcrumbHere">Create Snippet</span>
 		</xsl:when>
 		<xsl:otherwise>
@@ -592,13 +592,13 @@
 			<xsl:when test="request/session/role and request/session/role != 'local'">
 				<a>
 			<xsl:attribute name="href"><xsl:value-of select="navbar/element[@id = 'logout']/url" /></xsl:attribute>
-			<xsl:value-of select="$text_header_logout" />
+			<xsl:copy-of select="$text_header_logout" />
 			</a>
 			</xsl:when>
 			<xsl:otherwise>
 				<a>
 			<xsl:attribute name="href"><xsl:value-of select="navbar/element[@id = 'login']/url" /></xsl:attribute>
-			<xsl:value-of select="$text_header_login" /></a>
+			<xsl:copy-of select="$text_header_login" /></a>
 			</xsl:otherwise>
 			</xsl:choose>
 		</span>
@@ -616,7 +616,7 @@
 			<xsl:text> </xsl:text>
 			<a>
 			<xsl:attribute name="href"><xsl:value-of select="navbar/element[@id='saved_records']/url" /></xsl:attribute>
-			<xsl:value-of select="$text_header_savedrecords" />
+			<xsl:copy-of select="$text_header_savedrecords" />
 		</a>
 		</span>
 	</div>
@@ -649,7 +649,7 @@
 		<xsl:variable name="advanced_mode" select="$global_advanced_mode" />
 		
 		<div id="searchLabel">
-			<label for="field"><xsl:value-of select="$text_searchbox_search" /></label>
+			<label for="field"><xsl:copy-of select="$text_searchbox_search" /></label>
 		</div>
 		
 		<div id="searchInputs">
@@ -667,7 +667,7 @@
 				<xsl:if test="not($advanced_mode)">
 					<xsl:attribute name="style">display:none;</xsl:attribute>
 				</xsl:if>
-				<xsl:value-of select="$text_searchbox_ada_boolean" />
+				<xsl:copy-of select="$text_searchbox_ada_boolean" />
 			</label>
 			
 			<xsl:text> </xsl:text>
@@ -680,19 +680,19 @@
 					<xsl:if test="$find_operator = 'AND'">
 						<xsl:attribute name="selected">selected</xsl:attribute>
 					</xsl:if>
-					<xsl:value-of select="$text_searchbox_boolean_and" />
+					<xsl:copy-of select="$text_searchbox_boolean_and" />
 				</option>
 				<option value="OR">
 					<xsl:if test="$find_operator = 'OR'">
 						<xsl:attribute name="selected">selected</xsl:attribute>
 					</xsl:if>
-				<xsl:value-of select="$text_searchbox_boolean_or" />
+				<xsl:copy-of select="$text_searchbox_boolean_or" />
 				</option>
 				<option value="NOT">
 					<xsl:if test="$find_operator = 'NOT'">
 						<xsl:attribute name="selected">selected</xsl:attribute>
 					</xsl:if>
-				<xsl:value-of select="$text_searchbox_boolean_without" />
+				<xsl:copy-of select="$text_searchbox_boolean_without" />
 				</option>
 			</select>
 		
@@ -706,7 +706,7 @@
 				<xsl:if test="not($advanced_mode)">
 					<xsl:attribute name="style">display:none;</xsl:attribute>
 				</xsl:if>
-				<xsl:value-of select="$text_searchbox_search" />
+				<xsl:copy-of select="$text_searchbox_search" />
 			</label>
 			
 			<span id="searchBox_advanced_pair">
@@ -726,7 +726,7 @@
 		
 		<xsl:if test="results/search/spelling != ''">
 			<xsl:variable name="spell_url" select="results/search/spelling_url" />
-			<p class="errorSpelling"><xsl:value-of select="$text_searchbox_spelling_error" />
+			<p class="errorSpelling"><xsl:copy-of select="$text_searchbox_spelling_error" />
 			<a href="{$spell_url}"><xsl:value-of select="//spelling" /></a></p>
 		</xsl:if>
 	
@@ -737,7 +737,7 @@
 				<xsl:attribute name="href">
 					<xsl:value-of select="php:functionString('Xerxes_Framework_Request::setParamInUrl', $full_page_url, 'metasearch_input_mode', 'simple')"/>
 				</xsl:attribute>
-				<xsl:value-of select="$text_searchbox_options_fewer" />
+				<xsl:copy-of select="$text_searchbox_options_fewer" />
 				</a>
 			</xsl:when>
 			<xsl:otherwise>
@@ -745,7 +745,7 @@
 				<xsl:attribute name="href">
 					<xsl:value-of select="php:functionString('Xerxes_Framework_Request::setParamInUrl', $full_page_url, 'metasearch_input_mode', 'advanced')"/>
 				</xsl:attribute>
-				<xsl:value-of select="$text_searchbox_options_more" />
+				<xsl:copy-of select="$text_searchbox_options_more" />
 				</a>
 			</xsl:otherwise>
 		</xsl:choose>
@@ -773,24 +773,24 @@
 	<xsl:param name="input_name_suffix" select ="''" />
 	
 	<select id="field{$input_name_suffix}" name="field{$input_name_suffix}">
-		<option value="WRD"><xsl:value-of select="$text_searchbox_field_keyword" /></option>
+		<option value="WRD"><xsl:copy-of select="$text_searchbox_field_keyword" /></option>
 		<option value="WTI">
 		<xsl:if test="$field_selected = 'WTI'">
 			<xsl:attribute name="selected">seleted</xsl:attribute>
 		</xsl:if>
-		<xsl:value-of select="$text_searchbox_field_title" />
+		<xsl:copy-of select="$text_searchbox_field_title" />
 		</option>
 		<option value="WAU">
 		<xsl:if test="$field_selected = 'WAU'">
 			<xsl:attribute name="selected">selected</xsl:attribute>
 		</xsl:if>
-		<xsl:value-of select="$text_searchbox_field_author" />
+		<xsl:copy-of select="$text_searchbox_field_author" />
 		</option>
 		<option value="WSU">
 		<xsl:if test="$field_selected = 'WSU'">
 			<xsl:attribute name="selected">selected</xsl:attribute>
 		</xsl:if>
-		<xsl:value-of select="$text_searchbox_field_subject" />
+		<xsl:copy-of select="$text_searchbox_field_subject" />
 		</option>
 		
 		<!-- Include advanced mode options? We don't just try to hide,
@@ -801,19 +801,19 @@
 			<xsl:if test="$field_selected = 'ISSN'">
 				<xsl:attribute name="selected">selected</xsl:attribute>
 			</xsl:if>
-			<xsl:value-of select="$text_searchbox_field_issn" />
+			<xsl:copy-of select="$text_searchbox_field_issn" />
 			</option>
 			<option value="ISBN">
 			<xsl:if test="$field_selected = 'ISBN'">
 				<xsl:attribute name="selected">selected</xsl:attribute>
 			</xsl:if>
-			<xsl:value-of select="$text_searchbox_field_isbn" />
+			<xsl:copy-of select="$text_searchbox_field_isbn" />
 			</option>
 			<option value="WYR">
 			<xsl:if test="$field_selected = 'WYR'">
 				<xsl:attribute name="selected">selected</xsl:attribute>
 			</xsl:if>
-			<xsl:value-of select="$text_searchbox_field_year" />
+			<xsl:copy-of select="$text_searchbox_field_year" />
 			</option>
 		</xsl:if>
 	</select>
@@ -858,7 +858,7 @@
 			
 			<input type="hidden" name="tagsShaddow" id="shadow-{$id}" value="{$tag_list}" />
 			
-			<label for="tags-{$id}"><xsl:value-of select="$text_records_tags" /></label>
+			<label for="tags-{$id}"><xsl:copy-of select="$text_records_tags" /></label>
 			
 			<input type="text" name="tags" id="tags-{$id}" class="tagsInput" value="{$tag_list}" />
 			
@@ -1009,7 +1009,7 @@
 			<input type="hidden" name="base" value="databases" />
 			<input type="hidden" name="action" value="find" />
 			
-			<label for="query"><xsl:value-of select="$text_databases_az_search" /></label> 
+			<label for="query"><xsl:copy-of select="$text_databases_az_search" /></label> 
 			
 			<input id="query" name="query" type="text" size="32">
 				<xsl:attribute name="value"><xsl:value-of select="request/query" /></xsl:attribute>
@@ -1022,8 +1022,8 @@
 			<xsl:if test="request/action != 'alphabetical'">
 				<a>
 				<xsl:attribute name="href"><xsl:value-of select="navbar/element[@id='database_list']/url" /></xsl:attribute>
-				<xsl:value-of select="$text_databases_az_breadcrumb_all" /></a> <xsl:value-of select="$text_breadcrumb_seperator" />
-				<xsl:value-of select="$text_databases_az_breadcrumb_matching" /> "<xsl:value-of select="request/query" />"
+				<xsl:copy-of select="$text_databases_az_breadcrumb_all" /></a> <xsl:copy-of select="$text_breadcrumb_seperator" />
+				<xsl:copy-of select="$text_databases_az_breadcrumb_matching" /> "<xsl:value-of select="request/query" />"
 			</xsl:if>
 		</div>
 		
@@ -1043,14 +1043,14 @@
 	<xsl:variable name="group_restrictions" select="$database/group_restriction" />
 	
 	<xsl:if test="$group_restrictions">
-		<xsl:value-of select="$text_databases_access_available" />
+		<xsl:copy-of select="$text_databases_access_available" />
 	</xsl:if>
 	
 	<xsl:for-each select="$group_restrictions">
 		<xsl:value-of select="@display_name" />
 		<xsl:choose>
 			<xsl:when test="count(following-sibling::group_restriction) = 1">
-			<xsl:value-of select="$text_databases_access_group_and" />
+			<xsl:copy-of select="$text_databases_access_group_and" />
 			</xsl:when>
 			<xsl:when test="count(following-sibling::group_restriction) > 1">
 			, 
@@ -1058,7 +1058,7 @@
 		</xsl:choose>
 	</xsl:for-each>
 	<xsl:if test="$group_restrictions">
-	<xsl:text>  </xsl:text><xsl:value-of select="$text_databases_access_users" />
+	<xsl:text>  </xsl:text><xsl:copy-of select="$text_databases_access_users" />
 	</xsl:if>
 </xsl:template>
 
@@ -1119,8 +1119,8 @@
 	</h1>
 	
 	<xsl:if test="request/session/role = 'local'">
-		<p>( <a href="{navbar/element[@id='login']/url}"><xsl:value-of select="$text_folder_login" /><xsl:text>  </xsl:text></a> 
-		<xsl:value-of select="$text_folder_login_beyond" />.)</p>
+		<p>( <a href="{navbar/element[@id='login']/url}"><xsl:copy-of select="$text_folder_login" /><xsl:text>  </xsl:text></a> 
+		<xsl:copy-of select="$text_folder_login_beyond" />.)</p>
 	</xsl:if>
 		
 	</div>
@@ -1135,10 +1135,10 @@
 <xsl:template name="folder_header_label">
 	<xsl:choose>
 		<xsl:when test="request/session/role = 'local' or request/session/role = 'guest'">
-			<xsl:value-of select="$text_folder_header_temporary" />
+			<xsl:copy-of select="$text_folder_header_temporary" />
 		</xsl:when>
 		<xsl:otherwise>
-			<xsl:value-of select="$text_folder_header_my" />
+			<xsl:copy-of select="$text_folder_header_my" />
 		</xsl:otherwise>
 	</xsl:choose>
 </xsl:template>
@@ -1150,7 +1150,7 @@
 
 <xsl:template name="tags_display">
 	
-	<h2><xsl:value-of select="$text_folder_options_tags" /></h2>
+	<h2><xsl:copy-of select="$text_folder_options_tags" /></h2>
 	<ul>
 	<xsl:for-each select="tags/tag">
 		<li>
@@ -1190,7 +1190,7 @@
 				<xsl:when test="//request/label">
 					
 					<label for="all">
-					<xsl:value-of select="$text_folder_export_records_labeled" /> <strong><xsl:value-of select="//request/label" /></strong>
+					<xsl:copy-of select="$text_folder_export_records_labeled" /> <strong><xsl:value-of select="//request/label" /></strong>
 					</label>
 					<input type="hidden" name="label" value="{//request/label}" />
 
@@ -1198,13 +1198,13 @@
 				<xsl:when test="//request/type">
 
 					<label for="all">
-					<xsl:value-of select="$text_folder_export_records_type" /> <strong><xsl:value-of select="//request/type" /></strong>
+					<xsl:copy-of select="$text_folder_export_records_type" /> <strong><xsl:value-of select="//request/type" /></strong>
 					</label>
 					<input type="hidden" name="type" value="{//request/type}" />
 				
 				</xsl:when>
 				<xsl:otherwise>
-					<label for="all"><xsl:value-of select="$text_folder_export_records_all" /></label>
+					<label for="all"><xsl:copy-of select="$text_folder_export_records_all" /></label>
 				</xsl:otherwise>
 			
 			</xsl:choose>
@@ -1213,7 +1213,7 @@
 			
 			<li>
 				<input type="radio" name="items" value="new" id="new" />
-				<label for="new"><xsl:value-of select="$text_folder_export_records_selected" /></label>
+				<label for="new"><xsl:copy-of select="$text_folder_export_records_selected" /></label>
 
 			</li>
 	
@@ -1243,7 +1243,7 @@
 		<div class="folderReturn">
 			<img src="{$base_include}/images/back.gif" alt="" />
 			<span class="folderReturnText">
-				<a href="{$back}"><xsl:value-of select="$text_folder_return" /></a>
+				<a href="{$back}"><xsl:copy-of select="$text_folder_return" /></a>
 			</span>
 		</div>
 		
@@ -1316,7 +1316,7 @@
 		
 		<xsl:if test="request/base = 'books'">
 			<script src="{$base_include}/javascript/availability.js" language="javascript" type="text/javascript"></script>
-			<link href="{$base_include}/css/mango.css" rel="stylesheet" type="text/css" />
+			<link href="{$base_include}/css/mango.css?xerxes_version={$xerxes_version}" rel="stylesheet" type="text/css" />
 		</xsl:if>
 		
 	</xsl:if>
@@ -1371,15 +1371,15 @@
 				<xsl:choose>
 					<xsl:when test="@type = 'pdf'">
 						<img src="{$base_include}/images/pdf.gif" alt="" width="16" height="16" border="0" /> 
-						<xsl:value-of select="$text_records_fulltext_pdf" />
+						<xsl:copy-of select="$text_records_fulltext_pdf" />
 					</xsl:when>
 					<xsl:when test="@type = 'html'">
 						<img src="{$base_include}/images/html.gif" alt="" width="16" height="16" border="0" /> 
-						<xsl:value-of select="$text_records_fulltext_html" />
+						<xsl:copy-of select="$text_records_fulltext_html" />
 					</xsl:when>
 					<xsl:otherwise>
 						<img src="{$base_include}/images/html.gif" alt="" width="16" height="16" border="0" /> 
-						<xsl:value-of select="$text_records_fulltext_available" />
+						<xsl:copy-of select="$text_records_fulltext_available" />
 					</xsl:otherwise>
 				</xsl:choose>
 			</a>
@@ -1568,6 +1568,13 @@
 				<xsl:with-param name="nosave" select="$nosave" />
 			</xsl:call-template>			
 		</xsl:when>
+		<xsl:when test="$type = 'innreach'">
+			<xsl:call-template name="holdings_lookup_innreach">
+				<xsl:with-param name="isbn" select="$isbn" />
+				<xsl:with-param name="oclc" select="$oclc" />
+				<xsl:with-param name="nosave" select="$nosave" />
+			</xsl:call-template>			
+		</xsl:when>
 		<xsl:otherwise>
 			<xsl:call-template name="holdings_lookup_full">
 				<xsl:with-param name="isbn" select="$isbn" />
@@ -1578,6 +1585,42 @@
 				
 </xsl:template>
 
+<!-- 	
+	TEMPLATE: NO LOOKUP
+	For groups with an innreach server lookup
+-->
+
+<xsl:template name="holdings_lookup_innreach">
+	<xsl:param name="isbn" />
+	<xsl:param name="oclc" />
+	
+	<xsl:choose>
+		<xsl:when test="//lookup/library[status = 'AVAILABLE' and ( isbn = $isbn  or oclc = $oclc)]">
+			<p><strong style="color:#009900">Available in Link+</strong></p>
+		</xsl:when>
+		<xsl:when test="not(//lookup/library)">
+			<p><strong style="color:#CC0000">Not found in Link+</strong></p>
+		</xsl:when>
+
+		<xsl:otherwise>
+			<p><strong style="color:#CC0000">No copies available in Link+</strong></p>
+
+			<xsl:call-template name="ill_option">
+				<xsl:with-param name="element">div</xsl:with-param>
+				<xsl:with-param name="class">resultsAvailability</xsl:with-param>
+				<xsl:with-param name="oclc"><xsl:value-of select="$oclc" /></xsl:with-param>
+				<xsl:with-param name="isbn"><xsl:value-of select="$isbn" /></xsl:with-param>
+			</xsl:call-template>
+
+		</xsl:otherwise>
+	</xsl:choose>
+
+</xsl:template>
+
+<!-- 	
+	TEMPLATE: NO LOOKUP
+	For groups that have no look-up enabled
+-->
 
 <xsl:template name="holdings_lookup_none">
 	<xsl:param name="isbn" />
@@ -1655,12 +1698,18 @@
 			<div class="mangoAvailable">		
 				<table id="holdingsTable">
 				<tr>
+					<xsl:if test="//lookup/library[held = 1 and location != 'ONLINE' and ( isbn = $isbn  or oclc = $oclc)]/library">
+						<th>Institution</th>
+					</xsl:if>
 					<th>Location</th>
 					<th>Call Number</th>
 					<th>Status</th>
 				</tr>
 				<xsl:for-each select="//lookup/library[held = 1 and location != 'ONLINE' and ( isbn = $isbn  or oclc = $oclc)]">
 					<tr>
+						<xsl:if test="library">
+							<td><xsl:value-of select="library" /></td>
+						</xsl:if>
 						<td><xsl:value-of select="location" /></td>
 						<td><xsl:value-of select="call_number" /></td>
 						<td><xsl:value-of select="status" /></td>
@@ -1703,7 +1752,7 @@
 			<xsl:attribute name="class"><xsl:value-of select="$class" /></xsl:attribute>
 			<a href="{link}" class="resultsFullText"  target="" >
 				<img src="{$base_include}/images/html.gif" alt="" width="16" height="16" border="0" /> 
-				<xsl:value-of select="$text_records_fulltext_available" />
+				<xsl:copy-of select="$text_records_fulltext_available" />
 			</a>
 		</xsl:element>
 	</xsl:for-each>
@@ -1721,8 +1770,8 @@
 	<xsl:param name="oclc" />
 	<xsl:param name="isbn" />
 	
-	<xsl:variable name="source"  select="//request/source"/>
-
+	<xsl:variable name="source"  select="//request/source|//request/requester"/>
+	
 	<xsl:if test="not(//lookup/library[held = 1 and ( isbn = $isbn  or oclc = $oclc)]/@available = 'true')">
 		<xsl:element name="{$element}">
 			<xsl:attribute name="class"><xsl:value-of select="$class" /></xsl:attribute> 
