@@ -1,4 +1,6 @@
-#Xerxes feature to create an EZProxy config file from KB
+#introduction Xerxes feature to create an EZProxy config file from KB
+
+*this feature was finished after Xerxes 1.3. It is planned for inclusion in Xerxes 1.4* The feature is finished, it's just not in a released version yet. 
 
 = Introduction =
 
