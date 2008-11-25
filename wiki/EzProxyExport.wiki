@@ -108,7 +108,7 @@ However, you can set the Xerxes config variable *ezp_exp_default_group* to anoth
 
 == Restricted Access ==
 
-If you have some databases set in Metalib with further restrictions using the Metalib "seconedary affiliation" feature, that will be respected in the EZProxy export. 
+If you have some databases set in Metalib with further restrictions using the Metalib "secondary affiliation" feature, that will be respected in the EZProxy export. 
 
 The EZProxy domain entries will be put into groups sharing the same secondary affilationm and each of these clusters will be output together, with a Group heading. If more than one secondary affiliation is listed, they will both be included in the Group statement, seperated by the "+" delimiter EZProxy uses in Group statements. 
 
