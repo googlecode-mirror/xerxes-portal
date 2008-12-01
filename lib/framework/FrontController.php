@@ -116,8 +116,22 @@ class Xerxes_Framework_FrontController
 			{
 				$this_server_name = $objRequest->getServer( 'SERVER_NAME' );
 			}
+			
+			// check for a non-standard port
 						
-			$web = "http://" . $this_server_name . $base_path;
+			$port = $objRequest->getServer( 'SERVER_PORT' );
+			
+			if ( $port == 80 || $port == 443 )
+			{
+			    $port = "";
+			}
+			else
+			{
+			    $port = ":" . $port;
+			}
+			
+			$web = "http://" . $this_server_name . $port . $base_path;			
+			
 			
 			// register these values
 

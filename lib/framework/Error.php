@@ -84,8 +84,13 @@ class Xerxes_Framework_Error
 			$objHeading = $objError->createElement( "heading", $heading );
 			$objError->documentElement->appendChild( $objHeading );
 			
+			
+			
+			
 			// set the base url for the error.xsl file's benefit; don't want to assume that 
 			// the earlier code to this effect was executed before an exception, so this is redundant
+			
+			$base_path = $objRegistry->getConfig( 'BASE_WEB_PATH', false, "" );
 			
 			$this_server_name = "";
 			
@@ -100,8 +105,27 @@ class Xerxes_Framework_Error
 			{
 				$this_server_name = $objRequest->getServer( 'SERVER_NAME' );
 			}
+			
+			// check for a non-standard port
 						
-			$objBaseURL = $objError->createElement( "base_url", "http://" . $this_server_name . $objRegistry->getConfig( 'BASE_WEB_PATH', false, "" ) );
+			$port = $objRequest->getServer( 'SERVER_PORT' );
+			
+			if ( $port == 80 || $port == 443 )
+			{
+			    $port = "";
+			}
+			else
+			{
+			    $port = ":" . $port;
+			}
+			
+			$web = "http://" . $this_server_name . $port . $base_path;
+			
+			
+			
+						
+			$objBaseURL = $objError->createElement( "base_url", $web );
+			
 			$objError->documentElement->appendChild( $objBaseURL );
 			
 			// if it's a db denied exception, include info on dbs. 
