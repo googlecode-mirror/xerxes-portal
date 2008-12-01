@@ -31,7 +31,7 @@
 	<xsl:variable name="link_target"	select="//config/link_target" />
 	<xsl:variable name="base_include">
 		<xsl:choose>
-			<xsl:when test="//request/server/https">
+			<xsl:when test="//request/server/https and //request/server/https != 'off'">
 				<xsl:text>https://</xsl:text><xsl:value-of select="substring-after($base_url, 'http://')" />
 			</xsl:when>
 			<xsl:otherwise>
