@@ -10,20 +10,94 @@ Download the latest version of the code from the download section or check it ou
 
 How you update the files is up to  you.  You should be safe to _replace_ the lib/, commands/, and sql/ directories in your existing instance.  But you'll need to take care in updating the interface directory (called demo in the source) so as not to overwrite local files, particularly files you've changed in the config/ and css/ directories.
 
-One strategy is to keep a shadow copy of your demo/ folder with *only* the directories and files you've changed.  In that way, you can simply download the latest code to a new location, and then copy your customized files to that new location to overwrite what is there.
+One strategy is to keep a shadow copy of your demo/ folder with *only* the directories and files you've changed.  In that way, you can simply download the latest code to a new location, and then copy your customized files to that new location to overwrite what is there.  Then you can test the new version with your customizations.
  
 ==2. In MySQL, execute sql/create-kb.sql==
  
 Every time you upgrade, you should execute the latest sql/create-kb.sql file.  This will drop and recreate (with any new definitions) the tables that Xerxes uses to cache the Metalib knowledgebase. Do that in MySQL and then run the Xerxes populate databases command from the command line.  In that way, Xerxes will refresh its cache.
  
-==3. In MySQL, execute sql/migrate/migrate-1.2-to-1.3.sql==
+==3. In MySQL, execute sql/migrate/migrate-1.3-to-1.4.sql==
  
-_substitute 1.2 and 1.3 above with the actual version number_. This will update the other tables Xerxes uses.  Since these other tables include data that cannot be easily recreated (e.g., your users' saved records), you should *always* run the migrate sql rather than the create-serv.sql, since the latter will drop your tables.
+_substitute 1.3 and 1.4 above with the actual version number_. This will update the other tables Xerxes uses.  Since these other tables include data that cannot be easily recreated (e.g., your users' saved records), you should *always* run the migrate sql rather than the create-serv.sql, since the latter will drop your tables.
 
 
 
 
 = Accumulated list of changes =
+
+== version 1.4  (r 290) 2008-12-05 ==
+
+  * Number of bug fixes
+  * EZProxy config file generation
+  * Two line search box
+  * Autocomplete on tags; reworked javascript, session handling of saved records
+
+{{{
+	commands/authenticate/Authenticate.php
+	commands/authenticate/AuthenticateGuest.php
+	commands/authenticate/AuthenticateLogin.php
+	commands/availability/PopulateFulltext.php
+	commands/databases/DatabasesDatabase.php
+	commands/databases/DatabasesProxy.php
+	commands/databases/DatabasesSubject.php
+	commands/databases/PopulateDatabases.php
+	commands/folder/Folder.php
+	commands/folder/FolderDelete.php
+	commands/folder/FolderPaging.php
+	commands/folder/FolderRedirect.php
+	commands/folder/FolderResults.php
+	commands/helper/Helper.php
+	commands/helper/HelperNavbar.php
+	commands/metasearch/Metasearch.php
+	commands/metasearch/MetasearchResults.php
+	commands/metasearch/MetasearchSaveDelete.php
+	commands/metasearch/MetasearchSearch.php
+	demo/config/actions.xml
+	demo/config/config.xml
+	demo/css/xerxes-blue-embeddable.css
+	demo/css/xerxes-blue.css
+	demo/images/book.gif
+	demo/javascript/embed-gen-update.js
+	demo/javascript/prototype.js
+	demo/javascript/save.js
+	demo/javascript/scriptaculous/controls.js
+	demo/javascript/tags.js
+	demo/xsl/includes.xsl
+	lib/framework/Command.php
+	lib/framework/ControllerMap.php
+	lib/framework/DataMap.php
+	lib/framework/Error.php
+	lib/framework/FrontController.php
+	lib/framework/Parser.php
+	lib/framework/Registry.php
+	lib/framework/Request.php
+	lib/framework/Restrict.php
+	lib/Xerxes/DataMap.php
+	lib/Xerxes/Exceptions.php
+	lib/Xerxes/Helper.php
+	lib/Xerxes/MetaSearch.php
+	lib/Xerxes/QueryParser.php
+	lib/Xerxes/Record.php
+	lib/xsl/citation/ris.xsl
+	lib/xsl/databases_alphabetical.xsl
+	lib/xsl/databases_categories.xsl
+	lib/xsl/databases_database.xsl
+	lib/xsl/databases_subject.xsl
+	lib/xsl/embed/embed_database.xsl
+	lib/xsl/embed/embed_gen_database.xsl
+	lib/xsl/embed/embed_gen_subject.xsl
+	lib/xsl/embed/embed_subject.xsl
+	lib/xsl/folder_home.xsl
+	lib/xsl/folder_tags_edit.xsl
+	lib/xsl/includes.xsl
+	lib/xsl/metasearch_record.xsl
+	lib/xsl/metasearch_results.xsl
+	lib/xsl/metasearch_save-delete.xsl
+	lib/xsl/record.xsl
+	lib/xsl/utility/marc-to-database.xsl
+	sql/create-serv.sql
+	sql/migrate/migrate-1.2-to-1.3.sql
+}}}
 
 == version 1.3.1  (r 153) 2008-08-28 ==
 
