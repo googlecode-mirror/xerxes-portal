@@ -32,6 +32,8 @@ _substitute 1.3 and 1.4 above with the actual version number_. This will update 
   * Two line search box
   * Autocomplete on tags; reworked javascript, session handling of saved records
 
+=== Changed files ===
+
 {{{
 	commands/authenticate/Authenticate.php
 	commands/authenticate/AuthenticateGuest.php
