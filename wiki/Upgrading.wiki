@@ -6,7 +6,11 @@ Here are the basic steps for upgrading between versions of Xerxes.
 
 ==1. Download and update the PHP and XSLT files==
  
-This will give you the latest code and interface templates.  You can either download the code from the download section or check it out from the svn repository.
+Download the latest version of the code from the download section or check it out from the latest 'release-' tags in the svn repository.  
+
+How you update the files is up to  you.  You should be safe to _replace_ the lib/, commands/, and sql/ directories in your existing instance.  But you'll need to take care in updating the interface directory (called demo in the source) so as not to overwrite local files, particularly files you've changed in the config/ and css/ directories.
+
+One strategy is to keep a shadow copy of your demo/ folder with *only* the directories and files you've changed.  In that way, you can simply download the latest code to a new location, and then copy your customized files to that new location to overwrite what is there.
  
 ==2. In MySQL, execute sql/create-kb.sql==
  
