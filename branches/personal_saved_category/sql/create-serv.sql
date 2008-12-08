@@ -108,7 +108,7 @@ CREATE TABLE xerxes_user_categories(
 CREATE INDEX xerxes_user_categories_normalized_idex ON xerxes_user_categories(normalized);
 
 CREATE TABLE xerxes_user_subcategories(
-	id        MEDIUMINT NOT NULL AUTO_INCREMENT,
+	id        MEDIUMINT NOT NULL AUTO_INCREMENT PRIMARY,
 	name     	VARCHAR(255),
 	sequence	MEDIUMINT NOT NULL,
   category_id	MEDIUMINT NOT NULL,
