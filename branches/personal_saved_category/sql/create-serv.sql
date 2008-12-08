@@ -108,23 +108,22 @@ CREATE TABLE xerxes_user_categories(
 CREATE INDEX xerxes_user_categories_normalized_idex ON xerxes_user_categories(normalized);
 
 CREATE TABLE xerxes_user_subcategories(
-	id        MEDIUMINT NOT NULL AUTO_INCREMENT PRIMARY,
+	id        MEDIUMINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	name     	VARCHAR(255),
 	sequence	MEDIUMINT NOT NULL,
   category_id	MEDIUMINT NOT NULL,
 
-	PRIMARY KEY (id),
  	FOREIGN KEY (category_id) REFERENCES xerxes_user_categories(id) ON DELETE CASCADE
 );
 
 CREATE TABLE xerxes_user_subcategory_databases(
 
 	database_id	VARCHAR(10),
-  subcategory_id	VARCHAR(20),
+  subcategory_id	MEDIUMINT,
   sequence MEDIUMINT,
 
- 	FOREIGN KEY (database_id) REFERENCES xerxes_databases(metalib_id) ON DELETE CASCADE
-  -- why doesn't this work?
-	-- FOREIGN KEY (subcategory_id) REFERENCES xerxes_user_subcategories(id) ON DELETE CASCADE
+  PRIMARY KEY(database_id, subcategory_id),
+ 	FOREIGN KEY (database_id) REFERENCES xerxes_databases(metalib_id) ON DELETE CASCADE,  
+	FOREIGN KEY (subcategory_id) REFERENCES xerxes_user_subcategories (id) ON DELETE CASCADE
 );
 
