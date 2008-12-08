@@ -10,6 +10,10 @@ DROP TABLE IF EXISTS xerxes_sfx;
 DROP TABLE IF EXISTS xerxes_refereed;
 DROP TABLE IF EXISTS xerxes_users;
 DROP TABLE IF EXISTS xerxes_records;
+DROP TABLE IF EXISTS xerxes_user_subcategory_databases;
+DROP TABLE IF EXISTS xerxes_user_subcategories;
+DROP TABLE IF EXISTS xerxes_user_categories;
+
 
 CREATE TABLE xerxes_users (
 	username VARCHAR(50),
@@ -96,7 +100,7 @@ CREATE TABLE xerxes_user_categories(
 	id 			      MEDIUMINT NOT NULL AUTO_INCREMENT,
 	name     		  VARCHAR(255),
   username      VARCHAR(50),
-  public        INTEGER(1) NOT NULL DEFAULT 0 
+  public        INTEGER(1) NOT NULL DEFAULT 0, 
 	normalized		VARCHAR(255),
 
 	PRIMARY KEY (id)
@@ -119,7 +123,8 @@ CREATE TABLE xerxes_user_subcategory_databases(
   subcategory_id	VARCHAR(20),
   sequence MEDIUMINT,
 
- 	FOREIGN KEY (database_id) REFERENCES xerxes_databases(metalib_id) ON DELETE CASCADE,
-	FOREIGN KEY (subcategory_id) REFERENCES xerxes_user_subcategories(metalib_id) ON DELETE CASCADE
+ 	FOREIGN KEY (database_id) REFERENCES xerxes_databases(metalib_id) ON DELETE CASCADE
+  -- why doesn't this work?
+	-- FOREIGN KEY (subcategory_id) REFERENCES xerxes_user_subcategories(id) ON DELETE CASCADE
 );
 
