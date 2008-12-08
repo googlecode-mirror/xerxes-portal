@@ -125,7 +125,7 @@
 				}
 			}
 			
-			return $objStatement->execute();
+			return $objStatement->execute();      
 		}
 		
 		/**
@@ -133,12 +133,18 @@
 		 *
 		 * @param string $strSQL		SQL query
 		 * @param array $arrValues		paramaterized values
-		 * @return mixed				status of the request, as set by PDO
+     * @param boolean $boolReturnPk  return the inserted pk value?
+		 * @return mixed				if $boolReturnPk is false, status of the request (true or false), as set by PDO. if $boolReturnPk is true, either the last inserted pk, or 'false' for a failed insert. 
 		 */
 		
-		public function insert($strSQL, $arrValues = null)
+		public function insert($strSQL, $arrValues = null, $boolReturnPk = false)
 		{
-			return $this->update($strSQL, $arrValues);
+			$status = $this->update($strSQL, $arrValues);      
+      if ($status && $boolReturnPk) {
+        return $this->lastInsertId();
+      } else {
+        return $status;
+      }
 		}
 		
 		/**
@@ -153,6 +159,14 @@
 		{
 			return $this->update($strSQL, $arrValues);
 		}
+    
+    protected function lastInsertId() {
+      # No, this creates segfault:
+      #return PDO::lastInsertId();
+      
+      # Yes, this seems to work:
+      return $this->objPDO->lastInsertId();      
+    }
 		
 		private function echoSQL($strSQL)
 		{
