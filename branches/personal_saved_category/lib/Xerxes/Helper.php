@@ -133,6 +133,13 @@ class Xerxes_Helper
 		return $objDatabase;
 	}
 	
+  /* Ensures that specified user is logged in, or throws exception */
+  public static function ensureSpecifiedUser($username, $objRequest, $objRegistry, $strMessage = "Access only allowed by specific user.") {
+    if (! $objRequest->getSession("username") == $username) {
+      throw new Xerxes_AccessDeniedException($strMessage);
+    }
+  }
+  
 	/**
 	 * Checks to see if any of the databases currently being searched are restricted
 	 * to the user, throws Xerxes_DatabasesDeniedException if one is not
