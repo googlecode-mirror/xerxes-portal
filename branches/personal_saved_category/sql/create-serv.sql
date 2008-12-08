@@ -92,3 +92,34 @@ CREATE TABLE xerxes_cache (
 
 CREATE INDEX xerxes_cache_grouping_idx ON xerxes_cache(grouping);
 
+CREATE TABLE xerxes_user_categories(
+	id 			      MEDIUMINT NOT NULL AUTO_INCREMENT,
+	name     		  VARCHAR(255),
+  username      VARCHAR(50),
+  public        INTEGER(1) NOT NULL DEFAULT 0 
+	normalized		VARCHAR(255),
+
+	PRIMARY KEY (id)
+);
+CREATE INDEX xerxes_user_categories_normalized_idex ON xerxes_user_categories(normalized);
+
+CREATE TABLE xerxes_user_subcategories(
+	id        MEDIUMINT NOT NULL AUTO_INCREMENT,
+	name     	VARCHAR(255),
+	sequence	MEDIUMINT NOT NULL,
+  category_id	MEDIUMINT NOT NULL,
+
+	PRIMARY KEY (id),
+ 	FOREIGN KEY (category_id) REFERENCES xerxes_user_categories(id) ON DELETE CASCADE
+);
+
+CREATE TABLE xerxes_user_subcategory_databases(
+
+	database_id	VARCHAR(10),
+  subcategory_id	VARCHAR(20),
+  sequence MEDIUMINT,
+
+ 	FOREIGN KEY (database_id) REFERENCES xerxes_databases(metalib_id) ON DELETE CASCADE,
+	FOREIGN KEY (subcategory_id) REFERENCES xerxes_user_subcategories(metalib_id) ON DELETE CASCADE
+);
+
