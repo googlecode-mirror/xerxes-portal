@@ -405,17 +405,50 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		
 		return $arrCategories;
 	}
+  
+
+  const metalibMode = 'metalib';
+  const userCreatedMode = 'user_created';
+  /* ->getSubject can be used in two modes, metalib-imported  categories,
+   or user created categories. We take from different db tables depending. */
+  protected function schema_map_by_mode($mode) {
+    if ($mode == self::metalibMode) {       
+      return  array(
+          "categories_table" => "xerxes_categories",
+          "subcategories_table" => "xerxes_subcategories",
+          "database_join_table" => "xerxes_subcategory_databases",
+          "subcategories_pk" => "metalib_id",
+          "extra_select" => ""
+        );
+    } elseif ($mode == self::userCreatedMode) {
+            
+      return  array(
+          "categories_table" => "xerxes_user_categories",
+          "subcategories_table" => "xerxes_user_subcategories",
+          "database_join_table" => "xerxes_user_subcategory_databases",
+          "subcategories_pk" => "id",
+          "extra_select" => ", xerxes_user_categories.public AS public, xerxes_user_categories.username AS username"
+      );
+    } else {
+      throw new Exception("unrecognized mode");
+    }           
+  }
 	
 	/**
 	 * Get an inlined set of subcategories and databases for a subject
 	 *
 	 * @param string $normalized		normalized category name
 	 * @param string $old				old normalzied category name, for comp with Xerxes 1.0
-	 * @return array					array of Xerxes_Data_Subcategory objects, with databases
+   * @param string $mode  one of constants metalibMode or userCreatedMode, for metalib-imported categories or user-created categories, using different tables.
+	 * @return Xerxes_Data_Category					a Xerxes_Data_Category object, filled out with subcategories and databases. 
 	 */
 	
-	public function getSubject($normalized, $old = null)
+   public function getSubject($normalized, $old = null, $mode = self::metalibMode)
 	{
+    //This can be used to fetch personal or metalib-fetched data. We get
+    // from different tables depending. 
+    $schema_map = $this->schema_map_by_mode($mode);
+    
 		// we'll use the new 'categories' normalized scheme if available, but 
 		// otherwise get the old normalized scheme with the capitalizations for 
 		// compatability with xerxes 1.0 release.
@@ -433,27 +466,28 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		// really confusing and complicated to write this SQL, and that's all
 		// we need right now.
 		
-		$strSQL = "SELECT xerxes_categories.id as category_id, 
-		            xerxes_categories.name as category,
-		            xerxes_subcategories.metalib_id as subcat_id,
-		            xerxes_subcategories.sequence as subcat_seq, 
-		            xerxes_subcategories.name as subcategory, 
-		            xerxes_subcategory_databases.sequence as sequence,
+		$strSQL = "SELECT $schema_map[categories_table].id as category_id, 
+		            $schema_map[categories_table].name as category,
+		            $schema_map[subcategories_table].$schema_map[subcategories_pk] as subcat_id,
+		            $schema_map[subcategories_table].sequence as subcat_seq, 
+		            $schema_map[subcategories_table].name as subcategory, 
+		            $schema_map[database_join_table].sequence as sequence,
 		            xerxes_databases.*,
                 xerxes_database_group_restrictions.usergroup
-			   FROM xerxes_categories,
+                $schema_map[extra_select]
+			   FROM $schema_map[categories_table],
 			        xerxes_databases
                LEFT OUTER JOIN xerxes_database_group_restrictions ON xerxes_databases.metalib_id = xerxes_database_group_restrictions.database_id,
-			        xerxes_subcategory_databases, 
-			        xerxes_subcategories
-			 WHERE xerxes_categories.$column = :value
-			   AND xerxes_subcategories.name NOT LIKE 'All%'
-			   AND xerxes_subcategory_databases.database_id = xerxes_databases.metalib_id
-			   AND xerxes_subcategory_databases.subcategory_id = xerxes_subcategories.metalib_id
-			   AND xerxes_categories.id = xerxes_subcategories.category_id
+			        $schema_map[database_join_table], 
+			        $schema_map[subcategories_table]
+			 WHERE $schema_map[categories_table].$column = :value
+			   AND $schema_map[subcategories_table].name NOT LIKE 'All%'
+			   AND $schema_map[database_join_table].database_id = xerxes_databases.metalib_id
+			   AND $schema_map[database_join_table].subcategory_id = $schema_map[subcategories_table].$schema_map[subcategories_pk]
+			   AND $schema_map[categories_table].id = $schema_map[subcategories_table].category_id
 		  ORDER BY subcat_seq, sequence";
-		
-		$arrResults = $this->select( $strSQL, array (":value" => $normalized ) );
+
+    $arrResults = $this->select( $strSQL, array (":value" => $normalized ) );
 		
 		if ( $arrResults != null )
 		{
@@ -461,6 +495,9 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 			$objCategory->id = $arrResults[0]["category_id"];
 			$objCategory->name = $arrResults[0]["category"];
 			$objCategory->normalized = $normalized;
+      // These two only for user-created categories, will be nil otherwise.
+      if (array_key_exists("username", $arrResults[0])) $objCategory->owned_by_user = $arrResults[0]["username"];
+      if (array_key_exists("public", $arrResults[0])) $objCategory->public = $arrResults[0]["public"];
 			
 			$objSubcategory = new Xerxes_Data_Subcategory( );
 			//$objSubcategory->metalib_id = $arrResults[0]["subcat_id"];
