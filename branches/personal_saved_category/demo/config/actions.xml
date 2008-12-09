@@ -96,6 +96,7 @@
 			
 			<action name="categories">
 				<command>DatabasesCategories</command>
+        <command directory="saved">ListUserCreatedCategories</command>
 				<request name="use_categories_quicksearch">true</request>
 				<command>DatabasesSubject</command>
 				<view>xsl/databases_categories.xsl</view>
@@ -304,7 +305,7 @@
 			</action>
 		</section>
     
-    <section name="saved" directory="saved" namespace="Xerxes" documentElement="xerxes">
+    <section name="saved" directory="saved" namespace="Xerxes" documentElement="xerxes" login="true">
       <action name="subject">
 				<command>UserCreatedCategory</command>
 				<pathParamMap>
@@ -313,6 +314,8 @@
 				</pathParamMap>
 				<view>xsl/databases_subject.xsl</view>
 			</action>
+      
+
     </section>
 		
 		<section name="availability" directory="availability" namespace="Xerxes" documentElement="xerxes">
