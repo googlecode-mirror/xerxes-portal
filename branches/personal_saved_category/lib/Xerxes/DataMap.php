@@ -406,6 +406,28 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		return $arrCategories;
 	}
   
+  /**
+	 * Get user-created categories for specified user. 
+	 * @param string $username
+	 * @return array		array of Xerxes_Data_Category objects
+	 */
+  public function getUserCreatedCategories($username) {
+    if (! $username) throw new Exception("Must supply a username argument");
+    
+    $arrCategories = array ( );
+    $strSQL = "SELECT * from xerxes_user_categories WHERE username = :username ORDER BY UPPER(name) ASC";
+    $arrResults = $this->select( $strSQL, array (":username" => $username ) );
+    
+    foreach ( $arrResults as $arrResult )
+		{
+			$objCategory = new Xerxes_Data_Category( );
+			$objCategory->load( $arrResult );
+			
+			array_push( $arrCategories, $objCategory );
+		}
+		
+		return $arrCategories;
+  }
 
   const metalibMode = 'metalib';
   const userCreatedMode = 'user_created';
