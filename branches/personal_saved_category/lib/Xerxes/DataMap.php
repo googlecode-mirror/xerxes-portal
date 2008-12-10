@@ -1686,10 +1686,11 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 	 *
 	 * @param string $strTableName		table name
 	 * @param mixed $objValueObject		object derived from Xerxes_Framework_DataValue
-	 * @return unknown
+   * @param boolean $boolReturnPk  default false, return the inserted pk value?
+	 * @return  false if failure. on success, true or inserted pk based on $boolReturnPk
 	 */
 	
-	private function doSimpleInsert($strTableName, $objValueObject)
+	private function doSimpleInsert($strTableName, $objValueObject, $boolReturnPk=false)
 	{
 		$arrProperties = array ( );
 		
@@ -1703,7 +1704,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		
 		$strSQL = "INSERT INTO $strTableName ( $fields ) VALUES ( $values )";
 		
-		return $this->insert( $strSQL, $arrProperties );
+		return $this->insert( $strSQL, $arrProperties, $boolReturnPk );
 	}
 }
 
