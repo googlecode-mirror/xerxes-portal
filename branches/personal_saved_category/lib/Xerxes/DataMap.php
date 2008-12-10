@@ -487,7 +487,8 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
           "subcategories_table" => "xerxes_subcategories",
           "database_join_table" => "xerxes_subcategory_databases",
           "subcategories_pk" => "metalib_id",
-          "extra_select" => ""
+          "extra_select" => "",
+          "extra_where" => ""
         );
     } elseif ($mode == self::userCreatedMode) {
             
@@ -496,7 +497,8 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
           "subcategories_table" => "xerxes_user_subcategories",
           "database_join_table" => "xerxes_user_subcategory_databases",
           "subcategories_pk" => "id",
-          "extra_select" => ", xerxes_user_categories.public AS public, xerxes_user_categories.username AS username"
+          "extra_select" => ", xerxes_user_categories.published AS published, xerxes_user_categories.username AS username",
+          "extra_where" => " AND xerxes_user_categories.username = :username "
       );
     } else {
       throw new Exception("unrecognized mode");
@@ -567,6 +569,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		  ORDER BY subcat_seq, sequence";
     $args = array (":value" => $normalized );
     if ($username)  $args[":username"] = $username;  
+
     $arrResults = $this->select( $strSQL, $args );
 		
 		if ( $arrResults != null )
