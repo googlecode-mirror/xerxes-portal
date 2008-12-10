@@ -547,19 +547,27 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		            xerxes_databases.*,
                 xerxes_database_group_restrictions.usergroup
                 $schema_map[extra_select]
-			   FROM $schema_map[categories_table],
-			        xerxes_databases
-               LEFT OUTER JOIN xerxes_database_group_restrictions ON xerxes_databases.metalib_id = xerxes_database_group_restrictions.database_id,
-			        $schema_map[database_join_table], 
-			        $schema_map[subcategories_table]
+			   FROM $schema_map[categories_table]
+         
+              LEFT OUTER JOIN $schema_map[subcategories_table] ON $schema_map[categories_table].id = $schema_map[subcategories_table].category_id
+              
+              LEFT OUTER JOIN $schema_map[database_join_table] ON $schema_map[database_join_table].subcategory_id = $schema_map[subcategories_table].$schema_map[subcategories_pk]
+              
+			        LEFT OUTER JOIN xerxes_databases ON $schema_map[database_join_table].database_id = xerxes_databases.metalib_id
+              
+               LEFT OUTER JOIN xerxes_database_group_restrictions ON xerxes_databases.metalib_id = xerxes_database_group_restrictions.database_id
+			        
+			        
 			 WHERE $schema_map[categories_table].$column = :value
-			   AND $schema_map[subcategories_table].name NOT LIKE 'All%'
-			   AND $schema_map[database_join_table].database_id = xerxes_databases.metalib_id
-			   AND $schema_map[database_join_table].subcategory_id = $schema_map[subcategories_table].$schema_map[subcategories_pk]
-			   AND $schema_map[categories_table].id = $schema_map[subcategories_table].category_id
+			   AND 
+             ($schema_map[subcategories_table].name NOT LIKE 'All%' OR
+              $schema_map[subcategories_table].name is NULL)
+			   
+         $schema_map[extra_where]
 		  ORDER BY subcat_seq, sequence";
-
-    $arrResults = $this->select( $strSQL, array (":value" => $normalized ) );
+    $args = array (":value" => $normalized );
+    if ($username)  $args[":username"] = $username;  
+    $arrResults = $this->select( $strSQL, $args );
 		
 		if ( $arrResults != null )
 		{
@@ -587,10 +595,16 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 
 				if ( $arrResult["subcategory"] != $objSubcategory->name )
 				{
-					// Get the last db in this subcategory first too. 
-					array_push( $objSubcategory->databases, $objDatabase );
+					// Get the last db in this subcategory first too.
+          if ( $objDatabase->metalib_id != null )
+	          array_push( $objSubcategory->databases, $objDatabase );
 					$objDatabase = new Xerxes_Data_Database( );
-					array_push( $objCategory->subcategories, $objSubcategory );
+          
+          // Only add subcategory if it actually has databases, to
+          // maintain consistency with previous semantics.           
+          if (! empty($objSubcategory->databases)) {
+					  array_push( $objCategory->subcategories, $objSubcategory );
+          }
 					
 					$objSubcategory = new Xerxes_Data_Subcategory( );
 					$objSubcategory->id = $arrResult["subcat_id"];
@@ -633,9 +647,8 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 			}
 			
 			// last ones
-			 
-			array_push( $objSubcategory->databases, $objDatabase );
-			array_push( $objCategory->subcategories, $objSubcategory );
+			if ($objDatabase->metalib_id != null) array_push( $objSubcategory->databases, $objDatabase );
+			if (! empty($objSubcategory->databases)) array_push( $objCategory->subcategories, $objSubcategory );
 			
 			return $objCategory;
 		
