@@ -460,13 +460,16 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 	 * Get an inlined set of subcategories and databases for a subject
 	 *
 	 * @param string $normalized		normalized category name
-	 * @param string $old				old normalzied category name, for comp with Xerxes 1.0
+	 * @param string $old				old normalzied category name, for comp with Xerxes 1.0. Often can be left null in call. Only applicable to metalibMode. 
    * @param string $mode  one of constants metalibMode or userCreatedMode, for metalib-imported categories or user-created categories, using different tables.
+   * @param string $username only used in userCreatedMode, the particular user must be specified, becuase normalized subject names are only unique within a user. 
 	 * @return Xerxes_Data_Category					a Xerxes_Data_Category object, filled out with subcategories and databases. 
 	 */
 	
-   public function getSubject($normalized, $old = null, $mode = self::metalibMode)
+   public function getSubject($normalized, $old = null, $mode = self::metalibMode, $username = null)
 	{
+    if ($mode == self::userCreatedMode && $username == null) throw new Exception("a username argument must be supplied in userCreatedMode");
+    
     //This can be used to fetch personal or metalib-fetched data. We get
     // from different tables depending. 
     $schema_map = $this->schema_map_by_mode($mode);

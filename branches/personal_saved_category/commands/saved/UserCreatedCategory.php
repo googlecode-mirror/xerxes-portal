@@ -33,7 +33,11 @@ class Xerxes_Command_UserCreatedCategory extends Xerxes_Command_Saved
     $strUser = $objRequest->getProperty("user");
     
 		$objData = new Xerxes_DataMap( );
-		$objCategoryData = $objData->getSubject( $strSubject, null, Xerxes_DataMap::userCreatedMode );
+		$objCategoryData = array();
+    /* Only fetch if we actually have params, avoid the fetch-everything phenomena */
+    if ( $strSubject && $strUser ) { 
+      $objData->getSubject( $strSubject, null, Xerxes_DataMap::userCreatedMode, $strUser );
+    }
     
     // Make sure they have access
     if (! $objCategoryData->public) {
