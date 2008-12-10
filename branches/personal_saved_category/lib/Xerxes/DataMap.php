@@ -355,6 +355,30 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		}
 	}
 	
+  
+  /**
+   * Add a user-created category; Does not add subcategories or databases,
+   * just the category. Category should not have an 'id' property, will be
+   * supplied by auto-incremented db column.
+   *
+   * @param Xerxes_Data_Category $objCategory
+   *
+   */
+
+  public function addUserCreatedCategory(Xerxes_Data_Category $objCategory)
+  {
+    // We don't use metalib-id or old for user-created categories
+    unset($objCategory->metalib_id);
+    unset($objCategory->old);
+    
+    $new_pk = $this->doSimpleInsert( "xerxes_user_categories", $objCategory, true );
+    
+    $objCategory->id = $new_pk;
+    return $objCategory;
+  }
+
+
+  
 	/**
 	 * Convert metalib dates to something MySQL can understand
 	 *
