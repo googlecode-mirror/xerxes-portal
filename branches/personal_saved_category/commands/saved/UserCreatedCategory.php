@@ -40,7 +40,7 @@ class Xerxes_Command_UserCreatedCategory extends Xerxes_Command_Saved
     }
     
     // Make sure they have access
-    if (! $objCategoryData->public) {
+    if (! $objCategoryData->published) {
       Xerxes_Helper::ensureSpecifiedUser( $objCategoryData->owned_by_user, $objRequest, $objRegistry, "This is a private database set only accessible to the user who created it. Please log in if you are that user." );
     }          
 		

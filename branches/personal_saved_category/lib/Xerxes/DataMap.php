@@ -522,7 +522,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 			$objCategory->normalized = $normalized;
       // These two only for user-created categories, will be nil otherwise.
       if (array_key_exists("username", $arrResults[0])) $objCategory->owned_by_user = $arrResults[0]["username"];
-      if (array_key_exists("public", $arrResults[0])) $objCategory->public = $arrResults[0]["public"];
+      if (array_key_exists("published", $arrResults[0])) $objCategory->published = $arrResults[0]["published"];
 			
 			$objSubcategory = new Xerxes_Data_Subcategory( );
 			//$objSubcategory->metalib_id = $arrResults[0]["subcat_id"];

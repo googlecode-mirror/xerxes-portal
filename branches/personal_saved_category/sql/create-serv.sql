@@ -100,7 +100,7 @@ CREATE TABLE xerxes_user_categories(
 	id 			      MEDIUMINT NOT NULL AUTO_INCREMENT,
 	name     		  VARCHAR(255),
   username      VARCHAR(50),
-  public        INTEGER(1) NOT NULL DEFAULT 0, 
+  published        INTEGER(1) NOT NULL DEFAULT 0, 
 	normalized		VARCHAR(255),
 
 	PRIMARY KEY (id)
