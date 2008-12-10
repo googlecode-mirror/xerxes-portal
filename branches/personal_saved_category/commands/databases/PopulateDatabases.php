@@ -409,20 +409,7 @@
 		
 		private function normalize($strSubject)
 		{
-			$strNormalized = strtolower($strSubject);
-			
-			$strNormalized = str_replace("&amp;","", $strNormalized);
-			$strNormalized = str_replace("'","", $strNormalized);
-			$strNormalized = str_replace("+","-", $strNormalized);
-			
-			$strNormalized = preg_replace("/\W/","-",$strNormalized);
-			
-			while ( strstr($strNormalized, "--") )
-			{
-				$strNormalized = str_replace("--", "-", $strNormalized);
-			}
-			
-			return $strNormalized;
+			return Xerxes_Data_Category::normalize($strSubject);
 		}
 		
 		private function normalizeOld($strSubject)

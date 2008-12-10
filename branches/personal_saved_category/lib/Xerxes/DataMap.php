@@ -48,6 +48,29 @@ class Xerxes_Data_Category extends Xerxes_Framework_DataValue
 	public $normalized;
 	public $old;
 	public $subcategories = array ( );
+  
+  /**
+   * Converts a sting to a normalized (no-spaces, non-letters) string
+   *
+   * @param string $strSubject	original string
+   * @return string				normalized string
+   */
+  public static function normalize($strSubject) {
+    $strNormalized = strtolower($strSubject);
+    
+    $strNormalized = str_replace("&amp;","", $strNormalized);
+    $strNormalized = str_replace("'","", $strNormalized);
+    $strNormalized = str_replace("+","-", $strNormalized);
+    
+    $strNormalized = preg_replace("/\W/","-",$strNormalized);
+    
+    while ( strstr($strNormalized, "--") )
+    {
+      $strNormalized = str_replace("--", "-", $strNormalized);
+    }
+    
+    return $strNormalized;
+  }
 }
 
 class Xerxes_Data_Subcategory extends Xerxes_Framework_DataValue
