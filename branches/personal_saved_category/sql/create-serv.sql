@@ -105,7 +105,7 @@ CREATE TABLE xerxes_user_categories(
 
 	PRIMARY KEY (id)
 );
-CREATE INDEX xerxes_user_categories_normalized_idex ON xerxes_user_categories(username, normalized);
+CREATE INDEX xerxes_user_categories_normalized_idx ON xerxes_user_categories(username, normalized);
 
 CREATE TABLE xerxes_user_subcategories(
 	id        MEDIUMINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
