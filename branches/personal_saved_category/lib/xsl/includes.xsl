@@ -1715,7 +1715,7 @@
 			<div class="mangoAvailable">		
 				<table id="holdingsTable">
 				<tr>
-					<xsl:if test="//lookup/library[held = 1 and location != 'ONLINE' and ( isbn = $isbn  or oclc = $oclc)]/library">
+					<xsl:if test="//lookup/library[held = 1 and location != 'ONLINE' and library != 'local' and ( isbn = $isbn  or oclc = $oclc)]/library">
 						<th>Institution</th>
 					</xsl:if>
 					<th>Location</th>
@@ -1724,7 +1724,7 @@
 				</tr>
 				<xsl:for-each select="//lookup/library[held = 1 and location != 'ONLINE' and ( isbn = $isbn  or oclc = $oclc)]">
 					<tr>
-						<xsl:if test="library">
+						<xsl:if test="library and library != 'local'">
 							<td><xsl:value-of select="library" /></td>
 						</xsl:if>
 						<td><xsl:value-of select="location" /></td>

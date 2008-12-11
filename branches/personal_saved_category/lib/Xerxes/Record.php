@@ -29,6 +29,7 @@
 		private $strFormat = "";			// format
 		private $strTechnology ="";			// technology/system format
 		
+		private $strControlNumber = "";		// the 001 basically, OCLC or otherwise
 		private $strOCLC = "";				// oclc number
 		private $strGovDoc = "";			// gov doc number
 		private $strGPO = "";				// gov't printing office (gpo) number
@@ -192,6 +193,8 @@
 				// control and standard numbers
 				
 				$str001 = $this->extractMarcControlField($objXPath, 1);
+				$this->strControlNumber = $str001;
+				
 				$str003 = $this->extractMarcControlField($objXPath, 3);
 				$str008 = $this->extractMarcControlField($objXPath, 8);
 				$str035 = $this->extractMarcDataField($objXPath, 35, "a");
@@ -3404,6 +3407,11 @@
 		public function getOCLCNumber()
 		{
 			return $this->strOCLC;
+		}
+	
+		public function getControlNumber()
+		{
+			return $this->strControlNumber;
 		}
 	}
 
