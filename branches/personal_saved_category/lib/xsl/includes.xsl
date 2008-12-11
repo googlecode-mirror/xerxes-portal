@@ -175,7 +175,7 @@
 			<xsl:call-template name="metasearch_options" />	
 		</div>
     
-    <xsl:if test="//session/flash_message">
+    <xsl:if test="string(//session/flash_message)">
       <xsl:call-template name="message_display"/>
     </xsl:if>
 		
