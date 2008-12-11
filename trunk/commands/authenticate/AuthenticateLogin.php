@@ -92,7 +92,7 @@ class Xerxes_Command_AuthenticateLogin extends Xerxes_Command_Authenticate
 				// usergroups, we'll just keep what's in the db, if anything. 
 				
 				$user->usergroups = null;
-				$shib_map_file = $objRegistry->getConfig( "APP_DIRECTORY", true ) . "/config/shibboleth/shib_map.php";
+				$shib_map_file = "config/shibboleth/shib_map.php";
 				
 				if ( file_exists( $shib_map_file ) )
 				{
@@ -117,11 +117,6 @@ class Xerxes_Command_AuthenticateLogin extends Xerxes_Command_Authenticate
 
 		if ( $strPostBack == null ) return 1;
 			
-		// otherwise: we'll start off by assuming that the user id is the same as the username
-		// unless one of the authentication sources tells us otherwise
-
-		$strUID = $strUsername;
-		
 		// try to authenticate user against the configured authentication source
 
 		if ( $configAuthenticationSource == "demo" )
@@ -140,6 +135,7 @@ class Xerxes_Command_AuthenticateLogin extends Xerxes_Command_Authenticate
 				
 				$objCustomAuth = new Xerxes_CustomAuth();
 				$bolAuthenticated = $objCustomAuth->authenticate($objRequest, $objRegistry);
+				$strUsername = $objCustomAuth->username;
 			}
 			else
 			{
@@ -155,7 +151,7 @@ class Xerxes_Command_AuthenticateLogin extends Xerxes_Command_Authenticate
 			
 			$objAuth = new Xerxes_LDAP( $configDirectoryServer );
 			
-			if ( $objAuth->authenticate( $configDomain, $strUID, $strPassword ) == true )
+			if ( $objAuth->authenticate( $configDomain, $strUsername, $strPassword ) == true )
 			{
 				$bolAuthenticated = true;
 			}
@@ -168,7 +164,7 @@ class Xerxes_Command_AuthenticateLogin extends Xerxes_Command_Authenticate
 			
 			// see if the user passes the pin test
 
-			if ( $objAuth->authenticate( $strUID, $strPassword ) == true )
+			if ( $objAuth->authenticate( $strUsername, $strPassword ) == true )
 			{
 				$bolAuthenticated = true;
 			}
