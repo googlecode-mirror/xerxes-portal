@@ -34,7 +34,7 @@
       <input type="hidden" name="id" value="{$id}" />
       <input type="hidden" name="username" value="{$username}" />
       <input type="hidden" name="subject" value="{@normalized}" />
-      <input type="hidden" name="return" value="{@return}" />
+      <input type="hidden" name="return" value="{$return}" />
     
       <p>
         Use an existing section: 
