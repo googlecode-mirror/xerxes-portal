@@ -55,7 +55,7 @@ However, if the user is *on* campus, then the user is not presented with a login
 
 login=true
 
-If login is set to true, then the user must be logged into an authenticated account, *or* have a temporary session-account in their session ("local" or "guest"). If the user has no account (temporary session or real) in their session, they will be presented with a login screen when trying to use the action. 
+This only has effect if 'restricted' is also true. If login is also set to true, then the user must be logged into an authenticated account (*not* a temporary session-account in their session ("local" or "guest")). If the user is not logged into an authenticated account, they will be presented with a login screen when trying to use the action. 
 
 = Command/Controller based security =
 
