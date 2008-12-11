@@ -3,15 +3,9 @@
 /**
  * Display a single 'subject' in Xerxes, which is an inlined display of a subcategories
  * 
- * @author David Walker
- * @copyright 2008 California State University
- * @link http://xerxes.calstate.edu
- * @license http://www.gnu.org/licenses/
- * @version 1.1
- * @package Xerxes
  */
 
-class Xerxes_Command_UserCreatedCategory extends Xerxes_Command_Saved
+class Xerxes_Command_UserCreatedCategory extends Xerxes_Command_Collections
 {
 	/**
 	 * Fetch a single top-level category and inline its subcategories as XML;
@@ -29,14 +23,26 @@ class Xerxes_Command_UserCreatedCategory extends Xerxes_Command_Saved
 		$objXml = new DOMDOcument( );
 		$objXml->loadXML( "<category />" );
 		
-		$strSubject = $objRequest->getProperty( "subject" );
-    $strUser = $objRequest->getProperty("user");
+    $strSubject = $objRequest->getProperty( "subject" );
+    $strUser = $objRequest->getProperty("username");
     
 		$objData = new Xerxes_DataMap( );
-		$objCategoryData = array();
+		$objCategoryData = null;
     /* Only fetch if we actually have params, avoid the fetch-everything phenomena */
     if ( $strSubject && $strUser ) { 
-      $objData->getSubject( $strSubject, null, Xerxes_DataMap::userCreatedMode, $strUser );
+      $objCategoryData = $objData->getSubject( $strSubject, null, Xerxes_DataMap::userCreatedMode, $strUser );
+    }
+    
+    //If there hasn't
+    if (! $objCategoryData) {
+      if ( $objRequest->getRedirect()) {
+        //Nevermind, we're in the creation process, already redirected, just
+        //end now. 
+        return 1;
+      }
+      else {
+        throw new Xerxes_NotFoundException("Personal collection not found.");
+      }
     }
     
     // Make sure they have access
@@ -51,11 +57,11 @@ class Xerxes_Command_UserCreatedCategory extends Xerxes_Command_Saved
 			$objXml->documentElement->setAttribute( "name", $objCategoryData->name );
 			$objXml->documentElement->setAttribute( "normalized", $objCategoryData->normalized );
       $objXml->documentElement->setAttribute("owned_by_user", $objCategoryData->owned_by_user);
-      $objXml->documentElement->setAttribute("public", $objCategoryData->public);
+      $objXml->documentElement->setAttribute("published", $objCategoryData->published);
 			
 			// standard url for the category 
 			       
-			$arrParams = array ("base" => "saved", "action" => "subject", "user" => $strUser, "subject" => $objCategoryData->normalized );
+			$arrParams = array ("base" => "collections", "action" => "subject", "user" => $strUser, "subject" => $objCategoryData->normalized );
 			$url = Xerxes_Parser::escapeXml( $objRequest->url_for( $arrParams ) );
 			$objElement = $objXml->createElement( "url", $url );
 			$objXml->documentElement->appendChild( $objElement );

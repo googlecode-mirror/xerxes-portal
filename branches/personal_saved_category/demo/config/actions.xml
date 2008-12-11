@@ -96,7 +96,7 @@
 			
 			<action name="categories">
 				<command>DatabasesCategories</command>
-        <command directory="saved">ListUserCreatedCategories</command>
+        <command directory="collections">ListUserCategories</command>
 				<request name="use_categories_quicksearch">true</request>
 				<command>DatabasesSubject</command>
 				<view>xsl/databases_categories.xsl</view>
@@ -305,17 +305,49 @@
 			</action>
 		</section>
     
-    <section name="saved" directory="saved" namespace="Xerxes" documentElement="xerxes" login="true">
+    <section name="collections" directory="collections" namespace="Xerxes" documentElement="xerxes" login="true">
       <action name="subject">
 				<command>UserCreatedCategory</command>
 				<pathParamMap>
-          <mapEntry pathIndex="2" property="user" />
+          <mapEntry pathIndex="2" property="username" />
 					<mapEntry pathIndex="3" property="subject"/>
 				</pathParamMap>
 				<view>xsl/databases_subject.xsl</view>
 			</action>
       
-
+      <action name="save_choose_collection">
+        <!-- all of them -->
+        <command>ListUserCategories</command>
+        <!-- specified database -->
+				<command directory="databases">DatabasesDatabase</command>
+        <pathParamMap>
+          <mapEntry pathIndex="2" property="username" />
+          <mapEntry pathIndex="3" property="id" />
+        </pathParamMap>
+        <view>xsl/collections/save_database_choose_category.xsl</view>
+      </action>
+      <action name="save_choose_subheading">
+          <command directory="databases">DatabasesDatabase</command>
+          <!-- save if it needs saving, or normalize to use the right one -->
+          <command>ChooseUserCategory</command>
+          <!-- add it to xml -->
+          <command>UserCreatedCategory</command>
+          <pathParamMap>
+            <mapEntry pathIndex="2" property="username" />
+            <mapEntry pathIndex="3" property="id"/>
+          </pathParamMap>
+          <!-- display the subheading picker -->
+          <view>xsl/collections/save_database_choose_section.xsl</view>
+      </action>
+      <action name="save_complete">
+         <command>SaveDatabaseToUserCategory</command>
+          <pathParamMap>
+            <mapEntry pathIndex="2" property="username" />
+            <mapEntry pathIndex="3" property="id"/>
+          </pathParamMap>
+          <!-- no view, redirect -->
+      </action>
+      
     </section>
 		
 		<section name="availability" directory="availability" namespace="Xerxes" documentElement="xerxes">
