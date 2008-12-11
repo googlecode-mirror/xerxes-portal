@@ -305,7 +305,7 @@
 			</action>
 		</section>
     
-    <section name="collections" directory="collections" namespace="Xerxes" documentElement="xerxes" login="true">
+    <section name="collections" directory="collections" namespace="Xerxes" documentElement="xerxes" restricted="true" login="true">
       <action name="subject">
 				<command>UserCreatedCategory</command>
 				<pathParamMap>
