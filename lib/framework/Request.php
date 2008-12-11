@@ -655,7 +655,8 @@ class Xerxes_Framework_Request
 					unset( $properties[$property] );
 				}
 			}
-			
+		  // Need to resort since we may have added indexes in a weird order. Silly PHP. 
+			ksort($extra_path_arr); 	
 			$extra_path = implode( "/", $extra_path_arr );
 		}
 		
