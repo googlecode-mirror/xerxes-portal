@@ -175,7 +175,7 @@
 			<xsl:call-template name="metasearch_options" />	
 		</div>
     
-    <xsl:if test="//request/message">
+    <xsl:if test="//session/flash_message">
       <xsl:call-template name="message_display"/>
     </xsl:if>
 		
@@ -233,7 +233,7 @@
 -->
 <xsl:template name="message_display">
 <div id="message_display">
-<xsl:value-of select="//request/message"/>
+<xsl:value-of select="//session/flash_message"/>
 </div>
 </xsl:template>
 

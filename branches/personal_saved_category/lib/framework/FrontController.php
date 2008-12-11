@@ -437,9 +437,12 @@ class Xerxes_Framework_FrontController
 					
 					echo $output;
 				}
+        //remove the flash message, intended for one display only. 
+        $objRequest->setSession("flash_message", null);        
 			}
 		} 
 
+    
 		// we'll catch all exceptions here, but the Xerxes_Error class can perform actions
 		// based on the specific type of error, such as PDOException
 		
