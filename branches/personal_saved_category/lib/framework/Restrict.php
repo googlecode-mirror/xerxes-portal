@@ -55,7 +55,7 @@ class Xerxes_Framework_Restrict
 	
 	public function checkLogin(Xerxes_Framework_Request $objRequest)
 	{
-		if ( self::isAuthenticatedUser( $objRequest ) );
+		if (! self::isAuthenticatedUser( $objRequest ) )
 		{
 			// redirect to authentication page
 
