@@ -39,7 +39,10 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
-
+  
+  <!-- show 'save database' link on item detail-->
+  <xsl:variable name="show_save_db_on_detail" select="true()"/>
+  
 	<xsl:variable name="global_advanced_mode" 
 		select="(//request/metasearch_input_mode = 'advanced') or 
 		( //results/search/pair[@position = '2']/query != '' ) or 
@@ -171,6 +174,10 @@
 			</div>
 			<xsl:call-template name="metasearch_options" />	
 		</div>
+    
+    <xsl:if test="//request/message">
+      <xsl:call-template name="message_display"/>
+    </xsl:if>
 		
 		<xsl:call-template name="main" />
 		
@@ -219,6 +226,16 @@
 	override the template. 
 </xsl:template>
 
+<!-- 
+  TEMPLATE message_display
+  A generic way to display a message to the user in any page, usually
+  used for non-ajax version of completion status messages. 
+-->
+<xsl:template name="message_display">
+<div id="message_display">
+<xsl:value-of select="//request/message"/>
+</div>
+</xsl:template>
 
 <!--
 	TEMPLATE: PAGE NAME
