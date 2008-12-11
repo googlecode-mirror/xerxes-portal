@@ -20,7 +20,7 @@ class Xerxes_Command_ChooseUserCategory extends Xerxes_Command_Collections
 	public function doExecute(Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry)
 	{
     //Cancel?
-    if ($objRequest->getProperty("cancel")) {
+    if ($objRequest->getProperty("cancel")) {      
       $this->returnWithMessage("Cancelled"); 
       return 1;
     }
@@ -71,7 +71,8 @@ class Xerxes_Command_ChooseUserCategory extends Xerxes_Command_Collections
                                      "action" => "save_choose_subheading",
                                      "id" => $objRequest->getProperty("id"),
                                      "username" => $objRequest->getProperty("username"),
-                                     "subject" => $existingSubject->normalized),
+                                     "subject" => $existingSubject->normalized,
+                                     "return" => $objRequest->getProperty("return")),
                               true // force full url
                               );
       $objRequest->setRedirect(  $fixedUrl  );
