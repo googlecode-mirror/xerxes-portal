@@ -54,9 +54,9 @@
       
   
       <p>
-        <input type="submit" value="cancel"/>
+        <input type="submit" value="cancel" name="cancel"/>
         <xsl:text> </xsl:text>      
-        <input type="submit" value="save"/>
+        <input type="submit" value="save" name="save"/>
       </p>
     </form>
     </xsl:for-each>
