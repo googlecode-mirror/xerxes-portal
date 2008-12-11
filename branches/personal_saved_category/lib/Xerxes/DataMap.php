@@ -376,8 +376,39 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
     $objCategory->id = $new_pk;
     return $objCategory;
   }
-
-
+  
+  /**
+   * Add a user-created subcategory; Does not add databases joins,
+   * just the subcategory. Category should not have an 'id' property, will be
+   * supplied by auto-incremented db column.
+   *
+   * @param Xerxes_Data_Subcategory $objSubcat
+   *
+   */
+  public function addUserCreatedSubcategory(Xerxes_Data_Subcategory $objSubcat) {
+    //We don't use metalib-id, we use id instead, sorry. 
+    unset($objSubcat->metalib_id);
+    
+    $new_pk = $this->doSimpleInsert("xerxes_user_subcategories", $objSubcat, true);
+    $objSubcat->id = $new_pk;
+    return $objSubcat;
+  }
+  /**
+   * Add a database to a user-created subcategory; 
+   *
+   * @param String $databaseID the metalib_id of a Xerxes database object
+   * @param Xerxes_Data_Subcategory $objSubcat object representing user created subcat
+   *
+   */
+  public function addDatabaseToUserCreatedSubcategory( $databaseID, Xerxes_Data_Subcategory $objSubcat)
+  {
+      $strSQL = "INSERT INTO xerxes_user_subcategory_databases ( database_id, subcategory_id, sequence ) " . "VALUES ( :database_id, :subcategory_id, :sequence )";
+				
+      $arrValues = array (":database_id" => $databaseID, ":subcategory_id" => $objSubcat->id, ":sequence" => count($objSubcat->databases) + 1 );
+      
+      $this->insert( $strSQL, $arrValues );
+  }
+  
   
 	/**
 	 * Convert metalib dates to something MySQL can understand
