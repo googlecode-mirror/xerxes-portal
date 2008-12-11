@@ -580,6 +580,19 @@
 			<xsl:copy-of select="$text_breadcrumb_seperator" />
 			<span class="breadcrumbHere">Create Snippet</span>
 		</xsl:when>
+    
+    <!-- personal collections/saved databases -->
+    <xsl:when test="request/base = 'collections' and  (request/action = 'save_choose_collection' or request/action = 'save_choose_subheading')">
+      <a>
+        <xsl:attribute name="href">
+					<xsl:value-of select="//database/url" />
+				</xsl:attribute>
+				<xsl:value-of select="//database/title_display" />
+			</a>
+      <xsl:copy-of select="$text_breadcrumb_seperator" />
+      <span class="breadcrumbHere">Save to personal collection</span>
+    </xsl:when>
+    
 		<xsl:otherwise>
 			<span class="breadcrumbHere"><xsl:call-template name="page_name" /></span>
 		</xsl:otherwise>

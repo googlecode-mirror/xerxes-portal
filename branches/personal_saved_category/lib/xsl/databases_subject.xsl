@@ -14,11 +14,15 @@
 <xsl:stylesheet version="1.0"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:php="http://php.net/xsl">
-<xsl:include href="includes.xsl" />
+<xsl:import href="includes.xsl" />
 <xsl:output method="html" encoding="utf-8" indent="yes" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
 
 <xsl:template match="/*">
 	<xsl:call-template name="surround" />
+</xsl:template>
+
+<xsl:template name="page_name">
+  <xsl:value-of select="//category/@name" />
 </xsl:template>
 
 <xsl:template name="main">
