@@ -17,6 +17,7 @@ class Xerxes_Framework_Registry
 	private $file = "config/config.xml"; // settings configuration file
 	private $php = "config/config.php"; // settings configuration in a php file
 	private $usergroups = array ( ); // user groups
+  private $authentication_sources = array();
 	private $arrConfig = null; // configuration settings
 	private $arrPass = array ( ); // values to pass on to the view
 	private static $instance; // singleton pattern
@@ -134,10 +135,20 @@ class Xerxes_Framework_Registry
 					$value = str_replace( "&gt;", ">", $value );
 					$value = str_replace( "&amp;", "&", $value );
 					
+          // special logic for authentication_source because we can
+          // have more than one. 
+          if ( $name == "AUTHENTICATION_SOURCE") {
+            $this->authentication_sources[ (string) $config["id"] ] = $value;
+            // And don't overwrite the first one in our standard config array
+            if (! empty($this->arrConfig["AUTHENTICATION_SOURCE"])) {
+              $value = "";
+            }
+          }
+        
 					if ( $value != "" )
 					{
+    
 						// add it to the config array
-						
 
 						$this->arrConfig[$name] = $value;
 						
@@ -151,11 +162,11 @@ class Xerxes_Framework_Registry
 						}
 					}
 				}
+        
 				
 				// get group information out of config.xml too
 				// we just store actual SimpleXML elements in the 
 				// $this->usergroups array.
-				
 
 				$groups = $xml->configuration->groups->group;
 				
@@ -337,6 +348,21 @@ class Xerxes_Framework_Registry
 			return null;
 		}
 	}
+  
+  // Gets an authentication source by id. If id is null or no such
+  // source can be found, returns first authentication source in config file.
+  // If not even that, returns "demo". 
+  public function getAuthenticationSource($id) {
+    $source = null;
+    if (! empty($id)) $source = $this->authentication_sources[$id];
+    if ($source == null) {
+      $source = $this->getConfig("AUTHENTICATION_SOURCE");
+    }
+    if ($source == null) {
+      $source = "demo";
+    }
+    return $source;
+  }
 	
 	public function getXML()
 	{
