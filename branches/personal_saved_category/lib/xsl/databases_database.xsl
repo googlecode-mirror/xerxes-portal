@@ -74,7 +74,12 @@
           </xsl:otherwise>
           </xsl:choose>
 				</xsl:if>
-                
+        
+        <div class="database_functions" style="margin-top:10px;">
+           <xsl:if test="/*/config/collection_save_on_db_detail">
+            <a href="{add_to_collection_url}">Save database in personal collection</a>
+           </xsl:if>
+        </div>        
         
 				<div class="databasesDescription">
 					<xsl:value-of disable-output-escaping="yes" select="description" />			
