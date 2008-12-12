@@ -37,7 +37,9 @@ class Xerxes_Command_AuthenticateLogin extends Xerxes_Command_Authenticate
 		
 		// configuration settings
 
-		$configAuthenticationSource = $objRegistry->getConfig( "AUTHENTICATION_SOURCE", false, "demo" );
+		//$configAuthenticationSource = $objRegistry->getConfig( "AUTHENTICATION_SOURCE", false, "demo" );
+    $configAuthenticationSource = $objRegistry->getAuthenticationSource( $objRequest->getProperty("authentication_source"));
+    
 		$configDemoUsers = $objRegistry->getConfig( "DEMO_USERS", false );
 		$configHttps = $objRegistry->getConfig( "SECURE_LOGIN", false, false );
 		

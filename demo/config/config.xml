@@ -178,6 +178,13 @@
 		 -->
 		
 		<config name="authentication_source">demo</config>
+    
+    <!-- additional authentication_sources may optionally be included. They
+         will be used by Xerxes only from a base=authenticate action=login request with a URL parameter "authentication_source" set to an 'id'
+         mentioned here. 
+         
+         <config name="authentication_source" id="other">something_else</config>
+    -->
 		
 		<!-- setting this to 'true' will cause xerxes to force all logins thru https:// -->
 		
