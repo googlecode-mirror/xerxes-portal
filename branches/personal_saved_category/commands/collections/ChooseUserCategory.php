@@ -19,11 +19,6 @@ class Xerxes_Command_ChooseUserCategory extends Xerxes_Command_Collections
 	
 	public function doExecute(Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry)
 	{
-    //Cancel?
-    if ($objRequest->getProperty("cancel")) {      
-      $this->returnWithMessage("Cancelled"); 
-      return 1;
-    }
 		
 		$strSubjectSelection = $objRequest->getProperty( "subject" );
     $strNewSubject = $objRequest->getProperty("new_subject_name");

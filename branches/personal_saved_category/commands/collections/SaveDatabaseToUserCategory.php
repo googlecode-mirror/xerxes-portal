@@ -15,11 +15,6 @@ class Xerxes_Command_SaveDatabaseToUserCategory extends Xerxes_Command_Collectio
 	
 	public function doExecute(Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry)
 	{
-    //Cancel?
-    if ($objRequest->getProperty("cancel")) {
-      $this->returnWithMessage("Cancelled");
-      return 1;
-    }
     
 		$strNormalizedSubject = $objRequest->getProperty("subject");
     $strUsername = $objRequest->getProperty("username");
