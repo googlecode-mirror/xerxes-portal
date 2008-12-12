@@ -351,6 +351,9 @@
 			seperate server so that you can slpit the spell checking between multiple ip addresses -->
 			
 		<config name="alternate_yahoo_location"></config>
+    
+    <!-- saving databases to personal collection. Show save buttons to do so? -->
+    <config name="collection_save_on_db_detail" pass="true">true</config>
 		
 		<!-- mango stuff -->
 		

@@ -908,16 +908,24 @@
 -->
 
 <xsl:template name="subject_databases_list">
-
+  <!-- edit mode for user created categories, default to false -->
+  <xsl:param name="edit_mode" select="false()" />
 	<!-- default to true: -->
 	<xsl:param name="should_show_checkboxes" select="true()" />
 	<!-- specific subcategory only? Default to false meaning, no, all subcats. -->
 	<xsl:param name="show_only_subcategory" select="false()" />
-	
+	  
 	<xsl:for-each select="category/subcategory[(not($show_only_subcategory )) or ($show_only_subcategory = '') or (@id = $show_only_subcategory)]">
-		<fieldset class="subjectSubCategory">
-		<legend><xsl:value-of select="@name" /></legend>
 
+		<fieldset class="subjectSubCategory">
+      <xsl:if test="$edit_mode">
+        <div class="subject_edit_commands">
+          <a href="./?base=collections&amp;action=rename_form&amp;subject={../@normalized}&amp;subcategory={@id}&amp;username={../@owned_by_user}">
+          [Change name]</a> [Change Databases Order]
+        </div>
+      </xsl:if>
+		<legend><xsl:value-of select="@name" /></legend>
+    
 			<!-- if the current session can't search this resource, should we show a lock icon? 
 			We show lock icons for logged in with account users, on campus users, and guest users. 
 			Not for off campus not logged in users, because they might be able to search more 
@@ -932,7 +940,8 @@
 			<xsl:for-each select="database">
 			<xsl:variable name="id_meta" select="metalib_id" />
 			<tr valign="top">
-			<td>
+			<td>      
+      
 				<!-- how many database checkboxes were displayed in this subcategory, before now?
 					Used for seeing if we've reached maximum for default selected dbs. Depends on 
 					if we're locking non-searchable or not. -->
@@ -1009,7 +1018,11 @@
 					</img>
 					</a>
 				</div>
-				
+        <xsl:if test="$edit_mode">
+          <div class="subject_edit_commands">
+            [remove]
+          </div>
+				</xsl:if>
 				<xsl:if test="group_restriction">
 					<div class="subjectDatabaseRestriction"><xsl:call-template name="db_restriction_display" /></div>
 				</xsl:if>

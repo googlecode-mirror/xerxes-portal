@@ -29,6 +29,7 @@
 
 	<xsl:variable name="category_name"	select="//category/@name" />
 	<xsl:variable name="request_uri"	select="//request/server/request_uri" />
+  <xsl:variable name="user_can_edit" select="/*/category/@owned_by_user = /*/request/session/username" /> 
 
 	<form name="form1" method="get" action="{$base_url}/" onSubmit="return databaseLimit(this)">
 	<input type="hidden" name="base" value="metasearch" />
@@ -57,6 +58,12 @@
        </xsl:if>
 			</div>
 			
+      <xsl:if test="$user_can_edit" >
+        <div id="subject_edit_commands">
+          <a href="{/*/category/edit_url}">[Edit]</a>
+        </div>
+      </xsl:if>
+      
 			<div class="subjectDatabases">
         <!-- defined in includes.xsl -->
 				<xsl:call-template name="subject_databases_list"/>

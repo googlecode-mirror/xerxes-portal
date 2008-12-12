@@ -306,14 +306,38 @@
 		</section>
     
     <section name="collections" directory="collections" namespace="Xerxes" documentElement="xerxes" restricted="true" login="true">
+      <pathParamMap>
+        <mapEntry pathIndex="2" property="username" />
+        <mapEntry pathIndex="3" property="subject"/>
+      </pathParamMap>
+    
       <action name="subject">
 				<command>UserCreatedCategory</command>
-				<pathParamMap>
-          <mapEntry pathIndex="2" property="username" />
-					<mapEntry pathIndex="3" property="subject"/>
-				</pathParamMap>
 				<view>xsl/databases_subject.xsl</view>
 			</action>
+  
+            
+      <action name="edit_form">
+        <!-- non-ajax edit form -->
+        <command>UserCreatedCategory</command>
+				<view>xsl/collections/edit_subject.xsl</view>
+      </action>
+      <action name="rename_form">
+        <!-- Can be used for renaming a category or a subcategory. If subcategory URL param is there, subcat it is.  --> 
+        <command>UserCreatedCategory</command>
+        <view>xsl/collections/rename.xsl</view>
+      </action>
+      <action name="rename">
+        <!-- Can be used for renaming a category or a subcategory. If subcategory URL param is there, subcat it is.  -->
+        <command>RenameUserCategory</command>        
+      </action>
+      <action name="reorder_subcats_form">
+        <command>UserCreatedCategory</command>
+        <view>xsl/collections/reorder_subcats.xsl</view>
+      </action>
+      <action name="reorder_subcats">
+        <command>ReorderSubcats</command>
+      </action>
       
       <action name="save_choose_collection">
         <!-- all of them -->

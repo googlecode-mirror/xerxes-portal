@@ -275,7 +275,7 @@ a img{
 .subjectCheckList {
 	margin-top: 10px;
 }
-.subjectDatabaseTitle, .subjectDatabaseInfo {
+.subjectDatabaseTitle, .subjectDatabaseInfo, .subjectEditDatabase {
 	display: inline;
 	padding-left: 5px;
 }

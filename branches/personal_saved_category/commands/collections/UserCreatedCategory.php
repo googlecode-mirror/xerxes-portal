@@ -61,9 +61,15 @@ class Xerxes_Command_UserCreatedCategory extends Xerxes_Command_Collections
 			
 			// standard url for the category 
 			       
-			$arrParams = array ("base" => "collections", "action" => "subject", "user" => $strUser, "subject" => $objCategoryData->normalized );
+			$arrParams = array ("base" => "collections", "action" => "subject", "username" => $strUser, "subject" => $objCategoryData->normalized );
 			$url = Xerxes_Parser::escapeXml( $objRequest->url_for( $arrParams ) );
 			$objElement = $objXml->createElement( "url", $url );
+			$objXml->documentElement->appendChild( $objElement );
+
+      //edit url for the user-created category
+      $arrParams = array ("base" => "collections", "action" => "edit_form", "username" => $strUser, "subject" => $objCategoryData->normalized );
+			$url = Xerxes_Parser::escapeXml( $objRequest->url_for( $arrParams ) );
+			$objElement = $objXml->createElement( "edit_url", $url );
 			$objXml->documentElement->appendChild( $objElement );
 			
 			// the attributes of the subcategories

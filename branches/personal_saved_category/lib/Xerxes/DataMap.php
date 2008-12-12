@@ -376,6 +376,15 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
     $objCategory->id = $new_pk;
     return $objCategory;
   }
+    // Does not update subcategory assignments, only the actual category
+    // values, at present. Right now, just name and normalized!
+    public function updateUserCategoryProperties(Xerxes_Data_Category $objCategory) {      
+      $objCategory->normalized = Xerxes_Data_Category::normalize( $objCategory->name );
+      
+      $sql = "UPDATE xerxes_user_categories SET name = :name, normalized = :normalized WHERE id = " . $objCategory->id;
+      
+      return $this->update($sql, array(":name" => $objCategory->name, ":normalized" => $objCategory->normalized ));      
+    }
   
   /**
    * Add a user-created subcategory; Does not add databases joins,
@@ -408,6 +417,15 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
       
       $this->insert( $strSQL, $arrValues );
   }
+  
+    // Does not update database assignments, only the actual subcat
+    // values. Right now, just name and sequence!
+    public function updateUserSubcategoryProperties(Xerxes_Data_Subcategory $objSubcat) {
+      
+      $sql = "UPDATE xerxes_user_subcategories SET name = :name, sequence = :sequence WHERE id = " . $objSubcat->id;
+      
+      return $this->update($sql, array(":name" => $objSubcat->name, ":sequence" => $objSubcat->sequence ));      
+    }
   
   
 	/**
@@ -1753,6 +1771,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		
 		return $this->insert( $strSQL, $arrProperties, $boolReturnPk );
 	}
+  
 }
 
 ?>
