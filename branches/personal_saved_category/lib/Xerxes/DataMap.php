@@ -407,13 +407,16 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
    *
    * @param String $databaseID the metalib_id of a Xerxes database object
    * @param Xerxes_Data_Subcategory $objSubcat object representing user created subcat
+   * @param int sequence optional, will default to end of list if null. 
    *
    */
-  public function addDatabaseToUserCreatedSubcategory( $databaseID, Xerxes_Data_Subcategory $objSubcat)
+  public function addDatabaseToUserCreatedSubcategory( $databaseID, Xerxes_Data_Subcategory $objSubcat, $sequence = null)
   {
+    if ($sequence == null) $sequence = count($objSubcat->databases) + 1;
+    
       $strSQL = "INSERT INTO xerxes_user_subcategory_databases ( database_id, subcategory_id, sequence ) " . "VALUES ( :database_id, :subcategory_id, :sequence )";
 				
-      $arrValues = array (":database_id" => $databaseID, ":subcategory_id" => $objSubcat->id, ":sequence" => count($objSubcat->databases) + 1 );
+      $arrValues = array (":database_id" => $databaseID, ":subcategory_id" => $objSubcat->id, ":sequence" => $sequence );
       
       $this->insert( $strSQL, $arrValues );
   }
@@ -427,6 +430,21 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
       return $this->update($sql, array(":name" => $objSubcat->name, ":sequence" => $objSubcat->sequence ));      
     }
   
+    // Update the 'sequence' number of a database in a user created category
+    public function updateUserDatabaseOrder(Xerxes_Data_Database $objDb, Xerxes_Data_Subcategory $objSubcat, $sequence) {
+      $this->beginTransaction();
+      
+      //first delete an existing join object.
+      $strDeleteSql = "DELETE from xerxes_user_subcategory_databases WHERE database_id = :database_id AND subcategory_id = :subcategory_id";
+      $this->delete($strDeleteSql, array(":database_id" => $objDb->metalib_id, ":subcategory_id" => $objSubcat->id  ));
+        
+      // Now create our new one with desired sequence. 
+      $this->addDatabaseToUserCreatedSubcategory($objDb->metalib_id, $objSubcat, $sequence);
+      
+      $this->commit();
+      
+      //commit transaction
+    }
   
 	/**
 	 * Convert metalib dates to something MySQL can understand

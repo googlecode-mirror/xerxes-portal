@@ -338,6 +338,13 @@
       <action name="reorder_subcats">
         <command>ReorderSubcats</command>
       </action>
+      <action name="reorder_databases_form">
+        <command>UserCreatedCategory</command>
+        <view>xsl/collections/reorder_databases.xsl</view>
+      </action>
+      <action name="reorder_databases">
+        <command>ReorderDatabases</command>
+      </action>
       
       <action name="save_choose_collection">
         <!-- all of them -->

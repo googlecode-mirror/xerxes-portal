@@ -921,7 +921,7 @@
       <xsl:if test="$edit_mode">
         <div class="subject_edit_commands">
           <a href="./?base=collections&amp;action=rename_form&amp;subject={../@normalized}&amp;subcategory={@id}&amp;username={../@owned_by_user}">
-          [Change name]</a> [Change Databases Order]
+          [Change name]</a><xsl:text> </xsl:text><a href="./?base=collections&amp;action=reorder_databases_form&amp;subject={//category/@normalized}&amp;subcategory={@id}&amp;username={//category/@owned_by_user}">[Change Databases Order]</a>
         </div>
       </xsl:if>
 		<legend><xsl:value-of select="@name" /></legend>

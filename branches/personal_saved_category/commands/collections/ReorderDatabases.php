@@ -4,7 +4,7 @@
  * 
  */
 
-class Xerxes_Command_ReorderSubcats extends Xerxes_Command_Collections
+class Xerxes_Command_ReorderDatabases extends Xerxes_Command_Collections
 {
 	/**
 	 * Reorder subcategories. 
@@ -20,6 +20,7 @@ class Xerxes_Command_ReorderSubcats extends Xerxes_Command_Collections
     
 		$strSubject = $objRequest->getProperty( "subject" );
     $strUsername = $objRequest->getProperty("username");
+    $strSubcategoryID = $objRequest->getProperty("subcategory");
     
 
     
@@ -30,45 +31,45 @@ class Xerxes_Command_ReorderSubcats extends Xerxes_Command_Collections
     $objData = new Xerxes_DataMap();
     
     $category = $objData->getSubject( $strSubject, null, Xerxes_DataMap::userCreatedMode, $strUsername );
+    $subcategory = $this->getSubcategory($category, $strSubcategoryID);
 
     
     // Find any new assigned numbers, and reorder. 
-    $orderedSubcats = $category->subcategories;
+    $orderedDatabases = $subcategory->databases;
     // We need to through the assignments in sorted order by sequence choice,
     // for this to work right. 
     $sortedProperties = $objRequest->getAllProperties();
     asort($sortedProperties);
     
     foreach ($sortedProperties as $name => $new_sequence) {
-      if (! empty($new_sequence) &&  preg_match('/^subcat_seq_(\d+)$/', $name, $matches) ) {
-        $subcatID = $matches[1];
+      if (! empty($new_sequence) &&  preg_match('/^db_seq_(.+)$/', $name, $matches) ) {        
+        $dbID = $matches[1];
         $old_index = null;
-        $subcategory = null;
-        for ($i = 0; $i < count($orderedSubcats) ; $i++) {
-          $candidate = $orderedSubcats[$i];
-          if ($candidate->id == $subcatID) {
+        $database = null;
+        for ($i = 0; $i < count($orderedDatabases) ; $i++) {
+          $candidate = $orderedDatabases[$i];
+          if ($candidate->metalib_id == $dbID) {
             $old_index = $i;
-            $subcategory = $candidate;
+            $database = $candidate;
           }
         }
         // If we found it. 
-        if ( $subcategory ) {        
+        if ( $database ) {        
           // remove it from the array, then add it back in
-          array_splice( $orderedSubcats, $old_index, 1);
-          array_splice( $orderedSubcats, $new_sequence - 1, 0, array($subcategory));                     
+          array_splice( $orderedDatabases, $old_index, 1);
+          array_splice( $orderedDatabases, $new_sequence - 1, 0, array($database));                     
         }
       }
     }
-    
-    
+        
     // Okay, we've re-ordered $orderedSubcats, now update the sequence #s
-    for ($i = 0; $i < count($orderedSubcats) ; $i++) {
-      $subcategory = $orderedSubcats[$i];
-      $subcategory->sequence = $i+1;
-      $objData->updateUserSubcategoryProperties( $subcategory );
+    for ($i = 0; $i < count($orderedDatabases) ; $i++) {
+      $db = $orderedDatabases[$i];
+        
+      $objData->updateUserDatabaseOrder( $db, $subcategory, $i+1);
     }
     
-    $this->returnWithMessage("Section order changed", $arrDefaultReturn);
+    $this->returnWithMessage("Database order changed", $arrDefaultReturn);
     
 		return 1;
 	}

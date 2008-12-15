@@ -23,12 +23,14 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
 <xsl:template name="main">
 
 	<xsl:variable name="category_name"	select="//category/@name" />
+  <xsl:variable name="subcategory_id" select="//request/subcategory" />
 	<xsl:variable name="request_uri"	select="//request/server/request_uri" />
 
 	<form name="form1" method="get" action="{$base_url}/" onSubmit="return databaseLimit(this)">
 	<input type="hidden" name="base" value="collections" />
-	<input type="hidden" name="action" value="reorder_subcats" />
+	<input type="hidden" name="action" value="reorder_databases" />
   <input type="hidden" name="subject" value="{//category/@normalized}" />
+  <input type="hidden" name="subcategory" value="{$subcategory_id}" />
   <input type="hidden" name="username" value="{//category/@owned_by_user}" />
   <input type="hidden" name="return" value="{//request/return}" />
 	
@@ -39,15 +41,15 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
   
 		<div id="searchArea">
 	
-				<h1>Reorder Sections</h1>         
-
+				<h1>Reorder Databases</h1>
+          
         <p>
           <table>
-            <xsl:for-each select="//category/subcategory">
+            <xsl:for-each select="//category/subcategory[@id = $subcategory_id]/database">
               <tr>
-                <td><xsl:value-of select="@position"/></td>
-                <td><input type="text" size="2" name="subcat_seq_{@id}" /></td>
-                <td><xsl:value-of select="@name" /></td>
+                <td><xsl:value-of select="position()"/></td>
+                <td><input type="text" size="2" name="db_seq_{metalib_id}" /></td>
+                <td><xsl:value-of select="title_full" /></td>
               </tr>              
             </xsl:for-each>
           </table>
