@@ -43,6 +43,10 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
         <a href="./?base=collections&amp;action=reorder_subcats_form&amp;subject={//category/@normalized}&amp;username={//category/@owned_by_user}"> 
         [Change section order]</a>
         
+        <!-- <a href="./?base=collections&amp;action=delete_category&amp;subject={//category/@normalized}&amp;username={//category/@owned_by_user}">
+          [Delete Collection]
+        </a> -->
+        
         </p>                
       </div>
       
@@ -76,7 +80,33 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
     </div>
     
 		<div id="sidebar">
-			
+       <xsl:if test="/*/request/add_to_subcategory">
+       <form method="GET" action="{base_url}">
+         <input type="hidden" name="base" value="collections" />
+         <input type="hidden" name="action" value="edit_form" />
+         <input type="hidden" name="username" value="{/*/category[1]/@owned_by_user}" />
+         <input type="hidden" name="subject" value="{/*/category[1]/@normalized}" />
+         <input type="hidden" name="add_to_subcategory" value="{//request/add_to_subcategory}" />
+         
+         <h2>Add Databases to Collection</h2>
+          <p>Add to section: <xsl:value-of select="/*/category/subcategory[@id = /*/request/add_to_subcategory]/@name"/>          
+          </p>  
+         <p>Find database: <input type="text" name="query" value="{/*/request/query}"/> <input type="submit" value="GO"/>
+         </p>
+       </form>
+       
+       
+       
+         <ul>
+          <xsl:if test="/*/request/query and not( /*/databases/database )">
+            <li>No databases found matching "<xsl:value-of select="/*/request/query"/>"</li>
+          </xsl:if>
+          <xsl:for-each select="/*/databases/database">
+            <li><a href="./?base=collections&amp;action=save_complete&amp;username={/*/category[1]/@owned_by_user}&amp;subject={/*/category[1]/@normalized}&amp;subcategory={/*/request/add_to_subcategory}&amp;id={metalib_id}&amp;return={php:function('urlencode', string(//server/request_uri))}">
+            Add: <xsl:value-of select="title_display"/></a></li>
+          </xsl:for-each>
+          </ul>
+       </xsl:if>
 		</div>
 	</div>
 

@@ -320,6 +320,10 @@
       <action name="edit_form">
         <!-- non-ajax edit form -->
         <command>UserCreatedCategory</command>
+        <request name="suppress_full_db_list">true</request>
+        <!-- because we use this page as a target of searches to add -->
+        <command directory="databases">DatabasesDatabase</command>  
+        <!-- because we use this page as the add action target too -->
 				<view>xsl/collections/edit_subject.xsl</view>
       </action>
       <action name="rename_form">
