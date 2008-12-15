@@ -52,6 +52,7 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
         <!-- defined in includes.xsl -->
 				<xsl:call-template name="subject_databases_list">
           <xsl:with-param name="edit_mode" select="true()"/>
+          <xsl:with-param name="should_show_checkboxes" select="false()" />
         </xsl:call-template>
 			</div>
 		</div>
