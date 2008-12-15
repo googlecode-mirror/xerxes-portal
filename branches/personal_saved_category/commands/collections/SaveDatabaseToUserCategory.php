@@ -41,6 +41,7 @@ class Xerxes_Command_SaveDatabaseToUserCategory extends Xerxes_Command_Collectio
     
     // Were we directed to create a new one?
     if ( $strNewSubcat || ($strSubcatSelection == "NEW" )) {
+      
       if (empty($strNewSubcat)) $strNewSubcat = "Databases";
       
       $subcategory = new Xerxes_Data_Subcategory();
@@ -49,7 +50,13 @@ class Xerxes_Command_SaveDatabaseToUserCategory extends Xerxes_Command_Collectio
       // just put it at the end
       $subcategory->sequence = count($category->subcategories) + 1;
       
-      $subcategory = $objData->addUserCreatedSubcategory($subcategory);  
+      $subcategory = $objData->addUserCreatedSubcategory($subcategory);
+    }
+    
+    //If no db id was provided, all we needed to do was create a subcategory.
+    if ( ! $strDatabaseID ) {
+      $this->returnWithMessage("New section created");
+      return 1;
     }
     
     
@@ -62,6 +69,9 @@ class Xerxes_Command_SaveDatabaseToUserCategory extends Xerxes_Command_Collectio
     // Now we better have one. 
     if (! $subcategory) throw new Exception("Selected section not found.");
 
+
+      
+    
     // And add the db to it, unless it already is there. 
     foreach ($subcategory->databases as $db) {
       if ($db->metalib_id == $strDatabaseID) {

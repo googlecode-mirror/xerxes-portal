@@ -379,6 +379,17 @@
           <!-- no view, redirect -->
       </action>
       
+      <!-- generic edit insert/update action, with no view, must supply
+           a "return" parameter. "username" parameter must also be provided for
+           scope. 
+           
+           Depending on what params are provided, different edits may be done.
+           subject, new_subcategory_name => will create a new subcategory in subject. 
+           -->
+      <action name="edit">
+          <command>SaveDatabaseToUserCategory</command>
+      </action>
+      
     </section>
 		
 		<section name="availability" directory="availability" namespace="Xerxes" documentElement="xerxes">

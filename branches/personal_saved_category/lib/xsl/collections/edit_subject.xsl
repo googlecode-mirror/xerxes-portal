@@ -55,7 +55,24 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
           <xsl:with-param name="should_show_checkboxes" select="false()" />
         </xsl:call-template>
 			</div>
-		</div>
+      
+      <div>
+        <form action="{$base_url}" METHOD="GET">
+            <input type="hidden" name="base" value="collections"/>
+            <input type="hidden" name="action" value="edit"/>
+            <input type="hidden" name="username" value="{//request/username}" />
+            
+            <input type="hidden" name="return" value="{//server/request_uri}" />
+            
+            <input type="hidden" name="subject" value="{//category/@normalized}" />
+            
+
+          Add a new section: <input type="text" name="new_subcategory_name" />  
+            <input type="submit" name="save" value="add"/>
+        </form>
+      </div>
+    </div>
+    
 		<div id="sidebar">
 			
 		</div>

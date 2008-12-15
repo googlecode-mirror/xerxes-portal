@@ -573,7 +573,9 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
   }
 	
 	/**
-	 * Get an inlined set of subcategories and databases for a subject
+	 * Get an inlined set of subcategories and databases for a subject. In
+   * metalibMode, empty subcategories are not included. In userCreatedMode,
+   * they are. 
 	 *
 	 * @param string $normalized		normalized category name
 	 * @param string $old				old normalzied category name, for comp with Xerxes 1.0. Often can be left null in call. Only applicable to metalibMode. 
@@ -652,8 +654,8 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 			$objSubcategory = new Xerxes_Data_Subcategory( );
 			//$objSubcategory->metalib_id = $arrResults[0]["subcat_id"];
 			$objSubcategory->id = $arrResults[0]["subcat_id"];
-			
 			$objSubcategory->name = $arrResults[0]["subcategory"];
+      $objSubcategory->sequence = $arrResults[0]["subcat_seq"];
 			
 			$objDatabase = new Xerxes_Data_Database( );
 			
@@ -672,13 +674,14 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
           
           // Only add subcategory if it actually has databases, to
           // maintain consistency with previous semantics.           
-          if (! empty($objSubcategory->databases)) {
+          if ($mode == self::userCreatedMode || ! empty($objSubcategory->databases)) {
 					  array_push( $objCategory->subcategories, $objSubcategory );
           }
 					
 					$objSubcategory = new Xerxes_Data_Subcategory( );
 					$objSubcategory->id = $arrResult["subcat_id"];
 					$objSubcategory->name = $arrResult["subcategory"];
+          $objSubcategory->sequence = $arrResult["subcat_seq"];
 				}
 				
 				// if the previous row has a different id, then we've come 
@@ -718,7 +721,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 			
 			// last ones
 			if ($objDatabase->metalib_id != null) array_push( $objSubcategory->databases, $objDatabase );
-			if (! empty($objSubcategory->databases)) array_push( $objCategory->subcategories, $objSubcategory );
+			if ($mode == self::userCreatedMode || ! empty($objSubcategory->databases)) array_push( $objCategory->subcategories, $objSubcategory );
 			
 			return $objCategory;
 		
