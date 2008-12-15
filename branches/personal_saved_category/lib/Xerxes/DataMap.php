@@ -683,7 +683,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
           
           // Only add subcategory if it actually has databases, to
           // maintain consistency with previous semantics.           
-          if ($mode == self::userCreatedMode || ! empty($objSubcategory->databases)) {
+          if ( ( $mode == self::userCreatedMode && $objSubcategory->id ) || ! empty($objSubcategory->databases)) {
 					  array_push( $objCategory->subcategories, $objSubcategory );
           }
 					
@@ -730,7 +730,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 			
 			// last ones
 			if ($objDatabase->metalib_id != null) array_push( $objSubcategory->databases, $objDatabase );
-			if ($mode == self::userCreatedMode || ! empty($objSubcategory->databases)) array_push( $objCategory->subcategories, $objSubcategory );
+			if ( ($mode == self::userCreatedMode && $objSubcategory->id) || ! empty($objSubcategory->databases)) array_push( $objCategory->subcategories, $objSubcategory );
 			
 			return $objCategory;
 		
