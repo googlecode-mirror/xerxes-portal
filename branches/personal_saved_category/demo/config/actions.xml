@@ -384,10 +384,19 @@
            scope. 
            
            Depending on what params are provided, different edits may be done.
-           subject, new_subcategory_name => will create a new subcategory in subject. 
+           
+           subject, new_subcategory_name => will create a new subcategory in subject.
+           
+           More planned, if not we'll re-think name. 
            -->
       <action name="edit">
           <command>SaveDatabaseToUserCategory</command>
+      </action>
+      <action name="remove_db">
+        <command>RemoveDatabaseFromUserSubcategory</command>
+      </action>
+      <action name="delete_subcategory">
+        <command>DeleteSubcategory</command>
       </action>
       
     </section>

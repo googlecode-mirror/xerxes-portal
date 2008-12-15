@@ -921,7 +921,10 @@
       <xsl:if test="$edit_mode">
         <div class="subject_edit_commands">
           <a href="./?base=collections&amp;action=rename_form&amp;subject={../@normalized}&amp;subcategory={@id}&amp;username={../@owned_by_user}">
-          [Change name]</a><xsl:text> </xsl:text><a href="./?base=collections&amp;action=reorder_databases_form&amp;subject={//category/@normalized}&amp;subcategory={@id}&amp;username={//category/@owned_by_user}">[Change Databases Order]</a>
+          [Change name]</a><xsl:text> </xsl:text><a href="./?base=collections&amp;action=reorder_databases_form&amp;subject={//category/@normalized}&amp;subcategory={@id}&amp;username={//category/@owned_by_user}">[Change Databases Order]</a>                            
+          <a href="./?base=collections&amp;action=delete_subcategory&amp;subject={//category/@normalized}&amp;subcategory={@id}&amp;username={//category/@owned_by_user}"> 
+          [Delete Section]
+          </a>
         </div>
       </xsl:if>
 		<legend><xsl:value-of select="@name" /></legend>
@@ -1020,7 +1023,7 @@
 				</div>
         <xsl:if test="$edit_mode">
           <div class="subject_edit_commands">
-            [remove]
+            <a href="./?base=collections&amp;action=remove_db&amp;username={//request/username}&amp;subject={//category[1]/@normalized}&amp;subcategory={../@id}&amp;id={metalib_id}&amp;return={//server/request_uri}">[remove]</a>
           </div>
 				</xsl:if>
 				<xsl:if test="group_restriction">

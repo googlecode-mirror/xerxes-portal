@@ -402,6 +402,11 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
     $objSubcat->id = $new_pk;
     return $objSubcat;
   }
+  
+  public function deleteUserCreatedSubcategory(Xerxes_Data_Subcategory $objSubcat) {
+    $sql = "DELETE FROM xerxes_user_subcategories WHERE ID = :subcategory_id";
+    return $this->delete($sql, array(":subcategory_id" => $objSubcat->id));
+  }
   /**
    * Add a database to a user-created subcategory; 
    *
@@ -430,13 +435,17 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
       return $this->update($sql, array(":name" => $objSubcat->name, ":sequence" => $objSubcat->sequence ));      
     }
   
+    public function removeDatabaseFromUserCreatedSubcategory($databaseID, Xerxes_Data_Subcategory $objSubcat) {
+      $strDeleteSql = "DELETE from xerxes_user_subcategory_databases WHERE database_id = :database_id AND subcategory_id = :subcategory_id";
+      $this->delete($strDeleteSql, array(":database_id" => $databaseID, ":subcategory_id" => $objSubcat->id  ));
+    }
+    
     // Update the 'sequence' number of a database in a user created category
     public function updateUserDatabaseOrder(Xerxes_Data_Database $objDb, Xerxes_Data_Subcategory $objSubcat, $sequence) {
       $this->beginTransaction();
       
       //first delete an existing join object.
-      $strDeleteSql = "DELETE from xerxes_user_subcategory_databases WHERE database_id = :database_id AND subcategory_id = :subcategory_id";
-      $this->delete($strDeleteSql, array(":database_id" => $objDb->metalib_id, ":subcategory_id" => $objSubcat->id  ));
+      $this->removeDatabaseFromUserCreatedSubcategory($objDb->metalib_id, $objSubcat);
         
       // Now create our new one with desired sequence. 
       $this->addDatabaseToUserCreatedSubcategory($objDb->metalib_id, $objSubcat, $sequence);

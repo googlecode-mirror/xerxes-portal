@@ -41,7 +41,9 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
         [Change name]</a> 
         
         <a href="./?base=collections&amp;action=reorder_subcats_form&amp;subject={//category/@normalized}&amp;username={//category/@owned_by_user}"> 
-        [Change section order]</a></p>
+        [Change section order]</a>
+        
+        </p>                
       </div>
       
 			<div id="search">

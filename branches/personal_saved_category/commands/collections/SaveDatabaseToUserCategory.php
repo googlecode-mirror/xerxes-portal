@@ -48,7 +48,8 @@ class Xerxes_Command_SaveDatabaseToUserCategory extends Xerxes_Command_Collectio
       $subcategory->name = $strNewSubcat;
       $subcategory->category_id = $category->id;
       // just put it at the end
-      $subcategory->sequence = count($category->subcategories) + 1;
+      $last_one = $category->subcategories[ count($category->subcategories) -1 ];
+      $subcategory->sequence = $last_one->sequence + 1;
       
       $subcategory = $objData->addUserCreatedSubcategory($subcategory);
     }
