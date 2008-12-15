@@ -43,9 +43,9 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
         <a href="./?base=collections&amp;action=reorder_subcats_form&amp;subject={//category/@normalized}&amp;username={//category/@owned_by_user}"> 
         [Change section order]</a>
         
-        <!-- <a href="./?base=collections&amp;action=delete_category&amp;subject={//category/@normalized}&amp;username={//category/@owned_by_user}">
+        <a href="./?base=collections&amp;action=delete_category&amp;subject={//category/@normalized}&amp;username={//category/@owned_by_user}">
           [Delete Collection]
-        </a> -->
+        </a>
         
         </p>                
       </div>

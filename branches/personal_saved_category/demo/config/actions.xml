@@ -402,6 +402,9 @@
       <action name="delete_subcategory">
         <command>DeleteSubcategory</command>
       </action>
+      <action name="delete_category">
+        <command>DeleteUserCategory</command>
+      </action>
       
     </section>
 		

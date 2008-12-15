@@ -407,6 +407,12 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
     $sql = "DELETE FROM xerxes_user_subcategories WHERE ID = :subcategory_id";
     return $this->delete($sql, array(":subcategory_id" => $objSubcat->id));
   }
+  
+  public function deleteUserCreatedCategory(Xerxes_Data_Category $objCat) {
+     $sql = "DELETE FROM xerxes_user_categories WHERE ID = :category_id";
+    return $this->delete($sql, array(":category_id" => $objCat->id));
+  }
+  
   /**
    * Add a database to a user-created subcategory; 
    *
