@@ -385,6 +385,10 @@
 			<action name="home">
 				<view>xsl/mango_home.xsl</view>
 			</action>
+			<action name="advanced">
+				<request name="advancedfull">true</request>
+				<view>xsl/mango_home.xsl</view>
+			</action>
 			<action name="results">
 				<pathParamMap>
 					<mapEntry pathIndex="2" property="source"/>
