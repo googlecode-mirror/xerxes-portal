@@ -25,6 +25,7 @@
 
 	<xsl:variable name="return" 	select="request/return" />
 	<xsl:variable name="local" 	select="request/local" />
+  <xsl:variable name="authentication_source" select="request/authentication_source" />
 
 	<xsl:variable name="username">
 		<xsl:if test="not(contains(request/session/username,'local@')) and not(contains(request/session/username,'guest@'))">
@@ -53,6 +54,7 @@
 				<input name="action" type="hidden" value="login" />
 				<input name="return" type="hidden" value="{$return}" />
 				<input name="local" type="hidden" value="{$local}" />
+        <input name="authentication_source" type="hidden" value="{$authentication_source}"/>
 				<input name="postback" type="hidden" value="true" />  
 				<table border="0" cellspacing="0" cellpadding="8" summary="">
 					<tr>
