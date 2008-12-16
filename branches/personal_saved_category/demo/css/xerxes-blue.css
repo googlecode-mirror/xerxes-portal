@@ -783,8 +783,14 @@ a.categoryCommand.edit {
 }
 
 .addDatabaseSidebar ul li {
-  background: transparent url(../images/famfamfam/add.png) no-repeat scroll 0px;
-  padding-left: 24px;
+  background: none;
+  padding-left: 8px;
+}
+
+.addDatabaseSidebar ul li a {
+  background: transparent url(../images/famfamfam/add.png) no-repeat scroll 0px 0px;
+  background-position: 0px -1px;
+  padding-left: 20px;
 }
 
 #addNewSection {
