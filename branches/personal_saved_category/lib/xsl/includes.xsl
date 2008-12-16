@@ -947,13 +947,12 @@
 		<fieldset class="subjectSubCategory">
       <xsl:if test="$edit_mode">
         <div class="subject_edit_commands">
-          <a class="categoryCommand" href="./?base=collections&amp;action=rename_form&amp;subject={../@normalized}&amp;subcategory={@id}&amp;username={../@owned_by_user}">
-          Change name</a> <a class="categoryCommand" href="./?base=collections&amp;action=reorder_databases_form&amp;subject={//category/@normalized}&amp;subcategory={@id}&amp;username={//category/@owned_by_user}">Change Databases Order</a> 
-          <a class="categoryCommand" href="./?base=collections&amp;action=edit_form&amp;username={../@owned_by_user}&amp;subject={../@normalized}&amp;add_to_subcategory={@id}">
+          <a class="categoryCommand edit" href="./?base=collections&amp;action=rename_form&amp;subject={../@normalized}&amp;subcategory={@id}&amp;username={../@owned_by_user}">
+          Change name</a> <a class="categoryCommand reorder" href="./?base=collections&amp;action=reorder_databases_form&amp;subject={//category/@normalized}&amp;subcategory={@id}&amp;username={//category/@owned_by_user}">Change Databases Order</a> 
+          <a class="categoryCommand add" href="./?base=collections&amp;action=edit_form&amp;username={../@owned_by_user}&amp;subject={../@normalized}&amp;add_to_subcategory={@id}">
             Add Databases
-          </a>
-          
-          <a class="categoryCommand" href="./?base=collections&amp;action=delete_subcategory&amp;subject={//category/@normalized}&amp;subcategory={@id}&amp;username={//category/@owned_by_user}"> 
+          </a>          
+          <a class="categoryCommand delete" href="./?base=collections&amp;action=delete_subcategory&amp;subject={//category/@normalized}&amp;subcategory={@id}&amp;username={//category/@owned_by_user}"> 
           Delete Section
           </a>
         </div>
@@ -1025,6 +1024,9 @@
 			</td>
 			<td>
 				<div class="subjectDatabaseTitle">
+          <xsl:if test="$edit_mode">
+              <a class="categoryCommand delete" href="./?base=collections&amp;action=remove_db&amp;username={//request/username}&amp;subject={//category[1]/@normalized}&amp;subcategory={../@id}&amp;id={metalib_id}&amp;return={//server/request_uri}">Remove</a>
+          </xsl:if> 
 					<xsl:choose>
 						<xsl:when test="not($should_lock_nonsearchable and searchable_by_user != '1')">						
 							<xsl:element name="label">
@@ -1044,7 +1046,7 @@
 					</xsl:choose>
 				</div>
 					
-				<div class="subjectDatabaseInfo">
+				<div class="subjectDatabaseInfo">         
 					<a>
 					<xsl:attribute name="href"><xsl:value-of select="url" /></xsl:attribute>
 					<img alt="more information" src="images/info.gif" >
@@ -1052,12 +1054,7 @@
 					</img>
 					</a>
 				</div>
-        <xsl:if test="$edit_mode">
-          <div class="subject_edit_commands">
-            <a href="./?base=collections&amp;action=remove_db&amp;username={//request/username}&amp;subject={//category[1]/@normalized}&amp;subcategory={../@id}&amp;id={metalib_id}&amp;return={//server/request_uri}">[remove]</a>
-          </div>
-				</xsl:if>
-				<xsl:if test="group_restriction">
+        <xsl:if test="group_restriction">
 					<div class="subjectDatabaseRestriction"><xsl:call-template name="db_restriction_display" /></div>
 				</xsl:if>
 				

@@ -47,14 +47,11 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
 			</div>
 			
       <div class="subject_edit_commands">
-        <p><a class="categoryCommand" href="./?base=collections&amp;action=rename_form&amp;subject={//category/@normalized}&amp;username={//category/@owned_by_user}">
-        Change name</a> 
+        <p><a class="categoryCommand edit" href="./?base=collections&amp;action=rename_form&amp;subject={//category/@normalized}&amp;username={//category/@owned_by_user}">Change name</a> 
         
-        <a class="categoryCommand" href="./?base=collections&amp;action=reorder_subcats_form&amp;subject={//category/@normalized}&amp;username={//category/@owned_by_user}"> 
-        Change section order</a>
+        <a class="categoryCommand reorder" href="./?base=collections&amp;action=reorder_subcats_form&amp;subject={//category/@normalized}&amp;username={//category/@owned_by_user}">Change section order</a>
         
-        <a class="categoryCommand" href="./?base=collections&amp;action=delete_category&amp;subject={//category/@normalized}&amp;username={//category/@owned_by_user}">
-          Delete Collection
+        <a class="categoryCommand delete" href="./?base=collections&amp;action=delete_category&amp;subject={//category/@normalized}&amp;username={//category/@owned_by_user}">Delete Collection
         </a>
         
         </p>                
@@ -73,7 +70,7 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
 			</div>
       
       <div>
-        <form action="{$base_url}" METHOD="GET">
+        <div id="addNewSection"><form action="{$base_url}" METHOD="GET">
             <input type="hidden" name="base" value="collections"/>
             <input type="hidden" name="action" value="save_complete"/>
             <input type="hidden" name="username" value="{//request/username}" />
@@ -82,16 +79,15 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
             
             <input type="hidden" name="subject" value="{//category/@normalized}" />
             
-
           Add a new section: <input type="text" name="new_subcategory_name" />  
             <input type="submit" name="save" value="add"/>
-        </form>
+        </form></div>
       </div>
     </div>
     
 		<div id="sidebar">
-       <div class="addDatabaseSidebar">
-       <xsl:if test="/*/request/add_to_subcategory">
+     <xsl:if test="/*/request/add_to_subcategory">
+     <div class="addDatabaseSidebar">
        <form method="GET" action="{base_url}">
          <input type="hidden" name="base" value="collections" />
          <input type="hidden" name="action" value="edit_form" />
@@ -117,8 +113,8 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
             <xsl:value-of select="title_display"/></a></li>
           </xsl:for-each>
           </ul>
+         </div>
        </xsl:if>
-      </div>
 		</div>
 	</div>
 
