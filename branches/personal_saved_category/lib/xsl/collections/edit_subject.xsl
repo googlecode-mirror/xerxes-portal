@@ -98,9 +98,9 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
          <input type="hidden" name="subject" value="{/*/category[1]/@normalized}" />
          <input type="hidden" name="add_to_subcategory" value="{//request/add_to_subcategory}" />
          
-         <h2>Add Databases to Collection</h2>
-          <p>Add to section: <xsl:value-of select="/*/category/subcategory[@id = /*/request/add_to_subcategory]/@name"/>          
-          </p>  
+         <h2>Add databases to section
+          '<xsl:value-of select="/*/category/subcategory[@id = /*/request/add_to_subcategory]/@name"/>'</h2>          
+            
          <p>List databases matching: <input type="text" name="query" value="{/*/request/query}"/> <input type="submit" value="GO"/>
          </p>
        </form>
