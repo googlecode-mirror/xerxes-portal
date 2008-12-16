@@ -935,8 +935,6 @@
 -->
 
 <xsl:template name="subject_databases_list">
-  <!-- edit mode for user created categories, default to false -->
-  <xsl:param name="edit_mode" select="false()" />
 	<!-- default to true: -->
 	<xsl:param name="should_show_checkboxes" select="true()" />
 	<!-- specific subcategory only? Default to false meaning, no, all subcats. -->
@@ -944,24 +942,7 @@
 	  
 	<xsl:for-each select="category/subcategory[(not($show_only_subcategory )) or ($show_only_subcategory = '') or (@id = $show_only_subcategory)]">
 
-		<fieldset class="subjectSubCategory">
-      <xsl:if test="$edit_mode">
-        <div class="subject_edit_commands">
-          <a class="categoryCommand edit" href="./?base=collections&amp;action=rename_form&amp;subject={../@normalized}&amp;subcategory={@id}&amp;username={../@owned_by_user}">
-          Change name</a>
-          
-          <xsl:if test="count(database) &gt; 1">
-            <a class="categoryCommand reorder" href="./?base=collections&amp;action=reorder_databases_form&amp;subject={//category/@normalized}&amp;subcategory={@id}&amp;username={//category/@owned_by_user}">Change database order</a>
-          </xsl:if>
-          
-          <a class="categoryCommand add" href="./?base=collections&amp;action=edit_form&amp;username={../@owned_by_user}&amp;subject={../@normalized}&amp;add_to_subcategory={@id}">
-            Add databases
-          </a>          
-          <a class="categoryCommand delete" href="./?base=collections&amp;action=delete_subcategory&amp;subject={//category/@normalized}&amp;subcategory={@id}&amp;username={//category/@owned_by_user}"> 
-          Delete section
-          </a>
-        </div>
-      </xsl:if>
+		<fieldset class="subjectSubCategory">      
 		<legend><xsl:value-of select="@name" /></legend>
     
 			<!-- if the current session can't search this resource, should we show a lock icon? 
@@ -1028,10 +1009,7 @@
 				</xsl:choose>
 			</td>
 			<td>
-				<div class="subjectDatabaseTitle">
-          <xsl:if test="$edit_mode">
-              <a class="categoryCommand delete" href="./?base=collections&amp;action=remove_db&amp;username={//request/username}&amp;subject={//category[1]/@normalized}&amp;subcategory={../@id}&amp;id={metalib_id}&amp;return={php:function('urlencode', string(//server/request_uri))}">Remove</a>
-          </xsl:if> 
+				<div class="subjectDatabaseTitle">           
 					<xsl:choose>
 						<xsl:when test="not($should_lock_nonsearchable and searchable_by_user != '1')">						
 							<xsl:element name="label">

@@ -67,11 +67,56 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
 			</div>
 			
 			<div class="subjectDatabases">
-        <!-- defined in includes.xsl -->
-				<xsl:call-template name="subject_databases_list">
-          <xsl:with-param name="edit_mode" select="true()"/>
-          <xsl:with-param name="should_show_checkboxes" select="false()" />
-        </xsl:call-template>
+        <xsl:for-each select="category/subcategory">
+          <fieldset class="subjectSubCategory">
+            <legend><xsl:value-of select="@name" /></legend>
+            <div class="subject_edit_commands">
+              <a class="categoryCommand edit" href="./?base=collections&amp;action=rename_form&amp;subject={../@normalized}&amp;subcategory={@id}&amp;username={../@owned_by_user}">
+              Change name</a>
+              
+              <xsl:if test="count(database) &gt; 1">
+                <a class="categoryCommand reorder" href="./?base=collections&amp;action=reorder_databases_form&amp;subject={//category/@normalized}&amp;subcategory={@id}&amp;username={//category/@owned_by_user}">Change database order</a>
+              </xsl:if>
+              
+              <a class="categoryCommand add" href="./?base=collections&amp;action=edit_form&amp;username={../@owned_by_user}&amp;subject={../@normalized}&amp;add_to_subcategory={@id}">
+                Add databases
+              </a>          
+              <a class="categoryCommand delete" href="./?base=collections&amp;action=delete_subcategory&amp;subject={//category/@normalized}&amp;subcategory={@id}&amp;username={//category/@owned_by_user}"> 
+              Delete section
+              </a>
+            </div>
+            
+            <table summary="this table lists databases you have included in your personal collection" class="subjectCheckList">
+              <xsl:for-each select="database">
+                <xsl:variable name="id_meta" select="metalib_id" />
+                <tr valign="top">
+                  <td>      
+                       <a class="categoryCommand delete" href="./?base=collections&amp;action=remove_db&amp;username={//request/username}&amp;subject={//category[1]/@normalized}&amp;subcategory={../@id}&amp;id={metalib_id}&amp;return={php:function('urlencode', string(//server/request_uri))}">Remove</a>                    
+                  </td>
+                  <td>
+                    <div class="subjectDatabaseTitle">
+                      <a>
+                        <xsl:attribute name="href"><xsl:value-of select="xerxes_native_link_url" /></xsl:attribute>
+                        <xsl:value-of select="title_display" />
+                      </a>
+                    </div>
+                    <div class="subjectDatabaseInfo">         
+                      <a>
+                      <xsl:attribute name="href"><xsl:value-of select="url" /></xsl:attribute>
+                        <img alt="more information" src="images/info.gif" >
+                          <xsl:attribute name="src"><xsl:value-of select="//config/base_url" />/images/info.gif</xsl:attribute>
+                        </img>
+                      </a>
+                    </div>
+                    <xsl:if test="group_restriction">
+                      <div class="subjectDatabaseRestriction"><xsl:call-template name="db_restriction_display" /></div>
+                    </xsl:if>
+                  </td>
+                </tr>
+              </xsl:for-each>
+              </table>
+          </fieldset>        
+        </xsl:for-each>            
 			</div>
       
       <div>
