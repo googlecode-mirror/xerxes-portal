@@ -114,7 +114,7 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
           </xsl:if>
           <xsl:for-each select="/*/databases/database">
             <li><a href="./?base=collections&amp;action=save_complete&amp;username={/*/category[1]/@owned_by_user}&amp;subject={/*/category[1]/@normalized}&amp;subcategory={/*/request/add_to_subcategory}&amp;id={metalib_id}&amp;return={php:function('urlencode', string(//server/request_uri))}">
-            Add: <xsl:value-of select="title_display"/></a></li>
+            <xsl:value-of select="title_display"/></a></li>
           </xsl:for-each>
           </ul>
        </xsl:if>

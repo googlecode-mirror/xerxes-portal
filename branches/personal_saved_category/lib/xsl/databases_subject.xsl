@@ -41,6 +41,11 @@
 		<div id="searchArea">
 	
 			<div class="subject">
+        <xsl:if test="$user_can_edit" >
+        <p>        
+          <a class="categoryCommand" href="{/*/category/edit_url}">[Edit]</a>
+        </p>
+        </xsl:if>
 				<h1><xsl:value-of select="//category/@name" /></h1>
         <xsl:if test="$user_can_edit">
           <p>
@@ -70,11 +75,7 @@
        </xsl:if>
 			</div>
 			
-      <xsl:if test="$user_can_edit" >
-        <div id="subject_edit_commands">
-          <a href="{/*/category/edit_url}">[Edit]</a>
-        </div>
-      </xsl:if>
+
       
 			<div class="subjectDatabases">
         <!-- defined in includes.xsl -->
