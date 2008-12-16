@@ -43,7 +43,7 @@
 			<div class="subject">
         <xsl:if test="$user_can_edit" >
         <p>        
-          <a class="categoryCommand" href="{/*/category/edit_url}">[Edit]</a>
+          <a class="categoryCommand edit" href="{/*/category/edit_url}">Edit</a>
         </p>
         </xsl:if>
 				<h1><xsl:value-of select="//category/@name" /></h1>
