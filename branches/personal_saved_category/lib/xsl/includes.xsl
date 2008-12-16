@@ -1025,7 +1025,7 @@
 			<td>
 				<div class="subjectDatabaseTitle">
           <xsl:if test="$edit_mode">
-              <a class="categoryCommand delete" href="./?base=collections&amp;action=remove_db&amp;username={//request/username}&amp;subject={//category[1]/@normalized}&amp;subcategory={../@id}&amp;id={metalib_id}&amp;return={//server/request_uri}">Remove</a>
+              <a class="categoryCommand delete" href="./?base=collections&amp;action=remove_db&amp;username={//request/username}&amp;subject={//category[1]/@normalized}&amp;subcategory={../@id}&amp;id={metalib_id}&amp;return={php:function('urlencode', string(//server/request_uri))}">Remove</a>
           </xsl:if> 
 					<xsl:choose>
 						<xsl:when test="not($should_lock_nonsearchable and searchable_by_user != '1')">						
