@@ -42,6 +42,18 @@
 	
 			<div class="subject">
 				<h1><xsl:value-of select="//category/@name" /></h1>
+        <xsl:if test="$user_can_edit">
+          <p>
+          <xsl:choose>
+          <xsl:when test="//category/@published = '1'">
+            published
+          </xsl:when>
+          <xsl:otherwise>
+            private
+          </xsl:otherwise>
+          </xsl:choose>
+          </p>
+        </xsl:if>
 			</div>
 				
 			<div id="search">

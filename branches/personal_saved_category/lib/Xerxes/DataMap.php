@@ -381,9 +381,9 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
     public function updateUserCategoryProperties(Xerxes_Data_Category $objCategory) {      
       $objCategory->normalized = Xerxes_Data_Category::normalize( $objCategory->name );
       
-      $sql = "UPDATE xerxes_user_categories SET name = :name, normalized = :normalized WHERE id = " . $objCategory->id;
+      $sql = "UPDATE xerxes_user_categories SET name = :name, normalized = :normalized, published = :published WHERE id = " . $objCategory->id;
       
-      return $this->update($sql, array(":name" => $objCategory->name, ":normalized" => $objCategory->normalized ));      
+      return $this->update($sql, array(":name" => $objCategory->name, ":normalized" => $objCategory->normalized, ":published" => $objCategory->published ));      
     }
   
   /**

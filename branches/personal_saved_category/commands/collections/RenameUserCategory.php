@@ -30,13 +30,9 @@ class Xerxes_Command_RenameUserCategory extends Xerxes_Command_Collections
 		
 		$strSubject = $objRequest->getProperty( "subject" );
     $strSubcatID = $objRequest->getProperty("subcategory");
+    $strPublished = $objRequest->getProperty("published");
     $strUsername = $objRequest->getProperty("username");
     $strNewName = $objRequest->getProperty("new_name");
-        
-    if ( empty($strNewName) ) {
-      $this->returnWithMessage("Blank name, not changed.", $arrDefaultReturn); 
-      return 1;
-    }
     
     // Make sure they are logged in as the user they are trying to save as. 
     Xerxes_Helper::ensureSpecifiedUser($strUsername, $objRequest, $objRegistry, "You must be logged in as $strUsername to save to a personal database collection owned by that user.");
@@ -45,21 +41,32 @@ class Xerxes_Command_RenameUserCategory extends Xerxes_Command_Collections
     
     $category = $objData->getSubject( $strSubject, null, Xerxes_DataMap::userCreatedMode, $strUsername );
 
+    $message = "";
     
     if (! empty($strSubcatID)) {
-      //Rename a subcategory
+      //Edit a subcategory, rename
       $subcat = $this->getSubcategory( $category, $strSubcatID);
-      $subcat->name = $strNewName;
-      $objData->updateUserSubcategoryProperties($subcat);
+      if (! empty($strNewName) ) {
+        $message .= "Section name changed. ";
+        $subcat->name = $strNewName;
+        $objData->updateUserSubcategoryProperties($subcat);
+      }
     }
     else {
-      //rename category
-      $category->name = $strNewName;
+      //Edit a category, rename/publish
+      if (! empty($strNewName)) {
+        $category->name = $strNewName;
+        $message .= "Collection name changed. ";
+      }
+      if (! empty($strPublished)) {
+        $category->published = (boolean) ($strPublished == "true");
+        $message .= " Collection publication status changed. ";
+      }
       $objData->updateUserCategoryProperties($category);
     }
     // New name if it's been changed!
     $arrDefaultReturn["subject"] = $category->normalized;
-    $this->returnWithMessage("Renamed", $arrDefaultReturn);
+    $this->returnWithMessage($message, $arrDefaultReturn);
     
 		return 1;
 	}

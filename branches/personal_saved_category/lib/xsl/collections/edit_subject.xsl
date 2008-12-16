@@ -34,6 +34,16 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
 	
 			<div class="subject">
 				<h1>Edit: <xsl:value-of select="//category/@name" /></h1>
+        <p>
+        <xsl:choose>
+          <xsl:when test="//category/@published = '1'">
+            published <a href="{$base_url}/?base=collections&amp;action=rename&amp;username={//category/@owned_by_user}&amp;subject={//category/@normalized}&amp;published=false&amp;return={php:function('urlencode', string(//server/request_uri))}">make private</a>
+          </xsl:when>
+          <xsl:otherwise>
+            private <a href="{$base_url}/?base=collections&amp;action=rename&amp;username={//category/@owned_by_user}&amp;subject={//category/@normalized}&amp;published=true&amp;return={php:function('urlencode', string(//server/request_uri))}">publish</a>
+          </xsl:otherwise>
+          </xsl:choose>
+        </p>
 			</div>
 			
       <div class="subject_edit_commands">
@@ -91,7 +101,7 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
          <h2>Add Databases to Collection</h2>
           <p>Add to section: <xsl:value-of select="/*/category/subcategory[@id = /*/request/add_to_subcategory]/@name"/>          
           </p>  
-         <p>Find database: <input type="text" name="query" value="{/*/request/query}"/> <input type="submit" value="GO"/>
+         <p>List databases matching: <input type="text" name="query" value="{/*/request/query}"/> <input type="submit" value="GO"/>
          </p>
        </form>
        
