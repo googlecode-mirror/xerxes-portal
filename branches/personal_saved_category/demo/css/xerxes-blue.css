@@ -746,6 +746,10 @@ a.categoryCommand, a.categoryCommand:visited, a:hover.categoryCommand {
   text-decoration: none;
   white-space: nowrap;
 }
+a.categoryCommand:hover {
+  	color: #FFCC33; text-decoration: none; 
+    background-color: #8C8C8C;
+}
 
 a.categoryCommand.delete {
   background-image: url(../images/famfamfam/delete.png);

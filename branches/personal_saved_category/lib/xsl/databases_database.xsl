@@ -77,7 +77,7 @@
         
         <div class="database_functions" style="margin-top:10px;">
            <xsl:if test="/*/config/collection_save_on_db_detail">
-            <a class="categoryCommand" href="{add_to_collection_url}">Save database in personal collection</a>
+            <a class="categoryCommand add" href="{add_to_collection_url}">Save database in personal collection</a>
            </xsl:if>
         </div>        
         
