@@ -736,7 +736,7 @@ a img{
 a.categoryCommand, a.categoryCommand:visited, a:hover.categoryCommand {
   margin-right: 2px;
   margin-left: 2px;
-  padding: 1px 2px 1px 2px;
+  padding: 2px;
   /*background-color: #D9FFB3;&*/
   background-color: #E7FFCC;
   border: 1px dotted #CCCCCC;
@@ -754,25 +754,25 @@ a.categoryCommand:hover {
 a.categoryCommand.delete {
   background-image: url(../images/famfamfam/delete.png);
   background-repeat: no-repeat;
-  background-position: 2px 0px;
+  background-position: 2px 1px;
   padding-left: 20px;
 }
 a.categoryCommand.add {
   background-image: url(../images/famfamfam/add.png);
   background-repeat: no-repeat;
-  background-position: 2px 0px;
+  background-position: 2px 1px;
   padding-left: 20px;
 }
 a.categoryCommand.reorder {
   background-image: url(../images/reorder.gif);
   background-repeat: no-repeat;
-  background-position: 2px 0px;
+  background-position: 2px 2px;
   padding-left: 20px;
 }
 a.categoryCommand.edit {
   background-image: url(../images/famfamfam/wrench.png);
   background-repeat: no-repeat;
-  background-position: 4px 0px;
+  background-position: 4px 2px;
   padding-left: 24px;
 }
 
