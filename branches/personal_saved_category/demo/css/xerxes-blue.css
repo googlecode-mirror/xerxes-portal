@@ -735,6 +735,7 @@ a img{
 
 .editSubjectHeading {
   line-height: 20px;
+  padding: 20px 20px 0px 25px;
 }
 
 .editSubjectHeading h1 {
@@ -742,6 +743,16 @@ a img{
 }
 
 .editSubjectHeading .categoryCommand {
+  vertical-align: top;
+}
+
+.editCategory .subjectSubCategory {
+  margin-bottom: 40px;
+}
+
+.subjectSubCategory .subject_edit_commands {
+  margin-bottom: 18px;
+  line-height: 26px;
   vertical-align: top;
 }
 
@@ -789,7 +800,7 @@ a.categoryCommand.edit {
 }
 
 .addDatabaseSidebar {
-  margin-top: 50px;
+  margin-top: 28px;
   padding: 20px;
   background-color: #EFEFEF;
 }

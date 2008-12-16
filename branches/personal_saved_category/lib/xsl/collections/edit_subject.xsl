@@ -27,9 +27,7 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
 
 	
 	<div id="container">
-		<div id="searchArea">
-	
-			<div class="editSubjectHeading">
+    <div class="editSubjectHeading">
 				<h1>Edit: <xsl:value-of select="//category/@name" /></h1>
         <a class="categoryCommand edit" href="./?base=collections&amp;action=rename_form&amp;subject={//category/@normalized}&amp;username={//category/@owned_by_user}">Change name</a> 
         <xsl:text> </xsl:text>
@@ -39,11 +37,9 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
         </xsl:if>
         
         <a class="categoryCommand delete" href="./?base=collections&amp;action=delete_category&amp;subject={//category/@normalized}&amp;username={//category/@owned_by_user}">Delete collection
-        </a>        
-			</div>
-      
-      <p>
-        <xsl:choose>
+        </a>  
+        <p>
+          <xsl:choose>
           <xsl:when test="//category/@published = '1'">
             published <a class="categoryCommand" href="{$base_url}/?base=collections&amp;action=edit&amp;username={//category/@owned_by_user}&amp;subject={//category/@normalized}&amp;published=false&amp;return={php:function('urlencode', string(//server/request_uri))}">Make private</a>
           </xsl:when>
@@ -52,16 +48,11 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
           </xsl:otherwise>
           </xsl:choose>
         </p>
-			
-      <div class="subject_edit_commands">
-        <p>
-        
+			</div>
 
-
-        
-        </p>                
-      </div>
-      
+  
+		<div id="searchArea" class="editCategory">
+	
 			<div id="search">
         <xsl:variable name="should_lock_nonsearchable" select=" (/*/request/authorization_info/affiliated = 'true' or /*/request/session/role = 'guest')" />
 			</div>
@@ -73,16 +64,17 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
             <div class="subject_edit_commands">
               <a class="categoryCommand edit" href="./?base=collections&amp;action=rename_form&amp;subject={../@normalized}&amp;subcategory={@id}&amp;username={../@owned_by_user}">
               Change name</a>
-              
+              <xsl:text> </xsl:text>
               <xsl:if test="count(database) &gt; 1">
                 <a class="categoryCommand reorder" href="./?base=collections&amp;action=reorder_databases_form&amp;subject={//category/@normalized}&amp;subcategory={@id}&amp;username={//category/@owned_by_user}">Change database order</a>
+                <xsl:text> </xsl:text>
               </xsl:if>
               
               <a class="categoryCommand add" href="./?base=collections&amp;action=edit_form&amp;username={../@owned_by_user}&amp;subject={../@normalized}&amp;add_to_subcategory={@id}">
                 Add databases
-              </a>          
-              <a class="categoryCommand delete" href="./?base=collections&amp;action=delete_subcategory&amp;subject={//category/@normalized}&amp;subcategory={@id}&amp;username={//category/@owned_by_user}"> 
-              Delete section
+              </a>
+              <xsl:text> </xsl:text>
+              <a class="categoryCommand delete" href="./?base=collections&amp;action=delete_subcategory&amp;subject={//category/@normalized}&amp;subcategory={@id}&amp;username={//category/@owned_by_user}">Delete section
               </a>
             </div>
             
@@ -91,7 +83,7 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
                 <xsl:variable name="id_meta" select="metalib_id" />
                 <tr valign="top">
                   <td>      
-                       <a class="categoryCommand delete" href="./?base=collections&amp;action=remove_db&amp;username={//request/username}&amp;subject={//category[1]/@normalized}&amp;subcategory={../@id}&amp;id={metalib_id}&amp;return={php:function('urlencode', string(//server/request_uri))}">Remove</a>                    
+                       <a href="./?base=collections&amp;action=remove_db&amp;username={//request/username}&amp;subject={//category[1]/@normalized}&amp;subcategory={../@id}&amp;id={metalib_id}&amp;return={php:function('urlencode', string(//server/request_uri))}"><img src="{$base_url}/images/famfamfam/delete.png" alt="Remove" title="Remove database from section"/></a>                    
                   </td>
                   <td>
                     <div class="subjectDatabaseTitle">
@@ -132,11 +124,12 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
             
           Add a new section: <input type="text" name="new_subcategory_name" />  
             <input type="submit" name="save" value="add"/>
-        </form></div>
-      </div>
+        </form></div>                                
+      </div>            
+      
     </div>
-    
-		<div id="sidebar">
+
+    <div id="sidebar">
      <xsl:if test="/*/request/add_to_subcategory">
      <div class="addDatabaseSidebar">
        <form method="GET" action="{base_url}">
@@ -166,9 +159,11 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
           </ul>
          </div>
        </xsl:if>
-		</div>
-	</div>
+		</div>  
+    
+  </div>
 	
+
 </xsl:template>
 
 </xsl:stylesheet>
