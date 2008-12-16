@@ -311,7 +311,7 @@
         <mapEntry pathIndex="3" property="subject"/>
       </pathParamMap>
     
-      <action name="subject">
+      <action name="subject" restricted="false">
 				<command>UserCreatedCategory</command>
 				<view>xsl/databases_subject.xsl</view>
 			</action>
