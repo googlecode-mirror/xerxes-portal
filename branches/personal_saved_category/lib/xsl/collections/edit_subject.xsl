@@ -44,9 +44,14 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
 			</div>
 			
       <div class="subject_edit_commands">
-        <p><a class="categoryCommand edit" href="./?base=collections&amp;action=rename_form&amp;subject={//category/@normalized}&amp;username={//category/@owned_by_user}">Change name</a> 
+        <p>
         
+
+        <a class="categoryCommand edit" href="./?base=collections&amp;action=rename_form&amp;subject={//category/@normalized}&amp;username={//category/@owned_by_user}">Change name</a> 
+
+        <xsl:if test="count(/*/category[1]/subcategory) &gt; 1">
         <a class="categoryCommand reorder" href="./?base=collections&amp;action=reorder_subcats_form&amp;subject={//category/@normalized}&amp;username={//category/@owned_by_user}">Change section order</a>
+        </xsl:if>
         
         <a class="categoryCommand delete" href="./?base=collections&amp;action=delete_category&amp;subject={//category/@normalized}&amp;username={//category/@owned_by_user}">Delete collection
         </a>

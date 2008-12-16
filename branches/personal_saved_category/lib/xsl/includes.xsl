@@ -948,7 +948,12 @@
       <xsl:if test="$edit_mode">
         <div class="subject_edit_commands">
           <a class="categoryCommand edit" href="./?base=collections&amp;action=rename_form&amp;subject={../@normalized}&amp;subcategory={@id}&amp;username={../@owned_by_user}">
-          Change name</a> <a class="categoryCommand reorder" href="./?base=collections&amp;action=reorder_databases_form&amp;subject={//category/@normalized}&amp;subcategory={@id}&amp;username={//category/@owned_by_user}">Change database order</a> 
+          Change name</a>
+          
+          <xsl:if test="count(database) &gt; 1">
+            <a class="categoryCommand reorder" href="./?base=collections&amp;action=reorder_databases_form&amp;subject={//category/@normalized}&amp;subcategory={@id}&amp;username={//category/@owned_by_user}">Change database order</a>
+          </xsl:if>
+          
           <a class="categoryCommand add" href="./?base=collections&amp;action=edit_form&amp;username={../@owned_by_user}&amp;subject={../@normalized}&amp;add_to_subcategory={@id}">
             Add databases
           </a>          
