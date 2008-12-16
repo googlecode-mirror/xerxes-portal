@@ -27,7 +27,7 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
 
 	<form name="form1" method="get" action="{$base_url}/" onSubmit="return databaseLimit(this)">
 	<input type="hidden" name="base" value="collections" />
-	<input type="hidden" name="action" value="rename" />
+	<input type="hidden" name="action" value="edit" />
   <input type="hidden" name="subject" value="{//category/@normalized}" />
   <input type="hidden" name="username" value="{//category/@owned_by_user}" />
   <input type="hidden" name="subcategory" value="{//request/subcategory}" />

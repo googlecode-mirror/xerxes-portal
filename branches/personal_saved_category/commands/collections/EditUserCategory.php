@@ -1,10 +1,12 @@
 <?php
 
-/**
- * 
- */
+/** Can be used to edit a user-created category or subcategory. 
+  * If subcategory url param is there, edit a subcategory (name).
+  * Of only subject param, edit a category (name and published status)
+  * 
+  */
 
-class Xerxes_Command_RenameUserCategory extends Xerxes_Command_Collections
+class Xerxes_Command_EditUserCategory extends Xerxes_Command_Collections
 {
 	/**
 	 * Rename a user-created category or subcategory. Expects request param

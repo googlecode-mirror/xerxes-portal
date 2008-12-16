@@ -37,10 +37,10 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
         <p>
         <xsl:choose>
           <xsl:when test="//category/@published = '1'">
-            published <a href="{$base_url}/?base=collections&amp;action=rename&amp;username={//category/@owned_by_user}&amp;subject={//category/@normalized}&amp;published=false&amp;return={php:function('urlencode', string(//server/request_uri))}">make private</a>
+            published <a href="{$base_url}/?base=collections&amp;action=edit&amp;username={//category/@owned_by_user}&amp;subject={//category/@normalized}&amp;published=false&amp;return={php:function('urlencode', string(//server/request_uri))}">make private</a>
           </xsl:when>
           <xsl:otherwise>
-            private <a href="{$base_url}/?base=collections&amp;action=rename&amp;username={//category/@owned_by_user}&amp;subject={//category/@normalized}&amp;published=true&amp;return={php:function('urlencode', string(//server/request_uri))}">publish</a>
+            private <a href="{$base_url}/?base=collections&amp;action=edit&amp;username={//category/@owned_by_user}&amp;subject={//category/@normalized}&amp;published=true&amp;return={php:function('urlencode', string(//server/request_uri))}">publish</a>
           </xsl:otherwise>
           </xsl:choose>
         </p>
@@ -75,7 +75,7 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
       <div>
         <form action="{$base_url}" METHOD="GET">
             <input type="hidden" name="base" value="collections"/>
-            <input type="hidden" name="action" value="edit"/>
+            <input type="hidden" name="action" value="save_complete"/>
             <input type="hidden" name="username" value="{//request/username}" />
             
             <input type="hidden" name="return" value="{//server/request_uri}" />
