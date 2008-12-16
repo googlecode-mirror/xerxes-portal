@@ -37,10 +37,10 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
         <p>
         <xsl:choose>
           <xsl:when test="//category/@published = '1'">
-            published <a class="categoryCommand" href="{$base_url}/?base=collections&amp;action=edit&amp;username={//category/@owned_by_user}&amp;subject={//category/@normalized}&amp;published=false&amp;return={php:function('urlencode', string(//server/request_uri))}">make private</a>
+            published <a class="categoryCommand" href="{$base_url}/?base=collections&amp;action=edit&amp;username={//category/@owned_by_user}&amp;subject={//category/@normalized}&amp;published=false&amp;return={php:function('urlencode', string(//server/request_uri))}">Make private</a>
           </xsl:when>
           <xsl:otherwise>
-            private <a class="categoryCommand" href="{$base_url}/?base=collections&amp;action=edit&amp;username={//category/@owned_by_user}&amp;subject={//category/@normalized}&amp;published=true&amp;return={php:function('urlencode', string(//server/request_uri))}">publish</a>
+            private <a class="categoryCommand" href="{$base_url}/?base=collections&amp;action=edit&amp;username={//category/@owned_by_user}&amp;subject={//category/@normalized}&amp;published=true&amp;return={php:function('urlencode', string(//server/request_uri))}">Publish</a>
           </xsl:otherwise>
           </xsl:choose>
         </p>
@@ -51,7 +51,7 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
         
         <a class="categoryCommand reorder" href="./?base=collections&amp;action=reorder_subcats_form&amp;subject={//category/@normalized}&amp;username={//category/@owned_by_user}">Change section order</a>
         
-        <a class="categoryCommand delete" href="./?base=collections&amp;action=delete_category&amp;subject={//category/@normalized}&amp;username={//category/@owned_by_user}">Delete Collection
+        <a class="categoryCommand delete" href="./?base=collections&amp;action=delete_category&amp;subject={//category/@normalized}&amp;username={//category/@owned_by_user}">Delete collection
         </a>
         
         </p>                
