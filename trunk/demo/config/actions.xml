@@ -205,6 +205,12 @@
 				<command>AuthenticateLogin</command>
 				<view>xsl/authenticate_login.xsl</view>
 			</action>
+      <!-- exact duplicate of login method, useful if one of them is
+           shibboleth protected and one not. -->
+      <action name="login2">
+        <command>AuthenticateLogin</command>
+				<view>xsl/authenticate_login.xsl</view>
+      </action>
 			<action name="logout">
 				<command>AuthenticateLogout</command>
 				<view>xsl/authenticate_logout.xsl</view>
