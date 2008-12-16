@@ -17,7 +17,7 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
 </xsl:template>
 
 <xsl:template name="page_name">
-  Rename
+  Reorder
 </xsl:template>
 
 <xsl:template name="main">

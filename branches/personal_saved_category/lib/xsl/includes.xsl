@@ -592,6 +592,33 @@
       <xsl:copy-of select="$text_breadcrumb_seperator" />
       <span class="breadcrumbHere">Save to personal collection</span>
     </xsl:when>
+    <xsl:when test="request/base = 'collections' and (request/action = 'edit_form')">
+      <a>
+        <xsl:attribute name="href">
+					<xsl:value-of select="//category[1]/url" />
+				</xsl:attribute>
+				<xsl:value-of select="//category[1]/@name" />
+			</a>
+      <xsl:copy-of select="$text_breadcrumb_seperator" />
+      <span class="breadcrumbHere">Edit</span>
+    </xsl:when>
+    <xsl:when test="request/base = 'collections' and (request/action = 'rename_form' or request/action = 'reorder_subcats_form' or request/action = 'reorder_databases_form')">
+      <a>
+        <xsl:attribute name="href">
+					<xsl:value-of select="//category[1]/url" />
+				</xsl:attribute>
+				<xsl:value-of select="//category[1]/@name" />
+			</a>
+      <xsl:copy-of select="$text_breadcrumb_seperator" />
+      <a>
+        <xsl:attribute name="href">
+					<xsl:value-of select="//category[1]/edit_url" />
+				</xsl:attribute>
+				Edit
+			</a>
+      <xsl:copy-of select="$text_breadcrumb_seperator" />
+      <xsl:call-template name="page_name" />
+    </xsl:when>
     
 		<xsl:otherwise>
 			<span class="breadcrumbHere"><xsl:call-template name="page_name" /></span>
