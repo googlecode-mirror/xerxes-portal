@@ -25,7 +25,7 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
 	<xsl:variable name="category_name"	select="//category/@name" />
 	<xsl:variable name="request_uri"	select="//request/server/request_uri" />
 
-	<form name="form1" method="get" action="{$base_url}/" onSubmit="return databaseLimit(this)">
+	<form name="form1" method="get" action="{$base_url}/">
 	<input type="hidden" name="base" value="collections" />
 	<input type="hidden" name="action" value="edit" />
   <input type="hidden" name="subject" value="{//category/@normalized}" />

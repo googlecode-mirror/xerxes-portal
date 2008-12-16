@@ -25,9 +25,6 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
 	<xsl:variable name="category_name"	select="//category/@name" />
 	<xsl:variable name="request_uri"	select="//request/server/request_uri" />
 
-	<form name="form1" method="get" action="{$base_url}/" onSubmit="return databaseLimit(this)">
-	<input type="hidden" name="base" value="collections" />
-	<input type="hidden" name="action" value="edit" />
 	
 	<div id="container">
 		<div id="searchArea">
@@ -70,7 +67,8 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
 			</div>
       
       <div>
-        <div id="addNewSection"><form action="{$base_url}" METHOD="GET">
+        <div id="addNewSection">
+         <form action="{$base_url}" METHOD="GET">
             <input type="hidden" name="base" value="collections"/>
             <input type="hidden" name="action" value="save_complete"/>
             <input type="hidden" name="username" value="{//request/username}" />
@@ -117,8 +115,6 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
        </xsl:if>
 		</div>
 	</div>
-
-	</form>
 	
 </xsl:template>
 
