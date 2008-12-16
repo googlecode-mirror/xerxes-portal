@@ -733,6 +733,18 @@ a img{
 
 /* User-created categories (collections) */
 
+.editSubjectHeading {
+  line-height: 20px;
+}
+
+.editSubjectHeading h1 {
+   display: inline;
+}
+
+.editSubjectHeading .categoryCommand {
+  vertical-align: top;
+}
+
 a.categoryCommand, a.categoryCommand:visited, a:hover.categoryCommand {
   margin-right: 2px;
   margin-left: 2px;

@@ -29,9 +29,20 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
 	<div id="container">
 		<div id="searchArea">
 	
-			<div class="subject">
+			<div class="editSubjectHeading">
 				<h1>Edit: <xsl:value-of select="//category/@name" /></h1>
-        <p>
+        <a class="categoryCommand edit" href="./?base=collections&amp;action=rename_form&amp;subject={//category/@normalized}&amp;username={//category/@owned_by_user}">Change name</a> 
+        <xsl:text> </xsl:text>
+        <xsl:if test="count(/*/category[1]/subcategory) &gt; 1">
+        <a class="categoryCommand reorder" href="./?base=collections&amp;action=reorder_subcats_form&amp;subject={//category/@normalized}&amp;username={//category/@owned_by_user}">Change section order</a>
+        <xsl:text> </xsl:text>
+        </xsl:if>
+        
+        <a class="categoryCommand delete" href="./?base=collections&amp;action=delete_category&amp;subject={//category/@normalized}&amp;username={//category/@owned_by_user}">Delete collection
+        </a>        
+			</div>
+      
+      <p>
         <xsl:choose>
           <xsl:when test="//category/@published = '1'">
             published <a class="categoryCommand" href="{$base_url}/?base=collections&amp;action=edit&amp;username={//category/@owned_by_user}&amp;subject={//category/@normalized}&amp;published=false&amp;return={php:function('urlencode', string(//server/request_uri))}">Make private</a>
@@ -41,20 +52,12 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
           </xsl:otherwise>
           </xsl:choose>
         </p>
-			</div>
 			
       <div class="subject_edit_commands">
         <p>
         
 
-        <a class="categoryCommand edit" href="./?base=collections&amp;action=rename_form&amp;subject={//category/@normalized}&amp;username={//category/@owned_by_user}">Change name</a> 
 
-        <xsl:if test="count(/*/category[1]/subcategory) &gt; 1">
-        <a class="categoryCommand reorder" href="./?base=collections&amp;action=reorder_subcats_form&amp;subject={//category/@normalized}&amp;username={//category/@owned_by_user}">Change section order</a>
-        </xsl:if>
-        
-        <a class="categoryCommand delete" href="./?base=collections&amp;action=delete_category&amp;subject={//category/@normalized}&amp;username={//category/@owned_by_user}">Delete collection
-        </a>
         
         </p>                
       </div>
