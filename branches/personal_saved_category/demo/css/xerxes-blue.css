@@ -750,8 +750,12 @@ a img{
   margin-bottom: 40px;
 }
 
-.subjectSubCategory .subject_edit_commands {
+.editCategory .subjectCheckList {
+  margin-top: 24px;
   margin-bottom: 18px;
+}
+
+.subjectSubCategory .subject_edit_commands {
   line-height: 26px;
   vertical-align: top;
 }

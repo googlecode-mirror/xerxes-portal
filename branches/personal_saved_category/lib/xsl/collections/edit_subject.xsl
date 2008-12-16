@@ -70,7 +70,7 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
                 <xsl:text> </xsl:text>
               </xsl:if>
               
-              <a class="categoryCommand add" href="./?base=collections&amp;action=edit_form&amp;username={../@owned_by_user}&amp;subject={../@normalized}&amp;add_to_subcategory={@id}">
+              <a class="categoryCommand add" href="./?base=collections&amp;action=edit_form&amp;username={../@owned_by_user}&amp;subject={../@normalized}&amp;add_to_subcategory={@id}#addDatabaseSidebar">
                 Add databases
               </a>
               <xsl:text> </xsl:text>
@@ -131,7 +131,7 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
 
     <div id="sidebar">
      <xsl:if test="/*/request/add_to_subcategory">
-     <div class="addDatabaseSidebar">
+     <div class="addDatabaseSidebar" id="addDatabaseSidebar">
        <form method="GET" action="{base_url}">
          <input type="hidden" name="base" value="collections" />
          <input type="hidden" name="action" value="edit_form" />
