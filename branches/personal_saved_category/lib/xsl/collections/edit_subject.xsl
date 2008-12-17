@@ -156,8 +156,8 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
             <li>No databases found matching "<xsl:value-of select="/*/request/query"/>"</li>
           </xsl:if>
           <xsl:for-each select="/*/databases/database">
-            <li><a href="./?base=collections&amp;action=save_complete&amp;username={/*/category[1]/@owned_by_user}&amp;subject={/*/category[1]/@normalized}&amp;subcategory={/*/request/add_to_subcategory}&amp;id={metalib_id}&amp;return={php:function('urlencode', string(//server/request_uri))}">
-            <xsl:value-of select="title_display"/></a></li>
+            <li><a class="addToCollection" href="./?base=collections&amp;action=save_complete&amp;username={/*/category[1]/@owned_by_user}&amp;subject={/*/category[1]/@normalized}&amp;subcategory={/*/request/add_to_subcategory}&amp;id={metalib_id}&amp;return={php:function('urlencode', string(//server/request_uri))}">
+            <xsl:value-of select="title_display"/></a><xsl:text> </xsl:text><a href="{url}"><img src="{$base_url}/images/info.gif" alt="more information" title="more information"/></a></li>
           </xsl:for-each>
           </ul>
          </div>

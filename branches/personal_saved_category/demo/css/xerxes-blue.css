@@ -819,7 +819,7 @@ a.categoryCommand.rename {
   padding-left: 8px;
 }
 
-.addDatabaseSidebar ul li a {
+.addDatabaseSidebar ul li a.addToCollection {
   background: transparent url(../images/famfamfam/add.png) no-repeat scroll 0px 0px;
   background-position: 0px -1px;
   padding-left: 20px;
