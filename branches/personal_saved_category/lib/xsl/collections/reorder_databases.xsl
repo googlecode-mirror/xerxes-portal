@@ -35,9 +35,6 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
   <input type="hidden" name="return" value="{//request/return}" />
 	
 	<div id="container">
-    <div class="folderReturn">
-      <img alt="" src="http://testbox.mse.jhu.edu/xerxes/images/back.gif"/><span class="folderReturnText"><a href="{/*/category[1]/edit_url}">Return to edit page</a></span>
-    </div>
   
 		<div id="searchArea">
 	
