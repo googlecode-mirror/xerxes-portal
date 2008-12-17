@@ -779,9 +779,9 @@ a.categoryCommand:hover {
 }
 
 a.categoryCommand.delete {
-  background-image: url(../images/famfamfam/delete.png);
+  background-image: url(../images/delete.gif);
   background-repeat: no-repeat;
-  background-position: 2px 1px;
+  background-position: 2px 3px;
   padding-left: 20px;
 }
 a.categoryCommand.add {
@@ -802,7 +802,12 @@ a.categoryCommand.edit {
   background-position: 4px 2px;
   padding-left: 24px;
 }
-
+a.categoryCommand.rename {
+  background-image: url(../images/famfamfam/tag_blue_edit.png);
+  background-repeat: no-repeat;
+  background-position: 4px 2px;
+  padding-left: 24px;
+}
 .addDatabaseSidebar {
   margin-top: 28px;
   padding: 20px;
