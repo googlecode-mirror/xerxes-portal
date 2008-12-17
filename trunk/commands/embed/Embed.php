@@ -8,6 +8,10 @@
    function getEmbedContent($url) {         
      $output = '';
      $handle = fopen($url, 'r');
+     if (! $handle) {
+       return "Error: Could not open content at $url";
+     }
+     
      while(!feof($handle)) {
       //read file line by line into variable
       $output = $output . fgets($handle, 4096);
