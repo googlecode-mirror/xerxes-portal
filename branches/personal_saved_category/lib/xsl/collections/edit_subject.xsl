@@ -29,6 +29,7 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
 	<div id="container">
     <div class="editSubjectHeading">
 				<h1>Edit: <xsl:value-of select="//category/@name" /></h1>
+        <div class="subject_edit_commands">
         <a class="categoryCommand rename" href="./?base=collections&amp;action=rename_form&amp;subject={//category/@normalized}&amp;username={//category/@owned_by_user}">Change name</a> 
         <xsl:text> </xsl:text>
         <xsl:if test="count(/*/category[1]/subcategory) &gt; 1">
@@ -38,6 +39,7 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
         
         <a class="categoryCommand delete deleteCollection" href="./?base=collections&amp;action=delete_category&amp;subject={//category/@normalized}&amp;username={//category/@owned_by_user}">Delete collection
         </a>  
+        </div>
         <p>
           <xsl:choose>
           <xsl:when test="//category/@published = '1'">
@@ -64,8 +66,7 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
             <div class="subject_edit_commands">
               <a class="categoryCommand rename" href="./?base=collections&amp;action=rename_form&amp;subject={../@normalized}&amp;subcategory={@id}&amp;username={../@owned_by_user}">
               Change name</a>
-              <xsl:text> </xsl:text>
-      
+              <xsl:text> </xsl:text>      
               <a class="categoryCommand add" href="./?base=collections&amp;action=edit_form&amp;username={../@owned_by_user}&amp;subject={../@normalized}&amp;add_to_subcategory={@id}#addDatabaseSidebar">
                 Add databases
               </a>
