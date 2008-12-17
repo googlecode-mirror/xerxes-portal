@@ -29,7 +29,7 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
 	<div id="container">
     <div class="editSubjectHeading">
 				<h1>Edit: <xsl:value-of select="//category/@name" /></h1>
-        <a class="categoryCommand edit" href="./?base=collections&amp;action=rename_form&amp;subject={//category/@normalized}&amp;username={//category/@owned_by_user}">Change name</a> 
+        <a class="categoryCommand rename" href="./?base=collections&amp;action=rename_form&amp;subject={//category/@normalized}&amp;username={//category/@owned_by_user}">Change name</a> 
         <xsl:text> </xsl:text>
         <xsl:if test="count(/*/category[1]/subcategory) &gt; 1">
         <a class="categoryCommand reorder" href="./?base=collections&amp;action=reorder_subcats_form&amp;subject={//category/@normalized}&amp;username={//category/@owned_by_user}">Change section order</a>
@@ -62,20 +62,23 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
           <fieldset class="subjectSubCategory">
             <legend><xsl:value-of select="@name" /></legend>
             <div class="subject_edit_commands">
-              <a class="categoryCommand edit" href="./?base=collections&amp;action=rename_form&amp;subject={../@normalized}&amp;subcategory={@id}&amp;username={../@owned_by_user}">
+              <a class="categoryCommand rename" href="./?base=collections&amp;action=rename_form&amp;subject={../@normalized}&amp;subcategory={@id}&amp;username={../@owned_by_user}">
               Change name</a>
               <xsl:text> </xsl:text>
-              <xsl:if test="count(database) &gt; 1">
-                <a class="categoryCommand reorder" href="./?base=collections&amp;action=reorder_databases_form&amp;subject={//category/@normalized}&amp;subcategory={@id}&amp;username={//category/@owned_by_user}">Change database order</a>
-                <xsl:text> </xsl:text>
-              </xsl:if>
-              
+      
               <a class="categoryCommand add" href="./?base=collections&amp;action=edit_form&amp;username={../@owned_by_user}&amp;subject={../@normalized}&amp;add_to_subcategory={@id}#addDatabaseSidebar">
                 Add databases
               </a>
               <xsl:text> </xsl:text>
               <a class="categoryCommand delete" href="./?base=collections&amp;action=delete_subcategory&amp;subject={//category/@normalized}&amp;subcategory={@id}&amp;username={//category/@owned_by_user}">Delete section
               </a>
+              
+              <xsl:if test="count(database) &gt; 1">
+                <xsl:text> </xsl:text>
+                <a class="categoryCommand reorder" href="./?base=collections&amp;action=reorder_databases_form&amp;subject={//category/@normalized}&amp;subcategory={@id}&amp;username={//category/@owned_by_user}">Change database order</a>           
+              </xsl:if>
+           
+              
             </div>
             
             <table summary="this table lists databases you have included in your personal collection" class="subjectCheckList">
@@ -83,7 +86,7 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
                 <xsl:variable name="id_meta" select="metalib_id" />
                 <tr valign="top">
                   <td>      
-                       <a href="./?base=collections&amp;action=remove_db&amp;username={//request/username}&amp;subject={//category[1]/@normalized}&amp;subcategory={../@id}&amp;id={metalib_id}&amp;return={php:function('urlencode', string(//server/request_uri))}"><img src="{$base_url}/images/famfamfam/delete.png" alt="Remove" title="Remove database from section"/></a>                    
+                       <a href="./?base=collections&amp;action=remove_db&amp;username={//request/username}&amp;subject={//category[1]/@normalized}&amp;subcategory={../@id}&amp;id={metalib_id}&amp;return={php:function('urlencode', string(//server/request_uri))}"><img src="{$base_url}/images/delete.gif" alt="Remove" title="Remove database from section"/></a>                    
                   </td>
                   <td>
                     <div class="subjectDatabaseTitle">
