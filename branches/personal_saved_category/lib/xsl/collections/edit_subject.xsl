@@ -36,7 +36,7 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
         <xsl:text> </xsl:text>
         </xsl:if>
         
-        <a class="categoryCommand delete" href="./?base=collections&amp;action=delete_category&amp;subject={//category/@normalized}&amp;username={//category/@owned_by_user}">Delete collection
+        <a class="categoryCommand delete deleteCollection" href="./?base=collections&amp;action=delete_category&amp;subject={//category/@normalized}&amp;username={//category/@owned_by_user}">Delete collection
         </a>  
         <p>
           <xsl:choose>
@@ -70,7 +70,7 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
                 Add databases
               </a>
               <xsl:text> </xsl:text>
-              <a class="categoryCommand delete" href="./?base=collections&amp;action=delete_subcategory&amp;subject={//category/@normalized}&amp;subcategory={@id}&amp;username={//category/@owned_by_user}">Delete section
+              <a class="categoryCommand delete deleteSection" href="./?base=collections&amp;action=delete_subcategory&amp;subject={//category/@normalized}&amp;subcategory={@id}&amp;username={//category/@owned_by_user}">Delete section
               </a>
               
               <xsl:if test="count(database) &gt; 1">
@@ -86,7 +86,7 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
                 <xsl:variable name="id_meta" select="metalib_id" />
                 <tr valign="top">
                   <td>      
-                       <a href="./?base=collections&amp;action=remove_db&amp;username={//request/username}&amp;subject={//category[1]/@normalized}&amp;subcategory={../@id}&amp;id={metalib_id}&amp;return={php:function('urlencode', string(//server/request_uri))}"><img src="{$base_url}/images/delete.gif" alt="Remove" title="Remove database from section"/></a>                    
+                       <a class="removeDatabase" href="./?base=collections&amp;action=remove_db&amp;username={//request/username}&amp;subject={//category[1]/@normalized}&amp;subcategory={../@id}&amp;id={metalib_id}&amp;return={php:function('urlencode', string(//server/request_uri))}"><img src="{$base_url}/images/delete.gif" alt="Remove" title="Remove database from section"/></a>                    
                   </td>
                   <td>
                     <div class="subjectDatabaseTitle">

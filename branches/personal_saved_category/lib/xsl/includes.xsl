@@ -1368,6 +1368,9 @@
 			var dateSearch = "<xsl:value-of select="results/search/date" />";
 			var iSearchable = "<xsl:value-of select="$search_limit" />";
 		</script>
+    
+    <!-- add behaviors to edit collection dialog, currently just delete confirm -->
+    <script src="{$base_include}/javascript/collections.js" language="javascript" type ="text/javascript"></script>
 		
 		<!-- mango stuff -->
 		
