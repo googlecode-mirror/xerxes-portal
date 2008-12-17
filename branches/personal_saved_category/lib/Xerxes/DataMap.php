@@ -679,8 +679,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 				// if the current row's subcategory name does not match the previous
 				// one, then push the previous one onto category obj and make a new one
 				
-
-				if ( $arrResult["subcategory"] != $objSubcategory->name )
+				if ( $arrResult["subcat_id"] != $objSubcategory->id )
 				{
 					// Get the last db in this subcategory first too.
           if ( $objDatabase->metalib_id != null )
@@ -688,7 +687,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 					$objDatabase = new Xerxes_Data_Database( );
           
           // Only add subcategory if it actually has databases, to
-          // maintain consistency with previous semantics.           
+          // maintain consistency with previous semantics.
           if ( ( $mode == self::userCreatedMode && $objSubcategory->id ) || ! empty($objSubcategory->databases)) {
 					  array_push( $objCategory->subcategories, $objSubcategory );
           }
@@ -737,7 +736,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 			// last ones
 			if ($objDatabase->metalib_id != null) array_push( $objSubcategory->databases, $objDatabase );
 			if ( ($mode == self::userCreatedMode && $objSubcategory->id) || ! empty($objSubcategory->databases)) array_push( $objCategory->subcategories, $objSubcategory );
-			
+
 			return $objCategory;
 		
 		} 
