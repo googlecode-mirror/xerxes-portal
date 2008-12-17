@@ -123,12 +123,15 @@ class Xerxes_Helper
 		$objElement = $objDom->createElement( "url", $objRequest->url_for( array ("base" => "databases", "action" => "database", "id" => htmlentities( $objDatabaseData->metalib_id ) ) ) );
 		$objDatabase->appendChild( $objElement );
     
-    // The 'add to personal collection' url for logged in user, if there
-    // is a logged in user. 
-    if ( Xerxes_Framework_Restrict::isAuthenticatedUser($objRequest) ) {
-      $objElement = $objDom->createElement( "add_to_collection_url", $objRequest->url_for( array ("base" => "collections", "action" => "save_choose_collection", "id" => htmlentities( $objDatabaseData->metalib_id), "username" => $objRequest->getSession("username"), "return" => $objRequest->getServer('REQUEST_URI') ) ) );
-      $objDatabase->appendChild( $objElement );
-    }
+    // The 'add to personal collection' url for logged in user--if no
+    // logged in user, generate link anyway, but it's going to have
+    // an empty user. User should be required to log in before continuing
+    // with action. 
+    
+    $url = $objRequest->url_for( array ("base" => "collections", "action" => "save_choose_collection", "id" => $objDatabaseData->metalib_id, "username" => $objRequest->getSession("username"), "return" => $objRequest->getServer('REQUEST_URI') ) );
+          
+    $objElement = $objDom->createElement( "add_to_collection_url", $url );
+    $objDatabase->appendChild( $objElement );
 		
 		//add an element for url to xerxes-mediated direct link to db. 
 		

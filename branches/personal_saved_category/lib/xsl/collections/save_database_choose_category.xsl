@@ -27,13 +27,17 @@
 
 <xsl:template name="main">
 
+    
 
 <div id="container">
   <div id="searchArea">
     <xsl:for-each select="//database">
     
     <xsl:variable name="id" select="metalib_id" />
-    <xsl:variable name="username" select="//request/username" />
+    <!-- username in request, unless they JUST logged in, then take it from
+       session -->
+  
+    <xsl:variable name="username"><xsl:choose><xsl:when test="string(//request/username)"><xsl:value-of select="//request/username" /></xsl:when><xsl:otherwise><xsl:value-of select="//session/username"/></xsl:otherwise></xsl:choose></xsl:variable>
     <xsl:variable name="return" select="//request/return" />
     
     <xsl:if test="string(/*/request/return)">
