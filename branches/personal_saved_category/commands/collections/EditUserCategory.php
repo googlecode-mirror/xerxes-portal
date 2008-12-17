@@ -61,8 +61,13 @@ class Xerxes_Command_EditUserCategory extends Xerxes_Command_Collections
         $message .= "Collection name changed. ";
       }
       if (! empty($strPublished)) {
-        $category->published = (boolean) ($strPublished == "true");
-        $message .= " Collection publication status changed. ";
+        $boolPublished = (boolean) ($strPublished == "true");
+        $category->published = $boolPublished;
+        if ( $boolPublished ) {
+          $message .= " Collection published. ";
+        } else {
+          $message .= " Collection made private. ";
+        }        
       }
       $objData->updateUserCategoryProperties($category);
     }
