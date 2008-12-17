@@ -276,7 +276,7 @@
 		<xsl:when test="request/base = 'databases' and request/action = 'database'">
 			<xsl:text></xsl:text><xsl:value-of select="//title_display" />
 		</xsl:when>
-		<xsl:when test="request/base = 'embed' and request/action = 'gen_subject'">
+		<xsl:when test="(request/base = 'embed' and request/action = 'gen_subject') or (request/base = 'collections' and request/action = 'gen_embed')">
 			<xsl:text>Create Snippet for: </xsl:text> 
 		<xsl:value-of select="//category/@name" />
 		</xsl:when>
@@ -560,7 +560,7 @@
 			<span class="breadcrumbHere">Record</span>
 		</xsl:when>	
 		
-		<xsl:when test="request/base = 'embed' and request/action = 'gen_subject'">
+		<xsl:when test="(request/base = 'embed' and request/action = 'gen_subject') or (request/base = 'collections' and request/action = 'gen_embed')">
 			<a>
 				<xsl:attribute name="href">
 				 <xsl:value-of select="//category/url" />
