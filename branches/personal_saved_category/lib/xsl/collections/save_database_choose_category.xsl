@@ -39,18 +39,7 @@
   
     <xsl:variable name="username"><xsl:choose><xsl:when test="string(//request/username)"><xsl:value-of select="//request/username" /></xsl:when><xsl:otherwise><xsl:value-of select="//session/username"/></xsl:otherwise></xsl:choose></xsl:variable>
     <xsl:variable name="return" select="//request/return" />
-    
-    <xsl:if test="string(/*/request/return)">
-      <div>
-        <img alt="" src="http://testbox.mse.jhu.edu/xerxes/images/back.gif"/><span class="folderReturnText">
-        <a href="{/*/request/return}">Return 
-        <xsl:if test="string(/*/request/context)">
-          to <xsl:value-of select="/*/request/context"/>
-        </xsl:if>  
-        </a></span>
-      </div>
-    </xsl:if>
-      
+              
     <h2><xsl:value-of select="title_display" />: Save to personal collection</h2>
     
     <form method="GET" action="{$base_url}">

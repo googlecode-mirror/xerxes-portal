@@ -25,18 +25,7 @@
 
 <div id="container">
   <div id="searchArea">
-    <xsl:for-each select="//category">
-    
-        <xsl:if test="string(/*/request/return)">
-      <div>
-        <img alt="" src="http://testbox.mse.jhu.edu/xerxes/images/back.gif"/><span class="folderReturnText">
-        <a href="{/*/request/return}">Return 
-        <xsl:if test="string(/*/request/context)">
-          to <xsl:value-of select="/*/request/context"/>
-        </xsl:if>  
-        </a></span>
-      </div>
-    </xsl:if>
+    <xsl:for-each select="//category">           
     
     <h2><xsl:value-of select="/*/databases/database/title_display" />: Save to personal collection: <xsl:value-of select="@name" /></h2>
     <h3>Choose a section</h3>
