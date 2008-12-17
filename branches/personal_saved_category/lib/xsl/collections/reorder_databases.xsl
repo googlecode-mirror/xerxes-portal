@@ -45,7 +45,7 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
             <xsl:for-each select="//category/subcategory[@id = $subcategory_id]/database">
               <tr>
                 <td><xsl:value-of select="position()"/></td>
-                <td><input type="text" size="2" name="db_seq_{metalib_id}" /></td>
+                <td><input class="reorder" type="text" size="2" name="db_seq_{metalib_id}" /></td>
                 <td><xsl:value-of select="title_full" /></td>
               </tr>              
             </xsl:for-each>

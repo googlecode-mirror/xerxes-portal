@@ -40,24 +40,21 @@
 	<div id="container">
 		<div id="searchArea">
 	
-			<div class="subject">
-        <xsl:if test="$user_can_edit" >
-        <p>        
-          <a class="categoryCommand edit" href="{/*/category/edit_url}">Edit</a>
-        </p>
-        </xsl:if>
+			<div class="subject">        
 				<h1><xsl:value-of select="//category/@name" /></h1>
-        <xsl:if test="$user_can_edit">
-          <p>
+        <xsl:if test="$user_can_edit" >
+        <div class="subject_edit_commands">        
+          <a class="categoryCommand edit" href="{/*/category/edit_url}">Edit</a>
+          <xsl:text> </xsl:text>
           <xsl:choose>
           <xsl:when test="//category/@published = '1'">
-            published
+            <span class="publishedStatus">Published</span>
           </xsl:when>
           <xsl:otherwise>
-            private
+            <span class="privateStatus">Private</span>
           </xsl:otherwise>
           </xsl:choose>
-          </p>
+        </div>
         </xsl:if>
 			</div>
 				

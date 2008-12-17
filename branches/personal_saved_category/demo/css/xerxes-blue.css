@@ -758,6 +758,7 @@ a img{
   vertical-align: top;
   background-color: #EFEFEF;
   padding: 8px;
+  margin-top: 16px;
 }
 .editSubjectHeading .subject_edit_commands {
   margin-top: 16px;
@@ -777,6 +778,7 @@ a.categoryCommand, a.categoryCommand:visited, a:hover.categoryCommand {
   text-decoration: none;
   white-space: nowrap;
   background-position: 4px 4px;
+  background-repeat: no-repeat;
   padding-left: 24px;
 }
 a.categoryCommand:hover {
@@ -786,24 +788,46 @@ a.categoryCommand:hover {
 
 a.categoryCommand.delete {
   background-image: url(../images/delete.gif);
-  background-repeat: no-repeat;
 }
 a.categoryCommand.add {
   background-image: url(../images/famfamfam/add.png);
-  background-repeat: no-repeat;
 }
 a.categoryCommand.reorder {
   background-image: url(../images/reorder.gif);
-  background-repeat: no-repeat;
 }
 a.categoryCommand.edit {
   background-image: url(../images/famfamfam/wrench.png);
-  background-repeat: no-repeat;
 }
 a.categoryCommand.rename {
   background-image: url(../images/famfamfam/tag_blue_edit.png);
-  background-repeat: no-repeat;
 }
+a.categoryCommand.publish {
+    padding-left: 8px;
+
+}
+a.categoryCommand.makePrivate {
+  padding-left: 8px
+}
+span.publishedStatus {
+  margin-right: 2px;
+  margin-left: 2px;
+  padding: 4px; 
+  background-position: 4px 4px;
+  background-repeat: no-repeat;
+  padding-left: 24px;
+  background-image: url(../images/famfamfam/lock_open.png);
+}
+span.privateStatus {
+  margin-right: 2px;
+  margin-left: 2px;
+  padding: 4px; 
+  background-position: 4px 4px;
+  background-repeat: no-repeat;
+  padding-left: 24px;
+  background-image: url(../images/famfamfam/lock.png);
+}
+
+
 .addDatabaseSidebar {
   margin-top: 28px;
   padding: 20px;
@@ -826,6 +850,13 @@ a.categoryCommand.rename {
   margin-top: 20px;
   padding: 20px;
 }
+
+input.reorder {
+  padding: 2px;
+  height: 1em;
+  width: 2em;
+}
+  
 
 /* Autocomplete styling, used by tag entry right now */
 

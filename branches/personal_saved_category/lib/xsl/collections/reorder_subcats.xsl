@@ -43,7 +43,7 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
             <xsl:for-each select="//category/subcategory">
               <tr>
                 <td><xsl:value-of select="@position"/></td>
-                <td><input type="text" size="2" name="subcat_seq_{@id}" /></td>
+                <td><input class="reorder" type="text" size="2" name="subcat_seq_{@id}" /></td>
                 <td><xsl:value-of select="@name" /></td>
               </tr>              
             </xsl:for-each>
