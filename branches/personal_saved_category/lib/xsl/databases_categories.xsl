@@ -91,12 +91,13 @@
 				<h2><xsl:copy-of select="$text_databases_category_subject" /></h2>
 				<p><xsl:copy-of select="$text_databases_category_subject_desc" /></p>
 				<xsl:variable name="total" select="count(categories/category)" />
-				
+        <xsl:variable name="numRows" select="ceiling($total * .33)"/>
+
 				<table class="categoriesTable">
 				<tr valign="top">
 				<td>
 					<ul>
-					<xsl:for-each select="categories/category[@position &lt;= ( $total * .33 )]">
+					<xsl:for-each select="categories/category[@position &lt;= $numRows]">
 						<xsl:variable name="normalized" select="normalized" />
 						<li><a href="{url}"><xsl:value-of select="name" /></a></li>
 					</xsl:for-each>
@@ -104,7 +105,7 @@
 				</td>
 				<td>
 					<ul>
-					<xsl:for-each select="categories/category[@position &gt; ( $total * .33 ) and @position &lt; ( $total * .66 )]">
+					<xsl:for-each select="categories/category[@position &gt; $numRows and @position &lt;= ( $numRows * 2 )]">
 						<xsl:variable name="normalized" select="normalized" />
 						<li><a href="{url}"><xsl:value-of select="name" /></a></li>
 					</xsl:for-each>
@@ -112,7 +113,7 @@
 				</td>
 				<td>
 					<ul>
-					<xsl:for-each select="categories/category[@position &gt;= ( $total * .66 )]">
+					<xsl:for-each select="categories/category[@position &gt; ( $numRows * 2 )]">
 						<xsl:variable name="normalized" select="normalized" />
 						<li><a href="{url}"><xsl:value-of select="name" /></a></li>
 					</xsl:for-each>
