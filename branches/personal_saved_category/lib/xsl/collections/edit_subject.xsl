@@ -39,16 +39,20 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
         
         <a class="categoryCommand delete deleteCollection" href="./?base=collections&amp;action=delete_category&amp;subject={//category/@normalized}&amp;username={//category/@owned_by_user}">Delete collection
         </a>  
-        <xsl:text> </xsl:text>
-        <xsl:choose>
-          <xsl:when test="//category/@published = '1'">
-            <span class="publishedStatus">Published</span><a class="categoryCommand makePrivate" href="{$base_url}/?base=collections&amp;action=edit&amp;username={//category/@owned_by_user}&amp;subject={//category/@normalized}&amp;published=false&amp;return={php:function('urlencode', string(//server/request_uri))}">Make private</a>
-          </xsl:when>
-          <xsl:otherwise>
-            <span class="privateStatus">Private</span><a class="categoryCommand publish" href="{$base_url}/?base=collections&amp;action=edit&amp;username={//category/@owned_by_user}&amp;subject={//category/@normalized}&amp;published=true&amp;return={php:function('urlencode', string(//server/request_uri))}">Publish</a>
-          </xsl:otherwise>
-        </xsl:choose>
         </div>
+        <p>
+          <xsl:choose>
+            <xsl:when test="//category/@published = '1'">
+            <a class="publishToggle" href="{$base_url}/?base=collections&amp;action=edit&amp;username={//category/@owned_by_user}&amp;subject={//category/@normalized}&amp;published=false&amp;return={php:function('urlencode', string(//server/request_uri))}">
+              <span class="publishedStatus">Published</span> <span class="grayed">Private</span></a>
+            </xsl:when>
+            <xsl:otherwise>
+              <a class="publishToggle" href="{$base_url}/?base=collections&amp;action=edit&amp;username={//category/@owned_by_user}&amp;subject={//category/@normalized}&amp;published=true&amp;return={php:function('urlencode', string(//server/request_uri))}">
+              <span class="grayed">Published</span> <span class="privateStatus">Private</span>
+              </a>
+            </xsl:otherwise>
+          </xsl:choose>
+        </p>
 			</div>
 
   

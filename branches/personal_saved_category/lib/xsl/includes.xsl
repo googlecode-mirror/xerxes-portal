@@ -1148,7 +1148,7 @@
 
 <!-- 
 	TEMPLATE: FOLDER HEADER 
-	Sets the name of the folder area, dynamically based on roles
+	Sets the name of the folder area, dynamically based on roles.
 -->
 
 <xsl:template name="folder_header">

@@ -770,7 +770,7 @@ a.categoryCommand, a.categoryCommand:visited, a:hover.categoryCommand {
   margin-right: 2px;
   margin-left: 2px;
   padding: 4px;  
-  background-color: #E7FFCC;
+  background-color: #F7FDCB;
   border: 1px dotted #CCCCCC;
   font-weight: bold;
   font-family: Arial,Verdana,Geneva,Arial,helvetica,sans-serif;
@@ -805,9 +805,29 @@ a.categoryCommand.publish {
     padding-left: 8px;
 
 }
-a.categoryCommand.makePrivate {
-  padding-left: 8px
+
+a.publishToggle {
+  margin-right: 2px;
+  margin-left: 2px;
+  padding: 8px;  
+  background-color: #F7FDCB;
+  border: 1px dotted #CCCCCC;
+  font-weight: bold;
+  font-family: Arial,Verdana,Geneva,Arial,helvetica,sans-serif;
+  color: black;
+  text-decoration: none;
+  white-space: nowrap;    
 }
+a.publishToggle span.grayed {
+  background-color: gray; 
+  margin-right: 2px;
+  margin-left: 2px;
+  padding: 4px; 
+  background-position: 4px 4px;
+  background-repeat: no-repeat;
+  padding-left: 24px;
+}
+
 span.publishedStatus {
   margin-right: 2px;
   margin-left: 2px;
