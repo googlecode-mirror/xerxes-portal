@@ -51,8 +51,7 @@
 				</div>
 			</div>
 			<div class="citationNote">
-				These citations are software generated and may contain errors. 
-				To verify accuracy, check the appropriate style guide.
+				<xsl:copy-of select="$text_record_citation_note" />
 			</div>
 		</div>
 		
