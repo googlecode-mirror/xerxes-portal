@@ -1855,10 +1855,25 @@
 			{
 				$arrReferant["rft.title"] = $strTitle;
 			}
+			if ( $arrReferant["rft.genre"] == "journal" )
+			{
+				$arrReferant["rft.title"] = $strTitle;
+				
+				// remove these elements from a journal, since they produce
+				// some erroneous info, especially date!
+				
+				$arrReferant["rft.date"] = null;
+				$arrReferant["rft.pub"] = null;
+				$arrReferant["rft.place"] = null;
+			}
 			else
 			{
 				$arrReferant["rft.atitle"] = $strTitle;
 			}
+			
+			
+
+			
 		
 			return $arrReferant;
 		}
