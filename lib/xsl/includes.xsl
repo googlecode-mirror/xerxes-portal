@@ -408,6 +408,22 @@
 		<xsl:when test="request/action = 'categories'">
 			<span class="breadcrumbHere">Home</span>
 		</xsl:when>
+		
+		<!-- put this here, rather than breadcrumbs to allow local implementation to treat
+			 mango as a standalone app; really, really need to refactor all this breadcrumb stuff! -->
+		
+		<xsl:when test="request/base = 'books'">
+			<a href="{$base_url}">Home</a> <xsl:copy-of select="$text_breadcrumb_seperator" /> 			
+			<xsl:choose>
+				<xsl:when test="request/action != 'home'">
+					<a href="./?base=books">Find Books</a> <xsl:copy-of select="$text_breadcrumb_seperator" /> 
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:text>Find Books</xsl:text>
+				</xsl:otherwise>
+			</xsl:choose>
+			
+		</xsl:when>
 		<xsl:otherwise>
 			<a href="{$base_url}">Home</a> <xsl:copy-of select="$text_breadcrumb_seperator" />  
 		</xsl:otherwise>
@@ -1558,6 +1574,14 @@
 			<input id="query" name="query" type="text" size="32" value="{$query}" /><xsl:text> </xsl:text>
 			
 			<input type="submit" name="Submit" value="GO" />
+			
+			<xsl:if test="spelling != ''">
+				<p class="errorSpelling">Did you mean: <a href="{spelling/@url}"><xsl:value-of select="spelling" /></a></p>
+			</xsl:if>
+			
+			<div id="mangoAdvancedMore">
+				<a href="./?base=books&amp;action=advanced">More options</a>
+			</div>
 		
 		</div>
 	</div>
@@ -1573,187 +1597,525 @@
 			<legend>Search Terms</legend>
 			
 			<ul>
-				<li>
-					<xsl:text>Search: </xsl:text>
-					<xsl:call-template name="field-pulldown">
-						<xsl:with-param name="default">kw</xsl:with-param>
-						<xsl:with-param name="active"><xsl:value-of select="request/field1" /></xsl:with-param>
-						<xsl:with-param name="id">1</xsl:with-param>
-					</xsl:call-template> 
-					<xsl:text> for </xsl:text><input type="text" name="term1" value="{request/term1}" />
-					<xsl:text> </xsl:text>
-					<xsl:call-template name="boolean">
-						<xsl:with-param name="id">1</xsl:with-param>
-					</xsl:call-template>
-				</li>
-				<li>
-					<xsl:text>Search: </xsl:text>
-					<xsl:call-template name="field-pulldown">
-						<xsl:with-param name="default">ti</xsl:with-param>
-						<xsl:with-param name="active"><xsl:value-of select="request/field2" /></xsl:with-param>
-						<xsl:with-param name="id">2</xsl:with-param>
-					</xsl:call-template> 
-					<xsl:text> for </xsl:text><input type="text" name="term2"  value="{request/term2}" />
-					<xsl:text> </xsl:text>
-					<xsl:call-template name="boolean">
-						<xsl:with-param name="id">2</xsl:with-param>
-					</xsl:call-template>
-				</li>
-				<li>
-					<xsl:text>Search: </xsl:text>
-					<xsl:call-template name="field-pulldown">
-						<xsl:with-param name="default">au</xsl:with-param>
-						<xsl:with-param name="active"><xsl:value-of select="request/field3" /></xsl:with-param>
-						<xsl:with-param name="id">3</xsl:with-param>
-					</xsl:call-template> 
-					<xsl:text> for </xsl:text><input type="text" name="term3"  value="{request/term3}" />
-					<xsl:text> </xsl:text>
-					<xsl:call-template name="boolean">
-						<xsl:with-param name="id">3</xsl:with-param>
-					</xsl:call-template>
-				</li>
-				<li>
-					<xsl:text>Search: </xsl:text>
-					<xsl:call-template name="field-pulldown">
-						<xsl:with-param name="default">su</xsl:with-param>
-						<xsl:with-param name="active"><xsl:value-of select="request/field4" /></xsl:with-param>
-						<xsl:with-param name="id">4</xsl:with-param>
-					</xsl:call-template> 
-					<xsl:text> for </xsl:text><input type="text" name="term4"  value="{request/term4}" />
-				</li>
+				<xsl:if test="request/advancedfull or request/term1">
+					<li>
+						<xsl:text>Search: </xsl:text>
+						<xsl:call-template name="field-pulldown">
+							<xsl:with-param name="default">kw</xsl:with-param>
+							<xsl:with-param name="active"><xsl:value-of select="request/field1" /></xsl:with-param>
+							<xsl:with-param name="id">1</xsl:with-param>
+						</xsl:call-template> 
+						<xsl:text> for </xsl:text><input type="text" name="term1" value="{request/term1}" />
+					</li>
+				</xsl:if>
+				<xsl:if test="request/advancedfull or request/term2">
+					<li> 
+						<xsl:call-template name="boolean">
+							<xsl:with-param name="id">1</xsl:with-param>
+						</xsl:call-template>
+						<xsl:text> </xsl:text>
+						<xsl:call-template name="field-pulldown">
+							<xsl:with-param name="default">ti</xsl:with-param>
+							<xsl:with-param name="active"><xsl:value-of select="request/field2" /></xsl:with-param>
+							<xsl:with-param name="id">2</xsl:with-param>
+						</xsl:call-template> 
+						<xsl:text> for </xsl:text><input type="text" name="term2"  value="{request/term2}" />
+					</li>
+				</xsl:if>
+				<xsl:if test="request/advancedfull or request/term3">
+					<li>
+						<xsl:call-template name="boolean">
+							<xsl:with-param name="id">2</xsl:with-param>
+						</xsl:call-template>
+						<xsl:text> </xsl:text>
+						<xsl:call-template name="field-pulldown">
+							<xsl:with-param name="default">au</xsl:with-param>
+							<xsl:with-param name="active"><xsl:value-of select="request/field3" /></xsl:with-param>
+							<xsl:with-param name="id">3</xsl:with-param>
+						</xsl:call-template> 
+						<xsl:text> for </xsl:text><input type="text" name="term3"  value="{request/term3}" />
+					</li>
+				</xsl:if>
+				<xsl:if test="request/advancedfull or request/term4">
+					<li>
+						<xsl:call-template name="boolean">
+							<xsl:with-param name="id">3</xsl:with-param>
+						</xsl:call-template>
+						<xsl:text> </xsl:text>
+						<xsl:call-template name="field-pulldown">
+							<xsl:with-param name="default">su</xsl:with-param>
+							<xsl:with-param name="active"><xsl:value-of select="request/field4" /></xsl:with-param>
+							<xsl:with-param name="id">4</xsl:with-param>
+						</xsl:call-template> 
+						<xsl:text> for </xsl:text><input type="text" name="term4"  value="{request/term4}" />
+					</li>
+				</xsl:if>
 			</ul>
+						
+			<xsl:if test="not(request/advancedfull)">
 			
+				<xsl:if test="request/year or request/mt or request/la">
+					<p class="error">Limits have been set</p>
+				</xsl:if>
+				
+				<p>[ <a href="{//advanced_search/@link}">Show full options</a> ]</p>
+			
+			</xsl:if>
+
 			<div id="searchSubmit">
 				<input type="submit" value="Search" />
 			</div>
 			
 		</fieldset>
 		
-		<xsl:choose>
-			<xsl:when test="request/advancedfull">
-		
-				<fieldset id="basicLimits" class="limit">
-				
-					<legend>Limits (optional)</legend>
-				
-					<table summary="for layout only">
-						<tr>
-							<td>Year:</td>
-							<td>
-							<select name="year-relation">
-								<option value="=">=</option>
-								<option value="&lt;">before</option>
-								<option value="&gt;">after</option>
+		<xsl:if test="request/advancedfull">
+	
+			<fieldset id="basicLimits" class="limit">
+			
+				<legend>Limits (optional)</legend>
+			
+				<table summary="for layout only">
+					<tr>
+						<td>Year:</td>
+						<td>
+						<select name="year-relation">
+							<option value="=">
+								<xsl:if test="request/year-relation = '='">
+									<xsl:attribute name="selected">seleted</xsl:attribute>
+								</xsl:if>
+								<xsl:text>=</xsl:text>
+							</option>
+							<option value="&lt;">
+								<xsl:if test="request/year-relation = '&#60;'">
+									<xsl:attribute name="selected">seleted</xsl:attribute>
+								</xsl:if>
+								<xsl:text>before</xsl:text>
+							</option>
+							<option value="&gt;">
+								<xsl:if test="request/year-relation = '&#62;'">
+									<xsl:attribute name="selected">seleted</xsl:attribute>
+								</xsl:if>
+								<xsl:text>after</xsl:text>
+							</option>
+						</select>
+						<xsl:text> </xsl:text>
+						<input type="text" name="year" value="{//request/year}" />
+						<xsl:text> ( enter a single year, or range of years as YYYY-YYYY ) </xsl:text>
+						</td>
+					</tr>
+					<tr>
+						<td>Format:</td>
+						<td>
+							<select name="mt">
+								<option value="">
+									<xsl:text>All Formats</xsl:text>
+								</option>
+								<option value="bks">
+									<xsl:if test="contains(request/mt, 'bks')">
+										<xsl:attribute name="selected">seleted</xsl:attribute>
+									</xsl:if>
+									<xsl:text>Book</xsl:text>
+								</option>
+								<option value="brl">
+									<xsl:if test="contains(request/mt, 'brl')">
+										<xsl:attribute name="selected">seleted</xsl:attribute>
+									</xsl:if>
+									&#160;&#160;&#160; Braille
+								</option>
+								<option value="lpt">
+									<xsl:if test="contains(request/mt, 'lpt')">
+										<xsl:attribute name="selected">seleted</xsl:attribute>
+									</xsl:if>
+									&#160;&#160;&#160; Large print
+								</option>
+								<option value="vis">
+									<xsl:if test="contains(request/mt, 'vis')">
+										<xsl:attribute name="selected">seleted</xsl:attribute>
+									</xsl:if>
+									<xsl:text>Visual Material</xsl:text>
+								</option>
+								<option value="vca">
+									<xsl:if test="contains(request/mt, 'vca')">
+										<xsl:attribute name="selected">seleted</xsl:attribute>
+									</xsl:if>
+									&#160;&#160;&#160; Videocassette
+								</option>
+								<option value="dvv">
+									<xsl:if test="contains(request/mt, 'dvv')">
+										<xsl:attribute name="selected">seleted</xsl:attribute>
+									</xsl:if>
+									&#160;&#160;&#160; DVD video
+								</option>
+								<option value="rec">
+									<xsl:if test="contains(request/mt, 'rec')">
+										<xsl:attribute name="selected">seleted</xsl:attribute>
+									</xsl:if>
+									<xsl:text>Sound Recording</xsl:text>
+								</option>
+								<option value="msr">
+									<xsl:if test="contains(request/mt, 'msr')">
+										<xsl:attribute name="selected">seleted</xsl:attribute>
+									</xsl:if>
+									&#160;&#160;&#160; Music
+								</option>
+								<option value="nsr">
+									<xsl:if test="contains(request/mt, 'nsr')">
+										<xsl:attribute name="selected">seleted</xsl:attribute>
+									</xsl:if>
+									&#160;&#160;&#160; Audio book, etc.
+								</option>
+								<option value="cda">
+									<xsl:if test="contains(request/mt, 'cda')">
+										<xsl:attribute name="selected">seleted</xsl:attribute>
+									</xsl:if>
+									&#160;&#160;&#160; CD audio
+								</option>
+								<option value="cas">
+									<xsl:if test="contains(request/mt, 'cas')">
+										<xsl:attribute name="selected">seleted</xsl:attribute>
+									</xsl:if>
+									&#160;&#160;&#160; Cassette recording
+								</option>
+								<option value="lps">
+									<xsl:if test="contains(request/mt, 'lps')">
+										<xsl:attribute name="selected">seleted</xsl:attribute>
+									</xsl:if>
+									&#160;&#160;&#160; LP recording
+								</option>
+								<option value="sco">
+									<xsl:if test="contains(request/mt, 'sco')">
+										<xsl:attribute name="selected">seleted</xsl:attribute>
+									</xsl:if>
+									<xsl:text>Musical Score</xsl:text>
+								</option>
+								<option value="ser">
+									<xsl:if test="contains(request/mt, 'ser')">
+										<xsl:attribute name="selected">seleted</xsl:attribute>
+									</xsl:if>
+									<xsl:text>Journal / Magazine / Newspaper</xsl:text>
+								</option>
+								<option value="url">
+									<xsl:if test="contains(request/mt, 'url')">
+										<xsl:attribute name="selected">seleted</xsl:attribute>
+									</xsl:if>
+									<xsl:text>Internet Resource</xsl:text>
+								</option>
+								<option value="com">
+									<xsl:if test="contains(request/mt, 'com')">
+										<xsl:attribute name="selected">seleted</xsl:attribute>
+									</xsl:if>
+									<xsl:text>Computer File</xsl:text>
+								</option>
+								<option value="map">
+									<xsl:if test="contains(request/mt, 'map')">
+										<xsl:attribute name="selected">seleted</xsl:attribute>
+									</xsl:if>
+									<xsl:text>Map</xsl:text>
+								</option>
+								<option value="mix">
+									<xsl:if test="contains(request/mt, 'mix')">
+										<xsl:attribute name="selected">seleted</xsl:attribute>
+									</xsl:if>
+									<xsl:text>Archival Material</xsl:text>
+								</option>
 							</select>
-							<xsl:text> </xsl:text>
-							<input type="text" name="year" />
-							<xsl:text> ( enter a single year, or range of years as YYYY-YYYY ) </xsl:text>
-							</td>
-						</tr>
-						<tr>
-							<td>Format:</td>
-							<td>
-								<select name="mt">
-									<option value="">All Formats</option>
-									<option value="bks">Book</option>
-									<option value="brl">&#160;&#160;&#160; Braille</option>
-									<option value="lpt">&#160;&#160;&#160; Large print</option>
-				
-									<option value="vis">Visual Material</option>
-									<option value="vca">&#160;&#160;&#160; Videocassette</option>
-									<option value="dvv">&#160;&#160;&#160; DVD video</option>
-				
-									<option value="rec">Sound Recording</option>					
-									<option value="msr">&#160;&#160;&#160; Music</option>
-									<option value="nsr">&#160;&#160;&#160; Audio book, etc.</option>
-									<option value="cda">&#160;&#160;&#160; CD audio</option>
-									<option value="cas">&#160;&#160;&#160; Cassette recording</option>
-									<option value="lps">&#160;&#160;&#160; LP recording</option>
-				
-									<option value="sco">Musical Score</option>
-									<option value="ser">Journal / Magazine / Newspaper</option>
-									<option value="url">Internet Resource</option>
-									<option value="com">Computer File</option>
-									<option value="map">Map</option>
-									<option value="mix">Archival Material</option>
-								</select>
-							
-							</td>
-						</tr>
-						<tr>
-							<td>Content:</td>
-							<td>
-								<select name="mt">
-									<option value="">Any content</option>
-									<option value="fic">Fiction</option>
-									<option value="-fic">Non-Fiction</option>
-									<option value="bio">Biography</option>
-									<option value="deg">Thesis or Dissertation</option>
-									<option value="cnp">Conference publication</option>
-									<option value="mss">Manuscript</option>
-								</select>			
-							</td>
-						</tr>
-						<tr>
-							<td>Audience:</td>
-							<td>
-								<select name="mt">
-									<option value="">All audiences</option>
-									<option value="-juv">Non-Juvenile</option>
-									<option value="juv">Juvenile</option>
-									<option value="pre">&#160;&#160;&#160; Preschool</option>
-									<option value="pri">&#160;&#160;&#160; Primary school</option>
-									<option value="ejh">&#160;&#160;&#160; Pre-adolescent</option>
-									<option value="shs">&#160;&#160;&#160; Adolescent</option>
-									<option value="jau">&#160;&#160;&#160; Juvenile</option>
-								</select>
-							</td>
-						</tr>
-						<tr>
-							<td>Language:</td>
-							<td>
-								<select name="la">
-									<option value="">All languages</option>
-									<option value="ara">Arabic</option>
-									<option value="bul">Bulgarian</option>
-									<option value="chi">Chinese</option>
-									<option value="cze">Czech</option>
-									<option value="dan">Danish</option>
-									<option value="dut">Dutch</option>
-									<option value="eng">English</option>
-									<option value="fre">French</option>
-									<option value="ger">German</option>
-									<option value="gre">Greek (modern)</option>
-									<option value="heb">Hebrew</option>
-									<option value="hin">Hindi</option>
-									<option value="hun">Hungarian</option>
-									<option value="ind">Indonesian</option>
-									<option value="ita">Italian</option>
-									<option value="jpn">Japanese</option>
-									<option value="kor">Korean</option>
-									<option value="lat">Latin</option>
-									<option value="nor">Norwegian</option>
-									<option value="per">Persian (modern)</option>
-									<option value="pol">Polish</option>
-									<option value="por">Portuguese</option>
-									<option value="rum">Romanian</option>
-									<option value="rus">Russian</option>
-									<option value="scr">Serbo-Croatian (Roman)</option>
-									<option value="spa">Spanish</option>
-									<option value="swe">Swedish</option>
-									<option value="tha">Thai</option>
-									<option value="tur">Turkish</option>
-									<option value="ukr">Ukrainian</option>
-								</select>
-							</td>
-						</tr>
-				
-					</table>
-				
-				</fieldset>
-			</xsl:when>
-		</xsl:choose>
-		
+						
+						</td>
+					</tr>
+					<tr>
+						<td>Content:</td>
+						<td>
+							<select name="mt">
+								<option value="">
+									<xsl:text>Any content</xsl:text>
+								</option>
+								<option value="fic">
+									<xsl:if test="contains(request/mt, 'fic')">
+										<xsl:attribute name="selected">seleted</xsl:attribute>
+									</xsl:if>
+									<xsl:text>Fiction</xsl:text>
+								</option>
+								<option value="-fic">
+									<xsl:if test="contains(request/mt, '-fic')">
+										<xsl:attribute name="selected">seleted</xsl:attribute>
+									</xsl:if>
+									<xsl:text>Non-Fiction</xsl:text>
+								</option>
+								<option value="bio">
+									<xsl:if test="contains(request/mt, 'bio')">
+										<xsl:attribute name="selected">seleted</xsl:attribute>
+									</xsl:if>
+									<xsl:text>Biography</xsl:text>
+								</option>
+								<option value="deg">
+									<xsl:if test="contains(request/mt, 'deg')">
+										<xsl:attribute name="selected">seleted</xsl:attribute>
+									</xsl:if>
+									<xsl:text>Thesis or Dissertation</xsl:text>
+								</option>
+								<option value="cnp">
+									<xsl:if test="contains(request/mt, 'cnp')">
+										<xsl:attribute name="selected">seleted</xsl:attribute>
+									</xsl:if>
+									<xsl:text>Conference publication</xsl:text>
+								</option>
+								<option value="mss">
+									<xsl:if test="contains(request/mt, 'mss')">
+										<xsl:attribute name="selected">seleted</xsl:attribute>
+									</xsl:if>
+									<xsl:text>Manuscript</xsl:text>
+								</option>
+							</select>			
+						</td>
+					</tr>
+					<tr>
+						<td>Audience:</td>
+						<td>
+							<select name="mt">
+								<option value="">
+									<xsl:text>All audiences</xsl:text>
+								</option>
+								<option value="-juv">
+									<xsl:if test="contains(request/mt, '-juv')">
+										<xsl:attribute name="selected">seleted</xsl:attribute>
+									</xsl:if>
+									<xsl:text>Non-Juvenile</xsl:text>
+								</option>
+								<option value="juv">
+									<xsl:if test="contains(request/mt, 'juv')">
+										<xsl:attribute name="selected">seleted</xsl:attribute>
+									</xsl:if>
+									<xsl:text>Juvenile</xsl:text>
+								</option>
+								<option value="pre">
+									<xsl:if test="contains(request/mt, 'pre')">
+										<xsl:attribute name="selected">seleted</xsl:attribute>
+									</xsl:if>
+									&#160;&#160;&#160; Preschool
+								</option>
+								<option value="pri">
+									<xsl:if test="contains(request/mt, 'pri')">
+										<xsl:attribute name="selected">seleted</xsl:attribute>
+									</xsl:if>
+									&#160;&#160;&#160; Primary school
+								</option>
+								<option value="ejh">
+									<xsl:if test="contains(request/mt, 'ejh')">
+										<xsl:attribute name="selected">seleted</xsl:attribute>
+									</xsl:if>
+									&#160;&#160;&#160; Pre-adolescent
+								</option>
+								<option value="shs">
+									<xsl:if test="contains(request/mt, 'shs')">
+										<xsl:attribute name="selected">seleted</xsl:attribute>
+									</xsl:if>
+									&#160;&#160;&#160; Adolescent
+								</option>
+								<option value="jau">
+									<xsl:if test="contains(request/mt, 'jau')">
+										<xsl:attribute name="selected">seleted</xsl:attribute>
+									</xsl:if>
+									&#160;&#160;&#160; Juvenile
+								</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>Language:</td>
+						<td>
+							<select name="la">
+								<option value="">
+									<xsl:text>All languages</xsl:text>
+								</option>
+								<option value="ara">
+									<xsl:if test="request/la = 'bks'">
+										<xsl:attribute name="selected">seleted</xsl:attribute>
+									</xsl:if>
+									<xsl:text>Arabic</xsl:text>
+								</option>
+								<option value="bul">
+									<xsl:if test="request/la = 'bul'">
+										<xsl:attribute name="selected">seleted</xsl:attribute>
+									</xsl:if>
+									<xsl:text>Bulgarian</xsl:text>
+								</option>
+								<option value="chi">
+									<xsl:if test="request/la = 'chi'">
+										<xsl:attribute name="selected">seleted</xsl:attribute>
+									</xsl:if>
+									<xsl:text>Chinese</xsl:text>
+								</option>
+								<option value="cze">
+									<xsl:if test="request/la = 'cze'">
+										<xsl:attribute name="selected">seleted</xsl:attribute>
+									</xsl:if>
+									<xsl:text>Czech</xsl:text>
+								</option>
+								<option value="dan">
+									<xsl:if test="request/la = 'dan'">
+										<xsl:attribute name="selected">seleted</xsl:attribute>
+									</xsl:if>
+									<xsl:text>Danish</xsl:text>
+								</option>
+								<option value="dut">
+									<xsl:if test="request/la = 'dut'">
+										<xsl:attribute name="selected">seleted</xsl:attribute>
+									</xsl:if>
+									<xsl:text>Dutch</xsl:text>
+								</option>
+								<option value="eng">
+									<xsl:if test="request/la = 'eng'">
+										<xsl:attribute name="selected">seleted</xsl:attribute>
+									</xsl:if>
+									<xsl:text>English</xsl:text>
+								</option>
+								<option value="fre">
+									<xsl:if test="request/la = 'fre'">
+										<xsl:attribute name="selected">seleted</xsl:attribute>
+									</xsl:if>
+									<xsl:text>French</xsl:text>
+								</option>
+								<option value="ger">
+									<xsl:if test="request/la = 'ger'">
+										<xsl:attribute name="selected">seleted</xsl:attribute>
+									</xsl:if>
+									<xsl:text>German</xsl:text>
+								</option>
+								<option value="gre">
+									<xsl:if test="request/la = 'gre'">
+										<xsl:attribute name="selected">seleted</xsl:attribute>
+									</xsl:if>
+									<xsl:text>Greek (modern)</xsl:text>
+								</option>
+								<option value="heb">
+									<xsl:if test="request/la = 'heb'">
+										<xsl:attribute name="selected">seleted</xsl:attribute>
+									</xsl:if>
+									<xsl:text>Hebrew</xsl:text>
+								</option>
+								<option value="hin">
+									<xsl:if test="request/la = 'hin'">
+										<xsl:attribute name="selected">seleted</xsl:attribute>
+									</xsl:if>
+									<xsl:text>Hindi</xsl:text>
+								</option>
+								<option value="hun">
+									<xsl:if test="request/la = 'hun'">
+										<xsl:attribute name="selected">seleted</xsl:attribute>
+									</xsl:if>
+									<xsl:text>Hungarian</xsl:text>
+								</option>
+								<option value="ind">
+									<xsl:if test="request/la = 'ind'">
+										<xsl:attribute name="selected">seleted</xsl:attribute>
+									</xsl:if>
+									<xsl:text>Indonesian</xsl:text>
+								</option>
+								<option value="ita">
+									<xsl:if test="request/la = 'ita'">
+										<xsl:attribute name="selected">seleted</xsl:attribute>
+									</xsl:if>
+									<xsl:text>Italian</xsl:text>
+								</option>
+								<option value="jpn">
+									<xsl:if test="request/la = 'jpn'">
+										<xsl:attribute name="selected">seleted</xsl:attribute>
+									</xsl:if>
+									<xsl:text>Japanese</xsl:text>
+								</option>
+								<option value="kor">
+									<xsl:if test="request/la = 'kor'">
+										<xsl:attribute name="selected">seleted</xsl:attribute>
+									</xsl:if>
+									<xsl:text>Korean</xsl:text>
+								</option>
+								<option value="lat">
+									<xsl:if test="request/la = 'lat'">
+										<xsl:attribute name="selected">seleted</xsl:attribute>
+									</xsl:if>
+									<xsl:text>Latin</xsl:text>
+								</option>
+								<option value="nor">
+									<xsl:if test="request/la = 'nor'">
+										<xsl:attribute name="selected">seleted</xsl:attribute>
+									</xsl:if>
+									<xsl:text>Norwegian</xsl:text>
+								</option>
+								<option value="per">
+									<xsl:if test="request/la = 'per'">
+										<xsl:attribute name="selected">seleted</xsl:attribute>
+									</xsl:if>
+									<xsl:text>Persian (modern)</xsl:text>
+								</option>
+								<option value="pol">
+									<xsl:if test="request/la = 'pol'">
+										<xsl:attribute name="selected">seleted</xsl:attribute>
+									</xsl:if>
+									<xsl:text>Polish</xsl:text>
+								</option>
+								<option value="por">
+									<xsl:if test="request/la = 'por'">
+										<xsl:attribute name="selected">seleted</xsl:attribute>
+									</xsl:if>
+									<xsl:text>Portuguese</xsl:text>
+								</option>
+								<option value="rum">
+									<xsl:if test="request/la = 'rum'">
+										<xsl:attribute name="selected">seleted</xsl:attribute>
+									</xsl:if>
+									<xsl:text>Romanian</xsl:text>
+								</option>
+								<option value="rus">
+									<xsl:if test="request/la = 'rus'">
+										<xsl:attribute name="selected">seleted</xsl:attribute>
+									</xsl:if>
+									<xsl:text>Russian</xsl:text>
+								</option>
+								<option value="scr">
+									<xsl:if test="request/la = 'scr'">
+										<xsl:attribute name="selected">seleted</xsl:attribute>
+									</xsl:if>
+									<xsl:text>Serbo-Croatian (Roman)</xsl:text>
+								</option>
+								<option value="spa">
+									<xsl:if test="request/la = 'spa'">
+										<xsl:attribute name="selected">seleted</xsl:attribute>
+									</xsl:if>
+									<xsl:text>Spanish</xsl:text>
+								</option>
+								<option value="swe">
+									<xsl:if test="request/la = 'swe'">
+										<xsl:attribute name="selected">seleted</xsl:attribute>
+									</xsl:if>
+									<xsl:text>Swedish</xsl:text>
+								</option>
+								<option value="tha">
+									<xsl:if test="request/la = 'tha'">
+										<xsl:attribute name="selected">seleted</xsl:attribute>
+									</xsl:if>
+									<xsl:text>Thai</xsl:text>
+								</option>
+								<option value="tur">
+									<xsl:if test="request/la = 'tur'">
+										<xsl:attribute name="selected">seleted</xsl:attribute>
+									</xsl:if>
+									<xsl:text>Turkish</xsl:text>
+								</option>
+								<option value="ukr">
+									<xsl:if test="request/la = 'ukr'">
+										<xsl:attribute name="selected">seleted</xsl:attribute>
+									</xsl:if>
+									<xsl:text>Ukrainian</xsl:text>
+								</option>
+							</select>
+						</td>
+					</tr>
+			
+				</table>
+			
+			</fieldset>
+		</xsl:if>
+
 	</div>
 
 </xsl:template>
@@ -2142,7 +2504,6 @@
 		<xsl:with-param name="oclc"><xsl:value-of select="$oclc" /></xsl:with-param>
 		<xsl:with-param name="isbn"><xsl:value-of select="$isbn" /></xsl:with-param>
 	</xsl:call-template>	
-
 		
 </xsl:template>
 
