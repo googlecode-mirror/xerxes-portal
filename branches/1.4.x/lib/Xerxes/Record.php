@@ -29,6 +29,7 @@
 		private $strFormat = "";			// format
 		private $strTechnology ="";			// technology/system format
 		
+		private $strControlNumber = "";		// the 001 basically, OCLC or otherwise
 		private $strOCLC = "";				// oclc number
 		private $strGovDoc = "";			// gov doc number
 		private $strGPO = "";				// gov't printing office (gpo) number
@@ -73,7 +74,6 @@
 		private $strLanguage = "";			// primary language of the record
 		private $arrNotes = array();		// notes that are not the abstract, language, or table of contents
 		private $arrSubjects = array();		// subjects
-		private $arrEngSubjects = array();  // subjects that are english only
 		private $strTOC = "";				// table of contents note
 		
 		private $arrLinks = array();		// all supplied links in the record both full text and non
@@ -192,6 +192,8 @@
 				// control and standard numbers
 				
 				$str001 = $this->extractMarcControlField($objXPath, 1);
+				$this->strControlNumber = $str001;
+				
 				$str003 = $this->extractMarcControlField($objXPath, 3);
 				$str008 = $this->extractMarcControlField($objXPath, 8);
 				$str035 = $this->extractMarcDataField($objXPath, 35, "a");
@@ -322,30 +324,11 @@
 					"//marc:datafield[@tag >= 500 and @tag < 600 and @tag != 505 and @tag != 520 and @tag != 546]");
 					
 				// subjects
+				
 				// we'll exclude the numeric subfields since they contain information about the
 				// source of the subject terms, which are probably not needed for display?
 				
 				$this->arrSubjects = $this->extractMarcArray($objXPath, "600-669", "abcdfghijklmnopqrstuvwxyz");
-				
-				// english terms?
-				
-				$objSubjects = $objXPath->query("//marc:datafield[@tag >= 600 and @tag <= 699 and (@ind2 = '0' or @ind2 = '' or @ind2 = ' ')]");
-				
-				foreach ( $objSubjects as $objSubject )
-				{
-					$strEnglishSubject = "";
-					
-					foreach ( $objSubject->getElementsByTagName("subfield") as $objSubjectSubField )
-					{
-						if ( $objSubjectSubField->getAttribute("code") != "e")
-						{
-							$strEnglishSubject .= " " . $objSubjectSubField->nodeValue;
-						}
-					}
-					
-					$strEnglishSubject = trim($strEnglishSubject);
-					array_push($this->arrEngSubjects, $strEnglishSubject);
-				}
 				
 				// full-text
 				
@@ -1305,11 +1288,6 @@
 					}
 				}
 
-				for ( $s = 0; $s < count($this->arrEngSubjects); $s++ )
-				{
-					$this->arrEngSubjects[$s] = $this->stripEndPunctuation($this->arrEngSubjects[$s], "./;,:" );
-				}
-				
 				for ( $s = 0; $s < count($this->arrSubjects); $s++ )
 				{
 					$this->arrSubjects[$s] = $this->stripEndPunctuation($this->arrSubjects[$s], "./;,:" );
@@ -1722,11 +1700,6 @@
 				{
 					$objSubject = $objXml->createElement("subject", $this->escapeXml($strSubject));
 					$objSubjects->appendChild($objSubject);
-					
-					if ( !in_array($strSubject, $this->arrEngSubjects))
-					{
-						$objSubject->setAttribute("thesaurus", "foreign");
-					}
 				}
 				
 				$objRecord->appendChild($objSubjects);
@@ -1881,6 +1854,29 @@
 			elseif ( $arrReferant["rft.genre"] == "dissertation")
 			{
 				$arrReferant["rft.title"] = $strTitle;
+				
+				// since this is sometimes divined from diss abs, we'll drop all
+				// the journal stuff that is still in the openurl but messes up sfx
+				
+				$arrReferant["rft.jtitle"] = null;
+				$arrReferant["rft.issn"] = null;
+				$arrReferant["rft.volume"] = null;
+				$arrReferant["rft.issue"] = null;
+				$arrReferant["rft.spage"] = null;
+				$arrReferant["rft.epage"] = null;
+				
+				
+			}
+			if ( $arrReferant["rft.genre"] == "journal" )
+			{
+				$arrReferant["rft.title"] = $strTitle;
+				
+				// remove these elements from a journal, since they produce
+				// some erroneous info, especially date!
+				
+				$arrReferant["rft.date"] = null;
+				$arrReferant["rft.pub"] = null;
+				$arrReferant["rft.place"] = null;
 			}
 			else
 			{
@@ -3369,16 +3365,9 @@
 		
 		public function getNotes() { return $this->arrNotes; }
 		
-		public function getSubjects($bolEnglish = false) 
+		public function getSubjects() 
 		{
-			if ( $bolEnglish == true )
-			{
-				return $this->arrEngSubjects;
-			}
-			else
-			{
-				return $this->arrSubjects;
-			}
+			return $this->arrSubjects;
 		}
 		
 		public function getInstitution()
@@ -3404,6 +3393,11 @@
 		public function getOCLCNumber()
 		{
 			return $this->strOCLC;
+		}
+	
+		public function getControlNumber()
+		{
+			return $this->strControlNumber;
 		}
 	}
 
