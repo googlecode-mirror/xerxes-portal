@@ -31,6 +31,7 @@ class Xerxes_Framework_FrontController
 
 		$objRegistry = Xerxes_Framework_Registry::getInstance();
 		$objRegistry->init();
+		
 		$objControllerMap = Xerxes_Framework_ControllerMap::getInstance();
 		$objControllerMap->init();
 		
@@ -290,19 +291,6 @@ class Xerxes_Framework_FrontController
 			}
 			
 			####################
-			#   COMMANDLINE    #
-			####################
-
-			// command line scripts should exit without calling a view? NO!
-      // Now we have some command line with a view. And if no view,
-      // FrontController will now silently be happy to have no view. 
-
-			/*if ( $objRequest->isCommandLine() )
-			{
-				exit();
-			}*/
-				
-			####################
 			#     COOKIES      #
 			####################
 
@@ -375,33 +363,38 @@ class Xerxes_Framework_FrontController
 			} 
 			else
 			{
-				// VIEW CODE
+					// VIEW CODE
 				//
 				// ControllerMap contains instructions on what file to include for the view; typically
 				// this will be an xslt file, but could be a php file if the xslt does not
 				// provide enough flexibility; php page will inherit the xml dom document and
 				// can go from there
-        
-        if ( $objControllerMap->getView() == "") {
-          // No view specified, no view will be executed. 
-          return;
-        }
-			
+				
+
+				if ( $objControllerMap->getView() == "" )
+				{
+					// No view specified, no view will be executed. 
+					return;
+				}
+				
 				if ( $objControllerMap->getViewType() != "xsl" && $objControllerMap->getViewType() != null )
 				{
-          
-          $file = $objControllerMap->getView();
-          $distro_file = $objRegistry->getConfig("PATH_PARENT_DIRECTORY", true)."/lib/$file";
-          
-          if ( file_exists($file)) {
-            require_once ($file);
-          }
-          elseif ( file_exists( $distro_file )) {
-            require_once( $distro_file );
-          }
-          else {
-            throw new Exception("Could not find non-xsl view specified to include: $file");
-          }
+					
+					$file = $objControllerMap->getView();
+					$distro_file = $objRegistry->getConfig( "PATH_PARENT_DIRECTORY", true ) . "/lib/$file";
+					
+					if ( file_exists( $file ) )
+					{
+						require_once ($file);
+					} 
+					elseif ( file_exists( $distro_file ) )
+					{
+						require_once ($distro_file);
+					} 
+					else
+					{
+						throw new Exception( "Could not find non-xsl view specified to include: $file" );
+					}
 				} 
 				else
 				{
@@ -412,7 +405,6 @@ class Xerxes_Framework_FrontController
 					// you can append 'format=embed_html_js' to the querystring to output 
 					// the content as a javascript source document with everything wrapped in 
 					// document.write() statements
-					
 
 					if ( $format == "embed_html_js" )
 					{

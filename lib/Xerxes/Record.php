@@ -1854,6 +1854,18 @@
 			elseif ( $arrReferant["rft.genre"] == "dissertation")
 			{
 				$arrReferant["rft.title"] = $strTitle;
+				
+				// since this is sometimes divined from diss abs, we'll drop all
+				// the journal stuff that is still in the openurl but messes up sfx
+				
+				$arrReferant["rft.jtitle"] = null;
+				$arrReferant["rft.issn"] = null;
+				$arrReferant["rft.volume"] = null;
+				$arrReferant["rft.issue"] = null;
+				$arrReferant["rft.spage"] = null;
+				$arrReferant["rft.epage"] = null;
+				
+				
 			}
 			if ( $arrReferant["rft.genre"] == "journal" )
 			{
@@ -1870,10 +1882,6 @@
 			{
 				$arrReferant["rft.atitle"] = $strTitle;
 			}
-			
-			
-
-			
 		
 			return $arrReferant;
 		}
