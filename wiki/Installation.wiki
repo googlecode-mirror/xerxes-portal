@@ -38,16 +38,13 @@ The main configuration file is located at 'demo/config/config.xml'.  The file in
 
 Apache and IIS will, by default, serve-up the config.xml file over the web, exposing your sensitive information to anyone.
 
-The .htaccess file that comes in the source includes `FileMatch` directives to prevent this, but you must first grant your 'demo' directory sufficient privilege to enable these directives.  You can do this in httpd.conf by creating a `Directory` entry for your demo directory and giving it an `AllowOverride All` setting.  You may also with to place this directive in the `Directory` entry itself.
+If you are using Apache, the .htaccess file that comes with the source code includes `FileMatch` directives to prevent this, but you must first grant your 'demo' directory, or one of its parents, sufficient privilege to enable these directives.  You can do this in httpd.conf by creating a `Directory` entry for your demo directory and giving it an `AllowOverride All` setting.
 
-As an alternative to the config.xml file, you may put the config entries as a series of PHP `const` definitions in the 'config.php' file, which will definitely not show any data over the web.
-
+If you are using IIS, or cannot make the above changes in Apache, simply change the name of the config.xml to config.php.  This will prevent others from viewing the file directly over the web.
 
 ==5. Populate the local knowledgebase==
  
-Assuming you having PHP set-up with the CLI (command line interface) option, you can issue a 
-command like this to do the initial pull-down of your Metalib knowledgebase.  Make sure to 
-change the path accordingly.
+Assuming you having PHP set-up with the CLI (command line interface) option, you can issue a command like this to do the initial pull-down of your Metalib knowledgebase.  Make sure to change the path accordingly.
  
   {{{php -f /path/to/xerxes/demo/index.php action=populate base=databases}}}
 
