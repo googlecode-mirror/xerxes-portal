@@ -1864,10 +1864,8 @@
 				$arrReferant["rft.issue"] = null;
 				$arrReferant["rft.spage"] = null;
 				$arrReferant["rft.epage"] = null;
-				
-				
 			}
-			if ( $arrReferant["rft.genre"] == "journal" )
+			elseif ( $arrReferant["rft.genre"] == "journal" )
 			{
 				$arrReferant["rft.title"] = $strTitle;
 				
