@@ -13,17 +13,14 @@ And will optionally require these PHP extensions:
 
  * ldap – if you plan to authenticate users against a directory server
  * openssl - if you plan to use CAS authentication
+ * curl - if you need Xerxes to route all http traffic through an http proxy
 
 
 ==MySQL 5.0 or higher==
 
-Right now, I only have SQL scripts to create the tables in MySQL 5, although I 
-have plans to support MySQL 4 and Oracle 10.  The tables are straight forward 
-and require no specific features of MySQL 5, so it should be simple to port the 
-scripts to another RDBMS by simply changing some of the data types.
+Right now, I only have SQL scripts to create the tables in MySQL 5.  The tables are straight forward and require no specific features of MySQL 5, so it should be simple to port the scripts to another RDBMS by simply changing some of the data types.
 
 ==Web Server==
 
 You can pretty much run Xerxes on whatever web server you want, so long as it 
-can support PHP.  I've set it up on Apache 1.3, Apache 2.x and IIS 6 on both 
-Windows and Linux servers.
+can support PHP.  People have successfully set it up using Apache 1.3, Apache 2.x and IIS 6 on both Windows and Linux servers.
