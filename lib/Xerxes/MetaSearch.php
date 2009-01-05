@@ -5,10 +5,10 @@
 	 * Accepts queries in Metalib search format and returns results in MARC-XML
 	 * 
 	 * @author David Walker
-	 * @copyright 2008 California State University
+	 * @copyright 2009 California State University
 	 * @link http://xerxes.calstate.edu
 	 * @license http://www.gnu.org/licenses/
-	 * @version 1.1
+	 * @version 1.4.1
 	 * @package Xerxes
 	 */
 
@@ -26,7 +26,7 @@
 		private $finished = false;	// flag indicating metalib is done searching
 		
 		/**
-		 *  Constructor
+		 * Constructor
 		 * @param string $strServer		the Metalib address url
 		 * @param string $strUsername	this application's username 
 		 * @param string $strPassword	this application's password
@@ -34,14 +34,7 @@
 		 */
 		
 		public function __construct( $strServer, $strUsername, $strPassword, $strSession = null )
-		{
-			// metalib takes little care to ensure propoer encoding of its xml, so we will set 
-			// recover to true here in order to allow libxml to recover from erros and continue 
-			// processing the document
-			
-			$this->xml = new DOMDocument();
-			$this->xml->recover = true;
-			
+		{						
 			$this->server = $strServer;
 			$this->username = $strUsername;
 			$this->password = $strPassword;
@@ -70,13 +63,7 @@
 
 			// get login_response from Metalib
 
-			$this->xml = new DOMDocument();
-			$this->xml->recover = true;			
-			$this->xml->load($this->url);
-			
-			// check for errors
-			
-			$this->errorCheck( $this->xml );
+			$this->xml = $this->getResponse($this->url);
 			
 			// extract session ID
 			
@@ -123,14 +110,7 @@
 	
 			// get find_response from Metalib
 
-			$this->xml = new DOMDocument();
-			$this->xml->recover = true;			
-			$this->xml->load($this->url);
-			
-			// check for errors
-			
-			$this->errorCheck( $this->xml );
-			
+			$this->xml = $this->getResponse($this->url);			
 			
 			if ( $bolWait == true)
 			{
@@ -156,27 +136,18 @@
 
 		public function searchStatus( $strGroupNumber ) 
 		{
-			$strXml = "";		// xml response as xml
-			
 			$this->url = $this->server . "/X?op=find_group_info_request" .
 				"&group_number=" . $strGroupNumber .
 				"&session_id=" . $this->session;
 	
 			// find_group_info_response from Metalib
-			$strXml = file_get_contents($this->url);
+			
+			$this->xml = $this->getResponse($this->url);
 
-			// finished flag
-			$this->finished = $this->CheckFinished($strXml);
+			// set finished flag
 			
-			// load to DOMDocument
+			$this->finished = $this->checkFinished($this->xml->saveXML());
 			
-			$this->xml = new DOMDocument();
-			$this->xml->recover = true;			
-			$this->xml->loadXML($strXml);
-			
-			// check for errors
-			$this->errorCheck( $this->xml );
-						
 			return $this->xml; 
 		}
 
@@ -201,12 +172,7 @@
         
 			// get merge_response from Metalib
 
-			$this->xml = new DOMDocument();
-			$this->xml->recover = true;			
-			$this->xml->load($this->url);
-			
-			// check for errors
-			$this->errorCheck( $this->xml );
+			$this->xml = $this->getResponse($this->url);
 			
 			return $this->xml;
 		}
@@ -239,12 +205,7 @@
 
 			// get merge_response from Metalib
 
-			$this->xml = new DOMDocument();
-			$this->xml->recover = true;			
-			$this->xml->load($this->url);
-			
-			// check for errors
-			$this->errorCheck( $this->xml );
+			$this->xml = $this->getResponse($this->url);
 			
 			return $this->xml;
 		}
@@ -269,12 +230,7 @@
 
 			// get merge_response from Metalib
 
-			$this->xml = new DOMDocument();
-			$this->xml->recover = true;			
-			$this->xml->load($this->url);
-			
-			// check for errors
-			$this->errorCheck( $this->xml );
+			$this->xml = $this->getResponse($this->url);
 
 			return $this->xml;
 		}
@@ -393,41 +349,29 @@
 	
 			// get present_response from Metalib
       
-			$this->xml = new DOMDocument();
-			$this->xml->recover = true;			
-			$this->xml->load($this->url);
+			$this->xml = $this->getResponse($this->url);
 			
 			return $this->xml;
 		}
 
 		/**
-		 * Retrieves all subject categories from the Metalib KnowledgeBase
+		 * Retrieves all categories and subcategories from the Metalib KnowledgeBase
 		 *
 		 * @param string $strIpAddress		IP address associated with a Metalib portal
-		 * @param bool $bolFull				whether to include full record, true by default
 		 * @return DOMDocument				Metalib category xml document	
 		 */
 		
-		public function categories( $strIpAddress, $bolFull = true ) 
+		public function categories( $strIpAddress ) 
 		{
-			// set string flag for inclusion of subcategories
-			$strFull = "Y";
-					
-			if ( $bolFull == false ) $strFull = "N";
-
 			$this->url = $this->server . "/X?op=retrieve_categories_request" .
 				"&requester_ip=" . $strIpAddress .
 				"&session_id=" . $this->session;
 	
 			// get retrieve_resource_categories_response from Metalib
 
-			$this->xml = new DOMDocument();
-			$this->xml->recover = true;			
-			$this->xml->load($this->url);
+			$this->xml = $this->getResponse($this->url);
 
 			return $this->xml;
-			
-			
 		}
 		
 		/**
@@ -452,7 +396,7 @@
 	
 			// get retrieve_resource_categories_response from Metalib
 
-			$this->xml->load($this->url);
+			$this->xml = $this->getResponse($this->url);
 			
 			return $this->xml; 
 		}
@@ -472,9 +416,7 @@
 
 			// get retrieve_resource_types_response from Metalib
 
-			$this->xml = new DOMDocument();
-			$this->xml->recover = true;			
-			$this->xml->load($this->url);
+			$this->xml = $this->getResponse($this->url);
 			
 			return $this->xml; 
 		}
@@ -500,23 +442,13 @@
 			if ($bolFull == false) $strFull = "N";
 			
 			$this->url = $this->server . "/X?op=source_locate_request" .
-        // source_locate_filter not neccesary, and also messes up population
-        // of usergroup-specified resources in some ML versions. So left out.
-        // the locate_command below is sufficient to limit to the institution.
-				//"&source_locate_filter=" .
-				//"&institute=" . $strInstitute .
-				//"&requester_ip=" . $strIpAddress .
-				//"&user_group=" . 
 				"&locate_command=WIN=(" . urlencode(trim($strInstitute)) . ")" .
 				"&source_full_info_flag=" . $strFull .
 				"&session_id=" . $this->session;
 
 			// load into DOM
 
-			$this->xml = new DOMDocument();
-			$this->xml->recover = true;			
-			$this->xml->load($this->url);
-			
+			$this->xml = $this->getResponse($this->url);			
       
 			// extract marc records
 			
@@ -551,9 +483,7 @@
 			
 			// load into DOM
 			
-			$this->xml = new DOMDocument();
-			$this->xml->recover = true;			
-			$this->xml->load($this->url);
+			$this->xml = $this->getResponse($this->url);
 			
 			return $this->xml; 
 		}
@@ -593,19 +523,31 @@
 		}
 		
 		/**
-		 * Throws an error if the X-server response includes an error message
+		 * Fetch the data from Metalib and check for errors
 		 *
-		 * @param string $strXml		x-server response as xml string
+		 * @param string $url		url of the request
 		 */
 		
-		private function errorCheck( $objXml )
+		private function getResponse( $url )
 		{
+			// metalib takes little care to ensure propoer encoding of its xml, so we will set 
+			// recover to true here in order to allow libxml to recover from erros and continue 
+			// processing the document
+			
+			$objXml = new DOMDocument();
+			$objXml->recover = true;
+			
+			$strResponse = Xerxes_Parser::request($url);
+			$objXml->loadXML($strResponse);
+			
+			// no response?
+			
 			if ( $objXml->documentElement == null )
 			{
 				throw new Exception("cannot connect to metalib server");
 			}
 			
-			// global errors will stop the application as exception
+			// global errors will stop the application as exception?
 			
 			if ( $objXml->getElementsByTagName("global_error") != null )
 			{
@@ -630,7 +572,7 @@
 				}
 			}
 			
-			// local error is equal to a warning
+			// local error is equal to a warning?
 			
 			if ( $objXml->getElementsByTagName("local_error") != null )
 			{
@@ -646,6 +588,8 @@
 					$this->warning->documentElement->appendChild($objImport);
 				}
 			}
+			
+			return $objXml;
 		}
 
 		/**
@@ -755,7 +699,7 @@
 			else
 			{
 				$this->url = $this->server . "/X";
-				$this->xml->load($this->url);
+				$this->xml = $this->getResponse($this->url);
 			
 				$objVersion = $this->xml->getElementsByTagName("x_server_response")->item(0);
 			}

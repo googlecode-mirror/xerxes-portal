@@ -23,9 +23,10 @@
 		 */
 		
 		public function doExecute( Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry )
-		{			
-			echo "\n\nSFX INSTITUTIONAL HOLDINGS POPULATION \n\n";
+		{
+			ini_set("memory_limit","50M");
 			
+			echo "\n\nSFX INSTITUTIONAL HOLDINGS POPULATION \n\n";
 			
 			// You can define the export file on sfx as having an instance extension, so
 			// give the client the opportunity to define that here
@@ -35,12 +36,15 @@
 			
 			// construct the address to Google Scholar institutional 
 			// holdings file on SFX. Either SFX specific config, or
-      // general link resolver config. 
+			// general link resolver config. 
 			
-			$configSfx = $objRegistry->getConfig("SFX_RESOLVER_ADDRESS", false, $objRegistry->getConfig("LINK_RESOLVER_ADDRESS", false));
-      if ( ! $configSfx ) {
-        throw new Exception("Can not run populate action, no link resolver address configured. Need config sfx_resolver_address or link_resolver_address."); 
-      }
+			$configSfx = $objRegistry->getConfig( "SFX_RESOLVER_ADDRESS", false, $objRegistry->getConfig( "LINK_RESOLVER_ADDRESS", false ) );
+
+			if ( ! $configSfx )
+			{
+				throw new Exception( "Can not run populate action, no link resolver address configured. " .
+					"Need config sfx_resolver_address or link_resolver_address." );
+			}
 			
 			$strUrl = $configSfx . "/cgi/public/get_file.cgi?file=institutional_holding" . $strInstance . ".xml";
 			
@@ -48,7 +52,6 @@
 			
 			$objData = new Xerxes_DataMap();
 			$objData->beginTransaction();
-			
 			
 			echo "  Flushing SFX fulltext table . . . ";
 			
@@ -58,13 +61,19 @@
 			
 			echo "  Pulling down SFX inst holdings file . . . ";
 			
+			// try to get the data from sfx
+			
 			try
 			{
-				$objXml = new SimpleXMLElement($strUrl, null, true);
+				$strResponse = Xerxes_Parser::request($strUrl);
+				$objXml = new SimpleXMLElement($strResponse);
 			}
 			catch (Exception $e)
 			{
-				throw new Exception("cannot get institutional holding file from sfx: '$strUrl'. If this is the correct SFX server address, make sure your SFX allows access to institutional holding file from this IP address in config/get_file_restriction.config on SFX server.");
+				throw new Exception("cannot get institutional holding file from sfx: '$strUrl'. " .
+					"If this is the correct SFX server address, make sure your SFX allows access to " .
+					"institutional holding file from this IP address in config/get_file_restriction.config " .
+					"on SFX server.");
 			}
 			
 			echo "done.\n";

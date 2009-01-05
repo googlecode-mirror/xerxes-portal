@@ -104,7 +104,7 @@
 			
 			// get the data and strip out html tags
 			
-			$strResponse = file_get_contents($url);
+			$strResponse = Xerxes_Parser::request($url);
 			$strResponse = trim(strip_tags($strResponse));
 			
 			if ( $strResponse == "" )

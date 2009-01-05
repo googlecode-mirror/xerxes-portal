@@ -32,8 +32,6 @@
 		
 		public function checkSpelling( $strQuery, $strYahooId, $strAltLocation = "" )
 		{
-			$objSpelling = new DOMDocument();
-			
 			if ( $strAltLocation != "" )
 			{
 				$this->url = $strAltLocation . "?appid=" . $strYahooId . "&query=" . urlencode($strQuery);
@@ -43,8 +41,11 @@
 				$this->url = "http://api.search.yahoo.com/WebSearchService/V1/spellingSuggestion?appid=" . 
 				$strYahooId . "&query=" . urlencode($strQuery);
 			}
+			
+			$strResponse = Xerxes_Parser::request($this->url);
 				
-			$objSpelling->load($this->url);
+			$objSpelling = new DOMDocument();
+			$objSpelling->loadXML($strResponse);
 				
 			if ( $objSpelling->getElementsByTagName("Result")->item(0) != null )
 			{

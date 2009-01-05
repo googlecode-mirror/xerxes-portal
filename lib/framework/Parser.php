@@ -113,11 +113,13 @@
 			{	
 				self::addImportReference($generated_xsl, $distro_path, $importInsertionPoint);
 			}
-      else {
-        //Need to directly import distro includes.xsl, since we're not
-        //importing a distro file that will reference it. 
-        self::addImportReference($generated_xsl, $distro_xsl_dir . "xsl/includes.xsl", $importInsertionPoint);
-      }
+			else
+			{
+				// need to directly import distro includes.xsl, since we're not
+				// importing a distro file that will reference it. 
+				
+				self::addImportReference( $generated_xsl, $distro_xsl_dir . "xsl/includes.xsl", $importInsertionPoint );
+			}
 			
 			// include local
 			
@@ -388,77 +390,158 @@
 			
 			return $string;
 		}
-
+		
 		/**
-		 * Send an http post request
+		 * Send a request as either GET or POST
 		 *
-		 * @param string $url the location of the server
-		 * @param string $data the data to send
-		 * @return string data returned from the server
-		 * @static 
+		 * @param string $url			url you want to send the request to
+		 * @param string $data			[optional] data to POST to the above url
+		 * @param string $content_type	[optional] content-type in the post, 'application/x-www-form-urlencoded' by default
+		 * @param bool $bolEncode		[optional] whether to encode the posted data, true by default
+		 * @return string				the response from the server
 		 */
-
-		public static function postRequest($url, $data, $content_type = null, $bolEncode = false)
+		
+		public static function request($url, $data = null, $content_type = null, $bolEncode = true)
 		{
-			$arrMatches = array();
-			$host = "";
-			$port = 80;
-			$path = "";
-			$buf = "";
+			$objRegistry = Xerxes_Framework_Registry::getInstance();
 			
-			if ( $content_type == null )
+			$proxy = $objRegistry->getConfig("HTTP_PROXY_SERVER", false);
+			
+			### GET REQUEST (NON-PROXY)
+			
+			if ( $data == null && $proxy == null )
 			{
-				$content_type = "application/x-www-form-urlencoded";
+				return file_get_contents($url);
 			}
 			
-			// split the host from the path
+			// these for POST requests
 			
-			if ( preg_match("/http:\/\/([^\/]*)(\/.*)/", $url, $arrMatches) != false )
+			$host = ""; // just the server host name
+			$port = 80; // just the port number
+			$path = ""; // just the uri path
+
+			if ( $data != null )
 			{
-				$host = $arrMatches[1];
-				$path = $arrMatches[2];
+				if ( $content_type == null )
+				{
+					$content_type = "application/x-www-form-urlencoded";
+				}
+				
+				// split the host from the path
+				
+				$arrMatches = array();
+				
+				if ( preg_match("/http:\/\/([^\/]*)(\/.*)/", $url, $arrMatches) != false )
+				{
+					$host = $arrMatches[1];
+					$path = $arrMatches[2];
+				}
+				
+				// extract the port number, if present
+				
+				if ( strstr($host, ":") )
+				{
+					$port = (int) self::removeLeft($host, ":");
+					$host = self::removeRight($host, ":");
+				}
+				
+				// regular POST requests will need to have the data urlencoded, but some special 
+				// POST requests, like 'text/xml' to Solr, should not, so client code should 
+				// set to false
+				
+				if ( $bolEncode == true )
+				{
+					$data = urlencode($data);
+				}				
 			}
+
+			### POST OR GET USING AN HTTP PROXY
 			
-			// extract the port number, if present
-			
-			if ( strstr($host, ":") )
-			{
-				$port = (int) self::removeLeft($host, ":");
-				$host = self::removeRight($host, ":");
-			}
+			if ( $proxy != null )
+			{				
+				$response = ""; // the response
+				$ch = curl_init(); // curl object
+					
+				// basic curl settings
+				
+				curl_setopt($ch, CURLOPT_URL, $url); // the url we're sending the request to
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); // this returns the response to a variable		
+				curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true); // this tells curl to follow 'location:' headers
+				curl_setopt($ch, CURLOPT_MAXREDIRS, 10); // but don't follow more than 10 'location:' redirects
+				
+				// this is a post request
+				
+				if ( $data != null )
+				{
+					// we do it this way, as opposed to a more typical curl post,
+					// in case this is a custom HTTP POST request
+
+					$header[] = "Host: $host\r\n";
+					$header[] = "Content-type: $content_type\r\n";
+					$header[] = "Content-length: " . strlen($data) . "\r\n";
+					$header[] = $data;
 						
-			$fp = fsockopen($host, $port);
-			
-			if ( ! $fp )
-			{
-				throw new Exception("could not connect to server");
+					curl_setopt( $ch, CURLOPT_HTTPHEADER, $header ); 
+					curl_setopt( $ch, CURLOPT_CUSTOMREQUEST, 'POST' );
+				}
+				
+				// proxy settings
+				
+				curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, true);
+				curl_setopt($ch, CURLOPT_PROXY, $proxy);
+
+				// proxy username and password, if necessary
+				
+				$username = $objRegistry->getConfig("HTTP_PROXY_USERNAME", false);
+				$password = $objRegistry->getConfig("HTTP_PROXY_PASSWORD", false);				
+				
+				if ( $username != null && $password != null )
+				{
+					curl_setopt($ch, CURLOPT_PROXYUSERPWD, "$username:$password");
+				}
+				
+				// return the response
+	
+				curl_exec($ch);
+				$response = curl_getinfo($ch);
+				curl_close($ch);
+				
+				return $response;
 			}
+
+			### POST REQUEST (NON-PROXY)
 			
-			if ( $bolEncode == true )
+			else
 			{
-				$data = urlencode($data);
+				$buf = ""; // the response
+				$fp = fsockopen($host, $port); // file pointer object
+				
+				if ( ! $fp )
+				{
+					throw new Exception("could not connect to server");
+				}
+				
+				fputs($fp, "POST $path HTTP/1.1\r\n");
+				fputs($fp, "Host: $host\r\n");
+				fputs($fp, "Content-type: $content_type\r\n");
+				fputs($fp, "Content-length: " . strlen($data) . "\r\n");
+				fputs($fp, "Connection: close\r\n\r\n");
+				fputs($fp, $data);
+				
+				while (!feof($fp))
+				{
+					$buf .= fgets($fp,128);
+				}
+				
+				fclose($fp);
+				
+				if ( ! strstr($buf, "200 OK") )
+				{
+					throw new Exception("Error in response, $buf");
+				}
+					
+				return $buf;					
 			}
-			
-			fputs($fp, "POST $path HTTP/1.1\r\n");
-			fputs($fp, "Host: $host\r\n");
-			fputs($fp, "Content-type: $content_type\r\n");
-			fputs($fp, "Content-length: " . strlen($data) . "\r\n");
-			fputs($fp, "Connection: close\r\n\r\n");
-			fputs($fp, $data);
-			
-			while (!feof($fp))
-			{
-				$buf .= fgets($fp,128);
-			}
-			
-			fclose($fp);
-			
-			if ( ! strstr($buf, "200 OK") )
-			{
-				throw new Exception("Error in response, $buf");
-			}
-			
-			return $buf;
 		}
 	}
 	
