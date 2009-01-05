@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xerxes version="1.4">
+<xerxes version="1.4.1">
 
 	<!-- <configuration> includes basic values and settings specific to metalib and other systems.
 			
@@ -12,13 +12,12 @@
 		
 	<!-- BASIC CONFIGURATION -->	
 	
-		<!-- The base web server path for your xerxes installation. Highly
-		 reccommended to set this if you are using config rewrite=true urls.
-		 NO trailing slash. If you have installed at web root, empty string. -->
+		<!-- The base web server path for your xerxes installation. NO trailing slash. 
+		If you have installed at web root, empty string. -->
 		
 		<config name="base_web_path">/demo</config>
 		
-		<!-- What is your application called? Will be used in some view templates. -->
+		<!-- What is your application called? Will be used in parts of the system. -->
 			 
 		<config name="application_name" pass="true">Xerxes Demo</config>
 		
@@ -32,9 +31,13 @@
 			 
 		<config name="local_ip_range"></config>
 		
-		<!-- the uri to the authentication page; here just in case you need to change it for some reason -->
+		<!-- http proxy tunnel. do not confuse this with proxy_server (e.g., ezproxy) below. if all 
+		outgoing http requests from the server need to be sent through an http proxy, set server address 
+		(including port) and optionally a username and password here. -->
 		
-		<!-- <config name="authentication_page">/authenticate/login</config> -->
+		<config name="http_proxy_server"></config>
+		<config name="http_proxy_username"></config>
+		<config name="http_proxy_password"></config>
 		
 		
 	<!-- METALIB CONFIGURATION -->
@@ -44,7 +47,7 @@
 			* do *NOT* include the /X in the metalib address.
 			* username and password must correspond to a valid /M interface user.
 			* institute is usually the same as username. -->
-				
+			
 		<config name="metalib_address"></config>
 		<config name="metalib_username"></config>
 		<config name="metalib_password"></config>
@@ -55,33 +58,6 @@
 		so that Metalib knows which knowledgebase to associate with this implementation of Xerxes. -->
 		
 		<config name="ip_address"></config>
-       
-		<!-- subject/category ID to use on the home page (the "categories" page) for a quicksearch search box. -->
-		
-		<config name="categories_quicksearch">quick-search</config>
-
-		<!-- Strip out HTML tags in database descriptiona
-		
-		Default Metalib is to allow some HTML, but strip others (details undocumented). Default Xerxes
-		is to not allow any HTML, escaping all HTML chars. 
-		
-		db_description_html  values:
-		
-		escape:	Escape all HTML so it shows up as source. Xerxes default.
-		allow:	Allow all HTML through as code. NOT reccommended. Suggest you use strip with some 
-			tags in db_description_allow_tags instead. 
-		strip:  Strip out all HTML tags. May be used in combination with db_description_allow_tags below. 
-		
-		<config name="db_description_html">strip</config>
-		
-		db_description_allow_tags:  Only used with db_description_html=strip.
-		Tags listed here (comma seperated) will NOT be stripped, but
-		will be allowed - they are a whitelist. All other tags will
-		be stripped.
-		
-		<config name="db_description_allow_tags">b,i,strong,em,a</config>
-		
-		-->
 		
 		<!-- Metalib user groups (aka 'secondary affiliations'). -->
 		
@@ -103,7 +79,7 @@
 		<local_ip_range>201.2.4.*</local_ip_range>
 		</group>
 		</groups> 
-		
+	
 		-->
 	
 	<!-- LOCAL DATABASE -->
@@ -117,20 +93,21 @@
 		
 	<!-- PROXY, LINK RESOLVER, AND EXTERNAL APIS -->
 		
-		<!-- base open url to link resolver -->
+		<!-- base url of link resolver -->
 		
 		<config name="link_resolver_address"></config>
 		
-		<!--  If you want to do the SFX 'populate' action from another link
-			resolver, perhaps because your main one is not SFX, configure this -->
-		<!-- <config name="sfx_resolver_address"></config>-->  
+		<!--  If you want to do the SFX 'populate' action from another link resolver, perhaps because 
+		your main one is not SFX, configure this -->
+		
+		<config name="sfx_resolver_address"></config>
 		
 		<!-- the sid that will be passed to the link resolver, xerxes will also append the name 
 		of the database to the sid -->
 		
 		<config name="application_sid">calstate.edu:xerxes</config>
 		
-		<!-- Base URL of proxy server 
+		<!-- base url of proxy server 
 
 			EZProxy: include the entire proxy url prefix, e.g., 'http: ezproxy.library.edu/login?qurl='
 			xerxes will url-encode the full-text link, so it is preferable to use qurl param 
@@ -141,23 +118,23 @@
 		
 		<config name="proxy_server"></config>
 		
-		<!-- EZPROXY EXPORT
-		config to customize the ezproxy export. See 
-		http://code.google.com/p/xerxes-portal/wiki/EzProxyExport
-		-->
+	<!-- EZPROXY EXPORT -->
+	
+		<!-- See http://code.google.com/p/xerxes-portal/wiki/EzProxyExport -->
 		
 		<!-- domains that should not excluded as "Domain" config in the EZProxy
 		export, even if ordinary rules would include them -->
-		<!-- <config name="ezp_exp_domain_avoid">youruniv.edu</config> -->
+		
+		<config name="ezp_exp_domain_avoid">youruniv.edu</config>
 		
 		<!-- Particular databases that should be excluded from the EZProxy
 		export, even if ordinary rules would include them. -->
 		
-		<!-- <config name="ezp_exp_resourceid_omit"></config> -->
+		<config name="ezp_exp_resourceid_omit"></config>
 		
 		<!-- "Group" statement to output for ordinary default KB resources. -->
 		
-		<!-- <config name="ezp_exp_default_group">EzP_Group</config> -->
+		<config name="ezp_exp_default_group">EzP_Group</config>
 		
 		<!-- for spell check api, doesn't hurt to leave this as 'calstate', since the usage limits are 
 		based on ip address, but better to get your own key from Yahoo -->
@@ -178,13 +155,11 @@
 		 -->
 		
 		<config name="authentication_source">demo</config>
-    
-    <!-- additional authentication_sources may optionally be included. They
-         will be used by Xerxes only from a base=authenticate action=login request with a URL parameter "authentication_source" set to an 'id'
-         mentioned here. 
-         
-         <config name="authentication_source" id="other">something_else</config>
-    -->
+		
+		<!-- additional authentication_sources. Will be used from a base=authenticate action=login 
+		request with a URL parameter "authentication_source" set to an 'id' mentioned here. -->
+		
+		<!-- <config name="authentication_source" id="other">something_else</config> -->
 		
 		<!-- setting this to 'true' will cause xerxes to force all logins thru https:// -->
 		
@@ -224,18 +199,14 @@
 
 
 		<!-- SHIBBOLETH	-->
-		
-		<!-- For more information on setting-up Shib with Xerxes see the wiki at:
-		     		
-		 -->
-				 
+						 
 		<!-- shib username header -->
 		
 			<!--  the HTTP header that xerxes will expect to find the username in. Defaults to REMOTE_USER, which seems
 			to be what the Shib SP normally does. Can customize if needed. For even more flexible customization, see your
 			shibboleth/shib_map.php file. --> 
 			
-		<!-- <config name="shib_username_header">REMOTE_USER</config> -->
+		<config name="shib_username_header">REMOTE_USER</config>
 		
 		
 		<!-- DEMO -->
@@ -259,18 +230,38 @@
 			 If you are using rewrite true, you need to set up redirects in your webserver, see the 
 			 demo/.htaccess file for specification. -->
 		
-		<config name="rewrite" pass="true">false</config>	
+		<config name="rewrite" pass="true">false</config>
+
+		<!-- subject/category ID to use on the home page (the "categories" page) for a quicksearch search box. -->
+		
+		<config name="categories_quicksearch">quick-search</config>
+
+		<!-- Strip out HTML tags in database description. Possible values:
+		
+			escape: Escape all HTML so it shows up as source.
+			allow: Allow all HTML through as code. NOT reccommended. Suggest you use strip with some 
+			       tags in db_description_allow_tags instead. 
+			strip: Strip out all HTML tags. May be used in combination with db_description_allow_tags below. -->
+			
+		<config name="db_description_html">escape</config>
+		
+		<!-- Tags NOT to strip in database descriptions.
+		
+			Only used with db_description_html=strip. Tags listed here (comma seperated) will NOT be stripped, but
+			will be allowed - they are a whitelist. All other tags will be stripped. -->
+		
+		<config name="db_description_allow_tags">b,i,strong,em,a</config>
 		
 		<!-- whether the alphabetical database list should include a search box, allowing users to search for
 			databases by name or other information -->
 		
 		<config name="show_search_box" pass="true">false</config>	
 		
-		<!-- full text and sfx links
-				 You can change this value to any valid HTML anchor target attribute value to affect the behavior
-			 of sfx and full-text links in the search results and saved record pages.
-			 '_self' causes the browser to open the links in the same window
-			 '_blank' causes the browser to open the links in a new window. -->
+		<!-- full text and sfx links. You can change this value to any valid HTML anchor 
+		target attribute value to affect the behavior of sfx and full-text links in the 
+		search results and saved record pages.
+			'_self' causes the browser to open the links in the same window
+			'_blank' causes the browser to open the links in a new window. -->
 		
 		<config name="link_target" pass="true">_blank</config>
 		
@@ -279,30 +270,30 @@
 		<config name="search_limit" pass="true">10</config>
 		
 		<!-- specify here an explicit from address when user emails records, otherwise the from will be
-				 from the server name, or some other default if relaying thru an SMTP server -->
+		from the server name, or some other default if relaying thru an SMTP server -->
 		
 		<config name="email_from"></config>
 		
 		<!-- the url to send user's when they logout, if left blank, then the base url of the application
-				 will be used -->
+		will be used -->
 		
 		<config name="logout_url" />	
 		
-		<!-- will adjust the user's query, sending it to metalib in such a way as to support a 
-				 limited number of AND and OR boolen operators in the search box, which Metalib doesn't natively
-			 support; this is still experimental, and requires that there be only one search box in the interface
-			 instead of two a Metalib supports -->
+		<!-- will adjust the user's query, sending it to metalib in such a way as to support a limited number of 
+		AND and OR boolen operators in the search box, which Metalib doesn't natively support; this is still 
+		experimental, and requires that there be only one search box in the interface instead of two a Metalib 
+		supports -->
 		
 		<config name="normalize_query">false</config>
 		
-		<!-- number of second before xerxes stops the search and merges available records.	Note that this
-				 will not automatically change the animated search progress image, setting this higher will require
-			 a change in that display -->
+		<!-- number of second before xerxes stops the search and merges available records. Note that this
+		will not automatically change the animated search progress image, setting this higher will require 
+		a change in that display -->
 		
 		<config name="search_progress_cap">34</config>
 		
 		<!-- whether to immediately show the merged results from a search (true) or show the users the search hits
-				 results with links to the merged set and individual databases -->
+		results with links to the merged set and individual databases -->
 		
 		<config name="immediately_show_merged_results">true</config>
 		
@@ -311,13 +302,13 @@
 		<config name="facets">false</config>
 		
 		<!-- initial and secondary sort orders for merged results, this will be the default sort order when the user 
-				 is first dropped into the merged results; valid values for both include:
+		is first dropped into the merged results; valid values for both include:
 			 
-			 	* 'rank'
-				* 'title'
-				* 'author'
-				* 'year'
-				* 'database'
+		 	* 'rank'
+			* 'title'
+			* 'author'
+			* 'year'
+			* 'database'
 		 -->
 		
 		<config name="sort_order_primary">rank</config>
@@ -337,25 +328,25 @@
 		<config name="maximum_record_export_limit" />
 		
 		<!-- display inline full-text; some databases include the full-text inline with the MARC record.  
-			to show this to users, simply add 900## to the configuration below -->
+		to show this to users, simply add 900## to the configuration below -->
 		
 		<!-- add additional marc fields to the brief results; adding fields will incur a slight performance hit; 
-			 enter marc fields as a 5 character string consisting of 3 digit field code and 2 characters for ind1 and ind2;
-			 use # as a wildcard, e.g., 245## will fetch the 245, 6#### will fetch all 6XX fields; see 
-			 commands/metasearch/MetasearchResults.php file for the default fields already included -->		
+		enter marc fields as a 5 character string consisting of 3 digit field code and 2 characters for ind1 and ind2;
+		use # as a wildcard, e.g., 245## will fetch the 245, 6#### will fetch all 6XX fields; see 
+		commands/metasearch/MetasearchResults.php file for the default fields already included -->		
 		
 		<config name="marc_fields_brief" />
 		
 		<!-- whether to include the original marc record in the xml response, can be used to get at fields not currently
-			processed by xerxes in order to display them in the interface -->
+		processed by xerxes in order to display them in the interface -->
 		
 		<config name="xerxes_brief_include_marc">false</config>
 		
 		<config name="xerxes_full_include_marc">false</config>
 		
 		<!-- location of an alternate relay script for the yahoo api.  if you host multiple xerxes instances
-			on one box, you may find it advantageous to have some use a relay to the yahoo spell check on a 
-			seperate server so that you can slpit the spell checking between multiple ip addresses -->
+		on one box, you may find it advantageous to have some use a relay to the yahoo spell check on a 
+		seperate server so that you can slpit the spell checking between multiple ip addresses -->
 			
 		<config name="alternate_yahoo_location"></config>
 		
