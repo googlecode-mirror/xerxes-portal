@@ -684,11 +684,19 @@
 					$iIndex = (integer) $map_entry['pathIndex'];
 					$strProperty = (string) $map_entry['property'];
 					
+          //Remove conflicting session declerations
+          $oldProperty = $this->propertyForIndex($section, $action, $iIndex);
+          if ($oldProperty)     
+            unset($this->mapsByProperty[$key_name][$oldProperty]);
+          $oldIndex = $this->indexForProperty($section, $action, $strProperty);
+          if ($oldIndex)
+            unset($this->mapsByIndex[$key_name][$oldIndex]);
+          
+          //And add new ones
 					$this->mapsByProperty[$key_name][$strProperty] = $iIndex;
 					$this->mapsByIndex[$key_name][$iIndex] = $strProperty;
 				}
 			}
-			
 		}
 	}
 

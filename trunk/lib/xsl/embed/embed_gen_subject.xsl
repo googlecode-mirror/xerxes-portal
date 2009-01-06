@@ -49,13 +49,12 @@
     
     <div id="snippet_option_column">
   
-    <form method="GET" id="generator">
-      <input type="hidden" name="base" value="embed" />
-      <input type="hidden" name="action" value="gen_subject" />
-      <input type="hidden" name="subject">
-         <xsl:attribute name="value"><xsl:value-of select="request/subject" /></xsl:attribute>
-      </input>
-  
+    <form method="GET" id="generator" action="{$base_url}">
+      <input type="hidden" name="base" value="{request/base}" />
+      <input type="hidden" name="action" value="{request/action}" />
+      <input type="hidden" name="subject" value="{request/subject}" />
+      <input type="hidden" name="username" value="{category/@owned_by_user}"/>
+         
       <fieldset id="options">
         <legend>Options</legend>
         <p>How would you like the included snippet to look?</p>
