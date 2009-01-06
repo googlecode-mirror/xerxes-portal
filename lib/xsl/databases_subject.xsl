@@ -14,17 +14,22 @@
 <xsl:stylesheet version="1.0"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:php="http://php.net/xsl">
-<xsl:include href="includes.xsl" />
+<xsl:import href="includes.xsl" />
 <xsl:output method="html" encoding="utf-8" indent="yes" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
 
 <xsl:template match="/*">
 	<xsl:call-template name="surround" />
 </xsl:template>
 
+<xsl:template name="page_name">
+  <xsl:value-of select="//category/@name" />
+</xsl:template>
+
 <xsl:template name="main">
 
 	<xsl:variable name="category_name"	select="//category/@name" />
 	<xsl:variable name="request_uri"	select="//request/server/request_uri" />
+  <xsl:variable name="user_can_edit" select="/*/category/@owned_by_user = /*/request/session/username" /> 
 
 	<form name="form1" method="get" action="{$base_url}/" onSubmit="return databaseLimit(this)">
 	<input type="hidden" name="base" value="metasearch" />
@@ -35,8 +40,22 @@
 	<div id="container">
 		<div id="searchArea">
 	
-			<div class="subject">
+			<div class="subject">        
 				<h1><xsl:value-of select="//category/@name" /></h1>
+        <xsl:if test="$user_can_edit" >
+        <div class="subject_edit_commands">        
+          <a class="categoryCommand edit" href="{/*/category/edit_url}">Edit</a>
+          <xsl:text> </xsl:text>
+          <xsl:choose>
+          <xsl:when test="//category/@published = '1'">
+            <span class="publishedStatus">Published</span>
+          </xsl:when>
+          <xsl:otherwise>
+            <span class="privateStatus">Private</span>
+          </xsl:otherwise>
+          </xsl:choose>
+        </div>
+        </xsl:if>
 			</div>
 				
 			<div id="search">
@@ -53,6 +72,8 @@
        </xsl:if>
 			</div>
 			
+
+      
 			<div class="subjectDatabases">
         <!-- defined in includes.xsl -->
 				<xsl:call-template name="subject_databases_list"/>

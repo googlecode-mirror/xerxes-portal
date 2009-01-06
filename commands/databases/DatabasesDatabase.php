@@ -45,7 +45,7 @@ class Xerxes_Command_DatabasesDatabase extends Xerxes_Command_Databases
 		{
 			$arrResults = $objData->getDatabases( null, $strQuery );
 		} 
-		else
+		elseif ( $objRequest->getProperty("suppress_full_db_list") != "true")
 		{
 			// all database.
 			$arrResults = $objData->getDatabases();

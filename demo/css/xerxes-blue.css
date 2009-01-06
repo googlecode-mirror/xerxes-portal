@@ -275,7 +275,7 @@ a img{
 .subjectCheckList {
 	margin-top: 10px;
 }
-.subjectDatabaseTitle, .subjectDatabaseInfo {
+.subjectDatabaseTitle, .subjectDatabaseInfo, .subjectEditDatabase {
 	display: inline;
 	padding-left: 5px;
 }
@@ -413,6 +413,27 @@ a img{
 	background-image: url(../images/bg-long-light.gif);
 	background-repeat: repeat-x;
 	background-position: top;
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 2px;
+	border-left-width: 1px;
+	border-top-style: solid;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-left-style: solid;
+	border-top-color: #CCCCCC;
+	border-right-color: #CCCCCC;
+	border-bottom-color: #999999;
+	border-left-color: #CCCCCC;
+}
+
+#message_display {
+  padding: 10px;
+	margin-top: 20px;
+  margin-left: 20px;
+	background-color: #FFDADA;
+  display: table;
+  max-width: 480px;
 	border-top-width: 1px;
 	border-right-width: 1px;
 	border-bottom-width: 2px;
@@ -709,6 +730,216 @@ a img{
 .tagsSubmit {
 	font-size: 90%;
 }
+
+/* Tab navigation */
+/* Adapted from Yahoo YUL framework. http://developer.yahoo.com/yui/examples/tabview/frommarkup.html */
+
+.tabNavigationContainer {
+  position: relative;
+}
+
+ul.tabNavigation { /* general settings */
+  border-color:#386ace;
+  border-style:solid;
+  border-width:0 0 5px;
+  position: static;
+  width: auto;
+  white-space: nowrap;
+}
+ul.tabNavigation h1 {
+  display: inline;
+}
+
+ul.tabNavigation, .ul.tabNavigation li {
+  list-style-image:none;
+  list-style-position:outside;
+  list-style-type:none;
+  margin:0;
+  padding:0;
+}
+
+ul.tabNavigation li {
+  display: inline;
+  list-style-image:none;
+  list-style-position:outside;
+  list-style-type:none;
+  background: none;
+  margin:0 0.48em 0 0;
+  padding:1px 0 0;
+  vertical-align:bottom;
+}
+
+ul.tabNavigation a {
+  background:#EFEFEF;
+  border-color:#A3A3A3;
+  border-style:solid;
+  border-width:1px 1px 0 1px;
+  position:relative;
+  text-decoration:none; 
+  vertical-align: bottom;
+  display: inline-block;
+  padding: .35em .75em;
+  color: black;
+  font-weight: normal;
+}
+
+ul.tabNavigation .selected a, ul.tabNavigation .selected a:hover {  
+  color: white;
+  border-color:#243356;
+  background-color: #386ace;
+  font-weight: bold;
+}
+
+ul.tabNavigation a:hover {      
+  background-color: #386ace;
+}
+
+/* User-created categories (collections) */
+
+.editSubjectHeading {
+  line-height: 20px;
+  padding: 20px 20px 0px 25px;
+  width: 500px;
+}
+
+
+.editSubjectHeading .categoryCommand {
+  vertical-align: top;
+}
+
+.editCategory .subjectSubCategory {
+  margin-bottom: 40px;
+}
+
+.editCategory .subjectCheckList {
+  margin-top: 24px;
+  margin-bottom: 18px;
+}
+
+.subject_edit_commands {
+  line-height: 30px;
+  vertical-align: top;
+  background-color: #EFEFEF;
+  padding: 8px;
+  margin-top: 16px;
+}
+.editSubjectHeading .subject_edit_commands {
+  margin-top: 16px;
+  margin-bottom: 16px;
+  margin-right: 16px;
+}
+
+a.categoryCommand, a.categoryCommand:visited, a:hover.categoryCommand {
+  margin-right: 2px;
+  margin-left: 2px;
+  padding: 4px;  
+  background-color: #F7FDCB;
+  border: 1px dotted #CCCCCC;
+  font-weight: bold;
+  font-family: Arial,Verdana,Geneva,Arial,helvetica,sans-serif;
+  color: black;
+  text-decoration: none;
+  white-space: nowrap;
+  background-position: 4px 4px;
+  background-repeat: no-repeat;
+  padding-left: 24px;
+}
+a.categoryCommand:hover {
+  	color: #FFCC33; text-decoration: none; 
+    background-color: #8C8C8C;
+}
+
+a.categoryCommand.delete {
+  background-image: url(../images/delete.gif);
+}
+a.categoryCommand.add {
+  background-image: url(../images/famfamfam/add.png);
+}
+a.categoryCommand.reorder {
+  background-image: url(../images/reorder.gif);
+}
+a.categoryCommand.edit {
+  background-image: url(../images/famfamfam/wrench.png);
+}
+a.categoryCommand.rename {
+  background-image: url(../images/famfamfam/tag_blue_edit.png);
+}
+a.categoryCommand.publish {
+    padding-left: 8px;
+
+}
+
+a.publishToggle {
+  margin-right: 2px;
+  margin-left: 2px;
+  padding: 8px;  
+  background-color: #F7FDCB;
+  border: 1px dotted #CCCCCC;
+  font-weight: bold;
+  font-family: Arial,Verdana,Geneva,Arial,helvetica,sans-serif;
+  color: black;
+  text-decoration: none;
+  white-space: nowrap;    
+}
+a.publishToggle span.grayed {
+  background-color: gray; 
+  margin-right: 2px;
+  margin-left: 2px;
+  padding: 4px; 
+  background-position: 4px 4px;
+  background-repeat: no-repeat;
+  padding-left: 24px;
+}
+
+span.publishedStatus {
+  margin-right: 2px;
+  margin-left: 2px;
+  padding: 4px; 
+  background-position: 4px 4px;
+  background-repeat: no-repeat;
+  padding-left: 24px;
+  background-image: url(../images/famfamfam/lock_open.png);
+}
+span.privateStatus {
+  margin-right: 2px;
+  margin-left: 2px;
+  padding: 4px; 
+  background-position: 4px 4px;
+  background-repeat: no-repeat;
+  padding-left: 24px;
+  background-image: url(../images/famfamfam/lock.png);
+}
+
+
+.addDatabaseSidebar {
+  margin-top: 28px;
+  padding: 20px;
+  background-color: #EFEFEF;
+}
+
+.addDatabaseSidebar ul li {
+  background: none;
+  padding-left: 8px;
+}
+
+.addDatabaseSidebar ul li a.addToCollection {
+  background: transparent url(../images/famfamfam/add.png) no-repeat scroll 0px 0px;
+  background-position: 0px -1px;
+  padding-left: 20px;
+}
+
+#addNewSection {
+  background-color: #EFEFEF;
+  margin-top: 20px;
+  padding: 20px;
+}
+
+input.reorder {
+  padding: 2px;
+  height: 1em;
+  width: 2em;
+}
+  
 
 /* Autocomplete styling, used by tag entry right now */
 

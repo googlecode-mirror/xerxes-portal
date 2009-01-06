@@ -86,6 +86,11 @@
 		<xsl:variable name="id" select="//database[1]/metalib_id" />
 		[ <a href="./embed/gen_database/{$id}">Generate Snippet</a> ]
 	</xsl:if>
+  
+  <xsl:if test="request/base = 'collections' and (request/action = 'subject' or request/action = 'edit_form')">
+    [ <a href="./collections/gen_embed/{//category[1]/@owned_by_user}/{//category[1]/@normalized}"> Generate Snippet </a> ]
+  </xsl:if>
+  
 	</p>
 
 </xsl:template>

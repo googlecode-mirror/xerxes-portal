@@ -39,7 +39,10 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
-
+  
+  <!-- show 'save database' link on item detail-->
+  <xsl:variable name="show_save_db_on_detail" select="true()"/>
+  
 	<xsl:variable name="global_advanced_mode" 
 		select="(//request/metasearch_input_mode = 'advanced') or 
 		( //results/search/pair[@position = '2']/query != '' ) or 
@@ -173,6 +176,10 @@
 			</div>
 			<xsl:call-template name="metasearch_options" />	
 		</div>
+    
+    <xsl:if test="string(//session/flash_message)">
+      <xsl:call-template name="message_display"/>
+    </xsl:if>
 		
 		<xsl:call-template name="main" />
 		
@@ -221,6 +228,16 @@
 	override the template. 
 </xsl:template>
 
+<!-- 
+  TEMPLATE message_display
+  A generic way to display a message to the user in any page, usually
+  used for non-ajax version of completion status messages. 
+-->
+<xsl:template name="message_display">
+<div id="message_display">
+<xsl:value-of select="//session/flash_message"/>
+</div>
+</xsl:template>
 
 <!--
 	TEMPLATE: PAGE NAME
@@ -261,7 +278,7 @@
 		<xsl:when test="request/base = 'databases' and request/action = 'database'">
 			<xsl:text></xsl:text><xsl:value-of select="//title_display" />
 		</xsl:when>
-		<xsl:when test="request/base = 'embed' and request/action = 'gen_subject'">
+		<xsl:when test="(request/base = 'embed' and request/action = 'gen_subject') or (request/base = 'collections' and request/action = 'gen_embed')">
 			<xsl:text>Create Snippet for: </xsl:text> 
 		<xsl:value-of select="//category/@name" />
 		</xsl:when>
@@ -561,7 +578,7 @@
 			<span class="breadcrumbHere">Record</span>
 		</xsl:when>	
 		
-		<xsl:when test="request/base = 'embed' and request/action = 'gen_subject'">
+		<xsl:when test="(request/base = 'embed' and request/action = 'gen_subject') or (request/base = 'collections' and request/action = 'gen_embed')">
 			<a>
 				<xsl:attribute name="href">
 				 <xsl:value-of select="//category/url" />
@@ -581,6 +598,46 @@
 			<xsl:copy-of select="$text_breadcrumb_seperator" />
 			<span class="breadcrumbHere">Create Snippet</span>
 		</xsl:when>
+    
+    <!-- personal collections/saved databases -->
+    <xsl:when test="request/base = 'collections' and  (request/action = 'save_choose_collection' or request/action = 'save_choose_subheading')">
+      <a>
+        <xsl:attribute name="href">
+					<xsl:value-of select="//database/url" />
+				</xsl:attribute>
+				<xsl:value-of select="//database/title_display" />
+			</a>
+      <xsl:copy-of select="$text_breadcrumb_seperator" />
+      <span class="breadcrumbHere">Save to personal collection</span>
+    </xsl:when>
+    <xsl:when test="request/base = 'collections' and (request/action = 'edit_form')">
+      <a>
+        <xsl:attribute name="href">
+					<xsl:value-of select="//category[1]/url" />
+				</xsl:attribute>
+				<xsl:value-of select="//category[1]/@name" />
+			</a>
+      <xsl:copy-of select="$text_breadcrumb_seperator" />
+      <span class="breadcrumbHere">Edit</span>
+    </xsl:when>
+    <xsl:when test="request/base = 'collections' and (request/action = 'rename_form' or request/action = 'reorder_subcats_form' or request/action = 'reorder_databases_form')">
+      <a>
+        <xsl:attribute name="href">
+					<xsl:value-of select="//category[1]/url" />
+				</xsl:attribute>
+				<xsl:value-of select="//category[1]/@name" />
+			</a>
+      <xsl:copy-of select="$text_breadcrumb_seperator" />
+      <a>
+        <xsl:attribute name="href">
+					<xsl:value-of select="//category[1]/edit_url" />
+				</xsl:attribute>
+				Edit
+			</a>
+      <xsl:copy-of select="$text_breadcrumb_seperator" />
+      <xsl:call-template name="page_name" />
+    </xsl:when>
+    
 		<xsl:otherwise>
 			<span class="breadcrumbHere"><xsl:call-template name="page_name" /></span>
 		</xsl:otherwise>
@@ -896,16 +953,16 @@
 -->
 
 <xsl:template name="subject_databases_list">
-
 	<!-- default to true: -->
 	<xsl:param name="should_show_checkboxes" select="true()" />
 	<!-- specific subcategory only? Default to false meaning, no, all subcats. -->
 	<xsl:param name="show_only_subcategory" select="false()" />
-	
+	  
 	<xsl:for-each select="category/subcategory[(not($show_only_subcategory )) or ($show_only_subcategory = '') or (@id = $show_only_subcategory)]">
-		<fieldset class="subjectSubCategory">
-		<legend><xsl:value-of select="@name" /></legend>
 
+		<fieldset class="subjectSubCategory">      
+		<legend><xsl:value-of select="@name" /></legend>
+    
 			<!-- if the current session can't search this resource, should we show a lock icon? 
 			We show lock icons for logged in with account users, on campus users, and guest users. 
 			Not for off campus not logged in users, because they might be able to search more 
@@ -920,7 +977,8 @@
 			<xsl:for-each select="database">
 			<xsl:variable name="id_meta" select="metalib_id" />
 			<tr valign="top">
-			<td>
+			<td>      
+      
 				<!-- how many database checkboxes were displayed in this subcategory, before now?
 					Used for seeing if we've reached maximum for default selected dbs. Depends on 
 					if we're locking non-searchable or not. -->
@@ -969,7 +1027,7 @@
 				</xsl:choose>
 			</td>
 			<td>
-				<div class="subjectDatabaseTitle">
+				<div class="subjectDatabaseTitle">           
 					<xsl:choose>
 						<xsl:when test="not($should_lock_nonsearchable and searchable_by_user != '1')">						
 							<xsl:element name="label">
@@ -989,7 +1047,7 @@
 					</xsl:choose>
 				</div>
 					
-				<div class="subjectDatabaseInfo">
+				<div class="subjectDatabaseInfo">         
 					<a>
 					<xsl:attribute name="href"><xsl:value-of select="url" /></xsl:attribute>
 					<img alt="more information" src="images/info.gif" >
@@ -997,8 +1055,7 @@
 					</img>
 					</a>
 				</div>
-				
-				<xsl:if test="group_restriction">
+        <xsl:if test="group_restriction">
 					<div class="subjectDatabaseRestriction"><xsl:call-template name="db_restriction_display" /></div>
 				</xsl:if>
 				
@@ -1109,32 +1166,55 @@
 
 <!-- 
 	TEMPLATE: FOLDER HEADER 
-	Sets the name of the folder area, dynamically based on roles
+	Sets the name of the folder area, dynamically based on roles.
 -->
 
 <xsl:template name="folder_header">
 
 	<xsl:variable name="return" 	select="php:function('urlencode', string(request/server/request_uri))" />
-	
-	<div class="folderHeaderArea">
-	
-	<h1>
-		<xsl:choose>
-			<xsl:when test="request/label or request/type">
-				<a href="./?base=folder" class="folderHomeHeader"><xsl:call-template name="folder_header_label" /></a>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:call-template name="folder_header_label" />
-			</xsl:otherwise>
-		</xsl:choose>
-		
+  
+  <xsl:variable name="showTabs" select="//session/username and //session/role = 'named'"/>
+  
+
+    
+    <div class="folderHeaderArea">
+    
+    <xsl:choose>
+    <xsl:when test="$showTabs">
+      <div class="tabNavigationContainer">
+      <ul class="tabNavigation">
+        <li>
+          <xsl:if test="request/base = 'folder' and request/action = 'home'"><xsl:attribute name="class">selected</xsl:attribute></xsl:if>
+          <h1><a href="./?base=folder">
+          <xsl:call-template name="folder_header_label" />
+          </a></h1>
+        </li>
+        <li>
+          <xsl:if test="request/base = 'collections' and request/action = 'list'"><xsl:attribute name="class">selected</xsl:attribute></xsl:if>
+          <h1><a href="./?base=collections&amp;action=list&amp;username={//session/username}">My Database Collections</a></h1>
+        </li>      
+      </ul>
+      </div>
+    </xsl:when>
+    <xsl:otherwise>
+      <!-- Just the heading for My Saved Records without tabs -->
+      <h1><xsl:call-template name="folder_header_label" /></h1>
+    </xsl:otherwise>
+  </xsl:choose>
+  
+ 
 		<xsl:if test="request/label">
-			<xsl:text> / </xsl:text><xsl:value-of select="request/label" />
+      <h2>
+        <a href="./?base=folder"><img src="{$base_url}/images/delete.gif" /></a>
+        <xsl:text>Label: </xsl:text><xsl:value-of select="request/label" />
+      </h2>
 		</xsl:if>
 		<xsl:if test="request/type">
-			<xsl:text> / </xsl:text><xsl:value-of select="request/type" />
+      <h2>
+        <a href="./?base=folder"><img src="{$base_url}/images/delete.gif" /></a>
+        <xsl:text>Format: </xsl:text><xsl:value-of select="request/type" />
+      </h2>
 		</xsl:if>
-	</h1>
 	
 	<xsl:if test="request/session/role = 'local'">
 		<p>( <a href="{navbar/element[@id='login']/url}"><xsl:copy-of select="$text_folder_login" /><xsl:text>  </xsl:text></a> 
@@ -1329,6 +1409,9 @@
 			var dateSearch = "<xsl:value-of select="results/search/date" />";
 			var iSearchable = "<xsl:value-of select="$search_limit" />";
 		</script>
+    
+    <!-- add behaviors to edit collection dialog, currently just delete confirm -->
+    <script src="{$base_include}/javascript/collections.js" language="javascript" type ="text/javascript"></script>
 		
 		<!-- mango stuff -->
 		

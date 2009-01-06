@@ -119,10 +119,19 @@ class Xerxes_Helper
 		$objDatabase->appendChild( $objElement );
 		
 		//add an element for url to xerxes detail page for this db
-		
 
 		$objElement = $objDom->createElement( "url", $objRequest->url_for( array ("base" => "databases", "action" => "database", "id" => htmlentities( $objDatabaseData->metalib_id ) ) ) );
 		$objDatabase->appendChild( $objElement );
+    
+    // The 'add to personal collection' url for logged in user--if no
+    // logged in user, generate link anyway, but it's going to have
+    // an empty user. User should be required to log in before continuing
+    // with action. 
+    
+    $url = $objRequest->url_for( array ("base" => "collections", "action" => "save_choose_collection", "id" => $objDatabaseData->metalib_id, "username" => $objRequest->getSession("username"), "return" => $objRequest->getServer('REQUEST_URI') ) );
+          
+    $objElement = $objDom->createElement( "add_to_collection_url", $url );
+    $objDatabase->appendChild( $objElement );
 		
 		//add an element for url to xerxes-mediated direct link to db. 
 		
@@ -133,6 +142,13 @@ class Xerxes_Helper
 		return $objDatabase;
 	}
 	
+  /* Ensures that specified user is logged in, or throws exception */
+  public static function ensureSpecifiedUser($username, $objRequest, $objRegistry, $strMessage = "Access only allowed by specific user.") {
+    if (! $objRequest->getSession("username") == $username) {
+      throw new Xerxes_AccessDeniedException($strMessage);
+    }
+  }
+  
 	/**
 	 * Checks to see if any of the databases currently being searched are restricted
 	 * to the user, throws Xerxes_DatabasesDeniedException if one is not

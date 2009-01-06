@@ -96,6 +96,7 @@
 			
 			<action name="categories">
 				<command>DatabasesCategories</command>
+        <command directory="collections">ListUserCategories</command>
 				<request name="use_categories_quicksearch">true</request>
 				<command>DatabasesSubject</command>
 				<view>xsl/databases_categories.xsl</view>
@@ -309,6 +310,110 @@
 				<view />
 			</action>
 		</section>
+    
+    <section name="collections" directory="collections" namespace="Xerxes" documentElement="xerxes" restricted="true" login="true">
+      <pathParamMap>
+        <mapEntry pathIndex="2" property="username" />
+        <mapEntry pathIndex="3" property="subject"/>
+      </pathParamMap>
+    
+      <action name="subject" restricted="false">
+				<command>UserCreatedCategory</command>
+				<view>xsl/databases_subject.xsl</view>
+			</action>
+      
+      <action name="list">
+        <command>ListUserCategories</command>
+        <view>xsl/collections/collections_list.xsl</view>
+      </action>
+  
+            
+      <action name="edit_form">
+        <!-- non-ajax edit form -->
+        <command>UserCreatedCategory</command>
+        <request name="suppress_full_db_list">true</request>
+        <!-- because we use this page as a target of searches to add -->
+        <command directory="databases">DatabasesDatabase</command>  
+        <!-- because we use this page as the add action target too -->
+				<view>xsl/collections/edit_subject.xsl</view>
+      </action>
+      <action name="rename_form">
+        <!-- Can be used for renaming a category or a subcategory. If subcategory URL param is there, subcat it is.  --> 
+        <command>UserCreatedCategory</command>
+        <view>xsl/collections/rename.xsl</view>
+      </action>
+      <action name="edit">
+        <!-- If subcategory url param is there, edit a subcategory (name).
+             Of only subject param, edit a category (name and published status). If param new_subject_name, a new category can be created. -->
+        <command>ChooseUserCategory</command>
+        <command>EditUserCategory</command>        
+      </action>
+      <action name="reorder_subcats_form">
+        <command>UserCreatedCategory</command>
+        <view>xsl/collections/reorder_subcats.xsl</view>
+      </action>
+      <action name="reorder_subcats">
+        <command>ReorderSubcats</command>
+      </action>
+      <action name="reorder_databases_form">
+        <command>UserCreatedCategory</command>
+        <view>xsl/collections/reorder_databases.xsl</view>
+      </action>
+      <action name="reorder_databases">
+        <command>ReorderDatabases</command>
+      </action>
+      
+      <action name="save_choose_collection">
+        <!-- all of them -->
+        <command>ListUserCategories</command>
+        <!-- specified database -->
+				<command directory="databases">DatabasesDatabase</command>
+        <view>xsl/collections/save_database_choose_category.xsl</view>
+      </action>
+      <action name="save_choose_subheading">
+          <command directory="databases">DatabasesDatabase</command>
+          <!-- save if it needs saving, or normalize to use the right one -->
+          <command>ChooseUserCategory</command>
+          <!-- add it to xml -->
+          <command>UserCreatedCategory</command>
+          <!-- display the subheading picker -->
+          <view>xsl/collections/save_database_choose_section.xsl</view>
+      </action>
+      <!-- Can be used to create a new subcategory and/or add a 
+           database to a new or existing subcategory -->
+      <action name="save_complete">
+         <command>SaveDatabaseToUserCategory</command>
+          <!-- no view, redirect -->
+      </action>     
+      <action name="remove_db">
+        <command>RemoveDatabaseFromUserSubcategory</command>
+      </action>
+      <action name="delete_subcategory">
+        <command>DeleteSubcategory</command>
+      </action>
+      <action name="delete_category">
+        <command>DeleteUserCategory</command>
+      </action>
+      
+      <!-- embedding for user created ones needs it's own
+           actions, alas. -->
+      <action name="gen_embed" restricted="false">
+				<pathParamMap>
+					<mapEntry pathIndex="3" property="subject"/>
+				</pathParamMap>
+				<command>UserCreatedCategory</command>
+				<command directory="embed">EmbedGenUserCreatedCategory</command>
+				<view>xsl/embed/embed_gen_subject.xsl</view>
+			</action>
+      <action name="embed" restricted="false">
+				<command>UserCreatedCategory</command>
+				<pathParamMap>
+					<mapEntry pathIndex="3" property="subject"/>
+				</pathParamMap>
+				<view>xsl/embed/embed_subject.xsl</view>
+      </action>
+      
+    </section>
 		
 		<section name="availability" directory="availability" namespace="Xerxes" documentElement="xerxes">
 
