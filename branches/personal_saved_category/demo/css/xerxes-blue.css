@@ -731,6 +731,69 @@ a img{
 	font-size: 90%;
 }
 
+/* Tab navigation */
+/* Adapted from Yahoo YUL framework. http://developer.yahoo.com/yui/examples/tabview/frommarkup.html */
+
+.tabNavigationContainer {
+  position: relative;
+}
+
+ul.tabNavigation { /* general settings */
+  border-color:#386ace;
+  border-style:solid;
+  border-width:0 0 5px;
+  position: static;
+  width: auto;
+  white-space: nowrap;
+}
+ul.tabNavigation h1 {
+  display: inline;
+}
+
+ul.tabNavigation, .ul.tabNavigation li {
+  list-style-image:none;
+  list-style-position:outside;
+  list-style-type:none;
+  margin:0;
+  padding:0;
+}
+
+ul.tabNavigation li {
+  display: inline;
+  list-style-image:none;
+  list-style-position:outside;
+  list-style-type:none;
+  background: none;
+  margin:0 0.48em 0 0;
+  padding:1px 0 0;
+  vertical-align:bottom;
+}
+
+ul.tabNavigation a {
+  background:#EFEFEF;
+  border-color:#A3A3A3;
+  border-style:solid;
+  border-width:1px 1px 0 1px;
+  position:relative;
+  text-decoration:none; 
+  vertical-align: bottom;
+  display: inline-block;
+  padding: .35em .75em;
+  color: black;
+  font-weight: normal;
+}
+
+ul.tabNavigation .selected a, ul.tabNavigation .selected a:hover {  
+  color: white;
+  border-color:#243356;
+  background-color: #386ace;
+  font-weight: bold;
+}
+
+ul.tabNavigation a:hover {      
+  background-color: #386ace;
+}
+
 /* User-created categories (collections) */
 
 .editSubjectHeading {

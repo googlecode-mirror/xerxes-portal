@@ -1156,26 +1156,49 @@
 <xsl:template name="folder_header">
 
 	<xsl:variable name="return" 	select="php:function('urlencode', string(request/server/request_uri))" />
-	
-	<div class="folderHeaderArea">
-	
-	<h1>
-		<xsl:choose>
-			<xsl:when test="request/label or request/type">
-				<a href="./?base=folder" class="folderHomeHeader"><xsl:call-template name="folder_header_label" /></a>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:call-template name="folder_header_label" />
-			</xsl:otherwise>
-		</xsl:choose>
-		
+  
+  <xsl:variable name="showTabs" select="//session/username and //session/role = 'named'"/>
+  
+
+    
+    <div class="folderHeaderArea">
+    
+    <xsl:choose>
+    <xsl:when test="$showTabs">
+      <div class="tabNavigationContainer">
+      <ul class="tabNavigation">
+        <li>
+          <xsl:if test="request/base = 'folder' and request/action = 'home'"><xsl:attribute name="class">selected</xsl:attribute></xsl:if>
+          <h1><a href="./?base=folder">
+          <xsl:call-template name="folder_header_label" />
+          </a></h1>
+        </li>
+        <li>
+          <xsl:if test="request/base = 'collections' and request/action = 'list'"><xsl:attribute name="class">selected</xsl:attribute></xsl:if>
+          <h1><a href="./?base=collections&amp;action=list&amp;username={//session/username}">My Database Collections</a></h1>
+        </li>      
+      </ul>
+      </div>
+    </xsl:when>
+    <xsl:otherwise>
+      <!-- Just the heading for My Saved Records without tabs -->
+      <h1><xsl:call-template name="folder_header_label" /></h1>
+    </xsl:otherwise>
+  </xsl:choose>
+  
+ 
 		<xsl:if test="request/label">
-			<xsl:text> / </xsl:text><xsl:value-of select="request/label" />
+      <h2>
+        <a href="./?base=folder"><img src="{$base_url}/images/delete.gif" /></a>
+        <xsl:text>Label: </xsl:text><xsl:value-of select="request/label" />
+      </h2>
 		</xsl:if>
 		<xsl:if test="request/type">
-			<xsl:text> / </xsl:text><xsl:value-of select="request/type" />
+      <h2>
+        <a href="./?base=folder"><img src="{$base_url}/images/delete.gif" /></a>
+        <xsl:text>Format: </xsl:text><xsl:value-of select="request/type" />
+      </h2>
 		</xsl:if>
-	</h1>
 	
 	<xsl:if test="request/session/role = 'local'">
 		<p>( <a href="{navbar/element[@id='login']/url}"><xsl:copy-of select="$text_folder_login" /><xsl:text>  </xsl:text></a> 

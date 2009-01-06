@@ -321,6 +321,11 @@
 				<command>UserCreatedCategory</command>
 				<view>xsl/databases_subject.xsl</view>
 			</action>
+      
+      <action name="list">
+        <command>ListUserCategories</command>
+        <view>xsl/collections/collections_list.xsl</view>
+      </action>
   
             
       <action name="edit_form">
@@ -339,7 +344,8 @@
       </action>
       <action name="edit">
         <!-- If subcategory url param is there, edit a subcategory (name).
-             Of only subject param, edit a category (name and published status)-->
+             Of only subject param, edit a category (name and published status). If param new_subject_name, a new category can be created. -->
+        <command>ChooseUserCategory</command>
         <command>EditUserCategory</command>        
       </action>
       <action name="reorder_subcats_form">
