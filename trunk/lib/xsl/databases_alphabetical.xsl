@@ -36,20 +36,27 @@
 	
 	<a name="top" />
 	
+
+  
 	<div id="databasesAlpha">
+  
+    <div id="sidebar_float">
+      <xsl:call-template name="account_sidebar" />
+    </div>
 	
-		<div class="subject">
-			<h1><xsl:call-template name="page_name" /></h1>
-		</div>
-    
+
+    <div class="subject">
+      <h1><xsl:call-template name="page_name" /></h1>
+    </div>
+  
     <xsl:if test="$show_search_box">
       <div id="databaseSearchArea">
         <xsl:call-template name="databases_search_box" />
       </div>
     </xsl:if>
-    
+
     <p><strong><xsl:value-of select="count(databases/database)" /> databases
-    </strong></p> 
+    </strong></p>
   
     <xsl:variable name="lower">abcdefghijklmnopqrstuvwxyz</xsl:variable>
     <xsl:variable name="upper">ABCDEFGHIJKLMNOPQRSTUVWXYZ</xsl:variable>

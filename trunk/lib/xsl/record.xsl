@@ -29,32 +29,37 @@
 			<xsl:value-of select="$result_set" />:<xsl:value-of select="$record_number" />
 		</xsl:variable>
 		
-		<div id="citation">
-			
-			<h2>Cite this <xsl:value-of select="format" />:</h2>
-			
-			<div class="citations">
-				
-				<h3>APA</h3>
-				<div class="citationStyle">
-					<xsl:call-template name="apa" />
-				</div>
-				
-				<h3>MLA</h3>
-				<div class="citationStyle">
-					<xsl:call-template name="mla" />
-				</div>
-				
-				<h3>Turabian</h3>
-				<div class="citationStyle">
-					<xsl:call-template name="turabian" />
-				</div>
-			</div>
-			<div class="citationNote">
-				<xsl:copy-of select="$text_record_citation_note" />
-			</div>
-		</div>
-		
+    <div id="sidebar_float">
+    <xsl:call-template name="account_sidebar"/>
+    
+    
+      <div id="citation1" class="box">
+        
+        <h2>Cite this <xsl:value-of select="format" />:</h2>
+        
+        <div class="citations">
+          
+          <h3>APA</h3>
+          <div class="citationStyle">
+            <xsl:call-template name="apa" />
+          </div>
+          
+          <h3>MLA</h3>
+          <div class="citationStyle">
+            <xsl:call-template name="mla" />
+          </div>
+          
+          <h3>Turabian</h3>
+          <div class="citationStyle">
+            <xsl:call-template name="turabian" />
+          </div>
+        </div>
+        <div class="citationNote">
+          <xsl:copy-of select="$text_record_citation_note" />
+        </div>
+      </div>
+    </div>
+      
 		<div id="record">
 		
 			<!-- Title -->			

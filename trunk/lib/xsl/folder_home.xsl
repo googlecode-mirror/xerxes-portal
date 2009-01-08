@@ -40,57 +40,64 @@
 	<xsl:call-template name="results_return" />
 	
 	<div id="folderArea">	
-		
-		<xsl:call-template name="folder_header" />
-		
-		<xsl:choose>
-		<xsl:when test="results/records/record">
-					
-			<div id="results1" class="folderOutputs">
-
-				<div class="folderOutput">
-					<h2>Export Records</h2>
-					<ul>					
-						<li><a href="{export_functions/export_option[@id='email']/url}">Email records to yourself</a></li>
-						<li><a href="{export_functions/export_option[@id='refworks']/url}">Export to Refworks</a></li>
-						<li><a href="{export_functions/export_option[@id='text']/url}">Download to text file</a></li>
-						<li><a href="{export_functions/export_option[@id='endnote']/url}">Download to Endnote, Zotero, etc.</a></li>
-					</ul>
-				</div>
-
-				<div class="folderOutput">
-					<h2>Limit by Format</h2>
-					<ul>
-					<xsl:for-each select="format_facets/facet">
-						<li>
-						<xsl:choose>
-							<xsl:when test="@name = //request/type">
-								<strong><xsl:value-of select="@name" /></strong> ( <xsl:value-of select="text()" /> )
-							</xsl:when>
-							<xsl:otherwise>
-								<a href="{@url}"><xsl:value-of select="@name" /></a> ( <xsl:value-of select="text()" /> )					
-							</xsl:otherwise>
-						</xsl:choose>
-						</li>
-					</xsl:for-each>
-					</ul>
-				</div>
-				
-				<xsl:if test="$temporarySession != 'true'">
-					<div id="labelsMaster" class="folderOutput">
-						<xsl:call-template name="tags_display" />
-					</div>
-				</xsl:if>
-				
+    <xsl:if test="results/records/record">
+    <div id="sidebar_float">
+        <xsl:call-template name="account_sidebar"/>
+        <div class="folderOutputs">
+    
+          <div class="folderOutput">
+            <h2>Export Records</h2>
+            <ul>					
+              <li><a href="{export_functions/export_option[@id='email']/url}">Email records to yourself</a></li>
+              <li><a href="{export_functions/export_option[@id='refworks']/url}">Export to Refworks</a></li>
+              <li><a href="{export_functions/export_option[@id='text']/url}">Download to text file</a></li>
+              <li><a href="{export_functions/export_option[@id='endnote']/url}">Download to Endnote, Zotero, etc.</a></li>
+            </ul>
+          </div>
+  
+          <div class="folderOutput">
+            <h2>Limit by Format</h2>
+            <ul>
+            <xsl:for-each select="format_facets/facet">
+              <li>
+              <xsl:choose>
+                <xsl:when test="@name = //request/type">
+                  <strong><xsl:value-of select="@name" /></strong> ( <xsl:value-of select="text()" /> )
+                </xsl:when>
+                <xsl:otherwise>
+                  <a href="{@url}"><xsl:value-of select="@name" /></a> ( <xsl:value-of select="text()" /> )					
+                </xsl:otherwise>
+              </xsl:choose>
+              </li>
+            </xsl:for-each>
+            </ul>
+          </div>
+          
+          <xsl:if test="$temporarySession != 'true'">
+            <div id="labelsMaster" class="folderOutput">
+              <xsl:call-template name="tags_display" />
+            </div>
+          </xsl:if>
+        </div>
 			</div>
+    </xsl:if>
+    
+    <xsl:call-template name="folder_header" />
+
+    
+		<xsl:choose>
+		<xsl:when test="results/records/record">								
 			
 			<div class="folderResults">
 
 				<div class="resultsPageOptions">
 
-					<xsl:if test="sort_display">
-						<div class="resultsSorting">
-							sort by:
+				
+
+					<div>            
+           <xsl:if test="sort_display">
+						<span class="resultsSorting">
+							sort by:<xsl:text> </xsl:text>
 							<xsl:for-each select="sort_display/option">
 								<xsl:choose>
 									<xsl:when test="@active = 'true'">
@@ -107,12 +114,11 @@
 									<xsl:text> | </xsl:text>
 								</xsl:if>
 							</xsl:for-each>
-						</div>
+						</span>
 					</xsl:if>
-
-					<div>
-						Results <strong><xsl:value-of select="summary/range" /></strong> of 
-						<strong><xsl:value-of select="summary/total" /></strong>
+          
+            Results <strong><xsl:value-of select="summary/range" /></strong> of 
+            <strong><xsl:value-of select="summary/total" /></strong>
 					</div>	
 				</div>
 
