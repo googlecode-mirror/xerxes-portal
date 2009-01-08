@@ -1173,34 +1173,11 @@
 
 	<xsl:variable name="return" 	select="php:function('urlencode', string(request/server/request_uri))" />
   
-  <xsl:variable name="showTabs" select="//session/username and //session/role = 'named'"/>
-  
-
     
     <div class="folderHeaderArea">
     
-    <xsl:choose>
-    <xsl:when test="$showTabs">
-      <div class="tabNavigationContainer">
-      <ul class="tabNavigation">
-        <li>
-          <xsl:if test="request/base = 'folder' and request/action = 'home'"><xsl:attribute name="class">selected</xsl:attribute></xsl:if>
-          <h1><a href="./?base=folder">
-          <xsl:call-template name="folder_header_label" />
-          </a></h1>
-        </li>
-        <li>
-          <xsl:if test="request/base = 'collections' and request/action = 'list'"><xsl:attribute name="class">selected</xsl:attribute></xsl:if>
-          <h1><a href="./?base=collections&amp;action=list&amp;username={//session/username}">My Database Collections</a></h1>
-        </li>      
-      </ul>
-      </div>
-    </xsl:when>
-    <xsl:otherwise>
-      <!-- Just the heading for My Saved Records without tabs -->
-      <h1><xsl:call-template name="folder_header_label" /></h1>
-    </xsl:otherwise>
-  </xsl:choose>
+
+    <h1><xsl:call-template name="folder_header_label" /></h1>
   
  
 		<xsl:if test="request/label">
@@ -1499,6 +1476,47 @@
 <xsl:template name="categories_sidebar">
 </xsl:template>
 <xsl:template name="categories_sidebar_alt">
+</xsl:template>
+
+<!-- TEMPLATE: MY ACCOUNT SIDEBAR
+     Standard nav elements included in sidebar on every page -->
+<xsl:template name="account_sidebar">
+<xsl:if test="request/base != 'authenticate'">
+		<span class="sessionAction">
+			<xsl:choose>
+			<xsl:when test="request/session/role and request/session/role != 'local'">
+				<a>
+			<xsl:attribute name="href"><xsl:value-of select="navbar/element[@id = 'logout']/url" /></xsl:attribute>
+			<xsl:copy-of select="$text_header_logout" />
+			</a>
+			</xsl:when>
+			<xsl:otherwise>
+				<a>
+			<xsl:attribute name="href"><xsl:value-of select="navbar/element[@id = 'login']/url" /></xsl:attribute>
+			<xsl:copy-of select="$text_header_login" /></a>
+			</xsl:otherwise>
+			</xsl:choose>
+		</span>
+		|
+		</xsl:if>
+		<span class="sessionAction">
+			<img name="folder" width="17" height="15" border="0" id="folder" alt="">
+			<xsl:attribute name="src">
+				<xsl:choose>
+				<xsl:when test="navbar/element[@id='saved_records']/@numSessionSavedRecords &gt; 0"><xsl:value-of select="$base_include" />/images/folder_on.gif</xsl:when>
+				<xsl:otherwise><xsl:value-of select="$base_include"/>/images/folder.gif</xsl:otherwise>
+				</xsl:choose>
+			</xsl:attribute>
+			</img>
+			<xsl:text> </xsl:text>
+			<a>
+			<xsl:attribute name="href"><xsl:value-of select="navbar/element[@id='saved_records']/url" /></xsl:attribute>
+			<xsl:copy-of select="$text_header_savedrecords" />
+		</a>
+		</span>
+    <span class="sessionAction">
+       My Collections
+    </span>
 </xsl:template>
 
 <!--
