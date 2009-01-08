@@ -1481,42 +1481,46 @@
 <!-- TEMPLATE: MY ACCOUNT SIDEBAR
      Standard nav elements included in sidebar on every page -->
 <xsl:template name="account_sidebar">
-<xsl:if test="request/base != 'authenticate'">
-		<span class="sessionAction">
-			<xsl:choose>
-			<xsl:when test="request/session/role and request/session/role != 'local'">
-				<a>
-			<xsl:attribute name="href"><xsl:value-of select="navbar/element[@id = 'logout']/url" /></xsl:attribute>
-			<xsl:copy-of select="$text_header_logout" />
-			</a>
-			</xsl:when>
-			<xsl:otherwise>
-				<a>
-			<xsl:attribute name="href"><xsl:value-of select="navbar/element[@id = 'login']/url" /></xsl:attribute>
-			<xsl:copy-of select="$text_header_login" /></a>
-			</xsl:otherwise>
-			</xsl:choose>
-		</span>
-		|
-		</xsl:if>
-		<span class="sessionAction">
-			<img name="folder" width="17" height="15" border="0" id="folder" alt="">
-			<xsl:attribute name="src">
-				<xsl:choose>
-				<xsl:when test="navbar/element[@id='saved_records']/@numSessionSavedRecords &gt; 0"><xsl:value-of select="$base_include" />/images/folder_on.gif</xsl:when>
-				<xsl:otherwise><xsl:value-of select="$base_include"/>/images/folder.gif</xsl:otherwise>
-				</xsl:choose>
-			</xsl:attribute>
-			</img>
-			<xsl:text> </xsl:text>
-			<a>
-			<xsl:attribute name="href"><xsl:value-of select="navbar/element[@id='saved_records']/url" /></xsl:attribute>
-			<xsl:copy-of select="$text_header_savedrecords" />
-		</a>
-		</span>
-    <span class="sessionAction">
-       My Collections
-    </span>
+<div id="accountSidebar" class="box">
+  <h2 class="sidebar-title">My Account</h2>
+  <ul>
+  <xsl:if test="request/base != 'authenticate'">
+      <li class="accountSidebar">
+        <xsl:choose>
+        <xsl:when test="request/session/role and request/session/role != 'local'">
+          <a>
+        <xsl:attribute name="href"><xsl:value-of select="navbar/element[@id = 'logout']/url" /></xsl:attribute>
+        <xsl:copy-of select="$text_header_logout" />
+        </a>
+        </xsl:when>
+        <xsl:otherwise>
+          <a>
+        <xsl:attribute name="href"><xsl:value-of select="navbar/element[@id = 'login']/url" /></xsl:attribute>
+        <xsl:copy-of select="$text_header_login" /></a>
+        </xsl:otherwise>
+        </xsl:choose>
+      </li>
+      </xsl:if>
+      <li class="accountSidebar mySavedRecords">
+        <img name="folder" width="17" height="15" border="0" id="folder" alt="">
+        <xsl:attribute name="src">
+          <xsl:choose>
+          <xsl:when test="navbar/element[@id='saved_records']/@numSessionSavedRecords &gt; 0"><xsl:value-of select="$base_include" />/images/folder_on.gif</xsl:when>
+          <xsl:otherwise><xsl:value-of select="$base_include"/>/images/folder.gif</xsl:otherwise>
+          </xsl:choose>
+        </xsl:attribute>
+        </img>
+        <xsl:text> </xsl:text>
+        <a>
+        <xsl:attribute name="href"><xsl:value-of select="navbar/element[@id='saved_records']/url" /></xsl:attribute>
+        <xsl:copy-of select="$text_header_savedrecords" />
+      </a>
+      </li>
+      <li class="accountSidebar">
+         My Collections
+      </li>
+    </ul>
+   </div>
 </xsl:template>
 
 <!--

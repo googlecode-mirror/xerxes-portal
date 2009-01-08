@@ -47,38 +47,12 @@
 	<div id="tag_suggestions" class="autocomplete" style="display:none;"></div>
 	
 	<div id="container">
-	
-		<div id="searchArea">
-
-			<form action="./" method="get">
-				<input type="hidden" name="base" value="metasearch" />
-				<input type="hidden" name="action" value="search" />
-				<input type="hidden" name="context" value="{$context}" />
-				<input type="hidden" name="context_url" value="{$context_url}" />
-	
-
-				<div class="subject">
-					<h1><xsl:value-of select="$context" /></h1>
-				</div>
-			
-				<div id="search">
-					<xsl:call-template name="search_box" />
-				</div>
-			</form>
-		</div>
-			
-		<div id="sidebar">
-		
-		</div>	
-	</div>
-	
-	<div id="resultsArea">
-			
-		<div id="resultsOptions">
-			
-			<div class="box">
-	
-				<h2 class="sidebar-title">Search Results</h2>
+  
+    <div id="sidebar_float">
+      <xsl:call-template name="account_sidebar" />
+    
+      <div class="box">
+    	<h2 class="sidebar-title">Search Results</h2>
 				<xsl:for-each select="//base_info">
 					<xsl:if test="base = 'MERGESET'">
 						<ul class="hitsList">
@@ -101,9 +75,7 @@
 						</ul>
 					</xsl:if>
 				</xsl:for-each>
-				
-				
-				<h2 class="sidebar-title">Limit results by database: </h2>
+        	<h2 class="sidebar-title">Limit results by database: </h2>
 				<ul class="hitsList">
 				<xsl:for-each select="//base_info">
 					<xsl:if test="base != 'MERGESET'">
@@ -147,7 +119,8 @@
 								</xsl:call-template>
 							</xsl:otherwise>
 						</xsl:choose>
-						
+					 
+            <span class="nonBreaking">
 						<xsl:text> ( </xsl:text>
 						<xsl:choose>
 							<xsl:when test="no_of_documents = '888888888'">
@@ -161,7 +134,7 @@
 							</xsl:otherwise>
 						</xsl:choose>
 						<xsl:text> )</xsl:text>
-						
+						</span>
 						</li>
 					</xsl:if>
 				</xsl:for-each>
@@ -181,14 +154,10 @@
 						<xsl:text>)</xsl:text>
 					</li>
 				</xsl:for-each>
-
 				</ul>
+      </div>
 
-			</div>
-			
-			<!-- FACETS -->
-			
-			<xsl:if test="//cluster_facet and results/database = 'Top Results'">
+      			<xsl:if test="//cluster_facet and results/database = 'Top Results'">
 				
 				<div class="box">
 					<h2 class="sidebar-title">Limit top results by:</h2>
@@ -237,7 +206,34 @@
 					</xsl:for-each>
 				</div>
 			</xsl:if>
+           
+    </div>
+	
+		<div id="searchArea">
+
+			<form action="./" method="get">
+				<input type="hidden" name="base" value="metasearch" />
+				<input type="hidden" name="action" value="search" />
+				<input type="hidden" name="context" value="{$context}" />
+				<input type="hidden" name="context_url" value="{$context_url}" />
+	
+
+				<div class="subject">
+					<h1><xsl:value-of select="$context" /></h1>
+				</div>
+			
+				<div id="search">
+					<xsl:call-template name="search_box" />
+				</div>
+			</form>
 		</div>
+			
+		<!-- <div id="sidebar">
+		  
+		</div> -->	
+	</div>
+	
+	<div id="resultsArea">
 		
 		<div class="results">
 			

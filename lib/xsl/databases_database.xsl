@@ -33,6 +33,10 @@
 	
 
 	<div id="container">
+    <div id="sidebar_float">					
+      <xsl:call-template name="account_sidebar"/>		
+		</div>
+    
 		<div id="searchArea">
 			<xsl:for-each select="//database">
 			
@@ -40,7 +44,7 @@
 				<xsl:variable name="id_meta" select="metalib_id" />
 				
         
-				<h2 class="database_detail_title" style="margin-bottom: 30px;"><xsl:value-of select="title_display" /></h2>
+				<h2 class="database_detail_title"><xsl:value-of select="title_display" /></h2>
         
         <!-- show a search box if: 
             1) config is set to show search boxes on db detail page
@@ -150,10 +154,6 @@
 				</table>
 				
 			</xsl:for-each>
-		</div>
-
-		<div id="sidebar">
-			
 		</div>
 	</div>
 	

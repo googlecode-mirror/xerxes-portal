@@ -38,6 +38,10 @@
 	<input type="hidden" name="context_url" value="{$request_uri}" />
 	
 	<div id="container">
+    <div id="sidebar_float">
+      <xsl:call-template name="account_sidebar"/>
+		</div>
+  
 		<div id="searchArea">
 	
 			<div class="subject">        
@@ -78,9 +82,6 @@
         <!-- defined in includes.xsl -->
 				<xsl:call-template name="subject_databases_list"/>
 			</div>
-		</div>
-		<div id="sidebar">
-			
 		</div>
 	</div>
 
