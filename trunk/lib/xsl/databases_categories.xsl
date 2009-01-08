@@ -75,17 +75,6 @@
 				<xsl:call-template name="categories_sidebar_alt" />
 			</div>
       
-      <!-- personal categories -->
-      <xsl:if test="/*/userCategories/category">
-      <div class="categories userCategories">
-        <h2>Personal Collections</h2>
-        <ul>
-        <xsl:for-each select="/*/userCategories/category">
-          <li><a href="{url}"><xsl:value-of select="name"/></a></li>
-        </xsl:for-each>
-        </ul>
-      </div>
-      </xsl:if>
 			
 			<div class="categories">
 				<h2><xsl:copy-of select="$text_databases_category_subject" /></h2>
