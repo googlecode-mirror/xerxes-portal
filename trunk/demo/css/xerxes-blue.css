@@ -44,9 +44,11 @@ h1, h2, h3, h4 {
 h1 {
 	color: #3366cc;
 	font-size: 22px;
+  margin-bottom: 20px;
 }
 h2 {
 	font-size: 16px; 
+  margin-bottom: 16px;
 }
 h3 {
 	font-size: 14px;
@@ -139,16 +141,28 @@ a img{
 	color: #666666;
 }
 #container {
+  padding: 20px;
 	margin-top: 0px;
 	margin-bottom: 0px;
 	line-height: 130%;
 }
+.databasesAlphaMenu {
+  line-height: 1.8em;
+}
+
 #databasesAlpha {
 	margin: 30px;
 }
-#sidebar {
+#sidebar, .sidebar {
 	padding: 20px 10px 10px 10px;
 	margin-left: 545px;
+}
+/* a version of sidebar CSS that floats instead of using a margin */
+#sidebar_float, .sidebar_float {
+  float:right; 
+	width: 300px; 
+	padding: 0px 10px 10px 10px;
+	margin: 0 10px 0 0; 
 }
 #sidebar_alt {
 	padding: 0px 10px 10px 0px;
@@ -159,12 +173,16 @@ a img{
 	max-width: 320px;
 }
 #searchArea {
-	float: left;
+	/*float: left;*/
 	width: 500px;
-	padding: 20px;
 }
+
+#databaseSearchArea {
+  width: 480px;
+}
+
 #resultsArea {
-	clear: both;
+	/*clear: both;*/
 	margin-top: 10px;
 	padding: 20px;
 }
@@ -187,17 +205,15 @@ a img{
 	padding: 20px;
 	color: #999999;
 }
-#citation {
-	float:right; 
+#citation {	 
 	width: 300px; 
-	padding: 10px; 
-	margin: 20px; 
+	padding: 10px;  
 	background-color: #efefef;
 }
 
-#record { 
+/*#record { 
 	margin-top: 20px;
-}
+}*/
 
 /** SIDEBAR STYLES **/
 
@@ -228,6 +244,13 @@ a img{
 }
 #sessionAuthSection strong {
 	font-weight: normal;
+}
+li.accountSidebar {
+  padding: 0 0 3px 21px;
+}
+li.mySavedRecords {
+  background-image: none;
+  padding: 0 0 3px 0;
 }
 
 /* librarian */
@@ -270,7 +293,7 @@ a img{
 /* subject page */
 
 .subject {
-	margin-bottom: 30px;
+	/*margin-bottom: 30px;*/
 }
 .subjectCheckList {
 	margin-top: 10px;
@@ -303,7 +326,6 @@ a img{
 	float:left;
 }
 .categories {
-	margin-top: 30px;  
   clear: both;
 }
 .categoriesTable td {
@@ -383,7 +405,7 @@ a img{
 }
 .searchBox {
 	padding: 20px;
-	margin: 0px;
+	margin: 0 0 0 0;
 	background-color: #fff;
 	background-image: url(../images/bg.gif);
 	background-repeat: repeat-x;
@@ -405,7 +427,7 @@ a img{
 /* results options */
 
 .box {
-	width:339px;
+	width:280px;
 	margin-bottom: 20px;
 	padding:10px;
 	line-height:1.5em;
@@ -456,6 +478,10 @@ a img{
 	font-size:115%;
 	line-height:1.5em;
 	color:#333;
+}
+
+.nonBreaking {
+   white-space: nowrap;
 }
 
 
@@ -535,7 +561,6 @@ a img{
 	margin: 20px;
 }
 .resultsSorting {
-	text-align: right;
 	float: right;
 }
 .resultsTitle:link {
@@ -673,7 +698,7 @@ a img{
 .folderOptions {
 	margin: 20px;
 	margin-top: 30px;
-	width: 600px;
+	width: 440px;
 	padding: 10px;
 	background-color: #f0f0f0;
 	background-image: url(../images/bg-long.gif);
@@ -696,7 +721,7 @@ a img{
 	padding-bottom: 20px;
 }
 .folderOutputs {
-	width: 220px; 
+	width: 280px; 
 	background-color: #efefef; 
 	padding: 10px; 
 	float: left; 
@@ -716,9 +741,9 @@ a img{
 	border-bottom-color: #CCCCCC;
 	border-left-color: #CCCCCC;
 }
-.folderResults {
+/*.folderResults {
 	margin-left: 270px;
-}
+}*/
 .folderReturn {
 	clear: both;
 	margin-top: 10px;
@@ -735,7 +760,6 @@ a img{
 
 .editSubjectHeading {
   line-height: 20px;
-  padding: 20px 20px 0px 25px;
   width: 500px;
 }
 
@@ -753,12 +777,20 @@ a img{
   margin-bottom: 18px;
 }
 
+.miniForm {
+   background-color: #EFEFEF;
+   padding: 20px;
+   margin-top: 20px;
+   width: 400px;
+}
+
 .subject_edit_commands {
   line-height: 30px;
   vertical-align: top;
   background-color: #EFEFEF;
   padding: 8px;
   margin-top: 16px;
+  margin-bottom: 16px;
 }
 .editSubjectHeading .subject_edit_commands {
   margin-top: 16px;
