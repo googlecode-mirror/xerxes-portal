@@ -5,6 +5,10 @@
  * info in xml. Can be: a single database; all databases (for a-z list);
  * or a database query. 
  * 
+ * Normally, if no ID or query is supplied, this action will end up
+ * getting ALL databases. But if the request has suppress_full_db_list=true,
+ * then it will get noen.  
+ * 
  * @author David Walker
  * @copyright 2008 California State University
  * @link http://xerxes.calstate.edu

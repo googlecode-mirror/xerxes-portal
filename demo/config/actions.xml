@@ -363,6 +363,7 @@
       </action>
       
       <action name="save_choose_collection">
+        <request name="suppress_full_db_list">true</request>
         <!-- all of them -->
         <command>ListUserCategories</command>
         <!-- specified database -->
