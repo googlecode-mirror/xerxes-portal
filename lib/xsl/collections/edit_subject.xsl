@@ -27,11 +27,12 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
 
 	
 	<div id="container">
-    <div id="add_to_subcategory_search" class="sidebar_float">
-        <xsl:call-template name="account_sidebar"/>
+    <div id="sidebar_float" class="sidebar_float">
+    <xsl:call-template name="account_sidebar"/>
     
      <xsl:if test="/*/request/add_to_subcategory">
      <div class="addDatabaseSidebar" id="addDatabaseSidebar">
+       <a name="addDatabaseSidebar"/>
        <form method="GET" action="{base_url}">
          <input type="hidden" name="base" value="collections" />
          <input type="hidden" name="action" value="edit_form" />
