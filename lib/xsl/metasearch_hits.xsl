@@ -30,6 +30,7 @@
 	<xsl:variable name="group" 			select="request/group" />
 	<xsl:variable name="progress" 		select="results/progress" />
 	
+
 	<!-- catch a serious search error -->
 	
 	<xsl:choose>
@@ -58,7 +59,13 @@
 		<input type="hidden" name="context_url" value="{$context_url}" />
 	
 		<div id="container">
-		
+		    <!-- sidebar -->
+        <div id="sidebar_float" class="sidebar_float">
+          <xsl:call-template name="account_sidebar"/>
+        </div>
+        
+    
+    
 			<div id="searchArea">
 				<div class="subject">
 					<h1><xsl:value-of select="$context" /></h1>
