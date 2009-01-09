@@ -96,7 +96,6 @@
 			
 			<action name="categories">
 				<command>DatabasesCategories</command>
-        <command directory="collections">ListUserCategories</command>
 				<request name="use_categories_quicksearch">true</request>
 				<command>DatabasesSubject</command>
 				<view>xsl/databases_categories.xsl</view>
