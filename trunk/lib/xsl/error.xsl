@@ -23,6 +23,10 @@
 
 <xsl:template name="main">
 	<div id="content">
+    <div id="sidebar_float" class="sidebar_float">
+      <xsl:call-template name="account_sidebar"/>
+    </div>
+  
 		<div class="loginBox">
 			<table border="0" cellspacing="0" cellpadding="5">
 			<tr>
