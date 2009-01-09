@@ -33,7 +33,10 @@
 	<input type="hidden" name="username" value="{$username}" />
 	
 	<div id="folderArea">
-		
+    <div id="sidebar_float" class="sidebar_float">
+      <xsl:call-template name="account_sidebar"/>
+    </div>
+    
 		<xsl:call-template name="folder_header" />
 		
 		<div class="folderOptions">
