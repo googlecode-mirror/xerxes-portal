@@ -35,7 +35,9 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
   <input type="hidden" name="return" value="{//request/return}" />
 	
 	<div id="container">
-  
+    <div id="sidebar_float" class="sidebar_float">
+      <xsl:call-template name="account_sidebar"/>
+    </div>
 		<div id="searchArea">
 	
 				<h1>Reorder Databases</h1>

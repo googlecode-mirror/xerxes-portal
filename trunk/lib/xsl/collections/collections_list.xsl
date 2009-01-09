@@ -16,18 +16,24 @@
 	<xsl:call-template name="surround" />
 </xsl:template>
 
+<xsl:template name="page_name">
+  My Collections
+</xsl:template>
+
 <xsl:template name="main">
 
 	
 	<div id="folderArea">
+    <div id="sidebar_float">
+       <xsl:call-template name="account_sidebar"/>
+    </div>
+  
 		
-			<xsl:call-template name="folder_header" />
-		
+		  <h1><xsl:call-template name="page_name"/></h1>
   
       <!-- personal categories -->
       
       <div>
-        <h2>Personal Collections</h2>
         <ul>
         <!-- <xsl:if test="count(/*/userCategories/category) = 0">
           include a lazily created one
@@ -37,6 +43,19 @@
           <li><a href="{url}"><xsl:value-of select="name"/></a></li>
         </xsl:for-each>
         </ul>
+        
+
+        <form method="GET" action="./" class="miniForm">
+          <input type="hidden" name="base" value="collections"/>
+          <input type="hidden" name="action" value="edit"/>
+          <input type="hidden" name="username" value="{//request/username}"/>
+          
+        
+        Add a new collection: <input type="text" name="new_subject_name"/><input type="submit" name="add" value="Add"/>
+          
+        </form>
+        
+        
       </div>
       
 			

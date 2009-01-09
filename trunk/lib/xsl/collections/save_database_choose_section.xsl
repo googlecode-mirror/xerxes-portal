@@ -24,7 +24,12 @@
 
 
 <div id="container">
+  <div id="sidebar_float" class="sidebar_float">
+    <xsl:call-template name="account_sidebar"/>
+  </div>
   <div id="searchArea">
+
+  
     <xsl:for-each select="//category">           
     
     <h2><xsl:value-of select="/*/databases/database/title_display" />: Save to personal collection: <xsl:value-of select="@name" /></h2>
