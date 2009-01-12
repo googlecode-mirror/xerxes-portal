@@ -35,10 +35,10 @@
       
       <div>
         <ul>
-        <!-- <xsl:if test="count(/*/userCategories/category) = 0">
-          include a lazily created one
-          <li><a href="./?base=collections&amp;action=edit&amp;username={//request/username}&amp;new_subject_name=My%20Collection">My Collection</a></li>
-        </xsl:if> -->
+        <xsl:if test="count(/*/userCategories/category) = 0">
+          <!-- include a lazily created one -->
+          <li><a href="./?base=collections&amp;action=new&amp;username={//request/username}&amp;new_subject_name=My%20Collection">My Collection</a></li>
+        </xsl:if>
         <xsl:for-each select="/*/userCategories/category">
           <li><a href="{url}"><xsl:value-of select="name"/></a></li>
         </xsl:for-each>
