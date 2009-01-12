@@ -72,42 +72,20 @@
 			</xsl:if>
 			
 			<div id="sidebar_alt" class="categories_sidebar">
-				<xsl:call-template name="categories_sidebar_alt" />
+				<!-- <xsl:call-template name="categories_sidebar_alt" /> -->
+        <xsl:call-template name="account_sidebar" />
 			</div>
       
 			
-			<div class="categories">
+			<div class="categories">            
 				<h2><xsl:copy-of select="$text_databases_category_subject" /></h2>
 				<p><xsl:copy-of select="$text_databases_category_subject_desc" /></p>
-				<xsl:variable name="total" select="count(categories/category)" />
-        <xsl:variable name="numRows" select="ceiling($total * .33)"/>
 
+
+        
 				<table class="categoriesTable">
 				<tr valign="top">
-				<td>
-					<ul>
-					<xsl:for-each select="categories/category[@position &lt;= $numRows]">
-						<xsl:variable name="normalized" select="normalized" />
-						<li><a href="{url}"><xsl:value-of select="name" /></a></li>
-					</xsl:for-each>
-					</ul>
-				</td>
-				<td>
-					<ul>
-					<xsl:for-each select="categories/category[@position &gt; $numRows and @position &lt;= ( $numRows * 2 )]">
-						<xsl:variable name="normalized" select="normalized" />
-						<li><a href="{url}"><xsl:value-of select="name" /></a></li>
-					</xsl:for-each>
-					</ul>
-				</td>
-				<td>
-					<ul>
-					<xsl:for-each select="categories/category[@position &gt; ( $numRows * 2 )]">
-						<xsl:variable name="normalized" select="normalized" />
-						<li><a href="{url}"><xsl:value-of select="name" /></a></li>
-					</xsl:for-each>
-					</ul>
-				</td>
+          <xsl:call-template name="loop_columns" />
 				</tr>
 				</table>
 				
@@ -121,5 +99,42 @@
 	</div>
 	
 </xsl:template>
+
+<!-- A recursively called looping template for dynamically determined
+     number of columns. -->
+<xsl:template name="loop_columns">
+  <xsl:param name="num_columns" select="$categories_num_columns"/>
+  <xsl:param name="iteration_value" select="1"/>
+   <!--
+   This template produces the following logic
+   for ($i = $initial-value; $i<=$maxount; ($i = $i + 1))
+   {
+      // print column
+   }
+   -->
+   
+  <xsl:variable name="total" select="count(categories/category)" />
+  <xsl:variable name="numRows" select="ceiling($total div $num_columns)"/>
+ 
+   
+  <xsl:if test="$iteration_value &lt;= $num_columns">
+      <!-- stuff to print -->
+				<td>
+					<ul>
+          <xsl:for-each select="categories/category[@position &gt; ($numRows * ($iteration_value -1)) and @position &lt;= ( $numRows * $iteration_value )]">					
+						<xsl:variable name="normalized" select="normalized" />
+						<li><a href="{url}"><xsl:value-of select="name" /></a></li>
+					</xsl:for-each>
+					</ul>
+				</td>      
+      
+ 			<xsl:call-template name="loop_columns">
+ 				<xsl:with-param name="num_columns" select="$num_columns"/>
+ 				<xsl:with-param name="iteration_value"  select="$iteration_value+1"/>
+ 			</xsl:call-template>
+  </xsl:if>
+ 	</xsl:template>
+
+
 </xsl:stylesheet>
 
