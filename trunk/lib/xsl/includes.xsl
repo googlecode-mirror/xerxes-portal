@@ -133,6 +133,9 @@
 	<!-- Other configurable variables -->
 	
 	<xsl:variable name="app_mini_icon_url"><xsl:value-of select="$base_url" />/images/famfamfam/page_find.png</xsl:variable>
+  
+  <!-- how many columns to display on databases/categories home page -->
+  <xsl:variable name="categories_num_columns" select="2"/>
 
 <!-- 	
 	TEMPLATE: SURROUND
@@ -2846,5 +2849,7 @@
 	</xsl:element>
 			
 </xsl:template>
+
+
 
 </xsl:stylesheet>
