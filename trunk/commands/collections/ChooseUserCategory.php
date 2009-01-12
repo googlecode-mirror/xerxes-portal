@@ -7,11 +7,18 @@
 class Xerxes_Command_ChooseUserCategory extends Xerxes_Command_Collections
 {
 	/**
-	 * Fetch a single top-level category and inline its subcategories as XML;
+	 * Fetch a single user-created category and inline its subcategories as XML;
+   * Will _create_ a new user category if request param new_subject_name
+   * exists, and does not match an existing subject by this user. 
+   *
 	 * Request param should be 'subject', the normalized name of the subject as
 	 * saved for user-created db. The 'normalized' name is the one we will show in
    * the url. 
-	 *
+   *
+   * Request param "mode" can be:
+   *   'create' => will redirect back to edit_form for category
+   *   'save_db' => will in some cases generate a redirect for newly created collection, to collections/save_choose_subheading
+   *
 	 * @param Xerxes_Framework_Request $objRequest
 	 * @param Xerxes_Framework_Registry $objRegistry
 	 * @return int status
@@ -23,7 +30,8 @@ class Xerxes_Command_ChooseUserCategory extends Xerxes_Command_Collections
 		$strSubjectSelection = $objRequest->getProperty( "subject" );
     $strNewSubject = $objRequest->getProperty("new_subject_name");
     $strUsername = $objRequest->getProperty("username");
-        
+    $strMode = $objRequest->getProperty("mode");
+    
 
     
     // Make sure they are logged in as the user they are trying to save as. 
@@ -61,17 +69,24 @@ class Xerxes_Command_ChooseUserCategory extends Xerxes_Command_Collections
     // existingSubject will have a value. If so, we actually want to redirect
     // to put that identified subject in the URL, for proper display of choice
     // box, especially on redirects. 
-    if ( $existingSubject ) {      
+    if ($strMode == 'save_db' && $existingSubject ) {      
       $fixedUrl = $objRequest->url_for( array( "base" => "collections",
                                      "action" => "save_choose_subheading",
                                      "id" => $objRequest->getProperty("id"),
                                      "username" => $objRequest->getProperty("username"),
-                                     "subject" => $existingSubject->normalized,
-                                     "return" => $objRequest->getProperty("return")),
-                              true // force full url
+                                     "subject" => $existingSubject->normalized),
+                              true // force full url for redirect
                               );
-      $objRequest->setRedirect(  $fixedUrl  );
-      
+      $objRequest->setRedirect(  $fixedUrl  );      
+    }
+    elseif ($strMode == "create") {
+      $newUrl = $objRequest->url_for( array( "base" => "collections",
+                                     "action" => "edit_form",
+                                     "username" => $objRequest->getProperty("username"),
+                                     "subject" => $existingSubject->normalized),                                     
+                              true // force full url for redirect
+                              );
+      $objRequest->setRedirect(  $newUrl  );     
     }
     
 			

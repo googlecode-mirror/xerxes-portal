@@ -23,6 +23,7 @@ class Xerxes_Command_EditUserCategory extends Xerxes_Command_Collections
 	
 	public function doExecute(Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry)
 	{
+    
     //Cancel?
     $arrDefaultReturn = array("base" => "collections", "action" => "edit_form", "subject" => $objRequest->getProperty("subject"), "subcategory" => $objRequest->getProperty("subcategory"), "username" => $objRequest->getProperty("username")); 
     if ($objRequest->getProperty("cancel")) {      
@@ -55,7 +56,7 @@ class Xerxes_Command_EditUserCategory extends Xerxes_Command_Collections
       }
     }
     else {
-      //Edit a category, rename/publish
+      //Edit a category: rename/publish
       if (! empty($strNewName)) {
         $category->name = $strNewName;
         $message .= "Collection name changed. ";

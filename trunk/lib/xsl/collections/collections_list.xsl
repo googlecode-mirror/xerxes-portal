@@ -47,7 +47,7 @@
 
         <form method="GET" action="./" class="miniForm">
           <input type="hidden" name="base" value="collections"/>
-          <input type="hidden" name="action" value="edit"/>
+          <input type="hidden" name="action" value="new"/>
           <input type="hidden" name="username" value="{//request/username}"/>
           
         

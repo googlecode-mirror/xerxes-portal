@@ -80,11 +80,11 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
         <xsl:choose>
             <xsl:when test="//category/@published = '1'">
             <span class="publishedStatus">Published:</span>
-            <a class="publishToggle" href="{$base_url}/?base=collections&amp;action=edit&amp;username={//category/@owned_by_user}&amp;subject={//category/@normalized}&amp;published=false&amp;return={php:function('urlencode', string(//server/request_uri))}">
+            <a class="categoryCommand publishToggle" href="{$base_url}/?base=collections&amp;action=edit&amp;username={//category/@owned_by_user}&amp;subject={//category/@normalized}&amp;published=false&amp;return={php:function('urlencode', string(//server/request_uri))}">
               <span>Make private</span></a>
             </xsl:when>
             <xsl:otherwise>
-              <span class="privateStatus">Private:</span> <a class="publishToggle" href="{$base_url}/?base=collections&amp;action=edit&amp;username={//category/@owned_by_user}&amp;subject={//category/@normalized}&amp;published=true&amp;return={php:function('urlencode', string(//server/request_uri))}">
+              <span class="privateStatus">Private:</span> <a class="categoryCommand publishToggle" href="{$base_url}/?base=collections&amp;action=edit&amp;username={//category/@owned_by_user}&amp;subject={//category/@normalized}&amp;published=true&amp;return={php:function('urlencode', string(//server/request_uri))}">
               <span>Publish</span> 
               </a>
             </xsl:otherwise>
