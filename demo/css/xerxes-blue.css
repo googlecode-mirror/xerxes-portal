@@ -162,7 +162,7 @@ a img{
   float:right; 
 	width: 260px; 
 	padding: 0px 10px 10px 10px;
-	margin: 0 10px 0 20px; 
+	margin: 0 10px 0 0; 
 }
 #sidebar_alt {
 	padding: 0px 10px 10px 0px;
@@ -312,6 +312,10 @@ li.mySavedRecords {
 .subjectMetaSearch {
 	width: 500px;
 }
+.searchBox {
+  width: 460px;
+}
+
 .subjectSubCategory {
 	margin-top: 20px;
 }
@@ -323,7 +327,7 @@ li.mySavedRecords {
 }
 
 #main_content {
-	float:left;
+	/*float:left;*/
 }
 .categories {
   clear: both;
@@ -334,7 +338,7 @@ li.mySavedRecords {
 
 #categories_quicksearch {
   width: 500px; 
-  float: left;  
+  float: left; 
   margin-bottom: 20px;
   margin-right: 20px;
 }
