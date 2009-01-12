@@ -160,7 +160,7 @@ a img{
 /* a version of sidebar CSS that floats instead of using a margin */
 #sidebar_float, .sidebar_float {
   float:right; 
-	width: 300px; 
+	width: 260px; 
 	padding: 0px 10px 10px 10px;
 	margin: 0 10px 0 20px; 
 }
@@ -428,7 +428,7 @@ li.mySavedRecords {
 /* results options */
 
 .box {
-	width:280px;
+	width:240px;
 	margin-bottom: 20px;
 	padding:10px;
 	line-height:1.5em;
