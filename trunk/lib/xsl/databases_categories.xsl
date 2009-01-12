@@ -71,10 +71,9 @@
 				</form>
 			</xsl:if>
 			
-			<div id="sidebar_alt" class="categories_sidebar">
-				<!-- <xsl:call-template name="categories_sidebar_alt" /> -->
-        <xsl:call-template name="account_sidebar" />
-			</div>
+			<!-- <div id="sidebar_alt" class="categories_sidebar">				
+        
+			</div> -->
       
 			
 			<div class="categories">            
@@ -93,7 +92,10 @@
 		</div>
 		
 		<div id="sidebar" class="categories_sidebar">
+      <xsl:call-template name="account_sidebar" />
 			<xsl:call-template name="categories_sidebar" />
+      <!-- deprecated, only one kind of sidebar on databases_categories now.-->
+      <xsl:call-template name="categories_sidebar_alt" />
 		</div>
 	
 	</div>
