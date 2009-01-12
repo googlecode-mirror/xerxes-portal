@@ -371,8 +371,10 @@
         <view>xsl/collections/save_database_choose_category.xsl</view>
       </action>
       <action name="save_choose_subheading">
+          <request name="suppress_full_db_list">true</request>
           <command directory="databases">DatabasesDatabase</command>
           <!-- save if it needs saving, or normalize to use the right one -->
+          <request name="mode">save_db</request>
           <command>ChooseUserCategory</command>
           <!-- add it to xml -->
           <command>UserCreatedCategory</command>
@@ -393,6 +395,11 @@
       </action>
       <action name="delete_category">
         <command>DeleteUserCategory</command>
+      </action>
+      <action name="new">
+        <!-- create new category -->
+        <request name="mode">create</request>
+        <command>ChooseUserCategory</command>
       </action>
       
       <!-- embedding for user created ones needs it's own

@@ -613,6 +613,13 @@
     <xsl:when test="request/base = 'collections' and (request/action = 'edit_form')">
       <a>
         <xsl:attribute name="href">
+          <xsl:value-of select="/*/navbar/element[@id = 'saved_collections']"/>
+        </xsl:attribute>
+        My Collections
+      </a>
+      <xsl:copy-of select="$text_breadcrumb_seperator" />      
+      <a>
+        <xsl:attribute name="href">
 					<xsl:value-of select="//category[1]/url" />
 				</xsl:attribute>
 				<xsl:value-of select="//category[1]/@name" />
@@ -621,6 +628,13 @@
       <span class="breadcrumbHere">Edit</span>
     </xsl:when>
     <xsl:when test="request/base = 'collections' and (request/action = 'rename_form' or request/action = 'reorder_subcats_form' or request/action = 'reorder_databases_form')">
+      <a>
+        <xsl:attribute name="href">
+          <xsl:value-of select="/*/navbar/element[@id = 'saved_collections']"/>
+        </xsl:attribute>
+        My Collections
+      </a>
+      <xsl:copy-of select="$text_breadcrumb_seperator" />
       <a>
         <xsl:attribute name="href">
 					<xsl:value-of select="//category[1]/url" />
@@ -637,6 +651,17 @@
       <xsl:copy-of select="$text_breadcrumb_seperator" />
       <xsl:call-template name="page_name" />
     </xsl:when>
+    <xsl:when test="request/base = 'collections' and ( request/action = 'subject')">
+      <a>
+        <xsl:attribute name="href">
+          <xsl:value-of select="/*/navbar/element[@id = 'saved_collections']"/>
+        </xsl:attribute>
+        My Collections
+      </a>
+      <xsl:copy-of select="$text_breadcrumb_seperator" />
+      <xsl:call-template name="page_name" />
+   </xsl:when>
+
     
 		<xsl:otherwise>
 			<span class="breadcrumbHere"><xsl:call-template name="page_name" /></span>
