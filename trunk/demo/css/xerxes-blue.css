@@ -805,7 +805,11 @@ li.mySavedRecords {
 a.categoryCommand, a.categoryCommand:visited, a:hover.categoryCommand {
   margin-right: 2px;
   margin-left: 2px;
-  padding: 4px;  
+  /* position: relative gets around a weird IE6/7 bug with what we're trying
+     to do */
+  position: relative;
+
+  padding: 4px 4px 4px 24px;  
   background-color: #F7FDCB;
   border: 1px dotted #CCCCCC;
   font-weight: bold;
@@ -813,9 +817,9 @@ a.categoryCommand, a.categoryCommand:visited, a:hover.categoryCommand {
   color: black;
   text-decoration: none;
   white-space: nowrap;
+  /*background-position: 4px 4px;*/
   background-position: 4px 4px;
   background-repeat: no-repeat;
-  padding-left: 24px;
 }
 a.categoryCommand:hover {
   	color: #FFCC33; text-decoration: none; 
@@ -837,7 +841,7 @@ a.categoryCommand.edit {
 a.categoryCommand.rename {
   background-image: url(../images/famfamfam/tag_blue_edit.png);
 }
-a.categoryCommand.publishToggle {
+a.categoryCommand.publishToggle, a.categoryCommand.publishToggle:hover {
     padding-left: 8px;
 }
 
