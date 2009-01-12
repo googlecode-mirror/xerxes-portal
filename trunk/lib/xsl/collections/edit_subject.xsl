@@ -30,36 +30,6 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
     <div id="sidebar_float" class="sidebar_float">
     <xsl:call-template name="account_sidebar"/>
     
-     <xsl:if test="/*/request/add_to_subcategory">
-     <div class="addDatabaseSidebar" id="addDatabaseSidebar">
-       <a name="addDatabaseSidebar"/>
-       <form method="GET" action="{base_url}">
-         <input type="hidden" name="base" value="collections" />
-         <input type="hidden" name="action" value="edit_form" />
-         <input type="hidden" name="username" value="{/*/category[1]/@owned_by_user}" />
-         <input type="hidden" name="subject" value="{/*/category[1]/@normalized}" />
-         <input type="hidden" name="add_to_subcategory" value="{//request/add_to_subcategory}" />
-         
-         <h2>Add databases to section
-          '<xsl:value-of select="/*/category/subcategory[@id = /*/request/add_to_subcategory]/@name"/>'</h2>          
-            
-         <p>List databases matching: <input type="text" name="query" value="{/*/request/query}"/> <input type="submit" value="GO"/>
-         </p>
-       </form>
-       
-       
-       
-         <ul>
-          <xsl:if test="/*/request/query and not( /*/databases/database )">
-            <li>No databases found matching "<xsl:value-of select="/*/request/query"/>"</li>
-          </xsl:if>
-          <xsl:for-each select="/*/databases/database">
-            <li><a class="addToCollection" href="./?base=collections&amp;action=save_complete&amp;username={/*/category[1]/@owned_by_user}&amp;subject={/*/category[1]/@normalized}&amp;subcategory={/*/request/add_to_subcategory}&amp;id={metalib_id}&amp;return={php:function('urlencode', string(//server/request_uri))}">
-            <xsl:value-of select="title_display"/></a><xsl:text> </xsl:text><a href="{url}"><img src="{$base_url}/images/info.gif" alt="more information" title="more information"/></a></li>
-          </xsl:for-each>
-          </ul>
-         </div>
-       </xsl:if>
 		</div>  
 
   
@@ -74,6 +44,7 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
         <xsl:text> </xsl:text>
         </xsl:if>
         
+        <xsl:text> </xsl:text>
         <a class="categoryCommand delete deleteCollection" href="./?base=collections&amp;action=delete_category&amp;subject={//category/@normalized}&amp;username={//category/@owned_by_user}">Delete collection
         </a>  
         
@@ -102,13 +73,14 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
 			
 			<div class="subjectDatabases">
         <xsl:for-each select="category/subcategory">
+          <a name="section_{@id}"/>
           <fieldset class="subjectSubCategory">
             <legend><xsl:value-of select="@name" /></legend>
             <div class="subject_edit_commands">
               <a class="categoryCommand rename" href="./?base=collections&amp;action=rename_form&amp;subject={../@normalized}&amp;subcategory={@id}&amp;username={../@owned_by_user}">
               Change name</a>
               <xsl:text> </xsl:text>      
-              <a class="categoryCommand add" href="./?base=collections&amp;action=edit_form&amp;username={../@owned_by_user}&amp;subject={../@normalized}&amp;add_to_subcategory={@id}#addDatabaseSidebar">
+              <a class="categoryCommand add" href="./?base=collections&amp;action=edit_form&amp;username={../@owned_by_user}&amp;subject={../@normalized}&amp;add_to_subcategory={@id}#section_{@id}">
                 Add databases
               </a>
               <xsl:text> </xsl:text>
@@ -122,13 +94,16 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
            
               
             </div>
+            <xsl:if test="/*/request/add_to_subcategory = @id">
+              <xsl:call-template name="addDatabases" />
+            </xsl:if>
             
             <table summary="this table lists databases you have included in your personal collection" class="subjectCheckList">
               <xsl:for-each select="database">
                 <xsl:variable name="id_meta" select="metalib_id" />
                 <tr valign="top">
                   <td>      
-                       <a class="removeDatabase" href="./?base=collections&amp;action=remove_db&amp;username={//request/username}&amp;subject={//category[1]/@normalized}&amp;subcategory={../@id}&amp;id={metalib_id}&amp;return={php:function('urlencode', string(//server/request_uri))}"><img src="{$base_url}/images/delete.gif" alt="Remove" title="Remove database from section"/></a>                    
+                       <a class="removeDatabase" href="./?base=collections&amp;action=remove_db&amp;username={//request/username}&amp;subject={//category[1]/@normalized}&amp;subcategory={../@id}&amp;id={metalib_id}&amp;return={php:function('urlencode', string(//server/request_uri))}#section_{../@id}"><img src="{$base_url}/images/delete.gif" alt="Remove" title="Remove database from section"/></a>                    
                   </td>
                   <td>
                     <div class="subjectDatabaseTitle">
@@ -156,7 +131,7 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
         </xsl:for-each>            
 			</div>
       
-      <div>
+      
         <div id="addNewSection">
          <form action="{$base_url}" METHOD="GET">
             <input type="hidden" name="base" value="collections"/>
@@ -169,16 +144,50 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
             
           Add a new section: <input type="text" name="new_subcategory_name" />  
             <input type="submit" name="save" value="add"/>
-        </form></div>                                
-      </div>            
+        </form>
+       </div>                                
+                
       
     </div>
 
     
     
   </div>
-	
 
 </xsl:template>
+
+<xsl:template name="addDatabases">
+     <div class="addDatabases" id="addDatabases">
+       <form method="GET" action="{base_url}#section_{//request/add_to_subcategory}">
+         <input type="hidden" name="base" value="collections" />
+         <input type="hidden" name="action" value="edit_form" />
+         <input type="hidden" name="username" value="{/*/category[1]/@owned_by_user}" />
+         <input type="hidden" name="subject" value="{/*/category[1]/@normalized}" />
+         <input type="hidden" name="add_to_subcategory" value="{//request/add_to_subcategory}" />
+                  
+         
+         <h3><a name="addDatabases" href="./?base=collections&amp;action=edit_form&amp;username={/*/category[1]/@owned_by_user}&amp;subject={/*/category[1]/@normalized}&amp;id={metalib_id}"><img src="./images/delete.gif" alt="remove search box" title="remove search box"/></a>Add Databases</h3>
+         <p>          
+          List databases matching: <input type="text" name="query" value="{/*/request/query}"/> <input type="submit" value="GO"/>
+         </p>
+       </form>
+       
+       
+       
+        <ul>
+          <xsl:if test="count(/*/databases/database)">
+            <xsl:attribute name="class">addDatabasesMatches</xsl:attribute>
+          </xsl:if>
+          <xsl:if test="/*/request/query and not( /*/databases/database )">
+            <li>No databases found matching "<xsl:value-of select="/*/request/query"/>"</li>
+          </xsl:if>
+          <xsl:for-each select="/*/databases/database">
+            <li><a class="addToCollection" href="./?base=collections&amp;action=save_complete&amp;username={/*/category[1]/@owned_by_user}&amp;subject={/*/category[1]/@normalized}&amp;subcategory={/*/request/add_to_subcategory}&amp;id={metalib_id}&amp;return={php:function('urlencode', string(//server/request_uri))}#section_{/*/request/add_to_subcategory}">
+            <xsl:value-of select="title_display"/></a><xsl:text> </xsl:text><a href="{url}"><img src="{$base_url}/images/info.gif" alt="more information" title="more information"/></a></li>
+          </xsl:for-each>
+          </ul>
+         </div>
+</xsl:template>
+
 
 </xsl:stylesheet>

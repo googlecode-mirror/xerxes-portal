@@ -800,7 +800,6 @@ li.mySavedRecords {
 .editSubjectHeading .subject_edit_commands {
   margin-top: 16px;
   margin-bottom: 16px;
-  margin-right: 16px;
 }
 
 a.categoryCommand, a.categoryCommand:visited, a:hover.categoryCommand {
@@ -862,18 +861,25 @@ span.privateStatus {
 }
 
 
-.addDatabaseSidebar {
-  margin-top: 28px;
-  padding: 20px;
+.addDatabases {
+  margin-top: 20px;
+  padding: 10px;
   background-color: #EFEFEF;
 }
 
-.addDatabaseSidebar ul li {
+ul.addDatabasesMatches {
+  *-height: 10em; /* for mysterious reasons, IE6 only gets this */
+  max-height: 10em;
+  overflow-y: auto;
+  border: 1px dotted #CCCCCC;
+}
+
+.addDatabases ul li {
   background: none;
   padding-left: 8px;
 }
 
-.addDatabaseSidebar ul li a.addToCollection {
+.addDatabases ul li a.addToCollection {
   background: transparent url(../images/famfamfam/add.png) no-repeat scroll 0px 0px;
   background-position: 0px -1px;
   padding-left: 20px;
