@@ -1534,7 +1534,12 @@
 			if ($this->getExtent()!= null ) $objRecord->appendChild($objXml->createElement("extent", $this->escapeXML($this->getExtent())));
 			if ($this->getInstitution() != null ) $objRecord->appendChild($objXml->createElement("institution", $this->escapeXML($this->getInstitution()))); 
 			if ($this->getDegree() != null ) $objRecord->appendChild($objXml->createElement("degree", $this->escapeXML($this->getDegree()))); 
-			if ($this->getDatabaseName() != null ) $objRecord->appendChild($objXml->createElement("database_name", $this->escapeXML($this->getDatabaseName()))); 
+			if ($this->getDatabaseName() != null ) {   
+        $objDb = $objXml->createElement("database_name", $this->escapeXML($this->getDatabaseName()));
+        //Oops, we have no objRequest, so much for that  idea. 
+        //$objDb->setAttribute("url", $objRequest->url_for(array("base" => "databases", "action" => "database", "id" =>$this->getMetalibId())));
+        $objRecord->appendChild($objDb);
+      }
 			if ($this->getEdition() != null ) $objRecord->appendChild($objXml->createElement("edition", $this->escapeXML($this->getEdition()))); 
 			if ($this->getCallNumber() != null ) $objRecord->appendChild($objXml->createElement("call_number", $this->escapeXML($this->getCallNumber())));
 			
