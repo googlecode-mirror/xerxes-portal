@@ -37,8 +37,9 @@
 	<xsl:variable name="quick_search_category" select="category/@name" />
 	
 	<div class="homePage">
-		
 		<div id="main_content">
+
+    
 			<xsl:if test="$quick_search_category != ''">
 				<form action="./" method="get">
 					<input type="hidden" name="base" value="metasearch" />
@@ -49,7 +50,12 @@
 					<input type="hidden" name="subject">
 						<xsl:attribute name="value"><xsl:value-of select="category/@normalized" /></xsl:attribute>
 					</input>
-					
+					    <div id="sidebar_float" class="sidebar_float">
+      <xsl:call-template name="account_sidebar" />
+			<xsl:call-template name="categories_sidebar" />
+      <!-- deprecated, only one kind of sidebar on databases_categories now.-->
+      <xsl:call-template name="categories_sidebar_alt" />
+		</div>		
 					<div id="categories_quicksearch">
 						<h2><xsl:value-of select="$quick_search_category" /></h2>
 						<p><xsl:copy-of select="$text_databases_category_quick_desc" /></p>
@@ -89,14 +95,11 @@
 				</table>
 				
 			</div>
+      
+
 		</div>
 		
-		<div id="sidebar" class="categories_sidebar">
-      <xsl:call-template name="account_sidebar" />
-			<xsl:call-template name="categories_sidebar" />
-      <!-- deprecated, only one kind of sidebar on databases_categories now.-->
-      <xsl:call-template name="categories_sidebar_alt" />
-		</div>
+
 	
 	</div>
 	

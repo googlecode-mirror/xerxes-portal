@@ -336,6 +336,7 @@ li.mySavedRecords {
   width: 500px; 
   float: left;  
   margin-bottom: 20px;
+  margin-right: 20px;
 }
 
 /* databases full and a-z list */
