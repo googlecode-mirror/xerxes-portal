@@ -288,6 +288,8 @@
 					// by default we'll take the first view file in the action
 					
 					$this->strViewFile = (string) $action->view;
+          $type = (string) $action->view["type"];
+					if ( $type != null ) $this->strViewType = $type;
           
 					// if there is a format={format-name} in the request and a seperate
 					// <view fomat="{format-name}"> that matches it, we'll take that as the
@@ -302,12 +304,10 @@
 							if ( $view["format"] == $format)
 							{
 								$this->strViewFile = $view;
+                $this->strViewType = $view["type"];
 							}
 						}
 					}
-          
-					$type = (string) $this->strViewFile["type"];
-					if ( $type != null ) $this->strViewType = $type;
 				}
 			}
 			
