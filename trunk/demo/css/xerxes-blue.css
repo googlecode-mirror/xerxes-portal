@@ -173,7 +173,7 @@ a img{
 	max-width: 320px;
 }
 #searchArea {
-	/*float: left;*/
+	float: left;
 	width: 500px;
 }
 
@@ -182,7 +182,7 @@ a img{
 }
 
 #resultsArea {
-	/*clear: both;*/
+	clear: left;
 	margin-top: 10px;
 	padding: 20px;
 }
@@ -491,6 +491,10 @@ li.mySavedRecords {
 
 
 /* results */
+
+.results {
+  clear: left;
+}
 
 .resultsAbstract {
 	margin-bottom: 10px;
@@ -808,7 +812,6 @@ a.categoryCommand, a.categoryCommand:visited, a:hover.categoryCommand {
   /* position: relative gets around a weird IE6/7 bug with what we're trying
      to do */
   position: relative;
-
   padding: 4px 4px 4px 24px;  
   background-color: #F7FDCB;
   border: 1px dotted #CCCCCC;
@@ -819,6 +822,8 @@ a.categoryCommand, a.categoryCommand:visited, a:hover.categoryCommand {
   white-space: nowrap;
   /*background-position: 4px 4px;*/
   background-position: 4px 4px;
+  background-position-x: 4px;
+  background-position-y: 4px;
   background-repeat: no-repeat;
 }
 a.categoryCommand:hover {
