@@ -306,7 +306,7 @@
 						}
 					}
           
-					$type = (string) $action->view["type"];
+					$type = (string) $this->strViewFile["type"];
 					if ( $type != null ) $this->strViewType = $type;
 				}
 			}
