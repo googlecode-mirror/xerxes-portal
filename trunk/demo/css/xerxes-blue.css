@@ -175,6 +175,7 @@ a img{
 #searchArea {
 	float: left;
 	width: 500px;
+  margin-bottom: 40px;
 }
 
 #databaseSearchArea {
