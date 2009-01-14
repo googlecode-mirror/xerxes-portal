@@ -7,13 +7,20 @@
 class Xerxes_Command_NewUserCategory extends Xerxes_Command_Collections
 {
 	/**
-	 * Fetch a single user-created category and inline its subcategories as XML;
-   * Will _create_ a new user category if request param new_subject_name
-   * exists, and does not match an existing subject by this user. 
+   * Create a new user created category, name identified by request param
+   * "new_subject_name".  username must also be a request param. 
    *
-	 * Request param should be 'subject', the normalized name of the subject as
-	 * saved for user-created db. The 'normalized' name is the one we will show in
-   * the url. 
+   * Will refuse to create a new subject with the same normalized name
+   * as an existing one by that user, will just no-op. 
+   *
+   * Redirects to 'edit' page for newly created (or existing) subject
+   * when done. 
+   *
+   * If new_subcategory_name is given, will create an initial empty subcat
+   * in the new category--UNLESS action='save_complete', in which case
+   * new subcat is never created.  This is used when this command is used by
+   * the save_complete action, for AJAXy database saving in collection,
+   * and the new subcat should not be created in that case. 
    *
    *
 	 * @param Xerxes_Framework_Request $objRequest
@@ -24,11 +31,16 @@ class Xerxes_Command_NewUserCategory extends Xerxes_Command_Collections
 	public function doExecute(Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry)
 	{
 		
-		$strSubjectSelection = $objRequest->getProperty( "subject" );
     $strNewSubject = $objRequest->getProperty("new_subject_name");
     if (empty($strNewSubject)) $strNewSubject = 'My Collection';
-    $strUsername = $objRequest->getProperty("username");
+
+    $strUsername = $objRequest->getProperty("username");    
     
+    $strNewSubcategory = $objRequest->getProperty("new_subcategory_name");
+    if ( $objRequest->getProperty("action") == "save_complete") {
+      // Nevermind, don't do it. 
+      $strNewSubcategory = null;
+    }
 
     
     // Make sure they are logged in as the user they are trying to save as. 
@@ -59,13 +71,15 @@ class Xerxes_Command_NewUserCategory extends Xerxes_Command_Collections
       $existingSubject = $objData->addUserCreatedCategory($objDataCategory);        
     }      
     
-    // And create an initial section, please. 
-    $subcategory = new Xerxes_Data_Subcategory();
-    $subcategory->name = 'Databases';
-    $subcategory->category_id = $existingSubject->id;        
-    $subcategory->sequence = 1;
+    // And create an initial section, please.
+    if ( $strNewSubcategory && ! $objRequest->getProperty("format") == "json") {
+      $subcategory = new Xerxes_Data_Subcategory();
+      $subcategory->name = $strNewSubcategory;
+      $subcategory->category_id = $existingSubject->id;        
+      $subcategory->sequence = 1;
+      $subcategory = $objData->addUserCreatedSubcategory($subcategory);
+    }
     
-    $subcategory = $objData->addUserCreatedSubcategory($subcategory);
 
   
     // Send them off to the edit_mode of their new category.    

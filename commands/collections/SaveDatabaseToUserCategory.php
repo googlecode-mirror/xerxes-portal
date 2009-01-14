@@ -17,6 +17,14 @@ class Xerxes_Command_SaveDatabaseToUserCategory extends Xerxes_Command_Collectio
 	{
     
 		$strNormalizedSubject = $objRequest->getProperty("subject");
+    // If that was set to "NEW" then, we have a newly created subject,
+    // already created by a prior command in execution chain, but we
+    // need to make sure to look it up properly. 
+    if ( $strNormalizedSubject == "NEW" ) {
+      $strNormalizedSubject =  Xerxes_Data_Category::normalize ($objRequest->getProperty("new_subject_name"));
+    }
+    
+    
     $strUsername = $objRequest->getProperty("username");
     $strDatabaseID = $objRequest->getProperty("id");
     
@@ -33,6 +41,7 @@ class Xerxes_Command_SaveDatabaseToUserCategory extends Xerxes_Command_Collectio
     // Find the category
     
     $category = $objData->getSubject( $strNormalizedSubject, null, Xerxes_DataMap::userCreatedMode, $strUsername );
+      
     
 
     

@@ -129,6 +129,9 @@
 	<xsl:variable name="text_records_tags">Labels: </xsl:variable>
   
   <xsl:variable name="text_record_citation_note">These citations are software generated and may contain errors. To verify accuracy, check the appropriate style guide.</xsl:variable>
+  
+  <xsl:variable name="text_collection_default_new_name">My Collection</xsl:variable>
+  <xsl:variable name="text_collection_default_new_section_name">Databases</xsl:variable>
 
 	<!-- Other configurable variables -->
 	

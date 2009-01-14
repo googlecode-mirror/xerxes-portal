@@ -386,6 +386,7 @@
       <!-- Can be used to create a new subcategory and/or add a 
            database to a new or existing subcategory -->
       <action name="save_complete">
+         <command>NewUserCategory</command>
          <command>SaveDatabaseToUserCategory</command>
           <!-- no view, redirect -->
       </action>     

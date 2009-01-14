@@ -48,6 +48,25 @@
 	
 	<div id="container">
   
+  		<div id="searchArea" style="float:left">
+
+			<form action="./" method="get">
+				<input type="hidden" name="base" value="metasearch" />
+				<input type="hidden" name="action" value="search" />
+				<input type="hidden" name="context" value="{$context}" />
+				<input type="hidden" name="context_url" value="{$context_url}" />
+	
+
+				<div class="subject">
+					<h1><xsl:value-of select="$context" /></h1>
+				</div>
+			
+				<div id="search">
+					<xsl:call-template name="search_box" />
+				</div>
+			</form>
+		</div>
+  
     <div id="sidebar_float">
       <xsl:call-template name="account_sidebar" />
     
@@ -209,24 +228,7 @@
            
     </div>
 	
-		<div id="searchArea">
 
-			<form action="./" method="get">
-				<input type="hidden" name="base" value="metasearch" />
-				<input type="hidden" name="action" value="search" />
-				<input type="hidden" name="context" value="{$context}" />
-				<input type="hidden" name="context_url" value="{$context_url}" />
-	
-
-				<div class="subject">
-					<h1><xsl:value-of select="$context" /></h1>
-				</div>
-			
-				<div id="search">
-					<xsl:call-template name="search_box" />
-				</div>
-			</form>
-		</div>
 			
 		<!-- <div id="sidebar">
 		  

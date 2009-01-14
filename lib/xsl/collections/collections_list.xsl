@@ -37,7 +37,7 @@
         <ul>
         <xsl:if test="count(/*/userCategories/category) = 0">
           <!-- include a lazily created one -->
-          <li><a href="./?base=collections&amp;action=new&amp;username={//request/username}&amp;new_subject_name=My%20Collection">My Collection</a></li>
+          <li><a href="./?base=collections&amp;action=new&amp;username={//request/username}&amp;new_subject_name={php:functionString('urlencode',$text_collection_default_new_name)}&amp;new_subcategory_name={php:functionString('urlencode',$text_collection_default_new_section_name)}"><xsl:copy-of select="$text_collection_default_new_name"/></a></li>
         </xsl:if>
         <xsl:for-each select="/*/userCategories/category">
           <li><a href="{url}"><xsl:value-of select="name"/></a></li>
@@ -50,6 +50,7 @@
           <input type="hidden" name="action" value="new"/>
           <input type="hidden" name="username" value="{//request/username}"/>
           
+          <input type="hidden" name="new_subcategory_name" value="{$text_collection_default_new_section_name}"/>
         
         Add a new collection: <input type="text" name="new_subject_name"/><input type="submit" name="add" value="Add"/>
           

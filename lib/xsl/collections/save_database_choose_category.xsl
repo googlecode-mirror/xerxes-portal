@@ -27,8 +27,6 @@
 
 <xsl:template name="main">
 
-    
-
 <div id="container">
   <div id="sidebar_float" class="sidebar_float">
     <xsl:call-template name="account_sidebar"/>
@@ -36,7 +34,7 @@
 
   <div id="searchArea">
   
-    <xsl:for-each select="//database">
+    <xsl:for-each select="//database[1]">
     
     <xsl:variable name="id" select="metalib_id" />
     <!-- username in request, unless they JUST logged in, then take it from
@@ -47,19 +45,19 @@
               
     <h2><xsl:value-of select="title_display" />: Save to personal collection</h2>
     
-    <form method="GET" action="{$base_url}">
+    <form method="GET" id="save_database" action="{$base_url}">
       <input type="hidden" name="base" value="collections"/>
-      <input type="hidden" name="action" value="save_choose_subheading"/>
+      <input type="hidden" id="action_input" name="action" value="save_choose_subheading"/>
       <input type="hidden" name="id" value="{$id}" />
       <input type="hidden" name="username" value="{$username}" />
       <input type="hidden" name="return" value="{$return}" />
-    
+      <h3>1. Choose a collection</h3>
       <p>
         Use one of your existing collections: 
-        <select name="subject">
+        <select id="subject" name="subject">
           <!-- if no existing ones, use our default name -->
           <xsl:if test="count(/*/userCategories/category) = 0">
-            <option value="NEW">My Collection</option>
+            <option id="new_collection" value="NEW"><xsl:copy-of select="$text_collection_default_new_name"/></option>
           </xsl:if>
           <xsl:for-each select="/*/userCategories/category">
             <option value="{normalized}"><xsl:value-of select="name"/></option>
@@ -67,9 +65,21 @@
         </select>
       </p>
       <p>
-        Or create new one: <input type="text" name="new_subject_name"></input>
+        Or create new one: <input type="text" id="new_subject_name" name="new_subject_name"></input>
       </p>
       
+      <!-- hidden div that will be shown and loaded by javascript -->
+      <div id="section_choice" style="display: none">
+        <h3>2. Choose a section</h3>
+        <p>
+          Use an existing section: 
+          <select id="subcategory" name="subcategory">
+          </select>
+        </p>
+        <p>
+          Or create new one: <input type="text" id="new_subcategory_name" name="new_subcategory_name"></input>
+        </p>
+      </div>
   
       <p>      
         <input type="submit" name="save" value="save"/>

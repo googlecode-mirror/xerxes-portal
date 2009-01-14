@@ -47,7 +47,7 @@
         <select name="subcategory">
           <!-- if no existing ones, use our default name -->
           <xsl:if test="count(/*/category/subcategory) = 0">
-            <option value="NEW">Databases</option>
+            <option value="NEW"><xsl:copy-of select="$text_collection_default_new_section_name"/></option>
           </xsl:if>
           <xsl:for-each select="/*/category/subcategory">
             <option value="{@id}"><xsl:value-of select="@name"/></option>
