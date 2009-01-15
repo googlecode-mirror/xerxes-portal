@@ -31,39 +31,40 @@
 
   
     <xsl:for-each select="//category">           
-    
-    <h2><xsl:value-of select="/*/databases/database/title_display" />: Save to personal collection: <xsl:value-of select="@name" /></h2>
-    <h3>Choose a section</h3>
-    <form method="GET" action="{$base_url}">
-      <input type="hidden" name="base" value="collections"/>
-      <input type="hidden" name="action" value="save_complete"/>
-      <input type="hidden" name="id" value="{$id}" />
-      <input type="hidden" name="username" value="{$username}" />
-      <input type="hidden" name="subject" value="{@normalized}" />
-      <input type="hidden" name="return" value="{$return}" />
-    
-      <p>
-        Use an existing section: 
-        <select name="subcategory">
-          <!-- if no existing ones, use our default name -->
-          <xsl:if test="count(/*/category/subcategory) = 0">
-            <option value="NEW"><xsl:copy-of select="$text_collection_default_new_section_name"/></option>
-          </xsl:if>
-          <xsl:for-each select="/*/category/subcategory">
-            <option value="{@id}"><xsl:value-of select="@name"/></option>
-          </xsl:for-each>
-        </select>
-      </p>
-      <p>
-        Or create new one: <input type="text" name="new_subcategory_name"></input>
-      </p>
+    <div id="subcategory_choice" class="miniForm">
+      <h2><xsl:value-of select="/*/databases/database/title_display" />: Save to personal collection: <xsl:value-of select="@name" /></h2>
+      <h3>Choose a section</h3>
+      <form method="GET" action="{$base_url}">
+        <input type="hidden" name="base" value="collections"/>
+        <input type="hidden" name="action" value="save_complete"/>
+        <input type="hidden" name="id" value="{$id}" />
+        <input type="hidden" name="username" value="{$username}" />
+        <input type="hidden" name="subject" value="{@normalized}" />
+        <input type="hidden" name="return" value="{$return}" />
       
-  
-      <p>  
-        <input type="submit" value="save" name="save"/>
-      </p>
-    </form>
-    </xsl:for-each>
+        <p>
+          Use an existing section: 
+          <select name="subcategory">
+            <!-- if no existing ones, use our default name -->
+            <xsl:if test="count(/*/category/subcategory) = 0">
+              <option value="NEW"><xsl:copy-of select="$text_collection_default_new_section_name"/></option>
+            </xsl:if>
+            <xsl:for-each select="/*/category/subcategory">
+              <option value="{@id}"><xsl:value-of select="@name"/></option>
+            </xsl:for-each>
+          </select>
+        </p>
+        <p>
+          Or create new one: <input type="text" name="new_subcategory_name"></input>
+        </p>
+        
+    
+        <p>  
+          <input type="submit" value="save" name="save"/>
+        </p>
+      </form>
+    </div>
+  </xsl:for-each>
   </div>
 </div>
 </xsl:template>
