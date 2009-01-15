@@ -90,7 +90,7 @@
     }
     
     // Now that we're done, we can make sure it's displayed and enabled. 
-    $('section_choice').show();
+    $('subcategory_choice').show();
     $('save_database').enable();
     
     // This needs to be done after enable. 
@@ -121,8 +121,8 @@
       
       $('subject').onchange = changedCategoryChoice;
       
-      $('new_subject_name').onkeypress = function () { 
-        if ($('subject').value != 'NEW') {
+      $('new_subject_name').onkeypress = function () {
+        if ($('subject').value != 'NEW' && $('new_subject_name').value != '') {
           $('subject').value = 'NEW';
           $('subject').onchange();
         }
@@ -139,7 +139,7 @@
       }
       
       $('new_subcategory_name').onkeypress = function () { 
-        if ($('subcategory').getValue() != 'NEW') {
+        if ($('subcategory').getValue() != 'NEW' && $('new_subcategory_name').getValue() != '') {
           $('subcategory').value = 'NEW';          
         }
       };
