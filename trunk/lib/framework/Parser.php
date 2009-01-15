@@ -487,7 +487,6 @@
 				
 				// proxy settings
 				
-				curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, true);
 				curl_setopt($ch, CURLOPT_PROXY, $proxy);
 
 				// proxy username and password, if necessary
@@ -502,9 +501,14 @@
 				
 				// return the response
 	
-				curl_exec($ch);
-				$response = curl_getinfo($ch);
+				$response = curl_exec($ch);
+				$responseInfo = curl_getinfo($ch);
 				curl_close($ch);
+
+				if ( $response === false || $responseInfo["http_code"] != 200 )
+				{
+					throw new Exception("Error in response, " . $responseInfo["http_code"] . " " . $response );
+				}
 				
 				return $response;
 			}
@@ -539,7 +543,7 @@
 				{
 					throw new Exception("Error in response, $buf");
 				}
-					
+				
 				return $buf;					
 			}
 		}
