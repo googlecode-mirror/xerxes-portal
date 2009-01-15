@@ -43,7 +43,7 @@
     <xsl:variable name="username"><xsl:choose><xsl:when test="string(//request/username)"><xsl:value-of select="//request/username" /></xsl:when><xsl:otherwise><xsl:value-of select="//session/username"/></xsl:otherwise></xsl:choose></xsl:variable>
     <xsl:variable name="return" select="//request/return" />
               
-    <h2><xsl:value-of select="title_display" />: Save to personal collection</h2>
+    <h2><xsl:call-template name="page_name"/>: <xsl:value-of select="title_display" /></h2>
     
     <form method="GET" id="save_database" action="{$base_url}">
       <input type="hidden" name="base" value="collections"/>
@@ -51,25 +51,29 @@
       <input type="hidden" name="id" value="{$id}" />
       <input type="hidden" name="username" value="{$username}" />
       <input type="hidden" name="return" value="{$return}" />
-      <h3>1. Choose a collection</h3>
-      <p>
-        Use one of your existing collections: 
-        <select id="subject" name="subject">
-          <!-- if no existing ones, use our default name -->
-          <xsl:if test="count(/*/userCategories/category) = 0">
-            <option id="new_collection" value="NEW"><xsl:copy-of select="$text_collection_default_new_name"/></option>
-          </xsl:if>
-          <xsl:for-each select="/*/userCategories/category">
-            <option value="{normalized}"><xsl:value-of select="name"/></option>
-          </xsl:for-each>
-        </select>
-      </p>
-      <p>
-        Or create new one: <input type="text" id="new_subject_name" name="new_subject_name"></input>
-      </p>
+      
+      <div id="subjectChoice" class="miniForm">
+      
+        <h3>1. Choose a collection</h3>
+        <p>
+          Use one of your existing collections: 
+          <select id="subject" name="subject">
+            <!-- if no existing ones, use our default name -->
+            <xsl:if test="count(/*/userCategories/category) = 0">
+              <option id="new_collection" value="NEW"><xsl:copy-of select="$text_collection_default_new_name"/></option>
+            </xsl:if>
+            <xsl:for-each select="/*/userCategories/category">
+              <option value="{normalized}"><xsl:value-of select="name"/></option>
+            </xsl:for-each>
+          </select>
+        </p>
+        <p>
+          Or create new one: <input type="text" id="new_subject_name" name="new_subject_name"></input>
+        </p>
+      </div>
       
       <!-- hidden div that will be shown and loaded by javascript -->
-      <div id="section_choice" style="display: none">
+      <div id="subcategory_choice" class="miniForm" style="display: none">
         <h3>2. Choose a section</h3>
         <p>
           Use an existing section: 
