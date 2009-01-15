@@ -54,6 +54,7 @@
 
 		private $strEdition = "";			// edition
 		private $strTPages = "";			// total pages
+		private $strPrice = "";				// price
 
 		private $strBookTitle = "";			// book title (for book chapters)
 		private $strJournalTitle = "";		// journal title
@@ -300,6 +301,7 @@
 				$this->strEdition = $this->extractMarcDataField($objXPath, 250, "a");			
 				$this->strTPages = $this->extractMarcDataField($objXPath, 300, "a");
 				$this->strDescription = $this->extractMarcDataField($objXPath, 300, "*");
+				$this->strPrice = $this->extractMarcDataField($objXPath, 365, "*");
 				
 				// publisher
 				
@@ -1542,6 +1544,7 @@
       }
 			if ($this->getEdition() != null ) $objRecord->appendChild($objXml->createElement("edition", $this->escapeXML($this->getEdition()))); 
 			if ($this->getCallNumber() != null ) $objRecord->appendChild($objXml->createElement("call_number", $this->escapeXML($this->getCallNumber())));
+			if ($this->getPrice() != null ) $objRecord->appendChild($objXml->createElement("price", $this->escapeXML($this->getPrice())));
 			
 			$strFormat = $this->getFormat();
 			
@@ -3363,6 +3366,7 @@
 		public function getStartPage() { return $this->strStartPage; }
 		public function getEndPage() { return $this->strEndPage; }
 		public function getExtent() { return  $this->strTPages; }
+		public function getPrice() { return  $this->strPrice; }
 		
 		public function getDatabaseName() { return $this->strDatabaseName; }
 		
