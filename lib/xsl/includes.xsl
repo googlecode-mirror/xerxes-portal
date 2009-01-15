@@ -139,6 +139,9 @@
   
   <!-- how many columns to display on databases/categories home page -->
   <xsl:variable name="categories_num_columns" select="3"/>
+  
+  <!-- show links to personal saved database list 'collections'? -->
+  <xsl:variable name="show_collection_links" select="true()"/>
 
 <!-- 	
 	TEMPLATE: SURROUND
@@ -1547,7 +1550,7 @@
         <xsl:copy-of select="$text_header_savedrecords" />
       </a>
       </li>
-      <xsl:if test="/*/navbar/element[@id='saved_collections']">
+      <xsl:if test="$show_collection_links and /*/navbar/element[@id='saved_collections']">
         <li class="accountSidebar">
            <a href="{/*/navbar/element[@id='saved_collections']/url}">My Collections</a>
         </li>
