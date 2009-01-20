@@ -30,10 +30,11 @@
   
 		
 		  <h1><xsl:call-template name="page_name"/></h1>
-  
+      <p>Collections are places to save your own lists of databases.</p>
+
       <!-- personal categories -->
       
-      <div>
+      <div id="collections_body">
         <ul>
         <xsl:if test="count(/*/userCategories/category) = 0">
           <!-- include a lazily created one -->
