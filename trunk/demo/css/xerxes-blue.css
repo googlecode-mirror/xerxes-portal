@@ -283,7 +283,7 @@ li.mySavedRecords, li.myCollections {
 /* breadcrumb */
 
 .trail {
-	float: left;
+	/*float: left;*/
 	width: 50%;
 }
 .sessionOptions {

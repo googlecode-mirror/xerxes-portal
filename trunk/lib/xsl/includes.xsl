@@ -683,54 +683,18 @@
 
 <!-- 	
 	TEMPLATE: METASEARCH OPTIONS
-	Defines a set of options that should appear on all the metasearch pages, such as 
-	the link to the saved records feature, log-in or log-out link, etc.
+	Defines a set of options that should appear on all the metasearch pages. USED to include the link to the saved records feature, log-in or log-out link, etc.. These are now in the account_sidebar, and this is pretty much empty. 
 -->
 
 <xsl:template name="metasearch_options">
 	
-	<xsl:variable name="return" 		select="php:function('urlencode', string(request/server/request_uri))" />
 	
 	<xsl:comment>
 		<xsl:value-of select="request/session/username" /> 
 		( <xsl:value-of select="request/session/role" /> )
 	</xsl:comment>
 
-	<div class="sessionOptions" title="login and saved records links">
-		<xsl:if test="request/base != 'authenticate'">
-		<span class="sessionAction">
-			<xsl:choose>
-			<xsl:when test="request/session/role and request/session/role != 'local'">
-				<a>
-			<xsl:attribute name="href"><xsl:value-of select="navbar/element[@id = 'logout']/url" /></xsl:attribute>
-			<xsl:copy-of select="$text_header_logout" />
-			</a>
-			</xsl:when>
-			<xsl:otherwise>
-				<a>
-			<xsl:attribute name="href"><xsl:value-of select="navbar/element[@id = 'login']/url" /></xsl:attribute>
-			<xsl:copy-of select="$text_header_login" /></a>
-			</xsl:otherwise>
-			</xsl:choose>
-		</span>
-		|
-		</xsl:if>
-		<span class="sessionAction">
-			<img name="folder" width="17" height="15" border="0" id="folder" alt="">
-			<xsl:attribute name="src">
-				<xsl:choose>
-				<xsl:when test="navbar/element[@id='saved_records']/@numSessionSavedRecords &gt; 0"><xsl:value-of select="$base_include" />/images/folder_on.gif</xsl:when>
-				<xsl:otherwise><xsl:value-of select="$base_include"/>/images/folder.gif</xsl:otherwise>
-				</xsl:choose>
-			</xsl:attribute>
-			</img>
-			<xsl:text> </xsl:text>
-			<a>
-			<xsl:attribute name="href"><xsl:value-of select="navbar/element[@id='saved_records']/url" /></xsl:attribute>
-			<xsl:copy-of select="$text_header_savedrecords" />
-		</a>
-		</span>
-	</div>
+	
 </xsl:template>
 
 <!-- 	
