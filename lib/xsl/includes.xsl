@@ -102,7 +102,9 @@
 		</xsl:choose>
 	</xsl:variable>
 	<xsl:variable name="text_header_savedrecords">My Saved Records</xsl:variable>
-	
+	<xsl:variable name="text_header_collections">My Saved Databases</xsl:variable>
+
+  
 	<xsl:variable name="text_link_resolver_available">Full text available</xsl:variable>
 	<xsl:variable name="text_link_resolver_check">Check for availability</xsl:variable>
 	
@@ -132,7 +134,7 @@
   
   <xsl:variable name="text_collection_default_new_name">My Collection</xsl:variable>
   <xsl:variable name="text_collection_default_new_section_name">Databases</xsl:variable>
-
+  
 	<!-- Other configurable variables -->
 	
 	<xsl:variable name="app_mini_icon_url"><xsl:value-of select="$base_url" />/images/famfamfam/page_find.png</xsl:variable>
@@ -1551,8 +1553,10 @@
       </a>
       </li>
       <xsl:if test="$show_collection_links and /*/navbar/element[@id='saved_collections']">
-        <li class="accountSidebar">
-           <a href="{/*/navbar/element[@id='saved_collections']/url}">My Collections</a>
+        <li class="accountSidebar myCollections">
+        <img src="{$base_include}/images/folder.gif" width="17" height="15" border="0" alt=""/><xsl:text> </xsl:text>      
+        
+           <a href="{/*/navbar/element[@id='saved_collections']/url}"><xsl:copy-of select="$text_header_collections"/></a>
         </li>
       </xsl:if>
     </ul>

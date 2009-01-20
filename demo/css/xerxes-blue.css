@@ -249,7 +249,7 @@ a img{
 li.accountSidebar {
   padding: 0 0 3px 21px;
 }
-li.mySavedRecords {
+li.mySavedRecords, li.myCollections {
   background-image: none;
   padding: 0 0 3px 0;
 }
