@@ -12,6 +12,25 @@
 	*/
 	
 	addEvent(window, 'load', addAjaxToSaveLinks);
+  addEvent(window, 'load', loadLabelVariables );
+  
+  function loadLabelVariables() {
+    /* String variables. Can be set in global js vars in calling context
+     if desired, to over-ride/customize. */
+     if (typeof(window['save_action_label']) == "undefined") {
+       save_action_label = 'Save this record';
+     }     
+     if (typeof(window['saved_permanent_label']) == "undefined") {
+       saved_permanent_label = 'Record saved';
+     }
+     if (typeof(window['saved_temporary_label']) == "undefined") {
+       saved_temporary_label = 'Temporarily saved';
+     }
+     if (typeof(window['saved_temporary_login_label']) == "undefined") {
+       saved_temporary_login_label = 'login to save permanently';
+     }
+
+  }
 	
 	/**
 	 * Add onClick event to save records
@@ -101,8 +120,12 @@
 			{
 				numSavedRecords--;
 				$('folder_' + resultSet + recordNumber).src = "images/folder.gif";
-				$(id).update("Save this record");
+				$(id).update( save_action_label );
 				$(id).removeClassName("saved");
+        $$('#saveRecordOption_' + resultSet+ '_' + recordNumber + ' .temporary_login_note').each(function(node) {
+          node.remove();
+        });
+
 
 				// remove label input
 				
@@ -113,7 +136,20 @@
 			{
 				numSavedRecords++;
 				$('folder_' + resultSet + recordNumber).src = "images/folder_on.gif";
-				$(id).update("Record saved");
+
+        // Different label depending on whether they are logged in or not. 
+        // We tell if they are logged in or not, as well as find the login
+        // url, based on looking for 'login' link in the DOM. 
+        if ($('login')) {
+          var temporary_login_note = ' <span class="temporary_login_note">(<a  href="' + $('login').href +'">' + saved_temporary_login_label + ' </a>)</span>';
+                   
+         // Put the login link back please         
+         $(id).update( saved_temporary_label ); 
+         $(id).insert({after: temporary_login_note  });
+        }
+        else {
+          $(id).update( saved_permanent_label );
+        }
 				$(id).addClassName("saved");
 
 				// add tag input
