@@ -18,7 +18,6 @@
 <xsl:include href="citation/styles.xsl" />
 
 <xsl:template name="record">
-	
 	<xsl:for-each select="//records/record/xerxes_record">
 
 		<xsl:variable name="result_set" 	select="result_set" />
@@ -260,7 +259,7 @@
 					</xsl:choose>
 				</div>
 				<xsl:if test="/metasearch">
-					<div class="recordFullTextOption" id="saveRecordOption">
+					<div class="recordFullTextOption" id="saveRecordOption_{$result_set}_{$record_number}">
 						<img id="folder_{$result_set}{$record_number}"	width="17" height="15" alt="" border="0">
 							<xsl:attribute name="src">
 								<xsl:choose> 
@@ -279,10 +278,24 @@
 									</xsl:attribute>
 							
 									<xsl:choose>
-										<xsl:when test="//request/session/resultssaved[@key = $record_id]">Record saved</xsl:when>
+										<xsl:when test="//request/session/resultssaved[@key = $record_id]">
+                      <xsl:choose>
+                        <xsl:when test="//session/role = 'named'">
+                          Record saved
+                        </xsl:when>
+                        <xsl:otherwise>
+                          Temporarily Saved
+                        </xsl:otherwise>
+                      </xsl:choose>                    
+                    </xsl:when>
 										<xsl:otherwise>Save this record</xsl:otherwise>
 									</xsl:choose>						
 						</a>
+            <xsl:if test="//request/session/resultssaved[@key = $record_id] and /*/request/session/role != 'named'"> 
+              <span class="temporary_login_note">
+                (<a href="{/*/navbar/element[@id = 'login']/url}">login to save permanently</a>)
+              </span>
+            </xsl:if>
 					</div>
 					<!-- label/tag input for saved records, if record is saved and it's not a temporary session -->
 					<xsl:if test="//request/session/resultssaved[@key = $record_id] and not(//request/session/role = 'guest' or //request/session/role = 'local')">
