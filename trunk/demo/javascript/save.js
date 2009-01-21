@@ -119,12 +119,13 @@
 			if ( $(id).hasClassName("saved") )
 			{
 				numSavedRecords--;
-				$('folder_' + resultSet + recordNumber).src = "images/folder.gif";
-				$(id).update( save_action_label );
-				$(id).removeClassName("saved");
         $$('#saveRecordOption_' + resultSet+ '_' + recordNumber + ' .temporary_login_note').each(function(node) {
           node.remove();
         });
+				$('folder_' + resultSet + recordNumber).src = "images/folder.gif";
+				$(id).update( save_action_label );
+				$(id).removeClassName("saved");
+
 
 
 				// remove label input
