@@ -316,22 +316,30 @@
         <mapEntry pathIndex="3" property="subject"/>
       </pathParamMap>
     
+      <action name="list">
+        <!-- Even though this is called 'list', it really does something else,
+             redirects to the longest ago created collection by this user,
+             or lazily creates a collection with default name if they
+             have none. -->
+        <command>GoToDefaultCollection</command>
+        <!-- <view>xsl/collections/collections_list.xsl</view> -->
+      </action>
+      
       <action name="subject" restricted="false">
 				<command>UserCreatedCategory</command>
+        <command>ListUserCategories</command>
 				<view>xsl/databases_subject.xsl</view>
         <request name="force_array_for_key">subcategory</request>
         <request name="force_array_for_key">database</request>
         <view format="json" type="php">php-views/generic-json.php</view>
 			</action>
       
-      <action name="list">
-        <command>ListUserCategories</command>
-        <view>xsl/collections/collections_list.xsl</view>
-      </action>
+
   
             
       <action name="edit_form">
         <!-- non-ajax edit form -->
+        <command>ListUserCategories</command>
         <command>UserCreatedCategory</command>
         <request name="suppress_full_db_list">true</request>
         <!-- because we use this page as a target of searches to add -->
@@ -340,6 +348,7 @@
 				<view>xsl/collections/edit_subject.xsl</view>
       </action>
       <action name="rename_form">
+        <command>ListUserCategories</command>
         <!-- Can be used for renaming a category or a subcategory. If subcategory URL param is there, subcat it is.  --> 
         <command>UserCreatedCategory</command>
         <view>xsl/collections/rename.xsl</view>
@@ -347,25 +356,31 @@
       <action name="edit">
         <!-- If subcategory url param is there, edit a subcategory (name).
              Of only subject param, edit a category (name and published status). If param new_subject_name, a new category can be created. -->
+        <command>ListUserCategories</command>
         <command>ChooseUserCategory</command>
         <command>EditUserCategory</command>        
       </action>
       <action name="reorder_subcats_form">
+        <command>ListUserCategories</command>
         <command>UserCreatedCategory</command>
         <view>xsl/collections/reorder_subcats.xsl</view>
       </action>
       <action name="reorder_subcats">
+        <command>ListUserCategories</command>
         <command>ReorderSubcats</command>
       </action>
       <action name="reorder_databases_form">
+        <command>ListUserCategories</command>
         <command>UserCreatedCategory</command>
         <view>xsl/collections/reorder_databases.xsl</view>
       </action>
       <action name="reorder_databases">
+        <command>ListUserCategories</command>
         <command>ReorderDatabases</command>
       </action>
       
       <action name="save_choose_collection">
+        <command>ListUserCategories</command>
         <request name="suppress_full_db_list">true</request>
         <!-- all of them -->
         <command>ListUserCategories</command>
@@ -374,6 +389,7 @@
         <view>xsl/collections/save_database_choose_category.xsl</view>
       </action>
       <action name="save_choose_subheading">
+          <command>ListUserCategories</command>
           <request name="suppress_full_db_list">true</request>
           <command directory="databases">DatabasesDatabase</command>
           <!-- save if it needs saving, or normalize to use the right one -->          

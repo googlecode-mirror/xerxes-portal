@@ -2,7 +2,7 @@
 
 <!--
 
-Edit subject page for user-created subjects. Only used for non-AJAX version.
+Edit subject page for user-created subjects.
  
  -->
  
@@ -25,20 +25,22 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
 	<xsl:variable name="category_name"	select="//category/@name" />
 	<xsl:variable name="request_uri"	select="//request/server/request_uri" />
 
-	<form name="form1" method="get" action="{$base_url}/">
-	<input type="hidden" name="base" value="collections" />
-	<input type="hidden" name="action" value="edit" />
-  <input type="hidden" name="subject" value="{//category/@normalized}" />
-  <input type="hidden" name="username" value="{//category/@owned_by_user}" />
-  <input type="hidden" name="subcategory" value="{//request/subcategory}" />
-  <input type="hidden" name="return" value="{//request/return}" />
+
 	
 	<div id="container">
   
     <div id="sidebar_float" class="sidebar_float">
       <xsl:call-template name="account_sidebar"/>
+      <xsl:call-template name="collections_sidebar" />
     </div>
   
+    <form name="form1" method="get" action="{$base_url}/">
+    <input type="hidden" name="base" value="collections" />
+    <input type="hidden" name="action" value="edit" />
+    <input type="hidden" name="subject" value="{//category/@normalized}" />
+    <input type="hidden" name="username" value="{//category/@owned_by_user}" />
+    <input type="hidden" name="subcategory" value="{//request/subcategory}" />
+    <input type="hidden" name="return" value="{//request/return}" />
 		<div id="searchArea">
 	
 				<h1>Rename
@@ -67,8 +69,8 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
           
         <input type="submit" name="save" value="save"/></p>
       </div>
+      </form>
     </div>
-	</form>
 	
 </xsl:template>
 

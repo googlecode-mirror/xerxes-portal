@@ -141,7 +141,7 @@
 		
 		<config name="yahoo_id">calstate</config>
 		
-	<!-- AUTHENTICATION + AUHTORIZATION -->
+	<!-- AUTHENTICATION + AUTHORIZATION -->
 	
 		<!-- the source against which you will authenticate users; valid values include:
 		
@@ -350,8 +350,10 @@
 			
 		<config name="alternate_yahoo_location"></config>
     
-    <!-- saving databases to personal collection. Show save buttons to do so? -->
-    <config name="collection_save_on_db_detail" pass="true">true</config>
+    <!-- saving databases to personal collection features. -->
+    <!-- default name for new collection and section -->
+    <config name="default_collection_name" pass="true">My Saved Databases</config>
+    <config name="default_collection_section_name" pass="true">Databases</config>
 		
 		<!-- mango stuff -->
 		

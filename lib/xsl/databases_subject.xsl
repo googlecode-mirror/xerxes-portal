@@ -31,17 +31,21 @@
 	<xsl:variable name="request_uri"	select="//request/server/request_uri" />
   <xsl:variable name="user_can_edit" select="/*/category/@owned_by_user = /*/request/session/username" /> 
 
-	<form name="form1" method="get" action="{$base_url}/" onSubmit="return databaseLimit(this)">
-	<input type="hidden" name="base" value="metasearch" />
-	<input type="hidden" name="action" value="search" />
-	<input type="hidden" name="context" value="{$category_name}" />
-	<input type="hidden" name="context_url" value="{$request_uri}" />
+
 	
 	<div id="container">
     <div id="sidebar_float">
       <xsl:call-template name="account_sidebar"/>
+      <xsl:if test="//request/base = 'collections'">
+        <xsl:call-template name="collections_sidebar"/>
+      </xsl:if>
 		</div>
   
+    <form name="form1" method="get" action="{$base_url}/" onSubmit="return databaseLimit(this)">
+    <input type="hidden" name="base" value="metasearch" />
+    <input type="hidden" name="action" value="search" />
+    <input type="hidden" name="context" value="{$category_name}" />
+    <input type="hidden" name="context_url" value="{$request_uri}" />
 		<div id="searchArea">
 	
 			<div class="subject">        
@@ -83,9 +87,10 @@
 				<xsl:call-template name="subject_databases_list"/>
 			</div>
 		</div>
+    </form>
+
 	</div>
 
-	</form>
 	
 </xsl:template>
 
