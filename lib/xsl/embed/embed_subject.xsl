@@ -25,7 +25,7 @@
     <script src="{$base_url}/javascript/save.js" language="javascript" type="text/javascript" />
       
     <div id="xerxes_outer_wrapper">
-      <form name="form1" method="get" action="{$base_url}/" onSubmit="return databaseLimit(this)">
+      <form name="form1" method="get" action="{$base_url}/" class="metasearchForm">
         <input type="hidden" name="base" value="metasearch" />
         <input type="hidden" name="action" value="search" />
         <input type="hidden" name="context">

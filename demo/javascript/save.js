@@ -10,9 +10,21 @@
 	set a global js variable isTemporarySession (boolean), used to determine whether to
 	ajax add a tagging input on save or not. 
 	*/
-	
+
+  addEvent(window, 'load', loadLabelVariables );	
 	addEvent(window, 'load', addAjaxToSaveLinks);
-  addEvent(window, 'load', loadLabelVariables );
+  addEvent(window, 'load', addDatabaseLimitChecks );
+  
+  function addDatabaseLimitChecks() {
+    $$('.subjectDatabaseCheckbox').each( function(checkbox) {
+        checkbox.onclick = function() {databaseLimitCheckbox(this)};
+        });
+    
+    $$('.metasearchForm').each( function(form) {
+        form.onsubmit = function () {return databaseLimit(this)};
+    });
+  }
+  
   
   function loadLabelVariables() {
     /* String variables. Can be set in global js vars in calling context
@@ -225,21 +237,7 @@
 	
 	function databaseLimit(form1)
 	{
-		var iTotal = 0;
-		var iMax = form1.database.length;
-		
-		if ( iMax == "" || iMax == undefined)
-		{
-			iMax = 1;
-		}
-	
-		for (var x = 0; x < iMax; x++)
-		{
-			if (eval("document.forms.form1.database[" + x + "].checked") == true)
-			{
-				iTotal++;
-			}
-		}
+		var iTotal = numChecked(form1)
 		
 		if ( iTotal == 0 )
 		{
@@ -257,8 +255,29 @@
 		}
 	}
   
+  /* How many checkboxes are checked in the form1 passed in as argument?
+     Returns number. Assumes checkboxes have class 'subjectDatabaseCheckbox' */
+  function numChecked(form1) {
+    var iTotal = 0;
+		
+    $(form1).select('input.subjectDatabaseCheckbox').each( function(checkbox) {
+          if ( checkbox.checked ) iTotal++;
+    });
+    
+    return iTotal;
+  }
+  
   function databaseLimitCheckbox(checkbox) {
-    alert( databaseLimit(self.parent));
+    var limit_reached = (numChecked(checkbox.form) > iSearchable);
+    
+    if (limit_reached) {
+      alert("Sorry, you can only search up to " + iSearchable + " databases at one time");
+			checkbox.checked = false;
+      return false;
+    }
+    else {
+      return true; 
+    }
   }
 	
 	/**

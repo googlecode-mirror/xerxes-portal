@@ -41,7 +41,7 @@
       </xsl:if>
 		</div>
   
-    <form name="form1" method="get" action="{$base_url}/" onSubmit="return databaseLimit(this)">
+    <form name="form1" method="get" action="{$base_url}/" class="metasearchForm">
     <input type="hidden" name="base" value="metasearch" />
     <input type="hidden" name="action" value="search" />
     <input type="hidden" name="context" value="{$category_name}" />
