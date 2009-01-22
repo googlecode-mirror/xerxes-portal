@@ -256,6 +256,10 @@
 			return true;
 		}
 	}
+  
+  function databaseLimitCheckbox(checkbox) {
+    alert( databaseLimit(self.parent));
+  }
 	
 	/**
 	 * Simple alert message to confirm deletion of saved records

@@ -132,8 +132,8 @@
   
   <xsl:variable name="text_record_citation_note">These citations are software generated and may contain errors. To verify accuracy, check the appropriate style guide.</xsl:variable>
   
-  <xsl:variable name="text_collection_default_new_name">My Collection</xsl:variable>
-  <xsl:variable name="text_collection_default_new_section_name">Databases</xsl:variable>
+  <xsl:variable name="text_collection_default_new_name" select="/*/config/default_collection_name" />
+  <xsl:variable name="text_collection_default_new_section_name" select="/*/config/default_section_name" />
   
 	<!-- Other configurable variables -->
 	
@@ -1488,13 +1488,13 @@
       <li class="accountSidebar">
         <xsl:choose>
         <xsl:when test="/*/request/session/role and /*/request/session/role != 'local'">
-          <a>
+          <a id="logout">
         <xsl:attribute name="href"><xsl:value-of select="/*/navbar/element[@id = 'logout']/url" /></xsl:attribute>
         <xsl:copy-of select="$text_header_logout" />
         </a>
         </xsl:when>
         <xsl:otherwise>
-          <a>
+          <a id="login">
         <xsl:attribute name="href"><xsl:value-of select="/*/navbar/element[@id = 'login']/url" /></xsl:attribute>
         <xsl:copy-of select="$text_header_login" /></a>
         </xsl:otherwise>
@@ -1525,6 +1525,42 @@
       </xsl:if>
     </ul>
    </div>
+</xsl:template>
+
+<!-- TEMPLATE: collections_sidebar
+     This sidebar shows a list of collections, and has a form to create
+     a new collection. (user-created subject). It is shown on collection-related
+     pages. -->
+<xsl:template name="collections_sidebar">
+<div id="collections_sidebar" class="box">
+  <h2 class="sidebar-title">My Collections</h2>
+  <p>Collections are a way to organize your saved databases.</p>
+  <ul>
+  <xsl:for-each select="/*/userCategories/category">
+    <li>
+      <xsl:choose>
+        <xsl:when test="//request/subject = normalized">
+          <!-- already looking at it, don't make it a link. -->
+          <strong><xsl:value-of select="name"/></strong>
+        </xsl:when>
+        <xsl:otherwise>
+          <a href="{url}"><xsl:value-of select="name"/></a>
+        </xsl:otherwise>
+      </xsl:choose>
+    </li>
+  </xsl:for-each>
+  </ul>
+   <form method="GET" action="./">
+    <input type="hidden" name="base" value="collections"/>
+    <input type="hidden" name="action" value="new"/>
+    <input type="hidden" name="username" value="{//request/username}"/>
+    
+    <input type="hidden" name="new_subcategory_name" value="{$text_collection_default_new_section_name}"/>
+  
+  Add a new collection: <input type="text" name="new_subject_name"/><input type="submit" name="add" value="Add"/>
+    
+  </form>
+</div>
 </xsl:template>
 
 <!--
@@ -2804,7 +2840,9 @@
 				saveThisRecord resultsFullText <xsl:if test="//request/session/resultssaved[@key = $record_id]">saved</xsl:if>
 			</xsl:attribute>
 			<xsl:choose>
-				<xsl:when test="//request/session/resultssaved[@key = $record_id]">Record saved</xsl:when>
+				<xsl:when test="//request/session/resultssaved[@key = $record_id]">
+          Record saved
+        </xsl:when>
 				<xsl:otherwise>Save this record</xsl:otherwise>
 			</xsl:choose>
 		</a>

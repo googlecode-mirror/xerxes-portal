@@ -28,9 +28,9 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
 	
 	<div id="container">
     <div id="sidebar_float" class="sidebar_float">
-    <xsl:call-template name="account_sidebar"/>
-    
-		</div>  
+      <xsl:call-template name="account_sidebar"/>
+      <xsl:call-template name="collections_sidebar" />
+		</div>
 
   
   
