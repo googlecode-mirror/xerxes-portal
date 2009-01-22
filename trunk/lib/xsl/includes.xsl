@@ -994,8 +994,9 @@
 						<xsl:attribute name="value"><xsl:value-of select="metalib_id" /></xsl:attribute>
 						<xsl:attribute name="type">checkbox</xsl:attribute>
 						<xsl:if test="$subcategory = 1 and $prev_checkbox_count &lt; //config/search_limit">
-						<xsl:attribute name="checked">checked</xsl:attribute>
+              <xsl:attribute name="checked">checked</xsl:attribute>
 						</xsl:if>
+            <xsl:attribute name="class">subjectDatabaseCheckbox</xsl:attribute>
 					</xsl:element>
 					</xsl:otherwise>
 					</xsl:choose>
