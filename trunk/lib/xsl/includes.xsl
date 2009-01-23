@@ -1010,13 +1010,16 @@
 				<div class="subjectDatabaseTitle">           
 					<xsl:choose>
 						<xsl:when test="not($should_lock_nonsearchable and searchable_by_user != '1')">						
-							<xsl:element name="label">
-							<xsl:attribute name="for"><xsl:value-of select="metalib_id" /></xsl:attribute>
 							<a>
 							<xsl:attribute name="href"><xsl:value-of select="xerxes_native_link_url" /></xsl:attribute>
 								<xsl:value-of select="title_display" />
 							</a>
-							</xsl:element>
+              <!-- label that is hidden from normal graphical browsers,
+                   but available for screen readers or other machine
+                   processing. -->
+              <label for="{metalib_id}" class="ada">
+                <xsl:value-of select="title_display" />						
+              </label>							
 						</xsl:when>
 						<xsl:otherwise>
 							<a>
