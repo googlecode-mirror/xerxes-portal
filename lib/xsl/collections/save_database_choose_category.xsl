@@ -27,6 +27,12 @@
 
 <xsl:template name="main">
 
+<!-- load js globals with some string variables the js will need -->
+<script type="text/javascript">
+collection_default_new_name = '<xsl:value-of select="$text_collection_default_new_name" />';
+collection_default_new_section_name = '<xsl:value-of select="$text_collection_default_new_section_name" />';
+</script>
+
 <div id="container">
   <div id="sidebar_float" class="sidebar_float">
     <xsl:call-template name="account_sidebar"/>
