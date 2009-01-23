@@ -32,7 +32,7 @@ class Xerxes_Command_NewUserCategory extends Xerxes_Command_Collections
 	{
 		
     $strNewSubject = $objRequest->getProperty("new_subject_name");
-    if (empty($strNewSubject)) $strNewSubject = 'My Collection';
+    if (empty($strNewSubject)) $strNewSubject = $objRegistry->getConfig("default_collection_name", false, "My Saved Databases");
 
     $strUsername = $objRequest->getProperty("username");    
     
