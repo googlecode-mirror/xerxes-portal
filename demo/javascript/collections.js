@@ -5,11 +5,21 @@
   *  Also adds AJAXy goodness to the db save dialog. 
   **/
   
-  default_new_subject = 'My Collection';
-  default_new_subcategory = 'Databases';
   
   addEvent(window, 'load', addConfirmDialogs);
   addEvent(window, 'load', addDynamicSectionChoice);
+  addEvent(window, 'load', loadCollectionStrings);
+  
+  // Can be loaded by calling page in js global variables, but if not
+  // we use some defaults. 
+  function loadCollectionStrings() {
+     if (typeof(window['collection_default_new_name']) == "undefined") {
+      collection_default_new_name = 'My Saved Databases';
+     }
+     if (typeof(window['collection_default_new_section_name']) == "undefined") {     
+      collection_default_new_section_name = 'Databases';
+     }
+  }
   
   function addSelectOption(selectObj, text, value, isSelected, id) 
   {
@@ -48,11 +58,11 @@
     if (this.getValue() == 'NEW') {
       // Fill out subcategory selection with default values for a new category.
       
-      $('new_subject_name').value = default_new_subject;
+      $('new_subject_name').value = collection_default_new_name;
       // Load subcategory select options
       $('subcategory').options.length = 0;
       addSelectOption($('subcategory'), "New section...", "NEW");
-      $('new_subcategory_name').value = default_new_subcategory;
+      $('new_subcategory_name').value = collection_default_new_section_name;
     }
     else {
       // Load the subcategory selection with appropriate values
@@ -77,7 +87,7 @@
             addSelectOption($('subcategory'), "New section...", "NEW");
             // If it was the only one and is selected, fill out text box. 
             if ($('subcategory').getValue() == "NEW") {
-              $('new_subcategory_name').value = default_new_subcategory;
+              $('new_subcategory_name').value = collection_default_new_section_name;
             }
             else {
               $('new_subcategory_name').value = '';
@@ -111,11 +121,11 @@
       // Some input checking to avoid blank new names. 
       $('save_database').onsubmit = function() {
         if ( $('subject').getValue() == "NEW" && trim($('new_subject_name').getValue()) == "") {
-          $('new_subject_name').value = default_new_subject;
+          $('new_subject_name').value = collection_default_new_name;
         }
         if ($('subcategory').getValue() == "NEW" &&
          trim($('new_subcategory_name').getValue()) == "") {
-          $('new_subcategory_name').value = default_new_subcategory;
+          $('new_subcategory_name').value = collection_default_new_section_name;
         } 
       };
       
@@ -130,7 +140,7 @@
       
       $('subcategory').onchange = function() {
         if (this.getValue() == "NEW") {
-          $('new_subcategory_name').value = default_new_subcategory;
+          $('new_subcategory_name').value = collection_default_new_section_name;
           $('new_subcategory_name').select();
         }
         else {

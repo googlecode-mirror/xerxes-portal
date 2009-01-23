@@ -11,7 +11,7 @@
 	ajax add a tagging input on save or not. 
 	*/
 
-  addEvent(window, 'load', loadLabelVariables );	
+  addEvent(window, 'load', loadSaveStrings );	
 	addEvent(window, 'load', addAjaxToSaveLinks);
   addEvent(window, 'load', addDatabaseLimitChecks );
   
@@ -26,7 +26,7 @@
   }
   
   
-  function loadLabelVariables() {
+  function loadSaveStrings() {
     /* String variables. Can be set in global js vars in calling context
      if desired, to over-ride/customize. */
      if (typeof(window['save_action_label']) == "undefined") {
