@@ -22,7 +22,7 @@
   <!-- version used to to prevent css caching, and possibly other
        places to advertise version -->
 	
-	<xsl:variable name="xerxes_version" select="'1.4'" />     
+	<xsl:variable name="xerxes_version" select="'1.5'" />     
     
 	<xsl:variable name="base_url"		select="//base_url" />
 	<xsl:variable name="app_name"		select="//config/application_name" />
