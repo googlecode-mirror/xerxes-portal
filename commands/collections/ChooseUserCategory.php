@@ -39,7 +39,7 @@ class Xerxes_Command_ChooseUserCategory extends Xerxes_Command_Collections
     
     // Were we directed to create a new one?
     if ( $strNewSubject || $strSubjectSelection == "NEW" ) {
-      if (empty($strNewSubject)) $strNewSubject = "My Collection";
+      if (empty($strNewSubject)) $strNewSubject = $objRegistry->getConfig("default_collection_name", false, "My Saved Databases");
           
       // Make sure it's truly new and has a unique normalized form, else
       // reuse existing.
