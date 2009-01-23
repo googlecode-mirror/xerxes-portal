@@ -475,7 +475,7 @@ li.mySavedRecords, li.myCollections {
 	border-left-color: #CCCCCC;
 }
 
-.sidebar-title {
+.sidebar-title, .box h2 {
 	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
 	margin:0;
 	padding:0 0 .2em;
@@ -729,13 +729,7 @@ li.mySavedRecords, li.myCollections {
 .folderOptionHeader {
 	padding-bottom: 20px;
 }
-.folderOutputs {
-	width: 240px; 
-	background-color: #efefef; 
-	padding: 10px; 
-	float: left; 
-	margin-right: 30px;
-}
+
 .folderOutput {
 	margin-bottom: 30px;
 }

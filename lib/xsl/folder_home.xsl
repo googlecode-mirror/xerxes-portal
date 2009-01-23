@@ -43,7 +43,8 @@
     <xsl:if test="results/records/record">
     <div id="sidebar_float">
         <xsl:call-template name="account_sidebar"/>
-        <div class="folderOutputs">
+        
+        <div class="folderOutputs box">
     
           <div class="folderOutput">
             <h2>Export Records</h2>
