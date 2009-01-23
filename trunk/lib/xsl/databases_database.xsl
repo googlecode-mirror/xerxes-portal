@@ -81,7 +81,7 @@
         
         <div class="database_functions" style="margin-top:10px;">
            <xsl:if test="$show_collection_links">
-            <a class="categoryCommand add" href="{add_to_collection_url}">Save database in personal collection</a>
+            <a class="categoryCommand add" href="{add_to_collection_url}">Save database</a>
            </xsl:if>
         </div>        
         
