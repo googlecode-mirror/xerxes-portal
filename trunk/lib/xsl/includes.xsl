@@ -1522,7 +1522,7 @@
   <xsl:for-each select="/*/userCategories/category">
     <li>
       <xsl:choose>
-        <xsl:when test="//request/subject = normalized">
+        <xsl:when test="//request/base = 'collections' and //request/action = 'subject' and //request/subject = normalized">
           <!-- already looking at it, don't make it a link. -->
           <strong><xsl:value-of select="name"/></strong>
         </xsl:when>
