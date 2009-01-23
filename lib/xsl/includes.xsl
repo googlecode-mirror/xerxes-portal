@@ -133,7 +133,7 @@
   <xsl:variable name="text_record_citation_note">These citations are software generated and may contain errors. To verify accuracy, check the appropriate style guide.</xsl:variable>
   
   <xsl:variable name="text_collection_default_new_name" select="/*/config/default_collection_name" />
-  <xsl:variable name="text_collection_default_new_section_name" select="/*/config/default_section_name" />
+  <xsl:variable name="text_collection_default_new_section_name" select="/*/config/default_collection_section_name" />
   
 	<!-- Other configurable variables -->
 	
