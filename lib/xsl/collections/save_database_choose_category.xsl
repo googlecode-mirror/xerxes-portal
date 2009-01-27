@@ -36,7 +36,6 @@ collection_default_new_section_name = '<xsl:value-of select="$text_collection_de
 <div id="container">
   <div id="sidebar_float" class="sidebar_float">
     <xsl:call-template name="account_sidebar"/>
-    <xsl:call-template name="collections_sidebar" />
   </div>
 
   <div id="searchArea">
