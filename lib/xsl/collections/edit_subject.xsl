@@ -25,6 +25,9 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
 	<xsl:variable name="category_name"	select="//category/@name" />
 	<xsl:variable name="request_uri"	select="//request/server/request_uri" />
 
+  <div class="folderReturn">
+    <img alt="" src="{$base_url}/images/back.gif"/><span class="folderReturnText"><a href="{/*/userCategories/category[1]/url}">Return to <xsl:value-of select="/*/userCategories/category[1]/name"/></a></span>
+</div>
 	
 	<div id="container">
     <div id="sidebar_float" class="sidebar_float">
