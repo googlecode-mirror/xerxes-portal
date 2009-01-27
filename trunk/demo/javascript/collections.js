@@ -112,8 +112,10 @@
 
   }
   
+  /* Adds ajaxy javascript to the 'save database' dialog, to 
+     dynamically change available sections based on selected collection */
   function addDynamicSectionChoice() {
-    if ($('subject')) {            
+    if ($('save_database')) {            
       
       // Change action to save_complete, instead of just step 2. 
       $('action_input').value = 'save_complete';
