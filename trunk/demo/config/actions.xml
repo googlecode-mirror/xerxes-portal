@@ -328,7 +328,7 @@
       <action name="subject" restricted="false">
 				<command>UserCreatedCategory</command>
         <command>ListUserCategories</command>
-				<view>xsl/databases_subject.xsl</view>
+				<view>xsl/collections/collections_subject.xsl</view>
         <request name="force_array_for_key">subcategory</request>
         <request name="force_array_for_key">database</request>
         <view format="json" type="php">php-views/generic-json.php</view>
