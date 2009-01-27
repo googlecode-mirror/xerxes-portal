@@ -155,7 +155,7 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
             
             <input type="hidden" name="return" value="{//server/request_uri}" />
             
-            <input type="hidden" name="subject" value="{//category/@normalized}" />
+            <input type="hidden" name="subject" value="{/*/category/@normalized}" />
             
           Add a new section: <input type="text" name="new_subcategory_name" />  
             <input type="submit" name="save" value="add"/>
