@@ -377,7 +377,7 @@ li.mySavedRecords, li.myCollections {
 	font-weight: bold;
 }
 
-.alphaTitle .mini_icon {
+.mini_icon {
   vertical-align: middle;
 }
 
@@ -889,6 +889,7 @@ ul.addDatabasesMatches {
   background: transparent url(../images/famfamfam/add.png) no-repeat scroll 0px 0px;
   background-position: 0px -1px;
   padding-left: 20px;
+  vertical-align: middle;
 }
 
 #addNewSection {
