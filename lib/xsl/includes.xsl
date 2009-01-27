@@ -624,9 +624,9 @@
     <xsl:when test="request/base = 'collections' and (request/action = 'edit_form')">
       <a>
         <xsl:attribute name="href">
-					<xsl:value-of select="//category[1]/url" />
+					<xsl:value-of select="/*/category/url" />
 				</xsl:attribute>
-				<xsl:value-of select="//category[1]/@name" />
+				<xsl:value-of select="/*/category/@name" />
 			</a>
       <xsl:copy-of select="$text_breadcrumb_seperator" />
       <span class="breadcrumbHere">Edit</span>
