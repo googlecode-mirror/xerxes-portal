@@ -36,7 +36,7 @@
 	<div id="container">
     <div id="sidebar_float">
       <xsl:call-template name="account_sidebar"/>
-      <xsl:if test="//request/base = 'collections'">
+      <xsl:if test="//request/base = 'collections' and //category/@owned_by_user = //session/username">
         <xsl:call-template name="collections_sidebar"/>
       </xsl:if>
 		</div>
