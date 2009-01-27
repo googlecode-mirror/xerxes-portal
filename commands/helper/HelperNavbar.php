@@ -28,10 +28,13 @@ class Xerxes_Command_HelperNavbar extends Xerxes_Command_Helper
 		$savedRecordsLink->setAttribute( "numSavedRecords", ( string ) $num );
 		$savedRecordsLink->setAttribute( "numSessionSavedRecords", Xerxes_Helper::numMarkedSaved() );
     
-    // My Collections. Only if logged in. 
+    // My Collections.
+    $arrCollectionUrl = array ("base" => "collections", "action" => "list" );
     if (Xerxes_Framework_Restrict::isAuthenticatedUser( $objRequest ) ) {
-      $this->addNavbarElement( $objXml, $objRequest, "saved_collections", array ("base" => "collections", "action" => "list", "username" => $objRequest->getSession( "username" ) ));
+      $arrCollectionUrl["username"] = $objRequest->getSession( "username" );
     }
+    $this->addNavbarElement( $objXml, $objRequest, "saved_collections", $arrCollectionUrl );
+    
 		
 		//login. Tell it to force an https url if so configured. 
     $force_secure_login = false;
