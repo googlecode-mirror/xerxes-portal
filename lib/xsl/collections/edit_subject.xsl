@@ -183,7 +183,14 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
           </xsl:if>
           <xsl:for-each select="/*/databases/database">
             <li><a class="addToCollection" href="./?base=collections&amp;action=save_complete&amp;username={/*/category[1]/@owned_by_user}&amp;subject={/*/category[1]/@normalized}&amp;subcategory={/*/request/add_to_subcategory}&amp;id={metalib_id}&amp;return={php:function('urlencode', string(//server/request_uri))}#section_{/*/request/add_to_subcategory}">
-            <xsl:value-of select="title_display"/></a><xsl:text> </xsl:text><a href="{url}"><img src="{$base_url}/images/info.gif" alt="more information" title="more information"/></a></li>
+            <xsl:value-of select="title_display"/></a><xsl:text> </xsl:text><a href="{url}"><img class="mini_icon" src="{$base_url}/images/info.gif" alt="more information" title="more information"/></a>
+            
+            <xsl:if test="searchable = '1'">
+              <xsl:text> </xsl:text>
+              <img alt="searchable" title="searchable" class="mini_icon" src="{$base_url}/images/famfamfam/magnifier.png"/>
+            </xsl:if>
+            
+            </li>
           </xsl:for-each>
           </ul>
          </div>
