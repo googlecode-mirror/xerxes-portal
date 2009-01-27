@@ -33,7 +33,7 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
 		</div>
 
   <div class="navReturn">
-    <img alt="" src="{$base_url}/images/back.gif"/><span class="navReturnText"><a href="{/*/userCategories/category[1]/url}">Return to <xsl:value-of select="/*/userCategories/category[1]/name"/></a></span>
+    <img alt="" src="{$base_url}/images/back.gif"/><span class="navReturnText"><a href="{/*/category/url}">Return to <xsl:value-of select="/*/category/@name"/></a></span>
   </div>
 	
   
