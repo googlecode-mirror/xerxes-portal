@@ -162,8 +162,8 @@
 	<base href="{$base_include}/" />
 	</head>
 	<body>
-	<xsl:if test="request/action = 'subject'">
-		<xsl:attribute name="onLoad">document.forms.form1.query.focus()</xsl:attribute>
+	<xsl:if test="request/action = 'subject' or request/action = 'categories'">
+		<xsl:attribute name="onLoad">if (document.forms.form1) if  (document.forms.form1.query)  document.forms.form1.query.focus()</xsl:attribute>
 	</xsl:if>
 	
 	<div class="ada">
