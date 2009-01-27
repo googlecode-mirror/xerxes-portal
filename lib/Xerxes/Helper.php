@@ -143,8 +143,8 @@ class Xerxes_Helper
 	}
 	
   /* Ensures that specified user is logged in, or throws exception */
-  public static function ensureSpecifiedUser($username, $objRequest, $objRegistry, $strMessage = "Access only allowed by specific user.") {
-    if (! $objRequest->getSession("username") == $username) {
+  public static function ensureSpecifiedUser($username, $objRequest, $objRegistry, $strMessage = "Access only allowed by specific user.") {    
+    if (! ($objRequest->getSession("username") == $username)) {
       throw new Xerxes_AccessDeniedException($strMessage);
     }
   }
