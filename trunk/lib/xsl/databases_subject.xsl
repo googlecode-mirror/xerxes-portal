@@ -50,6 +50,10 @@
 	
 			<div class="subject">        
 				<h1><xsl:value-of select="//category/@name" /></h1>
+        <xsl:if test="//userCategories and not(//category/@owned_by_user = //session/username)">
+          <p>Created by <xsl:value-of select="//category/@owned_by_user" /></p>
+        </xsl:if>
+        
         <xsl:if test="$user_can_edit" >
         <div class="subject_edit_commands">        
           <a class="categoryCommand edit" href="{/*/category/edit_url}">Edit</a>
