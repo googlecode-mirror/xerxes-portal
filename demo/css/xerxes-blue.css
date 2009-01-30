@@ -819,7 +819,7 @@ li.mySavedRecords, li.myCollections {
 a.categoryCommand, a.categoryCommand:visited, a:hover.categoryCommand {
   vertical-align: middle;
   margin-right: 2px;
-  margin-left: 2px;
+  margin-left: 2px;  
   /* position: relative gets around a weird IE6/7 bug with what we're trying
      to do */
   position: relative;
@@ -845,7 +845,7 @@ a.categoryCommand:hover {
 
 a.categoryCommand img {
   vertical-align: middle;
-  margin-right: 6px;
+  padding-right: 6px;
 }
 
 
