@@ -813,12 +813,13 @@ li.mySavedRecords, li.myCollections {
 }
 
 a.categoryCommand, a.categoryCommand:visited, a:hover.categoryCommand {
+  vertical-align: middle;
   margin-right: 2px;
   margin-left: 2px;
   /* position: relative gets around a weird IE6/7 bug with what we're trying
      to do */
   position: relative;
-  padding: 4px 4px 4px 24px;  
+  padding: 4px 4px 4px 4px;  
   background-color: #F7FDCB;
   border: 1px dotted #CCCCCC;
   font-weight: bold;
@@ -837,21 +838,13 @@ a.categoryCommand:hover {
     background-color: #8C8C8C;
 }
 
-a.categoryCommand.delete {
-  background-image: url(../images/delete.gif);
+
+a.categoryCommand img {
+  vertical-align: middle;
+  margin-right: 6px;
 }
-a.categoryCommand.add {
-  background-image: url(../images/famfamfam/add.png);
-}
-a.categoryCommand.reorder {
-  background-image: url(../images/reorder.gif);
-}
-a.categoryCommand.edit {
-  background-image: url(../images/famfamfam/wrench.png);
-}
-a.categoryCommand.rename {
-  background-image: url(../images/famfamfam/tag_blue_edit.png);
-}
+
+
 a.categoryCommand.publishToggle, a.categoryCommand.publishToggle:hover {
     padding-left: 8px;
 }
@@ -862,17 +855,25 @@ span.publishedStatus {
   padding: 4px; 
   background-position: 4px 4px;
   background-repeat: no-repeat;
-  padding-left: 24px;
-  background-image: url(../images/famfamfam/lock_open.png);
+  /*padding-left: 24px;*/
+  /*background-image: url(../images/famfamfam/lock_open.png);*/
+  white-space: nowrap;
+  vertical-align: middle;
 }
+span.publishedStatus img, span.privateStatus img {
+  vertical-align: middle;
+  margin-right: 6px;
+}
+
 span.privateStatus {
   margin-right: 2px;
   margin-left: 2px;
   padding: 4px; 
   background-position: 4px 4px;
   background-repeat: no-repeat;
-  padding-left: 24px;
-  background-image: url(../images/famfamfam/lock.png);
+  /*padding-left: 24px;
+  background-image: url(../images/famfamfam/lock.png);*/
+  white-space: nowrap;
 }
 
 
@@ -895,10 +896,11 @@ ul.addDatabasesMatches {
 }
 
 .addDatabases ul li a.addToCollection {
-  background: transparent url(../images/famfamfam/add.png) no-repeat scroll 0px 0px;
-  background-position: 0px -1px;
-  padding-left: 20px;
   vertical-align: middle;
+}
+a.addToCollection img {
+  vertical-align: middle;
+  margin-right: 6px;
 }
 
 #addNewSection {

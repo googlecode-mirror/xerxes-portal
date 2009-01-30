@@ -40,25 +40,28 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
     <div class="editSubjectHeading">
 				<h1>Edit: <xsl:value-of select="//category/@name" /></h1>
         <div class="subject_edit_commands">
-        <a class="categoryCommand rename" href="./?base=collections&amp;action=rename_form&amp;subject={//category/@normalized}&amp;username={//category/@owned_by_user}">Change name</a> 
+        <a class="categoryCommand rename" href="./?base=collections&amp;action=rename_form&amp;subject={//category/@normalized}&amp;username={//category/@owned_by_user}">
+        <img src="{$base_url}/images/famfamfam/tag_blue_edit.png" alt="foo"/>Change name</a> 
         <xsl:text> </xsl:text>
         <xsl:if test="count(/*/category[1]/subcategory) &gt; 1">
-        <a class="categoryCommand reorder" href="./?base=collections&amp;action=reorder_subcats_form&amp;subject={//category/@normalized}&amp;username={//category/@owned_by_user}">Change section order</a>
+        <a class="categoryCommand reorder" href="./?base=collections&amp;action=reorder_subcats_form&amp;subject={//category/@normalized}&amp;username={//category/@owned_by_user}">
+        <img src="{$base_url}/images/reorder.gif" alt=""/>Change section order</a>
         <xsl:text> </xsl:text>
         </xsl:if>
         
         <xsl:text> </xsl:text>
-        <a class="categoryCommand delete deleteCollection" href="./?base=collections&amp;action=delete_category&amp;subject={//category/@normalized}&amp;username={//category/@owned_by_user}">Delete collection
+        <a class="categoryCommand delete deleteCollection" href="./?base=collections&amp;action=delete_category&amp;subject={//category/@normalized}&amp;username={//category/@owned_by_user}">
+        <img src="{$base_url}/images/delete.gif" alt=""/>Delete collection
         </a>  
-        
+        <xsl:text> </xsl:text>
         <xsl:choose>
             <xsl:when test="//category/@published = '1'">
-            <span class="publishedStatus">Published:</span>
+            <span class="publishedStatus"><img src="{$base_url}/images/famfamfam/lock_open.png" alt="" />Published:</span>
             <a class="categoryCommand publishToggle" href="{$base_url}/?base=collections&amp;action=edit&amp;username={//category/@owned_by_user}&amp;subject={//category/@normalized}&amp;published=false&amp;return={php:function('urlencode', string(//server/request_uri))}">
               <span>Make private</span></a>
             </xsl:when>
             <xsl:otherwise>
-              <span class="privateStatus">Private:</span> <a class="categoryCommand publishToggle" href="{$base_url}/?base=collections&amp;action=edit&amp;username={//category/@owned_by_user}&amp;subject={//category/@normalized}&amp;published=true&amp;return={php:function('urlencode', string(//server/request_uri))}">
+              <span class="privateStatus"><img src="{$base_url}/images/famfamfam/lock.png" alt="" />Private:</span> <a class="categoryCommand publishToggle" href="{$base_url}/?base=collections&amp;action=edit&amp;username={//category/@owned_by_user}&amp;subject={//category/@normalized}&amp;published=true&amp;return={php:function('urlencode', string(//server/request_uri))}">
               <span>Publish</span> 
               </a>
             </xsl:otherwise>
@@ -93,18 +96,20 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
             <legend><xsl:value-of select="@name" /></legend>
             <div class="subject_edit_commands">
               <a class="categoryCommand rename" href="./?base=collections&amp;action=rename_form&amp;subject={../@normalized}&amp;subcategory={@id}&amp;username={../@owned_by_user}">
-              Change name</a>
+              <img src="{$base_url}/images/famfamfam/tag_blue_edit.png" alt="foo"/>Change name</a>
               <xsl:text> </xsl:text>      
               <a class="categoryCommand add" href="./?base=collections&amp;action=edit_form&amp;username={../@owned_by_user}&amp;subject={../@normalized}&amp;add_to_subcategory={@id}#section_{@id}">
-                Add databases
+                <img src="{$base_url}/images/famfamfam/add.png" alt=""/>Add databases
               </a>
               <xsl:text> </xsl:text>
-              <a class="categoryCommand delete deleteSection" href="./?base=collections&amp;action=delete_subcategory&amp;subject={//category/@normalized}&amp;subcategory={@id}&amp;username={//category/@owned_by_user}">Delete section
+              <a class="categoryCommand delete deleteSection" href="./?base=collections&amp;action=delete_subcategory&amp;subject={//category/@normalized}&amp;subcategory={@id}&amp;username={//category/@owned_by_user}">
+              <img src="{$base_url}/images/delete.gif" alt=""/>Delete section
               </a>
               
               <xsl:if test="count(database) &gt; 1">
                 <xsl:text> </xsl:text>
-                <a class="categoryCommand reorder" href="./?base=collections&amp;action=reorder_databases_form&amp;subject={//category/@normalized}&amp;subcategory={@id}&amp;username={//category/@owned_by_user}">Change database order</a>           
+                <a class="categoryCommand reorder" href="./?base=collections&amp;action=reorder_databases_form&amp;subject={//category/@normalized}&amp;subcategory={@id}&amp;username={//category/@owned_by_user}">
+                <img src="{$base_url}/images/reorder.gif" alt=""/>Change database order</a>           
               </xsl:if>
            
               
@@ -198,7 +203,7 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
           </xsl:if>
           <xsl:for-each select="/*/databases/database">
             <li><a class="addToCollection" href="./?base=collections&amp;action=save_complete&amp;username={/*/category[1]/@owned_by_user}&amp;subject={/*/category[1]/@normalized}&amp;subcategory={/*/request/add_to_subcategory}&amp;id={metalib_id}&amp;return={php:function('urlencode', string(//server/request_uri))}#section_{/*/request/add_to_subcategory}">
-            <xsl:value-of select="title_display"/></a><xsl:text> </xsl:text><a href="{url}"><img class="mini_icon" src="{$base_url}/images/info.gif" alt="more information" title="more information"/></a>
+            <img src="{$base_url}/images/famfamfam/add.png" alt=""/><xsl:value-of select="title_display"/></a><xsl:text> </xsl:text><a href="{url}"><img class="mini_icon" src="{$base_url}/images/info.gif" alt="more information" title="more information"/></a>
             
             <xsl:if test="searchable = '1'">
               <xsl:text> </xsl:text>
