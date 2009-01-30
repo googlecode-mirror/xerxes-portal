@@ -52,7 +52,7 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
         </a><xsl:text> </xsl:text>
         
         <xsl:choose>
-            <xsl:when test="//category/@published = '1'">
+            <xsl:when test="//category/@published = '1'">            
             <span class="publishedStatus">Published:</span>
             <a class="categoryCommand publishToggle" href="{$base_url}/?base=collections&amp;action=edit&amp;username={//category/@owned_by_user}&amp;subject={//category/@normalized}&amp;published=false&amp;return={php:function('urlencode', string(//server/request_uri))}">
               <span>Make private</span></a>
@@ -105,7 +105,7 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
               <xsl:text> </xsl:text>
               <a class="categoryCommand delete deleteSection" href="./?base=collections&amp;action=delete_subcategory&amp;subject={//category/@normalized}&amp;subcategory={@id}&amp;username={//category/@owned_by_user}">Delete section
               </a>
-              
+              <xsl:text> </xsl:text>
               <xsl:if test="count(database) &gt; 1">
                 <xsl:text> </xsl:text>
                 <a class="categoryCommand reorder" href="./?base=collections&amp;action=reorder_databases_form&amp;subject={//category/@normalized}&amp;subcategory={@id}&amp;username={//category/@owned_by_user}">Change database order</a>           
