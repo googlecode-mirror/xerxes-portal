@@ -779,10 +779,6 @@ li.mySavedRecords, li.myCollections {
 }
 
 
-.editSubjectHeading .categoryCommand {
-  vertical-align: top;
-}
-
 .editCategory .subjectSubCategory {
   margin-bottom: 40px;
 }
@@ -800,8 +796,7 @@ li.mySavedRecords, li.myCollections {
 }
 
 .subject_edit_commands {
-  line-height: 30px;
-  vertical-align: top;
+  line-height: 34px;
   background-color: #EFEFEF;
   padding: 8px;
   margin-top: 16px;
