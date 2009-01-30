@@ -107,6 +107,7 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
               <span> </span>
               <a class="categoryCommand delete deleteSection" href="./?base=collections&amp;action=delete_subcategory&amp;subject={//category/@normalized}&amp;subcategory={@id}&amp;username={//category/@owned_by_user}">Delete section
               </a>
+              <xsl:text> </xsl:text>
               <span> </span>
               <xsl:if test="count(database) &gt; 1">
                 <a class="categoryCommand reorder" href="./?base=collections&amp;action=reorder_databases_form&amp;subject={//category/@normalized}&amp;subcategory={@id}&amp;username={//category/@owned_by_user}">Change database order</a>           
