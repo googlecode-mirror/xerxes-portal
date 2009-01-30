@@ -841,18 +841,33 @@ a.categoryCommand:hover {
 
 a.categoryCommand.delete {
   background-image: url(../images/delete.gif);
+  /* For some reason only IE6 gets these *- selectors, and we turn
+     bg images off in ie6, becuase ie6 is doing weird things with them. */
+  *-background-image: none;  
 }
 a.categoryCommand.add {
   background-image: url(../images/famfamfam/add.png);
+  /* For some reason only IE6 gets these *- selectors, and we turn
+     bg images off in ie6, becuase ie6 is doing weird things with them. */
+  *-background-image: none;  
 }
 a.categoryCommand.reorder {
   background-image: url(../images/reorder.gif);
+  /* For some reason only IE6 gets these *- selectors, and we turn
+     bg images off in ie6, becuase ie6 is doing weird things with them. */
+  *-background-image: none;  
 }
 a.categoryCommand.edit {
   background-image: url(../images/famfamfam/wrench.png);
+  /* For some reason only IE6 gets these *- selectors, and we turn
+     bg images off in ie6, becuase ie6 is doing weird things with them. */
+  *-background-image: none;  
 }
 a.categoryCommand.rename {
   background-image: url(../images/famfamfam/tag_blue_edit.png);
+  /* For some reason only IE6 gets these *- selectors, and we turn
+     bg images off in ie6, becuase ie6 is doing weird things with them. */
+  *-background-image: none;  
 }
 a.categoryCommand.publishToggle, a.categoryCommand.publishToggle:hover {
     padding-left: 8px;
