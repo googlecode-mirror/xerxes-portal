@@ -1509,7 +1509,7 @@
 			// simple elements
 			
 			if ($this->hasFullText() != null ) $objRecord->appendChild($objXml->createElement("full_text_bool", $this->escapeXml($this->hasFullText())));
-			if ($strPrimaryAuthor != null ) $objRecord->appendChild($objXml->createElement("primary_author", $strPrimaryAuthor));
+			if ($strPrimaryAuthor != null ) $objRecord->appendChild($objXml->createElement("primary_author", $this->escapeXml($strPrimaryAuthor)));
 			if ($strTitle != null ) $objRecord->appendChild($objXml->createElement("title_normalized", $this->escapeXML($strTitle)));
 			if ($this->getMetalibID() != null ) $objRecord->appendChild($objXml->createElement("metalib_id", $this->escapeXML($this->getMetalibID()))); 
 			if ($this->getResultSet() != null ) $objRecord->appendChild($objXml->createElement("result_set", $this->escapeXML($this->getResultSet()))); 
@@ -1536,12 +1536,7 @@
 			if ($this->getExtent()!= null ) $objRecord->appendChild($objXml->createElement("extent", $this->escapeXML($this->getExtent())));
 			if ($this->getInstitution() != null ) $objRecord->appendChild($objXml->createElement("institution", $this->escapeXML($this->getInstitution()))); 
 			if ($this->getDegree() != null ) $objRecord->appendChild($objXml->createElement("degree", $this->escapeXML($this->getDegree()))); 
-			if ($this->getDatabaseName() != null ) {   
-        $objDb = $objXml->createElement("database_name", $this->escapeXML($this->getDatabaseName()));
-        //Oops, we have no objRequest, so much for that  idea. 
-        //$objDb->setAttribute("url", $objRequest->url_for(array("base" => "databases", "action" => "database", "id" =>$this->getMetalibId())));
-        $objRecord->appendChild($objDb);
-      }
+			if ($this->getDatabaseName() != null ) $objRecord->appendChild($objXml->createElement("database_name", $this->escapeXML($this->getDatabaseName())));
 			if ($this->getEdition() != null ) $objRecord->appendChild($objXml->createElement("edition", $this->escapeXML($this->getEdition()))); 
 			if ($this->getCallNumber() != null ) $objRecord->appendChild($objXml->createElement("call_number", $this->escapeXML($this->getCallNumber())));
 			if ($this->getPrice() != null ) $objRecord->appendChild($objXml->createElement("price", $this->escapeXML($this->getPrice())));
@@ -1552,7 +1547,6 @@
 			{
 				$objRecord->appendChild($objXml->createElement("format", $this->escapeXML($strFormat))); 
 			}
-			
 			
 			// embedded text, seperated into paragraphs
 
