@@ -70,14 +70,18 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
         </div>
         
         <xsl:if test="/*/category/@published = '1'">
-        <p>Public URL: <a href="{/*/category/url}">
+        <p><a href="{/*/category/url}">Public URL:</a> 
+        <textarea readonly="" class="displayTextbox">
+        
+        
           <xsl:choose>
             <xsl:when test="//server/https = 'on'">
             https://
             </xsl:when><xsl:otherwise>http://</xsl:otherwise>
           </xsl:choose>
           <xsl:value-of select="//server/http_host"/><xsl:value-of select="/*/category/url"/>
-        </a></p>
+        </textarea>
+        </p>
         </xsl:if>
         
 			</div>

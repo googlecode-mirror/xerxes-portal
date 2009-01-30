@@ -778,6 +778,9 @@ li.mySavedRecords, li.myCollections {
   width: 500px;
 }
 
+.editSubjectHeading .displayTextbox {
+  height: 2.5em;
+}
 
 .editSubjectHeading .categoryCommand {
   vertical-align: top;
@@ -791,6 +794,7 @@ li.mySavedRecords, li.myCollections {
   margin-top: 24px;
   margin-bottom: 18px;
 }
+
 
 .miniForm {
    background-color: #EFEFEF;
@@ -1054,7 +1058,7 @@ div.autocomplete ul li {
 #snippet_generator .optionInfo {
   margin-left: 20px;
 }
-#snippet_generator .displayTextbox {
+.displayTextbox {
   margin-left: 5%;
   width:70%; 
   height: 5em;
