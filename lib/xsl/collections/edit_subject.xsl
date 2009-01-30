@@ -41,18 +41,20 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
 				<h1>Edit: <xsl:value-of select="//category/@name" /></h1>
         <div class="subject_edit_commands">
         <a class="categoryCommand rename" href="./?base=collections&amp;action=rename_form&amp;subject={//category/@normalized}&amp;username={//category/@owned_by_user}">Change name</a> 
-        <xsl:text> </xsl:text>
+        <span> </span>
         <xsl:if test="count(/*/category[1]/subcategory) &gt; 1">
         <a class="categoryCommand reorder" href="./?base=collections&amp;action=reorder_subcats_form&amp;subject={//category/@normalized}&amp;username={//category/@owned_by_user}">Change section order</a>
-        <xsl:text> </xsl:text>
+        <span> </span>
         </xsl:if>
         
-        <xsl:text> </xsl:text>
+        
         <a class="categoryCommand delete deleteCollection" href="./?base=collections&amp;action=delete_category&amp;subject={//category/@normalized}&amp;username={//category/@owned_by_user}">Delete collection
-        </a><xsl:text> </xsl:text>
+        </a>
+        <span> </span>
         
         <xsl:choose>
-            <xsl:when test="//category/@published = '1'">            
+            <xsl:when test="//category/@published = '1'">
+            <xsl:text> </xsl:text>            
             <span class="publishedStatus">Published:</span>
             <a class="categoryCommand publishToggle" href="{$base_url}/?base=collections&amp;action=edit&amp;username={//category/@owned_by_user}&amp;subject={//category/@normalized}&amp;published=false&amp;return={php:function('urlencode', string(//server/request_uri))}">
               <span>Make private</span></a>
@@ -98,16 +100,15 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
             <div class="subject_edit_commands">
               <a class="categoryCommand rename" href="./?base=collections&amp;action=rename_form&amp;subject={../@normalized}&amp;subcategory={@id}&amp;username={../@owned_by_user}">
               Change name</a>
-              <xsl:text> </xsl:text>      
+              <span> </span>      
               <a class="categoryCommand add" href="./?base=collections&amp;action=edit_form&amp;username={../@owned_by_user}&amp;subject={../@normalized}&amp;add_to_subcategory={@id}#section_{@id}">
                 Add databases
               </a>
-              <xsl:text> </xsl:text>
+              <span> </span>
               <a class="categoryCommand delete deleteSection" href="./?base=collections&amp;action=delete_subcategory&amp;subject={//category/@normalized}&amp;subcategory={@id}&amp;username={//category/@owned_by_user}">Delete section
               </a>
-              <xsl:text> </xsl:text>
+              <span> </span>
               <xsl:if test="count(database) &gt; 1">
-                <xsl:text> </xsl:text>
                 <a class="categoryCommand reorder" href="./?base=collections&amp;action=reorder_databases_form&amp;subject={//category/@normalized}&amp;subcategory={@id}&amp;username={//category/@owned_by_user}">Change database order</a>           
               </xsl:if>
            
