@@ -56,14 +56,14 @@
         
         <xsl:if test="$user_can_edit" >
           <div class="subject_edit_commands">        
-            <a class="categoryCommand edit" href="{/*/category/edit_url}"><img src="{$base_url}/images/famfamfam/wrench.png" alt=""/>Edit</a>
+            <a class="categoryCommand edit" href="{/*/category/edit_url}">Edit</a>
             <xsl:text> </xsl:text>
             <xsl:choose>
             <xsl:when test="/*/category/@published = '1'">
-              <span class="publishedStatus"><img src="{$base_url}/images/famfamfam/lock_open.png" alt="" />Published</span>
+              <span class="publishedStatus">Published</span>
             </xsl:when>
             <xsl:otherwise>
-              <span class="privateStatus">><img src="{$base_url}/images/famfamfam/lock.png" alt="" />Private</span>
+              <span class="privateStatus">Private</span>
             </xsl:otherwise>
             </xsl:choose>
           </div>
