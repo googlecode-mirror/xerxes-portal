@@ -283,8 +283,7 @@ li.mySavedRecords, li.myCollections {
 /* breadcrumb */
 
 .trail {
-	/*float: left;*/
-	width: 50%;
+
 }
 .sessionOptions {
 	text-align: right;
