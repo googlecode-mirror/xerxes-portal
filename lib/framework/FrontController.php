@@ -17,12 +17,31 @@ class Xerxes_Framework_FrontController
 	 * Fire-up the framework
 	 */
 	
+	private static $parent_directory = "";
+	
 	public static function execute()
 	{
-		// include the framework files
+		// calculate current file, this directory
 
 		$this_directory = dirname( __FILE__ );
 		$base = basename( __FILE__ );
+		
+		// calculate root directory of the app ../../ from here
+
+		$path_to_parent = $this_directory;
+		$path_to_parent = str_replace( "\\", "/", $path_to_parent );
+		$arrPath = explode( "/", $path_to_parent );
+		
+		array_pop( $arrPath );
+		array_pop( $arrPath );
+		
+		$path_to_parent = implode( "/", $arrPath );
+		
+		// here so other framework files can reference it
+		
+		self::$parent_directory = $path_to_parent;
+				
+		// include the framework files
 		
 		self::includeFiles( $this_directory, $base );
 		
@@ -79,19 +98,7 @@ class Xerxes_Framework_FrontController
 
 			// the working directory is the instance, so any relative paths will
 			// be executed in relation to the root directory of the instance
-			
-			// set the 'parent' directory to '../../' from here
-			
-			$path_to_parent = $this_directory;
-			$path_to_parent = str_replace( "\\", "/", $path_to_parent );
-			$arrPath = explode( "/", $path_to_parent );
-			array_pop( $arrPath );
-			array_pop( $arrPath );
-			$path_to_parent = implode( "/", $arrPath );
-			
-			// set the app directory -- the index.php better have set 
-			// the working directory to itself as required!
-			
+						
 			$working_dir = getcwd();
 			$working_dir = str_replace( "\\", "/", $working_dir );
 			
@@ -139,8 +146,8 @@ class Xerxes_Framework_FrontController
 			$objRegistry->setConfig( "PATH_PARENT_DIRECTORY", $path_to_parent );
 			$objRegistry->setConfig( "APP_DIRECTORY", $working_dir );
 			$objRegistry->setConfig( "BASE_URL", $web, true );
+			
 
-      
 			####################
 			#   INSTRUCTIONS   #
 			####################
@@ -207,7 +214,7 @@ class Xerxes_Framework_FrontController
 			
 			foreach ( $objControllerMap->getIncludes() as $path_to_include )
 			{
-				self::includeFiles( "$path_to_parent/$path_to_include" );
+				self::includeFiles( $path_to_parent . "/$path_to_include" );
 			}
 			
 			####################
@@ -429,8 +436,9 @@ class Xerxes_Framework_FrontController
 					
 					echo $output;
 				}
-        //remove the flash message, intended for one display only. 
-        $objRequest->setSession("flash_message", null);        
+				
+				//remove the flash message, intended for one display only. 
+				$objRequest->setSession( "flash_message", null );        
 			}
 		} 
 
@@ -446,6 +454,17 @@ class Xerxes_Framework_FrontController
 	}
 	
 	/**
+	 * Returns the root directory ../../ of xerxes
+	 * 
+	 * @return string path to application root
+	 */
+	
+	public static function parentDirectory()
+	{
+		return self::$parent_directory;
+	}
+	
+	/**
 	 * require_once() all php files or directories specified
 	 *
 	 * @param string $path		path to the file or directory
@@ -455,13 +474,11 @@ class Xerxes_Framework_FrontController
 	private static function includeFiles($path, $exclude = null)
 	{
 		// check to see if this is a directory or a file
-		
 
 		if ( is_dir( $path ) )
 		{
 			// open a directory handle and grab all the php files 
 			
-
 			$directory = opendir( $path );
 			
 			while ( ($file = readdir( $directory )) !== false )
