@@ -47,10 +47,9 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
         <span> </span>
         </xsl:if>
         
-        
         <a class="categoryCommand delete deleteCollection" href="./?base=collections&amp;action=delete_category&amp;subject={//category/@normalized}&amp;username={//category/@owned_by_user}">Delete collection
         </a>
-        <span> </span>
+        <span style="display: inline-block;"></span>
         
         <xsl:choose>
             <xsl:when test="//category/@published = '1'">
