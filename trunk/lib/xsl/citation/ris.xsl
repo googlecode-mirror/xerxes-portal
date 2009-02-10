@@ -20,7 +20,21 @@
 <xsl:template match="/">
 
 	<xsl:for-each select="//xerxes_record">
-		<xsl:text>&#013;&#010;</xsl:text><xsl:text>TY  - GEN</xsl:text>
+		<xsl:text>&#013;&#010;</xsl:text><xsl:text>TY  - </xsl:text>
+		<xsl:choose>
+			<xsl:when test="format = 'Article'">
+				<xsl:text>JOUR</xsl:text>
+			</xsl:when>
+			<xsl:when test="format = 'Book'">
+				<xsl:text>BOOK</xsl:text>
+			</xsl:when>
+			<xsl:when test="format = 'Thesis' or format = 'Dissertation'">
+				<xsl:text>THES</xsl:text>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:text>GEN</xsl:text>
+			</xsl:otherwise>
+		</xsl:choose>
 		<xsl:text>&#013;&#010;</xsl:text><xsl:text>T1  - </xsl:text><xsl:value-of select="title" />
 		<xsl:text>&#013;&#010;</xsl:text><xsl:text>T2  - </xsl:text><xsl:value-of select="sub_title" />
 		<xsl:text>&#013;&#010;</xsl:text><xsl:text>T3  - </xsl:text><xsl:value-of select="series_title" />
