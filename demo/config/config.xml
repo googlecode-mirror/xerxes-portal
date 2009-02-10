@@ -351,6 +351,10 @@
 		<config name="alternate_yahoo_location"></config>
     
     <!-- saving databases to personal collection features. -->
+    <!-- You can turn off display of this feature entirely in includes.xsl,
+         see   <xsl:variable name="show_collection_links" select="true()"/>
+         variable. -->
+
     <!-- default name for new collection and section -->
     <config name="default_collection_name" pass="true">My Saved Databases</config>
     <config name="default_collection_section_name" pass="true">Databases</config>

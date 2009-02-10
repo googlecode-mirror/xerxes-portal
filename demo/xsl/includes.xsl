@@ -18,6 +18,11 @@
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:php="http://php.net/xsl">
 
+<!-- Turn off display of the Saved Databases/Collection feature, if you
+     don't want it, uncomment this: -->
+<!-- <xsl:variable name="show_collection_links" select="false()"/> -->
+  
+  
 <!-- 
 	LOCALIZED TEXT LABELS / GLOBAL VARIABLES
 	Override the value of any of the global variables in lib/xsl/includes.xsl.  This also
