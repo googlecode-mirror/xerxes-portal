@@ -30,7 +30,7 @@
   <div id="searchArea">
 
   
-    <xsl:for-each select="//category">           
+    <xsl:for-each select="/*/category">           
     <div id="subcategory_choice" class="miniForm">
       <h2><xsl:value-of select="/*/databases/database/title_display" />: Save to personal collection: <xsl:value-of select="@name" /></h2>
       <h3>Choose a section</h3>
