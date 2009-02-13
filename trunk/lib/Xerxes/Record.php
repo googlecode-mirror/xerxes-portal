@@ -752,6 +752,7 @@
 					// oxford: only include the links that are free, otherwise just a link to abstract (5/7/08)
 					// gale: only has full-text if 'text available' note in 500 field (9/7/07) BUT: Not true of Gale virtual reference library (GALE_GVRL). 10/14/08 jrochkind. 
 					// catalog: any catalog record that links to loc toc without $3, bad catalogers! (7/18/08)
+					// ieee xplore: does not distinguish between things in your subscription or not (2/13/09) 
 
 
 					if ( stristr($strUrl, "$3") || 	
@@ -765,7 +766,8 @@
 					     stristr($this->strSource, "WILEY_IS") || 
 					     ( stristr($this->strSource, "OXFORD_JOU") && ! strstr($strUrl, "content/full/") ) ||
 					     ( strstr($this->strSource, "GALE") && ! $this->strSource == "GALE_GVRL" && ! in_array("Text available", $this->arrNotes)  ) ||
-					     stristr($strUrl, "www.loc.gov/catdir") )
+					     stristr($strUrl, "www.loc.gov/catdir") ||
+					     stristr($this->strSource, "IEEE_XPLORE"))
 					{
 						$bolToc = true;
 					}
