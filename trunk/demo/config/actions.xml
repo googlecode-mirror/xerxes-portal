@@ -364,7 +364,6 @@
         <!-- If subcategory url param is there, edit a subcategory (name).
              Of only subject param, edit a category (name and published status). If param new_subject_name, a new category can be created. -->
         <command>ListUserCategories</command>
-        <command>ChooseUserCategory</command>
         <command>EditUserCategory</command>        
       </action>
       <action name="reorder_subcats_form">
