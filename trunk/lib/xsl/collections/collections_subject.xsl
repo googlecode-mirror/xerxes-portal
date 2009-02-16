@@ -21,7 +21,7 @@
       <fieldset class="emptyCollectionInstructions">
         <legend>Instructions</legend>
         <p>Add your own list of databases to <strong><xsl:value-of select="/*/category/@name"/></strong> by choosing the <a class="categoryCommand edit">Edit</a> option above, and then choosing the <a class="categoryCommand add">Add databases</a> option.</p>
-        <p>You can also save databases by clicking the information link (<img src="{$base_url}/images/info.gif"/>) next to a database you want to save, and choosing the <a class="categoryCommand add">Save database</a> option. </p>
+        <p>You can also save databases by clicking the information link (<img src="{$base_url}/images/info.gif"/>) next to a database, and choosing the <a class="categoryCommand add">Save database</a> option. </p>
       </fieldset>
 </xsl:variable>
 
