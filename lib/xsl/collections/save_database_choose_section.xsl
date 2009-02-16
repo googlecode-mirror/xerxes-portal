@@ -43,7 +43,6 @@
         <input type="hidden" name="return" value="{$return}" />
       
         <p>
-          Use an existing section: 
           <select name="subcategory">
             <!-- if no existing ones, use our default name -->
             <xsl:if test="count(/*/category/subcategory) = 0">
@@ -54,9 +53,7 @@
             </xsl:for-each>
           </select>
         </p>
-        <p>
-          Or create new one: <input type="text" name="new_subcategory_name"></input>
-        </p>
+
         
     
         <p>  

@@ -62,7 +62,6 @@ collection_default_new_section_name = '<xsl:value-of select="$text_collection_de
       
         <h3>1. Choose a collection</h3>
         <p>
-          Use one of your existing collections: 
           <select id="subject" name="subject">
             <!-- if no existing ones, use our default name -->
             <xsl:if test="count(/*/userCategories/category) = 0">
@@ -73,21 +72,14 @@ collection_default_new_section_name = '<xsl:value-of select="$text_collection_de
             </xsl:for-each>
           </select>
         </p>
-        <p>
-          Or create new one: <input type="text" id="new_subject_name" name="new_subject_name"></input>
-        </p>
       </div>
       
       <!-- hidden div that will be shown and loaded by javascript -->
       <div id="subcategory_choice" class="miniForm" style="display: none">
         <h3>2. Choose a section</h3>
         <p>
-          Use an existing section: 
           <select id="subcategory" name="subcategory">
           </select>
-        </p>
-        <p>
-          Or create new one: <input type="text" id="new_subcategory_name" name="new_subcategory_name"></input>
         </p>
       </div>
   

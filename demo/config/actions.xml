@@ -388,10 +388,9 @@
       
       <action name="save_choose_collection">
         <command>ListUserCategories</command>
-        <request name="suppress_full_db_list">true</request>
-        <!-- all of them -->
-        <command>ListUserCategories</command>
+        <command>ChooseCategorySkip</command>
         <!-- specified database -->
+        <request name="suppress_full_db_list">true</request>
 				<command directory="databases">DatabasesDatabase</command>
         <view>xsl/collections/save_database_choose_category.xsl</view>
       </action>
@@ -400,7 +399,7 @@
           <request name="suppress_full_db_list">true</request>
           <command directory="databases">DatabasesDatabase</command>
           <!-- save if it needs saving, or normalize to use the right one -->          
-          <command>ChooseUserCategory</command>
+          <command>ChooseSectionSkip</command>
           <!-- add it to xml -->
           <command>UserCreatedCategory</command>
           <!-- display the subheading picker -->

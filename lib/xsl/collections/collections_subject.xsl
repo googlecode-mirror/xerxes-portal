@@ -84,7 +84,11 @@
        </xsl:if>
 			</div>
 			
-
+      <!-- help text, only when the user actually owns this guy, and
+           hasn't added any dbs yet. -->
+      <xsl:if test="$user_can_edit and count(/*/category/subcategory/database) = 0">
+        <p>Instructions go here.</p>
+      </xsl:if>
       
 			<div class="subjectDatabases">
         <!-- defined in includes.xsl -->
