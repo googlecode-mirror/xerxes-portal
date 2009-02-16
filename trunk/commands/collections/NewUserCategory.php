@@ -84,7 +84,7 @@ class Xerxes_Command_NewUserCategory extends Xerxes_Command_Collections
   
     // Send them off to the edit_mode of their new category.    
     $newUrl = $objRequest->url_for( array( "base" => "collections",
-                                   "action" => "edit_form",
+                                   "action" => "subject",
                                    "username" => $objRequest->getProperty("username"),
                                    "subject" => $existingSubject->normalized),                                     
                             true // force full url for redirect
