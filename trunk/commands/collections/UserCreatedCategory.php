@@ -58,6 +58,12 @@ class Xerxes_Command_UserCreatedCategory extends Xerxes_Command_Collections
 			$objXml->documentElement->setAttribute( "normalized", $objCategoryData->normalized );
       $objXml->documentElement->setAttribute("owned_by_user", $objCategoryData->owned_by_user);
       $objXml->documentElement->setAttribute("published", $objCategoryData->published);
+      
+      // We treat the 'default' collection (usually 'My Saved Records') special
+      // giving it less flexibility for simplicity, in the XSL/javascript. 
+      if ( $this->isDefaultCollection($objCategoryData) ) {
+        $objXml->documentElement->setAttribute("is_default_collection", "yes"); 
+      }
 			
 			// standard url for the category 
 			       
