@@ -1341,6 +1341,9 @@
 		<script src="{$base_include}/javascript/onload.js" language="javascript" type="text/javascript"></script>
 		<script src="{$base_include}/javascript/prototype.js" language="javascript" type="text/javascript"></script>
 		<script src="{$base_include}/javascript/scriptaculous/scriptaculous.js" language="javascript" type="text/javascript"></script>
+    
+    <!-- fancy message display -->
+    <script src="{$base_include}/javascript/message_display.js" language="javascript" type="text/javascript"></script>
 		
 		<!-- controls the adding and editing of tags -->
 		
