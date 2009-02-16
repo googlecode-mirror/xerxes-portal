@@ -17,6 +17,14 @@
 <xsl:import href="../includes.xsl" />
 <xsl:output method="html" encoding="utf-8" indent="yes" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
 
+<xsl:variable name="empty_collection_instructions">
+      <fieldset class="emptyCollectionInstructions">
+        <legend>Instructions</legend>
+        <p>Add your own list of databases to <strong><xsl:value-of select="/*/category/@name"/></strong> by choosing the <a class="categoryCommand edit">Edit</a> option above, and then choosing the <a class="categoryCommand add">Add databases</a> option.</p>
+        <p>You can also save databases by clicking the information link (<img src="{$base_url}/images/info.gif"/>) next to a database you want to save, and choosing the <a class="categoryCommand add">Save database</a> option. </p>
+      </fieldset>
+</xsl:variable>
+
 <xsl:template match="/*">
 	<xsl:call-template name="surround" />
 </xsl:template>
@@ -87,13 +95,15 @@
       <!-- help text, only when the user actually owns this guy, and
            hasn't added any dbs yet. -->
       <xsl:if test="$user_can_edit and count(/*/category/subcategory/database) = 0">
-        <p>Instructions go here.</p>
+        <xsl:copy-of select="$empty_collection_instructions"/>
       </xsl:if>
       
-			<div class="subjectDatabases">
-        <!-- defined in includes.xsl -->
-				<xsl:call-template name="subject_databases_list"/>
-			</div>
+      <xsl:if test="not($user_can_edit and count(/*/category/subcategory/database) = 0)">
+        <div class="subjectDatabases">
+          <!-- defined in includes.xsl -->
+          <xsl:call-template name="subject_databases_list"/>
+        </div>
+      </xsl:if>
 		</div>
     </form>
 
