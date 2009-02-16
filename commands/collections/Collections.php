@@ -33,6 +33,12 @@ abstract class Xerxes_Command_Collections extends Xerxes_Framework_Command
     }
     return $subcategory;
   }
+  
+  // Is the collection the default one? We tell by seeing if it's name matches
+  // the default name. 
+  public function isDefaultCollection($objCategoryData) {
+    return ( $objCategoryData->normalized == Xerxes_Data_Category::normalize($this->registry->getConfig("default_collection_name", false, "My Saved Databases")));
+  }
 }
 
 ?>
