@@ -92,7 +92,7 @@ class Xerxes_Command_SaveDatabaseToUserCategory extends Xerxes_Command_Collectio
     $objData->addDatabaseToUserCreatedSubcategory($strDatabaseID, $subcategory);    
     
     // Send them back where they came from, with a message. 
-    $this->returnWithMessage("Stored database in personal collection " . $category->name );
+    $this->returnWithMessage("Saved database in " . $category->name );
     
 		return 1;
 	}

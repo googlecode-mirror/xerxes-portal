@@ -41,7 +41,7 @@ class Xerxes_Command_DeleteSubcategory extends Xerxes_Command_Collections
         
     
     // Send them back where they came from, with a message. 
-    $this->returnWithMessage("Removed section" ,array("base" => "collections", "action" => "edit_form", "subject" => $category->normalized, "username" => $strUsername ));
+    $this->returnWithMessage("Deleted " . $subcategory->name ,array("base" => "collections", "action" => "edit_form", "subject" => $category->normalized, "username" => $strUsername ));
     
 		return 1;
 	}
