@@ -11,7 +11,7 @@
         $('message_display').style.position = 'fixed'; 
         $('message_display').style.zIndex = '100';  
         $('message_display').style.top = '50px'; 
-        $('message_display').style.left = '25%'; 
+        $('message_display').style.right = '25%'; 
         
         // fancy effects!
         $('message_display').appear({ duration: 1.5, from:0, to:0.85,  queue: { position: 'end', scope:'messagedisplayscope' } });  
