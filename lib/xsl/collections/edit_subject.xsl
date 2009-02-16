@@ -25,7 +25,10 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
 	<xsl:variable name="category_name"	select="//category/@name" />
 	<xsl:variable name="request_uri"	select="//request/server/request_uri" />
 
-  
+  <!-- We don't show certain 'advanced' editing functions for the default
+       collection -->
+  <xsl:variable name="show_advanced_options" select="not(/*/category/@is_default_collection = 'yes')"/>
+    
 	<div id="container">
     <div id="sidebar_float" class="sidebar_float">
       <xsl:call-template name="account_sidebar"/>
@@ -40,16 +43,22 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
     <div class="editSubjectHeading">
 				<h1>Edit: <xsl:value-of select="//category/@name" /></h1>
         <div class="subject_edit_commands">
-        <a class="categoryCommand rename" href="./?base=collections&amp;action=rename_form&amp;subject={//category/@normalized}&amp;username={//category/@owned_by_user}">Change name</a> 
-        <span> </span>
-        <xsl:if test="count(/*/category[1]/subcategory) &gt; 1">
-        <a class="categoryCommand reorder" href="./?base=collections&amp;action=reorder_subcats_form&amp;subject={//category/@normalized}&amp;username={//category/@owned_by_user}">Change section order</a>
-        <span> </span>
+        
+        <xsl:if test="$show_advanced_options">
+          <a class="categoryCommand rename" href="./?base=collections&amp;action=rename_form&amp;subject={//category/@normalized}&amp;username={//category/@owned_by_user}">Change name</a> 
+          <span> </span>
         </xsl:if>
         
-        <a class="categoryCommand delete deleteCollection" href="./?base=collections&amp;action=delete_category&amp;subject={//category/@normalized}&amp;username={//category/@owned_by_user}">Delete collection
-        </a>
-        <span style="display: inline-block;"></span>
+        <xsl:if test="count(/*/category[1]/subcategory) &gt; 1">
+          <a class="categoryCommand reorder" href="./?base=collections&amp;action=reorder_subcats_form&amp;subject={//category/@normalized}&amp;username={//category/@owned_by_user}">Change section order</a>
+          <span> </span>
+        </xsl:if>
+
+        <xsl:if test="$show_advanced_options">        
+          <a class="categoryCommand delete deleteCollection" href="./?base=collections&amp;action=delete_category&amp;subject={//category/@normalized}&amp;username={//category/@owned_by_user}">Delete collection
+          </a>
+          <span style="display: inline-block;"></span>
+        </xsl:if>
         
         <xsl:choose>
             <xsl:when test="//category/@published = '1'">
@@ -97,17 +106,25 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
           <fieldset class="subjectSubCategory">
             <legend><xsl:value-of select="@name" /></legend>
             <div class="subject_edit_commands">
-              <a class="categoryCommand rename" href="./?base=collections&amp;action=rename_form&amp;subject={../@normalized}&amp;subcategory={@id}&amp;username={../@owned_by_user}">
-              Change name</a>
-              <span> </span>      
+            
+              <xsl:if test="$show_advanced_options">
+                <a class="categoryCommand rename" href="./?base=collections&amp;action=rename_form&amp;subject={../@normalized}&amp;subcategory={@id}&amp;username={../@owned_by_user}">
+                Change name</a>
+                <span> </span>
+              </xsl:if>
+              
               <a class="categoryCommand add" href="./?base=collections&amp;action=edit_form&amp;username={../@owned_by_user}&amp;subject={../@normalized}&amp;add_to_subcategory={@id}#section_{@id}">
                 Add databases
               </a>
               <span> </span>
-              <a class="categoryCommand delete deleteSection" href="./?base=collections&amp;action=delete_subcategory&amp;subject={//category/@normalized}&amp;subcategory={@id}&amp;username={//category/@owned_by_user}">Delete section
-              </a>
-              <xsl:text> </xsl:text>
-              <span> </span>
+              
+              <xsl:if test="$show_advanced_options">
+                <a class="categoryCommand delete deleteSection" href="./?base=collections&amp;action=delete_subcategory&amp;subject={//category/@normalized}&amp;subcategory={@id}&amp;username={//category/@owned_by_user}">Delete section
+                </a>              
+                <xsl:text> </xsl:text>
+                <span> </span>
+              </xsl:if>
+              
               <xsl:if test="count(database) &gt; 1">
                 <a class="categoryCommand reorder" href="./?base=collections&amp;action=reorder_databases_form&amp;subject={//category/@normalized}&amp;subcategory={@id}&amp;username={//category/@owned_by_user}">Change database order</a>           
               </xsl:if>
@@ -152,6 +169,7 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
 			</div>
       
       
+      <xsl:if test="$show_advanced_options">
         <div id="addNewSection">
          <form action="{$base_url}" METHOD="GET">
             <input type="hidden" name="base" value="collections"/>
@@ -165,7 +183,8 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
           Add a new section: <input type="text" name="new_subcategory_name" />  
             <input type="submit" name="save" value="add"/>
         </form>
-       </div>                                
+       </div>
+     </xsl:if>
                 
       
     </div>
