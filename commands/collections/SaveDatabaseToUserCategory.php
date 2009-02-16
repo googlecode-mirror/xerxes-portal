@@ -85,7 +85,7 @@ class Xerxes_Command_SaveDatabaseToUserCategory extends Xerxes_Command_Collectio
     // And add the db to it, unless it already is there. 
     foreach ($subcategory->databases as $db) {
       if ($db->metalib_id == $strDatabaseID) {
-        $this->returnWithMessage("Database was already in section  ".  $subcategory->name);
+        $this->returnWithMessage("Database was already saved to  ".  $subcategory->name . " in " . $category->name);
         return 1;
       }
     }
