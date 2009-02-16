@@ -14,7 +14,7 @@
         $('message_display').style.right = '40px'; 
         
         // fancy effects!
-        $('message_display').appear({ duration: 1.5, from:0, to:0.85,  queue: { position: 'end', scope:'messagedisplayscope' } });  
-        $('message_display').fade({ duration:1.5, from:0.85, to:0,  delay: 3, queue: { position: 'end', scope:'messagedisplayscope' } });
+        $('message_display').appear({ duration: 1.5, from:0, to:0.9,  queue: { position: 'end', scope:'messagedisplayscope' } });  
+        $('message_display').fade({ duration:1.5, from:0.9, to:0,  delay: 3, queue: { position: 'end', scope:'messagedisplayscope' } });
      }
    }
