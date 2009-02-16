@@ -1010,7 +1010,7 @@
 				<div class="subjectDatabaseTitle">           
 					<xsl:choose>
 						<xsl:when test="not($should_lock_nonsearchable and searchable_by_user != '1')">						
-							<a>
+							<a title="Go directly to {title_display}">
 							<xsl:attribute name="href"><xsl:value-of select="xerxes_native_link_url" /></xsl:attribute>
 								<xsl:value-of select="title_display" />
 							</a>
@@ -1022,7 +1022,7 @@
               </label>							
 						</xsl:when>
 						<xsl:otherwise>
-							<a>
+							<a title="Go directly to {title_display}">
 							<xsl:attribute name="href"><xsl:value-of select="xerxes_native_link_url" /></xsl:attribute>
 								<xsl:value-of select="title_display" />
 							</a>						
@@ -1031,7 +1031,7 @@
 				</div>
 					
 				<div class="subjectDatabaseInfo">         
-					<a>
+					<a title="More information about {title_display}">
 					<xsl:attribute name="href"><xsl:value-of select="url" /></xsl:attribute>
 					<img alt="more information" src="images/info.gif" >
 						<xsl:attribute name="src"><xsl:value-of select="//config/base_url" />/images/info.gif</xsl:attribute>
