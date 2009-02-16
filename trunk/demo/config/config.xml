@@ -355,7 +355,13 @@
          see   <xsl:variable name="show_collection_links" select="true()"/>
          variable. -->
 
-    <!-- default name for new collection and section -->
+    <!-- default name for new collection and section. NOTE: If you change
+         these parameters, especially default_collection_name,
+         after you have already deployed Xerxes with collections / 
+         saved databases functionality, users may see somewhat confusing
+         behavior (although no errors). Try it yourself to see. You may
+         want to change the names of all existing collections with the older
+         names by using direct SQL. -->
     <config name="default_collection_name" pass="true">My Saved Databases</config>
     <config name="default_collection_section_name" pass="true">Databases</config>
 		
