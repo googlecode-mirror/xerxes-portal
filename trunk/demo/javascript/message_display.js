@@ -10,7 +10,7 @@
         $('message_display').hide(); 
         $('message_display').style.position = 'fixed'; 
         $('message_display').style.zIndex = '100';  
-        $('message_display').style.top = '50px'; 
+        $('message_display').style.top = '35px'; 
         $('message_display').style.right = '25%'; 
         
         // fancy effects!
