@@ -15,6 +15,6 @@
         
         // fancy effects!
         $('message_display').appear({ duration: 1.5, from:0, to:0.85,  queue: { position: 'end', scope:'messagedisplayscope' } });  
-        $('message_display').fade({ duration:1.5, from:0.85, to:0,  delay: 2, queue: { position: 'end', scope:'messagedisplayscope' } });
+        $('message_display').fade({ duration:1.5, from:0.85, to:0,  delay: 3, queue: { position: 'end', scope:'messagedisplayscope' } });
      }
    }
