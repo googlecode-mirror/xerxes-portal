@@ -118,7 +118,8 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
               </a>
               <span> </span>
               
-              <xsl:if test="$show_advanced_options">
+              <!-- don't let them delete the last remaining section, it's confusing -->
+              <xsl:if test="$show_advanced_options and (count(/*/category/subcategory) &gt; 1)">
                 <a class="categoryCommand delete deleteSection" href="./?base=collections&amp;action=delete_subcategory&amp;subject={//category/@normalized}&amp;subcategory={@id}&amp;username={//category/@owned_by_user}">Delete section
                 </a>              
                 <xsl:text> </xsl:text>
@@ -211,18 +212,23 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
          </p>
        </form>
        
-       
+       <xsl:if test="count(/*/databases/database)">
+       <p><i>Click on a database title or <img src="{$base_url}/images/famfamfam/add.png" alt="add"/> icon to save a database to this area.</i></p>
+       </xsl:if>
+
        
         <ul>
           <xsl:if test="count(/*/databases/database)">
-            <xsl:attribute name="class">addDatabasesMatches</xsl:attribute>
+            <xsl:attribute name="class">addDatabasesMatches</xsl:attribute>            
           </xsl:if>
           <xsl:if test="/*/request/query and not( /*/databases/database )">
             <li>No databases found matching "<xsl:value-of select="/*/request/query"/>"</li>
           </xsl:if>
           <xsl:for-each select="/*/databases/database">
             <li><a class="addToCollection" href="./?base=collections&amp;action=save_complete&amp;username={/*/category[1]/@owned_by_user}&amp;subject={/*/category[1]/@normalized}&amp;subcategory={/*/request/add_to_subcategory}&amp;id={metalib_id}&amp;return={php:function('urlencode', string(//server/request_uri))}#section_{/*/request/add_to_subcategory}">
-            <xsl:value-of select="title_display"/></a><xsl:text> </xsl:text><a href="{url}"><img class="mini_icon" src="{$base_url}/images/info.gif" alt="more information" title="more information"/></a>
+            <xsl:value-of select="title_display"/></a><xsl:text> </xsl:text>
+            
+            <!-- <a href="{url}"><img class="mini_icon" src="{$base_url}/images/info.gif" alt="more information" title="more information"/></a> -->
             
             <xsl:if test="searchable = '1'">
               <xsl:text> </xsl:text>
