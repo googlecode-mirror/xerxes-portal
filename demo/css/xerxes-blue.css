@@ -777,6 +777,14 @@ li.mySavedRecords, li.myCollections {
   width: 500px;
 }
 
+.emptyCollectionInstructions {
+  line-height: 28px;
+}
+.emptyCollectionInstructions p {
+  margin-bottom: 2em;
+}
+
+  
 
 .editCategory .subjectSubCategory {
   margin-bottom: 40px;
@@ -833,7 +841,9 @@ a.categoryCommand, a.categoryCommand:visited, a:hover.categoryCommand {
   background-position-y: 4px;
   background-repeat: no-repeat;
 }
-a.categoryCommand:hover {
+/* Require it to have an href attribute to avoid mouseover change
+   on demo example links. */
+a.categoryCommand:hover[href] {
   	color: #FFCC33; text-decoration: none; 
     background-color: #8C8C8C;
 }
