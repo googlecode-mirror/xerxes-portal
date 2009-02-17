@@ -538,19 +538,13 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
   /**
 	 * Get user-created categories for specified user. 
 	 * @param string $username
-   * @param string $sortKey. Default 'name'. Pass in 'id' instead to order by id, to get oldest created collection first.  
 	 * @return array		array of Xerxes_Data_Category objects
 	 */
-  public function getUserCreatedCategories($username, $sortKey = "name") {
+  public function getUserCreatedCategories($username) {
     if (! $username) throw new Exception("Must supply a username argument");
     
-    $sortSql = "ORDER BY UPPER(name) ASC";
-    if ( $sortKey == "id") {
-      $sortSql = "ORDER BY id ASC";
-    }
-    
     $arrCategories = array ( );
-    $strSQL = "SELECT * from xerxes_user_categories WHERE username = :username $sortSql";
+    $strSQL = "SELECT * from xerxes_user_categories WHERE username = :username ORDER BY UPPER(name) ASC";
     $arrResults = $this->select( $strSQL, array (":username" => $username ) );
     
     foreach ( $arrResults as $arrResult )
