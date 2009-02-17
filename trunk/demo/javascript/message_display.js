@@ -10,7 +10,7 @@
         $('message_display').hide(); 
 
        /* some wacky conditional comment way to detect IE6 */
-        var IE6 = false /*@cc_on || @_jscript_version < 5.7 @*/;
+        var IE6 = navigator.userAgent.toLowerCase().indexOf('msie 6') != -1;
         if (! IE6 ) {                
           $('message_display').style.position = 'fixed';
         }
