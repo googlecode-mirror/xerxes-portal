@@ -239,7 +239,11 @@
 	{
 		var iTotal = numChecked(form1)
 		
-		if ( iTotal == 0 )
+    
+    // Allow a hidden input with name="database" to get them by this check,
+    // even if they've actually checked no checkboxes. 
+    //Some forms have no checkboxes, instead having hidden field!
+		if ( iTotal == 0 && $(form1).select('input[type="hidden"][name="database"]') == "") 
 		{
 			alert("Please select databases to search");
 			return false;
