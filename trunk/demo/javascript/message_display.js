@@ -8,7 +8,15 @@
      if ($('message_display')) {
         // Take it out of the page, and put it into position
         $('message_display').hide(); 
-        $('message_display').style.position = 'fixed'; 
+
+       /* some wacky conditional comment way to detect IE6 */
+        var IE6 = false /*@cc_on || @_jscript_version < 5.7 @*/;
+        if (! IE6 ) {                
+          $('message_display').style.position = 'fixed';
+        }
+        else {
+          $('message_display').style.position = 'absolute';
+        }
         $('message_display').style.zIndex = '100';  
         $('message_display').style.top = '35px'; 
         $('message_display').style.right = '20px'; 
