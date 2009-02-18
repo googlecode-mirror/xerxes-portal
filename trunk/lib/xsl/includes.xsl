@@ -1520,9 +1520,10 @@
 <xsl:template name="collections_sidebar">
 <div id="collections_sidebar" class="box">
   <h2 class="sidebar-title">My Collections</h2>
-  <p>Collections are a way to organize your saved databases.</p>
+  <p>Collections are a way to organize databases you choose.</p>
   <ul>
-  <xsl:for-each select="/*/userCategories/category">
+  <!-- don't list the default collection here, that's presented differently. -->
+  <xsl:for-each select="/*/userCategories/category[name != /*/config/default_collection_name]">
     <li>
       <xsl:choose>
         <xsl:when test="//request/base = 'collections' and //request/action = 'subject' and //request/subject = normalized">
