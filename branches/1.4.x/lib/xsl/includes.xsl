@@ -628,14 +628,14 @@
 -->
 <xsl:template name="search_box">
 
+	<xsl:param name="full_page_url" select="//request/server/request_uri"/>
+
+	<!-- "base" url used for switching search modes. Defaults to just our current url, but for embed purposes 
+	may be provided differently. -->
+
 	<!-- split contents into seperate template to make partial AJAX loading easier -->
 	<div class="searchBox" id="searchBox">
-	
-		<!-- "base" url used for switching search modes. Defaults to just our current url, but for embed purposes 
-		may be provided differently. -->
-	
-		<xsl:param name="full_page_url" select="//request/server/request_uri"/>
-	
+		
 		<!-- pull out any already existing query entries -->
 		
 		<xsl:variable name="query" select="//results/search/pair[@position = '1']/query" />
@@ -769,7 +769,7 @@
 <xsl:template name="metasearch_input_pair">
 	<xsl:param name="field_selected" />
 	<xsl:param name="query_entered" />
-	<xsl:param name="advanced_search" select="false" />
+	<xsl:param name="advanced_mode" select="false" />
 	<xsl:param name="input_name_suffix" select ="''" />
 	
 	<select id="field{$input_name_suffix}" name="field{$input_name_suffix}">
