@@ -776,8 +776,6 @@
 					
 					if ( $bolToc == false )
 					{
-            
-            
 						// ebsco html
 						// there is (a) an indicator from ebsco that the record has full-text, or 
 						// (b) an abberant 856 link that doesn't work, but the construct link will work, 
@@ -1542,7 +1540,8 @@
 			if ($this->getEdition() != null ) $objRecord->appendChild($objXml->createElement("edition", $this->escapeXML($this->getEdition()))); 
 			if ($this->getCallNumber() != null ) $objRecord->appendChild($objXml->createElement("call_number", $this->escapeXML($this->getCallNumber())));
 			if ($this->getPrice() != null ) $objRecord->appendChild($objXml->createElement("price", $this->escapeXML($this->getPrice())));
-			
+			if ($this->getControlNumber()!= null ) $objRecord->appendChild($objXml->createElement("control_number", $this->escapeXML($this->getControlNumber())));	
+
 			$strFormat = $this->getFormat();
 			
 			if ( $strFormat != null && ! stristr($strFormat,"unknown") )
