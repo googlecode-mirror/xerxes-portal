@@ -515,8 +515,9 @@
 
 		<section name="books" directory="mango" namespace="Mango" documentElement="metasearch" restricted="true">
 			<include>lib/Mango/</include>
+			<common_xslt>xsl/mango/mango.xsl</common_xslt>
 			<action name="home">
-				<view>xsl/mango_home.xsl</view>
+				<view>xsl/mango/mango_home.xsl</view>
 			</action>
 			<action name="advanced">
 				<request name="advancedfull">true</request>
