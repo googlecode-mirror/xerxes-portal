@@ -405,7 +405,7 @@ class Xerxes_Framework_FrontController
 				} 
 				else
 				{
-					$output = $objPage->transform( $objXml, $objControllerMap->getView(), null );
+					$output = $objPage->transform( $objXml, $objControllerMap->getView(), null, $objControllerMap->getCommonXSL() );
 					
 					// EMBEDED JAVASCRIPT DISPLAY
 					//

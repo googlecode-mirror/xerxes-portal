@@ -22,11 +22,12 @@
 		 * 								templates, if neccesary. 
 		 * @param array $arrParams		[optional] array of parameters to pass to stylesheet
 		 * @param bool $bolDoc			[optional] return result as DOMDocument (default false)
+		 * @param array $arrInclude		[optional] additional stylesheets that should be included in the transform
 		 * @return mixed				newly formatted document as string or DOMDocument
 		 * @static 
 		 */ 
 					
-		public static function transform ( $xml, $strXsltPath, $arrParams = null, $bolDoc = false )
+		public static function transform ( $xml, $strXsltPath, $arrParams = null, $bolDoc = false, $arrInclude = "" )
 		{
 			if ( $strXsltPath == "") throw new Exception("no stylesheet supplied");
 			
@@ -38,7 +39,7 @@
 				$xml = $objXml;
 			}
 			
-			$objXsl = self::generateBaseXsl($strXsltPath);
+			$objXsl = self::generateBaseXsl($strXsltPath, $arrInclude);
 			
 			// create XSLT Processor
 			$objProcessor = new XsltProcessor();
@@ -73,14 +74,14 @@
 		 * 'base'.  Base uses the distro file xsl/dynamic_skeleton.xsl to
 		 * begin with. 
 		 * 
-		 * @param string $strXsltRelPath Relative path to a stylesheet, generally 
-		 * 	beginning with "xsl/". Stylesheet may exist in library location, app
-		 *	location, or both. 
-		 * @return DomDocument 	A DomDocument holding the generated XSLT stylesheet.
+		 * @param string $strXsltRelPath 	Relative path to a stylesheet, generally beginning with "xsl/". 
+		 * 									Stylesheet may exist in library location, app location, or both. 
+		 * @param array $arrInclude			[optional] additional stylesheets that should be included in the request
+		 * @return DomDocument 		A DomDocument holding the generated XSLT stylesheet.
 		 * @static
 		*/
 		
-		public static function generateBaseXsl($strXsltRelPath)
+		public static function generateBaseXsl($strXsltRelPath, $arrInclude = "")
 		{
 			$objRegistry = Xerxes_Framework_Registry::getInstance(); 
 		
@@ -99,7 +100,6 @@
 			$generated_xsl = new DOMDocument();
 			$generated_xsl->load( $distro_xsl_dir . "xsl/dynamic_skeleton.xsl");
 			
-      
 			// pre-pend imports to this, to put them at the top of the file. 
 		
 			$importInsertionPoint = $generated_xsl->documentElement->firstChild;
@@ -119,6 +119,16 @@
 				// importing a distro file that will reference it. 
 				
 				self::addImportReference( $generated_xsl, $distro_xsl_dir . "xsl/includes.xsl", $importInsertionPoint );
+			}
+			
+			// additional xsl that should be included
+			
+			if ( $arrInclude != "" )
+			{
+				foreach ( $arrInclude as $strInclude )
+				{
+					self::addImportReference( $generated_xsl, $distro_xsl_dir . $strInclude, $importInsertionPoint );
+				}
 			}
 			
 			// include local

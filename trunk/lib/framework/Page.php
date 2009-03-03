@@ -300,20 +300,13 @@ class Xerxes_Framework_Page
 	 * @param mixed $xml			DOMDocument or string containing xml
 	 * @param string $strXslt		physical path to xslt document 
 	 * @param array $arrParams		[optional] array of parameters to pass to stylesheet
-	 * @param bool $bolAmersand		[optional] whether to unescape ampersands, true will convert &amp; => &
+	 * @param array $arrIncludes	[optional] additional stylesheets that should be included in the transform
 	 * @return string				newly formatted document
 	 */
 	
-	public function transform($xml, $strXslt, $arrParams = null, $bolAmersand = false)
+	public function transform($xml, $strXslt, $arrParams = null, $arrIncludes = null)
 	{
-		$strHtml = Xerxes_Parser::transform( $xml, $strXslt, $arrParams );
-		
-		if ( $bolAmersand == true )
-		{
-			$strHtml = str_replace( "&amp;", "&", $strHtml );
-		}
-		
-		return $strHtml;
+		return Xerxes_Parser::transform( $xml, $strXslt, $arrParams, false, $arrIncludes );
 	}
 }
 ?>
