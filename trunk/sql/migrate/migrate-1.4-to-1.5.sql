@@ -1,5 +1,6 @@
 # Create tables for user-created categories
 
+USE xerxes;
 
 CREATE TABLE xerxes_user_categories(
 	id 			      MEDIUMINT NOT NULL AUTO_INCREMENT,
