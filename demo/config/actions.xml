@@ -513,14 +513,14 @@
 		
 		<!-- mango is experimental in 1.5 -->
 
-		<section name="books" directory="mango" namespace="Mango" documentElement="metasearch" restricted="true">	
+		<section name="books" directory="mango" namespace="Mango" documentElement="metasearch" restricted="true">
 			<include>lib/Mango/</include>
 			<action name="home">
 				<view>xsl/mango_home.xsl</view>
 			</action>
 			<action name="advanced">
 				<request name="advancedfull">true</request>
-				<view>xsl/mango_home.xsl</view>
+				<view>xsl/mango/mango_home.xsl</view>
 			</action>
 			<action name="lookup">
 				<command>MangoLookupInject</command>
@@ -536,7 +536,7 @@
 				<command namespace="Xerxes" directory="metasearch">MetasearchCheckSaved</command>
 				<command>MangoPaging</command>
 				<command namespace="Xerxes" directory="folder">FolderTags</command>
-				<view>xsl/mango_results.xsl</view>
+				<view>xsl/mango/mango_results.xsl</view>
 			</action>
 			<action name="ill">
 				<command>MangoILL</command>
@@ -544,19 +544,18 @@
 			</action>
 			<action name="missing">
 				<command>MangoMissing</command>
-				<view format="rss">xsl/mango_missing.xsl</view>
+				<view format="rss">xsl/mango/mango_missing.xsl</view>
 			</action>
 			<action name="record">
 				<pathParamMap>
 					<mapEntry pathIndex="2" property="oclc"/>
 				</pathParamMap>
-				<command>MangoRecord</command>
+				<command>MangoResults</command>
 				<command>MangoAmazon</command>
 				<command>MangoRecommend</command>
 				<command>MangoLookupInject</command>
 				<command namespace="Xerxes" directory="metasearch">MetasearchCheckSaved</command>
-				<view>xsl/mango_record.xsl</view>
-				<view format="marc">xsl/marc-display.xsl</view>
+				<view>xsl/mango/mango_record.xsl</view>
 			</action>
 			<action name="save-delete">
 				<command>MangoSaveDelete</command>
