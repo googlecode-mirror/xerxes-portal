@@ -233,8 +233,20 @@ class Xerxes_Framework_FrontController
 			
 			foreach ( $objRegistry->getPass() as $key => $value )
 			{
-				$objElement = $objConfigXml->createElement( $key, Xerxes_Parser::escapeXml($value) );
-				$objConfigXml->documentElement->appendChild( $objElement );
+        if ($value instanceof SimpleXMLElement) {
+          // just spit it back out again as XML, need to convert to DOMDocument.
+          $objElement = $objConfigXml->createElement($key);
+          $objConfigXml->documentElement->appendChild( $objElement );
+          foreach ($value->children() as $child) {
+            $domValue = dom_import_simplexml($child);
+            $domValue =  $objConfigXml->importNode($domValue, true);
+            $objElement->appendChild($domValue);
+          }                                
+        }
+        else {
+          $objElement = $objConfigXml->createElement( $key, Xerxes_Parser::escapeXml($value) );
+          $objConfigXml->documentElement->appendChild( $objElement );
+        }
 			}
 			
 			$objRequest->addDocument( $objConfigXml );

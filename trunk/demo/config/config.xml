@@ -264,7 +264,7 @@
 			'_blank' causes the browser to open the links in a new window. -->
 		
 		<config name="link_target" pass="true">_blank</config>
-		
+    
 		<!-- this should correspond to the search limit in metalib -->
 		
 		<config name="search_limit" pass="true">10</config>

@@ -80,15 +80,22 @@ class Xerxes_Framework_Registry
 			foreach ( $xml->configuration->config as $config )
 			{
 				$name = strtoupper( $config["name"] );
-				$value = trim( ( string ) $config );
-					
-				// convert simple xml-encoded values to something easier 
-				// for the client code to digest
-
-				$value = str_replace( "&lt;", "<", $value );
-				$value = str_replace( "&gt;", ">", $value );
-				$value = str_replace( "&amp;", "&", $value );
-					
+        
+        if ( $config["xml"] == "true" ) {
+          // special XML config, already parsed as SimpleXML, leave it that way.
+          $value = $config;          
+        }
+        else {
+          //simple string        
+          $value = trim( ( string ) $config );
+            
+          // convert simple xml-encoded values to something easier 
+          // for the client code to digest
+          $value = str_replace( "&lt;", "<", $value );
+          $value = str_replace( "&gt;", ">", $value );
+          $value = str_replace( "&amp;", "&", $value );
+        }
+        
 				// special logic for authentication_source because we can
 				// have more than one. 
 
@@ -104,7 +111,7 @@ class Xerxes_Framework_Registry
 					}
 				}
 					
-				if ( $value != "" )
+				if (! empty($value) )
 				{
 					// add it to the config array
 
@@ -143,7 +150,7 @@ class Xerxes_Framework_Registry
 	 * @param string $name			name of the configuration setting
 	 * @param bool $bolRequired		[optional] whether function should throw exception if no value found
 	 * @param mixed $default		[optional] a default value for the constant if none found
-	 * @return mixed
+	 * @return mixed  Can return a String or a SimpleXMLElement, depending on whether it was XML config value. 
 	 */
 	
 	public function getConfig($name, $bolRequired = false, $default = null)
@@ -213,7 +220,7 @@ class Xerxes_Framework_Registry
 	 * Set a value for a configuration, from code rather than the file
 	 *
 	 * @param string $key		configuration setting name
-	 * @param mixed $value		value
+	 * @param mixed $value		value. Generally String or SimpleXMLElement. 
 	 * @param bool $bolPass		[optional] whether value should be passed to XML (default false)
 	 */
 	
