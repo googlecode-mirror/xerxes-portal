@@ -38,7 +38,7 @@
 		</div>
     
 		<div id="searchArea">
-			<xsl:for-each select="//database">
+			<xsl:for-each select="/*/databases/database">
 			
 				<xsl:variable name="native_link" select="php:function('urlencode', string(link_native_home))" />
 				<xsl:variable name="id_meta" select="metalib_id" />
