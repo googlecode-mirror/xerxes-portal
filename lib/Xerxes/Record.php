@@ -3182,7 +3182,9 @@
 			
 			foreach($this->arrLinks as $arrLink )
 			{
-				if ( $arrLink[2] != "none")
+        //  this should really be based on INCLUSION, which ones are
+        //  fulltext, not the current exclusion. Oh well.
+				if ( $arrLink[2] != "none" && $arrLink[2] != "original_record" && $arrLink[2] != "holdings")
 				{
 					$bolFullText = true;
 				}
