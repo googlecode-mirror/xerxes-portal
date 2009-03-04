@@ -382,6 +382,9 @@ abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
         if ($node->tagName == 'link_native_record' ) {
           $link_templates[$metalib_id]["original_record"] = $node->textContent; 
         }
+        if ($node->tagName == 'link_native_holdings') {
+          $link_templates[$metalib_id]["holdings"] = $node->textContent;
+        }
       }
     }
     return $link_templates;
