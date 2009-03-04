@@ -455,10 +455,7 @@
                   <xsl:copy-of select="$text_link_resolver_check" />
 								</a>
 							</xsl:when>
-              <!-- If no direct link or link resolver, do we have an original record link? -->
-              <xsl:when test="links/link[@type='original_record']">
-                <a href="{links/link[@type='original_record']}">Do some stuff!</a>
-              </xsl:when>              
+           
               <!-- if none of the above, 
                    but we DO have text in the record, tell them so. -->
               <xsl:when test="embeddedText/paragraph">

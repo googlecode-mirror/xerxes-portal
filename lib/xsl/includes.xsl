@@ -1441,7 +1441,9 @@
 	
 	<xsl:variable name="database_code" select="metalib_id" />
 	
-	<xsl:for-each select="links/link[@type != 'none']">
+  <!-- this should really be based on INCLUSION, which ones are
+       fulltext, not the current exclusion. Oh well. -->
+	<xsl:for-each select="links/link[@type != 'none' and @type != 'original_record' and @type != 'holdings']">
 		
 		<div class="{$class}">
 		
