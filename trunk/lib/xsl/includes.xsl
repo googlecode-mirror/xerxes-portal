@@ -108,6 +108,8 @@
   
 	<xsl:variable name="text_link_resolver_available">Full text available</xsl:variable>
 	<xsl:variable name="text_link_resolver_check">Check for availability</xsl:variable>
+  <xsl:variable name="text_link_holdings">Availability</xsl:variable>
+  <xsl:variable name="text_link_original_record">Original record</xsl:variable>
 	
 	<xsl:variable name="text_searchbox_ada_boolean">Boolean operator: </xsl:variable>
 	<xsl:variable name="text_searchbox_boolean_and">And</xsl:variable>
