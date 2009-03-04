@@ -527,6 +527,9 @@ li.mySavedRecords, li.myCollections {
 	color: #009900;
 	text-decoration:none;
 }
+.resultsFullText img {
+  vertical-align: text-bottom;
+}
 .resultsLanguage {
 	color: #990000;
 	font-weight: bold;
