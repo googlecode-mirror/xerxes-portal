@@ -102,6 +102,7 @@ abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
 		
 		if ( $objSearchXml->documentElement != null )
 		{
+      
 			$objImport = $objXml->importNode( $objSearchXml->documentElement, true );
 			$objXml->documentElement->appendChild( $objImport );
 		}
@@ -256,12 +257,23 @@ abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
 	
 	protected function addRecords($objXml, $arrRecords, $configMarcResults)
 	{
+    
+    # We need to make a hash of metalib-style link templates. We can do that
+    # simply from objXml, since it already includes the database_links
+    # section containing these templates. 
+    $link_templates = $this->getLinkTemplates($objXml);    
+    
 		$objRecords = $objXml->createElement( "records" );
 		
 		foreach ( $arrRecords as $objRecord )
 		{
+      
 			$objXerxesRecord = new Xerxes_Record( );
-			$objXerxesRecord->loadXml( $objRecord );
+         
+      # We pass in the link templates hash we calculated above, supplying
+      # metalib templates that should be used for calculating additional links
+      # based on raw MARC. 
+			$objXerxesRecord->loadXml( $objRecord, $link_templates);
 			
 			$objRecordContainer = $objXml->createElement( "record" );
 			$objRecords->appendChild( $objRecordContainer );
@@ -344,6 +356,36 @@ abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
 
 		return $objSearch->retrieve( $strResultSet, $iStartRecord, 1, null, "customize", $arrFields );
 	}
+  
+  /* Creates a hash data structure of metalib-style URL templates for a given
+     set of databases. Extracts this from Xerxes XML including a
+     <database_links> section. Extracts into a hash for more convenient
+     and quicker use.  Structure of hash is:
+     { metalib_id1 => { "xerxes_link_type_a" => template,
+                        "xerxes_link_type_b" => template }
+       metalib_id2 => [...]
+       
+       Input is an XML DOMDocument containing a Xerxes <database_links>
+       structure. 
+  */
+  protected function getLinkTemplates($xml) {
+    $link_templates = array();
+    $dbXPath = new DOMXPath($xml);
+    $objDbXml = $dbXPath->evaluate('//database_links/database');
+    for ( $i = 0; $i < $objDbXml->length ; $i ++) {
+      $dbXml = $objDbXml->item(0);
+      $metalib_id = $dbXml->getAttribute("metalib_id");
+      $link_templates[$metalib_id] = array();
+      
+      for ( $j = 0; $j < $dbXml->childNodes->length ; $j++) {
+        $node = $dbXml->childNodes->item($j);
+        if ($node->tagName == 'link_native_record' ) {
+          $link_templates[$metalib_id]["original_record"] = $node->textContent; 
+        }
+      }
+    }
+    return $link_templates;
+  }
 	
 	// Functions for saving saved record state from a result set. Just convenience
 	// call to helper. 

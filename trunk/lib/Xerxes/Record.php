@@ -13,7 +13,7 @@
 	 */
 
 	class Xerxes_Record
-	{
+	{        
 		private $objMarcXML = null;			// original marc-xml dom document
 		private $objXPath = null;			// xpath object
 		
@@ -82,6 +82,8 @@
 		private $arrAltScript = array();	// alternate character-scripts like cjk or hebrew, taken from 880s
 		private $strAltScript = "";			// the name of the alternate character-script; we'll just assume one for now, I guess
 		
+    static $TemplateEmptyValue = "Xerxes_Record_lookupTemplateValue_placeholder_missing";
+    
 		### PUBLIC FUNCTIONS ###
 		
 		
@@ -89,11 +91,13 @@
 		 * Load XML record to be processed
 		 *
 		 * @param mixed $xml [string or DOMDocument or DOMElement] single record
+     * @param array $databaseLinkTemplates An optional hash of metalib-style link templates to apply to the MARC to generate links to include in the Xerxes XML. Should be of the form: { "metalib_id" => { "xerxes_link_type" => "metalib_template", "different_link_type" => "template"}, "metalib_id2" => [etc] }     
 		 */
 		
-		public function loadXML( $xml )
+     public function loadXML( $xml, $databaseLinkTemplates = null )
 		{
 			// type check
+      
       
 			if ( ! ( is_string($xml) || get_class($xml) == "DOMDocument" || get_class($xml) == "DOMElement" ) )
 				throw new Exception("param 1 must be XML of type string, DOMDocument, or DOMElement");
@@ -119,6 +123,7 @@
 				$xml = $objXml;
 			}
 			
+      
 			### set XPath object and namespaces
 			
 			$strMarcNS = "http://www.loc.gov/MARC21/slim";
@@ -813,6 +818,26 @@
 						array_push($this->arrLinks, array($strDisplay, $strUrl, "none"));
 					}
 				}	
+        
+        ### Add link to native record and to external holdings URL too, if
+        # available from metalib template. 
+        
+        if ($databaseLinkTemplates && $this->getMetalibID() && array_key_exists($this->getMetalibID(), $databaseLinkTemplates)) { 
+          
+          $arrTemplates = $databaseLinkTemplates[ $this->getMetalibID() ];
+          
+          foreach( $arrTemplates as $type => $template ) {
+            $filled_in_link = $this->resolveUrlTemplate($template);
+            if (! empty($filled_in_link)) {
+            array_push($this->arrLinks, array(null, $filled_in_link, $type));
+            }
+          }
+        }
+        
+        #$objXPath->evaluate();
+        #$this->objMarcXML = $xml;
+			  #$this->objXPath = $objXPath;   
+        #exit;
 							
 				
 				### oclc number
@@ -1297,6 +1322,61 @@
 			}
 		}
 
+    /**
+		 * Take a Metalib-style template for a URL, including $100_a style
+     * placeholders, and replace placeholders with actual values
+     * taken from $this->marcXML
+		 *
+		 * @param string $template
+		 * @return string url
+		 */
+    protected function resolveUrlTemplate($template) {
+      # For some reason Metalib uses $0100 placeholder to correspond
+      # to an SID field. If I understand how this works, this is nothing
+      # but a synonym for $SID_c, so we'll use that. Absolutely no idea
+      # why Metalib uses $0100 as syntactic sugar instead. 
+      $template = str_replace('$0100', '$SID_c', $template);
+      
+      $filled_out = preg_replace_callback('/\$(...)(_(.))?/', array($this, 'lookupTemplateValue'), $template);
+      
+      // Make sure it doesn't have our special value indicating a placeholder
+      // could not be resolved. 
+      if ( strpos($filled_out, self::$TemplateEmptyValue)) {
+        // Consistent with Metalib behavior, if a placeholder can't be resolved,
+        // there is no link generated. 
+        return null;
+      }
+      
+      return $filled_out;
+      
+    }
+    
+    /* Takes a $matches array returned  by PHP regexp function that
+       has a MARC field in $matches[1] and a subfield in $matches[3]. 
+       Returns the value from $this->marcXML */
+    protected function lookupTemplateValue($matches) {
+      $field = $matches[1];
+      $subfield = (count($matches) >= 4) ? $matches[3] : null;
+      
+      $value = null;
+      if ( $subfield ) {
+        $value = $this->extractMarcDataField($this->objXPath, $field, $subfield);
+      }
+      else {
+        //assume it's a control field, those are the only ones without subfields
+        $value = $this->extractMarcControlField($this->objXPath, $field);
+      }
+      if ( empty($value) && true ) {
+        // Couldn't resolve the placeholder, that means we should NOT
+        // generate a URL, in this mode. Sadly we can't just throw
+        // an exception, PHP eats it before we get it. I hate PHP. 
+        // Put a special token in there. 
+        return self::$TemplateEmptyValue;
+      }
+      
+      return $value;
+    }
+    
 		/**
 		 * Get an OpenURL 1.0 formatted URL
 		 *
@@ -3403,4 +3483,7 @@
 		}
 	}
 
+  
+  class UrlTemplatePlaceholderMissing extends Exception {
+  }
 ?>
