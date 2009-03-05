@@ -127,6 +127,29 @@
 				$objRecords = $objXml->createElement("records");
 				$objXml->documentElement->appendChild($objRecords);
 				
+        /* Add a database_links element containing XML for each database
+           represented in this set. */
+        // Compile list of MetalibID's represented
+        $metalib_ids = array();
+        foreach($arrResults as $objDataRecord) {
+          $xerxes_record = $objDataRecord->xerxes_record;
+          $metalib_ids[ $xerxes_record->getMetalibID() ] = true;
+        }
+        //fetch em
+        $arrDB = $objData->getDatabases( array_keys($metalib_ids) );
+        
+        // add XML for them
+        $objDatabaseLinks = $objXml->createElement( "database_links" );
+        $objXml->documentElement->appendChild( $objDatabaseLinks );        
+        foreach( $arrDB as $objDatabase ) {
+          $objDatabaseXML = Xerxes_Helper::databaseToNodeset( $objDatabase, $objRequest, $objRegistry);
+          $objDatabaseXML = $objXml->importNode( $objDatabaseXML, true);
+          $objDatabaseLinks->appendChild( $objDatabaseXML );
+        }
+    
+    
+    
+        /*  Add the records */
 				foreach ( $arrResults as $objDataRecord )
 				{
 					// create a new record
