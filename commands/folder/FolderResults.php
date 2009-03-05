@@ -142,7 +142,7 @@
         $objDatabaseLinks = $objXml->createElement( "database_links" );
         $objXml->documentElement->appendChild( $objDatabaseLinks );        
         foreach( $arrDB as $objDatabase ) {
-          $objDatabaseXML = Xerxes_Helper::databaseToNodeset( $objDatabase, $objRequest, $objRegistry);
+          $objDatabaseXML = Xerxes_Helper::databaseToLinksNodeset( $objDatabase, $objRequest, $objRegistry);
           $objDatabaseXML = $objXml->importNode( $objDatabaseXML, true);
           $objDatabaseLinks->appendChild( $objDatabaseXML );
         }
