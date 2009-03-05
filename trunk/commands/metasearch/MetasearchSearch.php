@@ -375,45 +375,11 @@ class Xerxes_Command_MetasearchSearch extends Xerxes_Command_Metasearch
 		{
 			// create a database node and append to database_links
 			
-			$objNodeDatabase = $objXml->createElement( "database" );
-			$objNodeDatabase->setAttribute( "metalib_id", $objDatabase->metalib_id );
-			$objDatabaseLinks->appendChild( $objNodeDatabase );
-			
-			// attach all the links, database name, and restriction info
+      $objNodeDatabase = Xerxes_Helper::databaseToLinksNodeset($objDatabase, $objRequest, $objRegistry);
       
-			foreach ( $objDatabase->properties() as $key => $value )
-			{
-				if ( $value != "")
-				{
-					if (
-						strstr( $key, "link_" ) || 
-						$key == "title_display" ||
-						$key == "searchable" ||
-						$key == "guest_access" ||
-            $key == "sfx_suppress"
-						)
-					{
-						$objElement = $objXml->createElement( $key, Xerxes_Parser::escapeXml( $value ) );
-						$objNodeDatabase->appendChild( $objElement );
-					}
-				}
-			}
+      $objNodeDatabase = $objXml->importNode($objNodeDatabase, true);
+      $objDatabaseLinks->appendChild($objNodeDatabase);      
 			
-      
-			if ( count($objDatabase->group_restrictions) > 0 )
-			{
-				$objRestictions  = 	$objXml->createElement( "group_restrictions");
-				$objNodeDatabase->appendChild( $objRestictions );
-			
-				foreach ( $objDatabase->group_restrictions as $restriction )
-				{
-					if ( $restriction != "")
-					{
-						$objElement = $objXml->createElement( "group_restriction", Xerxes_Parser::escapeXml( $restriction ) );
-						$objRestictions->appendChild( $objElement );
-					}
-				}
-			}
 		}
 		
 		// add any warnings from metalib

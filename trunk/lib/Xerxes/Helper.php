@@ -141,6 +141,59 @@ class Xerxes_Helper
 		
 		return $objDatabase;
 	}
+  
+  /* Sadly, we serialize a xerxes database record to a slightly different format
+     for use with <database_links> element. This probably ought to have been
+     consistent with the format in databaseToNodeset, but oh well, it's not. */
+  public static function databaseToLinksNodeset($objDatabase, $objRequest, $objRegistry) {
+    $objXml = new DOMDocument( );
+		$objXml->loadXML( "<database/>" );
+    
+    $objNodeDatabase = $objXml->documentElement;
+        
+    $objNodeDatabase->setAttribute( "metalib_id", $objDatabase->metalib_id );
+			
+    // attach all the links, database name, and restriction info
+      
+    foreach ( $objDatabase->properties() as $key => $value )
+    {
+      if ( $value != "")
+      {
+        if (
+          strstr( $key, "link_" ) || 
+          $key == "title_display" ||
+          $key == "searchable" ||
+          $key == "guest_access" ||
+          $key == "sfx_suppress"
+          )
+        {
+          $objElement = $objXml->createElement( $key, Xerxes_Parser::escapeXml( $value ) );
+          $objNodeDatabase->appendChild( $objElement );
+        }
+      }
+    }
+			
+      
+    if ( count($objDatabase->group_restrictions) > 0 )
+    {
+      $objRestictions  = 	$objXml->createElement( "group_restrictions");
+      $objNodeDatabase->appendChild( $objRestictions );
+    
+      foreach ( $objDatabase->group_restrictions as $restriction )
+      {
+        if ( $restriction != "")
+        {
+          $objElement = $objXml->createElement( "group_restriction", Xerxes_Parser::escapeXml( $restriction ) );
+          $objRestictions->appendChild( $objElement );
+        }
+      }
+    }
+    
+    return $objXml->documentElement;
+  }
+
+   
+    
 	
   /* Ensures that specified user is logged in, or throws exception */
   public static function ensureSpecifiedUser($username, $objRequest, $objRegistry, $strMessage = "Access only allowed by specific user.") {    
