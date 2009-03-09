@@ -524,7 +524,7 @@
 				<view>xsl/mango/mango_home.xsl</view>
 			</action>
 			<action name="lookup">
-				<command>MangoLookupInject</command>
+				<command>MangoLookup</command>
 				<view>xsl/mango/mango_lookup.xsl</view>
 			</action>
 			<action name="results">
@@ -543,6 +543,12 @@
 				<command>MangoILL</command>
 				<view />
 			</action>
+			<action name="ill-recommend">
+				<command>MangoResults</command>
+				<command>MangoRecommend</command>
+				<command>MangoLookupInject</command>
+				<view>xsl/mango/mango_recommend.xsl</view>
+			</action>
 			<action name="missing">
 				<command>MangoMissing</command>
 				<view format="rss">xsl/mango/mango_missing.xsl</view>
@@ -555,6 +561,7 @@
 				<command>MangoAmazon</command>
 				<command>MangoRecommend</command>
 				<command>MangoLookupInject</command>
+				<command>MangoHoldings</command>
 				<command namespace="Xerxes" directory="metasearch">MetasearchCheckSaved</command>
 				<view>xsl/mango/mango_record.xsl</view>
 			</action>
@@ -563,8 +570,11 @@
 				<view>xsl/metasearch_save-delete.xsl</view>
 				<view format="json">xsl/metasearch_save-delete_ajax.xsl</view>
 			</action>
-			<action name="update" cli="true">
-				<command>MangoUpdateHoldings</command>
+			<action name="viewer">
+				<pathParamMap>
+					<mapEntry pathIndex="2" property="id"/>
+				</pathParamMap>
+				<view>xsl/mango/mango_viewer.xsl</view>
 			</action>
 		</section>
 	</commands>
