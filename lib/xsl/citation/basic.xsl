@@ -119,7 +119,7 @@
 		</xsl:if>
 		
 
-		<xsl:for-each select="links/link[@type != 'none']">
+		<xsl:for-each select="links/link[@type != 'none' and @type != 'original_record' and @type != 'holdings']">
 			<xsl:choose>
 				<xsl:when test="@type = 'html'">			
 					<xsl:text>Full-text in HTML: </xsl:text>
