@@ -1374,8 +1374,92 @@
         return self::$TemplateEmptyValue;
       }
       
-      return $value;
+     return $value;
     }
+    /* $records, an array of Xerxes_Record */
+    public static function completeUrlTemplates($records, &$database_links_dom = null) {
+      // If we weren't passed in a cached DOMDocument with a database_links
+      // section, create one. Note that the var was passed by reference,
+      // so this is available to the caller.   
+            
+      if ( $database_links_dom == null) {
+        $metalib_ids = array();
+                  
+        foreach($records as $r) { 
+          
+
+          
+          array_push($metalib_ids, $r->getMetalibID()); 
+        }        
+        
+        $objData = new Xerxes_DataMap();
+        $databases = $objData->getDatabases($metalib_ids);
+                 
+        $database_links_dom = new DOMDocument( );
+        $database_links_dom->loadXML( "<database_links/>" );
+        
+        foreach($databases as $db ) {
+          $objNodeDatabase = Xerxes_Helper::databaseToLinksNodeset($db);
+      
+          $objNodeDatabase = $database_links_dom->importNode($objNodeDatabase, true);
+          $database_links_dom->documentElement->appendChild($objNodeDatabase);    
+        }                
+      }
+      
+      // Pick out the templates into a convenient structure
+      $linkTemplates = self::getLinkTemplates($database_links_dom);
+      
+      ### Add link to native record and to external holdings URL too, if
+      # available from metalib template. 
+      foreach($records as $r ) {
+        if ($r->getMetalibID() && array_key_exists($r->getMetalibID(), $linkTemplates)) { 
+          
+          $arrTemplates = $linkTemplates[ $r->getMetalibID() ];
+          
+          foreach( $arrTemplates as $type => $template ) {
+            $filled_in_link = $r->resolveUrlTemplate($template);
+            if (! empty($filled_in_link)) {
+            array_push($r->arrLinks, array(null, $filled_in_link, $type));
+            }
+          }
+        }
+      }
+    }
+        
+  /* Creates a hash data structure of metalib-style URL templates for a given
+     set of databases. Extracts this from Xerxes XML including a
+     <database_links> section. Extracts into a hash for more convenient
+     and quicker use.  Structure of hash is:
+     { metalib_id1 => { "xerxes_link_type_a" => template,
+                        "xerxes_link_type_b" => template }
+       metalib_id2 => [...]
+       
+       Input is an XML DOMDocument containing a Xerxes <database_links>
+       structure. 
+  */
+  protected function getLinkTemplates($xml) {
+    $link_templates = array();
+    $dbXPath = new DOMXPath($xml);
+    $objDbXml = $dbXPath->evaluate('//database_links/database');
+    for ( $i = 0; $i < $objDbXml->length ; $i ++) {
+      $dbXml = $objDbXml->item(0);
+      $metalib_id = $dbXml->getAttribute("metalib_id");
+      $link_templates[$metalib_id] = array();
+      
+      for ( $j = 0; $j < $dbXml->childNodes->length ; $j++) {
+        $node = $dbXml->childNodes->item($j);
+        if ($node->tagName == 'link_native_record' ) {
+          $link_templates[$metalib_id]["original_record"] = $node->textContent; 
+        }
+        if ($node->tagName == 'link_native_holdings') {
+          $link_templates[$metalib_id]["holdings"] = $node->textContent;
+        }
+      }
+    }
+    return $link_templates;
+  }
+
+
     
 		/**
 		 * Get an OpenURL 1.0 formatted URL

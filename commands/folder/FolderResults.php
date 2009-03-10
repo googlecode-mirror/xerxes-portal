@@ -126,28 +126,26 @@
 			{
 				$objRecords = $objXml->createElement("records");
 				$objXml->documentElement->appendChild($objRecords);
+
 				
-        /* Add a database_links element containing XML for each database
-           represented in this set. */
-        // Compile list of MetalibID's represented
-        $metalib_ids = array();
-        foreach($arrResults as $objDataRecord) {
-          $xerxes_record = $objDataRecord->xerxes_record;
-          $metalib_ids[ $xerxes_record->getMetalibID() ] = true;
+        /* Enhance records with links generated from metalib templates,
+           and get a list of databases too. We need to get the Xerxes_Records out of our list of Xerxes_Data_Records first. */
+        $xerxes_records = array();
+        foreach($arrResults as $objDataRecord) {   
+          if ( $objDataRecord->xerxes_record ) {
+            array_push($xerxes_records, $objDataRecord->xerxes_record);
+          }
         }
-        //fetch em
-        $arrDB = $objData->getDatabases( array_keys($metalib_ids) );
+                
         
-        // add XML for them
-        $objDatabaseLinks = $objXml->createElement( "database_links" );
-        $objXml->documentElement->appendChild( $objDatabaseLinks );        
-        foreach( $arrDB as $objDatabase ) {
-          $objDatabaseXML = Xerxes_Helper::databaseToLinksNodeset( $objDatabase, $objRequest, $objRegistry);
-          $objDatabaseXML = $objXml->importNode( $objDatabaseXML, true);
-          $objDatabaseLinks->appendChild( $objDatabaseXML );
-        }
-    
-    
+        Xerxes_Record::completeUrlTemplates($xerxes_records, $database_links_dom);         
+        
+        $database_links = $objXml->importNode($database_links_dom->documentElement, true);
+        
+                
+        $objXml->documentElement->appendChild($database_links);        
+
+        
     
         /*  Add the records */
 				foreach ( $arrResults as $objDataRecord )

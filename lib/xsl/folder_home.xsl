@@ -131,7 +131,8 @@
 					<xsl:variable name="record_number" 	select="record_number" />
 					<xsl:variable name="position" 		select="position()" />
 					<xsl:variable name="id" 		select="../id" />
-					
+          <xsl:variable name="metalib_db_id" select="metalib_id" />
+          
 					<div class="folderRecord">
 						<a name="{$position}"></a>
 						
@@ -187,8 +188,9 @@
 		
 						<div class="resultsAvailability folderAvailability">
 							
-							<!-- Full-Text -->
-							
+							<!-- Full-Text -->              
+              <xsl:variable name="link_resolver_allowed" select="not(//database_links/database[@metalib_id = $metalib_db_id]/sfx_suppress = '1')" />
+              							
 							<xsl:choose>
 							<xsl:when test="full_text_bool">
 							
@@ -197,21 +199,50 @@
 								</xsl:call-template>
 								
 							</xsl:when>
-							<xsl:when test="//fulltext/issn = standard_numbers/issn">
+							<xsl:when test="$link_resolver_allowed and //fulltext/issn = standard_numbers/issn">
 								<a href="{../url_open}" class="resultsFullText" target="{$link_target}">
 									<img src="{$base_include}/images/html.gif" alt="full text online" width="16" height="16" border="0" />
                   <xsl:text> </xsl:text>
                   <xsl:copy-of select="$text_link_resolver_available" />
 								</a>
 							</xsl:when>
-							<xsl:otherwise>
+							<xsl:when test="$link_resolver_allowed">
 								<a href="{../url_open}" class="resultsFullText" target="{$link_target}">
 									<img src="{$base_url}/images/sfx.gif" alt="" />
                   <xsl:text> </xsl:text>
                   <xsl:copy-of select="$text_link_resolver_check" />
 								</a>
-							</xsl:otherwise>
+							</xsl:when>
+              
+              <!-- no fulltext or link resolver? How about original record? -->
+              <xsl:when test="links/link[@type='original_record'] and    (//config/show_all_original_record_links = 'true' or //config/original_record_links/database[@metalib_id = $metalib_db_id])">
+                <a href="{links/link[@type='original_record' and position()=1]}" class="resultsFullText">
+                  <img src="{$base_url}/images/famfamfam/link.png" alt="" />
+                  <xsl:text> </xsl:text>
+                  <xsl:copy-of select="$text_link_original_record"/>
+                </a>
+              </xsl:when>              
+              <!-- if none of the above, 
+                   but we DO have text in the record, tell them so. -->
+              <xsl:when test="embeddedText/paragraph">
+                  <a href="{$record_link}" class="resultsFulltext">
+                    <img src="{$base_url}/images/famfamfam/page_go.png" alt="" />
+                    Text in <xsl:value-of select="//config/application_name"/> record
+                  </a>
+              </xsl:when>
+              
 							</xsl:choose>
+              
+              <!-- link to native holdings? -->
+              <xsl:if test="links/link[@type='holdings'] and (//config/show_all_holdings_links = 'true' or //config/holdings_links/database[@metalib_id=$metalib_db_id])">
+                <span class="resultsAvailableOption">
+                  <a href="{links/link[@type='holdings' and position()=1]}" class="resultsFullText">
+                      <img src="{$base_url}/images/book.gif" alt="" />
+                      <xsl:text> </xsl:text>                    
+                      <xsl:copy-of select="$text_link_holdings"/>
+                  </a>
+                </span>
+              </xsl:if>
 								
 						</div>
 						

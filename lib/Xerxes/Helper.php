@@ -145,7 +145,7 @@ class Xerxes_Helper
   /* Sadly, we serialize a xerxes database record to a slightly different format
      for use with <database_links> element. This probably ought to have been
      consistent with the format in databaseToNodeset, but oh well, it's not. */
-  public static function databaseToLinksNodeset($objDatabase, $objRequest, $objRegistry) {
+  public static function databaseToLinksNodeset($objDatabase) {
     $objXml = new DOMDocument( );
 		$objXml->loadXML( "<database/>" );
     
