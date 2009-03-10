@@ -1507,14 +1507,29 @@
   	<xsl:param name="class" select="'resultsFullText'"/>
     <xsl:param name="text" select="$type"/>
     <xsl:param name="img_src"/>
-      <a href="{links/link[@type=$type]}" class="{$class}">
+    
+    <xsl:if test="links/link[@type=$type]">
+      <xsl:variable name="encoded_direct_url">				
+        <xsl:value-of select="php:function('urlencode', string(links/link[@type=$type]))" />
+			</xsl:variable>
+    
+      <!-- send through proxy action for possible proxying -->
+      <a class="{$class}">
+        <xsl:attribute name="href">
+					<xsl:value-of select="$base_url" /><xsl:text>/</xsl:text>
+					<xsl:text>./?base=databases&amp;action=proxy</xsl:text>
+					<xsl:text>&amp;database=</xsl:text><xsl:value-of select="metalib_id" />
+					<xsl:text>&amp;url=</xsl:text><xsl:value-of select="$encoded_direct_url" />
+        </xsl:attribute>
+					
+      
         <xsl:if test="$img_src">      
           <img src="{$img_src}" alt="" />
         </xsl:if>
         <xsl:text> </xsl:text>
         <xsl:copy-of select="$text"/>
       </a>
-
+    </xsl:if>
 </xsl:template>
 
 <!--
