@@ -1376,7 +1376,12 @@
       
      return $value;
     }
-    /* $records, an array of Xerxes_Record */
+    /* Fills out an array of Xerxes_Record to include links that are created
+       by Metalib link templates (type 'holdings', 'original_record'). 
+       
+      @param $records, an array of Xerxes_Record 
+      @param &$database_links_dom a DOMDocument containing a <database_links> section with Xerxes db information. Note that this is an optional parameter, if not given it will be calculated internally. If a variable with a null value is passed in, the variable will actually be SET to a valid DOMDocument on the way out (magic of pass by reference), so you can
+      use this method to calculate a <database_links> section for you. */
     public static function completeUrlTemplates($records, &$database_links_dom = null) {
       // If we weren't passed in a cached DOMDocument with a database_links
       // section, create one. Note that the var was passed by reference,
@@ -1438,11 +1443,15 @@
        structure. 
   */
   protected function getLinkTemplates($xml) {
+    
+
+    
     $link_templates = array();
     $dbXPath = new DOMXPath($xml);
     $objDbXml = $dbXPath->evaluate('//database_links/database');
+    
     for ( $i = 0; $i < $objDbXml->length ; $i ++) {
-      $dbXml = $objDbXml->item(0);
+      $dbXml = $objDbXml->item($i);
       $metalib_id = $dbXml->getAttribute("metalib_id");
       $link_templates[$metalib_id] = array();
       
@@ -1456,6 +1465,8 @@
         }
       }
     }
+
+    
     return $link_templates;
   }
 
