@@ -1355,7 +1355,8 @@
       
     }
     
-    /* Takes a $matches array returned  by PHP regexp function that
+    /* This function is just used as a callback in resolveUrlTemplate. 
+       Takes a $matches array returned  by PHP regexp function that
        has a MARC field in $matches[1] and a subfield in $matches[3]. 
        Returns the value from $this->marcXML */
     protected function lookupTemplateValue($matches) {
