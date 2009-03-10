@@ -88,7 +88,11 @@
 		
 		
 		/**
-		 * Load XML record to be processed
+		 * Load XML record to be processed into this Xerxes_Record. 
+     *
+     * Note that the record will NOT have been enhanced with metalib
+     * templated links (original_record, holdings). Use completeUrlTemplates()
+     * to add those. 
 		 *
 		 * @param mixed $xml [string or DOMDocument or DOMElement] single record
      * @param array $databaseLinkTemplates An optional hash of metalib-style link templates to apply to the MARC to generate links to include in the Xerxes XML. Should be of the form: { "metalib_id" => { "xerxes_link_type" => "metalib_template", "different_link_type" => "template"}, "metalib_id2" => [etc] }     
