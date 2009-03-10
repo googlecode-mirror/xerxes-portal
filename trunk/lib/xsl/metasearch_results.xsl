@@ -430,7 +430,7 @@
 					<div class="resultsAvailability recordOptions">
 						
 						<!-- Full-Text -->
-						<xsl:variable name="link_resolver_allowed" select="not(/*/results/search/database_links/database[@metalib_id = $metalib_db_id]/sfx_suppress) or /*/results/search/database_links/database[@metalib_id = $metalib_db_id]/sfx_suppress != '1'" />
+						<xsl:variable name="link_resolver_allowed" select="not(/*/results/search/database_links/database[@metalib_id = $metalib_db_id]/sfx_suppress = '1')" />
             
             
 						<xsl:choose>

@@ -1091,19 +1091,19 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		return $this->update( $strSQL, array (":old" => $old, ":new" => $new ) );
 	}
 	
-	public function getRecords($strUsername, $strView = null, $strOrder = null, $iStart = 1, $iCount = 20)
+	public function getRecords($strUsername, $strView = null, $strOrder = null, $iStart = 1, $iCount = 20, &$objDatabaseLinksXml = null)
 	{
-		return $this->returnRecords( $strUsername, $strView, null, $strOrder, $iStart, $iCount );
+		return $this->returnRecords($objDatabaseLinksXml, $strUsername, $strView, null, $strOrder, $iStart, $iCount );
 	}
 	
-	public function getRecordsByLabel($strUsername = null, $strLabel, $strOrder = null, $iStart = 1, $iCount = null)
+	public function getRecordsByLabel($strUsername = null, $strLabel, $strOrder = null, $iStart = 1, $iCount = null, &$objDatabaseLinksXml = null)
 	{
-		return $this->returnRecords( $strUsername, null, null, $strOrder, $iStart, $iCount, null, $strLabel );
+		return $this->returnRecords($objDatabaseLinksXml, $strUsername, null, null, $strOrder, $iStart, $iCount, null, $strLabel );
 	}
 	
-	public function getRecordsByFormat($strUsername = null, $strFormat, $strOrder = null, $iStart = 1, $iCount = null)
+	public function getRecordsByFormat($strUsername = null, $strFormat, $strOrder = null, $iStart = 1, $iCount = null, &$objDatabaseLinksXml = null)
 	{
-		return $this->returnRecords( $strUsername, null, null, $strOrder, $iStart, $iCount, $strFormat );
+		return $this->returnRecords($objDatabaseLinksXml, $strUsername, null, null, $strOrder, $iStart, $iCount, $strFormat, $objDatabaseLinksXml );
 	}
 	
 	public function getRecordByID($strID)
@@ -1120,9 +1120,9 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		}	
 	}
 	
-	public function getRecordsByID($arrID, $strOrder = null)
+	public function getRecordsByID($arrID, $strOrder = null, &$objDatabaseLinksXml = null)
 	{
-		return $this->returnRecords( null, null, $arrID, $strOrder );
+		return $this->returnRecords($objDatabaseLinksXml, null, null, $arrID, $strOrder );
 	}
 	
 	/**
@@ -1139,7 +1139,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 	 * @return array					array of Xerxes_Data_Record objects
 	 */
 	
-	private function returnRecords($strUsername = null, $strView = "full", $arrID = null, $strOrder = null, $iStart = 1, $iCount = null, $strFormat = null, $strLabel = null)
+	private function returnRecords(&$objDatabaseLinksDom = null, $strUsername = null, $strView = "full", $arrID = null, $strOrder = null, $iStart = 1, $iCount = null, $strFormat = null, $strLabel = null)
 	{
 		// esnure that we don't just end-up with a big database dump
 		
@@ -1338,6 +1338,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 			
 			array_push( $arrRecords, $objRecord );
 		}
+    
 		
 		return $arrRecords;
 	}
