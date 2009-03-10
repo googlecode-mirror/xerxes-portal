@@ -1499,6 +1499,24 @@
 	</xsl:for-each>
 </xsl:template>
 
+<!-- original_record and holdings type links. Generates a single link,
+     you supply the type. Call from an XSL context where ./ is a
+     xerxes_record-->
+<xsl:template name="record_link">
+    <xsl:param name="type" />
+  	<xsl:param name="class" select="'resultsFullText'"/>
+    <xsl:param name="text" select="$type"/>
+    <xsl:param name="img_src"/>
+      <a href="{links/link[@type=$type]}" class="{$class}">
+        <xsl:if test="$img_src">      
+          <img src="{$img_src}" alt="" />
+        </xsl:if>
+        <xsl:text> </xsl:text>
+        <xsl:copy-of select="$text"/>
+      </a>
+
+</xsl:template>
+
 <!--
 	TEMPLATE: CATEGORIES SIDEBAR
 	Override in local includes.xsl if you'd like a sidebar on the home/categories page. 
