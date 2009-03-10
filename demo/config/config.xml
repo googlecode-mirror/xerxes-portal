@@ -265,6 +265,31 @@
 		
 		<config name="link_target" pass="true">_blank</config>
     
+    <!-- metalib 'Link to Records in Native Interface' and 'Link to Holdings in Native Interface'.  Metalib supports generation of these links on a
+    resource-by-resource basis.  If a Metalib resource is configured to provide
+    such links, they can be displayed in Xerxes. 
+    
+    Note that the 'alternative' (off-campus) versions of these links in Metalib are not currently supported. 
+    
+    Note also: In Metalib even if you fill out a 'link to holdings' field for a resource, it may not be displayed depending on Metalib 'configuration' settings. In Xerxes, if a the 'link to holdings' field is filled out and available, it will be displayed in Xerxes according to this config, regardless of Metalib 'configuration'. Xerxes does not currently support realtime z39.50 lookup of holdings like Metalib does.
+    
+    You can turn on display of ALL available link of each type, or instead
+    list individual resource IDs -->
+    
+    <config name="show_all_holdings_links" pass="true">true</config>
+    <config name="show_all_original_record_links" pass="true">false</config>
+
+    <!-- 
+    <config name="holdings_links" pass="true" xml="true">
+      <database metalib_id="JHU0001" />
+      <database metalib_id="JHU0002" />
+    </config>
+    <config name="original_record_links" pass="true" xml="true">
+      <database metalib_id="JHU0001" />
+      <database metalib_id="JHU0002" />
+    </config>
+    -->
+    
 		<!-- this should correspond to the search limit in metalib -->
 		
 		<config name="search_limit" pass="true">10</config>
