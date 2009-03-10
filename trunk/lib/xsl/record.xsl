@@ -225,7 +225,7 @@
        <!-- original_record and holdings links, if appropriate -->
         <xsl:if test="links/link[@type='original_record'] and    (//config/show_all_original_record_links = 'true' or //config/original_record_links/database[@metalib_id = $database_code])">
           <div class="recordFullTextOption">
-            <a href="{links/link[@type='original_record' and position()=1]}" class="resultsFullText">
+            <a href="{links/link[@type='original_record']}" class="resultsFullText">
               <img src="{$base_url}/images/famfamfam/link.png" alt="" />
               <xsl:text> </xsl:text>
               <xsl:copy-of select="$text_link_original_record"/>
@@ -234,7 +234,7 @@
         </xsl:if>
         <xsl:if test="links/link[@type='holdings'] and (//config/show_all_holdings_links = 'true' or //config/holdings_links/database[@metalib_id=$database_code])">
             <div class="recordFullTextOption">
-              <a href="{links/link[@type='holdings' and position()=1]}" class="resultsFullText">
+              <a href="{links/link[@type='holdings']}" class="resultsFullText">
                   <img src="{$base_url}/images/book.gif" alt="" />
                   <xsl:text> </xsl:text>                    
                   <xsl:copy-of select="$text_link_holdings"/>
