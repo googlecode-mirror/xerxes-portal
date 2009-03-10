@@ -21,6 +21,8 @@
 <xsl:template match="/folder">
 
 	<xsl:for-each select="//xerxes_record">
+    <xsl:variable name="metalib_db_id" select="metalib_id" />
+
 	
 		<xsl:if test="title_normalized">
 			<xsl:text>Title: </xsl:text>
@@ -117,7 +119,8 @@
 			</xsl:for-each>
 			<xsl:text>&#013;&#010;</xsl:text>
 		</xsl:if>
-		
+
+    <xsl:variable name="link_resolver_allowed" select="not(//database_links/database[@metalib_id = $metalib_db_id]/sfx_suppress = '1')" />		
 
 		<xsl:for-each select="links/link[@type != 'none' and @type != 'original_record' and @type != 'holdings']">
 			<xsl:choose>
@@ -143,24 +146,28 @@
 			
 			<xsl:text>&#013;&#010;</xsl:text>
 		</xsl:for-each>
-
-		<xsl:choose>
-			<xsl:when test="full_text_bool">
-				<xsl:text>Check for additional availability: </xsl:text>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:text>Check for availability: </xsl:text>
-			</xsl:otherwise>
-		</xsl:choose>
-
-		<xsl:call-template name="fulltext">
-			<xsl:with-param name="rewrite"><xsl:value-of select="$rewrite" /></xsl:with-param>
-			<xsl:with-param name="type">openurl</xsl:with-param>
-			<xsl:with-param name="id"><xsl:value-of select="../id" /></xsl:with-param>
-			<xsl:with-param name="base_url"><xsl:value-of select="$base_url" /></xsl:with-param>
-			
-		</xsl:call-template>
-		
+    
+    <xsl:if test="$link_resolver_allowed">
+      <xsl:choose>
+        <xsl:when test="full_text_bool">
+          <xsl:text>Check for additional availability: </xsl:text>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:text>Check for availability: </xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
+  
+      <xsl:call-template name="fulltext">
+        <xsl:with-param name="rewrite"><xsl:value-of select="$rewrite" /></xsl:with-param>
+        <xsl:with-param name="type">openurl</xsl:with-param>
+        <xsl:with-param name="id"><xsl:value-of select="../id" /></xsl:with-param>
+        <xsl:with-param name="base_url"><xsl:value-of select="$base_url" /></xsl:with-param>
+        
+      </xsl:call-template>
+    </xsl:if>
+    
+    <!-- todo: export should include holdings and original_records links somehow, for resources configured to include, where appropriate (like no other links are available. -->
+    
 		<xsl:text>&#013;&#010;</xsl:text>
 		<xsl:text>&#013;&#010;</xsl:text>
 		<xsl:text>&#013;&#010;</xsl:text>
