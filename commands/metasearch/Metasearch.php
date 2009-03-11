@@ -19,7 +19,8 @@ abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
 	public function execute(Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry)
 	{
 		$this->objCache = new Xerxes_Cache( );
-		$this->status = $this->doExecute( $objRequest, $objRegistry );
+		//$this->status = $this->doExecute( $objRequest, $objRegistry );
+    parent::execute($objRequest, $objRegistry);
 	}
 	
 	/**
@@ -267,8 +268,9 @@ abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
       array_push($arrXerxesRecords, $objXerxesRecord);
     }    
 
-    // Enhance with links computed from metalib templates.
-    Xerxes_Record::completeUrlTemplates($arrXerxesRecords);    
+    // Enhance with links computed from metalib templates.    
+    
+    Xerxes_Record::completeUrlTemplates($arrXerxesRecords, $this->request, $this->registry);    
     
     
 		foreach ( $arrXerxesRecords as $objXerxesRecord )

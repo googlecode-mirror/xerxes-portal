@@ -1389,7 +1389,7 @@
       @param $records, an array of Xerxes_Record 
       @param &$database_links_dom a DOMDocument containing a <database_links> section with Xerxes db information. Note that this is an optional parameter, if not given it will be calculated internally. If a variable with a null value is passed in, the variable will actually be SET to a valid DOMDocument on the way out (magic of pass by reference), so you can
       use this method to calculate a <database_links> section for you. */
-    public static function completeUrlTemplates($records, &$database_links_dom = null) {
+    public static function completeUrlTemplates($records, $objRequest, $objRegistry, &$database_links_dom = null) {
       // If we weren't passed in a cached DOMDocument with a database_links
       // section, create one. Note that the var was passed by reference,
       // so this is available to the caller.   
@@ -1411,7 +1411,7 @@
         $database_links_dom->loadXML( "<database_links/>" );
         
         foreach($databases as $db ) {
-          $objNodeDatabase = Xerxes_Helper::databaseToLinksNodeset($db);
+          $objNodeDatabase = Xerxes_Helper::databaseToLinksNodeset($db, $objRequest, $objRegistry);
       
           $objNodeDatabase = $database_links_dom->importNode($objNodeDatabase, true);
           $database_links_dom->documentElement->appendChild($objNodeDatabase);    
