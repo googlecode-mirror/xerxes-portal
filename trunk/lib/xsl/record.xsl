@@ -200,8 +200,16 @@
 			<!-- Database -->
 			<tr>
 			<td class="recordAttribute">Database:</td>
-			<td>
-				<xsl:value-of select="database_name" />
+			<td>      
+        <xsl:variable name="metalib_id" select="metalib_id"/>
+      
+        <a>
+          <xsl:attribute name="href">
+            <xsl:value-of select="//database_links/database[@metalib_id = $metalib_id]/url"/>
+          </xsl:attribute>
+        
+          <xsl:value-of select="database_name" />
+        </a>
 			</td>
 			</tr>
 			
