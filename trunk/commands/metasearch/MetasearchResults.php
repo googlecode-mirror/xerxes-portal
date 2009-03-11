@@ -25,6 +25,8 @@ class Xerxes_Command_MetasearchResults extends Xerxes_Command_Metasearch
 	
 	public function doExecute(Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry)
 	{
+    
+    
 		$arrFields = array ( ); // fields to return in response
 		$iMaximumRecords = 10; // maximum number of records to return
 		$iTotalHits = 0; // total number of hits in response
@@ -133,7 +135,6 @@ class Xerxes_Command_MetasearchResults extends Xerxes_Command_Metasearch
 			
 			// this will also convert the marc-xml to xerxes_record, and check for an already
       // saved record
-      
       
 			$objXml = $this->addRecords( $objXml, $arrResults, $configIncludeMarcRecord );
 		}

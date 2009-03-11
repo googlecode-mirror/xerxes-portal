@@ -145,14 +145,19 @@ class Xerxes_Helper
   /* Sadly, we serialize a xerxes database record to a slightly different format
      for use with <database_links> element. This probably ought to have been
      consistent with the format in databaseToNodeset, but oh well, it's not. */
-  public static function databaseToLinksNodeset($objDatabase) {
+  public static function databaseToLinksNodeset($objDatabase, $objRequest, $objRegistry) {
     $objXml = new DOMDocument( );
 		$objXml->loadXML( "<database/>" );
     
     $objNodeDatabase = $objXml->documentElement;
         
     $objNodeDatabase->setAttribute( "metalib_id", $objDatabase->metalib_id );
-			
+		
+    //add an element for url to xerxes detail page for this db
+		$objElement = $objXml->createElement( "url", $objRequest->url_for( array ("base" => "databases", "action" => "database", "id" => htmlentities( $objDatabase->metalib_id ) ) ) );
+		$objNodeDatabase->appendChild( $objElement );
+    
+    
     // attach all the links, database name, and restriction info
       
     foreach ( $objDatabase->properties() as $key => $value )
