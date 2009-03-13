@@ -138,6 +138,9 @@
   <xsl:variable name="text_collection_default_new_name" select="//config/default_collection_name" />
   <xsl:variable name="text_collection_default_new_section_name" select="//config/default_collection_section_name" />
   
+  <!-- extra content to include in the HTML 'head' section -->
+  <xsl:variable name="text_extra_html_head_content" select="''"/>
+  
 	<!-- Other configurable variables -->
 	
 	<xsl:variable name="app_mini_icon_url"><xsl:value-of select="$base_url" />/images/famfamfam/page_find.png</xsl:variable>
@@ -1428,6 +1431,8 @@
 		</xsl:if>
 		
 	</xsl:if>
+  
+  <xsl:copy-of select="$text_extra_html_head_content"/>
 
 </xsl:template>
 
