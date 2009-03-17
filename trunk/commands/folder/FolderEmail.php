@@ -13,26 +13,15 @@
 	
 	class Xerxes_Command_FolderEmail extends Xerxes_Command_Folder
 	{
-		/**
-		 * Email a set of records to a user; Request params include 'email'
-		 * the send-to email address; 'subject' the subjectline of the email; 
-		 * 'notes' any user-supplied notes; 'username' the active username. Requires
-		 * that the FolderResults command be previously run.
-		 *
-		 * @param Xerxes_Framework_Request $objRequest
-		 * @param Xerxes_Framework_Registry $objRegistry
-		 * @return int		status
-		 */
-		
-		public function doExecute( Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry )
+		public function doExecute()
 		{
 			// ensure this is the same user
 			
-			$strRedirect = $this->enforceUsername($objRequest, $objRegistry);
+			$strRedirect = $this->enforceUsername();
 			
 			if ( $strRedirect != null )
 			{
-				$objRequest->setRedirect($strRedirect);
+				$this->request->setRedirect($strRedirect);
 				return 1;
 			}
 			
@@ -45,18 +34,18 @@
 			
 			// get the records from the previous results command
 			
-			$objXml = $objRequest->toXML();
+			$objXml = $this->request->toXML();
 			
 			// get user entered values
 			
-			$strEmail = $objRequest->getProperty("email");
-			$strSubject = $objRequest->getProperty("subject");
-			$strNotes = $objRequest->getProperty("notes");
-			$strUsername = $objRequest->getSession("username");			
+			$strEmail = $this->request->getProperty("email");
+			$strSubject = $this->request->getProperty("subject");
+			$strNotes = $this->request->getProperty("notes");
+			$strUsername = $this->request->getSession("username");			
 			
 			// get configuration options
 			
-			$configFromEmail = $objRegistry->getConfig("EMAIL_FROM", false, null);
+			$configFromEmail = $this->registry->getConfig("EMAIL_FROM", false, null);
 			
 			if ( $strEmail == null ) throw new Exception("Please enter an email address", 1);
 			
@@ -90,8 +79,8 @@
 					"message" =>  "done"
 				);
 				
-				$url = $objRequest->url_for($arrParams);
-				$objRequest->setRedirect($url);	
+				$url = $this->request->url_for($arrParams);
+				$this->request->setRedirect($url);	
 				
 				return 1;
 			}

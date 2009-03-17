@@ -13,40 +13,32 @@
 	
 	class Xerxes_Command_FolderDelete extends Xerxes_Command_Folder
 	{
-		/**
-		 * Delete a record from the user's folder
-		 *
-		 * @param Xerxes_Framework_Request $objRequest
-		 * @param Xerxes_Framework_Registry $objRegistry
-		 * @return int status
-		 */
-		
-		public function doExecute( Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry )
+		public function doExecute()
 		{
 			// ensure this is the same user
 			
-			$strRedirect = $this->enforceUsername($objRequest, $objRegistry);
+			$strRedirect = $this->enforceUsername();
 			
 			if ( $strRedirect != null )
 			{
-				$objRequest->setRedirect($strRedirect);
+				$this->request->setRedirect($strRedirect);
 				return 1;
 			}
 			
 			// get request parameters and configuration settings
 			
-			$strUsername = $objRequest->getSession("username");
-			$strSource = $objRequest->getProperty("source"); 
-			$strID = $objRequest->getProperty("id");
+			$strUsername = $this->request->getSession("username");
+			$strSource = $this->request->getProperty("source"); 
+			$strID = $this->request->getProperty("id");
 			
 			// params for deciding where to send the user back
 			
-			$strType = $objRequest->getProperty("type");
-			$strLabel = $objRequest->getProperty("label");
-			$iStart = $objRequest->getProperty("startRecord");	
-			$iTotal = $objRequest->getProperty("total");
-			$iCount = $objRequest->getProperty("recordsPerPage");
-			$strSort = $objRequest->getProperty("sortKeys");
+			$strType = $this->request->getProperty("type");
+			$strLabel = $this->request->getProperty("label");
+			$iStart = $this->request->getProperty("startRecord");	
+			$iTotal = $this->request->getProperty("total");
+			$iCount = $this->request->getProperty("recordsPerPage");
+			$strSort = $this->request->getProperty("sortKeys");
 			
 			// ensure we send user back to a page with actual results!
 			
@@ -59,7 +51,7 @@
 					"base" => "folder",
 					"action" => "home",
 					"sortKeys" => $strSort,
-					"username" => $objRequest->getSession("username")
+					"username" => $this->request->getSession("username")
 					
 				);
 			}
@@ -77,7 +69,7 @@
 				$arrParams = array(
 					"base" => "folder",
 					"action" => "home",
-					"username" => $objRequest->getSession("username"),
+					"username" => $this->request->getSession("username"),
 					"type" => $strType,
 					"label" => $strLabel,
 					"sortKeys" => $strSort,
@@ -85,7 +77,7 @@
 				);				
 			}
 			
-			$strReturn = $objRequest->url_for($arrParams);
+			$strReturn = $this->request->url_for($arrParams);
 			
 			// delete the record from the database
 			
@@ -100,7 +92,7 @@
 			
 			// send the user back out, so they don't step on this again
 			
-			$objRequest->setRedirect($strReturn);
+			$this->request->setRedirect($strReturn);
 			
 			return 1;
 		}

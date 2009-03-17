@@ -13,24 +13,16 @@
 	
 	class Xerxes_Command_FolderRefworksBounce extends Xerxes_Command_Folder
 	{
-		/**
-		 * Send an import request to refworks
-		 *
-		 * @param Xerxes_Framework_Request $objRequest
-		 * @param Xerxes_Framework_Registry $objRegistry
-		 * @return int		status
-		 */
-		
-		public function doExecute( Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry )
+		public function doExecute()
 		{
 			// get address for refworks
 			
-			$url = $objRegistry->getConfig("REFWORKS_ADDRESS", false, "http://www.refworks.com/express/ExpressImport.asp");
-			$strAppName = $objRegistry->getConfig("APPLICATION_NAME", false, "Xerxes");			
+			$url = $this->registry->getConfig("REFWORKS_ADDRESS", false, "http://www.refworks.com/express/ExpressImport.asp");
+			$strAppName = $this->registry->getConfig("APPLICATION_NAME", false, "Xerxes");			
 			
 			// get the ids that were selected for export
 			
-			$arrIDs = $objRequest->getData("//record/id", null, "array");
+			$arrIDs = $this->request->getData("//record/id", null, "array");
 			$strID = implode(",",$arrIDs);
 			
 			// construct return url back to the fetch action
@@ -42,7 +34,7 @@
 				"records" => $strID
 			);
 			
-			$return = $objRequest->url_for($arrProperties, true);
+			$return = $this->request->url_for($arrProperties, true);
 			
 			// construct full url to refworks
 			
@@ -51,7 +43,7 @@
 			$url .= "&encoding=65001";
 			$url .= "&url=" . urlencode($return);
 			
-			$objRequest->setRedirect($url);	
+			$this->request->setRedirect($url);	
 		}
 	}
 
