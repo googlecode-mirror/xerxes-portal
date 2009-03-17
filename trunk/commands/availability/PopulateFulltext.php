@@ -14,15 +14,7 @@
 	
 	class Xerxes_Command_PopulateFullText extends Xerxes_Command_Availability
 	{
-		/**
-		 * Populate the local database with data from SFX
-		 *
-		 * @param Xerxes_Framework_Request $objRequest
-		 * @param Xerxes_Framework_Registry $objRegistry
-		 * @return int		status
-		 */
-		
-		public function doExecute( Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry )
+		public function doExecute()
 		{
 			ini_set("memory_limit","50M");
 			
@@ -31,14 +23,14 @@
 			// You can define the export file on sfx as having an instance extension, so
 			// give the client the opportunity to define that here
 			
-			$strInstance = $objRequest->getProperty("instance");
+			$strInstance = $this->request->getProperty("instance");
 			if ( $strInstance != "" ) $strInstance = "-" . $strInstance;
 			
 			// construct the address to Google Scholar institutional 
 			// holdings file on SFX. Either SFX specific config, or
 			// general link resolver config. 
 			
-			$configSfx = $objRegistry->getConfig( "SFX_RESOLVER_ADDRESS", false, $objRegistry->getConfig( "LINK_RESOLVER_ADDRESS", false ) );
+			$configSfx = $this->registry->getConfig( "SFX_RESOLVER_ADDRESS", false, $this->registry->getConfig( "LINK_RESOLVER_ADDRESS", false ) );
 
 			if ( ! $configSfx )
 			{

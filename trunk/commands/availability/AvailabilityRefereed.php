@@ -14,20 +14,11 @@
 	
 	class Xerxes_Command_AvailabilityRefereed extends Xerxes_Command_Availability
 	{
-		/**
-		 * Performs an issn search of the refereed database and returns the location of a
-		 * peer reviewed image if the journal is found
-		 *
-		 * @param Xerxes_Framework_Request $objRequest
-		 * @param Xerxes_Framework_Registry $objRegistry
-		 * @return unknown
-		 */
-		
-		public function doExecute( Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry )
+		public function doExecute()
 		{
 			$bolRefereed = false;
-			$issn = $objRequest->getProperty("issn");
-			$configBaseUrl = $objRegistry->getConfig("BASE_URL");
+			$issn = $this->request->getProperty("issn");
+			$configBaseUrl = $this->request->getConfig("BASE_URL");
 			
 			if ( $issn != null && $issn != "")
 			{
@@ -48,11 +39,11 @@
 			
 			if ( $bolRefereed == true )
 			{
-				$objRequest->setRedirect($configBaseUrl . "/images/refereed.gif" );
+				$this->request->setRedirect($configBaseUrl . "/images/refereed.gif" );
 			}
 			else
 			{
-				$objRequest->setRedirect($configBaseUrl . "/images/empty.gif" );
+				$this->request->setRedirect($configBaseUrl . "/images/empty.gif" );
 			}
 			
 			return 1;
