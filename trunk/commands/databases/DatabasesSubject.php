@@ -13,29 +13,21 @@
 
 class Xerxes_Command_DatabasesSubject extends Xerxes_Command_Databases
 {
-	/**
-	 * Fetch a single top-level category and inline its subcategories as XML;
-	 * Request param should be 'subject', the normalized name of the subject as
-	 * created by PopulateDatabases
-	 *
-	 * @param Xerxes_Framework_Request $objRequest
-	 * @param Xerxes_Framework_Registry $objRegistry
-	 * @return int status
-	 */
-	
-	public function doExecute(Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry)
+	public function doExecute()
 	{
 		$objXml = new DOMDOcument( );
 		$objXml->loadXML( "<category />" );
 		
-		$strOld = $objRequest->getProperty( "category" );
-		$strSubject = $objRequest->getProperty( "subject" );
-    // Look up home page default subject from config if no subject
-    // was specified, and we were instructed to look it up with
-    // use_categories_quicksearch=true
-    if ($strSubject == "" && $objRequest->getProperty("use_categories_quicksearch") == "true") {
-      $strSubject =  $objRegistry->getConfig("categories_quicksearch", false, "quick-search");
-    }
+		$strOld = $this->request->getProperty( "category" );
+		$strSubject = $this->request->getProperty( "subject" );
+		
+		// look up home page default subject from config if no subject was specified, and we were 
+		// instructed to look it up with use_categories_quicksearch=true
+		
+		if ( $strSubject == "" && $this->request->getProperty( "use_categories_quicksearch" ) == "true" )
+		{
+			$strSubject = $this->registry->getConfig( "categories_quicksearch", false, "quick-search" );
+		}
 		
 		$objData = new Xerxes_DataMap( );
 		$objCategoryData = $objData->getSubject( $strSubject, $strOld );
@@ -48,13 +40,14 @@ class Xerxes_Command_DatabasesSubject extends Xerxes_Command_Databases
 			$objXml->documentElement->setAttribute( "normalized", $objCategoryData->normalized );
 			
 			// standard url for the category 
-			       
+
 			$arrParams = array ("base" => "databases", "action" => "subject", "subject" => $objCategoryData->normalized );
-			$url = Xerxes_Parser::escapeXml( $objRequest->url_for( $arrParams ) );
+			$url = Xerxes_Parser::escapeXml( $this->request->url_for( $arrParams ) );
 			$objElement = $objXml->createElement( "url", $url );
 			$objXml->documentElement->appendChild( $objElement );
 			
 			// the attributes of the subcategories
+			
 			$db_list_index = 1;
 			
 			foreach ( $objCategoryData->subcategories as $objSubData )
@@ -70,7 +63,7 @@ class Xerxes_Command_DatabasesSubject extends Xerxes_Command_Databases
 
 				foreach ( $objSubData->databases as $objDatabaseData )
 				{
-					$objDatabase = Xerxes_Helper::databaseToNodeset( $objDatabaseData, $objRequest, $objRegistry, $db_list_index );
+					$objDatabase = Xerxes_Helper::databaseToNodeset( $objDatabaseData, $this->request, $this->registry, $db_list_index );
 					$objDatabase = $objXml->importNode( $objDatabase, true );
 					$objSubCategory->appendChild( $objDatabase );
 				}
@@ -79,7 +72,7 @@ class Xerxes_Command_DatabasesSubject extends Xerxes_Command_Databases
 			}
 		}
 		
-		$objRequest->addDocument( $objXml );
+		$this->request->addDocument( $objXml );
 		
 		return 1;
 	}
