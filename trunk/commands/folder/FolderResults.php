@@ -41,7 +41,12 @@
 			
 			// configuration settings
 			
-			$iCount = $this->registry->getConfig("SAVED_RECORDS_PER_PAGE", false, $this->registry->getConfig("DEFAULT_RECORDS_PER_PAGE"));
+			// default records per page is either set explicitly in saved_record_per_page in config
+			// or is the main (metasearch) defaul_records_per_page or 20 which is the const 
+			
+			$defaultMax = $this->registry->getConfig("DEFAULT_RECORDS_PER_PAGE", false, self::DEFAULT_RECORDS_PER_PAGE);
+			$iCount = $this->registry->getConfig("SAVED_RECORDS_PER_PAGE", false, $defaultMax);
+
 			$iCountExport = $this->registry->getConfig("MAXIMUM_RECORD_EXPORT_LIMIT", false, 1000);
 			$configMarcBrief = $this->registry->getConfig("XERXES_BRIEF_INCLUDE_MARC", false, false);
 			$configMarcFull = $this->registry->getConfig("XERXES_FULL_INCLUDE_MARC", false, false);
