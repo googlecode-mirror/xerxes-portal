@@ -13,25 +13,14 @@
 	
 	class Xerxes_Command_MetasearchSaveDelete extends Xerxes_Command_Metasearch
 	{
-		/**
-		 * Save or delete a record; comes in on a single 'onClick' event from the interface so
-		 * we will make determination of whether this is save or delete from cookie; Request params
-		 * should include: 'username' (in session) the username under which to save the record, 
-		 * 'group' the search group number; 'resultSet' the result set from which
-		 * the record came; and 'startRecord' the record to save, based on position in the resultset
-		 *
-		 * @param Xerxes_Framework_Request $objRequest
-		 * @param Xerxes_Framework_Registry $objRegistry
-		 * @return unknown
-		 */
-		public function doExecute( Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry )
+		public function doExecute()
 		{
 			// get properties from request
 			
-			$strUsername = $objRequest->getSession("username");
-			$strGroup =	$objRequest->getProperty("group");
-			$strResultSet =	$objRequest->getProperty("resultSet");
-			$iStartRecord =	$objRequest->getProperty("startRecord");
+			$strUsername = $this->request->getSession("username");
+			$strGroup =	$this->request->getProperty("group");
+			$strResultSet =	$this->request->getProperty("resultSet");
+			$iStartRecord =	$this->request->getProperty("startRecord");
 
 			// get the search start date
 			
@@ -64,7 +53,7 @@
 				// get record from metalib result set
 				
 				$objXerxesRecord = new Xerxes_Record( );
-				$objXerxesRecord->loadXML( $this->getRecord( $objRequest, $objRegistry ) );
+				$objXerxesRecord->loadXML( $this->getRecord() );
 				
 				// add to database
 	
@@ -104,7 +93,7 @@
 				$objXml->documentElement->appendChild( $objInsertedId );
 			}
 			
-			$objRequest->addDocument( $objXml );
+			$this->request->addDocument( $objXml );
 			
 			return 1;
 		}

@@ -13,20 +13,8 @@
 
 class Xerxes_Command_MetasearchResults extends Xerxes_Command_Metasearch
 {
-	/**
-	 * Return a group of results and display them to the user; Request should include
-	 * params for: 'group' the search group number; 'resultSet' the result set from which
-	 * the record came; and 'startRecord' the offset from which to begin
-	 *
-	 * @param Xerxes_Framework_Request $objRequest
-	 * @param Xerxes_Framework_Registry $objRegistry
-	 * @return int status
-	 */
-	
-	public function doExecute(Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry)
+	public function doExecute()
 	{
-    
-    
 		$arrFields = array ( ); // fields to return in response
 		$iMaximumRecords = 10; // maximum number of records to return
 		$iTotalHits = 0; // total number of hits in response
@@ -34,18 +22,18 @@ class Xerxes_Command_MetasearchResults extends Xerxes_Command_Metasearch
 
 		// metalib search object
 
-		$objSearch = $this->getSearchObject( $objRequest, $objRegistry );
+		$objSearch = $this->getSearchObject();
 		
 		// parameters from request
 
-		$strGroup = $objRequest->getProperty( "group" );
-		$strResultSet = $objRequest->getProperty( "resultSet" );
-		$iStartRecord = ( int ) $objRequest->getProperty( "startRecord" );
+		$strGroup = $this->request->getProperty( "group" );
+		$strResultSet = $this->request->getProperty( "resultSet" );
+		$iStartRecord = ( int ) $this->request->getProperty( "startRecord" );
 		
 		// access control
 		
 		$objSearchXml = $this->getCache( $strGroup, "search", "DOMDocument" );
-		Xerxes_Helper::checkDbListSearchableByUser( $objSearchXml, $objRequest, $objRegistry );
+		Xerxes_Helper::checkDbListSearchableByUser( $objSearchXml, $this->request, $this->registry );
 		
 		// marc fields to return from metalib; we specify these here in order to keep
 		// the response size as small (and thus as fast) as possible
@@ -56,10 +44,10 @@ class Xerxes_Command_MetasearchResults extends Xerxes_Command_Metasearch
 		
 		// configuration options
 
-		$configRecordPerPage = $objRegistry->getConfig( "RECORDS_PER_PAGE", false, 10 );
-		$configMarcFields = $objRegistry->getConfig( "MARC_FIELDS_BRIEF", false );
-		$configIncludeMarcRecord = $objRegistry->getConfig( "XERXES_BRIEF_INCLUDE_MARC", false, false );
-		$configFacets = $objRegistry->getConfig( "FACETS", false, false );
+		$configRecordPerPage = $this->registry->getConfig( "RECORDS_PER_PAGE", false, 10 );
+		$configMarcFields = $this->registry->getConfig( "MARC_FIELDS_BRIEF", false );
+		$configIncludeMarcRecord = $this->registry->getConfig( "XERXES_BRIEF_INCLUDE_MARC", false, false );
+		$configFacets = $this->registry->getConfig( "FACETS", false, false );
 		
 		// add additional marc fields specified in the config file
 
@@ -114,7 +102,7 @@ class Xerxes_Command_MetasearchResults extends Xerxes_Command_Metasearch
 		$objXml = $this->documentElement();
 		$objXml = $this->addSearchInfo( $objXml, $strGroup );
 		$objXml = $this->addStatus( $objXml, $strGroup, $strResultSet, $iTotalHits );
-		$objXml = $this->addProgress( $objXml, $objRequest->getSession( "refresh-$strGroup" ) );
+		$objXml = $this->addProgress( $objXml, $this->request->getSession( "refresh-$strGroup" ) );
 		
 		// if this is a search-and-link resource add the original xml that contains the link
 
@@ -122,7 +110,6 @@ class Xerxes_Command_MetasearchResults extends Xerxes_Command_Metasearch
 		{
 			$objImport = $objXml->importNode( $objResultsXml->documentElement, true );
 			$objXml->documentElement->appendChild( $objImport );
-		
 		} 
 		else
 		{
@@ -134,14 +121,14 @@ class Xerxes_Command_MetasearchResults extends Xerxes_Command_Metasearch
 			}
 			
 			// this will also convert the marc-xml to xerxes_record, and check for an already
-      // saved record
+			// saved record
       
 			$objXml = $this->addRecords( $objXml, $arrResults, $configIncludeMarcRecord );
 		}
 		
 		$objXml = $this->addFacets( $objXml, $strGroup, $configFacets );
 		
-		$objRequest->addDocument( $objXml );
+		$this->request->addDocument( $objXml );
 		
 		return 1;
 	}

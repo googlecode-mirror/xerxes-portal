@@ -13,44 +13,33 @@
 
 class Xerxes_Command_MetasearchSearch extends Xerxes_Command_Metasearch
 {
-	/**
-	 * Check to make sure the user has chosen databases they can search, including limits;
-	 * initiate the search with metalib, spell check the query, grab any full-text links
-	 * from chosen IRD records for potential linking in the results, and save all of that 
-	 * in the cache
-	 *
-	 * @param Xerxes_Framework_Request $objRequest
-	 * @param Xerxes_Framework_Registry $objRegistry
-	 * @return int status
-	 */
-	
-	public function doExecute(Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry)
+	public function doExecute()
 	{
 		// metalib search object
 		
-		$objSearch = $this->getSearchObject( $objRequest, $objRegistry );
+		$objSearch = $this->getSearchObject();
 		
 		// params from the request
 
-		$strQuery = $objRequest->getProperty( "query" );
-		$strQuery2 = $objRequest->getProperty( "query2" );
-		$strField = $objRequest->getProperty( "field" );
-		$strField2 = $objRequest->getProperty( "field2" );
-		$strFindOperator = $objRequest->getProperty( "find_operator1" );
+		$strQuery = $this->request->getProperty( "query" );
+		$strQuery2 = $this->request->getProperty( "query2" );
+		$strField = $this->request->getProperty( "field" );
+		$strField2 = $this->request->getProperty( "field2" );
+		$strFindOperator = $this->request->getProperty( "find_operator1" );
     
-		$arrDatabases = $objRequest->getProperty( "database", true );
-		$strSubject = $objRequest->getProperty( "subject" );
-		$strSpell = $objRequest->getProperty( "spell" );
-		$strContext = $objRequest->getProperty( "context" );
-		$strContextUrl = $objRequest->getProperty( "context_url" );
+		$arrDatabases = $this->request->getProperty( "database", true );
+		$strSubject = $this->request->getProperty( "subject" );
+		$strSpell = $this->request->getProperty( "spell" );
+		$strContext = $this->request->getProperty( "context" );
+		$strContextUrl = $this->request->getProperty( "context_url" );
     
 		
 		// configuration options
 		
-		$configNormalize = $objRegistry->getConfig( "NORMALIZE_QUERY", false, false );
-		$configBaseUrl = $objRegistry->getConfig( "BASE_URL", true );
-		$configYahooID = $objRegistry->getConfig( "YAHOO_ID", false, "calstate" );
-		$configSearchLimit = $objRegistry->getConfig( "SEARCH_LIMIT", true );
+		$configNormalize = $this->registry->getConfig( "NORMALIZE_QUERY", false, false );
+		$configBaseUrl = $this->registry->getConfig( "BASE_URL", true );
+		$configYahooID = $this->registry->getConfig( "YAHOO_ID", false, "calstate" );
+		$configSearchLimit = $this->registry->getConfig( "SEARCH_LIMIT", true );
 		
 		// database communications object
 		
@@ -61,7 +50,7 @@ class Xerxes_Command_MetasearchSearch extends Xerxes_Command_Metasearch
 		
 		if ( $strSubject != null && count($arrDatabases) == 0 )
 		{
-			$search_limit = $objRegistry->getConfig( "SEARCH_LIMIT", true );
+			$search_limit = $this->registry->getConfig( "SEARCH_LIMIT", true );
 			
 			$arrDatabases = array ( );
         
@@ -92,18 +81,27 @@ class Xerxes_Command_MetasearchSearch extends Xerxes_Command_Metasearch
 				}
 			}
 		}
-    
-    // If we have a subject, but no context/contexturl, look
-    // them up for the subject. Allows convenient defaults
-    // for direct-linking into search results. 
-    if ( $strContext == "" && $strSubject != "") {
-       // Look up the subject if we haven't already, to get the name.
-       if (! isset($objSubject)) $objSubject = $objData->getSubject( $strSubject );
-       $strContext = $objSubject->name;
-    }
-    if ( $strContextUrl == "" && $strSubject != "") {
-       $strContextUrl = $objRequest->url_for(array("base" => "databases", "action" => "subject", "subject" => $strSubject));
-    }
+			
+		// if we have a subject, but no context/contexturl, look
+		// them up for the subject. Allows convenient defaults
+		// for direct-linking into search results. 
+		
+		if ( $strContext == "" && $strSubject != "" )
+		{
+			// look up the subject if we haven't already, to get the name.
+			
+			if ( ! isset( $objSubject ) )
+			{
+				$objSubject = $objData->getSubject( $strSubject );
+			}
+			
+			$strContext = $objSubject->name;
+		}
+		
+		if ( $strContextUrl == "" && $strSubject != "" )
+		{
+			$strContextUrl = $this->request->url_for( array ("base" => "databases", "action" => "subject", "subject" => $strSubject ) );
+		}
 		
 		// ensure a query and field
 
@@ -140,7 +138,7 @@ class Xerxes_Command_MetasearchSearch extends Xerxes_Command_Metasearch
 		
 		foreach ( $arrDB as $db )
 		{
-			if ( ! Xerxes_Helper::dbSearchableForUser( $db, $objRequest, $objRegistry ) )
+			if ( ! Xerxes_Helper::dbSearchableForUser( $db, $this->request, $this->registry ) )
 			{
 				$excludedDbs[] = $db;
 				$excludedIDs[] = ( string ) $db->metalib_id;
@@ -172,7 +170,7 @@ class Xerxes_Command_MetasearchSearch extends Xerxes_Command_Metasearch
 			
 			foreach ( $excludedDbs as $db )
 			{
-				$element = Xerxes_Helper::databaseToNodeset( $db, $objRequest, $objRegistry );
+				$element = Xerxes_Helper::databaseToNodeset( $db, $this->request, $this->registry );
 				$element = $objXml->importNode( $element, true );
 				$excluded_xml->appendChild( $element );
 			}
@@ -252,7 +250,7 @@ class Xerxes_Command_MetasearchSearch extends Xerxes_Command_Metasearch
 		{
 			// check spelling
 			
-			$strAltYahoo = $objRegistry->getConfig("ALTERNATE_YAHOO_LOCATION", false);
+			$strAltYahoo = $this->registry->getConfig("ALTERNATE_YAHOO_LOCATION", false);
 
 			$strSpellCorrect = $objQueryParser->checkSpelling( $strQuery, $configYahooID, $strAltYahoo );
 			$strSpellCorrect2 = null;
@@ -374,12 +372,10 @@ class Xerxes_Command_MetasearchSearch extends Xerxes_Command_Metasearch
 		foreach ( $arrDB as $objDatabase )
 		{
 			// create a database node and append to database_links
-			
-      $objNodeDatabase = Xerxes_Helper::databaseToLinksNodeset($objDatabase, $objRequest, $objRegistry);
-      
-      $objNodeDatabase = $objXml->importNode($objNodeDatabase, true);
-      $objDatabaseLinks->appendChild($objNodeDatabase);      
-			
+
+			$objNodeDatabase = Xerxes_Helper::databaseToLinksNodeset( $objDatabase, $this->request, $this->registry );
+			$objNodeDatabase = $objXml->importNode( $objNodeDatabase, true );
+			$objDatabaseLinks->appendChild( $objNodeDatabase );      
 		}
 		
 		// add any warnings from metalib
@@ -398,7 +394,7 @@ class Xerxes_Command_MetasearchSearch extends Xerxes_Command_Metasearch
 		
 		// redirect to hits page
 
-		$objRequest->setRedirect( $configBaseUrl . "/?base=metasearch&action=hits&group=$strGroup" );
+		$this->request->setRedirect( $configBaseUrl . "/?base=metasearch&action=hits&group=$strGroup" );
 		return 1;
 	}
 }

@@ -13,30 +13,19 @@
 	
 	class Xerxes_Command_MetasearchSort extends Xerxes_Command_Metasearch
 	{
-		/**
-		 * Sort the merged result set; Request object should include 'group' the search
-		 * group id number; 'sortKeys' the index on which to sort.  Will save the sort order
-		 * in the search status (group) cache, and redirect the user (to ensure they don't 
-		 * step back on this command) to the results page to fetch the records in the new order
-		 *
-		 * @param Xerxes_Framework_Request $objRequest
-		 * @param Xerxes_Framework_Registry $objRegistry
-		 * @return int status
-		 */
-		
-		public function doExecute( Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry )
+		public function doExecute()
 		{
 			$strResultSet = "";				// merged result set number to send back in return url
 			
 			// get paramters and configuration settings
 			
-			$strSortKeys = $objRequest->getProperty("sortKeys");
-			$strGroup = $objRequest->getProperty("group");
-			$configBaseUrl = $objRegistry->getConfig("BASE_URL", true);
+			$strSortKeys = $this->request->getProperty("sortKeys");
+			$strGroup = $this->request->getProperty("group");
+			$configBaseUrl = $this->registry->getConfig("BASE_URL", true);
 			
 			// sort the merged result set
 			
-			$objSearch = $this->getSearchObject($objRequest, $objRegistry);
+			$objSearch = $this->getSearchObject();
 			$objSearch->sort( $strGroup, $strSortKeys );
 			
 			// update search status xml to indicate present sort value for merged result
@@ -58,7 +47,7 @@
 					 
 		 	// redirect to results page
 		 	
-		 	$objRequest->setRedirect($configBaseUrl . 
+		 	$this->request->setRedirect($configBaseUrl . 
 		 		"/?base=metasearch&action=results&group=$strGroup&resultSet=$strResultSet");
 			
 			return 1;

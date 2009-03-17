@@ -13,7 +13,7 @@
 	
 	class Xerxes_Command_MetasearchCheckSaved extends Xerxes_Command_Metasearch
 	{
-		public function doExecute( Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry )
+		public function doExecute()
 		{
 			$arrSaved = array();
 			$arrMatch = array();
@@ -21,7 +21,7 @@
 			
 			// find all of the xerxes records
 			
-			$objRecords = $objRequest->getData("//xerxes_record", null, "DOMNodeList");
+			$objRecords = $this->request->getData("//xerxes_record", null, "DOMNodeList");
 			
 			if ( $objRecords->length > 0 )
 			{
@@ -90,7 +90,7 @@
 						$objXml->documentElement->appendChild( $objSavedRecordXml );
 					}
 					
-					$objRequest->addDocument($objXml);
+					$this->request->addDocument($objXml);
 					
 					return 1;
 				}

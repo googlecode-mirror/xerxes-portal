@@ -16,20 +16,8 @@
 	
 	class Xerxes_Command_MetasearchFacet extends Xerxes_Command_Metasearch
 	{
-		/**
-		 * Retrieve the documents for a particular facet; Request should include params
-		 * 'group' group number; 'startRecord' the offset for where to start the results
-		 * 'facet' facet name; 'node' the numbered node of the facet.  Adds record plus
-		 * previous cached data to the response.
-		 *
-		 * @param Xerxes_Framework_Request $objRequest
-		 * @param Xerxes_Framework_Registry $objRegistry
-		 * @return int status
-		 */
-		
-		public function doExecute( Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry )
+		public function doExecute()
 		{
-			
 			$arrResults = array();		// holds returned records
 			$iTotalHits = 0;			// total number of facets stored
 			$arrFields = array();		// fields to return in response
@@ -39,15 +27,15 @@
 			
 			// metalib search object
 			
-			$objSearch = $this->getSearchObject($objRequest, $objRegistry); 
+			$objSearch = $this->getSearchObject(); 
 			
 			// parameters from request
 			
-			$strGroup =	$objRequest->getProperty("group");
-			$strResultSet =	$objRequest->getProperty("resultSet");	// to correct a bug in 4.1.0
-			$iStartRecord =	(int) $objRequest->getProperty("startRecord");
-			$iFacet = $objRequest->getProperty("facet");
-			$iNode = $objRequest->getProperty("node");
+			$strGroup =	$this->request->getProperty("group");
+			$strResultSet =	$this->request->getProperty("resultSet");	// to correct a bug in 4.1.0
+			$iStartRecord =	(int) $this->request->getProperty("startRecord");
+			$iFacet = $this->request->getProperty("facet");
+			$iNode = $this->request->getProperty("node");
 			
 			// marc fields to return from metalib; we specify these here in order to keep
 			// the response size as small (and thus as fast) as possible
@@ -58,10 +46,10 @@
 			
 			// configuration options
 			
-			$configRecordPerPage = $objRegistry->getConfig("RECORDS_PER_PAGE", false, 10);
-			$configMarcFields = $objRegistry->getConfig("MARC_FIELDS_BRIEF", false);
-			$configIncludeMarcRecord = $objRegistry->getConfig("XERXES_BRIEF_INCLUDE_MARC", false, false);
-			$configFacets = $objRegistry->getConfig("FACETS", false, false);
+			$configRecordPerPage = $this->registry->getConfig("RECORDS_PER_PAGE", false, 10);
+			$configMarcFields = $this->registry->getConfig("MARC_FIELDS_BRIEF", false);
+			$configIncludeMarcRecord = $this->registry->getConfig("XERXES_BRIEF_INCLUDE_MARC", false, false);
+			$configFacets = $this->registry->getConfig("FACETS", false, false);
 			
 			
 			// add additional marc fields specified in the config file
@@ -135,13 +123,13 @@
 			
 			$objXml = $this->addSearchInfo($objXml, $strGroup);
 			$objXml = $this->addStatus($objXml, $strGroup, $strResultSet, $iTotalHits);
-			$objXml = $this->addProgress($objXml, $objRequest->getSession("refresh-$strGroup"));	
+			$objXml = $this->addProgress($objXml, $this->request->getSession("refresh-$strGroup"));	
 			$objXml = $this->addRecords($objXml, $arrResults, $configIncludeMarcRecord);
 			$objXml = $this->addFacets($objXml, $strGroup, $configFacets);
 			
 			// add to master xml
 			
-			$objRequest->addDocument($objXml);
+			$this->request->addDocument($objXml);
 			
 			return 1;
 		}

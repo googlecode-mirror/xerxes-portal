@@ -13,20 +13,9 @@
 
 class Xerxes_Command_MetasearchHits extends Xerxes_Command_Metasearch
 {
-	/**
-	 * Check the status of the search; Request should include params for:
-	 * 'group' the group number of the search; optionally 'mergeRedirect' to override
-	 * a redirect on merge, should that option be set in config.  Adds search status
-	 * information to the response.
-	 *
-	 * @param Xerxes_Framework_Request $objRequest
-	 * @param Xerxes_Framework_Registry $objRegistry
-	 * @return unknown
-	 */
-	
-	public function doExecute(Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry)
+	public function doExecute()
 	{
-		$objSearch = $this->getSearchObject( $objRequest, $objRegistry ); // metalib search object
+		$objSearch = $this->getSearchObject(); // metalib search object
 
 		$bolRedirect = false; // final determination to redirect on merge	
 		$objStatus = new DOMDocument( ); // search status
@@ -35,25 +24,25 @@ class Xerxes_Command_MetasearchHits extends Xerxes_Command_Metasearch
 		
 		// params from the request
 
-		$strGroup = $objRequest->getProperty( "group" );
-		$strMergeRedirect = $objRequest->getProperty( "mergeRedirect" );
+		$strGroup = $this->request->getProperty( "group" );
+		$strMergeRedirect = $this->request->getProperty( "mergeRedirect" );
 		
 		// configuration options
 
-		$configShowMergedResults = $objRegistry->getConfig( "IMMEDIATELY_SHOW_MERGED_RESULTS", false, true );
-		$configApplication = $objRegistry->getConfig( "APPLICATION_SID", false, "calstate.edu:xerxes" );
-		$configFacets = $objRegistry->getConfig( "FACETS", false, false );
-		$configRecordsPerPage = $objRegistry->getConfig( "RECORDS_PER_PAGE", false, 10 );
+		$configShowMergedResults = $this->registry->getConfig( "IMMEDIATELY_SHOW_MERGED_RESULTS", false, true );
+		$configApplication = $this->registry->getConfig( "APPLICATION_SID", false, "calstate.edu:xerxes" );
+		$configFacets = $this->registry->getConfig( "FACETS", false, false );
+		$configRecordsPerPage = $this->registry->getConfig( "RECORDS_PER_PAGE", false, 10 );
 		
-		$iRefreshSeconds = $objRegistry->getConfig( "SEARCH_PROGRESS_CAP", false, 35 );
+		$iRefreshSeconds = $this->registry->getConfig( "SEARCH_PROGRESS_CAP", false, 35 );
 		$configHitsCap = ( string ) $iRefreshSeconds / 5;
-		$configSortPrimary = $objRegistry->getConfig( "SORT_ORDER_PRIMARY", false, "rank" );
-		$configSortSecondary = $objRegistry->getConfig( "SORT_ORDER_SECONDARY", false, "year" );
+		$configSortPrimary = $this->registry->getConfig( "SORT_ORDER_PRIMARY", false, "rank" );
+		$configSortSecondary = $this->registry->getConfig( "SORT_ORDER_SECONDARY", false, "year" );
 		
 		// access control
 		
 		$objSearchXml = $this->getCache( $strGroup, "search", "DOMDocument" );
-		Xerxes_Helper::checkDbListSearchableByUser( $objSearchXml, $objRequest, $objRegistry );
+		Xerxes_Helper::checkDbListSearchableByUser( $objSearchXml, $this->request, $this->registry );
 		
 		// determine if redirect after merge
 
@@ -76,10 +65,10 @@ class Xerxes_Command_MetasearchHits extends Xerxes_Command_Metasearch
 		
 		// cap the number of refreshes
 
-		if ( $objRequest->getSession( "refresh-$strGroup" ) != null )
+		if ( $this->request->getSession( "refresh-$strGroup" ) != null )
 		{
 			// get refresh count
-			$iProgress = ( int ) $objRequest->getSession( "refresh-$strGroup" );
+			$iProgress = ( int ) $this->request->getSession( "refresh-$strGroup" );
 			
 			// if we hit limit, set metalib finish flag to true
 			if ( $iProgress >= ( int ) $configHitsCap )
@@ -89,12 +78,12 @@ class Xerxes_Command_MetasearchHits extends Xerxes_Command_Metasearch
 			else
 			{
 				$iProgress ++;
-				$objRequest->setSession( "refresh-$strGroup", $iProgress );
+				$this->request->setSession( "refresh-$strGroup", $iProgress );
 			}
 		} 
 		else
 		{
-			$objRequest->setSession( "refresh-$strGroup", 1 );
+			$this->request->setSession( "refresh-$strGroup", 1 );
 		}
 		
 		// if done see if there are results and merge and redirect, 
@@ -102,7 +91,7 @@ class Xerxes_Command_MetasearchHits extends Xerxes_Command_Metasearch
 
 		if ( $objSearch->getFinished() == true )
 		{
-			$objRequest->setSession( "refresh-$strGroup", 10 );
+			$this->request->setSession( "refresh-$strGroup", 10 );
 			
 			// check to see if there are any documents to merge, and then merge
 			// and create facets
@@ -138,7 +127,7 @@ class Xerxes_Command_MetasearchHits extends Xerxes_Command_Metasearch
 					
 					// redirect to results page
 
-					$objRequest->setRedirect( "./?base=metasearch&action=results&group=$strGroup&resultSet=$strSetNumber" );
+					$this->request->setRedirect( "./?base=metasearch&action=results&group=$strGroup&resultSet=$strSetNumber" );
 					
 					return 1;
 				} 
@@ -226,7 +215,7 @@ class Xerxes_Command_MetasearchHits extends Xerxes_Command_Metasearch
 						{
 							// redirect to individual results page
 
-							$objRequest->setRedirect( "./?base=metasearch&action=results&group=$strGroup&resultSet=$strIndividualSet" );
+							$this->request->setRedirect( "./?base=metasearch&action=results&group=$strGroup&resultSet=$strIndividualSet" );
 							
 							return 1;
 						}
@@ -235,7 +224,7 @@ class Xerxes_Command_MetasearchHits extends Xerxes_Command_Metasearch
 					{
 						// redirect to merged results page
 
-						$objRequest->setRedirect( "./?base=metasearch&action=results&group=$strGroup&resultSet=$strMergeSet" );
+						$this->request->setRedirect( "./?base=metasearch&action=results&group=$strGroup&resultSet=$strMergeSet" );
 						
 						return 1;
 					}
@@ -250,9 +239,9 @@ class Xerxes_Command_MetasearchHits extends Xerxes_Command_Metasearch
 		$objXml = $this->documentElement();
 		$objXml = $this->addSearchInfo( $objXml, $strGroup );
 		$objXml = $this->addStatus( $objXml, $strGroup );
-		$objXml = $this->addProgress( $objXml, $objRequest->getSession( "refresh-$strGroup" ) );
+		$objXml = $this->addProgress( $objXml, $this->request->getSession( "refresh-$strGroup" ) );
 		
-		$objRequest->addDocument( $objXml );
+		$this->request->addDocument( $objXml );
 		
 		return 1;
 	}
