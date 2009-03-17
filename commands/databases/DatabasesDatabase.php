@@ -7,7 +7,7 @@
  * 
  * Normally, if no ID or query is supplied, this action will end up
  * getting ALL databases. But if the request has suppress_full_db_list=true,
- * then it will get noen.  
+ * then it will get none.  
  * 
  * @author David Walker
  * @copyright 2008 California State University
@@ -19,37 +19,30 @@
 
 class Xerxes_Command_DatabasesDatabase extends Xerxes_Command_Databases
 {
-	/**
-	 * Display information from a single database, uses 'id' parama in request to
-	 * identify the database
-	 *
-	 * @param Xerxes_Framework_Request $objRequest
-	 * @param Xerxes_Framework_Registry $objRegistry
-	 * @return unknown
-	 */
-	
-	public function doExecute(Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry)
+	public function doExecute()
 	{
 		$objXml = new DOMDOcument( );
 		$objXml->loadXML( "<databases />" );
 		
-		$strID = $objRequest->getProperty( "id" );
-		$strQuery = $objRequest->getProperty( "query" );
+		$strID = $this->request->getProperty( "id" );
+		$strQuery = $this->request->getProperty( "query" );
 		$objData = new Xerxes_DataMap( );
-		$arrResults = array();
+		$arrResults = array ( );
 		
 		if ( $strID )
 		{
 			$arrResults = $objData->getDatabases( $strID );
-      if (count($arrResults) == 0) {
-        throw new Xerxes_NotFoundException("Can not find database with id $strID");
-      }
-		}
+			
+			if ( count( $arrResults ) == 0 )
+			{
+				throw new Xerxes_NotFoundException( "Can not find database with id $strID" );
+			}
+		} 
 		elseif ( $strQuery )
 		{
 			$arrResults = $objData->getDatabases( null, $strQuery );
 		} 
-		elseif ( $objRequest->getProperty("suppress_full_db_list") != "true")
+		elseif ( $this->request->getProperty( "suppress_full_db_list" ) != "true" )
 		{
 			// all database.
 			$arrResults = $objData->getDatabases();
@@ -57,12 +50,12 @@ class Xerxes_Command_DatabasesDatabase extends Xerxes_Command_Databases
 		
 		foreach ( $arrResults as $objDatabaseData )
 		{
-			$objDatabase = Xerxes_Helper::databaseToNodeset( $objDatabaseData, $objRequest, $objRegistry );
+			$objDatabase = Xerxes_Helper::databaseToNodeset( $objDatabaseData, $this->request, $this->registry );
 			$objDatabase = $objXml->importNode( $objDatabase, true );
 			$objXml->documentElement->appendChild( $objDatabase );
 		}
 		
-		$objRequest->addDocument( $objXml );
+		$this->request->addDocument( $objXml );
 		
 		return 1;
 	}

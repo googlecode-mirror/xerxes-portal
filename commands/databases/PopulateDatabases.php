@@ -13,7 +13,6 @@
 	 * @uses lib/xslt/marc-to-database.xsl
 	 */
 
-
 	class Xerxes_Command_PopulateDatabases extends Xerxes_Command_Databases
 	{
 		private $configIPAddress = "";			// config entry
@@ -21,15 +20,7 @@
 		private $objSearch = null;				// metasearch object
 		private $arrMissing = array();			// databases assigned to a category but missing from the all db pull
 		
-		/**
-		 * Download the Metalib KB and populate the local database with its information
-		 *
-		 * @param Xerxes_Framework_Request $objRequest
-		 * @param Xerxes_Framework_Registry $objRegistry
-		 * @return int status
-		 */
-		
-		public function doExecute( Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry )
+		public function doExecute()
 		{
 			// in case this is being called from the web, plaintext
 			header("Content-type: text/plain");
@@ -43,12 +34,12 @@
 			
 			// get configuration settings
 			
-			$this->configIPAddress = $objRegistry->getConfig("IP_ADDRESS", true);
-			$this->configInstitute = $objRegistry->getConfig("METALIB_INSTITUTE", true);
+			$this->configIPAddress = $this->registry->getConfig("IP_ADDRESS", true);
+			$this->configInstitute = $this->registry->getConfig("METALIB_INSTITUTE", true);
 			
-			$configMetalibAddress = $objRegistry->getConfig("METALIB_ADDRESS", true);
-			$configMetalibUsername = $objRegistry->getConfig("METALIB_USERNAME", true);
-			$configMetalibPassword = $objRegistry->getConfig("METALIB_PASSWORD", true);
+			$configMetalibAddress = $this->registry->getConfig("METALIB_ADDRESS", true);
+			$configMetalibUsername = $this->registry->getConfig("METALIB_USERNAME", true);
+			$configMetalibPassword = $this->registry->getConfig("METALIB_PASSWORD", true);
 			
 			// metalib search object
 			

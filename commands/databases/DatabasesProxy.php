@@ -2,9 +2,8 @@
 	
 	/**
 	 * Determines if a link should be proxied and the resulting URL that would result from that.
-   * Can also be used with a "database" request property to link to a database;
-   * will be redirected to native home url for that db, either with proxy or
-   * not as appropriate. 
+	 * Can also be used with a "database" request property to link to a database; will be 
+	 * redirected to native home url for that db, either with proxy or not as appropriate. 
 	 * 
 	 * @author David Walker
 	 * @copyright 2008 California State University
@@ -16,18 +15,7 @@
 	
 	class Xerxes_Command_DatabasesProxy extends Xerxes_Command_Databases
 	{
-		/**
-		 * Look-up the need to proxy a full-text link, Request params include
-		 * 'database' the metalib id of the database, 'url' the url to proxy
-		 * or 'param' a repeatable set of paramaters from which to construct a 
-		 * full-text link from a url full-text pattern
-		 * 
-		 * @param Xerxes_Framework_Request $objRequest
-		 * @param Xerxes_Framework_Registry $objRegistry
-		 * @return int	status
-		 */
-		
-		public function doExecute( Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry )
+		public function doExecute()
 		{
 			$bolProxy = false;				// whether to proxy or not
 			$strFinal = "";					// final link to send back
@@ -35,13 +23,13 @@
 			
 			// values from the url request
 			
-			$strMetalibID = $objRequest->getProperty("database"); // metalib id
-			$strUrl = $objRequest->getProperty("url"); // a direct url to a site, typically to full text
-			$arrParams = $objRequest->getProperty("param", true); // a series of paramaters that we'll use to constuct a full-text linke
+			$strMetalibID = $this->request->getProperty("database"); // metalib id
+			$strUrl = $this->request->getProperty("url"); // a direct url to a site, typically to full text
+			$arrParams = $this->request->getProperty("param", true); // a series of paramaters that we'll use to constuct a full-text linke
 			
 			// configuration settings
 			
-			$strProxyServer = $objRegistry->getConfig("PROXY_SERVER", false);
+			$strProxyServer = $this->registry->getConfig("PROXY_SERVER", false);
 
 			// if the database id is included, this could have come in off the 
 			// metasearch page, so we need to see if it should be proxied or not
@@ -200,7 +188,7 @@
 				$strFinal = $strUrl;
 			}
 			
-			$objRequest->setRedirect($strFinal);
+			$this->request->setRedirect($strFinal);
 			
 			return 1;
 		}

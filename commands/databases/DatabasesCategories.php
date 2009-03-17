@@ -21,7 +21,7 @@
 		 * @return int status
 		 */
 		
-		public function doExecute( Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry )
+		public function doExecute()
 		{
 			$objXml = new DOMDOcument();
 			
@@ -56,7 +56,7 @@
 						"subject" => $objCategoryData->normalized
 					);
 					
-					$url = Xerxes_Parser::escapeXml($objRequest->url_for($arrParams));
+					$url = Xerxes_Parser::escapeXml($this->request->url_for($arrParams));
 					
 					$objElement = $objXml->createElement("url", $url); 
 					$objCategory->appendChild($objElement);
@@ -66,7 +66,7 @@
 				}
 			}
 			
-			$objRequest->addDocument($objXml);
+			$this->request->addDocument($objXml);
 			
 			return 1;
 		}

@@ -7,6 +7,5 @@ class Xerxes_Command_DatabasesAccessible extends Xerxes_Command_Helper
 		$this->request->setSession("ada", "true");
 		$this->request->setRedirect($this->request->getProperty("return"));
 	}
-
 }
 ?>
