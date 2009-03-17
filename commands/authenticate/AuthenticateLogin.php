@@ -7,41 +7,30 @@
 
 class Xerxes_Command_AuthenticateLogin extends Xerxes_Command_Authenticate
 {
-	/**
-	 * Acquires username, password, and return url from params, and authenticates the user
-	 * against a directory server
-	 *
-	 * @param Xerxes_Framework_Request $objRequest
-	 * @param Xerxes_Framework_Registry $objRegistry
-	 * @return int		status
-	 */
-	
-	public function doExecute(Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry)
+	public function doExecute()
 	{
-    
 		$bolAuthenticated = false; // user is an authenticated  user
 		$bolDemo = false; // user is a demo user
 
 		// values from the request
 
-		$strPostBack = $objRequest->getProperty( "postback" );
-		$strUsername = $objRequest->getProperty( "username" );
-		$strPassword = $objRequest->getProperty( "password" );
-		$strReturn = $objRequest->getProperty( "return" );
+		$strPostBack = $this->request->getProperty( "postback" );
+		$strUsername = $this->request->getProperty( "username" );
+		$strPassword = $this->request->getProperty( "password" );
+		$strReturn = $this->request->getProperty( "return" );
 		
 		if ( $strReturn == null )
 		{
 			// default to home page
-			$strReturn = $objRegistry->getConfig( "BASE_WEB_PATH", false, "/" );
+			$strReturn = $this->registry->getConfig( "BASE_WEB_PATH", false, "/" );
 		}
 		
 		// configuration settings
-
-		//$configAuthenticationSource = $objRegistry->getConfig( "AUTHENTICATION_SOURCE", false, "demo" );
-    $configAuthenticationSource = $objRegistry->getAuthenticationSource( $objRequest->getProperty("authentication_source"));
+		
+		$configAuthenticationSource = $this->registry->getAuthenticationSource( $this->request->getProperty("authentication_source"));
     
-		$configDemoUsers = $objRegistry->getConfig( "DEMO_USERS", false );
-		$configHttps = $objRegistry->getConfig( "SECURE_LOGIN", false, false );
+		$configDemoUsers = $this->registry->getConfig( "DEMO_USERS", false );
+		$configHttps = $this->registry->getConfig( "SECURE_LOGIN", false, false );
 		
 
     
@@ -49,9 +38,9 @@ class Xerxes_Command_AuthenticateLogin extends Xerxes_Command_Authenticate
 
 		// if secure login is required, then force the user back thru https
 
-		if ( $configHttps == true && $objRequest->getServer( "HTTPS" ) == null )
+		if ( $configHttps == true && $this->request->getServer( "HTTPS" ) == null )
 		{
-			$objRequest->setRedirect( "https://" . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'] );
+			$this->request->setRedirect( "https://" . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'] );
 			return 1;
 		}
 		
@@ -62,12 +51,12 @@ class Xerxes_Command_AuthenticateLogin extends Xerxes_Command_Authenticate
 		
 		if ( $configAuthenticationSource == "cas" )
 		{
-			$configUrlBaseDirectory = $objRegistry->getConfig( "BASE_URL", true );
-			$configCasLogin = $objRegistry->getConfig( "CAS_LOGIN", true );
+			$configUrlBaseDirectory = $this->registry->getConfig( "BASE_URL", true );
+			$configCasLogin = $this->registry->getConfig( "CAS_LOGIN", true );
 			
 			$strUrl = $configCasLogin . "?service=" . urlencode( $configUrlBaseDirectory . "/?base=authenticate&action=cas-validate" . "&return=" . urlencode( $strReturn ) );
 			
-			$objRequest->setRedirect( $strUrl );
+			$this->request->setRedirect( $strUrl );
 			return 1;
 		}
 		
@@ -78,8 +67,10 @@ class Xerxes_Command_AuthenticateLogin extends Xerxes_Command_Authenticate
 		if ( $configAuthenticationSource == "shibboleth" )
 		{
 			// get username header from configged name
-			$username_header = $objRegistry->getConfig( "shib_username_header", false, "REMOTE_USER" );
+			
+			$username_header = $this->registry->getConfig( "shib_username_header", false, "REMOTE_USER" );
 			$strUsername = null;
+			
 			if ( array_key_exists( $username_header, $_SERVER ) )
 			{
 				$strUsername = $_SERVER[$username_header];
@@ -104,7 +95,7 @@ class Xerxes_Command_AuthenticateLogin extends Xerxes_Command_Authenticate
 				
 				$this->register( $user, "named" );
 				
-				$objRequest->setRedirect( "http://" . $objRequest->getServer( 'SERVER_NAME' ) . $strReturn );
+				$this->request->setRedirect( "http://" . $this->request->getServer( 'SERVER_NAME' ) . $strReturn );
         
         
 				return 1;
@@ -136,7 +127,7 @@ class Xerxes_Command_AuthenticateLogin extends Xerxes_Command_Authenticate
 				require_once ($local_auth_file);
 				
 				$objCustomAuth = new Xerxes_CustomAuth();
-				$bolAuthenticated = $objCustomAuth->authenticate($objRequest, $objRegistry);
+				$bolAuthenticated = $objCustomAuth->authenticate($this->request, $this->registry);
 				$strUsername = $objCustomAuth->username;
 			}
 			else
@@ -148,8 +139,8 @@ class Xerxes_Command_AuthenticateLogin extends Xerxes_Command_Authenticate
 		{
 			// see if user can bind to directory server with supplied credentials
 			
-			$configDirectoryServer = $objRegistry->getConfig( "DIRECTORY_SERVER", true );
-			$configDomain = $objRegistry->getConfig( "DOMAIN", true );
+			$configDirectoryServer = $this->registry->getConfig( "DIRECTORY_SERVER", true );
+			$configDomain = $this->registry->getConfig( "DOMAIN", true );
 			
 			$objAuth = new Xerxes_LDAP( $configDirectoryServer );
 			
@@ -160,7 +151,7 @@ class Xerxes_Command_AuthenticateLogin extends Xerxes_Command_Authenticate
 		} 
 		elseif ( $configAuthenticationSource == "innovative" )
 		{
-			$configPatronApi = $objRegistry->getConfig( "INNOVATIVE_PATRON_API", true );
+			$configPatronApi = $this->registry->getConfig( "INNOVATIVE_PATRON_API", true );
 			
 			$objAuth = new Xerxes_InnovativePatron( $configPatronApi );
 			
@@ -216,7 +207,7 @@ class Xerxes_Command_AuthenticateLogin extends Xerxes_Command_Authenticate
 			
 			$this->register( $strUsername, $role );
 			
-			$objRequest->setRedirect( "http://" . $objRequest->getServer( 'SERVER_NAME' ) . $strReturn );
+			$this->request->setRedirect( "http://" . $this->request->getServer( 'SERVER_NAME' ) . $strReturn );
 		}
 		else
 		{
@@ -239,7 +230,7 @@ class Xerxes_Command_AuthenticateLogin extends Xerxes_Command_Authenticate
 			$objFail = $objXml->createElement( "message", $strFailed );
 			$objXml->documentElement->appendChild( $objFail );
 			
-			$objRequest->addDocument( $objXml );
+			$this->request->addDocument( $objXml );
 		}
 		
 		return 1;
