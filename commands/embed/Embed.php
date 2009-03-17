@@ -1,31 +1,6 @@
 <?php
 
 /**
- *  Kind of lame and un-objected oriented, but we need to define a global
- *  function so we can call it from within the XSLT view, to load
- *  the embedable content as a sample. 
- */
-
-function getEmbedContent($url)
-{
-	$output = '';
-	$handle = fopen( $url, 'r' );
-	
-	if ( ! $handle )
-	{
-		return "Error: Could not open content at $url";
-	}
-	
-	while ( ! feof( $handle ) )
-	{
-		//read file line by line into variable
-		$output = $output . fgets( $handle, 4096 );
-	}
-	fclose( $handle );
-	return $output;
-}
-
-/**
  * Base class for embed commands, mostlyl used for embed generator. 
  *
  */
@@ -44,7 +19,7 @@ abstract class Xerxes_Command_Embed extends Xerxes_Framework_Command
 	 * @return unknown
 	 */
 	
-	protected static function doExecuteHelper(Array $url_params, Array $direct_url_params = null)
+	protected function doExecuteHelper(Array $url_params, Array $direct_url_params = null)
 	{
 		// default embed css to false, because it's awful.
 		
@@ -112,6 +87,30 @@ abstract class Xerxes_Command_Embed extends Xerxes_Framework_Command
 		return 1;
 	
 	}
+	
+	/**
+	 *  Call from within the XSLT view, to load  the embedable content as a sample. 
+	 */
+	
+	public static function getEmbedContent($url)
+	{
+		$output = '';
+		$handle = fopen( $url, 'r' );
+		
+		if ( ! $handle )
+		{
+			return "Error: Could not open content at $url";
+		}
+		
+		while ( ! feof( $handle ) )
+		{
+			//read file line by line into variable
+			$output = $output . fgets( $handle, 4096 );
+		}
+		fclose( $handle );
+		return $output;
+	}
+	
 
 }
 

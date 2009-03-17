@@ -150,7 +150,7 @@
     <legend>Example</legend>
     <div id="example_container">
     <div id="example_content">
-    <xsl:value-of disable-output-escaping="yes" select="php:functionString('getEmbedContent', embed_info/embed_direct_url)"  />
+    <xsl:value-of disable-output-escaping="yes" select="php:functionString('Xerxes_Command_Embed::getEmbedContent', embed_info/embed_direct_url)"  />
     </div>
     </div>
     </fieldset>
