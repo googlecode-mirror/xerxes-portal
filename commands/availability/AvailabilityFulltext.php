@@ -14,23 +14,14 @@
 	
 	class Xerxes_Command_AvailabilityFullText extends Xerxes_Command_Availability
 	{
-		/**
-		 * Performs an issn / year search of the sfx institutional holdings data to determine
-		 * if full-text is available via SFX, returns location of a full-text image if true
-		 *
-		 * @param Xerxes_Framework_Request $objRequest
-		 * @param Xerxes_Framework_Registry $objRegistry
-		 * @return int	status
-		 */
-		
-		public function doExecute( Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry )
+		public function doExecute()
 		{
 			$bolFullText = false;
 			
-			$issn = $objRequest->getProperty("issn");
-			$year = $objRequest->getProperty("year");
+			$issn = $this->request->getProperty("issn");
+			$year = $this->request->getProperty("year");
 			
-			$configBaseUrl = $objRegistry->getConfig("BASE_URL");
+			$configBaseUrl = $this->request->getConfig("BASE_URL");
 			
 			if ( $issn != null && $issn != "" )
 			{
@@ -90,11 +81,11 @@
 			
 			if ( $bolFullText == true )
 			{
-				$objRequest->setRedirect($configBaseUrl . "/images/dynamic-full.gif" );
+				$this->request->setRedirect($configBaseUrl . "/images/dynamic-full.gif" );
 			}
 			else
 			{
-				$objRequest->setRedirect($configBaseUrl . "/images/dynamic-sfx.gif" );
+				$this->request->setRedirect($configBaseUrl . "/images/dynamic-sfx.gif" );
 			}
 			
 			return 1;

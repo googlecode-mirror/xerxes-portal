@@ -13,17 +13,7 @@
 	
 	class Xerxes_Command_AvailabilityInjectFullText extends Xerxes_Command_Availability 
 	{
-		/**
-		 * Extracts all of the ISSNs and years from the request and add a new fulltext node in the XML
-		 * for all of the records that show full-text availability via SFX cache (that don't aleady
-		 * have native full-text link).
-		 *
-		 * @param Xerxes_Framework_Request $objRequest
-		 * @param Xerxes_Framework_Registry $objRegistry
-		 * @return int
-		 */
-		
-		public function doExecute( Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry )
+		public function doExecute()
 		{
 			$arrFullText = array();		// list of records with full text
 			$arrPairs = array();		// issn-year combo array
@@ -33,7 +23,7 @@
 			// as well as no native full-text link already
 			
 			$strXpath = "//xerxes_record[not(links/link[@type = 'pdf' or @type = 'html' or @type = 'online']) and standard_numbers/issn and year]";
-			$objSimple = simplexml_import_dom($objRequest->getData());
+			$objSimple = simplexml_import_dom($this->request->getData());
 			$arrRecords = $objSimple->xpath($strXpath);
 			
 			// pair-up the issn-year into a simple array here
@@ -129,7 +119,7 @@
 					$objXml->documentElement->appendChild($objIssn);
 				}
 				
-				$objRequest->addDocument($objXml);
+				$this->request->addDocument($objXml);
 			}
 			
 			return 1;

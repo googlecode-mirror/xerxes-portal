@@ -13,20 +13,11 @@
 	
 	class Xerxes_Command_AvailabilityInjectRefereed extends Xerxes_Command_Availability 
 	{
-		/**
-		 * Extracts all of the ISSNs from the request and adds a new refereed node in the XML
-		 * for all of the journals that are peer reviewed
-		 *
-		 * @param Xerxes_Framework_Request $objRequest
-		 * @param Xerxes_Framework_Registry $objRegistry
-		 * @return int
-		 */
-		
-		public function doExecute( Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry )
+		public function doExecute()
 		{
 			// get all of the issns
 			
-			$arrIssn = $objRequest->getData("//issn", null, "array");
+			$arrIssn = $this->request->getData("//issn", null, "array");
 			
 			if ( count($arrIssn) > 0 )
 			{
@@ -46,7 +37,7 @@
 					$objXml->documentElement->appendChild($objIssn);
 				}
 				
-				$objRequest->addDocument($objXml);
+				$this->request->addDocument($objXml);
 			}
 			
 			return 1;
