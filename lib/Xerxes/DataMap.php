@@ -48,29 +48,30 @@ class Xerxes_Data_Category extends Xerxes_Framework_DataValue
 	public $normalized;
 	public $old;
 	public $subcategories = array ( );
-  
-  /**
-   * Converts a sting to a normalized (no-spaces, non-letters) string
-   *
-   * @param string $strSubject	original string
-   * @return string				normalized string
-   */
-  public static function normalize($strSubject) {
-    $strNormalized = strtolower($strSubject);
-    
-    $strNormalized = str_replace("&amp;","", $strNormalized);
-    $strNormalized = str_replace("'","", $strNormalized);
-    $strNormalized = str_replace("+","-", $strNormalized);
-    
-    $strNormalized = preg_replace("/\W/","-",$strNormalized);
-    
-    while ( strstr($strNormalized, "--") )
-    {
-      $strNormalized = str_replace("--", "-", $strNormalized);
-    }
-    
-    return $strNormalized;
-  }
+	
+	/**
+	 * Converts a sting to a normalized (no-spaces, non-letters) string
+	 *
+	 * @param string $strSubject	original string
+	 * @return string				normalized string
+	 */
+	public static function normalize($strSubject)
+	{
+		$strNormalized = strtolower( $strSubject );
+		
+		$strNormalized = str_replace( "&amp;", "", $strNormalized );
+		$strNormalized = str_replace( "'", "", $strNormalized );
+		$strNormalized = str_replace( "+", "-", $strNormalized );
+		
+		$strNormalized = preg_replace( "/\W/", "-", $strNormalized );
+		
+		while ( strstr( $strNormalized, "--" ) )
+		{
+			$strNormalized = str_replace( "--", "-", $strNormalized );
+		}
+		
+		return $strNormalized;
+	}
 }
 
 class Xerxes_Data_Subcategory extends Xerxes_Framework_DataValue
@@ -158,7 +159,6 @@ class Xerxes_Data_Record extends Xerxes_Framework_DataValue
 	public $refereed;
 	public $marc;
 	public $xerxes_record; // not part of table!
-	
 
 	public $tags = array ( );
 }
@@ -208,7 +208,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		// delete join tables in the event mysql is set-up with myisam
 		// storage engine -- this should be fixed in xerxes 1.2 since 
 		// sql scripts for mysql will specifically set to innodb
-		
+
 		$this->delete( "DELETE FROM xerxes_database_alternate_publishers" );
 		$this->delete( "DELETE FROM xerxes_database_alternate_titles" );
 		$this->delete( "DELETE FROM xerxes_database_keywords" );
@@ -218,7 +218,6 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		$this->delete( "DELETE FROM xerxes_subcategory_databases" );
 		
 		// delete parent tables
-		
 
 		$this->delete( "DELETE FROM xerxes_databases" );
 		$this->delete( "DELETE FROM xerxes_subcategories" );
@@ -236,7 +235,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 	{
 		// clean-up metalib types
 		// basic single-value fields
-    
+
 		$objDatabase->proxy = $this->convertMetalibBool( $objDatabase->proxy );
 		$objDatabase->searchable = $this->convertMetalibBool( $objDatabase->searchable );
 		$objDatabase->guest_access = $this->convertMetalibBool( $objDatabase->guest_access );
@@ -245,14 +244,10 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		$objDatabase->new_resource_expiry = $this->convertMetalibDate( $objDatabase->new_resource_expiry );
 		$objDatabase->updated = $this->convertMetalibDate( $objDatabase->updated );
 		
-    
-
-    
-
 		$this->doSimpleInsert( "xerxes_databases", $objDatabase );
 		
 		// keywords
-		
+
 		foreach ( $objDatabase->keywords as $keyword )
 		{
 			$strSQL = "INSERT INTO xerxes_database_keywords ( database_id, keyword ) " . "VALUES ( :metalib_id, :keyword )";
@@ -261,7 +256,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		}
 		
 		// usergroups/"secondary affiliations". Used as access restrictions.
-		
+
 		foreach ( $objDatabase->group_restrictions as $usergroup )
 		{
 			$strSQL = "INSERT INTO xerxes_database_group_restrictions ( database_id, usergroup ) " . "VALUES ( :metalib_id, :usergroup )";
@@ -270,7 +265,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		}
 		
 		// notes
-		
+
 		foreach ( $objDatabase->notes as $note )
 		{
 			$strSQL = "INSERT INTO xerxes_database_notes ( database_id, note ) " . "VALUES ( :metalib_id, :note )";
@@ -279,7 +274,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		}
 		
 		// languages
-		
+
 		foreach ( $objDatabase->languages as $language )
 		{
 			$strSQL = "INSERT INTO xerxes_database_languages ( database_id, language ) " . "VALUES ( :metalib_id, :language )";
@@ -288,7 +283,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		}
 		
 		// alternate publishers
-		
+
 		foreach ( $objDatabase->alternate_publishers as $alternate_publisher )
 		{
 			$strSQL = "INSERT INTO xerxes_database_alternate_publishers ( database_id, alt_publisher ) " . "VALUES ( :metalib_id, :alt_publisher )";
@@ -297,7 +292,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		}
 		
 		// alternate titles
-		
+
 		foreach ( $objDatabase->alternate_titles as $alternate_title )
 		{
 			$strSQL = "INSERT INTO xerxes_database_alternate_titles ( database_id, alt_title ) " . "VALUES ( :metalib_id, :alt_title )";
@@ -355,112 +350,157 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		}
 	}
 	
-  
-  /**
-   * Add a user-created category; Does not add subcategories or databases,
-   * just the category. Category should not have an 'id' property, will be
-   * supplied by auto-incremented db column.
-   *
-   * @param Xerxes_Data_Category $objCategory
-   *
-   */
+	/**
+	 * Add a user-created category; Does not add subcategories or databases,
+	 * just the category. Category should not have an 'id' property, will be
+	 * supplied by auto-incremented db column.
+	 *
+	 * @param Xerxes_Data_Category $objCategory
+	 */
+	
+	public function addUserCreatedCategory(Xerxes_Data_Category $objCategory)
+	{
+		// We don't use metalib-id or old for user-created categories
+		unset( $objCategory->metalib_id );
+		unset( $objCategory->old );
+		
+		$new_pk = $this->doSimpleInsert( "xerxes_user_categories", $objCategory, true );
+		
+		$objCategory->id = $new_pk;
+		return $objCategory;
+	}
+	
+	/**
+	 * Does not update subcategory assignments, only the actual category
+	 * values, at present. Right now, just name and normalized!
+	 * 
+	 * @param Xerxes_Data_Category $objCategory 	a category object
+	 */
 
-  public function addUserCreatedCategory(Xerxes_Data_Category $objCategory)
-  {
-    // We don't use metalib-id or old for user-created categories
-    unset($objCategory->metalib_id);
-    unset($objCategory->old);
-    
-    $new_pk = $this->doSimpleInsert( "xerxes_user_categories", $objCategory, true );
-    
-    $objCategory->id = $new_pk;
-    return $objCategory;
-  }
-    // Does not update subcategory assignments, only the actual category
-    // values, at present. Right now, just name and normalized!
-    public function updateUserCategoryProperties(Xerxes_Data_Category $objCategory) {      
-      $objCategory->normalized = Xerxes_Data_Category::normalize( $objCategory->name );
-      
-      $sql = "UPDATE xerxes_user_categories SET name = :name, normalized = :normalized, published = :published WHERE id = " . $objCategory->id;
-      
-      return $this->update($sql, array(":name" => $objCategory->name, ":normalized" => $objCategory->normalized, ":published" => $objCategory->published ));      
-    }
-  
-  /**
-   * Add a user-created subcategory; Does not add databases joins,
-   * just the subcategory. Category should not have an 'id' property, will be
-   * supplied by auto-incremented db column.
-   *
-   * @param Xerxes_Data_Subcategory $objSubcat
-   *
-   */
-  public function addUserCreatedSubcategory(Xerxes_Data_Subcategory $objSubcat) {
-    //We don't use metalib-id, we use id instead, sorry. 
-    unset($objSubcat->metalib_id);
-    
-    $new_pk = $this->doSimpleInsert("xerxes_user_subcategories", $objSubcat, true);
-    $objSubcat->id = $new_pk;
-    return $objSubcat;
-  }
-  
-  public function deleteUserCreatedSubcategory(Xerxes_Data_Subcategory $objSubcat) {
-    $sql = "DELETE FROM xerxes_user_subcategories WHERE ID = :subcategory_id";
-    return $this->delete($sql, array(":subcategory_id" => $objSubcat->id));
-  }
-  
-  public function deleteUserCreatedCategory(Xerxes_Data_Category $objCat) {
-     $sql = "DELETE FROM xerxes_user_categories WHERE ID = :category_id";
-    return $this->delete($sql, array(":category_id" => $objCat->id));
-  }
-  
-  /**
-   * Add a database to a user-created subcategory; 
-   *
-   * @param String $databaseID the metalib_id of a Xerxes database object
-   * @param Xerxes_Data_Subcategory $objSubcat object representing user created subcat
-   * @param int sequence optional, will default to end of list if null. 
-   *
-   */
-  public function addDatabaseToUserCreatedSubcategory( $databaseID, Xerxes_Data_Subcategory $objSubcat, $sequence = null)
-  {
-    if ($sequence == null) $sequence = count($objSubcat->databases) + 1;
-    
-      $strSQL = "INSERT INTO xerxes_user_subcategory_databases ( database_id, subcategory_id, sequence ) " . "VALUES ( :database_id, :subcategory_id, :sequence )";
-				
-      $arrValues = array (":database_id" => $databaseID, ":subcategory_id" => $objSubcat->id, ":sequence" => $sequence );
-      
-      $this->insert( $strSQL, $arrValues );
-  }
-  
-    // Does not update database assignments, only the actual subcat
-    // values. Right now, just name and sequence!
-    public function updateUserSubcategoryProperties(Xerxes_Data_Subcategory $objSubcat) {
-      
-      $sql = "UPDATE xerxes_user_subcategories SET name = :name, sequence = :sequence WHERE id = " . $objSubcat->id;
-      
-      return $this->update($sql, array(":name" => $objSubcat->name, ":sequence" => $objSubcat->sequence ));      
-    }
-  
-    public function removeDatabaseFromUserCreatedSubcategory($databaseID, Xerxes_Data_Subcategory $objSubcat) {
-      $strDeleteSql = "DELETE from xerxes_user_subcategory_databases WHERE database_id = :database_id AND subcategory_id = :subcategory_id";
-      $this->delete($strDeleteSql, array(":database_id" => $databaseID, ":subcategory_id" => $objSubcat->id  ));
-    }
-    
-    // Update the 'sequence' number of a database in a user created category
-    public function updateUserDatabaseOrder(Xerxes_Data_Database $objDb, Xerxes_Data_Subcategory $objSubcat, $sequence) {
-      $this->beginTransaction();
-      
-      //first delete an existing join object.
-      $this->removeDatabaseFromUserCreatedSubcategory($objDb->metalib_id, $objSubcat);
-        
-      // Now create our new one with desired sequence. 
-      $this->addDatabaseToUserCreatedSubcategory($objDb->metalib_id, $objSubcat, $sequence);
-      
-      $this->commit();
-      
-      //commit transaction
-    }
-  
+	public function updateUserCategoryProperties(Xerxes_Data_Category $objCategory)
+	{
+		$objCategory->normalized = Xerxes_Data_Category::normalize( $objCategory->name );
+		
+		$sql = "UPDATE xerxes_user_categories SET name = :name, normalized = :normalized, published = :published WHERE id = " . $objCategory->id;
+		
+		return $this->update( $sql, array (":name" => $objCategory->name, ":normalized" => $objCategory->normalized, ":published" => $objCategory->published ) );
+	}
+	
+	/**
+	 * Add a user-created subcategory; Does not add databases joins,
+	 * just the subcategory. Category should not have an 'id' property, will be
+	 * supplied by auto-incremented db column.
+	 *
+	 * @param Xerxes_Data_Subcategory $objSubcat
+	 * @return Xerxes_Data_Subcategory subcategory
+	 */
+	
+	public function addUserCreatedSubcategory(Xerxes_Data_Subcategory $objSubcat)
+	{
+		//We don't use metalib-id, we use id instead, sorry. 
+		unset( $objSubcat->metalib_id );
+		
+		$new_pk = $this->doSimpleInsert( "xerxes_user_subcategories", $objSubcat, true );
+		$objSubcat->id = $new_pk;
+		return $objSubcat;
+	}
+	
+	/**
+	 * Delete a user subcategory
+	 *
+	 * @param Xerxes_Data_Subcategory $objSubcat	subcategort oject
+	 * @return int 									delete status
+	 */
+	
+	public function deleteUserCreatedSubcategory(Xerxes_Data_Subcategory $objSubcat)
+	{
+		$sql = "DELETE FROM xerxes_user_subcategories WHERE ID = :subcategory_id";
+		return $this->delete( $sql, array (":subcategory_id" => $objSubcat->id ) );
+	}
+	
+	/**
+	 * Delete a user created category
+	 *
+	 * @param Xerxes_Data_Category $objCat		category object
+	 * @return int 								detelete status
+	 */
+	
+	public function deleteUserCreatedCategory(Xerxes_Data_Category $objCat)
+	{
+		$sql = "DELETE FROM xerxes_user_categories WHERE ID = :category_id";
+		return $this->delete( $sql, array (":category_id" => $objCat->id ) );
+	}
+	
+	/**
+	 * Add a database to a user-created subcategory; 
+	 *
+	 * @param String $databaseID the metalib_id of a Xerxes database object
+	 * @param Xerxes_Data_Subcategory $objSubcat object representing user created subcat
+	 * @param int sequence optional, will default to end of list if null. 
+	 */
+
+	public function addDatabaseToUserCreatedSubcategory($databaseID, Xerxes_Data_Subcategory $objSubcat, $sequence = null)
+	{
+		if ( $sequence == null )
+			$sequence = count( $objSubcat->databases ) + 1;
+		
+		$strSQL = "INSERT INTO xerxes_user_subcategory_databases ( database_id, subcategory_id, sequence ) " . "VALUES ( :database_id, :subcategory_id, :sequence )";
+		
+		$arrValues = array (":database_id" => $databaseID, ":subcategory_id" => $objSubcat->id, ":sequence" => $sequence );
+		
+		$this->insert( $strSQL, $arrValues );
+	}
+	
+	/**
+	 * Does not update database assignments, only the actual subcat values. 
+	 * Right now, just name and sequence!
+	 *
+	 * @param Xerxes_Data_Subcategory $objSubcat	subcatgeory object
+	 * @return int 									update status
+	 */
+	
+	public function updateUserSubcategoryProperties(Xerxes_Data_Subcategory $objSubcat)
+	{
+		$sql = "UPDATE xerxes_user_subcategories SET name = :name, sequence = :sequence WHERE id = " . $objSubcat->id;
+		return $this->update( $sql, array (":name" => $objSubcat->name, ":sequence" => $objSubcat->sequence ) );
+	}
+	
+	/**
+	 * Remove database from user created subcategory
+	 *
+	 * @param string $databaseID					database id		
+	 * @param Xerxes_Data_Subcategory $objSubcat	subcategory object
+	 */
+	
+	public function removeDatabaseFromUserCreatedSubcategory($databaseID, Xerxes_Data_Subcategory $objSubcat)
+	{
+		$strDeleteSql = "DELETE from xerxes_user_subcategory_databases WHERE database_id = :database_id AND subcategory_id = :subcategory_id";
+		$this->delete( $strDeleteSql, array (":database_id" => $databaseID, ":subcategory_id" => $objSubcat->id ) );
+	}
+	
+	/**
+	 * Update the 'sequence' number of a database in a user created category
+	 *
+	 * @param Xerxes_Data_Database $objDb			database object 
+	 * @param Xerxes_Data_Subcategory $objSubcat	subcategory
+	 * @param int $sequence							sequence number
+	 */
+	
+	public function updateUserDatabaseOrder(Xerxes_Data_Database $objDb, Xerxes_Data_Subcategory $objSubcat, $sequence)
+	{
+		$this->beginTransaction();
+		
+		//first delete an existing join object.
+		$this->removeDatabaseFromUserCreatedSubcategory( $objDb->metalib_id, $objSubcat );
+		
+		// Now create our new one with desired sequence. 
+		$this->addDatabaseToUserCreatedSubcategory( $objDb->metalib_id, $objSubcat, $sequence );
+		
+		$this->commit();
+		
+	//commit transaction
+	}
+	
 	/**
 	 * Convert metalib dates to something MySQL can understand
 	 *
@@ -493,11 +533,11 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 	
 	private function convertMetalibBool($strValue)
 	{
-		if ( $strValue == "yes" || $strValue == "Y")
+		if ( $strValue == "yes" || $strValue == "Y" )
 		{
 			return 1;
-		}
-		elseif ( $strValue == "no" || $strValue == "N")
+		} 
+		elseif ( $strValue == "no" || $strValue == "N" )
 		{
 			return 0;
 		} 
@@ -534,20 +574,22 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		
 		return $arrCategories;
 	}
-  
-  /**
+	
+	/**
 	 * Get user-created categories for specified user. 
 	 * @param string $username
 	 * @return array		array of Xerxes_Data_Category objects
 	 */
-  public function getUserCreatedCategories($username) {
-    if (! $username) throw new Exception("Must supply a username argument");
-    
-    $arrCategories = array ( );
-    $strSQL = "SELECT * from xerxes_user_categories WHERE username = :username ORDER BY UPPER(name) ASC";
-    $arrResults = $this->select( $strSQL, array (":username" => $username ) );
-    
-    foreach ( $arrResults as $arrResult )
+	public function getUserCreatedCategories($username)
+	{
+		if ( ! $username )
+			throw new Exception( "Must supply a username argument" );
+		
+		$arrCategories = array ( );
+		$strSQL = "SELECT * from xerxes_user_categories WHERE username = :username ORDER BY UPPER(name) ASC";
+		$arrResults = $this->select( $strSQL, array (":username" => $username ) );
+		
+		foreach ( $arrResults as $arrResult )
 		{
 			$objCategory = new Xerxes_Data_Category( );
 			$objCategory->load( $arrResult );
@@ -556,57 +598,56 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		}
 		
 		return $arrCategories;
-  }
-
-  const metalibMode = 'metalib';
-  const userCreatedMode = 'user_created';
-  /* ->getSubject can be used in two modes, metalib-imported  categories,
-   or user created categories. We take from different db tables depending. */
-  protected function schema_map_by_mode($mode) {
-    if ($mode == self::metalibMode) {       
-      return  array(
-          "categories_table" => "xerxes_categories",
-          "subcategories_table" => "xerxes_subcategories",
-          "database_join_table" => "xerxes_subcategory_databases",
-          "subcategories_pk" => "metalib_id",
-          "extra_select" => "",
-          "extra_where" => ""
-        );
-    } elseif ($mode == self::userCreatedMode) {
-            
-      return  array(
-          "categories_table" => "xerxes_user_categories",
-          "subcategories_table" => "xerxes_user_subcategories",
-          "database_join_table" => "xerxes_user_subcategory_databases",
-          "subcategories_pk" => "id",
-          "extra_select" => ", xerxes_user_categories.published AS published, xerxes_user_categories.username AS username",
-          "extra_where" => " AND xerxes_user_categories.username = :username "
-      );
-    } else {
-      throw new Exception("unrecognized mode");
-    }           
-  }
+	}
+	
+	const metalibMode = 'metalib';
+	const userCreatedMode = 'user_created';
+	
+	/**
+	 * ->getSubject can be used in two modes, metalib-imported  categories, or user created categories. 
+	 * We take from different db tables depending
+	 *
+	 * @param string $mode		'metalib' or 'user_created' mode 
+	 * @return array
+	 */
+	
+	protected function schema_map_by_mode($mode)
+	{
+		if ( $mode == self::metalibMode )
+		{
+			return array ("categories_table" => "xerxes_categories", "subcategories_table" => "xerxes_subcategories", "database_join_table" => "xerxes_subcategory_databases", "subcategories_pk" => "metalib_id", "extra_select" => "", "extra_where" => "" );
+		} 
+		elseif ( $mode == self::userCreatedMode )
+		{
+			return array ("categories_table" => "xerxes_user_categories", "subcategories_table" => "xerxes_user_subcategories", "database_join_table" => "xerxes_user_subcategory_databases", "subcategories_pk" => "id", "extra_select" => ", xerxes_user_categories.published AS published, xerxes_user_categories.username AS username", "extra_where" => " AND xerxes_user_categories.username = :username " );
+		} 
+		else
+		{
+			throw new Exception( "unrecognized mode" );
+		}
+	}
 	
 	/**
 	 * Get an inlined set of subcategories and databases for a subject. In
-   * metalibMode, empty subcategories are not included. In userCreatedMode,
-   * they are. 
+	 * metalibMode, empty subcategories are not included. In userCreatedMode,
+	 * they are. 
 	 *
 	 * @param string $normalized		normalized category name
 	 * @param string $old				old normalzied category name, for comp with Xerxes 1.0. Often can be left null in call. Only applicable to metalibMode. 
-   * @param string $mode  one of constants metalibMode or userCreatedMode, for metalib-imported categories or user-created categories, using different tables.
-   * @param string $username only used in userCreatedMode, the particular user must be specified, becuase normalized subject names are only unique within a user. 
-	 * @return Xerxes_Data_Category					a Xerxes_Data_Category object, filled out with subcategories and databases. 
+	 * @param string $mode  			one of constants metalibMode or userCreatedMode, for metalib-imported categories or user-created categories, using different tables.
+	 * @param string $username 			only used in userCreatedMode, the particular user must be specified, becuase normalized subject names are only unique within a user. 
+	 * @return Xerxes_Data_Category		a Xerxes_Data_Category object, filled out with subcategories and databases. 
 	 */
 	
-   public function getSubject($normalized, $old = null, $mode = self::metalibMode, $username = null)
+	public function getSubject($normalized, $old = null, $mode = self::metalibMode, $username = null)
 	{
-    if ($mode == self::userCreatedMode && $username == null) throw new Exception("a username argument must be supplied in userCreatedMode");
-    
-    //This can be used to fetch personal or metalib-fetched data. We get
-    // from different tables depending. 
-    $schema_map = $this->schema_map_by_mode($mode);
-    
+		if ( $mode == self::userCreatedMode && $username == null )
+			throw new Exception( "a username argument must be supplied in userCreatedMode" );
+			
+		//This can be used to fetch personal or metalib-fetched data. We get
+		// from different tables depending. 
+		$schema_map = $this->schema_map_by_mode( $mode );
+		
 		// we'll use the new 'categories' normalized scheme if available, but 
 		// otherwise get the old normalized scheme with the capitalizations for 
 		// compatability with xerxes 1.0 release.
@@ -623,38 +664,36 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		// we're outer joining only to group_restrictions, because it's
 		// really confusing and complicated to write this SQL, and that's all
 		// we need right now.
-		
-		$strSQL = "SELECT $schema_map[categories_table].id as category_id, 
-		            $schema_map[categories_table].name as category,
-		            $schema_map[subcategories_table].$schema_map[subcategories_pk] as subcat_id,
-		            $schema_map[subcategories_table].sequence as subcat_seq, 
-		            $schema_map[subcategories_table].name as subcategory, 
-		            $schema_map[database_join_table].sequence as sequence,
-		            xerxes_databases.*,
-                xerxes_database_group_restrictions.usergroup
-                $schema_map[extra_select]
-			   FROM $schema_map[categories_table]
-         
-              LEFT OUTER JOIN $schema_map[subcategories_table] ON $schema_map[categories_table].id = $schema_map[subcategories_table].category_id
-              
-              LEFT OUTER JOIN $schema_map[database_join_table] ON $schema_map[database_join_table].subcategory_id = $schema_map[subcategories_table].$schema_map[subcategories_pk]
-              
-			        LEFT OUTER JOIN xerxes_databases ON $schema_map[database_join_table].database_id = xerxes_databases.metalib_id
-              
-               LEFT OUTER JOIN xerxes_database_group_restrictions ON xerxes_databases.metalib_id = xerxes_database_group_restrictions.database_id
-			        
-			        
-			 WHERE $schema_map[categories_table].$column = :value
-			   AND 
-             ($schema_map[subcategories_table].name NOT LIKE 'All%' OR
-              $schema_map[subcategories_table].name is NULL)
-			   
-         $schema_map[extra_where]
-		  ORDER BY subcat_seq, sequence";
-    $args = array (":value" => $normalized );
-    if ($username)  $args[":username"] = $username;  
 
-    $arrResults = $this->select( $strSQL, $args );
+		$strSQL = "SELECT $schema_map[categories_table].id as category_id, 
+			$schema_map[categories_table].name as category,
+			$schema_map[subcategories_table].$schema_map[subcategories_pk] as subcat_id,
+			$schema_map[subcategories_table].sequence as subcat_seq, 
+			$schema_map[subcategories_table].name as subcategory, 
+			$schema_map[database_join_table].sequence as sequence,
+			xerxes_databases.*,
+			xerxes_database_group_restrictions.usergroup
+			$schema_map[extra_select]
+			FROM $schema_map[categories_table]
+			LEFT OUTER JOIN $schema_map[subcategories_table] ON $schema_map[categories_table].id = $schema_map[subcategories_table].category_id
+			LEFT OUTER JOIN $schema_map[database_join_table] ON $schema_map[database_join_table].subcategory_id = $schema_map[subcategories_table].$schema_map[subcategories_pk]
+			LEFT OUTER JOIN xerxes_databases ON $schema_map[database_join_table].database_id = xerxes_databases.metalib_id
+			LEFT OUTER JOIN xerxes_database_group_restrictions ON xerxes_databases.metalib_id = xerxes_database_group_restrictions.database_id
+			WHERE $schema_map[categories_table].$column = :value
+			AND 
+			($schema_map[subcategories_table].name NOT LIKE 'All%' OR
+			$schema_map[subcategories_table].name is NULL)
+			$schema_map[extra_where]
+			ORDER BY subcat_seq, sequence";
+		  
+		$args = array (":value" => $normalized );
+		
+		if ( $username )
+		{
+			$args[":username"] = $username;
+		}
+		
+		$arrResults = $this->select( $strSQL, $args );
 		
 		if ( $arrResults != null )
 		{
@@ -662,15 +701,24 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 			$objCategory->id = $arrResults[0]["category_id"];
 			$objCategory->name = $arrResults[0]["category"];
 			$objCategory->normalized = $normalized;
-      // These two only for user-created categories, will be nil otherwise.
-      if (array_key_exists("username", $arrResults[0])) $objCategory->owned_by_user = $arrResults[0]["username"];
-      if (array_key_exists("published", $arrResults[0])) $objCategory->published = $arrResults[0]["published"];
+			
+			// these two only for user-created categories, will be nil otherwise.
+			
+			if ( array_key_exists( "username", $arrResults[0] ) )
+			{
+				$objCategory->owned_by_user = $arrResults[0]["username"];
+			}
+			
+			if ( array_key_exists( "published", $arrResults[0] ) )
+			{
+				$objCategory->published = $arrResults[0]["published"];
+			}
 			
 			$objSubcategory = new Xerxes_Data_Subcategory( );
 			//$objSubcategory->metalib_id = $arrResults[0]["subcat_id"];
 			$objSubcategory->id = $arrResults[0]["subcat_id"];
 			$objSubcategory->name = $arrResults[0]["subcategory"];
-      $objSubcategory->sequence = $arrResults[0]["subcat_seq"];
+			$objSubcategory->sequence = $arrResults[0]["subcat_seq"];
 			
 			$objDatabase = new Xerxes_Data_Database( );
 			
@@ -678,33 +726,39 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 			{
 				// if the current row's subcategory name does not match the previous
 				// one, then push the previous one onto category obj and make a new one
-				
+
 				if ( $arrResult["subcat_id"] != $objSubcategory->id )
 				{
-					// Get the last db in this subcategory first too.
-          if ( $objDatabase->metalib_id != null )
-	          array_push( $objSubcategory->databases, $objDatabase );
+					// get the last db in this subcategory first too.
+					
+					if ( $objDatabase->metalib_id != null )
+					{
+						array_push( $objSubcategory->databases, $objDatabase );
+					}
+					
 					$objDatabase = new Xerxes_Data_Database( );
-          
-          // Only add subcategory if it actually has databases, to
-          // maintain consistency with previous semantics.
-          if ( ( $mode == self::userCreatedMode && $objSubcategory->id ) || ! empty($objSubcategory->databases)) {
-					  array_push( $objCategory->subcategories, $objSubcategory );
-          }
+					
+					// only add subcategory if it actually has databases, to
+					// maintain consistency with previous semantics.
+					
+					if ( ($mode == self::userCreatedMode && $objSubcategory->id) || ! empty( $objSubcategory->databases ) )
+					{
+						array_push( $objCategory->subcategories, $objSubcategory );
+					}
 					
 					$objSubcategory = new Xerxes_Data_Subcategory( );
 					$objSubcategory->id = $arrResult["subcat_id"];
 					$objSubcategory->name = $arrResult["subcategory"];
-          $objSubcategory->sequence = $arrResult["subcat_seq"];
+					$objSubcategory->sequence = $arrResult["subcat_seq"];
 				}
 				
 				// if the previous row has a different id, then we've come 
 				// to a new database, otherwise these are values from the outer join
-				
 
 				if ( $arrResult["metalib_id"] != $objDatabase->metalib_id )
 				{
-					// Existing one that isn't empty? Save it. 
+					// existing one that isn't empty? save it.
+					
 					if ( $objDatabase->metalib_id != null )
 					{
 						array_push( $objSubcategory->databases, $objDatabase );
@@ -716,7 +770,6 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 				
 				// if the current row's outter join value is not already stored,
 				// then then we've come to a unique value, so add it
-				
 
 				$arrColumns = array ("usergroup" => "group_restrictions" );
 				
@@ -734,9 +787,17 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 			}
 			
 			// last ones
-			if ($objDatabase->metalib_id != null) array_push( $objSubcategory->databases, $objDatabase );
-			if ( ($mode == self::userCreatedMode && $objSubcategory->id) || ! empty($objSubcategory->databases)) array_push( $objCategory->subcategories, $objSubcategory );
-
+			
+			if ( $objDatabase->metalib_id != null )
+			{
+				array_push( $objSubcategory->databases, $objDatabase );
+			}
+			
+			if ( ($mode == self::userCreatedMode && $objSubcategory->id) || ! empty( $objSubcategory->databases ) )
+			{
+				array_push( $objCategory->subcategories, $objSubcategory );
+			}
+			
 			return $objCategory;
 		
 		} 
@@ -761,7 +822,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		if ( count( $arrResults ) > 0 )
 		{
 			return $arrResults[0];
-		}
+		} 
 		else
 		{
 			return null;
@@ -794,7 +855,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		if ( $id != null && is_array( $id ) )
 		{
 			// databases specified by an array of ids
-			
+
 			$arrParams = array ( );
 			$strSQL .= " WHERE ";
 			
@@ -816,7 +877,6 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		elseif ( $id != null && ! is_array( $id ) )
 		{
 			// single database query
-			
 
 			$strSQL .= " WHERE xerxes_databases.metalib_id = :id ";
 			$arrResults = $this->select( $strSQL, array (":id" => $id ) );
@@ -825,7 +885,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		{
 			// string query for databases.
 			// we match title, descrition, or keywords.
-      // MySQL specific REGEXP commands. 
+			// MySQL specific REGEXP commands. 
 			
 			$strSQL .= "WHERE xerxes_databases.title_display REGEXP :query1 OR xerxes_databases.title_full REGEXP :query2 OR xerxes_databases.description REGEXP :query3 OR xerxes_database_keywords.keyword REGEXP :query4 OR xerxes_database_alternate_titles.alt_title REGEXP :query5 ";
 			$strSQL .= " ORDER BY UPPER(title_display) ";
@@ -835,18 +895,20 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 			$arrParams[":query2"] = $sqlQuery;
 			$arrParams[":query3"] = $sqlQuery;
 			$arrParams[":query4"] = $sqlQuery;
-      $arrParams[":query5"] = $sqlQuery;
+			$arrParams[":query5"] = $sqlQuery;
 			
 			$arrResults = $this->select( $strSQL, $arrParams );
-		} else
+		} 
+		else
 		{
 			// all databases, sorted alphabetically
-			
+
 			$strSQL .= " ORDER BY UPPER(title_display)";
 			$arrResults = $this->select( $strSQL );
 		}
 		
-		// Read SQL and transform to internal data objs. 
+		// read sql and transform to internal data objs.
+		
 		if ( $arrResults != null )
 		{
 			$objDatabase = new Xerxes_Data_Database( );
@@ -855,7 +917,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 			{
 				// if the previous row has a different id, then we've come 
 				// to a new database, otherwise these are values from the outter join
-				
+
 				if ( $arrResult["metalib_id"] != $objDatabase->metalib_id )
 				{
 					if ( $objDatabase->metalib_id != null )
@@ -869,7 +931,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 				
 				// if the current row's outter join value is not already stored,
 				// then then we've come to a unique value, so add it
-				
+
 				$arrColumns = array ("keyword" => "keywords", "usergroup" => "group_restrictions", "language" => "languages", "note" => "notes", "alt_title" => "alternate_titles", "alt_publisher" => "alternate_publishers" );
 				
 				foreach ( $arrColumns as $column => $identifier )
@@ -930,21 +992,21 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 	public function setCache(Xerxes_Data_Cache $objCache)
 	{
 		// set timestamp if not specified
-		
+
 		if ( $objCache->timestamp == null )
 		{
 			$objCache->timestamp = time();
 		}
 		
 		// if no expiry specified, set a 6 hour cache
-		
+
 		if ( $objCache->expiry == null )
 		{
 			$objCache->expiry = 6 * 60 * 60;
 		}
 		
 		// delete any previously stored value under this group + id
-		
+
 		$this->beginTransaction();
 		
 		$arrParams = array ( );
@@ -957,7 +1019,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		$this->delete( $strSQL, $arrParams );
 		
 		// now insert the new value
-		
+
 		$this->doSimpleInsert( "xerxes_cache", $objCache );
 		
 		$this->commit();
@@ -1008,7 +1070,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 	
 	public function pruneCache($source = "", $timestamp = "")
 	{
-		$arrParams = array();
+		$arrParams = array ( );
 		
 		if ( $timestamp == null )
 		{
@@ -1026,7 +1088,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 			$arrParams[":source"] = $source;
 		}
 		
-		return $this->delete($strSQL, $arrParams);
+		return $this->delete( $strSQL, $arrParams );
 	}
 	
 	### SAVED RECORD FUNCTIONS ###
@@ -1047,7 +1109,6 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		
 		// labels are little different, since we need to make sure they
 		// include the tags table 
-		
 
 		if ( $strLabel != null )
 		{
@@ -1091,38 +1152,41 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		return $this->update( $strSQL, array (":old" => $old, ":new" => $new ) );
 	}
 	
-	public function getRecords($strUsername, $strView = null, $strOrder = null, $iStart = 1, $iCount = 20, &$objDatabaseLinksXml = null)
+	public function getRecords($strUsername, $strView = null, $strOrder = null, $iStart = 1, $iCount = 20)
 	{
-		return $this->returnRecords($objDatabaseLinksXml, $strUsername, $strView, null, $strOrder, $iStart, $iCount );
+		return $this->returnRecords( $strUsername, $strView, null, $strOrder, $iStart, $iCount );
 	}
 	
-	public function getRecordsByLabel($strUsername = null, $strLabel, $strOrder = null, $iStart = 1, $iCount = null, &$objDatabaseLinksXml = null)
+	public function getRecordsByLabel($strUsername = null, $strLabel, $strOrder = null, $iStart = 1, $iCount = null)
 	{
-		return $this->returnRecords($objDatabaseLinksXml, $strUsername, null, null, $strOrder, $iStart, $iCount, null, $strLabel );
+		return $this->returnRecords( $strUsername, null, null, $strOrder, $iStart, $iCount, null, $strLabel );
 	}
 	
-	public function getRecordsByFormat($strUsername = null, $strFormat, $strOrder = null, $iStart = 1, $iCount = null, &$objDatabaseLinksXml = null)
+	public function getRecordsByFormat($strUsername = null, $strFormat, $strOrder = null, $iStart = 1, $iCount = null)
 	{
-		return $this->returnRecords($objDatabaseLinksXml, $strUsername, null, null, $strOrder, $iStart, $iCount, $strFormat, $objDatabaseLinksXml );
+		return $this->returnRecords( $strUsername, null, null, $strOrder, $iStart, $iCount, $strFormat );
 	}
 	
 	public function getRecordByID($strID)
 	{
-		$arrResults = $this->getRecordsByID( array($strID) );
-    if ( count($arrResults) == 0 ) {
+		$arrResults = $this->getRecordsByID( array ($strID ) );
+		if ( count( $arrResults ) == 0 )
+		{
 			return null;
-		}
-		elseif ( count($arrResults) == 1 ) {
+		} 
+		elseif ( count( $arrResults ) == 1 )
+		{
 			return $arrResults[0];
+		} 
+		else
+		{
+			throw new Exception( "More than one saved record found for id $strID !" );
 		}
-		else {
-			throw new Exception("More than one saved record found for id $strID !");
-		}	
 	}
 	
-	public function getRecordsByID($arrID, $strOrder = null, &$objDatabaseLinksXml = null)
+	public function getRecordsByID($arrID, $strOrder = null)
 	{
-		return $this->returnRecords($objDatabaseLinksXml, null, null, $arrID, $strOrder );
+		return $this->returnRecords( null, null, $arrID, $strOrder );
 	}
 	
 	/**
@@ -1139,17 +1203,17 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 	 * @return array					array of Xerxes_Data_Record objects
 	 */
 	
-	private function returnRecords(&$objDatabaseLinksDom = null, $strUsername = null, $strView = "full", $arrID = null, $strOrder = null, $iStart = 1, $iCount = null, $strFormat = null, $strLabel = null)
+	private function returnRecords($strUsername = null, $strView = "full", $arrID = null, $strOrder = null, $iStart = 1, $iCount = null, $strFormat = null, $strLabel = null)
 	{
 		// esnure that we don't just end-up with a big database dump
-		
+
 		if ( $arrID == null && $strUsername == null && $iCount == null )
 		{
 			throw new Exception( "query must be limited by username, id(s), or record count limit" );
 		}
 		
 		#### construct the query
-		
+
 		$arrParams = array ( ); // sql paramaters
 		$strSQL = ""; // main sql query
 		$strTable = ""; // tables to include
@@ -1158,8 +1222,9 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		$strLimit = ""; // record limit and off-set
 		$strSort = ""; // sort part query
 		
+
 		// set the start record, limit and offset; mysql off-set is zero-based
-		
+
 		if ( $iStart == null )
 		{
 			$iStart = 1;
@@ -1168,7 +1233,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		$iStart --;
 		
 		// we'll only apply a limit if there was a count
-		
+
 		if ( $iCount != null )
 		{
 			$strLimit = " LIMIT $iStart, $iCount ";
@@ -1191,7 +1256,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		}
 		
 		// limit to a specific user
-		
+
 		if ( $strUsername != "" )
 		{
 			$strCriteria = " WHERE xerxes_records.username = :username ";
@@ -1203,15 +1268,15 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		}
 		
 		// limit to specific tag
-		
+
 		if ( $strLabel != "" )
 		{
 			// need to include the xerxes tags table
-			
+
 			$strTable .= ", xerxes_tags ";
 			
 			// and limit the results to only those where the tag matches!
-			
+
 			$strCriteria .= " AND xerxes_tags.record_id = xerxes_records.id ";
 			$strCriteria .= " AND xerxes_tags.tag = :tag ";
 			
@@ -1227,7 +1292,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		}
 		
 		// limit to specific records by id
-		
+
 		if ( $arrID != null )
 		{
 			// make sure we've got an array 
@@ -1275,7 +1340,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		
 		// kind of a funky query, but do it this way to limit to 10 (or whatever) records
 		// per page, while joining in as many tags as exist
-		
+
 		$strSQL = "SELECT * FROM 
 			(SELECT $strColumns FROM $strTable $strCriteria $strSort $strLimit ) as xerxes_records
 			LEFT OUTER JOIN xerxes_tags on xerxes_records.id = xerxes_tags.record_id";
@@ -1295,7 +1360,6 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 			{
 				// if the previous row has a different id, then we've come 
 				// to a new database, otherwise these are values from the outter join
-				
 
 				if ( $arrResult["id"] != $objRecord->id )
 				{
@@ -1308,7 +1372,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 					$objRecord->load( $arrResult );
 					
 					// only full display will include marc records
-					
+
 					if ( array_key_exists( "marc", $arrResult ) )
 					{
 						$objXerxes_Record = new Xerxes_Record( );
@@ -1319,7 +1383,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 				
 				// if the current row's outter join value is not already stored,
 				// then then we've come to a unique value, so add it
-				
+
 				$arrColumns = array ("tag" => "tags" );
 				
 				foreach ( $arrColumns as $column => $identifier )
@@ -1335,10 +1399,9 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 			}
 			
 			// get the last one
-			
+
 			array_push( $arrRecords, $objRecord );
 		}
-    
 		
 		return $arrRecords;
 	}
@@ -1402,21 +1465,18 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 	public function assignTags($strUsername, $arrTags, $iRecord)
 	{
 		// data check
-		
-		if ( $strUsername == "" )
-			throw new Exception( "param 1 'username' must not be null" );
-		if ( ! is_array( $arrTags ) )
-			throw new Exception( "param 2 'tags' must be of type array" );
-		if ( $iRecord == "" )
-			throw new Exception( "param 3 'record' must not be null" );
+
+		if ( $strUsername == "" ) throw new Exception( "param 1 'username' must not be null" );
+		if ( ! is_array( $arrTags ) ) throw new Exception( "param 2 'tags' must be of type array" );
+		if ( $iRecord == "" ) throw new Exception( "param 3 'record' must not be null" );
 			
 		// wrap it in a transaction, yo!
-		
+
 		$this->beginTransaction();
 		
 		// first clear any old tags associated with the record, so 
 		// we can 'edit' and 'add' on the same action
-		
+
 		$strSQL = "DELETE FROM xerxes_tags WHERE record_id = :record_id AND username = :username";
 		$this->delete( $strSQL, array (":record_id" => $iRecord, ":username" => $strUsername ) );
 		
@@ -1445,11 +1505,12 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 	 * @param Xerxes_User $user
 	 * @return Xerxes_User $user
 	 */
+	
 	public function touchUser(Xerxes_User $user)
 	{
 		// array to pass to db updating routines. Make an array out of our
 		// properties. 
-		
+
 		$update_values = array ( );
 		
 		foreach ( $user->properties() as $key => $value )
@@ -1473,8 +1534,9 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 			// use any data specified in our Xerxes_User record to overwrite. Start
 			// with what's already there, overwrite with anything provided in
 			// the Xerxes_User object. 
-
+			
 			$db_values = $arrResults[0];
+			
 			foreach ( $db_values as $key => $value )
 			{
 				if ( ! (is_null( $value ) || is_numeric( $key )) )
@@ -1483,24 +1545,27 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 					
 					// merge with currently specified values
 					
+
 					if ( ! array_key_exists( $dbKey, $update_values ) )
 					{
 						$update_values[$dbKey] = $value;
-					
+						
 					//And add it to the user object too
 					//$user->$key = $value;
 					
+
 					}
 				}
 			}
 			
 			$strSQL = "UPDATE xerxes_users SET last_login = :last_login, suspended = :suspended, first_name = :first_name, last_name = :last_name, email_addr = :email_addr WHERE username = :username";
 			$status = $this->update( $strSQL, $update_values );
-		}
+		} 
 		else
 		{
 			// add em otherwise
 			
+
 			$strSQL = "INSERT INTO xerxes_users ( username, last_login, suspended, first_name, last_name, email_addr) VALUES (:username, :last_login, :suspended, :first_name, :last_name, :email_addr)";
 			$status = $this->insert( $strSQL, $update_values );
 		}
@@ -1508,20 +1573,21 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		// add let's make our group assignments match, unless the group
 		// assignments have been marked null which means to keep any existing ones
 		// only.
-		
+
 		if ( is_null( $user->usergroups ) )
 		{
-			//fetch what's in the db and use that please.
-			
+			// fetch what's in the db and use that please.
+
 			$fetched = $this->select( "SELECT usergroup FROM xerxes_user_usergroups WHERE username = :username", array (":username" => $user->username ) );
 			if ( count( $fetched ) )
 			{
 				$user->usergroups = $fetched[0];
-			} else
+			} 
+			else
 			{
 				$user->usergroups = array ( );
 			}
-		}
+		} 
 		else
 		{
 			$status = $this->delete( "DELETE FROM xerxes_user_usergroups WHERE username = :username", array (":username" => $user->username ) );
@@ -1538,14 +1604,14 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 	
 	/**
 	 * Add a record to the user's saved record space. $objXerxesRecord will be
-   * updated with internal db id and original id.. 
+	 * updated with internal db id and original id.. 
 	 *
 	 * @param string $username					username to save the record under
 	 * @param string $source					name of the source database
 	 * @param string $id						identifier for the record
 	 * @param Xerxes_Record $objXerxesRecord	xerxes record object to save
 	 * @return int  status
- */
+	 */
 	
 	public function addRecord($username, $source, $id, Xerxes_Record $objXerxesRecord)
 	{
@@ -1559,11 +1625,9 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		$strTitle = $objXerxesRecord->getMainTitle();
 		$strSubTitle = $objXerxesRecord->getSubTitle();
 		
-		if ( $strSubTitle != "" )
-			$strTitle .= ": " . $strSubTitle;
+		if ( $strSubTitle != "" ) $strTitle .= ": " . $strSubTitle;
 			
 		// peer-reviwed look-up
-		
 
 		if ( $objXerxesRecord->getISSN() != null )
 		{
@@ -1593,15 +1657,16 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		$arrValues[":marc"] = $objXerxesRecord->getMarcXMLString();
 		
 		$status = $this->insert( $strSQL, $arrValues );
-
-		//Get the internal xerxes record id for the saved record, and fill record
-    // with it, so caller can use. 
-    $getIDSql = "SELECT id FROM xerxes_records WHERE original_id = :original_id";
-    $getIDParam = array(":original_id" => $id);
-    $getIDResults = $this->select( $getIDSql, $getIDParam);
-    $objXerxesRecord->id = $getIDResults[0]["id"];
-
-    $objXerxesRecord->original_id = $id;
+		
+		// get the internal xerxes record id for the saved record, and fill record
+		// with it, so caller can use. 
+		
+		$getIDSql = "SELECT id FROM xerxes_records WHERE original_id = :original_id";
+		$getIDParam = array (":original_id" => $id );
+		$getIDResults = $this->select( $getIDSql, $getIDParam );
+		$objXerxesRecord->id = $getIDResults[0]["id"];
+		
+		$objXerxesRecord->original_id = $id;
 		
 		return $status;
 	}
@@ -1665,8 +1730,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		
 		if ( is_array( $issn ) )
 		{
-			if ( count( $issn ) == 0 )
-				throw new Exception( "issn query with no values" );
+			if ( count( $issn ) == 0 ) throw new Exception( "issn query with no values" );
 			
 			$x = 1;
 			$arrParams = array ( );
@@ -1678,7 +1742,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 				if ( $x == 1 )
 				{
 					$strSQL .= " issn = :issn$x ";
-				}
+				} 
 				else
 				{
 					$strSQL .= " OR issn = :issn$x ";
@@ -1690,7 +1754,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 			}
 			
 			$arrResults = $this->select( $strSQL, $arrParams );
-		}
+		} 
 		else
 		{
 			$issn = str_replace( "-", "", $issn );
@@ -1724,8 +1788,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		
 		if ( is_array( $issn ) )
 		{
-			if ( count( $issn ) == 0 )
-				throw new Exception( "issn query with no values" );
+			if ( count( $issn ) == 0 )	throw new Exception( "issn query with no values" );
 			
 			$x = 1;
 			$arrParams = array ( );
@@ -1737,7 +1800,8 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 				if ( $x == 1 )
 				{
 					$strSQL .= " issn = :issn$x ";
-				} else
+				} 
+				else
 				{
 					$strSQL .= " OR issn = :issn$x ";
 				}
@@ -1748,7 +1812,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 			}
 			
 			$arrResults = $this->select( $strSQL, $arrParams );
-		}
+		} 
 		else
 		{
 			$issn = str_replace( "-", "", $issn );
@@ -1787,11 +1851,11 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 	 *
 	 * @param string $strTableName		table name
 	 * @param mixed $objValueObject		object derived from Xerxes_Framework_DataValue
-   * @param boolean $boolReturnPk  default false, return the inserted pk value?
+	 * @param boolean $boolReturnPk  default false, return the inserted pk value?
 	 * @return  false if failure. on success, true or inserted pk based on $boolReturnPk
 	 */
 	
-	private function doSimpleInsert($strTableName, $objValueObject, $boolReturnPk=false)
+	private function doSimpleInsert($strTableName, $objValueObject, $boolReturnPk = false)
 	{
 		$arrProperties = array ( );
 		
@@ -1807,7 +1871,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		
 		return $this->insert( $strSQL, $arrProperties, $boolReturnPk );
 	}
-  
+
 }
 
 ?>
