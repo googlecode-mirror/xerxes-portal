@@ -13,26 +13,18 @@
 	
 	class Xerxes_Command_FolderPaging extends Xerxes_Command_Folder
 	{
-		/**
-		 * Construct paging, sorting, and hit summary elements for the current page
-		 *
-		 * @param Xerxes_Framework_Request $objRequest
-		 * @param Xerxes_Framework_Registry $objRegistry
-		 * @return int status
-		 */
-		
-		public function doExecute( Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry )
+		public function doExecute()
 		{
 			$objPage = new Xerxes_Framework_Page();
 			
 			// get parameters and configuration information
 			
-			$strUsername = $objRequest->getSession("username");
-			$iStart = (int) $objRequest->getProperty("startRecord");
-			$strLabel = $objRequest->getProperty("label");
-			$strType = $objRequest->getProperty("type");
+			$strUsername = $this->request->getSession("username");
+			$iStart = (int) $this->request->getProperty("startRecord");
+			$strLabel = $this->request->getProperty("label");
+			$strType = $this->request->getProperty("type");
 			
-			$iMax = $objRegistry->getConfig("SAVED_RECORDS_PER_PAGE", false, self::DEFAULT_RECORDS_PER_PAGE);
+			$iMax = $this->registry->getConfig("SAVED_RECORDS_PER_PAGE", false, self::DEFAULT_RECORDS_PER_PAGE);
 			
 			// get total number of saved records
 			
@@ -41,12 +33,12 @@
 			### create page hit summary element
 		
 			$objSummaryXml = $objPage->summary($iTotal,$iStart,$iMax);
-			$objRequest->addDocument($objSummaryXml);
+			$this->request->addDocument($objSummaryXml);
 			
 			
 			### create sorting element
 			
-			$strSort = $objRequest->getProperty("sortKeys");
+			$strSort = $this->request->getProperty("sortKeys");
 			if ( $strSort == "" ) $strSort = "id";
 			
 			$arrParams = array(
@@ -58,12 +50,12 @@
 				"type" => $strType
 			);
 		
-			$strQueryString = $objRequest->url_for($arrParams);
+			$strQueryString = $this->request->url_for($arrParams);
 			
 			$arrSortOptions = array("title" => "title", "author" => "author", "year" => "date", "id" => "most recently added");
 			$objSortXml = $objPage->sortDisplay( $strQueryString, $strSort, $arrSortOptions);
 			
-			$objRequest->addDocument($objSortXml);
+			$this->request->addDocument($objSortXml);
 			
 			
 			### create paging element
@@ -71,8 +63,8 @@
 			$params = array (
 				"base" => "folder",
 				"action" => "home",
-				"username" => $objRequest->getSession("username"),
-				"sortKeys" => $objRequest->getProperty("sortKeys"),
+				"username" => $this->request->getSession("username"),
+				"sortKeys" => $this->request->getProperty("sortKeys"),
 				"label" => $strLabel,
 				"type" => $strType
 			);
@@ -80,12 +72,12 @@
 			
 			$objPagerXml = $objPage->pager_dom(
 				$params,
-				"startRecord", (int) $objRequest->getProperty("startRecord"),
+				"startRecord", (int) $this->request->getProperty("startRecord"),
 				null,  $iTotal, 
-				$iMax, $objRequest
+				$iMax, $this->request
 			);
 			
-			$objRequest->addDocument($objPagerXml);
+			$this->request->addDocument($objPagerXml);
 			
 			return 1;
 		}

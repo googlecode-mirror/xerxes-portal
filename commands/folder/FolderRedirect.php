@@ -14,26 +14,17 @@
 	
 	class Xerxes_Command_FolderRedirect extends Xerxes_Command_Folder
 	{
-		/**
-		 * Request paramaters include 'id' the id of the saved record, and the 'type'
-		 * of redirect, either sfx or a full-text link
-		 *
-		 * @param Xerxes_Framework_Request $objRequest
-		 * @param Xerxes_Framework_Registry $objRegistry
-		 * @return int status
-		 */
-		
-		public function doExecute( Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry )
+		public function doExecute()
 		{
 			// get request parameters and configuration settings
 			
-			$strID = $objRequest->getProperty("id");
-			$strType = $objRequest->getProperty("type");
-			$doNotRedirect = $objRequest->getProperty("printRedirect");
+			$strID = $this->request->getProperty("id");
+			$strType = $this->request->getProperty("type");
+			$doNotRedirect = $this->request->getProperty("printRedirect");
       
-			$configLinkResolver = $objRegistry->getConfig("LINK_RESOLVER_ADDRESS", true);
-			$configSID = $objRegistry->getConfig("APPLICATION_SID", false, "calstate.edu:xerxes");
-			$configBaseUrl  = $objRegistry->getConfig("BASE_URL", true);
+			$configLinkResolver = $this->registry->getConfig("LINK_RESOLVER_ADDRESS", true);
+			$configSID = $this->registry->getConfig("APPLICATION_SID", false, "calstate.edu:xerxes");
+			$configBaseUrl  = $this->registry->getConfig("BASE_URL", true);
 		
 			// get the record from database
 			
@@ -48,7 +39,7 @@
 			
 			if ( $strType == "openurl" )
 			{					
-				$objRequest->setRedirect($objRecord->getOpenURL($configLinkResolver, $configSID));
+				$this->request->setRedirect($objRecord->getOpenURL($configLinkResolver, $configSID));
 			}
 			else
 			{
@@ -86,12 +77,12 @@
 					throw new Exception("unsupported redirect type");
 				}
 				
-				$objRequest->setRedirect($strUrl);
+				$this->request->setRedirect($strUrl);
 			}
 			
 			if ($doNotRedirect == true )
 			{
-				echo $objRequest->getRedirect();
+				echo $this->request->getRedirect();
 				exit;
 			}
 			

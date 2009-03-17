@@ -7,29 +7,24 @@
 
 abstract class Xerxes_Command_Folder extends Xerxes_Framework_Command
 {
-	
-  const DEFAULT_RECORDS_PER_PAGE = 20; 
-
-  
+	const DEFAULT_RECORDS_PER_PAGE = 20; 
 	private $iTotal = "";			// total number of saved recods, kept here for caching
 	
 	/**
 	 * Ensure that the username stored in session matches the one being requested by url params
 	 *
-	 * @param Xerxes_Framework_Request $objRequest
-	 * @param Xerxes_Framework_Registry $objRegistry
 	 * @return mixed		string with a redirect url, null otherwise
 	 */
 	
-	function enforceUsername( Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry )
+	function enforceUsername()
 	{
-		if ( $objRequest->getProperty("username") == "" || $objRequest->getProperty("username") != $objRequest->getSession("username") )
+		if ( $this->request->getProperty("username") == "" || $this->request->getProperty("username") != $this->request->getSession("username") )
 		{
-			return $objRequest->url_for( 
+			return $this->request->url_for( 
 				array(
 					"base" => "folder",
 					"action" => "home",
-					"username" => $objRequest->getSession("username")
+					"username" => $this->request->getSession("username")
 				)
 			);
 		}
@@ -39,7 +34,7 @@ abstract class Xerxes_Command_Folder extends Xerxes_Framework_Command
 		}
 	}
 	
-	public function add_export_options( Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry )
+	public function add_export_options()
 	{
 	 	$objXml = new DOMDocument();
 		$objXml->loadXML("<export_functions />");
@@ -58,21 +53,21 @@ abstract class Xerxes_Command_Folder extends Xerxes_Framework_Command
 			
 			$arrParam = array(
 				"base" => "folder",
-				"username" => $objRequest->getSession("username"),
+				"username" => $this->request->getSession("username"),
 				"action" => $params["action"],
-				"sortKeys" => $objRequest->getProperty("sortKeys"),
-				"label" => $objRequest->getProperty("label"),
-				"type" => $objRequest->getProperty("type")
+				"sortKeys" => $this->request->getProperty("sortKeys"),
+				"label" => $this->request->getProperty("label"),
+				"type" => $this->request->getProperty("type")
 			);
 			
-			$url_str = $objRequest->url_for( $arrParam );
+			$url_str = $this->request->url_for( $arrParam );
 			
 			$url = $objXml->createElement('url', $url_str );
 			$option->appendChild( $url );
 			$objXml->documentElement->appendChild( $option );
 		}
 		
-		$objRequest->addDocument( $objXml );
+		$this->request->addDocument( $objXml );
 	}
 	
 	public function getTotal( $strUsername, $strLabel, $strType )
@@ -86,7 +81,7 @@ abstract class Xerxes_Command_Folder extends Xerxes_Framework_Command
 		return $this->iTotal;
 	}
 	
-	public function setTagsCache(Xerxes_Framework_Request $objRequest, $arrResults)
+	public function setTagsCache( $arrResults )
 	{
 		// we'll store the tags summary in session so that edits can be 
 		// done without round-tripping to the database; xslt can display
@@ -96,7 +91,7 @@ abstract class Xerxes_Command_Folder extends Xerxes_Framework_Command
 		
 		ksort($arrResults);
 		
-		$objRequest->setSession("tags", $arrResults);
+		$this->request->setSession("tags", $arrResults);
 		
 		// but also add it to the request with urls
 		
@@ -111,16 +106,16 @@ abstract class Xerxes_Command_Folder extends Xerxes_Framework_Command
 			$arrUrl = array(
 				"base" => "folder",
 				"action" => "home",
-				"username" => $objRequest->getSession("username"),
+				"username" => $this->request->getSession("username"),
 				"label" => $label
 			);
 			
 			$objTag->setAttribute("label", $label);
 			$objTag->setAttribute("total", $total);
-			$objTag->setAttribute("url", Xerxes_Parser::escapeXml($objRequest->url_for($arrUrl)));
+			$objTag->setAttribute("url", Xerxes_Parser::escapeXml($this->request->url_for($arrUrl)));
 		}
 		
-		$objRequest->addDocument($objXml);
+		$this->request->addDocument($objXml);
 	}
 
 }

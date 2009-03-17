@@ -13,25 +13,15 @@
 
 class Xerxes_Command_FolderTagsEdit extends Xerxes_Command_Folder
 {
-	/**
-	 * Add tags to a record
-	 * 
-	 * @param Xerxes_Framework_Request $objRequest
-	 * @param Xerxes_Framework_Registry $objRegistry
-	 * @return int		status
-	 */
-	
-	public function doExecute(Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry)
+	public function doExecute()
 	{
-		$strUsername = $objRequest->getSession( "username" );
+		$strUsername = $this->request->getSession( "username" );
 		
-		$iRecord = $objRequest->getProperty( "record" );
-		$strTags = $objRequest->getProperty( "tags" ); // updated tags
-		$strShadowTags = $objRequest->getProperty( "tagsShaddow" ); // original tags
-		
+		$iRecord = $this->request->getProperty( "record" );
+		$strTags = $this->request->getProperty( "tags" ); // updated tags
+		$strShadowTags = $this->request->getProperty( "tagsShaddow" ); // original tags
 
 		//  split tags out on comma
-		
 
 		$arrShadow = explode( ",", $strShadowTags );
 		$arrTags = explode( ",", $strTags );
@@ -51,26 +41,22 @@ class Xerxes_Command_FolderTagsEdit extends Xerxes_Command_Folder
 		$arrTags = array_unique( $arrTags );
 		
 		// update the database
-		
 
 		$objData = new Xerxes_DataMap( );
 		$objData->assignTags( $strUsername, $arrTags, $iRecord );
 		
 		// now update the cached version without recalculating all the 
 		// totals with a round-trip to the database
-		
 
-		$arrStored = $objRequest->getSession( "tags" );
+		$arrStored = $this->request->getSession( "tags" );
 		
 		// see which tags are new and which are actually being deleted or changed
 		
-
 		$arrDelete = array_diff( $arrShadow, $arrTags );
 		$arrAdded = array_diff( $arrTags, $arrShadow );
 		
 		// deletes!
 		
-
 		foreach ( $arrDelete as $strTag )
 		{
 			foreach ( $arrStored as $strStoredKey => $iStoredValue )
@@ -82,14 +68,12 @@ class Xerxes_Command_FolderTagsEdit extends Xerxes_Command_Folder
 					if ( $iStoredValue > 1 )
 					{
 						// just deincrement it
-						
 
 						$iStoredValue --;
 						$arrStored[$strStoredKey] = $iStoredValue;
 					} else
 					{
 						// this was the only entry for the tag so remove it
-						
 
 						unset( $arrStored[$strStoredKey] );
 					}
@@ -99,7 +83,6 @@ class Xerxes_Command_FolderTagsEdit extends Xerxes_Command_Folder
 		
 		// adds!
 		
-
 		foreach ( $arrAdded as $strTag )
 		{
 			if ( $strTag != "" )
@@ -111,7 +94,6 @@ class Xerxes_Command_FolderTagsEdit extends Xerxes_Command_Folder
 					if ( strtoupper( $strTag ) == strtoupper( $strStoredKey ) )
 					{
 						// there is one in here already so increment
-						
 
 						$iStoredValue = ( int ) $iStoredValue;
 						$iStoredValue ++;
@@ -122,7 +104,6 @@ class Xerxes_Command_FolderTagsEdit extends Xerxes_Command_Folder
 				}
 				
 				// if it wasn't in there already, add it as the first
-				
 
 				if ( $bolExists == false )
 				{
@@ -132,9 +113,8 @@ class Xerxes_Command_FolderTagsEdit extends Xerxes_Command_Folder
 		}
 		
 		// now store it back in session
-		
 
-		$this->setTagsCache( $objRequest, $arrStored );
+		$this->setTagsCache( $arrStored );
 		
 		return 1;
 	

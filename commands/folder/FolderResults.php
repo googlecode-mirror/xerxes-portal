@@ -13,47 +13,38 @@
 	
 	class Xerxes_Command_FolderResults extends Xerxes_Command_Folder
 	{
-		/**
-		 * Fetch a group or an individual saved record
-		 *
-		 * @param Xerxes_Framework_Request $objRequest
-		 * @param Xerxes_Framework_Registry $objRegistry
-		 * @return int		status
-		 */
-		
-     
-		public function doExecute( Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry )
+		public function doExecute()
 		{
-			$this->add_export_options( $objRequest, $objRegistry );
+			$this->add_export_options();
 			
 			// get request paramaters
 			
-			$strUsername = $objRequest->getSession("username");
-			$strOrder = $objRequest->getProperty("sortKeys");
-			$iStart = $objRequest->getProperty("startRecord");
-			$strReturn = $objRequest->getProperty("return");
-			$strLabel = $objRequest->getProperty("label");
-			$strType = $objRequest->getProperty("type");
-			$strView = $objRequest->getProperty("view");
+			$strUsername = $this->request->getSession("username");
+			$strOrder = $this->request->getProperty("sortKeys");
+			$iStart = $this->request->getProperty("startRecord");
+			$strReturn = $this->request->getProperty("return");
+			$strLabel = $this->request->getProperty("label");
+			$strType = $this->request->getProperty("type");
+			$strView = $this->request->getProperty("view");
 
 			// id numbers can come in the form of multiple 'record' params or a single
 			// 'records' param, with the ids comma seperated
 			
-			$arrID = $objRequest->getProperty("record", true);
-			$strIDs = $objRequest->getProperty("records");
+			$arrID = $this->request->getProperty("record", true);
+			$strIDs = $this->request->getProperty("records");
 			if ( $strIDs != null ) $arrID = explode(",", $strIDs);
 			
 			// these are typically set in actions.xml
 			
-			$strLimit = $objRequest->getProperty("limit");
-			$strLoginOverride = $objRequest->getProperty("doNotEnforceLogin");
+			$strLimit = $this->request->getProperty("limit");
+			$strLoginOverride = $this->request->getProperty("doNotEnforceLogin");
 			
 			// configuration settings
 			
-			$iCount = $objRegistry->getConfig("SAVED_RECORDS_PER_PAGE", false, $objRegistry->getConfig("DEFAULT_RECORDS_PER_PAGE"));
-			$iCountExport = $objRegistry->getConfig("MAXIMUM_RECORD_EXPORT_LIMIT", false, 1000);
-			$configMarcBrief = $objRegistry->getConfig("XERXES_BRIEF_INCLUDE_MARC", false, false);
-			$configMarcFull = $objRegistry->getConfig("XERXES_FULL_INCLUDE_MARC", false, false);
+			$iCount = $this->registry->getConfig("SAVED_RECORDS_PER_PAGE", false, $this->registry->getConfig("DEFAULT_RECORDS_PER_PAGE"));
+			$iCountExport = $this->registry->getConfig("MAXIMUM_RECORD_EXPORT_LIMIT", false, 1000);
+			$configMarcBrief = $this->registry->getConfig("XERXES_BRIEF_INCLUDE_MARC", false, false);
+			$configMarcFull = $this->registry->getConfig("XERXES_FULL_INCLUDE_MARC", false, false);
 			
 			// brief records and export actions should be set to export limit
 			
@@ -61,7 +52,7 @@
 			
 			// save the return url back to metasearch page if specified
 			
-			if ( $strReturn != "" ) $objRequest->setSession("SAVED_RETURN", $strReturn);
+			if ( $strReturn != "" ) $this->request->setSession("SAVED_RETURN", $strReturn);
 			
 			### access control
 			
@@ -69,7 +60,7 @@
 			// this prevents people from manually attempting this; 'doNotEnforceLogin' 
 			// must then only be used in conjunction with specific id numbers
 			
-			if ( $objRequest->getProperty("username") != null && $strLoginOverride != null )
+			if ( $this->request->getProperty("username") != null && $strLoginOverride != null )
 			{
 				throw new Exception("access denied");
 			}
@@ -79,11 +70,11 @@
 			
 			if ( $strLoginOverride == null )
 			{
-				$strRedirect = $this->enforceUsername($objRequest, $objRegistry);
+				$strRedirect = $this->enforceUsername();
 				
 				if ( $strRedirect != null )
 				{
-					$objRequest->setRedirect($strRedirect);
+					$this->request->setRedirect($strRedirect);
 					return 1;
 				}
 			}
@@ -164,7 +155,7 @@
 						"record" => $objDataRecord->id
 					);
 					
-					$url = $objRequest->url_for( $arrParams);
+					$url = $this->request->url_for( $arrParams);
 					$objUrlFull = $objXml->createElement("url_full", $url);
 			 		$objRecord->appendChild( $objUrlFull );
 			 		
@@ -184,7 +175,7 @@
 						"recordsPerPage" => $iCount,
 					);
 					
-					$url = $objRequest->url_for( $arrParams);
+					$url = $this->request->url_for( $arrParams);
 					$objUrlDelete = $objXml->createElement("url_delete", $url);
 			 		$objRecord->appendChild( $objUrlDelete );
 
@@ -197,7 +188,7 @@
 						"id" => $objDataRecord->id,
 					);
 					
-					$url = $objRequest->url_for( $arrParams);
+					$url = $this->request->url_for( $arrParams);
 					$objUrlOpen = $objXml->createElement("url_open", $url);
 			 		$objRecord->appendChild( $objUrlOpen ); 
 			 						 		
@@ -270,7 +261,7 @@
 				}
 			}
 			
-			$objRequest->addDocument($objXml);
+			$this->request->addDocument($objXml);
 			
 			return 1;
 		}

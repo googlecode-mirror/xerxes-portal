@@ -13,17 +13,9 @@
 	
 	class Xerxes_Command_FolderTags extends Xerxes_Command_Folder
 	{
-		/**
-		 * Provide a tags and format summary for a user's records
-		 *
-		 * @param Xerxes_Framework_Request $objRequest
-		 * @param Xerxes_Framework_Registry $objRegistry
-		 * @return int status
-		 */
-		
-		public function doExecute( Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry )
+		public function doExecute()
 		{
-			$strUsername = $objRequest->getSession("username");
+			$strUsername = $this->request->getSession("username");
 			
 			$arrSessionArray = array();
 			
@@ -47,16 +39,16 @@
 					$arrParams = array(
 						"base" => "folder",
 						"action" => "home",
-						"username" => $objRequest->getProperty("username"),
+						"username" => $this->request->getProperty("username"),
 						"type" => $objFacet->format
 					);
 					
-					$objFacetNode->setAttribute("url", $objRequest->url_for($arrParams));
+					$objFacetNode->setAttribute("url", $this->request->url_for($arrParams));
 					
 					$objXml->documentElement->appendChild($objFacetNode);
 				}
 				
-				$objRequest->addDocument($objXml);
+				$this->request->addDocument($objXml);
 
 				
 				
@@ -73,7 +65,7 @@
 					$arrSessionArray[$objTag->label] = $objTag->total;
 				}
 				
-				$this->setTagsCache($objRequest, $arrSessionArray);
+				$this->setTagsCache($arrSessionArray);
 			}
 			
 			return 1;
