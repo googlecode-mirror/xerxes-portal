@@ -7,27 +7,18 @@
 
 class Xerxes_Command_AuthenticateCasValidate extends Xerxes_Command_Authenticate
 {
-	/**
-	 * Acquires the ticket and return urls from paramaters, and checks back with the CAS
-	 * server to validate the user
-	 *
-	 * @param Xerxes_Framework_Request $objRequest
-	 * @param Xerxes_Framework_Registry $objRegistry
-	 * @return int	status
-	 */
-	
-	public function doExecute( Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry )
+	public function doExecute()
 	{
 		// values from the request
 		
-		$strTicket = $objRequest->getProperty("ticket");
-		$strReturn = $objRequest->getProperty("return");
+		$strTicket = $this->request->getProperty("ticket");
+		$strReturn = $this->request->getProperty("return");
 		
 		// configuration settings
 
-		$configUrlBaseDirectory = $objRegistry->getConfig("BASE_URL", true);
-		$configCasValidate = $objRegistry->getConfig("CAS_VALIDATE", true);
-		$configCasVersion = $objRegistry->getConfig("CAS_VERSION", true);
+		$configUrlBaseDirectory = $this->registry->getConfig("BASE_URL", true);
+		$configCasValidate = $this->registry->getConfig("CAS_VALIDATE", true);
+		$configCasVersion = $this->registry->getConfig("CAS_VERSION", true);
 
 		// get validation response
 			
@@ -44,7 +35,7 @@ class Xerxes_Command_AuthenticateCasValidate extends Xerxes_Command_Authenticate
 		if ( $objValidate->isValid($strResults, $configCasVersion) )
 		{
 			$this->register($objValidate->getUsername(), "named");
-			$objRequest->setRedirect("http://" . $objRequest->getServer('SERVER_NAME') . $strReturn );
+			$this->request->setRedirect("http://" . $this->request->getServer('SERVER_NAME') . $strReturn );
 		}
 		else
 		{
