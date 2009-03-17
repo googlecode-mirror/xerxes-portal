@@ -19,30 +19,27 @@ abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
 	public function execute(Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry)
 	{
 		$this->objCache = new Xerxes_Cache( );
-		//$this->status = $this->doExecute( $objRequest, $objRegistry );
-    parent::execute($objRequest, $objRegistry);
+    	parent::execute($objRequest, $objRegistry);
 	}
 	
 	/**
 	 * Get the metalib search object, here so we can ensure that we re-up the 
 	 * session if it goes dormant
 	 *
-	 * @param Xerxes_Framework_Request $objRequest
-	 * @param Xerxes_Framework_Registry $objRegistry
 	 * @return Xerxes_Metasearch object
 	 */
 	
-	protected function getSearchObject(Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry)
+	protected function getSearchObject()
 	{
-		$configMetalibAddress = $objRegistry->getConfig( "METALIB_ADDRESS" );
-		$configMetalibUsername = $objRegistry->getConfig( "METALIB_USERNAME" );
-		$configMetalibPassword = $objRegistry->getConfig( "METALIB_PASSWORD" );
+		$configMetalibAddress = $this->registry->getConfig( "METALIB_ADDRESS" );
+		$configMetalibUsername = $this->registry->getConfig( "METALIB_USERNAME" );
+		$configMetalibPassword = $this->registry->getConfig( "METALIB_PASSWORD" );
 		
 		// re-up the metalib session if it has gone dead
 		// first, check to see if the session id and expiry date are set
 
-		$strSession = $objRequest->getSession( "metalib_session_id" );
-		$datReconnect = ( int ) $objRequest->getSession( "metalib_session_expires" );
+		$strSession = $this->request->getSession( "metalib_session_id" );
+		$datReconnect = ( int ) $this->request->getSession( "metalib_session_expires" );
 		
 		// use the stored metalib session id if less than 20 minutes since the last 
 		// request; otherwise set it to null to force a new session
@@ -55,13 +52,13 @@ abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
 		// set the next expiry time to 20 minutes from now
 
 		$datReconnect = time() + 1200;
-		$objRequest->setSession( "metalib_session_expires", $datReconnect );
+		$this->request->setSession( "metalib_session_expires", $datReconnect );
 		
 		// create metalib search object
 		
 		$this->objSearch = new Xerxes_MetaSearch( $configMetalibAddress, $configMetalibUsername, $configMetalibPassword, $strSession );
 		
-		$objRequest->setSession( "metalib_session_id", $this->objSearch->getSession() );
+		$this->request->setSession( "metalib_session_id", $this->objSearch->getSession() );
 		
 		return $this->objSearch;
 	}
@@ -123,7 +120,6 @@ abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
 	protected function addStatus($objXml, $strGroup, $strResultSet = null, $iTotalHits = null)
 	{
 		// status of the search, stored in cache
-		
 
 		$objGroupXml = $this->getCache( $strGroup, "group", "DOMDocument" );
 		
@@ -220,7 +216,6 @@ abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
 	protected function addFacets($objXml, $strGroup, $bolFacets = false)
 	{
 		// facets, stored in cache
-		
 
 		try
 		{
@@ -231,13 +226,13 @@ abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
 				$objImport = $objXml->importNode( $objFacetXml->getElementsByTagName( "cluster_facet_response" )->item( 0 ), true );
 				$objXml->documentElement->appendChild( $objImport );
 			}
-		} catch ( Exception $e )
+		} 
+		catch ( Exception $e )
 		{
 			if ( $bolFacets == true )
 			{
 				// since a missing facet is not a fatal thing, we'll just warn
 				// here in case there is a problem
-				
 
 				error_log( $e->getMessage() );
 			}
@@ -336,24 +331,22 @@ abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
 	 * params 'resultSet' the result set id, 'startRecord' the record's position in that 
 	 * resultset
 	 *
-	 * @param Xerxes_Framework_Request $objRequest
-	 * @param Xerxes_Framework_Registry $objRegistry
 	 * @return DOMDocument 		marc-xml response from metalib
 	 */
 	
-	protected function getRecord(Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry)
+	protected function getRecord()
 	{
-		$objSearch = $this->getSearchObject( $objRequest, $objRegistry ); // metalib search object
+		$objSearch = $this->getSearchObject(); // metalib search object
 		
 		// parameters from request
 		
-		$strResultSet = $objRequest->getProperty( "resultSet" );
-		$iStartRecord = ( int ) $objRequest->getProperty( "startRecord" );
+		$strResultSet = $this->request->getProperty( "resultSet" );
+		$iStartRecord = ( int ) $this->request->getProperty( "startRecord" );
 		
 		// marc fields
 
 		$strMarcFields = "#####, OPURL";
-		$configResultsFields = $objRegistry->getConfig( "MARC_FIELDS_FULL", false, $strMarcFields );
+		$configResultsFields = $this->registry->getConfig( "MARC_FIELDS_FULL", false, $strMarcFields );
 		$arrFields = split( ",", $configResultsFields );
 		
 		// fetch record from metalib

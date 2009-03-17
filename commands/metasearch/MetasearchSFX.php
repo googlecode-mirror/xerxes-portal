@@ -13,26 +13,15 @@
 	
 	class Xerxes_Command_MetasearchSFX extends Xerxes_Command_Metasearch
 	{
-		/**
-		 * Fetches single record from Metalib, constructs OpenURL, and redirects the user to SFX
-		 * Request should include params for: 'group' the search group number; 
-		 * 'resultSet' the result set from which the record came; and 'startRecord' the records 
-		 * position in that resultset
-		 * 
-		 * @param Xerxes_Framework_Request $objRequest
-		 * @param Xerxes_Framework_Registry $objRegistry
-		 * @return int status
-		 */
-		
-		public function doExecute( Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry )
+		public function doExecute()
 		{
-			$configLinkResolver = $objRegistry->getConfig("LINK_RESOLVER_ADDRESS", true);
-			$configSID = $objRegistry->getConfig("APPLICATION_SID", false, "calstate.edu:xerxes");
+			$configLinkResolver = $this->registry->getConfig("LINK_RESOLVER_ADDRESS", true);
+			$configSID = $this->registry->getConfig("APPLICATION_SID", false, "calstate.edu:xerxes");
 			
 			$objXerxesRecord = new Xerxes_Record();
-			$objXerxesRecord->loadXML($this->getRecord($objRequest, $objRegistry));
+			$objXerxesRecord->loadXML($this->getRecord());
 			
-			$objRequest->setRedirect($objXerxesRecord->getOpenURL($configLinkResolver, $configSID));
+			$this->request->setRedirect($objXerxesRecord->getOpenURL($configLinkResolver, $configSID));
 			
 			return 1;
 		}

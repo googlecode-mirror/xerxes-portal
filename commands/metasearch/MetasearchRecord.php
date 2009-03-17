@@ -13,27 +13,17 @@
 	
 	class Xerxes_Command_MetasearchRecord extends Xerxes_Command_Metasearch
 	{
-		/**
-		 * Fetch and display a single record; Request should include params for:
-		 * 'group' the search group number; 'resultSet' the result set from which
-		 * the record came; and 'startRecord' the records position in that resultset
-		 *
-		 * @param Xerxes_Framework_Request $objRequest
-		 * @param Xerxes_Framework_Registry $objRegistry
-		 * @return int status
-		 */
-		
-		public function doExecute( Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry )
+		public function doExecute()
 		{
 			// parameters from request
 			
-			$strGroup =	$objRequest->getProperty("group");
-			$strResultSet =	$objRequest->getProperty("resultSet");
-			$configIncludeMarcRecord = $objRegistry->getConfig("XERXES_FULL_INCLUDE_MARC", false, false);
+			$strGroup =	$this->request->getProperty("group");
+			$strResultSet =	$this->request->getProperty("resultSet");
+			$configIncludeMarcRecord = $this->registry->getConfig("XERXES_FULL_INCLUDE_MARC", false, false);
 			
 			// fetch the marc record
 
-			$objRecord = $this->getRecord($objRequest, $objRegistry);
+			$objRecord = $this->getRecord();
 			
 			// build the response, including certain previous cached data	
 						
@@ -44,7 +34,7 @@
 			$objXml = $this->addStatus($objXml, $strGroup, $strResultSet);
 			$objXml = $this->addRecords($objXml, array($objRecord), $configIncludeMarcRecord);
 			
-			$objRequest->addDocument($objXml);
+			$this->request->addDocument($objXml);
 			
 			return 1;
 		}

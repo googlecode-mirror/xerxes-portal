@@ -13,51 +13,43 @@
 	
 	class Xerxes_Command_MetasearchPaging extends Xerxes_Command_Metasearch
 	{
-		/**
-		 * Construct paging, sorting, and hit summary elements for the current page
-		 *
-		 * @param Xerxes_Framework_Request $objRequest
-		 * @param Xerxes_Framework_Registry $objRegistry
-		 * @return int status
-		 */ 
-		
-		public function doExecute( Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry )
+		public function doExecute()
 		{
 			$objPage = new Xerxes_Framework_Page();
 			
-			$iTotalHits = (int) $objRequest->getData("results/hits");
-			$strDatabaseTitle = (string) $objRequest->getData("results/database");
-			$strSortKeys = (string) $objRequest->getData("results/sort");
+			$iTotalHits = (int) $this->request->getData("results/hits");
+			$strDatabaseTitle = (string) $this->request->getData("results/database");
+			$strSortKeys = (string) $this->request->getData("results/sort");
 			
-			$iMax = $objRegistry->getConfig("RECORDS_PER_PAGE", false, 10);
+			$iMax = $this->registry->getConfig("RECORDS_PER_PAGE", false, 10);
 			
 			
 			// create page hit summary element
 		
 			$objSummaryXml = $objPage->summary(
 				$iTotalHits,
-				(int) $objRequest->getProperty("startRecord"),
+				(int) $this->request->getProperty("startRecord"),
 				$iMax
 				);
 				
-			$objRequest->addDocument($objSummaryXml);
+			$this->request->addDocument($objSummaryXml);
 			
 				
 			// create sorting element only for merged results
 				
 			if ( $strDatabaseTitle == "Top Results" )
 			{
-				$strQueryString = "./?base=metasearch&action=sort&group=" . $objRequest->getProperty("group");
+				$strQueryString = "./?base=metasearch&action=sort&group=" . $this->request->getProperty("group");
 				$arrSortOptions = array("rank" => "relevance", "year" => "date", "title" => "title",  "author" => "author");
 						
 				if ( $strSortKeys == null )
 				{ 
-					$strSortKeys = $objRegistry->getConfig("SORT_ORDER_PRIMARY", false, "rank");
+					$strSortKeys = $this->registry->getConfig("SORT_ORDER_PRIMARY", false, "rank");
 				}
 					
 				$objSortXml = $objPage->sortDisplay( $strQueryString, $strSortKeys, $arrSortOptions);
 				
-				$objRequest->addDocument($objSortXml);
+				$this->request->addDocument($objSortXml);
 			}
 				
 			
@@ -65,22 +57,22 @@
 			
 			$strFacetNodes = "";
 			
-			if ( $objRequest->getProperty("node") != null ) $strFacetNodes .= "&node=" . $objRequest->getProperty("node");
-			if ( $objRequest->getProperty("facet") != null ) $strFacetNodes .= "&facet=" . $objRequest->getProperty("facet");
+			if ( $this->request->getProperty("node") != null ) $strFacetNodes .= "&node=" . $this->request->getProperty("node");
+			if ( $this->request->getProperty("facet") != null ) $strFacetNodes .= "&facet=" . $this->request->getProperty("facet");
 	   
 			$objPagerXml = $objPage->pager( 
 				"./", 
-				"startRecord",  (int) $objRequest->getProperty("startRecord"), 
+				"startRecord",  (int) $this->request->getProperty("startRecord"), 
 				null,  (int) $iTotalHits, 
 				$iMax,
-				"&base=metasearch&action=" . $objRequest->getProperty("action") .
-				"&group=" . $objRequest->getProperty("group") . 
-				"&resultSet=" . $objRequest->getProperty("resultSet") .
+				"&base=metasearch&action=" . $this->request->getProperty("action") .
+				"&group=" . $this->request->getProperty("group") . 
+				"&resultSet=" . $this->request->getProperty("resultSet") .
 				$strFacetNodes
 				);
 	
 			
-			$objRequest->addDocument($objPagerXml);
+			$this->request->addDocument($objPagerXml);
 				
 			return 1;
 		}
