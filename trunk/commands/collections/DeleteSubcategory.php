@@ -9,40 +9,29 @@
 
 class Xerxes_Command_DeleteSubcategory extends Xerxes_Command_Collections
 {
-	/**
-	 *
-	 * @param Xerxes_Framework_Request $objRequest
-	 * @param Xerxes_Framework_Registry $objRegistry
-	 * @return int status
-	 */
-	
-	public function doExecute(Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry)
+	public function doExecute()
 	{
-    
-		$strNormalizedSubject = $objRequest->getProperty("subject");
-    $strUsername = $objRequest->getProperty("username");    
-		$strSubcatID = $objRequest->getProperty( "subcategory" );
-    
-    
-    // Make sure they are logged in as the user they are trying to save as. 
-    Xerxes_Helper::ensureSpecifiedUser($strUsername, $objRequest, $objRegistry, "You must be logged in as $strUsername to save to a personal database collection owned by that user.");
-    
-    $objData = new Xerxes_DataMap();
-    $subcategory = null;
-    
-    // Find the category
-    
-    $category = $objData->getSubject( $strNormalizedSubject, null, Xerxes_DataMap::userCreatedMode, $strUsername );
-    $subcategory = $this->getSubcategory($category, $strSubcatID);    
+		$strNormalizedSubject = $this->request->getProperty( "subject" );
+		$strUsername = $this->request->getProperty( "username" );
+		$strSubcatID = $this->request->getProperty( "subcategory" );
+		
+		// Make sure they are logged in as the user they are trying to save as. 
+		Xerxes_Helper::ensureSpecifiedUser( $strUsername, $this->request, $this->registry, "You must be logged in as $strUsername to save to a personal database collection owned by that user." );
+		
+		$objData = new Xerxes_DataMap( );
+		$subcategory = null;
+		
+		// Find the category
+		
 
-    
-   
-    $objData->deleteUserCreatedSubcategory($subcategory); 
-        
-    
-    // Send them back where they came from, with a message. 
-    $this->returnWithMessage("Deleted " . $subcategory->name ,array("base" => "collections", "action" => "edit_form", "subject" => $category->normalized, "username" => $strUsername ));
-    
+		$category = $objData->getSubject( $strNormalizedSubject, null, Xerxes_DataMap::userCreatedMode, $strUsername );
+		$subcategory = $this->getSubcategory( $category, $strSubcatID );
+		
+		$objData->deleteUserCreatedSubcategory( $subcategory );
+		
+		// Send them back where they came from, with a message. 
+		$this->returnWithMessage( "Deleted " . $subcategory->name, array ("base" => "collections", "action" => "edit_form", "subject" => $category->normalized, "username" => $strUsername ) );
+		
 		return 1;
 	}
 }
