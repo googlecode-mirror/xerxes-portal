@@ -16,7 +16,8 @@
 	{
 		public function doExecute()
 		{
-			ini_set("memory_limit","50M");
+      
+			ini_set("memory_limit","60M");
 			
 			echo "\n\nSFX INSTITUTIONAL HOLDINGS POPULATION \n\n";
 			
