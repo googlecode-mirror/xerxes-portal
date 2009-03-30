@@ -476,7 +476,7 @@
             <xsl:if test="links/link[@type='holdings'] and (//config/show_all_holdings_links = 'true' or //config/holdings_links/database[@metalib_id=$metalib_db_id])">
               <span class="resultsAvailableOption">
                 <xsl:call-template name="record_link">
-                  <xsl:with-param name="type" select="holdings"/>
+                  <xsl:with-param name="type">holdings</xsl:with-param>
                   <xsl:with-param name="text" select="$text_link_holdings"/>
                   <xsl:with-param name="img_src" select="concat($base_url, '/images/book.gif')"/>
                 </xsl:call-template>                                
