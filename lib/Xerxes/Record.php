@@ -1501,10 +1501,16 @@
 			if ( $strReferer != "" ) $strKev .= "&rfr_id=info:sid/" .  urlencode($strReferer);
 			if ( $this->strDatabaseName != "" )  $strKev .= urlencode(" ( " . $this->strDatabaseName . ")");
 			
+      
+      // add rft_id's
+      $arrReferentId = $this->referentIdentifierArray();
+      foreach ($arrReferentId as $id) {
+        $strKev .= "&rft_id=" . urlencode($id); 
+      }
+      
 			// add simple referrant values
 			
-			$arrReferant = $this->referantArray();
-			
+			$arrReferant = $this->referentArray();      
 			foreach ($arrReferant as $key => $value )
 			{
 				if ($value != "")
@@ -1549,13 +1555,16 @@
 		
 		/**
 		 * Convert record to OpenURL 1.0 formatted XML Context Object
+     * jrochkind 6 April 09.: I don't believe this creates a legal XML doc, I
+     * don't think it uses namespaces properly.
 		 *
 		 * @return DOMDocument
 		 */
 		
 		public function getContextObject()
 		{	
-			$arrReferant = $this->referantArray();
+			$arrReferant = $this->referentArray();
+      $arrReferantIds = $this->referentIdentifierArray();
 			
 			$objXml = new DOMDocument();
 			$objXml->loadXML("<context-objects />");
@@ -1633,6 +1642,13 @@
 			
 			$objItem->appendChild($objAuthors);
 			
+      // add rft_id's. 
+      
+      foreach($arrReferantIds as $id) {
+        # rft_id goes in the <referent> element directly, as a <ctx:identifier>
+        $objNode = $objXml->createElement( "identifier", $this->escapeXml($id) );
+        $objReferent->appendChild($objNode);
+      }
 			
 			// add simple referrant values
 			
@@ -1966,16 +1982,20 @@
 		### PRIVATE FUNCTIONS ###		
 		
 		
+    
+    
 		/**
 		 * Returns the object's properties that correspond to the OpenURL standard
-		 * as an easy to use associative array
+		 * as an easy to use associative array. Does not include rft_id, see
+     * referentIdentifierArray. 
 		 *
 		 * @return array
 		 */
 		
-		private function referantArray()
+		private function referentArray()
 		{
 			$arrReferant = array();
+      # There can be multiple rft_ids, treat them special. 
 			$strTitle = "";
 			
 				
@@ -1983,7 +2003,6 @@
 			
 			$arrReferant["rft.genre"] = $this->convertGenreOpenURL($this->strFormat);
 			
-			if ( $this->strOCLC != "" ) $arrReferant["rft_id"] = "info:oclcnum/" . $this->strOCLC;
 			if ( count($this->arrIsbn) > 0 ) $arrReferant["rft.isbn"] = $this->arrIsbn[0];
 			if ( count($this->arrIssn) > 0 ) $arrReferant["rft.issn"] = $this->arrIssn[0];
 			
@@ -2068,6 +2087,24 @@
 		
 			return $arrReferant;
 		}
+    
+    /**
+		 * Returns the object's properties that correspond to OpenURL standard
+     * rft_id URIs as a simple list array. 
+		 *
+		 * @return array
+		 */
+     private function referentIdentifierArray() {
+        $results = array();
+       
+        if ( $this->strOCLC != "" ) array_push($results, "info:oclcnum/" . $this->strOCLC);
+
+        # sudoc, using rsinger's convention, http://dilettantes.code4lib.org/2009/03/a-uri-scheme-for-sudocs/
+        if ( $this->strGovDoc != "") array_push($results, "http://purl.org/NET/sudoc/" . urlencode($this->strGovDoc));
+          
+        return $results;
+     }
+		
 		
 		/**
 		 * Crosswalk the internal identified genre to one available in OpenURL 1.0
