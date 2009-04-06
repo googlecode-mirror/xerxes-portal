@@ -508,6 +508,7 @@
 			} else if ( strpos( $strStatus,"FETCH") !== false ) {
 			} else if ( strpos( $strStatus,"DONE1") !== false ) {
 			} else if ( strpos( $strStatus,"DONE2") !== false ) {
+			} else if ( strpos( $strStatus,"DONE3") !== false ) {
 			} else {
 				$strFinal = "Done";
 			}
