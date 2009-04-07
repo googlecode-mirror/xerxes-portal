@@ -700,7 +700,15 @@
 						array_push($this->arrLinks, array("Full-text at ERIC.gov", $strFullTextPdf, "pdf"));
 					}
 				}
-				
+        
+        // 7 Apr 09, jrochkind. Gale Biography Resource Center
+        // No 856 is included at all, but a full text link can be
+        // constructed from the 001 record id.
+        if ($this->strSource == "GALE_ZBRC") {
+            $url = "http://galenet.galegroup.com/servlet/BioRC?docNum=" . $this->strControlNumber;
+            
+            array_push($this->arrLinks, array("Full-Text in HTML", $url, "html"));                      
+        }
 				
 				### full-text 856
 				
