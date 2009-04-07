@@ -1,4 +1,4 @@
-CREATE DATABASE IF NOT EXISTS xerxes;
+﻿CREATE DATABASE IF NOT EXISTS xerxes;
 USE xerxes;
 
 SET storage_engine = INNODB;
@@ -75,6 +75,7 @@ CREATE TABLE xerxes_records (
 );
 
 CREATE INDEX xerxes_records_username_idx ON xerxes_records(username);
+CREATE INDEX xerxes_records_original_id_idx ON xerxes_records(original_id);
 
 CREATE TABLE xerxes_tags (
 	username	VARCHAR(50),
@@ -126,4 +127,3 @@ CREATE TABLE xerxes_user_subcategory_databases(
  	FOREIGN KEY (database_id) REFERENCES xerxes_databases(metalib_id) ON DELETE CASCADE,  
 	FOREIGN KEY (subcategory_id) REFERENCES xerxes_user_subcategories (id) ON DELETE CASCADE
 );
-

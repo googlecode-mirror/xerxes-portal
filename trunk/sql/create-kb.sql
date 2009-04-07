@@ -1,4 +1,4 @@
-CREATE DATABASE IF NOT EXISTS xerxes;
+﻿CREATE DATABASE IF NOT EXISTS xerxes;
 USE xerxes;
 
 SET storage_engine = INNODB;
@@ -17,7 +17,7 @@ DROP TABLE IF EXISTS xerxes_types;
 
 CREATE TABLE xerxes_databases(
 	metalib_id     		VARCHAR(10),
-	title_full     		VARCHAR(100),
+	title_full     		VARCHAR(255),
 	title_display		VARCHAR(100),
 	institute		VARCHAR(5),
 	filter			VARCHAR(50),
@@ -36,7 +36,7 @@ CREATE TABLE xerxes_databases(
 	description		VARCHAR(3000),
 	coverage		VARCHAR(1500),
 	time_span		VARCHAR(200),
-	copyright		VARCHAR(200),
+	copyright		VARCHAR(1000),
 	note_cataloger		VARCHAR(2500),
 	note_fulltext		VARCHAR(500),
 	type			VARCHAR(50),
