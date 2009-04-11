@@ -330,10 +330,18 @@ class Xerxes_Framework_FrontController
 			// flow and redirect the user out, unless overridden by the noRedirect
 			// directive
 
-			if ( $objRequest->getRedirect() != null && $objRequest->getProperty( "noRedirect" ) == null )
+			if ( $objRequest->getRedirect() != null )
 			{
-				header( "Location: " . $objRequest->getRedirect() );
-				exit();
+				if ( $objRequest->getProperty( "noRedirect" ) == null )
+				{
+					header( "Location: " . $objRequest->getRedirect() );
+					exit();
+				}
+				else
+				{
+					// include in the resposne what the redirect would have been
+					$objRequest->setProperty( "redirect", $objRequest->getRedirect() );
+				}
 			}
 			
 			####################
