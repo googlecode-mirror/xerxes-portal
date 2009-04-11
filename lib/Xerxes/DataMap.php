@@ -798,8 +798,25 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 				array_push( $objCategory->subcategories, $objSubcategory );
 			}
 			
+			// subcategories excluded by config
+			
+			$objRegistry = Xerxes_Framework_Registry::getInstance();
+			
+			$arrExclude = explode(",", $objRegistry->getConfig( "subcategories_exclude", false ));
+			
+			$x = 0;
+			
+			foreach ( $objCategory->subcategories as $subcat )
+			{
+				if ( in_array($subcat->name, $arrExclude))
+				{
+					unset($objCategory->subcategories[$x]);
+				}
+				
+				$x++;
+			}
+			
 			return $objCategory;
-		
 		} 
 		else
 		{
