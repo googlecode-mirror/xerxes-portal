@@ -393,8 +393,14 @@ class Xerxes_Command_MetasearchSearch extends Xerxes_Command_Metasearch
 		$this->setCache( $strGroup, "search", $objXml );
 		
 		// redirect to hits page
+		
+		$arrParams = array(
+			"base" => "metasearch",
+			"action" => "hits",
+			"group" => $strGroup
+		);
 
-		$this->request->setRedirect( $configBaseUrl . "/?base=metasearch&action=hits&group=$strGroup" );
+		$this->request->setRedirect($this->request->url_for($arrParams));
 		return 1;
 	}
 }

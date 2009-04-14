@@ -255,25 +255,79 @@ abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
 	{    
     
 		$objRecords = $objXml->createElement( "records" );
-    
-    $arrXerxesRecords = array();
-    foreach($arrRecords as $objRecord) {
-      $objXerxesRecord = new Xerxes_Record( );         
+		
+		$arrXerxesRecords = array();
+		
+		foreach($arrRecords as $objRecord)
+		{
+			$objXerxesRecord = new Xerxes_Record( );         
 			$objXerxesRecord->loadXml( $objRecord );
-      array_push($arrXerxesRecords, $objXerxesRecord);
-    }    
+			array_push($arrXerxesRecords, $objXerxesRecord);
+		 }    
 
-    // Enhance with links computed from metalib templates.    
-    
-    Xerxes_Record::completeUrlTemplates($arrXerxesRecords, $this->request, $this->registry);    
-    
+	    // enhance with links computed from metalib templates.
+	    
+		Xerxes_Record::completeUrlTemplates($arrXerxesRecords, $this->request, $this->registry);
+		
+		$position = $this->request->getProperty("startRecord");
+		
+		if ( $position == "" )
+		{
+			$position = 1;
+		}
     
 		foreach ( $arrXerxesRecords as $objXerxesRecord )
 		{
-      
-						
 			$objRecordContainer = $objXml->createElement( "record" );
 			$objRecords->appendChild( $objRecordContainer );
+			
+				
+			// basis for most of the links below
+
+			$arrParams = array(
+				"base" => "metasearch",
+				"group" => $this->request->getProperty("group"),
+				"resultSet" => $objXerxesRecord->getResultSet(),
+				"startRecord" => $objXerxesRecord->getRecordNumber()
+			);
+			
+			// full-text link
+			
+			$arrFullText = $arrParams;
+			$arrFullText["action"] = "record";
+			
+			// this for the benefit of the merged set, mostly for people that
+			// want a <prev next> pager in the full record display
+			
+			if ( $this->request->getProperty("action") == "results" )
+			{
+				$arrFullText["resultSet"] = $this->request->getProperty("resultSet");
+				$arrFullText["startRecord"] = $position;
+			}
+					
+			$url = $this->request->url_for( $arrFullText );
+			$objUrlFull = $objXml->createElement("url_full", $url);
+			$objRecordContainer->appendChild( $objUrlFull );
+			
+
+			// save-delete link
+			
+			$arrSave = $arrParams;
+			$arrSave["action"] = "save-delete";
+								
+			$url = $this->request->url_for( $arrSave );
+			$objUrlSave = $objXml->createElement("url_save_delete", $url);
+			$objRecordContainer->appendChild( $objUrlSave );
+
+			// openurl redirect link
+			
+			$arrOpen = $arrParams;
+			$arrOpen["action"] = "sfx";
+								
+			$url = $this->request->url_for( $arrOpen );
+			$objOpenUrl = $objXml->createElement("url_open", $url);
+			$objRecordContainer->appendChild( $objOpenUrl );			
+			
 			
 			// import xerxes xml
 			
@@ -289,6 +343,8 @@ abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
 				$objImportRecord = $objXml->importNode( $objMarcRecord->getElementsByTagName( "record" )->item( 0 ), true );
 				$objRecordContainer->appendChild( $objImportRecord );
 			}
+			
+			$position++;
 		}
 		
 		$objXml->documentElement->appendChild( $objRecords );

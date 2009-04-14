@@ -15,6 +15,8 @@ class Xerxes_Command_MetasearchResults extends Xerxes_Command_Metasearch
 {
 	public function doExecute()
 	{
+		$start = microtime(true);
+	
 		$arrFields = array ( ); // fields to return in response
 		$iMaximumRecords = 10; // maximum number of records to return
 		$iTotalHits = 0; // total number of hits in response
@@ -41,6 +43,10 @@ class Xerxes_Command_MetasearchResults extends Xerxes_Command_Metasearch
 		$strMarcFields = "LDR, 001, 007, 008, 016##, 020##, 022##, 035##, 072##, 100##, " . 
 			"24###, 260##, 500##, 505##, 513##, 514##, 520##, 546##, 6####, 773##, " . 
 			"856##, 900##, ERI##, SID, YR";
+			
+		$strMarcFields = "LDR, 0####, 1####, 2####, 3####, 4####, 5####, 6####, 7####, 8####, ERI##, SID, YR";		
+		
+		// $strMarcFields = "#####, OPURL";
 		
 		// configuration options
 
@@ -129,6 +135,8 @@ class Xerxes_Command_MetasearchResults extends Xerxes_Command_Metasearch
 		$objXml = $this->addFacets( $objXml, $strGroup, $configFacets );
 		
 		$this->request->addDocument( $objXml );
+		
+		// echo time(true) - $start . "<br>";
 		
 		return 1;
 	}

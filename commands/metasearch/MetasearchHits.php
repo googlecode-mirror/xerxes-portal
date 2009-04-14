@@ -44,6 +44,14 @@ class Xerxes_Command_MetasearchHits extends Xerxes_Command_Metasearch
 		$objSearchXml = $this->getCache( $strGroup, "search", "DOMDocument" );
 		Xerxes_Helper::checkDbListSearchableByUser( $objSearchXml, $this->request, $this->registry );
 		
+		// redirect link base
+		
+		$arrParams = array(
+			"base" => "metasearch",
+			"action" => "results",
+			"group" => $strGroup
+		);
+		
 		// determine if redirect after merge
 
 		if ( $configShowMergedResults == true )
@@ -126,8 +134,10 @@ class Xerxes_Command_MetasearchHits extends Xerxes_Command_Metasearch
 					$strSetNumber = $arrDatabaseHits[0];
 					
 					// redirect to results page
+					
+					$arrParams["resultSet"] = $strSetNumber;					
 
-					$this->request->setRedirect( "./?base=metasearch&action=results&group=$strGroup&resultSet=$strSetNumber" );
+					$this->request->setRedirect($this->request->url_for($arrParams));
 					
 					return 1;
 				} 
@@ -186,7 +196,6 @@ class Xerxes_Command_MetasearchHits extends Xerxes_Command_Metasearch
 				{
 					// catch no hits
 					
-
 					if ( $iMergeCount == 0 )
 					{
 						// check to see if any of the individual dbs had a search-and-link with 
@@ -214,8 +223,10 @@ class Xerxes_Command_MetasearchHits extends Xerxes_Command_Metasearch
 						if ( $bolIndividual == true )
 						{
 							// redirect to individual results page
+							
+							$arrParams["resultSet"] = $strIndividualSet;	
 
-							$this->request->setRedirect( "./?base=metasearch&action=results&group=$strGroup&resultSet=$strIndividualSet" );
+							$this->request->setRedirect( $this->request->url_for($arrParams) );
 							
 							return 1;
 						}
@@ -223,8 +234,10 @@ class Xerxes_Command_MetasearchHits extends Xerxes_Command_Metasearch
 					else
 					{
 						// redirect to merged results page
+						
+						$arrParams["resultSet"] = $strMergeSet;
 
-						$this->request->setRedirect( "./?base=metasearch&action=results&group=$strGroup&resultSet=$strMergeSet" );
+						$this->request->setRedirect( $this->request->url_for($arrParams) );
 						
 						return 1;
 					}
