@@ -21,7 +21,6 @@
 			
 			$strSortKeys = $this->request->getProperty("sortKeys");
 			$strGroup = $this->request->getProperty("group");
-			$configBaseUrl = $this->registry->getConfig("BASE_URL", true);
 			
 			// sort the merged result set
 			
@@ -47,8 +46,14 @@
 					 
 		 	// redirect to results page
 		 	
-		 	$this->request->setRedirect($configBaseUrl . 
-		 		"/?base=metasearch&action=results&group=$strGroup&resultSet=$strResultSet");
+			$arrParams = array(
+				"base" => "metasearch",
+				"action" => "results",
+				"group" => $this->request->getProperty("group"),
+				"resultSet" => $strResultSet
+			);
+			
+		 	$this->request->setRedirect($this->request->url_for($arrParams));
 			
 			return 1;
 		}

@@ -39,7 +39,14 @@
 				
 			if ( $strDatabaseTitle == "Top Results" )
 			{
-				$strQueryString = "./?base=metasearch&action=sort&group=" . $this->request->getProperty("group");
+				$arrParams = array(
+					"base" => "metasearch",
+					"action" => "sort",
+					"group" => $this->request->getProperty("group")
+				);
+				
+				$strQueryString = $this->request->url_for($arrParams);
+				
 				$arrSortOptions = array("rank" => "relevance", "year" => "date", "title" => "title",  "author" => "author");
 						
 				if ( $strSortKeys == null )
@@ -55,22 +62,27 @@
 			
 			// create paging element
 			
-			$strFacetNodes = "";
+			$arrParams = array(
+				"base" => "metasearch",
+				"action" => $this->request->getProperty("action"),
+				"group" => $this->request->getProperty("group"),
+				"resultSet" => $this->request->getProperty("resultSet") 
+			);
 			
-			if ( $this->request->getProperty("node") != null ) $strFacetNodes .= "&node=" . $this->request->getProperty("node");
-			if ( $this->request->getProperty("facet") != null ) $strFacetNodes .= "&facet=" . $this->request->getProperty("facet");
-	   
-			$objPagerXml = $objPage->pager( 
-				"./", 
-				"startRecord",  (int) $this->request->getProperty("startRecord"), 
+			// only used in facets
+			
+			if ( $this->request->getProperty("node") != null )
+			{
+				$arrParams["node"] = $this->request->getProperty("node");
+				$arrParams["facet"] = $this->request->getProperty("facet");
+			}
+
+			$objPagerXml = $objPage->pager_dom(
+				$arrParams,
+				"startRecord", (int) $this->request->getProperty("startRecord"),
 				null,  (int) $iTotalHits, 
-				$iMax,
-				"&base=metasearch&action=" . $this->request->getProperty("action") .
-				"&group=" . $this->request->getProperty("group") . 
-				"&resultSet=" . $this->request->getProperty("resultSet") .
-				$strFacetNodes
-				);
-	
+				$iMax, $this->request
+			);			
 			
 			$this->request->addDocument($objPagerXml);
 				
