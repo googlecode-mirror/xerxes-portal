@@ -24,11 +24,13 @@
 <xsl:template name="main">
 	
 	<xsl:variable name="back" select="request/server/http_referer" />
-  <xsl:variable name="context">
+	
+	<xsl:variable name="context">
 		<xsl:choose>
-		<xsl:when test="/*/request/context and /*/request/context != ''"><xsl:value-of
-select="/*/request/context" /></xsl:when>
-		<xsl:otherwise>the saved records page</xsl:otherwise>
+			<xsl:when test="/*/request/context and /*/request/context != ''">
+				<xsl:value-of select="/*/request/context" />
+			</xsl:when>
+			<xsl:otherwise>the saved records page</xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
 	

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xerxes version="1.4.1">
+<xerxes version="1.5">
 
 	<!-- <configuration> includes basic values and settings specific to metalib and other systems.
 			
@@ -107,8 +107,13 @@
 		
 		<config name="application_sid">calstate.edu:xerxes</config>
 		
+		<!-- for spell check api, doesn't hurt to leave this as 'calstate', since the usage limits are 
+		based on ip address, but better to get your own key from Yahoo -->
+		
+		<config name="yahoo_id">calstate</config>
+		
 		<!-- base url of proxy server 
-
+		
 			EZProxy: include the entire proxy url prefix, e.g., 'http: ezproxy.library.edu/login?qurl='
 			xerxes will url-encode the full-text link, so it is preferable to use qurl param 
 			
@@ -135,11 +140,6 @@
 		<!-- "Group" statement to output for ordinary default KB resources. -->
 		
 		<config name="ezp_exp_default_group">EzP_Group</config>
-		
-		<!-- for spell check api, doesn't hurt to leave this as 'calstate', since the usage limits are 
-		based on ip address, but better to get your own key from Yahoo -->
-		
-		<config name="yahoo_id">calstate</config>
 		
 	<!-- AUTHENTICATION + AUTHORIZATION -->
 	
@@ -220,15 +220,8 @@
 	
 		<!-- mod_rewrite scheme
 		
-			You have the option to run Xerxes together with Apache's mod_rewrite module or with one 
-			 of the various mod_rewite-like ISAPI modules available for IIS. This option will
-			 create simpler URLs for thing like the categories and databases pages, 'my saved records' and links sent
-			 out when users email records to themselves. This is advantageous, since these URLs will likely 
-			 be copied-and-pasted or otherwise used by users as stable links, and mod_rewrite will allow
-			 for shorter and simpler URLs for that purpose. If you do not want to use Apache's mod_rewrite
-			 module or choose not to install a URL rewriting ISAPI module in IIS, then set this value to false. 
-			 If you are using rewrite true, you need to set up redirects in your webserver, see the 
-			 demo/.htaccess file for specification. -->
+			create simpler urls using Apache mod_rewrite or IIS rewrite modules, see wiki for details.
+			see the demo/.htaccess file for specification. -->
 		
 		<config name="rewrite" pass="true">false</config>
 
@@ -236,7 +229,7 @@
 		
 		<config name="categories_quicksearch">quick-search</config>
 
-		<!-- Strip out HTML tags in database description. Possible values:
+		<!-- strip out HTML tags in database description. Possible values:
 		
 			escape: Escape all HTML so it shows up as source.
 			allow: Allow all HTML through as code. NOT reccommended. Suggest you use strip with some 
@@ -245,7 +238,7 @@
 			
 		<config name="db_description_html">escape</config>
 		
-		<!-- Tags NOT to strip in database descriptions.
+		<!-- tags NOT to strip in database descriptions.
 		
 			Only used with db_description_html=strip. Tags listed here (comma seperated) will NOT be stripped, but
 			will be allowed - they are a whitelist. All other tags will be stripped. -->
@@ -257,39 +250,29 @@
 		
 		<config name="show_search_box" pass="true">false</config>	
 		
-		<!-- full text and sfx links. You can change this value to any valid HTML anchor 
-		target attribute value to affect the behavior of sfx and full-text links in the 
-		search results and saved record pages.
+		<!-- open window for full text and sfx links.
+		
+			You can change this value to any valid HTML anchor  target attribute value to affect the 
+			behavior of sfx and full-text links in the  search results and saved record pages.
 			'_self' causes the browser to open the links in the same window
 			'_blank' causes the browser to open the links in a new window. -->
 		
 		<config name="link_target" pass="true">_blank</config>
-    
-    <!-- metalib 'Link to Records in Native Interface' and 'Link to Holdings in Native Interface'.  Metalib supports generation of these links on a
-    resource-by-resource basis.  If a Metalib resource is configured to provide
-    such links, they can be displayed in Xerxes. 
-    
-    Note that the 'alternative' (off-campus) versions of these links in Metalib are not currently supported. 
-    
-    Note also: In Metalib even if you fill out a 'link to holdings' field for a resource, it may not be displayed depending on Metalib 'configuration' settings. In Xerxes, if a the 'link to holdings' field is filled out and available, it will be displayed in Xerxes according to this config, regardless of Metalib 'configuration'. Xerxes does not currently support realtime z39.50 lookup of holdings like Metalib does.
-    
-    You can turn on display of ALL available link of each type, or instead
-    list individual resource IDs -->
-    
-    <config name="show_all_holdings_links" pass="true">true</config>
-    <config name="show_all_original_record_links" pass="true">false</config>
-
-    <!-- 
-    <config name="holdings_links" pass="true" xml="true">
-      <database metalib_id="JHU0001" />
-      <database metalib_id="JHU0002" />
-    </config>
-    <config name="original_record_links" pass="true" xml="true">
-      <database metalib_id="JHU0001" />
-      <database metalib_id="JHU0002" />
-    </config>
-    -->
-    
+		
+		<!-- show links to catalog for holdings -->
+		<!-- <database metalib_id="JHU0001" /> -->
+		
+		<config name="show_all_holdings_links" pass="true">true</config>
+		<config name="holdings_links" pass="true" xml="true">
+		</config>
+		
+		<!-- show links to original record in native interface -->
+		
+		<config name="show_all_original_record_links" pass="true">false</config>
+		
+		<config name="original_record_links" pass="true" xml="true">
+		</config>
+		
 		<!-- this should correspond to the search limit in metalib -->
 		
 		<config name="search_limit" pass="true">10</config>
@@ -304,10 +287,12 @@
 		
 		<config name="logout_url" />	
 		
-		<!-- will adjust the user's query, sending it to metalib in such a way as to support a limited number of 
-		AND and OR boolen operators in the search box, which Metalib doesn't natively support; this is still 
-		experimental, and requires that there be only one search box in the interface instead of two a Metalib 
-		supports -->
+		<!-- normalize query
+		
+			will adjust the user's query, sending it to metalib in such a way as to support a limited number of 
+			AND and OR boolen operators in the search box, which Metalib doesn't natively support; this is still 
+			experimental, and requires that there be only one search box in the interface instead of two a Metalib 
+			supports -->
 		
 		<config name="normalize_query">false</config>
 		
@@ -317,7 +302,7 @@
 		
 		<config name="search_progress_cap">34</config>
 		
-		<!-- whether to immediately show the merged results from a search (true) or show the users the search hits
+		<!-- whether to immediately show the merged results from a search (true) or show the user the search hits
 		results with links to the merged set and individual databases -->
 		
 		<config name="immediately_show_merged_results">true</config>
@@ -337,7 +322,7 @@
 		 -->
 		
 		<config name="sort_order_primary">rank</config>
-		<config name="sort_order_secondary">year</config>
+		<config name="sort_order_secondary">title</config>
 		
 		<!--	maximum number of records to return per page: setting this above 10 will slow down page load times -->
 		
@@ -374,21 +359,17 @@
 		seperate server so that you can slpit the spell checking between multiple ip addresses -->
 			
 		<config name="alternate_yahoo_location"></config>
-    
-    <!-- saving databases to personal collection features. -->
-    <!-- You can turn off display of this feature entirely in includes.xsl,
-         see   <xsl:variable name="show_collection_links" select="true()"/>
-         variable. -->
-
-    <!-- default name for new collection and section. NOTE: If you change
-         these parameters, especially default_collection_name,
-         after you have already deployed Xerxes with collections / 
-         saved databases functionality, users may see somewhat confusing
-         behavior (although no errors). Try it yourself to see. You may
-         want to change the names of all existing collections with the older
-         names by using direct SQL. -->
-    <config name="default_collection_name" pass="true">My Saved Databases</config>
-    <config name="default_collection_section_name" pass="true">Databases</config>
+		
+		<!-- saving databases to personal collection features. -->
+		<!-- You can turn off display of this feature entirely in includes.xsl,
+		see   <xsl:variable name="show_collection_links" select="true()"/>
+		variable. -->
+		
+		<!-- default name for new (my databases) collection and section. see wiki for making changes
+			_AFTER_ this has been deployed
+		-->
+		<config name="default_collection_name" pass="true">My Saved Databases</config>
+		<config name="default_collection_section_name" pass="true">Databases</config>
 		
 		<!-- mango stuff -->
 		

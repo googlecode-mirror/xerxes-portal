@@ -1,30 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xsl:stylesheet  [
+	<!ENTITY nbsp   "&#160;">
+	<!ENTITY copy   "&#169;">
+	<!ENTITY reg    "&#174;">
+	<!ENTITY trade  "&#8482;">
+	<!ENTITY mdash  "&#8212;">
+	<!ENTITY ldquo  "&#8220;">
+	<!ENTITY rdquo  "&#8221;"> 
+	<!ENTITY pound  "&#163;">
+	<!ENTITY yen    "&#165;">
+	<!ENTITY euro   "&#8364;">
+]>
 
 <!--
 
  author: David Walker
- copyright: 2007 California State University
- version 1.1
+ copyright: 2009 California State University
+ version 1.5
  package: Xerxes
  link: http://xerxes.calstate.edu
  license: http://www.gnu.org/licenses/
  
  -->
- 
+
 <xsl:stylesheet version="1.0"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-	xmlns:php="http://php.net/xsl"
-	xmlns:holdings="http://www.loc.gov/standards/iso20775/">
+	xmlns:php="http://php.net/xsl">
 
 <!-- 
 	GLOBAL VARIABLES
 	Configuration values used throughout the templates
 -->
-  <!-- version used to to prevent css caching, and possibly other
-       places to advertise version -->
+	<!-- version used to to prevent css caching, and possibly other places to advertise version -->
 	
-	<xsl:variable name="xerxes_version" select="'1.5'" />     
-    
+	<xsl:variable name="xerxes_version">1.5</xsl:variable>
+	
 	<xsl:variable name="base_url"		select="//base_url" />
 	<xsl:variable name="app_name"		select="//config/application_name" />
 	<xsl:variable name="rewrite" 		select="//config/rewrite" />
@@ -40,10 +50,13 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
-  
-  <!-- show 'save database' link on item detail-->
-  <xsl:variable name="show_save_db_on_detail" select="true()"/>
-  
+	<xsl:variable name="document">doc3</xsl:variable>
+	
+
+	<!-- show 'save database' link on item detail-->
+	
+	<xsl:variable name="show_save_db_on_detail" select="true()"/>
+
 	<xsl:variable name="global_advanced_mode" 
 		select="(//request/metasearch_input_mode = 'advanced') or 
 		( //results/search/pair[@position = '2']/query != '' ) or 
@@ -62,7 +75,7 @@
 	
 	<xsl:variable name="text_ada_version">For best results, click this link for accessible version</xsl:variable>
 	
-	<xsl:variable name="text_breadcrumb_seperator"> &gt; </xsl:variable>
+	<xsl:variable name="text_breadcrumb_seperator"> / </xsl:variable>
 	
 	<xsl:variable name="text_databases_access_available">Only available to </xsl:variable>
 	<xsl:variable name="text_databases_access_group_and">and</xsl:variable>
@@ -104,13 +117,10 @@
 	</xsl:variable>
 	<xsl:variable name="text_header_savedrecords">My Saved Records</xsl:variable>
 	<xsl:variable name="text_header_collections">My Saved Databases</xsl:variable>
-
-  
 	<xsl:variable name="text_link_resolver_available">Full text available</xsl:variable>
 	<xsl:variable name="text_link_resolver_check">Check for availability</xsl:variable>
-  <xsl:variable name="text_link_holdings">Availability</xsl:variable>
-  <xsl:variable name="text_link_original_record">Original record</xsl:variable>
-	
+	<xsl:variable name="text_link_holdings">Availability</xsl:variable>
+	<xsl:variable name="text_link_original_record">Original record</xsl:variable>
 	<xsl:variable name="text_searchbox_ada_boolean">Boolean operator: </xsl:variable>
 	<xsl:variable name="text_searchbox_boolean_and">And</xsl:variable>
 	<xsl:variable name="text_searchbox_boolean_or">Or</xsl:variable>
@@ -132,24 +142,27 @@
 	<xsl:variable name="text_records_fulltext_available">Full-Text Available</xsl:variable>
 	
 	<xsl:variable name="text_records_tags">Labels: </xsl:variable>
-  
-  <xsl:variable name="text_record_citation_note">These citations are software generated and may contain errors. To verify accuracy, check the appropriate style guide.</xsl:variable>
-  
-  <xsl:variable name="text_collection_default_new_name" select="//config/default_collection_name" />
-  <xsl:variable name="text_collection_default_new_section_name" select="//config/default_collection_section_name" />
-  
-  <!-- extra content to include in the HTML 'head' section -->
-  <xsl:variable name="text_extra_html_head_content" select="''"/>
-  
-	<!-- Other configurable variables -->
+
+	<xsl:variable name="text_record_citation_note">These citations are software generated and may contain errors. 
+	To verify accuracy, check the appropriate style guide.</xsl:variable>
 	
+	<xsl:variable name="text_collection_default_new_name" select="//config/default_collection_name" />
+	<xsl:variable name="text_collection_default_new_section_name" select="//config/default_collection_section_name" />
+	
+	
+	
+	
+	<!-- extra content to include in the HTML 'head' section -->
+	<xsl:variable name="text_extra_html_head_content" />
+	
+	<!-- Other configurable variables -->
 	<xsl:variable name="app_mini_icon_url"><xsl:value-of select="$base_url" />/images/famfamfam/page_find.png</xsl:variable>
-  
-  <!-- how many columns to display on databases/categories home page -->
-  <xsl:variable name="categories_num_columns" select="3"/>
-  
-  <!-- show links to personal saved database list 'collections'? -->
-  <xsl:variable name="show_collection_links" select="true()"/>
+	
+	<!-- how many columns to display on databases/categories home page -->
+	<xsl:variable name="categories_num_columns" select="3"/>
+	
+	<!-- show links to personal saved database list 'collections'? -->
+	<xsl:variable name="show_collection_links" select="true()"/>
 
 <!-- 	
 	TEMPLATE: SURROUND
@@ -158,10 +171,11 @@
 -->
 
 <xsl:template name="surround">
+	<xsl:param name="template">yui-t6</xsl:param>
 
 	<html xmlns="http://www.w3.org/1999/xhtml" lang="eng">
 	<head>
-	<title><xsl:call-template name="title" /></title>
+	<title><xsl:value-of select="//config/application_name" />: <xsl:call-template name="title" /></title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<xsl:call-template name="css_include" />
 	<xsl:call-template name="header" />
@@ -180,30 +194,33 @@
 			</a>
 		</xsl:if>
 	</div>
-	
-	<div id="xerxes_outer_wrapper">
-	
-		<div id="header">
+
+	<div id="{$document}" class="{$template}">
+		<div id="hd" role="banner">
 			<xsl:call-template name="header_div" />
-		</div>
-		
-		<div id="breadcrumb">
-			<div class="trail">
-				<xsl:call-template name="breadcrumb" />
+			<div id="breadcrumb">
+				<div class="trail">
+					<xsl:call-template name="breadcrumb" />
+				</div>
 			</div>
-			<xsl:call-template name="metasearch_options" />	
 		</div>
-    
-    <xsl:if test="string(//session/flash_message)">
-      <xsl:call-template name="message_display"/>
-    </xsl:if>
-		
-		<xsl:call-template name="main" />
-		
-		<div id="footer">
+		<div id="bd" role="main">
+			<div id="yui-main">
+				<div class="yui-b">
+					<xsl:if test="string(//session/flash_message)">
+						<xsl:call-template name="message_display"/>
+					</xsl:if>
+					
+					<xsl:call-template name="main" />
+				</div>
+			</div>
+			<div class="yui-b">
+				<xsl:call-template name="sidebar" />
+			</div>
+		</div>
+		<div id="ft" role="contentinfo">
 			<xsl:call-template name="footer_div" />
 		</div>
-		
 	</div>
 	
 	</body>
@@ -211,517 +228,137 @@
 	
 </xsl:template>
 
-<!-- TEMPLATE: CSS_INCLUDE 
+<!-- 
+	TEMPLATE: CSS_INCLUDE 
 -->
+
 <xsl:template name="css_include">
 
-	<link href="{$base_include}/css/reset.css?xerxes_version={$xerxes_version}" rel="stylesheet" type="text/css" />
-	<link href="{$base_include}/css/xerxes-blue.css?xerxes_version={$xerxes_version}" rel="stylesheet" type="text/css" />
-	<link href="{$base_include}/css/local.css?xerxes_version={$xerxes_version}" rel="stylesheet" type="text/css" />
-
-	<!-- print media overrides -->
-	
+	<link href="{$base_include}/css/reset-fonts-grids.css?xerxes_version={$xerxes_version}" rel="stylesheet" type="text/css" />
+	<link href="{$base_include}/css/xerxes-new.css?xerxes_version={$xerxes_version}" rel="stylesheet" type="text/css" />
+	<link href="{$base_include}/css/local.css?xerxes_version={$xerxes_version}" rel="stylesheet" type="text/css" />	
 	<link href="{$base_include}/css/xerxes-print.css?xerxes_version={$xerxes_version}" rel="stylesheet" type="text/css" media="print" />
 
 </xsl:template>
 
-<!-- 	
-	TEMPLATE: HEADER DIV
-	Contents of on-screen header. Generally overridden in local stylesheet.
+<!-- 
+	TEMPLATE: MESSAGE_DISPLAY
+	A generic way to display a message to the user in any page, usually
+	used for non-ajax version of completion status messages.
 -->
 
-<xsl:template name="header_div" >
-	<h2><a style="color:white" class="footer" href="{$base_url}"><xsl:value-of select="/knowledge_base/config/application_name" /></a></h2>
-	<p style="color:white">Header content. Customize by editing {Xerxes_app}/xsl/includes.xsl to override the template.</p>
+<xsl:template name="message_display">
+	<div id="message_display">
+		<xsl:copy-of select="//session/flash_message"/>
+	</div>
 </xsl:template>
+
 
 <!-- 	
-	TEMPLATE: FOOTER DIV
-	Contents of on-screen header. Generally overridden in local stylesheet.
+	TEMPLATES THAT SHOULD BE OVERRIDEN IN PAGES OR LOCAL INCLUDES.XSL
+	Defined here in case they are not, so as not to stop the proceeedings
 -->
 
-<xsl:template name="footer_div" >
-	Footer content. Customize by editing {Xerxes_app}/xsl/includes.xsl to
-	override the template. 
-</xsl:template>
+<xsl:template name="header_div" />
+<xsl:template name="footer_div" />
+<xsl:template name="page_name" />
+<xsl:template name="breadcrumb" />
+<xsl:template name="sidebar" />
+<xsl:template name="categories_sidebar" />
+<xsl:template name="categories_sidebar_alt" />
 
 <!-- 
-  TEMPLATE message_display
-  A generic way to display a message to the user in any page, usually
-  used for non-ajax version of completion status messages. 
--->
-<xsl:template name="message_display">
-<div id="message_display">
-  <xsl:copy-of select="//session/flash_message"/>
-</div>
-</xsl:template>
-
-<!--
-	TEMPLATE: PAGE NAME
-	A heading that can be used to label this page. Some views use this for
-	their heading, others don't. The "title" template always uses this to construct an html title. 
--->
-
-<xsl:template name="page_name">
-	<xsl:variable name="folder">
-		<xsl:text>Saved Records</xsl:text>
-	</xsl:variable>
-	
-	<xsl:choose>
-		<!-- mango -->
-		
-		<xsl:when test="request/base = 'books' and request/action = 'results'">
-			<xsl:text>Results: </xsl:text>
-			<xsl:value-of select="//request/query" />
-			<xsl:if test="//request/startRecord">
-				( <xsl:value-of select="//request/startRecord" /> )
-			</xsl:if>
-		</xsl:when>
-		<xsl:when test="request/base = 'books' and request/action = 'record'">
-			<xsl:value-of select="//results/records/record/xerxes_record/title_normalized" />
-		</xsl:when>
-		
-		<!-- xerxes -->
-		
-		<xsl:when test="request/base = 'databases' and (request/action = 'subject' or request/actions/action = 'subject')">
-			<xsl:text></xsl:text><xsl:value-of select="//category/@name" />
-		</xsl:when>
-		<xsl:when test="request/base = 'databases' and request/action = 'alphabetical'">
-			<xsl:text>Databases A-Z</xsl:text>
-		</xsl:when>
-		<xsl:when test="request/base = 'databases' and request/action = 'find'">
-			<xsl:text>Find a Database</xsl:text>
-		</xsl:when>
-		<xsl:when test="request/base = 'databases' and request/action = 'database'">
-			<xsl:text></xsl:text><xsl:value-of select="//title_display" />
-		</xsl:when>
-		<xsl:when test="(request/base = 'embed' and request/action = 'gen_subject') or (request/base = 'collections' and request/action = 'gen_embed')">
-			<xsl:text>Create Snippet for: </xsl:text> 
-		<xsl:value-of select="//category/@name" />
-		</xsl:when>
-		<xsl:when test="request/base = 'embed' and request/action = 'gen_database'">
-			<xsl:text>Create Snippet for: </xsl:text>
-			<xsl:value-of select="//title_display" />
-		</xsl:when>
-		<xsl:when test="request/base = 'metasearch' and request/action = 'hits'">
-			<xsl:value-of select="results/search/context" /><xsl:text>: </xsl:text>
-			<xsl:value-of select="results/search/pair/query" /><xsl:text>: </xsl:text>
-			<xsl:text>Searching</xsl:text>
-		</xsl:when>
-		<xsl:when test="request/base = 'metasearch' and ( request/action = 'results' or request/action = 'facet')">
-			<xsl:value-of select="results/search/context" /><xsl:text>: </xsl:text>
-			<xsl:value-of select="results/search/pair/query" /><xsl:text>: </xsl:text>
-			<xsl:text>Results </xsl:text>
-			( <xsl:value-of select="summary/range" /> )
-		</xsl:when>
-		<xsl:when test="request/base = 'metasearch' and request/action = 'record'">
-			<xsl:value-of select="results/search/context" /><xsl:text>: </xsl:text>
-			<xsl:value-of select="results/search/pair/query" /><xsl:text>: </xsl:text>
-			<xsl:text>Record</xsl:text>
-		</xsl:when>
-		<xsl:when test="request/base = 'folder' and request/action = 'home'">
-			<xsl:value-of select="$folder" />
-		</xsl:when>
-		<xsl:when test="request/action = 'login'">
-			<xsl:text>Login</xsl:text>
-		</xsl:when>
-		<xsl:when test="request/action = 'logout'">
-			<xsl:text>Logout</xsl:text>
-		</xsl:when>
-		<xsl:when test="request/base = 'folder' and request/action = 'output_email'">
-			<xsl:text>Email</xsl:text>
-		</xsl:when>
-		<xsl:when test="request/base = 'folder' and request/action = 'output_export_endnote'">
-			<xsl:text>Download to Endnote</xsl:text>
-		</xsl:when>
-		<xsl:when test="request/base = 'folder' and request/action = 'output_export_text'">
-			<xsl:value-of select="$folder" /><xsl:text>: Download to Text File</xsl:text>
-		</xsl:when>
-		<xsl:when test="request/base = 'folder' and request/action = 'output_refworks'">
-			<xsl:text>Export to Refworks</xsl:text>
-		</xsl:when>
-		<xsl:when test="request/base = 'folder' and request/action = 'full'">
-			<xsl:value-of select="$folder" /><xsl:text>: Record</xsl:text>
-		</xsl:when>
-	</xsl:choose>
-	
-</xsl:template>
-
-<!-- 	
 	TEMPLATE: TITLE
-	Sets the title ( the one that appears in the browser title bar)
-	Takes the 'header' and adds more stuff to it.
+	the title that appears in the browser window.  this is assumed to be the 
+	page name, unless the page overrides it
 -->
 
 <xsl:template name="title">
-	<xsl:variable name="page_title"><xsl:call-template name="page_name" /></xsl:variable>
-	<xsl:value-of select="config/application_name" />
-	<xsl:if test="$page_title != ''">
-		<xsl:text>: </xsl:text>
-		<xsl:value-of select="$page_title" />
-	</xsl:if>
+	<xsl:call-template name="page_name" />
 </xsl:template>
 
-<xsl:template name="title_old">
+
+<!-- 
+	TEMPLATE: BREADCRUMB START
+	The initial elements of the breadcrumbs, like library or university home pages 
+	if xerxes lives conceptually down in the site heirerarchy
+-->
+
+<xsl:template name="breadcrumb_start">
 	
-	<xsl:variable name="base" select="config/application_name" />
-	
-	<xsl:choose>
-		<xsl:when test="request/base = 'databases' and (request/action = 'categories' or request/actions/action = 'categories')">
-			<xsl:value-of select="$base" />
-		</xsl:when>
-		<xsl:when test="request/base = 'databases' and (request/action = 'subject' or request/actions/action = 'subject')">
-			<xsl:value-of select="$base" /><xsl:text>: </xsl:text><xsl:value-of select="//category/@name" />
-		</xsl:when>
-		<xsl:when test="request/base = 'databases' and request/action = 'alphabetical'">
-			<xsl:value-of select="$base" /><xsl:text>: Databases A-Z</xsl:text>
-		</xsl:when>
-		<xsl:when test="request/base = 'databases' and request/action = 'find'">
-			<xsl:value-of select="$base" /><xsl:text>: Find a Database</xsl:text>
-		</xsl:when>
-		<xsl:when test="request/base = 'databases' and request/action = 'database'">
-			<xsl:value-of select="$base" /><xsl:text>: </xsl:text><xsl:value-of select="//title_display" />
-		</xsl:when>
-		<xsl:when test="request/base = 'metasearch' and request/action = 'hits'">
-			<xsl:value-of select="$base" /><xsl:text>: </xsl:text>
-			<xsl:value-of select="results/search/context" /><xsl:text>: </xsl:text>
-			<xsl:value-of select="results/search/pair/query" /><xsl:text>: </xsl:text>
-			<xsl:text>Searching</xsl:text>
-		</xsl:when>
-		<xsl:when test="request/base = 'metasearch' and (request/action = 'results' or request/action = 'facet')">
-			<xsl:value-of select="$base" /><xsl:text>: </xsl:text>
-			<xsl:value-of select="results/search/context" /><xsl:text>: </xsl:text>
-			<xsl:value-of select="results/search/pair/query" /><xsl:text>: </xsl:text>
-			<xsl:text>Results </xsl:text>
-			( <xsl:value-of select="summary/range" /> )
-		</xsl:when>
-		<xsl:when test="request/base = 'metasearch' and request/action = 'record'">
-			<xsl:value-of select="$base" /><xsl:text>: </xsl:text>
-			<xsl:value-of select="results/search/context" /><xsl:text>: </xsl:text>
-			<xsl:value-of select="results/search/pair/query" /><xsl:text>: </xsl:text>
-			<xsl:text>Record</xsl:text>
-		</xsl:when>
-		<xsl:when test="request/base = 'folder' and request/action = 'home'">
-			<xsl:value-of select="$folder" />
-		</xsl:when>
-		<xsl:when test="request/action = 'login'">
-			<xsl:value-of select="$base" /><xsl:text>: Login</xsl:text>
-		</xsl:when>
-		<xsl:when test="request/action = 'logout'">
-			<xsl:value-of select="$base" /><xsl:text>: Logout</xsl:text>
-		</xsl:when>
-		<xsl:when test="request/base = 'folder' and request/action = 'output_email'">
-			<xsl:value-of select="$base" /><xsl:text>: Email</xsl:text>
-		</xsl:when>
-		<xsl:when test="request/base = 'folder' and request/action = 'output_export_endnote'">
-			<xsl:value-of select="$folder" /><xsl:text>: Download to Endnote</xsl:text>
-		</xsl:when>
-		<xsl:when test="request/base = 'folder' and request/action = 'output_export_text'">
-			<xsl:value-of select="$folder" /><xsl:text>: Download to Text File</xsl:text>
-		</xsl:when>
-		<xsl:when test="request/base = 'folder' and request/action = 'full'">
-			<xsl:value-of select="$folder" /><xsl:text>: Record</xsl:text>
-		</xsl:when>
-		<xsl:otherwise>
-			<xsl:value-of select="$base" />
-		</xsl:otherwise>
-	</xsl:choose>
+	Library Home /
 	
 </xsl:template>
 
 <!-- 
-	TEMPLATE: BREADCRUMB START
-	The initial elements of the breadcrumbs, often included external links or name changes
-	that are convenient to seperate out here so as not to have to customize the entire the 
-	breadcrumb template below 
+	TEMPLATE: BREADCRUMBS DATABASES
 -->
 
-<xsl:template name="breadcrumb_start">
+<xsl:template name="breadcrumb_databases">
+	<xsl:param name="condition" />
+	
+	<xsl:call-template name="breadcrumb_start" />
 
+	<xsl:if test="$condition != 1">
+		Articles <xsl:copy-of select="$text_breadcrumb_seperator" />
+	</xsl:if>
+	
 	<xsl:choose>
-		<xsl:when test="request/action = 'categories'">
-			<span class="breadcrumbHere">Home</span>
+		<xsl:when test="$condition = 2">
+			Subject <xsl:copy-of select="$text_breadcrumb_seperator" />
 		</xsl:when>
-		
-		<!-- put this here, rather than breadcrumbs to allow local implementation to treat
-			 mango as a standalone app; really, really need to refactor all this breadcrumb stuff! -->
-		
-		<xsl:when test="request/base = 'books'">
-			<a href="{$base_url}">Home</a> <xsl:copy-of select="$text_breadcrumb_seperator" /> 			
-			<xsl:choose>
-				<xsl:when test="request/action != 'home'">
-					<a href="./?base=books">Find Books</a> <xsl:copy-of select="$text_breadcrumb_seperator" /> 
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:text>Find Books</xsl:text>
-				</xsl:otherwise>
-			</xsl:choose>
-			
+		<xsl:when test="$condition = 3">
+			Database <xsl:copy-of select="$text_breadcrumb_seperator" />
 		</xsl:when>
-		<xsl:otherwise>
-			<a href="{$base_url}">Home</a> <xsl:copy-of select="$text_breadcrumb_seperator" />  
-		</xsl:otherwise>
+		<xsl:when test="$condition = 4">
+			Databases A-Z <xsl:copy-of select="$text_breadcrumb_seperator" />
+		</xsl:when>
 	</xsl:choose>
 
 </xsl:template>
 
-<!-- 	
-	TEMPLATE: BREADCRUMB
-	Sets a base set of breadcrumbs (if the application lives in a specific part of the library
-	website, for example) and the specific breadcrumb titles for each page.
+<!-- 
+	TEMPLATE: BREADCRUMBS METASEARCH
 -->
 
-<xsl:template name="breadcrumb">
-
-	<xsl:variable name="context_url" 	select="results/search/context_url" />
-	<xsl:variable name="username"		select="request/session/username" />
-	<xsl:variable name="return"		select="request/return" />
-	<xsl:variable name="return_title" 	select="request/return_title" />
-	<xsl:variable name="group"		select="request/group" />
-	<xsl:variable name="resultset" 		select="request/resultset" />
-	<xsl:variable name="start_record" 	select="request/startrecord" />
-	<xsl:variable name="records_per_page" 	select="config/records_per_page" />
-	<xsl:variable name="folder" select="navbar/element[@id = 'saved_records']/url" />
+<xsl:template name="breadcrumb_metasearch">
+	<xsl:param name="condition" />
 	
 	<xsl:call-template name="breadcrumb_start" />
 	
+	Articles <xsl:copy-of select="$text_breadcrumb_seperator" />
+	<a href="{results/search/context_url}"><xsl:value-of select="results/search/context" /></a> <xsl:copy-of select="$text_breadcrumb_seperator" />
+	
 	<xsl:choose>
-
-		<!-- rss and mango -->
-		
-		<xsl:when test="request/base = 'books' and request/action = 'results'">
-			<span class="breadcrumbHere">Results</span>
+		<xsl:when test="$condition = 2">
+			Results <xsl:copy-of select="$text_breadcrumb_seperator" />
 		</xsl:when>
-		<xsl:when test="request/base = 'books' and request/action = 'record'">
-			<span class="breadcrumbHere">Record</span>
-		</xsl:when>
-		<xsl:when test="request/base = 'rss'">
-			<span class="breadcrumbHere">RSS prototype</span>
-		</xsl:when>
-		
-		<!-- metasearch -->
-		
-		<xsl:when test="request/action = 'login'">
-			<span class="breadcrumbHere">Login</span>
-		</xsl:when>
-		<xsl:when test="request/action = 'logout'">
-			<span class="breadcrumbHere">Logout</span>
-		</xsl:when>
-		<xsl:when test="request/base = 'databases' and (request/action = 'subject' or request/actions/action = 'subject')">
-			<span class="breadcrumbHere"><xsl:value-of select="//category/@name" /></span>
-		</xsl:when>
-		<xsl:when test="request/base = 'databases' and request/action = 'alphabetical'">
-			<span class="breadcrumbHere">Databases A-Z</span>
-		</xsl:when>
-		<xsl:when test="request/base = 'databases' and request/action = 'find'">
-			<xsl:call-template name="page_name" />
-		</xsl:when>
-		<xsl:when test="request/base = 'databases' and request/action = 'database'">
-			<xsl:if test="$return != ''">
-				<a href="{$return}">
-					<xsl:choose>
-						<xsl:when test="$return_title != ''">
-						 <xsl:value-of select="$return_title" />
-						</xsl:when>
-						<xsl:otherwise><xsl:text>Databases</xsl:text></xsl:otherwise>
-					</xsl:choose>
-				</a> <xsl:copy-of select="$text_breadcrumb_seperator" />
-			</xsl:if>
-			<span class="breadcrumbHere"><xsl:value-of select="//title_display" /></span>
-		</xsl:when>
-		<xsl:when test="request/base = 'metasearch' and request/action = 'hits'">
-			<a href="{$context_url}"><xsl:value-of select="results/search/context" /></a> <xsl:copy-of select="$text_breadcrumb_seperator" /> 
-			<span class="breadcrumbHere">Searching</span>
-		</xsl:when>
-		<xsl:when test="request/base = 'metasearch' and request/action = 'results'">
-			<a href="{$context_url}"><xsl:value-of select="results/search/context" /></a> <xsl:copy-of select="$text_breadcrumb_seperator" /> 
-			<span class="breadcrumbHere"><xsl:value-of select="results/database" /></span>
-		</xsl:when>
-		<xsl:when test="request/base = 'metasearch' and request/action = 'facet'">
-			<a href="{$context_url}"><xsl:value-of select="results/search/context" /></a> <xsl:copy-of select="$text_breadcrumb_seperator" /> 
-			<a href="{$return}"><xsl:value-of select="results/database" /></a> <xsl:copy-of select="$text_breadcrumb_seperator" />
-			<span class="breadcrumbHere"><xsl:value-of select="results/facet_name" /></span>
-		</xsl:when>
-		<xsl:when test="request/base = 'metasearch' and request/action = 'record'">
-			<a href="{$context_url}"><xsl:value-of select="results/search/context" /></a> <xsl:copy-of select="$text_breadcrumb_seperator" /> 
-			
-			<xsl:choose>
-				<xsl:when test="$return != ''">
-					<a href="{$return}">Results</a> <xsl:copy-of select="$text_breadcrumb_seperator" />
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:variable name="parent_resultset">
-						<xsl:value-of select="$base_url" />
-						<xsl:text>/?base=metasearch&amp;action=results&amp;group=</xsl:text><xsl:value-of select="$group" />
-						<xsl:text>&amp;resultSet=</xsl:text><xsl:value-of select="$resultset" />
-						<xsl:text>&amp;startRecord=</xsl:text>
-						<xsl:value-of select="(floor( ($start_record	- 1 ) div $records_per_page) * $records_per_page) + 1" />
-					</xsl:variable>
-					
-					<a href="{$parent_resultset}">Results</a> <xsl:copy-of select="$text_breadcrumb_seperator" />
-				</xsl:otherwise>
-			</xsl:choose>
-			<span class="breadcrumbHere">Record</span>
-		</xsl:when>
-		<xsl:when test="request/base = 'folder' and request/action = 'home'">
-			<xsl:choose>
-				<xsl:when test="request/label or request/type">
-					<a href="{$folder}">My Saved Records</a> <xsl:copy-of select="$text_breadcrumb_seperator" />
-					<span class="breadcrumbHere"><xsl:value-of select="request/label|request/type" /></span>
-				</xsl:when>
-				<xsl:otherwise>
-					<span class="breadcrumbHere">My Saved Records</span>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:when>
-		<xsl:when test="request/base = 'folder' and request/action = 'output_email'">
-			<a href="{$folder}">My Saved Records</a> <xsl:copy-of select="$text_breadcrumb_seperator" /> 
-			<span class="breadcrumbHere">Email</span>
-		</xsl:when>
-		<xsl:when test="request/base = 'folder' and request/action = 'output_export_endnote'">
-			<a href="{$folder}">My Saved Records</a> <xsl:copy-of select="$text_breadcrumb_seperator" /> 
-			<span class="breadcrumbHere">Download to Endnote</span>
-		</xsl:when>
-		<xsl:when test="request/base = 'folder' and request/action = 'output_refworks'">
-			<a href="{$folder}">My Saved Records</a> <xsl:copy-of select="$text_breadcrumb_seperator" /> 
-			<span class="breadcrumbHere">Export to Refworks</span>
-		</xsl:when>
-		<xsl:when test="request/base = 'folder' and request/action = 'output_export_text'">
-			<a href="{$folder}">My Saved Records</a> <xsl:copy-of select="$text_breadcrumb_seperator" /> 
-			<span class="breadcrumbHere">Download to Text File</span>
-		</xsl:when>
-		<xsl:when test="request/base = 'folder' and request/action = 'full'">
-			<a href="{$folder}">My Saved Records</a> <xsl:copy-of select="$text_breadcrumb_seperator" /> 
-			<span class="breadcrumbHere">Record</span>
-		</xsl:when>	
-		
-		<xsl:when test="(request/base = 'embed' and request/action = 'gen_subject') or (request/base = 'collections' and request/action = 'gen_embed')">
-			<a>
-				<xsl:attribute name="href">
-				 <xsl:value-of select="//category/url" />
-				</xsl:attribute>
-				<xsl:value-of select="//category/@name" />
-			</a>
-			<xsl:copy-of select="$text_breadcrumb_seperator" />
-			<span class="breadcrumbHere">Create Snippet</span>
-		</xsl:when>
-		<xsl:when test="request/base = 'embed' and request/action = 'gen_database'">
-			<a>
-				<xsl:attribute name="href">
-					<xsl:value-of select="//database/url" />
-				</xsl:attribute>
-				<xsl:value-of select="//title_display" />
-			</a>
-			<xsl:copy-of select="$text_breadcrumb_seperator" />
-			<span class="breadcrumbHere">Create Snippet</span>
-		</xsl:when>
-    
-    <!-- personal collections/saved databases -->
-    <xsl:when test="request/base = 'collections' and  (request/action = 'save_choose_collection' or request/action = 'save_choose_subheading')">
-      <a>
-        <xsl:attribute name="href">
-					<xsl:value-of select="//database/url" />
-				</xsl:attribute>
-				<xsl:value-of select="//database/title_display" />
-			</a>
-      <xsl:copy-of select="$text_breadcrumb_seperator" />
-      <span class="breadcrumbHere">Save to personal collection</span>
-    </xsl:when>
-    <xsl:when test="request/base = 'collections' and (request/action = 'edit_form')">
-      <a>
-        <xsl:attribute name="href">
-					<xsl:value-of select="/*/category/url" />
-				</xsl:attribute>
-				<xsl:value-of select="/*/category/@name" />
-			</a>
-      <xsl:copy-of select="$text_breadcrumb_seperator" />
-      <span class="breadcrumbHere">Edit</span>
-    </xsl:when>
-    <xsl:when test="request/base = 'collections' and (request/action = 'rename_form' or request/action = 'reorder_subcats_form' or request/action = 'reorder_databases_form')">
-      <a>
-        <xsl:attribute name="href">
-					<xsl:value-of select="//category[1]/url" />
-				</xsl:attribute>
-				<xsl:value-of select="//category[1]/@name" />
-			</a>
-      <xsl:copy-of select="$text_breadcrumb_seperator" />
-      <a>
-        <xsl:attribute name="href">
-					<xsl:value-of select="//category[1]/edit_url" />
-				</xsl:attribute>
-				Edit
-			</a>
-      <xsl:copy-of select="$text_breadcrumb_seperator" />
-      <xsl:call-template name="page_name" />
-    </xsl:when>
-    <xsl:when test="request/base = 'collections' and ( request/action = 'subject')">
-      <xsl:call-template name="page_name" />
-   </xsl:when>
-
-    
-		<xsl:otherwise>
-			<span class="breadcrumbHere"><xsl:call-template name="page_name" /></span>
-		</xsl:otherwise>
 	</xsl:choose>
 
 </xsl:template>
 
-<!-- 	
-	TEMPLATE: METASEARCH OPTIONS
-	Defines a set of options that should appear on all the metasearch pages, such as 
-	the link to the saved records feature, log-in or log-out link, etc.
+<!-- 
+	TEMPLATE: BREADCRUMBS FOLDER
 -->
 
-<xsl:template name="metasearch_options">
+<xsl:template name="breadcrumb_folder">
+	<xsl:param name="condition" />
+		
+	<xsl:call-template name="breadcrumb_start" />
 	
-	<xsl:variable name="return" 		select="php:function('urlencode', string(request/server/request_uri))" />
-	
-	<xsl:comment>
-		<xsl:value-of select="request/session/username" /> 
-		( <xsl:value-of select="request/session/role" /> )
-	</xsl:comment>
+	<xsl:choose>
+		<xsl:when test="$condition != 1">
+			My Saved Records <xsl:copy-of select="$text_breadcrumb_seperator" />
+		</xsl:when>
+	</xsl:choose>
 
-	<div class="sessionOptions" title="login and saved records links">
-		<xsl:if test="request/base != 'authenticate'">
-		<span class="sessionAction">
-			<xsl:choose>
-			<xsl:when test="request/session/role and request/session/role != 'local'">
-				<a>
-			<xsl:attribute name="href"><xsl:value-of select="navbar/element[@id = 'logout']/url" /></xsl:attribute>
-			<xsl:copy-of select="$text_header_logout" />
-			</a>
-			</xsl:when>
-			<xsl:otherwise>
-				<a>
-			<xsl:attribute name="href"><xsl:value-of select="navbar/element[@id = 'login']/url" /></xsl:attribute>
-			<xsl:copy-of select="$text_header_login" /></a>
-			</xsl:otherwise>
-			</xsl:choose>
-		</span>
-		|
-		</xsl:if>
-		<span class="sessionAction">
-			<img name="folder" width="17" height="15" border="0" id="folder" alt="">
-			<xsl:attribute name="src">
-				<xsl:choose>
-				<xsl:when test="navbar/element[@id='saved_records']/@numSessionSavedRecords &gt; 0"><xsl:value-of select="$base_include" />/images/folder_on.gif</xsl:when>
-				<xsl:otherwise><xsl:value-of select="$base_include"/>/images/folder.gif</xsl:otherwise>
-				</xsl:choose>
-			</xsl:attribute>
-			</img>
-			<xsl:text> </xsl:text>
-			<a>
-			<xsl:attribute name="href"><xsl:value-of select="navbar/element[@id='saved_records']/url" /></xsl:attribute>
-			<xsl:copy-of select="$text_header_savedrecords" />
-		</a>
-		</span>
-	</div>
 </xsl:template>
 
 <!-- 	
 	TEMPLATE: SEARCH BOX
 	Search box that appears in the 'hits' and 'results' page, as well as databases_subject.xsl. 
 -->
+
 <xsl:template name="search_box">
 
 	<xsl:param name="full_page_url" select="//request/server/request_uri"/>
@@ -730,7 +367,8 @@
 	may be provided differently. -->
 
 	<!-- split contents into seperate template to make partial AJAX loading easier -->
-	<div class="searchBox" id="searchBox">
+	
+	<div class="raisedBox" id="searchBox">
 	
 		<!-- pull out any already existing query entries -->
 		
@@ -817,12 +455,12 @@
 				</xsl:call-template>
 				<xsl:text> </xsl:text>
 			</span>
-			<input type="submit" name="Submit" value="GO" />
+			<xsl:text> </xsl:text><input type="submit" name="Submit" value="GO" />
 		</div>
 		
 		<xsl:if test="results/search/spelling != ''">
 			<xsl:variable name="spell_url" select="results/search/spelling_url" />
-			<p class="errorSpelling"><xsl:copy-of select="$text_searchbox_spelling_error" />
+			<p class="error"><xsl:copy-of select="$text_searchbox_spelling_error" />
 			<a href="{$spell_url}"><xsl:value-of select="//spelling" /></a></p>
 		</xsl:if>
 	
@@ -850,8 +488,7 @@
 	
 	<xsl:for-each select="//base_info">
 		<xsl:if test="base_001">
-			<xsl:variable name="database" select="base_001" />
-			<input type="hidden" name="database" value="{$database}" />
+			<input type="hidden" name="database" value="{base_001}" />
 		</xsl:if>
 	</xsl:for-each>
 	
@@ -930,10 +567,11 @@
 <xsl:template name="tag_input">
 	<xsl:param name="record" select="." />
 	<xsl:param name="id" select="$record/id" /> 
-	<xsl:param name="context" select="'the saved records page'" />
+	<xsl:param name="context">the saved records page</xsl:param>
 
 	<div class="folderLabels" id="tag_input_div-{$id}">
 		<form action="./" method="get" class="tags">
+		
 			<!-- note that if this event is fired with ajax, the javascript changes
 			the action element here to 'tags_edit_ajax' so the server knows to display a 
 			different view, which the javascript captures and uses to updates the totals above. -->
@@ -974,16 +612,16 @@
 -->
 
 <xsl:template name="subject_databases_list">
-	<!-- default to true: -->
 	<xsl:param name="should_show_checkboxes" select="true()" />
 	<!-- specific subcategory only? Default to false meaning, no, all subcats. -->
 	<xsl:param name="show_only_subcategory" select="false()" />
-	  
-	<xsl:for-each select="category/subcategory[(not($show_only_subcategory )) or ($show_only_subcategory = '') or (@id = $show_only_subcategory)]">
-
+	
+	<xsl:for-each select="category/subcategory[(not($show_only_subcategory ))
+		or ($show_only_subcategory = '') or (@id = $show_only_subcategory)]">
+	
 		<fieldset class="subjectSubCategory">      
 		<legend><xsl:value-of select="@name" /></legend>
-    
+			
 			<!-- if the current session can't search this resource, should we show a lock icon? 
 			We show lock icons for logged in with account users, on campus users, and guest users. 
 			Not for off campus not logged in users, because they might be able to search more 
@@ -994,12 +632,12 @@
 			
 			<xsl:variable name="subcategory" select="position()" />
 
-			<table summary="this table lists databases you can search" class="subjectCheckList">
+			<ul id="databases_subject_list">
 			<xsl:for-each select="database">
-			<xsl:variable name="id_meta" select="metalib_id" />
-			<tr valign="top">
-			<td>      
-      
+				<li>
+				
+				<xsl:variable name="id_meta" select="metalib_id" />
+				
 				<!-- how many database checkboxes were displayed in this subcategory, before now?
 					Used for seeing if we've reached maximum for default selected dbs. Depends on 
 					if we're locking non-searchable or not. -->
@@ -1036,9 +674,9 @@
 						<xsl:attribute name="value"><xsl:value-of select="metalib_id" /></xsl:attribute>
 						<xsl:attribute name="type">checkbox</xsl:attribute>
 						<xsl:if test="$subcategory = 1 and $prev_checkbox_count &lt; //config/search_limit">
-              <xsl:attribute name="checked">checked</xsl:attribute>
+							<xsl:attribute name="checked">checked</xsl:attribute>
 						</xsl:if>
-            <xsl:attribute name="class">subjectDatabaseCheckbox</xsl:attribute>
+						<xsl:attribute name="class">subjectDatabaseCheckbox</xsl:attribute>
 					</xsl:element>
 					</xsl:otherwise>
 					</xsl:choose>
@@ -1047,32 +685,31 @@
 					<img src="{$base_url}/images/link-out.gif" alt="Click database title to search individually" title="Click database title to search individually"/>
 				</xsl:otherwise>
 				</xsl:choose>
-			</td>
-			<td>
-				<div class="subjectDatabaseTitle">           
+				
+				<div class="subjectDatabaseTitle">
 					<xsl:choose>
-						<xsl:when test="not($should_lock_nonsearchable and searchable_by_user != '1')">						
+						<xsl:when test="not($should_lock_nonsearchable and searchable_by_user != '1')">
 							<a title="Go directly to {title_display}">
 							<xsl:attribute name="href"><xsl:value-of select="xerxes_native_link_url" /></xsl:attribute>
 								<xsl:value-of select="title_display" />
 							</a>
-              <!-- label that is hidden from normal graphical browsers,
-                   but available for screen readers or other machine
-                   processing. -->
-              <label for="{metalib_id}" class="ada">
-                <xsl:value-of select="title_display" />						
-              </label>							
+							<!-- label that is hidden from normal graphical browsers, but 
+							available for screen readers or other machine
+							processing. -->
+							<label for="{metalib_id}" class="ada">
+								<xsl:value-of select="title_display" />
+							</label>
 						</xsl:when>
 						<xsl:otherwise>
 							<a title="Go directly to {title_display}">
 							<xsl:attribute name="href"><xsl:value-of select="xerxes_native_link_url" /></xsl:attribute>
 								<xsl:value-of select="title_display" />
-							</a>						
+							</a>
 						</xsl:otherwise>
 					</xsl:choose>
 				</div>
 					
-				<div class="subjectDatabaseInfo">         
+				<div class="subjectDatabaseInfo">
 					<a title="More information about {title_display}">
 					<xsl:attribute name="href"><xsl:value-of select="url" /></xsl:attribute>
 					<img alt="more information" src="images/info.gif" >
@@ -1080,17 +717,16 @@
 					</img>
 					</a>
 				</div>
-        <xsl:if test="group_restriction">
+				<xsl:if test="group_restriction">
 					<div class="subjectDatabaseRestriction"><xsl:call-template name="db_restriction_display" /></div>
 				</xsl:if>
 				
-			</td>
-		</tr>
-		</xsl:for-each>
-		</table>
-		
+				</li>
+			</xsl:for-each>
+			</ul>
 		</fieldset>
 	</xsl:for-each>
+	
 </xsl:template>
 
 <!-- 
@@ -1100,12 +736,9 @@
 -->
 
 <xsl:template name="databases_search_box">
-	
-	<!-- would be nice if the form action was rewrite aware, but couldn't figure
-	out a way to do that that wasn't awful. -->
-	
+		
 	<form method="GET" action="./">
-		<div class="searchBox">
+		<div class="raisedBox">
 			<input type="hidden" name="base" value="databases" />
 			<input type="hidden" name="action" value="find" />
 			
@@ -1114,19 +747,9 @@
 			<input id="query" name="query" type="text" size="32">
 				<xsl:attribute name="value"><xsl:value-of select="request/query" /></xsl:attribute>
 			</input>
-			<xsl:text> </xsl:text>
+			<xsl:text></xsl:text>
 			<input type="submit" value="GO" />
-		</div>
-		
-		<div class="databasesReturn">
-			<xsl:if test="request/action != 'alphabetical'">
-				<a>
-				<xsl:attribute name="href"><xsl:value-of select="navbar/element[@id='database_list']/url" /></xsl:attribute>
-				<xsl:copy-of select="$text_databases_az_breadcrumb_all" /></a> <xsl:copy-of select="$text_breadcrumb_seperator" />
-				<xsl:copy-of select="$text_databases_az_breadcrumb_matching" /> "<xsl:value-of select="request/query" />"
-			</xsl:if>
-		</div>
-		
+		</div>		
 	</form>
 	
 </xsl:template>
@@ -1150,7 +773,7 @@
 		<xsl:value-of select="@display_name" />
 		<xsl:choose>
 			<xsl:when test="count(following-sibling::group_restriction) = 1">
-			<xsl:copy-of select="$text_databases_access_group_and" />
+				<xsl:copy-of select="$text_databases_access_group_and" />
 			</xsl:when>
 			<xsl:when test="count(following-sibling::group_restriction) > 1">
 			, 
@@ -1165,29 +788,35 @@
 
 <!-- 	
 	TEMPLATE: FOLDER BRIEF RESULTS
-	Brief results list that appears on many of the export options pages.
+	VERY Brief results list that appears on the export options pages.
 -->
 
 <xsl:template name="folder_brief_results">
 
 	<xsl:variable name="username" 	select="request/session/username" />
 	
-	<table summary="">
-	<xsl:for-each select="results/records/record">
-		<tr>
-		<td class="folderRecord">
-			<input type="checkbox" name="record" value="{id}" id="record-{id}" />
-		</td>
-		<td class="folderRecord">
-			<label for="record-{id}">
-				<a href="{url_full}" class="resultsTitle"><xsl:value-of select="title" /></a><br />
-				<xsl:value-of select="author" /> / <xsl:value-of select="format" /> / <xsl:value-of select="year" />
-			</label>
-		</td>
-		</tr>
-	</xsl:for-each>
-	</table>
+	<!-- <xsl:call-template name="folder_export_options" /> -->
+	
+	<fieldset>
+		<legend>Records to export</legend>
+		
+			<input type="button" id="clear_databases" value="clear all" />
+
+			<ul id="folder_output_results">
+			<xsl:for-each select="results/records/record">
+				<li>
+					<input type="checkbox" name="record" value="{id}" id="record-{id}" checked="checked" />
+					<label for="record-{id}">
+						<a href="{url_full}" class="resultsTitle"><xsl:value-of select="title" /></a><br />
+						<xsl:value-of select="author" /> / <xsl:value-of select="format" /> / <xsl:value-of select="year" />
+					</label>
+				</li>
+			</xsl:for-each>
+			</ul>
+	</fieldset>
+	
 </xsl:template>
+
 
 <!-- 
 	TEMPLATE: FOLDER HEADER 
@@ -1197,33 +826,42 @@
 <xsl:template name="folder_header">
 
 	<xsl:variable name="return" 	select="php:function('urlencode', string(request/server/request_uri))" />
-  
-    
-    <div class="folderHeaderArea">
-    
-
-    <h1><xsl:call-template name="folder_header_label" /></h1>
-  
- 
-		<xsl:if test="request/label">
-      <h2>
-        <a href="./?base=folder"><img src="{$base_url}/images/delete.gif" /></a>
-        <xsl:text>Label: </xsl:text><xsl:value-of select="request/label" />
-      </h2>
-		</xsl:if>
-		<xsl:if test="request/type">
-      <h2>
-        <a href="./?base=folder"><img src="{$base_url}/images/delete.gif" /></a>
-        <xsl:text>Format: </xsl:text><xsl:value-of select="request/type" />
-      </h2>
-		</xsl:if>
+	
+	<h1><xsl:call-template name="folder_header_label" /></h1>
+				
+	<!-- @todo make this a singletext label variable -->
 	
 	<xsl:if test="request/session/role = 'local'">
 		<p>( <a href="{navbar/element[@id='login']/url}"><xsl:copy-of select="$text_folder_login" /><xsl:text>  </xsl:text></a> 
 		<xsl:copy-of select="$text_folder_login_beyond" />.)</p>
 	</xsl:if>
-		
-	</div>
+	
+	<xsl:call-template name="folder_header_limit" />
+
+</xsl:template>
+
+<!-- 
+	TEMPLATE: FOLDER HEADER LIMIT
+	Shows a selected 'tag' or format limit across the my saved records pages, including exports
+-->
+
+<xsl:template name="folder_header_limit">
+	
+	<!-- @todo fix these links to use pretty scheme -->
+	
+	<xsl:if test="request/label">
+		<h2>
+			<a href="./?base=folder"><img src="{$base_url}/images/delete.gif" alt="remove limit" /></a>
+			<xsl:text>Label: </xsl:text><xsl:value-of select="request/label" />
+		</h2>
+	</xsl:if>
+	
+	<xsl:if test="request/type">
+		<h2>
+			<a href="./?base=folder"><img src="{$base_url}/images/delete.gif" alt="remove limit" /></a>
+			<xsl:text>Format: </xsl:text><xsl:value-of select="request/type" />
+		</h2>
+	</xsl:if>
 
 </xsl:template>
 
@@ -1266,63 +904,6 @@
 	</xsl:for-each>
 	</ul>
 	
-</xsl:template>
-
-
-<!-- 
-	TEMPLATE: FOLDER EXPORT OPTIONS
-	used within each export to provide selection of items
--->
-
-<xsl:template name="folder_export_options">
-
-	<div>
-		
-		<fieldset class="folderExportSet">
-		<legend>Export</legend>
-		
-		<ul class="folderExportSelections">
-			<li>
-			
-			<input type="radio" name="items" value="all" id="all" checked="checked" />
-			
-			<xsl:choose>
-				<xsl:when test="//request/label">
-					
-					<label for="all">
-					<xsl:copy-of select="$text_folder_export_records_labeled" /> <strong><xsl:value-of select="//request/label" /></strong>
-					</label>
-					<input type="hidden" name="label" value="{//request/label}" />
-
-				</xsl:when>
-				<xsl:when test="//request/type">
-
-					<label for="all">
-					<xsl:copy-of select="$text_folder_export_records_type" /> <strong><xsl:value-of select="//request/type" /></strong>
-					</label>
-					<input type="hidden" name="type" value="{//request/type}" />
-				
-				</xsl:when>
-				<xsl:otherwise>
-					<label for="all"><xsl:copy-of select="$text_folder_export_records_all" /></label>
-				</xsl:otherwise>
-			
-			</xsl:choose>
-
-			</li>
-			
-			<li>
-				<input type="radio" name="items" value="new" id="new" />
-				<label for="new"><xsl:copy-of select="$text_folder_export_records_selected" /></label>
-
-			</li>
-	
-		</ul>
-		
-		</fieldset>
-		
-	</div>
-
 </xsl:template>
 
 
@@ -1383,9 +964,10 @@
 		<script src="{$base_include}/javascript/onload.js" language="javascript" type="text/javascript"></script>
 		<script src="{$base_include}/javascript/prototype.js" language="javascript" type="text/javascript"></script>
 		<script src="{$base_include}/javascript/scriptaculous/scriptaculous.js" language="javascript" type="text/javascript"></script>
-    
-    <!-- fancy message display -->
-    <script src="{$base_include}/javascript/message_display.js" language="javascript" type="text/javascript"></script>
+		
+		<!-- fancy message display -->
+		
+		<script src="{$base_include}/javascript/message_display.js" language="javascript" type="text/javascript"></script>
 		
 		<!-- controls the adding and editing of tags -->
 		
@@ -1414,7 +996,7 @@
 			var dateSearch = "<xsl:value-of select="results/search/date" />";
 			var iSearchable = "<xsl:value-of select="$search_limit" />";
 		</script>
-    
+		
 		<!-- add behaviors to edit collection dialog, currently just delete confirm -->
 		<script src="{$base_include}/javascript/collections.js" language="javascript" type ="text/javascript"></script>
 		
@@ -1443,13 +1025,10 @@
 -->
 
 <xsl:template name="full_text_links">
-
 	<xsl:param name="class" />
 	
 	<xsl:variable name="database_code" select="metalib_id" />
 	
-  <!-- this should really be based on INCLUSION, which ones are
-       fulltext, not the current exclusion. Oh well. -->
 	<xsl:for-each select="links/link[@type != 'none' and @type != 'original_record' and @type != 'holdings']">
 		
 		<div class="{$class}">
@@ -1504,134 +1083,166 @@
 	</xsl:for-each>
 </xsl:template>
 
-<!-- original_record and holdings type links. Generates a single link,
-     you supply the type. Call from an XSL context where ./ is a
-     xerxes_record-->
+<!-- 
+	TEMPLATE: RECORD LINK
+	generates a holding or link_native single link, you supply the type. 
+	Call from an XSL context where ./ is a xerxes_record
+-->
+	 
 <xsl:template name="record_link">
     <xsl:param name="type" />
-  	<xsl:param name="class" select="'resultsFullText'"/>
+  	<xsl:param name="class">resultsFullText</xsl:param>
     <xsl:param name="text" select="$type"/>
     <xsl:param name="img_src"/>
     
-    <xsl:if test="links/link[@type=$type]">
-      <xsl:variable name="encoded_direct_url">				
-        <xsl:value-of select="php:function('urlencode', string(links/link[@type=$type]))" />
-			</xsl:variable>
-    
-      <!-- send through proxy action for possible proxying -->
-      <a class="{$class}">
-        <xsl:attribute name="href">
-					<xsl:value-of select="$base_url" /><xsl:text>/</xsl:text>
-					<xsl:text>./?base=databases&amp;action=proxy</xsl:text>
-					<xsl:text>&amp;database=</xsl:text><xsl:value-of select="metalib_id" />
-					<xsl:text>&amp;url=</xsl:text><xsl:value-of select="$encoded_direct_url" />
-        </xsl:attribute>
-					
-      
-        <xsl:if test="$img_src">      
-          <img src="{$img_src}" alt="" />
-        </xsl:if>
-        <xsl:text> </xsl:text>
-        <xsl:copy-of select="$text"/>
-      </a>
-    </xsl:if>
+	<xsl:if test="links/link[@type=$type]">
+		<xsl:variable name="encoded_direct_url">				
+			<xsl:value-of select="php:function('urlencode', string(links/link[@type=$type]))" />
+		</xsl:variable>
+	
+		<!-- send through proxy action for possible proxying -->
+		
+		<a class="{$class}">
+			<xsl:attribute name="href">
+				<xsl:value-of select="$base_url" /><xsl:text>/</xsl:text>
+				<xsl:text>./?base=databases&amp;action=proxy</xsl:text>
+				<xsl:text>&amp;database=</xsl:text><xsl:value-of select="metalib_id" />
+				<xsl:text>&amp;url=</xsl:text><xsl:value-of select="$encoded_direct_url" />
+			</xsl:attribute>
+		
+			<xsl:if test="$img_src">      
+				<img src="{$img_src}" alt="" />
+			</xsl:if>
+			
+			<xsl:text> </xsl:text>
+			<xsl:copy-of select="$text"/>
+		</a>
+	</xsl:if>
+	
 </xsl:template>
 
 <!--
-	TEMPLATE: CATEGORIES SIDEBAR
-	Override in local includes.xsl if you'd like a sidebar on the home/categories page. 
-	Put your content in a div with id="sidebar_content" if you'd like some style. 
+	TEMPLATE: MY ACCOUNT SIDEBAR
+	links to login/out, my saved records, and other personalization features
 -->
 
-<xsl:template name="categories_sidebar">
-</xsl:template>
-<xsl:template name="categories_sidebar_alt">
-</xsl:template>
-
-<!-- TEMPLATE: MY ACCOUNT SIDEBAR
-     Standard nav elements included in sidebar on every page -->
 <xsl:template name="account_sidebar">
-<div id="accountSidebar" class="box">
-  <h2 class="sidebar-title">My Account</h2>
-  <ul>
-  <xsl:if test="/*/request/base != 'authenticate'">
-      <li class="accountSidebar">
-        <xsl:choose>
-        <xsl:when test="/*/request/session/role and /*/request/session/role != 'local'">
-          <a id="logout">
-        <xsl:attribute name="href"><xsl:value-of select="/*/navbar/element[@id = 'logout']/url" /></xsl:attribute>
-        <xsl:copy-of select="$text_header_logout" />
-        </a>
-        </xsl:when>
-        <xsl:otherwise>
-          <a id="login">
-        <xsl:attribute name="href"><xsl:value-of select="/*/navbar/element[@id = 'login']/url" /></xsl:attribute>
-        <xsl:copy-of select="$text_header_login" /></a>
-        </xsl:otherwise>
-        </xsl:choose>
-      </li>
-      </xsl:if>
-      <li class="accountSidebar mySavedRecords">
-        <img name="folder" width="17" height="15" border="0" id="folder" alt="">
-        <xsl:attribute name="src">
-          <xsl:choose>
-          <xsl:when test="/*/navbar/element[@id='saved_records']/@numSessionSavedRecords &gt; 0"><xsl:value-of select="$base_include" />/images/folder_on.gif</xsl:when>
-          <xsl:otherwise><xsl:value-of select="$base_include"/>/images/folder.gif</xsl:otherwise>
-          </xsl:choose>
-        </xsl:attribute>
-        </img>
-        <xsl:text> </xsl:text>
-        <a>
-        <xsl:attribute name="href"><xsl:value-of select="/*/navbar/element[@id='saved_records']/url" /></xsl:attribute>
-        <xsl:copy-of select="$text_header_savedrecords" />
-      </a>
-      </li>
-      <xsl:if test="$show_collection_links and /*/navbar/element[@id='saved_collections']">
-        <li class="accountSidebar myCollections">
-        <img src="{$base_include}/images/folder.gif" width="17" height="15" border="0" alt=""/><xsl:text> </xsl:text>      
-        
-           <a href="{/*/navbar/element[@id='saved_collections']/url}"><xsl:copy-of select="$text_header_collections"/></a>
-        </li>
-      </xsl:if>
-    </ul>
-   </div>
+	<div id="account" class="box">
+		<h2>My Account</h2>
+		<ul>
+			<li>
+				<xsl:choose>
+					<xsl:when test="//request/session/role and //request/session/role != 'local'">
+						<a id="logout">
+						<xsl:attribute name="href"><xsl:value-of select="//navbar/element[@id = 'logout']/url" /></xsl:attribute>
+							<xsl:copy-of select="$text_header_logout" />
+						</a>
+					</xsl:when>
+					<xsl:otherwise>
+						<a id="login">
+						<xsl:attribute name="href"><xsl:value-of select="//navbar/element[@id = 'login']/url" /></xsl:attribute>
+							<xsl:copy-of select="$text_header_login" />
+						</a>
+					</xsl:otherwise>
+				</xsl:choose>
+			</li>
+		
+			<li id="my_saved_records" class="sidebarFolder">
+				<img name="folder" width="17" height="15" border="0" id="folder" alt="">
+					<xsl:attribute name="src">
+					<xsl:choose>
+					<xsl:when test="//navbar/element[@id='saved_records']/@numSessionSavedRecords &gt; 0"><xsl:value-of select="$base_include" />/images/folder_on.gif</xsl:when>
+					<xsl:otherwise><xsl:value-of select="$base_include"/>/images/folder.gif</xsl:otherwise>
+					</xsl:choose>
+					</xsl:attribute>
+				</img>
+				<xsl:text> </xsl:text>
+				<a>
+				<xsl:attribute name="href"><xsl:value-of select="//navbar/element[@id='saved_records']/url" /></xsl:attribute>
+					<xsl:copy-of select="$text_header_savedrecords" />
+				</a>
+			</li>
+			
+			<xsl:if test="$show_collection_links and //navbar/element[@id='saved_collections']">
+				<li id="my_databases" class="sidebarFolder">
+					<img src="{$base_include}/images/folder.gif" width="17" height="15" border="0" alt=""/><xsl:text> </xsl:text>
+					<a href="{//navbar/element[@id='saved_collections']/url}"><xsl:copy-of select="$text_header_collections"/></a>
+				</li>
+			</xsl:if>
+		
+		</ul>
+	</div>
 </xsl:template>
 
-<!-- TEMPLATE: collections_sidebar
-     This sidebar shows a list of collections, and has a form to create
-     a new collection. (user-created subject). It is shown on collection-related
-     pages. -->
+<!--
+	TEMPLATE: COLLECTIONS SIDEBAR
+	This sidebar shows a list of collections, and has a form to create a new collection. 
+	(user-created subject). It is shown on collection-relate pages.
+-->
+
 <xsl:template name="collections_sidebar">
-<div id="collections_sidebar" class="box">
-  <h2 class="sidebar-title">My Collections</h2>
-  <p>Collections are a way to organize databases you choose.</p>
-  <ul>
-  <!-- don't list the default collection here, that's presented differently. -->
-  <xsl:for-each select="/*/userCategories/category[name != /*/config/default_collection_name]">
-    <li>
-      <xsl:choose>
-        <xsl:when test="//request/base = 'collections' and //request/action = 'subject' and //request/subject = normalized">
-          <!-- already looking at it, don't make it a link. -->
-          <strong><xsl:value-of select="name"/></strong>
-        </xsl:when>
-        <xsl:otherwise>
-          <a href="{url}"><xsl:value-of select="name"/></a>
-        </xsl:otherwise>
-      </xsl:choose>
-    </li>
-  </xsl:for-each>
-  </ul>
-   <form method="GET" action="./">
-    <input type="hidden" name="base" value="collections"/>
-    <input type="hidden" name="action" value="new"/>
-    <input type="hidden" name="username" value="{//request/username}"/>
-    
-    <input type="hidden" name="new_subcategory_name" value="{$text_collection_default_new_section_name}"/>
-  
-  Add a new collection: <input type="text" name="new_subject_name"/><input type="submit" name="add" value="Add"/>
-    
-  </form>
-</div>
+	<div id="collections" class="box">
+		<h2>My Collections</h2>
+		<p>Collections are a way to organize databases you choose.</p>
+		<ul>
+		<!-- don't list the default collection here, that's presented differently. -->
+		<xsl:for-each select="/*/userCategories/category[name != /*/config/default_collection_name]">
+			<li>
+				<xsl:choose>
+					<xsl:when test="//request/base = 'collections' and //request/action = 'subject' and //request/subject = normalized">
+						<!-- already looking at it, don't make it a link. -->
+						<strong><xsl:value-of select="name"/></strong>
+					</xsl:when>
+					<xsl:otherwise>
+						<a href="{url}"><xsl:value-of select="name"/></a>
+					</xsl:otherwise>
+				</xsl:choose>
+			</li>
+		</xsl:for-each>
+		</ul>
+		
+		<form method="GET" action="./">
+		<input type="hidden" name="base" value="collections"/>
+		<input type="hidden" name="action" value="new"/>
+		<input type="hidden" name="username" value="{//request/username}"/>
+		
+		<input type="hidden" name="new_subcategory_name" value="{$text_collection_default_new_section_name}"/>
+		
+		Create a new collection: <input type="text" name="new_subject_name"/><input type="submit" name="add" value="Add"/>
+		
+		</form>
+	</div>
+</xsl:template>
+
+<!-- 
+	TEMPLATE: SNIPPER SIDEBAR
+	Link to generate the snippet
+	
+-->
+
+<xsl:template name="snippet_sidebar">
+
+	<div id="snippet" class="box">
+		<h2>Embed this page?</h2>
+
+		<p>
+		<xsl:if test="request/base = 'databases' and request/action = 'subject'">
+			<xsl:variable name="subject" select="//category/@normalized" />
+			[ <a href="./embed/gen_subject/{$subject}">Generate Snippet</a> ]
+		</xsl:if>
+		
+		<xsl:if test="request/base = 'databases' and request/action = 'database'">
+			<xsl:variable name="id" select="//database[1]/metalib_id" />
+			[ <a href="./embed/gen_database/{$id}">Generate Snippet</a> ]
+		</xsl:if>
+		
+		<xsl:if test="request/base = 'collections' and (request/action = 'subject' or request/action = 'edit_form')">
+			[ <a href="./collections/gen_embed/{//category[1]/@owned_by_user}/{//category[1]/@normalized}"> Generate Snippet </a> ]
+		</xsl:if>
+		
+		</p>
+	</div>
+	
 </xsl:template>
 
 <!--
@@ -1641,7 +1252,7 @@
 -->
 
 <xsl:template name="session_auth_info">
-	<div id="sessionAuthInfo">
+	<div id="sessionAuthInfo" class="box">
 
 		<xsl:choose>
 			<xsl:when test="//request/authorization_info/affiliated[@user_account = 'true']">
@@ -1730,5 +1341,112 @@
 	</xsl:if>
 
 </xsl:template>
+
+<!-- 
+	TEMPLATE: FACETS
+	Control the display and configuration of facets in the metasearch results 
+-->
+
+<xsl:template name="facets">
+
+	<xsl:variable name="group" 				select="request/group" />
+	<xsl:variable name="this_result_set"	select="request/resultset" />
+	<xsl:variable name="facet_return">
+		<xsl:value-of select="php:function('urlencode', concat('./?base=metasearch&amp;action=results&amp;group=', $group, '&amp;resultSet=', $this_result_set))" />
+	</xsl:variable>
+
+	<xsl:if test="//cluster_facet and results/database = 'Top Results'">
+		
+		<div id="facets" class="box">
+			<h2>Limit top results by:</h2>
+			<xsl:for-each select="//cluster_facet">
+			
+				<xsl:variable name="name" select="@name" />
+				
+				<xsl:if test="//cluster_facet[@name = $name]/node[node_no_of_docs > 2 and @name != 'Other']">
+				
+					<xsl:variable name="facet_number" select="position()" />
+					
+					<h3><xsl:value-of select="@name" /></h3>
+					
+					<ul>
+					
+					<xsl:choose>
+						<xsl:when test="@name != 'DATE'">
+							<xsl:for-each select="node[node_no_of_docs > 2 and @name != 'Other' and @name != 'Target not returning the record']">
+								
+								<xsl:call-template name="facet_display">
+									<xsl:with-param name="group" select="$group" />
+									<xsl:with-param name="this_result_set" select="$this_result_set" />
+									<xsl:with-param name="facet_number" select="$facet_number" />
+									<xsl:with-param name="facet_return" select="$facet_return" />
+								</xsl:call-template>
+							</xsl:for-each>
+						</xsl:when>
+						<xsl:when test="@name = 'DATE'">
+							<xsl:for-each select="node[node_no_of_docs > 2 and @name != 'Other' and @name != 'Target not returning the record']">
+								<xsl:sort select="@name" order="descending" />
+								<xsl:call-template name="facet_display">
+									<xsl:with-param name="group" select="$group" />
+									<xsl:with-param name="this_result_set" select="$this_result_set" />
+									<xsl:with-param name="facet_number" select="$facet_number" />
+									<xsl:with-param name="facet_return" select="$facet_return" />
+								</xsl:call-template>
+							</xsl:for-each>
+						</xsl:when>
+					
+					</xsl:choose>
+					
+					</ul>
+				</xsl:if>
+			</xsl:for-each>
+		</div>
+	</xsl:if>
+	
+</xsl:template>
+
+<!-- 
+	TEMPLATE: FACET DISPLAY
+	A utility template for the 'facets' tempalte above
+-->
+
+<xsl:template name="facet_display">
+
+	<xsl:param name="group" />
+	<xsl:param name="this_result_set" />
+	<xsl:param name="facet_number" />
+	<xsl:param name="facet_return" />
+
+	<xsl:variable name="node_pos" select="@position" />
+	
+	<xsl:if test="@node_level = 1">
+		<li>
+		<xsl:choose>
+			<xsl:when test="//request/node = $node_pos and //request/facet = $facet_number">
+				<strong><xsl:value-of select="@name" /></strong> ( <xsl:value-of select="node_no_of_docs" /> )
+			</xsl:when>
+			<xsl:otherwise>
+				<a href="./?base=metasearch&amp;action=facet&amp;group={$group}&amp;resultSet={$this_result_set}&amp;facet={$facet_number}&amp;node={$node_pos}&amp;return={$facet_return}"><xsl:value-of select="@name" /></a>
+		 		(&#160;<xsl:value-of select="node_no_of_docs" />&#160;)
+			</xsl:otherwise>
+		</xsl:choose>
+		</li>
+		
+	</xsl:if>
+
+</xsl:template>
+
+<!--
+	##########################################################
+	#                                                        #
+	#   DEPRICATED TEMPLATES FOR VERSION 1.X COMPATIBILITY   #
+	#                                                        #
+	##########################################################
+-->
+
+<xsl:template name="metasearch_options" />
+<xsl:template name="title_old" />
+<xsl:template name="folder_export_options" />
+
 
 </xsl:stylesheet>

@@ -80,8 +80,7 @@
   
   
   <xsl:template name="disp_embed_css">
-    <!-- First a way that's technically HTML illegal (style tag in body)
-         but works: -->
+    <!-- First a way that's technically HTML illegal (style tag in body) but works: -->
     <style type="text/css">
        @import url(<xsl:value-of select="$base_include"/>/css/xerxes-embeddable.css);
     </style>

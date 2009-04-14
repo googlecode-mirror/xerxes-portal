@@ -3,8 +3,8 @@
 <!--
 
  author: David Walker
- copyright: 2007 California State University
- version 1.1
+ copyright: 2009 California State University
+ version 1.5
  package: Xerxes
  link: http://xerxes.calstate.edu
  license: http://www.gnu.org/licenses/
@@ -14,64 +14,45 @@
 <xsl:stylesheet version="1.0"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:php="http://php.net/xsl">
-<xsl:output method="html" encoding="utf-8" indent="yes" />
 <xsl:include href="citation/styles.xsl" />
+<xsl:output method="html" encoding="utf-8" indent="yes" />
+
+<xsl:template name="sidebar">
+	<div id="sidebar">
+		<xsl:call-template name="account_sidebar" />
+	</div>
+</xsl:template>
+
+<xsl:template name="page_name">
+	<xsl:value-of select="//records/record/xerxes_record/title_normalized" />
+</xsl:template>
 
 <xsl:template name="record">
-	<xsl:for-each select="//records/record/xerxes_record">
+	
+	<div id="record">
 
-		<xsl:variable name="result_set" 	select="result_set" />
-		<xsl:variable name="record_number" 	select="record_number" />
-		<xsl:variable name="group" 		select="//request/group" />
-		<xsl:variable name="issn" 		select="standard_numbers/issn" />
-		<xsl:variable name="record_id">
-			<xsl:value-of select="$result_set" />:<xsl:value-of select="$record_number" />
-		</xsl:variable>
+		<xsl:for-each select="//records/record/xerxes_record">
+	
+			<xsl:variable name="result_set" 	select="result_set" />
+			<xsl:variable name="record_number" 	select="record_number" />
+			<xsl:variable name="group" 			select="//request/group" />
+			<xsl:variable name="issn" 			select="standard_numbers/issn" />
+			<xsl:variable name="record_id">
+				<xsl:value-of select="$result_set" />:<xsl:value-of select="$record_number" />
+			</xsl:variable>
 		
-    <div id="sidebar_float">
-    <xsl:call-template name="account_sidebar"/>
-    
-    
-      <div id="citation1" class="box">
-        
-        <h2>Cite this <xsl:value-of select="format" />:</h2>
-        
-        <div class="citations">
-          
-          <h3>APA</h3>
-          <div class="citationStyle">
-            <xsl:call-template name="apa" />
-          </div>
-          
-          <h3>MLA</h3>
-          <div class="citationStyle">
-            <xsl:call-template name="mla" />
-          </div>
-          
-          <h3>Turabian</h3>
-          <div class="citationStyle">
-            <xsl:call-template name="turabian" />
-          </div>
-        </div>
-        <div class="citationNote">
-          <xsl:copy-of select="$text_record_citation_note" />
-        </div>
-      </div>
-    </div>
-      
-		<div id="record">
-		
-			<!-- Title -->			
-			<h2 class="recordTitle"><xsl:value-of select="title_normalized" /></h2>
-					
-			<table class="recordBasicTable">
+			<!-- Title -->
+			
+			<h1><xsl:call-template name="page_name" /></h1>
+			
+			<dl>
 			
 			<!-- Authors -->
 			
 			<xsl:if test="authors/author[@type = 'personal']">
-				<tr>
-				<td class="recordAttribute">By:</td>
-				<td>
+				<div>
+				<dt>By:</dt>
+				<dd>
 					<xsl:for-each select="authors/author[@type = 'personal']">
 						<xsl:value-of select="aufirst" /><xsl:text> </xsl:text>
 						<xsl:value-of select="auinit" /><xsl:text> </xsl:text>
@@ -81,16 +62,16 @@
 							<xsl:text> ; </xsl:text>
 						</xsl:if>
 					</xsl:for-each>
-				</td>
-				</tr>
+				</dd>
+				</div>
 			</xsl:if>
-
+	
 			<!-- Corp. Authors -->
 			
 			<xsl:if test="authors/author[@type = 'corporate']">
-				<tr>
-				<td class="recordAttribute">Corporate author:</td>
-				<td>
+				<div>
+				<dt>Corporate author:</dt>
+				<dd>
 					<xsl:for-each select="authors/author[@type = 'corporate']">
 						<xsl:value-of select="aucorp" /><xsl:text> </xsl:text>
 						
@@ -98,16 +79,16 @@
 							<xsl:text> ; </xsl:text>
 						</xsl:if>
 					</xsl:for-each>
-				</td>
-				</tr>
+				</dd>
+				</div>
 			</xsl:if>
-
+	
 			<!-- Conference -->
 			
 			<xsl:if test="authors/author[@type = 'conference']">
-				<tr>
-				<td class="recordAttribute">Conference:</td>
-				<td>
+				<div>
+				<dt>Conference:</dt>
+				<dd>
 					<xsl:for-each select="authors/author[@type = 'conference']">
 						
 						<xsl:value-of select="aucorp" /><xsl:text> </xsl:text>
@@ -116,16 +97,16 @@
 							<br />
 						</xsl:if>
 					</xsl:for-each>
-				</td>
-				</tr>
+				</dd>
+				</div>
 			</xsl:if>
-
 			
 			<!-- Format -->
+			
 			<xsl:if test="format">
-				<tr>
-				<td class="recordAttribute">Format:</td>
-				<td>
+				<div>
+				<dt>Format:</dt>
+				<dd>
 					<xsl:value-of select="format" />
 					
 					<xsl:choose>
@@ -138,41 +119,44 @@
 						<strong> Peer Reviewed</strong>
 					</xsl:when>
 					</xsl:choose>
-				</td>
-				</tr>
+				</dd>
+				</div>
 			</xsl:if>
-	
+			
 			<!-- Year -->
+			
 			<xsl:if test="format">
-				<tr>
-				<td class="recordAttribute">Year:</td>
-				<td><xsl:value-of select="year" /></td>
-				</tr>
+				<div>
+				<dt>Year:</dt>
+				<dd><xsl:value-of select="year" /></dd>
+				</div>
 			</xsl:if>
 			
 			<!-- Institution -->
+			
 			<xsl:if test="institution">
-				<tr>
-				<td class="recordAttribute">Institution:</td>
-				<td><xsl:value-of select="institution" /></td>
-				</tr>
+				<div>
+				<dt>Institution:</dt>
+				<dd><xsl:value-of select="institution" /></dd>
+				</div>
 			</xsl:if>
 			
 			<!-- Degree -->
+			
 			<xsl:if test="degree">
-				<tr>
-				<td class="recordAttribute">Degree:</td>
-				<td><xsl:value-of select="degree" /></td>
-				</tr>
+				<div>
+				<dt class="recordAttribute">Degree:</dt>
+				<dd><xsl:value-of select="degree" /></dd>
+				</div>
 			</xsl:if>
 			
 			<!-- Source -->
 			
+			<div>
 			<xsl:choose>
 				<xsl:when test="journal">
-					<tr>
-					<td class="recordAttribute">Published in:</td>
-					<td>
+					<dt>Published in:</dt>
+					<dd>
 						<xsl:choose>
 							<xsl:when test="book_title">
 								<xsl:value-of select="book_title" />
@@ -181,112 +165,104 @@
 								<xsl:value-of select="journal" />
 							</xsl:otherwise>
 						</xsl:choose>
-					</td>
-					</tr>
+					</dd>
 				</xsl:when>
 				<xsl:when test="format = 'Book'">
-					<tr>
-					<td class="recordAttribute">Publisher:</td>
-					<td>
+					<dt>Publisher:</dt>
+					<dd>
 						<xsl:value-of select="place" /><xsl:text>: </xsl:text>
 						<xsl:value-of select="publisher" /><xsl:text>, </xsl:text>
 						<xsl:value-of select="year" />
-					</td>
-					</tr>				
-				
+					</dd>
 				</xsl:when>
 			</xsl:choose>
-	
+			</div>
+			
 			<!-- Database -->
-			<tr>
-			<td class="recordAttribute">Database:</td>
-			<td>      
-        <xsl:variable name="metalib_id" select="metalib_id"/>
-      
-        <a>
-          <xsl:attribute name="href">
-            <xsl:value-of select="//database_links/database[@metalib_id = $metalib_id]/url"/>
-          </xsl:attribute>
-        
-          <xsl:value-of select="database_name" />
-        </a>
-			</td>
-			</tr>
 			
-			</table>
-	
+			<div>
+			<dt>Database:</dt>
+			<dd>
+				<xsl:variable name="metalib_id" select="metalib_id"/>
+				
+				<a>
+				<xsl:attribute name="href">
+					<xsl:value-of select="//database_links/database[@metalib_id = $metalib_id]/url"/>
+				</xsl:attribute>
+				
+				<xsl:value-of select="database_name" />
+				</a>
+			</dd>
+			</div>
 			
-			<div class="recordFullText recordOptions">
+			</dl>
+			
+			<div id="recordFullText" class="raisedBox recordOptions">
 				
 				<!-- Full-Text -->
 				
 				<xsl:variable name="database_code" select="metalib_id"/>
 				
 				<xsl:if test="full_text_bool != ''">
-	
 					<xsl:call-template name="full_text_links">
 						<xsl:with-param name="class">recordFullTextOption</xsl:with-param>
 					</xsl:call-template>
-				
 				</xsl:if>
-        
-       <!-- original_record and holdings links, if appropriate -->
-        <xsl:if test="links/link[@type='original_record'] and    (//config/show_all_original_record_links = 'true' or //config/original_record_links/database[@metalib_id = $database_code])">
-          <div class="recordFullTextOption">
-            <xsl:call-template name="record_link">
-              <xsl:with-param name="type" select="'original_record'"/>
-              <xsl:with-param name="text" select="$text_link_original_record"/>
-              <xsl:with-param name="img_src" select="concat($base_url, '/images/famfamfam/link.png')"/>
-            </xsl:call-template>
-          </div>
-        </xsl:if>
-        <xsl:if test="links/link[@type='holdings'] and (//config/show_all_holdings_links = 'true' or //config/holdings_links/database[@metalib_id=$database_code])">
-            <div class="recordFullTextOption">
-              <xsl:call-template name="record_link">
-                <xsl:with-param name="type" select="'holdings'"/>
-                <xsl:with-param name="text" select="$text_link_holdings"/>
-                <xsl:with-param name="img_src" select="concat($base_url, '/images/book.gif')"/>
-              </xsl:call-template>                          
-            </div>
-        </xsl:if>      
 				
-        <!-- save button -->
-        <div class="recordFullTextOption">
-          <xsl:variable name="db_metalib_id" select="metalib_id" />
-          <xsl:variable name="link_resolver_allowed" select="not(//database_links/database[@metalib_id = $db_metalib_id]/sfx_suppress) or //database_links/database[@metalib_id = $db_metalib_id]/sfx_suppress != '1'" />
-          
-					<xsl:choose>
-						<xsl:when test="/metasearch">
-              <xsl:if test="$link_resolver_allowed">
-                <a href="{$base_url}/./?base=metasearch&amp;action=sfx&amp;resultSet={$result_set}&amp;startRecord={$record_number}" class="resultsFullText"	target="{$link_target}" >
-                  <img src="{$base_url}/images/sfx.gif" alt="" />
-                  <xsl:text> </xsl:text>
-                  <xsl:copy-of select="$text_link_resolver_check" />
-                </a>
-              </xsl:if>
-						</xsl:when>
-						<xsl:when test="/folder">
-							<xsl:variable name="id" select="../id" />
-              <xsl:if test="$link_resolver_allowed">
-                <a href="{$base_url}/?base=folder&amp;action=redirect&amp;type=openurl&amp;id={$id}" class="resultsFullText"	target="{$link_target}" >
-                  <img src="{$base_url}/images/sfx.gif" alt="" />
-                  <xsl:text> </xsl:text>
-                  <xsl:copy-of select="$text_link_resolver_check" />
-                </a>
-              </xsl:if>
-							
-							<!-- label/tag input, we know record is saved because we
-									 are in folder section. -->
-							<div class="results_label resultsFullText" id="label_{$result_set}:{$record_number}" > 
-								<xsl:call-template name="tag_input">
-									<xsl:with-param name="record" select=".." />
-									<xsl:with-param name="context" select="'the record page'" />
-								</xsl:call-template>	
-							</div>
-							
-						</xsl:when>
-					</xsl:choose>
+				<!-- original_record and holdings links, if appropriate -->
+				
+				<xsl:if test="links/link[@type='original_record'] and (//config/show_all_original_record_links = 'true' or //config/original_record_links/database[@metalib_id = $database_code])">
+					<div class="recordFullTextOption">
+						<xsl:call-template name="record_link">
+							<xsl:with-param name="type">original_record</xsl:with-param>
+							<xsl:with-param name="text" select="$text_link_original_record"/>
+							<xsl:with-param name="img_src" select="concat($base_url, '/images/famfamfam/link.png')"/>
+						</xsl:call-template>
+					</div>
+				</xsl:if>
+				
+				<xsl:if test="links/link[@type='holdings'] and (//config/show_all_holdings_links = 'true' or //config/holdings_links/database[@metalib_id=$database_code])">
+					<div class="recordFullTextOption">
+						<xsl:call-template name="record_link">
+							<xsl:with-param name="type">holdings</xsl:with-param>
+							<xsl:with-param name="text" select="$text_link_holdings"/>
+							<xsl:with-param name="img_src" select="concat($base_url, '/images/book.gif')"/>
+						</xsl:call-template>
+					</div>
+				</xsl:if>
+				
+				<div class="recordFullTextOption">
+				
+					<xsl:variable name="db_metalib_id" select="metalib_id" />
+					<xsl:variable name="link_resolver_allowed" select="not(//database_links/database[@metalib_id = $db_metalib_id]/sfx_suppress) or //database_links/database[@metalib_id = $db_metalib_id]/sfx_suppress != '1'" />
+					
+					<!-- open url -->
+					
+					<xsl:if test="$link_resolver_allowed">
+						<a href="{../url_open}" class="resultsFullText"	target="{$link_target}" >
+							<img src="{$base_url}/images/sfx.gif" alt="" />
+							<xsl:text> </xsl:text>
+							<xsl:copy-of select="$text_link_resolver_check" />
+						</a>
+					</xsl:if>
+					
+					<!-- label/tag input, we know record is saved because we are in folder section. -->
+					
+					<xsl:if test="/folder">
+
+						<div class="results_label resultsFullText" id="label_{$result_set}:{$record_number}" > 
+							<xsl:call-template name="tag_input">
+								<xsl:with-param name="record" select=".." />
+								<xsl:with-param name="context">the record page</xsl:with-param>
+							</xsl:call-template>	
+						</div>
+						
+					</xsl:if>
+
 				</div>
+				
+				<!-- save option -->
+				
 				<xsl:if test="/metasearch">
 					<div class="recordFullTextOption" id="saveRecordOption_{$result_set}_{$record_number}">
 						<img id="folder_{$result_set}{$record_number}"	width="17" height="15" alt="" border="0">
@@ -299,56 +275,56 @@
 						</img>
 						<xsl:text> </xsl:text>
 						<a id="link_{$result_set}:{$record_number}"
-							href="./?base=metasearch&amp;action=save-delete&amp;group={$group}&amp;resultSet={$result_set}&amp;startRecord={$record_number}" 
+							href="{../url_save_delete}" 
 							class="saveThisRecord resultsFullText">
-									<!-- 'saved' class used as a tag by ajaxy stuff -->
-									<xsl:attribute name="class">
-										saveThisRecord resultsFullText <xsl:if test="//request/session/resultssaved[@key = $record_id]">saved</xsl:if>
-									</xsl:attribute>
+							<!-- 'saved' class used as a tag by ajaxy stuff -->
+							<xsl:attribute name="class">
+								saveThisRecord resultsFullText <xsl:if test="//request/session/resultssaved[@key = $record_id]">saved</xsl:if>
+							</xsl:attribute>
 							
+							<xsl:choose>
+								<xsl:when test="//request/session/resultssaved[@key = $record_id]">
 									<xsl:choose>
-										<xsl:when test="//request/session/resultssaved[@key = $record_id]">
-                      <xsl:choose>
-                        <xsl:when test="//session/role = 'named'">
-                          Record saved
-                        </xsl:when>
-                        <xsl:otherwise>
-                          Temporarily Saved
-                        </xsl:otherwise>
-                      </xsl:choose>                    
-                    </xsl:when>
-										<xsl:otherwise>Save this record</xsl:otherwise>
-									</xsl:choose>						
+										<xsl:when test="//session/role = 'named'">Record saved</xsl:when>
+										<xsl:otherwise>Temporarily Saved</xsl:otherwise>
+									</xsl:choose>
+								</xsl:when>
+								<xsl:otherwise>Save this record</xsl:otherwise>
+							</xsl:choose>
 						</a>
-            <xsl:if test="//request/session/resultssaved[@key = $record_id] and /*/request/session/role != 'named'"> 
-              <span class="temporary_login_note">
-                (<a href="{/*/navbar/element[@id = 'login']/url}">login to save permanently</a>)
-              </span>
-            </xsl:if>
+						<xsl:if test="//request/session/resultssaved[@key = $record_id] and //request/session/role != 'named'"> 
+							<span class="temporary_login_note">
+								(<a href="{//navbar/element[@id = 'login']/url}">login to save permanently</a>)
+							</span>
+						</xsl:if>
 					</div>
+					
 					<!-- label/tag input for saved records, if record is saved and it's not a temporary session -->
+					
 					<xsl:if test="//request/session/resultssaved[@key = $record_id] and not(//request/session/role = 'guest' or //request/session/role = 'local')">
 						<div class="results_label resultsFullText" id="label_{$result_set}:{$record_number}" > 
 							<xsl:call-template name="tag_input">
 								<xsl:with-param name="record" select="//saved_records/saved[@id = $record_id]" />
-								<xsl:with-param name="context" select="'the record page'" />
+								<xsl:with-param name="context">the record page</xsl:with-param>
 							</xsl:call-template>	
 						</div>
 					</xsl:if>
 				</xsl:if>
 			</div>
-
+			
 			<!-- Abstract -->
+			
 			<xsl:if test="abstract">
-				<h4>Summary</h4>
+				<h2>Summary</h2>
 				<div class="recordAbstract">
 					<xsl:value-of select="abstract" />
 				</div>
 			</xsl:if>
 	
 			<!-- Abstract -->
+			
 			<xsl:if test="toc">
-				<h4>Chapters:</h4>
+				<h2>Chapters:</h2>
 				<div class="recordAbstract">
 					<ul>
 					<xsl:for-each select="toc/chapter">
@@ -360,7 +336,7 @@
 								<xsl:otherwise>
 									<em><xsl:value-of select="title" /></em>
 									<xsl:text>By </xsl:text><xsl:value-of select="author" />
-	
+									
 								</xsl:otherwise>
 							</xsl:choose>
 						</li>
@@ -370,16 +346,18 @@
 			</xsl:if>
 			
 			<!-- Language -->
+			
 			<xsl:if test="language">
-				<h4>Language</h4>
+				<h2>Language</h2>
 				<ul>
 					<li><xsl:value-of select="language" /></li>
 				</ul>
 			</xsl:if>
 			
 			<!-- Subjects -->
+			
 			<xsl:if test="subjects">
-				<h4>Covers the topics:</h4>
+				<h2>Covers the topics:</h2>
 				<ul>
 					<xsl:for-each select="subjects/subject">
 						<li><xsl:value-of select="text()" /></li>
@@ -390,7 +368,7 @@
 			<!-- Standard Numbers -->
 			
 			<xsl:if test="standard_numbers">
-				<h4>Standard Numbers:</h4>
+				<h2>Standard Numbers:</h2>
 				<ul>
 				<xsl:for-each select="standard_numbers/issn">
 					<li><strong>ISSN</strong>: <xsl:value-of select="text()" /></li>
@@ -404,61 +382,50 @@
 				<xsl:for-each select="standard_numbers/govdoc">
 					<li><strong>Gov Doc Number</strong>: <xsl:value-of select="text()" /></li>
 				</xsl:for-each>
-        <xsl:for-each select="standard_numbers/oclc">
-          <li><strong>OCLC number</strong>: <xsl:value-of select="text()" /></li>
-        </xsl:for-each>
+				
+				<xsl:for-each select="standard_numbers/oclc">
+					<li><strong>OCLC number</strong>: <xsl:value-of select="text()" /></li>
+				</xsl:for-each>
 				</ul>
 			</xsl:if>
-      
-      <!-- Actual text embedded only if we have no links to full text-->
-      <xsl:if test="count(links/link[@type != 'none']) = 0 and embeddedText">
-        <h4>Text</h4>
-        <xsl:for-each select="embeddedText/paragraph">
-          <p class="recordAbstract"><xsl:value-of select="text()" /></p>
-        </xsl:for-each>
-      </xsl:if>
-
-		
+				
+			<!-- Actual text embedded only if we have no links to full text-->
+			
+			<xsl:if test="count(links/link[@type != 'none']) = 0 and embeddedText">
+				<h2>Text</h2>
+				<xsl:for-each select="embeddedText/paragraph">
+					<p class="recordAbstract"><xsl:value-of select="text()" /></p>
+				</xsl:for-each>
+			</xsl:if>
+			
 			<!-- Notes -->
+			
 			<xsl:if test="notes">
-				<h4>Additional Notes: </h4>
+				<h2>Additional Notes: </h2>
 				<ul>
 					<xsl:for-each select="notes/note">
 						<li><xsl:value-of select="text()" /></li>
 					</xsl:for-each>
 				</ul>
 			</xsl:if>
-			
+	
+		</xsl:for-each>
+	
+		<!-- used by ajax to add a tag input form after record is saved -->
+		
+		<div id="tag_suggestions" class="autocomplete" style="display:none;"></div>
+		
+		<div id="template_tag_input" class="results_label resultsFullText" style="display:none;">
+			<xsl:call-template name="tag_input">
+				<xsl:with-param name="id">template</xsl:with-param>
+			</xsl:call-template> 
 		</div>
 	
-	</xsl:for-each>
-	
-		 <!-- hidden div to be used for autocompletion suggestions -->
-	<div id="tag_suggestions" class="autocomplete" style="display:none;"></div>
-	
-		<!-- include a hidden template copy of the label/tab input form. Used by AJAX to add
-			 a tag input form after record is saved -->
-	<div id="template_tag_input" class="results_label resultsFullText" style="display:none;">
-		<xsl:call-template name="tag_input">
-			<xsl:with-param name="id" select="'template'" />
-		</xsl:call-template> 
+		<div id="labelsMaster" class="folderOutput" style="display: none">
+			<xsl:call-template name="tags_display" />
+		</div>
+
 	</div>
-
-	<!-- Label list display in a hidden div. We include this for javascript purposes
-			 for two reasons:
-			 1) The AJAX label code we are re-purposing from folder home expects it, and errors
-					if it's not there. But even more importantly...
-			 2) The AJAX autocompleter logic will use this to build the autocomplete possibilities,
-					which we also want on this page. 
-
-			So we include it hidden, because the user doesn't need to see it on this page, but we
-			include it.
-	-->
-
-	<div id="labelsMaster" class="folderOutput" style="display: none">
-		<xsl:call-template name="tags_display" />
-	</div>
-
 	
 </xsl:template>
 

@@ -17,7 +17,14 @@ Edit subject page for user-created subjects.
 </xsl:template>
 
 <xsl:template name="page_name">
-  Rename
+	Rename
+</xsl:template>
+
+<xsl:template name="sidebar">
+	<div id="sidebar">
+		<xsl:call-template name="account_sidebar"/>
+		<xsl:call-template name="collections_sidebar"/>
+	</div>
 </xsl:template>
 
 <xsl:template name="main">
@@ -25,52 +32,37 @@ Edit subject page for user-created subjects.
 	<xsl:variable name="category_name"	select="//category/@name" />
 	<xsl:variable name="request_uri"	select="//request/server/request_uri" />
 
-
+	<xsl:variable name="old_name">
+		<xsl:choose>
+			<xsl:when test="string(//request/subcategory)">
+				<xsl:value-of select="//category/subcategory[@id = //request/subcategory]/@name" />
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="//category/@name"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
 	
-	<div id="container">
-  
-    <div id="sidebar_float" class="sidebar_float">
-      <xsl:call-template name="account_sidebar"/>
-      <xsl:call-template name="collections_sidebar" />
-    </div>
-  
-    <form name="form1" method="get" action="{$base_url}/">
-    <input type="hidden" name="base" value="collections" />
-    <input type="hidden" name="action" value="edit" />
-    <input type="hidden" name="subject" value="{//category/@normalized}" />
-    <input type="hidden" name="username" value="{//category/@owned_by_user}" />
-    <input type="hidden" name="subcategory" value="{//request/subcategory}" />
-    <input type="hidden" name="return" value="{//request/return}" />
-		<div id="searchArea">
-	
-				<h1>Rename
-          <xsl:choose>
-            <xsl:when test="string(//request/subcategory)">
-              Section
-            </xsl:when>
-            <xsl:otherwise>
-              Collection
-            </xsl:otherwise>
-          </xsl:choose>
-        </h1>
+	<form name="form1" method="get" action="{$base_url}/">
+	<input type="hidden" name="base" value="collections" />
+	<input type="hidden" name="action" value="edit" />
+	<input type="hidden" name="subject" value="{//category/@normalized}" />
+	<input type="hidden" name="username" value="{//category/@owned_by_user}" />
+	<input type="hidden" name="subcategory" value="{//request/subcategory}" />
+	<input type="hidden" name="return" value="{//request/return}" />
 
-        <xsl:variable name="old_name">
-          <xsl:choose>
-            <xsl:when test="string(//request/subcategory)">
-              <xsl:value-of select="//category/subcategory[@id = //request/subcategory]/@name" />
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:value-of select="//category/@name"/>
-            </xsl:otherwise>
-          </xsl:choose>
-        </xsl:variable>
-        
-        <p>Name: <input type="text" name="new_name" value="{$old_name}"/>
-          
-        <input type="submit" name="save" value="save"/></p>
-      </div>
-      </form>
-    </div>
+
+	<h1><xsl:call-template name="page_name" /> 
+	<xsl:choose>
+		<xsl:when test="string(//request/subcategory)">Section</xsl:when>
+		<xsl:otherwise>Collection</xsl:otherwise>
+	</xsl:choose>
+	</h1>
+	
+	<p>Name: <input type="text" name="new_name" value="{$old_name}"/>
+	<input type="submit" name="save" value="save"/></p>
+	
+	</form>
 	
 </xsl:template>
 
