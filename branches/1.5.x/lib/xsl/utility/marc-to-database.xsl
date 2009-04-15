@@ -2,7 +2,7 @@
 <xsl:stylesheet version="1.0"
 	xmlns:marc="http://www.loc.gov/MARC21/slim"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-	xmlns:php="http://php.net/xsl">
+	xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 <xsl:output method="xml" encoding="utf-8"/>
 
 <xsl:template match="category">

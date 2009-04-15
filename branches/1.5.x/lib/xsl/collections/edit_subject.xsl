@@ -8,7 +8,7 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
  
 <xsl:stylesheet version="1.0"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-	xmlns:php="http://php.net/xsl">
+	xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 <xsl:import href="../includes.xsl" />
 <xsl:output method="html" encoding="utf-8" indent="yes" doctype-public="-//W3C//DTD HTML 4.01 Transitional//EN" doctype-system="http://www.w3.org/TR/html4/loose.dtd"/>
 

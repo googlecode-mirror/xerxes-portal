@@ -16,7 +16,7 @@
  
 <xsl:stylesheet version="1.0"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-	xmlns:php="http://php.net/xsl">
+	xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
   <!-- dynamically added imports get added above this line -->
   <xsl:output encoding="utf-8" />
   <!-- dynamically added includes get added below this line -->  
