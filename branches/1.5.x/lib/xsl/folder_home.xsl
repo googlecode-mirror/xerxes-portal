@@ -15,7 +15,7 @@
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:php="http://php.net/xsl">
 <xsl:import href="includes.xsl" />
-<xsl:output method="html" encoding="utf-8" indent="yes" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+<xsl:output method="html" encoding="utf-8" indent="yes" doctype-public="-//W3C//DTD HTML 4.01 Transitional//EN" doctype-system="http://www.w3.org/TR/html4/loose.dtd"/>
 
 <xsl:template match="/*">
 	<xsl:call-template name="surround">

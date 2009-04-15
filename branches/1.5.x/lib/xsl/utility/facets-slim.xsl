@@ -22,6 +22,14 @@
 						<node_no_of_docs>
 							<xsl:value-of select="node_no_of_docs" />
 						</node_no_of_docs>
+						<url>
+							<!-- 
+								@todo use request->url_for() to set this here rather than leaving it to the xslt
+								
+								base=metasearch action=facet group={$group} resultSet={$this_result_set}
+								facet={$facet_number} node={$node_pos} return={$facet_return} -->
+						</url>
+
 					</node>
 				</xsl:for-each>
 		

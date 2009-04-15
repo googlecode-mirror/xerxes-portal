@@ -25,7 +25,8 @@
 
 <xsl:stylesheet version="1.0"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-	xmlns:php="http://php.net/xsl">
+	xmlns:php="http://php.net/xsl" 
+	exclude-result-prefixes="php">
 
 <!-- 
 	GLOBAL VARIABLES
@@ -173,7 +174,7 @@
 <xsl:template name="surround">
 	<xsl:param name="template">yui-t6</xsl:param>
 
-	<html xmlns="http://www.w3.org/1999/xhtml" lang="eng">
+	<html lang="eng">
 	<head>
 	<title><xsl:value-of select="//config/application_name" />: <xsl:call-template name="title" /></title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
