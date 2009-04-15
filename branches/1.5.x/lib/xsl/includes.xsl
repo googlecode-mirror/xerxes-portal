@@ -26,11 +26,16 @@
 <xsl:stylesheet version="1.0"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
+	
+	<!-- text labels are defined in a seperate place -->
+	
+	<xsl:include href="labels/eng.xsl" />
 
 <!-- 
 	GLOBAL VARIABLES
 	Configuration values used throughout the templates
 -->
+
 	<!-- version used to prevent css caching, and possibly other places to advertise version -->
 	
 	<xsl:variable name="xerxes_version">1.5</xsl:variable>
@@ -50,13 +55,29 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
+	
+	<xsl:variable name="categories_num_columns">
+		<xsl:choose>
+			<xsl:when test="//config/categories_num_columns">
+				<xsl:value-of select="//config/categories_num_columns" />
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:text>3</xsl:text>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
+	
+	<xsl:variable name="show_collection_links" select="//config/show_collection_links" />
+	<xsl:variable name="show_save_db_on_detail" select="//config/show_save_db_on_detail" />
+
+	
 	<xsl:variable name="document">doc2</xsl:variable>
+	<xsl:variable name="template">yui-t6</xsl:variable>
 	
-
-	<!-- show 'save database' link on item detail-->
+	<!-- Other configurable variables -->
 	
-	<xsl:variable name="show_save_db_on_detail" select="true()"/>
-
+	<xsl:variable name="app_mini_icon_url"><xsl:value-of select="$base_url" />/images/famfamfam/page_find.png</xsl:variable>
+	
 	<xsl:variable name="global_advanced_mode" 
 		select="(//request/metasearch_input_mode = 'advanced') or 
 		( //results/search/pair[@position = '2']/query != '' ) or 
@@ -64,105 +85,9 @@
 		//results/search/pair[@position ='1']/field = 'ISBN' or 
 		//results/search/pair[@position ='1']/field = 'WYR'" />
 	
-<!-- 
-	TEXT LABELS 
-	These are global variables that provide the text for the system.  We'll be slowly
-	replacing the text in the templates with these starting with version 1.3.
-	
-	Variable names should follow the pattern of: text_{location}_{unique-name}
-	Keep them in alphabetical order!!
--->
-	
-	<xsl:variable name="text_ada_version">For best results, click this link for accessible version</xsl:variable>
-	
-	<xsl:variable name="text_breadcrumb_seperator"> / </xsl:variable>
-	
-	<xsl:variable name="text_databases_access_available">Only available to </xsl:variable>
-	<xsl:variable name="text_databases_access_group_and">and</xsl:variable>
-	<xsl:variable name="text_databases_access_users">users</xsl:variable>
-	
-	<xsl:variable name="text_databases_az_search">List databases matching: </xsl:variable>
-	<xsl:variable name="text_databases_az_breadcrumb_all">All databases</xsl:variable>
-	<xsl:variable name="text_databases_az_breadcrumb_matching">Databases matching</xsl:variable>
-	
-	<xsl:variable name="text_databases_category_quick_desc">
-		Search <xsl:value-of select="count(//category[1]/subcategory[1]/database)"/> of our most popular databases
-	</xsl:variable>
-	<xsl:variable name="text_databases_category_subject">Search by Subject</xsl:variable>
-	<xsl:variable name="text_databases_category_subject_desc">Search databases specific to your area of study.</xsl:variable>
-
-	<xsl:variable name="text_folder_export_records_all">All of my saved records </xsl:variable>
-	<xsl:variable name="text_folder_export_records_labeled">All of my saved records labeled </xsl:variable>
-	<xsl:variable name="text_folder_export_records_selected">Only the records I have selected below.</xsl:variable>
-	<xsl:variable name="text_folder_export_records_type">All of my saved records of the type </xsl:variable>
-
-	<xsl:variable name="text_folder_header_my">My Saved Records</xsl:variable>
-	<xsl:variable name="text_folder_header_temporary">Temporary Saved Records</xsl:variable>	
-	<xsl:variable name="text_folder_login_beyond">to save records beyond this session</xsl:variable>
-	<xsl:variable name="text_folder_login">Log-in</xsl:variable>
-	<xsl:variable name="text_folder_options_tags">Labels</xsl:variable>
-	<xsl:variable name="text_folder_return">Return to search results</xsl:variable>
-	
-	<xsl:variable name="text_header_login">Log-in</xsl:variable>
-	<xsl:variable name="text_header_logout">
-		<xsl:text>Log-out </xsl:text>
-		<xsl:choose>
-			<xsl:when test="//request/authorization_info/affiliated[@user_account = 'true']">
-				<xsl:value-of select="//request/session/username" />
-			</xsl:when>
-			<xsl:when test="//session/role = 'guest'">
-				<xsl:text>Guest</xsl:text>
-			</xsl:when>
-		</xsl:choose>
-	</xsl:variable>
-	<xsl:variable name="text_header_savedrecords">My Saved Records</xsl:variable>
-	<xsl:variable name="text_header_collections">My Saved Databases</xsl:variable>
-	<xsl:variable name="text_link_resolver_available">Full text available</xsl:variable>
-	<xsl:variable name="text_link_resolver_check">Check for availability</xsl:variable>
-	<xsl:variable name="text_link_holdings">Availability</xsl:variable>
-	<xsl:variable name="text_link_original_record">Original record</xsl:variable>
-	<xsl:variable name="text_searchbox_ada_boolean">Boolean operator: </xsl:variable>
-	<xsl:variable name="text_searchbox_boolean_and">And</xsl:variable>
-	<xsl:variable name="text_searchbox_boolean_or">Or</xsl:variable>
-	<xsl:variable name="text_searchbox_boolean_without">Without</xsl:variable>
-	<xsl:variable name="text_searchbox_field_keyword">all fields</xsl:variable>
-	<xsl:variable name="text_searchbox_field_title">title</xsl:variable>
-	<xsl:variable name="text_searchbox_field_author">author</xsl:variable>
-	<xsl:variable name="text_searchbox_field_subject">subject</xsl:variable>
-	<xsl:variable name="text_searchbox_field_year">year</xsl:variable>
-	<xsl:variable name="text_searchbox_field_issn">ISSN</xsl:variable>
-	<xsl:variable name="text_searchbox_field_isbn">ISBN</xsl:variable>
-	<xsl:variable name="text_searchbox_search">Search</xsl:variable>
-	<xsl:variable name="text_searchbox_spelling_error">Did you mean: </xsl:variable>	
-	<xsl:variable name="text_searchbox_options_fewer">Fewer Options</xsl:variable>
-	<xsl:variable name="text_searchbox_options_more">More Options</xsl:variable>
-	
-	<xsl:variable name="text_records_fulltext_pdf">Full-Text in PDF</xsl:variable>
-	<xsl:variable name="text_records_fulltext_html">Full-Text in HTML</xsl:variable>
-	<xsl:variable name="text_records_fulltext_available">Full-Text Available</xsl:variable>
-	
-	<xsl:variable name="text_records_tags">Labels: </xsl:variable>
-
-	<xsl:variable name="text_record_citation_note">These citations are software generated and may contain errors. 
-	To verify accuracy, check the appropriate style guide.</xsl:variable>
-	
-	<xsl:variable name="text_collection_default_new_name" select="//config/default_collection_name" />
-	<xsl:variable name="text_collection_default_new_section_name" select="//config/default_collection_section_name" />
-	
-	
-	
-	
 	<!-- extra content to include in the HTML 'head' section -->
 	<xsl:variable name="text_extra_html_head_content" />
 	
-	<!-- Other configurable variables -->
-	<xsl:variable name="app_mini_icon_url"><xsl:value-of select="$base_url" />/images/famfamfam/page_find.png</xsl:variable>
-	
-	<!-- how many columns to display on databases/categories home page -->
-	<xsl:variable name="categories_num_columns" select="3"/>
-	
-	<!-- show links to personal saved database list 'collections'? -->
-	<xsl:variable name="show_collection_links" select="true()"/>
 
 <!-- 	
 	TEMPLATE: SURROUND
@@ -171,7 +96,7 @@
 -->
 
 <xsl:template name="surround">
-	<xsl:param name="template">yui-t6</xsl:param>
+	<xsl:param name="surround_template"><xsl:value-of select="$template" /></xsl:param>
 
 	<html lang="eng">
 	<head>
@@ -195,8 +120,8 @@
 		</xsl:if>
 	</div>
 
-	<div id="{$document}" class="{$template}">
-		<div id="hd" role="banner">
+	<div id="{$document}" class="{$surround_template}">
+		<div id="hd">
 			<xsl:call-template name="header_div" />
 			<div id="breadcrumb">
 				<div class="trail">
@@ -204,7 +129,7 @@
 				</div>
 			</div>
 		</div>
-		<div id="bd" role="main">
+		<div id="bd">
 			<div id="yui-main">
 				<div class="yui-b">
 					<xsl:if test="string(//session/flash_message)">
@@ -218,7 +143,7 @@
 				<xsl:call-template name="sidebar" />
 			</div>
 		</div>
-		<div id="ft" role="contentinfo">
+		<div id="ft">
 			<xsl:call-template name="footer_div" />
 		</div>
 	</div>
@@ -266,6 +191,7 @@
 <xsl:template name="sidebar" />
 <xsl:template name="categories_sidebar" />
 <xsl:template name="categories_sidebar_alt" />
+<xsl:template name="breadcrumb_start" />
 
 <!-- 
 	TEMPLATE: TITLE
@@ -275,19 +201,6 @@
 
 <xsl:template name="title">
 	<xsl:call-template name="page_name" />
-</xsl:template>
-
-
-<!-- 
-	TEMPLATE: BREADCRUMB START
-	The initial elements of the breadcrumbs, like links to library or university home pages 
-	if xerxes lives conceptually down in the site heirerarchy
--->
-
-<xsl:template name="breadcrumb_start">
-	
-	Library Home /
-	
 </xsl:template>
 
 <!-- 
@@ -300,7 +213,7 @@
 	<xsl:call-template name="breadcrumb_start" />
 
 	<xsl:if test="$condition != 1">
-		Articles <xsl:copy-of select="$text_breadcrumb_seperator" />
+		<a href="{$base_url}">Home</a> <xsl:copy-of select="$text_breadcrumb_seperator" />
 	</xsl:if>
 	
 	<xsl:choose>
@@ -311,7 +224,7 @@
 			Database <xsl:copy-of select="$text_breadcrumb_seperator" />
 		</xsl:when>
 		<xsl:when test="$condition = 4">
-			Databases A-Z <xsl:copy-of select="$text_breadcrumb_seperator" />
+			<a href="{//navbar/element[@id='database_list']}">Databases A-Z</a> <xsl:copy-of select="$text_breadcrumb_seperator" />
 		</xsl:when>
 	</xsl:choose>
 
@@ -326,13 +239,17 @@
 	
 	<xsl:call-template name="breadcrumb_start" />
 	
-	Articles <xsl:copy-of select="$text_breadcrumb_seperator" />
+	<a href="{$base_url}">Home</a> <xsl:copy-of select="$text_breadcrumb_seperator" />
 	<a href="{results/search/context_url}"><xsl:value-of select="results/search/context" /></a> <xsl:copy-of select="$text_breadcrumb_seperator" />
 	
 	<xsl:choose>
 		<xsl:when test="$condition = 2">
-			Results <xsl:copy-of select="$text_breadcrumb_seperator" />
+			<a href="{//resultset_link}">Results</a> <xsl:copy-of select="$text_breadcrumb_seperator" />
 		</xsl:when>
+		<xsl:when test="$condition = 3">
+			<a href="{//request/return}">Results</a> <xsl:copy-of select="$text_breadcrumb_seperator" />
+		</xsl:when>
+
 	</xsl:choose>
 
 </xsl:template>
@@ -348,7 +265,7 @@
 	
 	<xsl:choose>
 		<xsl:when test="$condition != 1">
-			My Saved Records <xsl:copy-of select="$text_breadcrumb_seperator" />
+			<a href="{//navbar/element[@id='saved_records']}">My Saved Records</a> <xsl:copy-of select="$text_breadcrumb_seperator" />
 		</xsl:when>
 	</xsl:choose>
 
@@ -916,10 +833,10 @@
 
 	<xsl:variable name="back" 	select="request/session/saved_return" />
 	
-	<xsl:if test="contains(request/session/saved_return,'action=hits') or 
-			contains(request/session/saved_return,'action=results') or 
-			contains(request/session/saved_return,'action=facet') or
-			contains(request/session/saved_return,'action=record')">
+	<xsl:if test="contains(request/session/saved_return,'hits') or 
+			contains(request/session/saved_return,'results') or 
+			contains(request/session/saved_return,'facet') or
+			contains(request/session/saved_return,'record')">
 
 		<div class="folderReturn">
 			<img src="{$base_include}/images/back.gif" alt="" />
@@ -1221,7 +1138,7 @@
 -->
 
 <xsl:template name="snippet_sidebar">
-
+	
 	<div id="snippet" class="box">
 		<h2>Embed this page?</h2>
 
@@ -1351,9 +1268,6 @@
 
 	<xsl:variable name="group" 				select="request/group" />
 	<xsl:variable name="this_result_set"	select="request/resultset" />
-	<xsl:variable name="facet_return">
-		<xsl:value-of select="php:function('urlencode', concat('./?base=metasearch&amp;action=results&amp;group=', $group, '&amp;resultSet=', $this_result_set))" />
-	</xsl:variable>
 
 	<xsl:if test="//cluster_facet and results/database = 'Top Results'">
 		
@@ -1379,7 +1293,6 @@
 									<xsl:with-param name="group" select="$group" />
 									<xsl:with-param name="this_result_set" select="$this_result_set" />
 									<xsl:with-param name="facet_number" select="$facet_number" />
-									<xsl:with-param name="facet_return" select="$facet_return" />
 								</xsl:call-template>
 							</xsl:for-each>
 						</xsl:when>
@@ -1390,7 +1303,6 @@
 									<xsl:with-param name="group" select="$group" />
 									<xsl:with-param name="this_result_set" select="$this_result_set" />
 									<xsl:with-param name="facet_number" select="$facet_number" />
-									<xsl:with-param name="facet_return" select="$facet_return" />
 								</xsl:call-template>
 							</xsl:for-each>
 						</xsl:when>
@@ -1426,7 +1338,7 @@
 				<strong><xsl:value-of select="@name" /></strong> ( <xsl:value-of select="node_no_of_docs" /> )
 			</xsl:when>
 			<xsl:otherwise>
-				<a href="./?base=metasearch&amp;action=facet&amp;group={$group}&amp;resultSet={$this_result_set}&amp;facet={$facet_number}&amp;node={$node_pos}&amp;return={$facet_return}"><xsl:value-of select="@name" /></a>
+				<a href="./?base=metasearch&amp;action=facet&amp;group={$group}&amp;resultSet={$this_result_set}&amp;facet={$facet_number}&amp;node={$node_pos}"><xsl:value-of select="@name" /></a>
 		 		(&nbsp;<xsl:value-of select="node_no_of_docs" />&nbsp;)
 			</xsl:otherwise>
 		</xsl:choose>

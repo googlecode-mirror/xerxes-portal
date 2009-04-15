@@ -23,9 +23,18 @@
 </xsl:template>
 
 <xsl:template name="breadcrumb">
-	<xsl:call-template name="breadcrumb_metasearch">
-		<xsl:with-param name="condition">2</xsl:with-param>
-	</xsl:call-template>
+	<xsl:choose>
+		<xsl:when test="//request/return"> 
+			<xsl:call-template name="breadcrumb_metasearch">
+				<xsl:with-param name="condition">3</xsl:with-param>
+			</xsl:call-template>
+		</xsl:when>
+		<xsl:otherwise>
+			<xsl:call-template name="breadcrumb_metasearch">
+				<xsl:with-param name="condition">2</xsl:with-param>
+			</xsl:call-template>
+		</xsl:otherwise>
+	</xsl:choose>
 	Record
 </xsl:template>
 

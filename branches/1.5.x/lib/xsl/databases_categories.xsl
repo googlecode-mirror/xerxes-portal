@@ -22,7 +22,7 @@
 </xsl:template>
 
 <xsl:template name="page_name">
-	Categories
+	Home
 </xsl:template>
 
 <xsl:template name="breadcrumb">

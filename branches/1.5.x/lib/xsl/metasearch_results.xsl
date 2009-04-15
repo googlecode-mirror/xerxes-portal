@@ -75,7 +75,7 @@
 		<xsl:choose>
 			<xsl:when test="results/facet_name != ''">
 				<h3>
-					<a href="./?base=metasearch&amp;action=results&amp;group={$group}&amp;resultSet={$this_result_set}">
+					<a href="{//base_info[base = 'MERGESET']/url}">
 						<img src="{$base_url}/images/delete.gif" alt="remove limit" />
 					</a>
 					Limit: <xsl:value-of select="results/facet_name" />
@@ -203,7 +203,7 @@
 							<strong>Top Results</strong>
 						</xsl:when>
 						<xsl:otherwise>
-							<a href="./?base=metasearch&amp;action=results&amp;group={$group}&amp;resultSet={set_number}">Top Results</a>
+							<a href="{url}">Top Results</a>
 						</xsl:otherwise>
 					</xsl:choose>
 					<xsl:text> ( </xsl:text>
@@ -247,7 +247,7 @@
 								</strong>
 							</xsl:when>
 							<xsl:otherwise>
-								<a href="./?base=metasearch&amp;action=results&amp;group={$group}&amp;resultSet={$set_number}">
+								<a href="{url}">
 									<xsl:call-template name="database_name">
 										<xsl:with-param name="database" select="full_name" />
 									</xsl:call-template>

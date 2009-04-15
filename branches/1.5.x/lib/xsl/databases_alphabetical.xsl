@@ -31,15 +31,19 @@
 </xsl:template>
 
 <xsl:template name="breadcrumb">
-	<xsl:call-template name="breadcrumb_databases" />
 	
 	<xsl:choose>
 		<xsl:when test="//request/action != 'alphabetical'">
-		<xsl:call-template name="page_name" /> / 
-		<xsl:copy-of select="$text_databases_az_breadcrumb_matching" /> "<xsl:value-of select="//request/query" />"
+		
+			<xsl:call-template name="breadcrumb_databases">
+				<xsl:with-param name="condition">4</xsl:with-param>
+			</xsl:call-template>
+		
+			<xsl:copy-of select="$text_databases_az_breadcrumb_matching" /> "<xsl:value-of select="//request/query" />"
 		
 		</xsl:when>
 		<xsl:otherwise>
+			<xsl:call-template name="breadcrumb_databases" />
 			<xsl:call-template name="page_name" />
 		</xsl:otherwise>
 	</xsl:choose>
