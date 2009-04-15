@@ -326,7 +326,16 @@
 			<!-- Abstract -->
 			
 			<xsl:if test="toc">
-				<h2>Chapters:</h2>
+				<h2>
+					<xsl:choose>
+						<xsl:when test="format = 'Book'">
+							<xsl:text>Chapters:</xsl:text>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:text>Contents:</xsl:text>
+						</xsl:otherwise>
+					</xsl:choose>
+				</h2>
 				<div class="recordAbstract">
 					<ul>
 					<xsl:for-each select="toc/chapter">
@@ -337,8 +346,7 @@
 								</xsl:when>
 								<xsl:otherwise>
 									<em><xsl:value-of select="title" /></em>
-									<xsl:text>By </xsl:text><xsl:value-of select="author" />
-									
+									<xsl:text> by </xsl:text><xsl:value-of select="author" />
 								</xsl:otherwise>
 							</xsl:choose>
 						</li>

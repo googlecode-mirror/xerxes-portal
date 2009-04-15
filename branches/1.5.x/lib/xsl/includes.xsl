@@ -31,7 +31,7 @@
 	GLOBAL VARIABLES
 	Configuration values used throughout the templates
 -->
-	<!-- version used to to prevent css caching, and possibly other places to advertise version -->
+	<!-- version used to prevent css caching, and possibly other places to advertise version -->
 	
 	<xsl:variable name="xerxes_version">1.5</xsl:variable>
 	
@@ -404,7 +404,7 @@
 				<xsl:copy-of select="$text_searchbox_ada_boolean" />
 			</label>
 			
-			<xsl:text> </xsl:text>
+			<xsl:text>&nbsp;</xsl:text>
 
 			<select id="find_operator1" name="find_operator1">
 				<xsl:if test="not($advanced_mode)">
@@ -445,7 +445,7 @@
 			
 			<span id="searchBox_advanced_pair">
 				<xsl:if test="not($advanced_mode)">
-				<xsl:attribute name="style">display:none;</xsl:attribute>
+					<xsl:attribute name="style">display:none;</xsl:attribute>
 				</xsl:if>
 				<xsl:call-template name="metasearch_input_pair">
 					<xsl:with-param name="field_selected" select="$field2" />
@@ -453,9 +453,9 @@
 					<xsl:with-param name="advanced_mode" select="true()" />
 					<xsl:with-param name="input_name_suffix" select="2" />
 				</xsl:call-template>
-				<xsl:text> </xsl:text>
+				<xsl:text>&nbsp;</xsl:text>
 			</span>
-			<xsl:text> </xsl:text><input type="submit" name="Submit" value="GO" />
+			<input id="searchbox_submit" type="submit" name="Submit" value="GO" />
 		</div>
 		
 		<xsl:if test="results/search/spelling != ''">
@@ -1427,7 +1427,7 @@
 			</xsl:when>
 			<xsl:otherwise>
 				<a href="./?base=metasearch&amp;action=facet&amp;group={$group}&amp;resultSet={$this_result_set}&amp;facet={$facet_number}&amp;node={$node_pos}&amp;return={$facet_return}"><xsl:value-of select="@name" /></a>
-		 		(&#160;<xsl:value-of select="node_no_of_docs" />&#160;)
+		 		(&nbsp;<xsl:value-of select="node_no_of_docs" />&nbsp;)
 			</xsl:otherwise>
 		</xsl:choose>
 		</li>
