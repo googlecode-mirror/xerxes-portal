@@ -186,122 +186,134 @@
 		
 		<xsl:call-template name="account_sidebar" />
 		
-		<!-- database list -->
+		<!-- merged set -->
 		
-		<div class="box">
-			
-			<h2>Search results</h2>
-			
-			<ul id="merged">
-			
-			<!-- merged set -->
-			
-			<xsl:for-each select="//base_info[base = 'MERGESET']">
-				<li>
-					<xsl:choose>
-						<xsl:when test="set_number = $this_result_set">
-							<strong>Top Results</strong>
-						</xsl:when>
-						<xsl:otherwise>
-							<a href="{url}">Top Results</a>
-						</xsl:otherwise>
-					</xsl:choose>
-					<xsl:text> ( </xsl:text>
-					<xsl:value-of select="number(no_of_documents)" />
-					<xsl:text> )</xsl:text>
-				</li>
-			</xsl:for-each>
-			
-			</ul>
-			
-			<!-- individual databases -->
-			
-			<h3>Results by database</h3>
-					
-			<ul>
-
-			<xsl:for-each select="//base_info[base != 'MERGESET']">
-
-				<xsl:variable name="set_number" select="set_number" />
-				<xsl:variable name="hits">
-					<xsl:choose>
-						<xsl:when test="no_of_documents = '888888888'">
-							<xsl:text>0</xsl:text>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:value-of select="number(no_of_documents)" />
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:variable>
+		<xsl:if test="//base_info[base = 'MERGESET']">
+		
+			<div class="box">
 				
-				<li>
-					<xsl:choose>
-						<xsl:when test=" ( find_status = 'DONE' or find_status = 'DONE1' or find_status = 'DONE2') 
-											and no_of_documents != '000000000'">
-							<xsl:choose>
-							<xsl:when test="$set_number = $this_result_set">
-								<strong>
-									<xsl:call-template name="database_name">
-										<xsl:with-param name="database" select="full_name" />
-									</xsl:call-template>
-								</strong>
+				<h2>Search results</h2>
+				
+				<ul id="merged">
+				
+				<!-- merged set -->
+				
+				<xsl:for-each select="//base_info[base = 'MERGESET']">
+					<li>
+						<xsl:choose>
+							<xsl:when test="set_number = $this_result_set">
+								<strong>Top Results</strong>
 							</xsl:when>
 							<xsl:otherwise>
-								<a href="{url}">
-									<xsl:call-template name="database_name">
-										<xsl:with-param name="database" select="full_name" />
-									</xsl:call-template>
-								</a>
+								<a href="{url}">Top Results</a>
 							</xsl:otherwise>
-							</xsl:choose>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:call-template name="database_name">
-								<xsl:with-param name="database" select="full_name" />
-							</xsl:call-template>
-						</xsl:otherwise>
-					</xsl:choose>
-					<span class="nonBreaking">
-					<xsl:text> ( </xsl:text>
-					<xsl:choose>
-						<xsl:when test="no_of_documents = '888888888'">
-							<xsl:text>results found</xsl:text>
-						</xsl:when>
-						<xsl:when test="find_status = 'DONE' or find_status = 'DONE1' or find_status = 'DONE2'">
-							<xsl:value-of select="$hits"/>
-						</xsl:when>
-						<xsl:otherwise>
-							ERROR
-						</xsl:otherwise>
-					</xsl:choose>
-					<xsl:text> )</xsl:text>
-					</span>
-				</li>
+						</xsl:choose>
+						<xsl:text> ( </xsl:text>
+						<xsl:value-of select="number(no_of_documents)" />
+						<xsl:text> )</xsl:text>
+					</li>
+				</xsl:for-each>
+				
+				</ul>
+				
+			</div>
+		
+		</xsl:if>
+		
+		<!-- individual databases -->
+		
+		<xsl:if test="count(//base_info) > 1 or count(//excluded_dbs/database) > 0">
+		
+			<div class="box">
+				
+				<h2>Results by database</h2>
+						
+				<ul>
+	
+				<xsl:for-each select="//base_info[base != 'MERGESET']">
+	
+					<xsl:variable name="set_number" select="set_number" />
+					<xsl:variable name="hits">
+						<xsl:choose>
+							<xsl:when test="no_of_documents = '888888888'">
+								<xsl:text>0</xsl:text>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="number(no_of_documents)" />
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:variable>
 					
-			</xsl:for-each>
+					<li>
+						<xsl:choose>
+							<xsl:when test=" ( find_status = 'DONE' or find_status = 'DONE1' or find_status = 'DONE2') 
+												and no_of_documents != '000000000'">
+								<xsl:choose>
+								<xsl:when test="$set_number = $this_result_set">
+									<strong>
+										<xsl:call-template name="database_name">
+											<xsl:with-param name="database" select="full_name" />
+										</xsl:call-template>
+									</strong>
+								</xsl:when>
+								<xsl:otherwise>
+									<a href="{url}">
+										<xsl:call-template name="database_name">
+											<xsl:with-param name="database" select="full_name" />
+										</xsl:call-template>
+									</a>
+								</xsl:otherwise>
+								</xsl:choose>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:call-template name="database_name">
+									<xsl:with-param name="database" select="full_name" />
+								</xsl:call-template>
+							</xsl:otherwise>
+						</xsl:choose>
+						<span class="nonBreaking">
+						<xsl:text> ( </xsl:text>
+						<xsl:choose>
+							<xsl:when test="no_of_documents = '888888888'">
+								<xsl:text>results found</xsl:text>
+							</xsl:when>
+							<xsl:when test="find_status = 'DONE' or find_status = 'DONE1' or find_status = 'DONE2'">
+								<xsl:value-of select="$hits"/>
+							</xsl:when>
+							<xsl:otherwise>
+								ERROR
+							</xsl:otherwise>
+						</xsl:choose>
+						<xsl:text> )</xsl:text>
+						</span>
+					</li>
+						
+				</xsl:for-each>
+				
+				<!-- databases excluded -->
+				
+				<xsl:for-each select="//excluded_dbs/database">
+					<li>
+						<xsl:value-of select="title_display"/>
+						<xsl:text> (</xsl:text>
+						ERROR: 
+						<xsl:choose>
+							<xsl:when test="group_restriction">
+								<xsl:call-template name="db_restriction_display" />
+							</xsl:when>
+							<xsl:when test="subscription = '1'">
+								Only available to registered users.
+							</xsl:when>
+						</xsl:choose>
+						<xsl:text>)</xsl:text>
+					</li>
+				</xsl:for-each>
+				
+				</ul>
+	
+			</div>
 			
-			<!-- databases excluded -->
-			
-			<xsl:for-each select="//excluded_dbs/database">
-				<li>
-					<xsl:value-of select="title_display"/>
-					<xsl:text> (</xsl:text>
-					ERROR: 
-					<xsl:choose>
-						<xsl:when test="group_restriction">
-							<xsl:call-template name="db_restriction_display" />
-						</xsl:when>
-						<xsl:when test="subscription = '1'">
-							Only available to registered users.
-						</xsl:when>
-					</xsl:choose>
-					<xsl:text>)</xsl:text>
-				</li>
-			</xsl:for-each>
-			
-			</ul>
-
-		</div>
+		</xsl:if>
 		
 		<!-- facets -->
 		<xsl:call-template name="facets" />
