@@ -197,6 +197,8 @@
 			
 			</dl>
 			
+			<!-- @todo factor this out to includes? -->
+			
 			<div id="recordFullText" class="raisedBox recordOptions">
 				
 				<!-- Full-Text -->
@@ -410,7 +412,9 @@
 			</xsl:if>
 	
 		</xsl:for-each>
-	
+		
+		<!-- @todo factor this out to includes? -->
+		
 		<!-- used by ajax to add a tag input form after record is saved -->
 		
 		<div id="tag_suggestions" class="autocomplete" style="display:none;"></div>

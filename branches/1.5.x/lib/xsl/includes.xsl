@@ -50,7 +50,7 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
-	<xsl:variable name="document">doc3</xsl:variable>
+	<xsl:variable name="document">doc2</xsl:variable>
 	
 
 	<!-- show 'save database' link on item detail-->
@@ -280,7 +280,7 @@
 
 <!-- 
 	TEMPLATE: BREADCRUMB START
-	The initial elements of the breadcrumbs, like library or university home pages 
+	The initial elements of the breadcrumbs, like links to library or university home pages 
 	if xerxes lives conceptually down in the site heirerarchy
 -->
 
@@ -1433,6 +1433,262 @@
 		</li>
 		
 	</xsl:if>
+
+</xsl:template>
+
+<!-- 
+	TEMPLATE: BRIEF RESULTS
+	used in the metasearch and folder brief results pages
+-->
+
+<xsl:template name="brief_results">
+
+	<ul id="results">
+	
+	<xsl:for-each select="//records/record/xerxes_record">
+	
+		<xsl:variable name="result_set" 	select="result_set" />
+		<xsl:variable name="record_number" 	select="record_number" />
+		<xsl:variable name="metalib_db_id" 	select="metalib_id" />
+		
+		<!-- peer reviewed calculated differently in folder and metasearch -->
+		
+		<xsl:variable name="refereed">
+			<xsl:choose>
+				<xsl:when test="../refereed = 1 and format != 'Book Review'">
+					<xsl:text>true</xsl:text>
+				</xsl:when>
+				<xsl:when test="//refereed/issn = standard_numbers/issn and format != 'Book Review'">
+					<xsl:text>true</xsl:text>
+				</xsl:when>
+			</xsl:choose>
+		</xsl:variable>
+		
+		<xsl:variable name="record_id">
+			<xsl:value-of select="$result_set" />:<xsl:value-of select="$record_number" />
+		</xsl:variable>
+		
+		<li class="result">
+			
+			<xsl:variable name="title">
+				<xsl:choose>
+					<xsl:when test="title_normalized != ''">
+						<xsl:value-of select="title_normalized" />
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:text>[ No Title ]</xsl:text>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:variable>
+			
+			<div class="resultsTitle">
+				<a href="{../url_full}"><xsl:value-of select="$title" /></a>
+			</div>
+			
+			<div class="resultsInfo">
+			
+				<div class="resultsType">
+					<xsl:value-of select="format" />
+					<xsl:if test="language and language != 'English' and format != 'Video'">
+						<span class="resultsLanguage"> written in <xsl:value-of select="language" /></span>
+					</xsl:if>
+					
+					<!-- peer reviewed -->
+					
+					<xsl:if test="$refereed = 'true'">
+						<xsl:text> </xsl:text><img src="images/refereed_hat.gif" width="20" height="14" alt="" />
+						<xsl:text> Peer Reviewed</xsl:text>
+					</xsl:if>
+				</div>
+				
+				<div class="resultsAbstract">
+					<xsl:choose>
+						<xsl:when test="string-length(summary) &gt; 300">
+							<xsl:value-of select="substring(summary, 1, 300)" /> . . .
+						</xsl:when>
+						<xsl:when test="summary">
+							<xsl:value-of select="summary" />
+						</xsl:when>
+						
+						<!-- take from embedded text, if available -->
+						
+						<xsl:when test="embeddedText">
+							<xsl:variable name="usefulContent" select="embeddedText/paragraph[ string-length(translate(text(), '- ', '')) &gt; 20]" />
+							<xsl:value-of select="substring($usefulContent, 1, 300)" />
+							<xsl:if test="string-length($usefulContent) &gt; 300">. . . </xsl:if>
+						</xsl:when>
+					</xsl:choose>
+				</div>
+				
+				<xsl:if test="primary_author">
+					<span class="resultsAuthor">
+						<strong>By: </strong><xsl:value-of select="primary_author" />
+					</span>
+				</xsl:if>
+				
+				<xsl:if test="year">
+					<span class="resultsYear">
+						<strong>Year: </strong>
+						<xsl:value-of select="year" />
+					</span>
+				</xsl:if>
+				
+				<xsl:if test="journal or journal_title">
+					<span class="resultsPublishing">
+						<strong>Published in: </strong>
+						<xsl:choose>
+							<xsl:when test="journal_title">
+								<xsl:value-of select="journal_title" />
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="journal" />
+							</xsl:otherwise>
+						</xsl:choose>
+					</span>
+				</xsl:if>
+				
+				<div class="resultsAvailability recordOptions">
+					
+					<!-- full-text -->
+					
+					<xsl:variable name="link_resolver_allowed" select="not(//database_links/database[@metalib_id = $metalib_db_id]/sfx_suppress = '1')" />
+					
+					<xsl:choose>
+					
+						<xsl:when test="full_text_bool">
+							
+							<xsl:call-template name="full_text_links">
+								<xsl:with-param name="class">resultsFullTextOption</xsl:with-param>
+							</xsl:call-template>
+								
+						</xsl:when>
+						
+						<xsl:when test="$link_resolver_allowed and //fulltext/issn = standard_numbers/issn">
+							<a href="{../url_open}&amp;fulltext=1" target="{$link_target}" >
+								<img src="{$base_include}/images/html.gif" alt="" width="16" height="16" border="0" />
+								<xsl:text> </xsl:text>
+								<xsl:copy-of select="$text_link_resolver_available" />
+							</a>
+						</xsl:when>
+						
+						<xsl:when test="$link_resolver_allowed">
+							<a href="{../url_open}" target="{$link_target}" >
+								<img src="{$base_url}/images/sfx.gif" alt="" />
+								<xsl:text> </xsl:text>
+								<xsl:copy-of select="$text_link_resolver_check" />
+							</a>
+						</xsl:when>
+						
+						<!-- if no direct link or link resolver, do we have an original record link? -->
+						
+						<xsl:when test="links/link[@type='original_record'] and (//config/show_all_original_record_links = 'true' or //config/original_record_links/database[@metalib_id = $metalib_db_id])">
+							<xsl:call-template name="record_link">
+							<xsl:with-param name="type">original_record</xsl:with-param>
+							<xsl:with-param name="text" select="$text_link_original_record"/>
+							<xsl:with-param name="img_src" select="concat($base_url,'/images/famfamfam/link.png')"/>
+							</xsl:call-template>
+						</xsl:when>
+						
+						<!-- if none of the above, but we DO have text in the record, tell them so. -->
+						
+						<xsl:when test="embeddedText/paragraph">
+							<a href="{../url_full}">
+							<img src="{$base_url}/images/famfamfam/page_go.png" alt="" />
+								Text in <xsl:value-of select="//config/application_name"/> record
+							</a>
+						</xsl:when>
+					</xsl:choose>
+					
+					<!-- holdings (to catalog)  -->
+					
+					<xsl:if test="links/link[@type='holdings'] and (//config/show_all_holdings_links = 'true' or //config/holdings_links/database[@metalib_id=$metalib_db_id])">
+						<span class="resultsAvailableOption">
+							<xsl:call-template name="record_link">
+								<xsl:with-param name="type">holdings</xsl:with-param>
+								<xsl:with-param name="text" select="$text_link_holdings"/>
+								<xsl:with-param name="img_src" select="concat($base_url, '/images/book.gif')"/>
+							</xsl:call-template>
+						</span>
+					</xsl:if>
+					
+					<xsl:choose>
+						<xsl:when test="/metasearch">
+						
+							<!-- save facility in metasearch area -->
+							
+							<span class="resultsAvailableOption" id="saveRecordOption_{$result_set}_{$record_number}">
+								<img id="folder_{$result_set}{$record_number}"	width="17" height="15" alt="" border="0" >
+								<xsl:attribute name="src">
+									<xsl:choose> 
+										<xsl:when test="//request/session/resultssaved[@key = $record_id]">images/folder_on.gif</xsl:when>
+										<xsl:otherwise>images/folder.gif</xsl:otherwise>
+									</xsl:choose>
+								</xsl:attribute>
+								</img>
+								
+								<xsl:text> </xsl:text>
+								<a id="link_{$result_set}:{$record_number}" href="{../url_save_delete}">
+									<!-- 'saved' class used as a tag by ajaxy stuff -->
+									<xsl:attribute name="class">
+										saveThisRecord resultsFullText <xsl:if test="//request/session/resultssaved[@key = $record_id]">saved</xsl:if>
+									</xsl:attribute>
+									<xsl:choose>
+										<xsl:when test="//request/session/resultssaved[@key = $record_id]">
+											<xsl:choose>
+												<xsl:when test="//session/role = 'named'">Record saved</xsl:when>
+												<xsl:otherwise>Temporarily Saved</xsl:otherwise>
+											</xsl:choose>
+										</xsl:when>
+										<xsl:otherwise>Save this record</xsl:otherwise>
+									</xsl:choose>
+								</a>
+								
+								<xsl:if test="//request/session/resultssaved[@key = $record_id] and //request/session/role != 'named'"> 
+									<span class="temporary_login_note">
+										(<a href="{//navbar/element[@id = 'login']/url}">login to save permanently</a>)
+									</span>
+								</xsl:if>
+							</span>
+							
+							<!-- label/tag input for saved records, if record is saved and it's not a temporary session -->
+							
+							<xsl:if test="//request/session/resultssaved[@key = $record_id] and not(//request/session/role = 'guest' or //request/session/role = 'local')">
+								<div class="results_label resultsFullText" id="label_{$result_set}:{$record_number}" > 
+									<xsl:call-template name="tag_input">
+										<xsl:with-param name="record" select="//saved_records/saved[@id = $record_id]" />
+										<xsl:with-param name="context">the results page</xsl:with-param>
+									</xsl:call-template>	
+								</div>
+							</xsl:if>
+
+						</xsl:when>
+						<xsl:when test="/folder">
+						
+							<!-- folder -->
+						
+							<div class="folderAvailability">
+								<a class="deleteRecord resultsFullText" href="{../url_delete}">
+									<img src="{$base_url}/images/delete.gif" alt="" border="0" />
+									Delete this record
+								 </a>
+							</div>
+							
+							<xsl:if test="$temporarySession != 'true'">
+								<xsl:call-template name="tag_input">
+									<xsl:with-param name="record" select=".."/>
+								</xsl:call-template>
+							</xsl:if>						
+						
+						</xsl:when>
+					</xsl:choose>
+				</div>
+			</div>
+		</li>
+		
+	</xsl:for-each>
+	
+	</ul>
+
 
 </xsl:template>
 
