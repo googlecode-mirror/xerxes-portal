@@ -306,7 +306,14 @@ class Xerxes_Framework_Page
 	
 	public function transform($xml, $strXslt, $arrParams = null, $arrIncludes = null)
 	{
-		return Xerxes_Parser::transform( $xml, $strXslt, $arrParams, false, $arrIncludes );
+		$html =  Xerxes_Parser::transform( $xml, $strXslt, $arrParams, false, $arrIncludes );
+		
+		// as of metalib 4.3 we _still_ need to do this to catch html entity references that
+		// have been escaped for xml compatibility
+		
+		$html = str_replace("&amp;", "&", $html);
+		
+		return $html;
 	}
 }
 ?>
