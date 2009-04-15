@@ -36,6 +36,10 @@ strong {
 	font-weight: bold;
 }
 
+em {
+	font-style: italic;
+}
+
 a:link, a:visited {
 	text-decoration: none;
 	color: #003399;
@@ -94,10 +98,6 @@ dd {
 
 #sidebar li {
 	padding-bottom: 5px;
-}
-
-#merged {
-	margin-bottom: 20px;
 }
 
 #facets h3 {

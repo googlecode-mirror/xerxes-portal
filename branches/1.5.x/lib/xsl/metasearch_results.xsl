@@ -213,7 +213,9 @@
 			
 			</ul>
 			
-			<!-- databases -->
+			<!-- individual databases -->
+			
+			<h3>Results by database</h3>
 					
 			<ul>
 
