@@ -21,7 +21,6 @@
 			$arrResults = array();		// holds returned records
 			$iTotalHits = 0;			// total number of facets stored
 			$arrFields = array();		// fields to return in response
-			$iMaximumRecords = 10;		// maximum number of records to return
 			$arrDocs = array();			// stores list of document  numbers
 			$strFacetName = "";			// facet name
 			
@@ -40,17 +39,16 @@
 			// marc fields to return from metalib; we specify these here in order to keep
 			// the response size as small (and thus as fast) as possible
 			
-			$strMarcFields = "LDR, 001, 007, 008, 016##, 020##, 022##, 035##, 072##, 100##, " .
-				"245##, 242##, 260##, 500##, 505##, 513##, 514##, 520##, 546##, 6####, 773##, " .
-				"856##, ERI##, SID, YR";
+			// @todo factor this out to metasearch parent class
+			
+			$strMarcFields = $strMarcFields = self::MARC_FIELDS_BRIEF;
 			
 			// configuration options
 			
-			$configRecordPerPage = $this->registry->getConfig("RECORDS_PER_PAGE", false, 10);
+			$configRecordPerPage = $this->registry->getConfig("RECORDS_PER_PAGE", false, self::DEFAULT_RECORDS_PER_PAGE);
 			$configMarcFields = $this->registry->getConfig("MARC_FIELDS_BRIEF", false);
 			$configIncludeMarcRecord = $this->registry->getConfig("XERXES_BRIEF_INCLUDE_MARC", false, false);
 			$configFacets = $this->registry->getConfig("FACETS", false, false);
-			
 			
 			// add additional marc fields specified in the config file
 			
