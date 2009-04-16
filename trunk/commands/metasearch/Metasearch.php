@@ -8,6 +8,10 @@ abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
 {
 	private $objSearch = null; // metalib search object
 	private $objCache = null; // cache object
+	
+	const DEFAULT_RECORDS_PER_PAGE = 10;
+	const MARC_FIELDS_BRIEF = "LDR, 0####, 1####, 2####, 3####, 4####, 5####, 6####, 7####, 8####, ERI##, SID, YR";
+	const MARC_FIELDS_FULL = "#####, OPURL";
 
 	/**
 	 * Seperate here so we can set a cache object for all commands
@@ -125,61 +129,110 @@ abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
 		
 		if ( $objGroupXml->documentElement != null )
 		{
-			// append the search status xml to the response
+			$objSimple = simplexml_import_dom( $objGroupXml );
 			
-
-			$objImport = $objXml->importNode( $objGroupXml->getElementsByTagName( "find_group_info_response" )->item( 0 ), true );
-			$objXml->documentElement->appendChild( $objImport );
+			$strSort = ""; // last set sort order
+			$strDatabaseTitle = ""; // database title
 			
-			// extract these elements for convenience
-			
-
-			if ( $strResultSet != null )
+			// add links to group info and extract data for convenience
+				
+			foreach ( $objSimple->xpath( "//base_info" ) as $base_info )
 			{
-				$strSort = ""; // last set sort order
-				$strDatabaseTitle = ""; // database title
+				// create the link
 				
-
-				$objSimple = simplexml_import_dom( $objGroupXml );
+				$arrParams = array(
+					"base" => "metasearch",
+					"action" => "results",
+					"group" => $strGroup,
+					"resultSet" => (string) $base_info->set_number
+				);
 				
-				foreach ( $objSimple->xpath( "//base_info" ) as $base_info )
+				$base_info->url = $this->request->url_for($arrParams);
+				
+				if ( $base_info->set_number == $strResultSet )
 				{
-					if ( $base_info->set_number == $strResultSet )
+					$strSort = ( string ) $base_info->sort;
+					
+					$strTotalHits = $base_info->no_of_documents;
+					
+					if ( $strTotalHits == "888888888" )
 					{
-						$strSort = ( string ) $base_info->sort;
-						
-						$strTotalHits = $base_info->no_of_documents;
-						
-						if ( $strTotalHits == "888888888" )
-						{
-							$iTotalHits = 1;
-						} elseif ( $iTotalHits == null )
-						{
-							$iTotalHits = ( int ) $strTotalHits;
-						}
-						
-						$strDatabaseTitle = ( string ) $base_info->full_name;
-						
-						// metalib 3.x had a missing line error for combined set name,
-						// we will always convert the name to 'top results' for consistency
-						// name can be overriden in the interface 
-						
-
-						if ( $strDatabaseTitle == "Combined Set" || $strDatabaseTitle == "0170 Missing line" )
-						{
-							$strDatabaseTitle = "Top Results";
-						}
+						$iTotalHits = 1;
+					} 
+					elseif ( $iTotalHits == null )
+					{
+						$iTotalHits = ( int ) $strTotalHits;
+					}
+					
+					$strBase = ( string ) $base_info->base;
+					
+					if ( $strBase == "MERGESET" )
+					{
+						$strDatabaseTitle = "Top Results";
+					}
+					else
+					{
+						$strDatabaseTitle = (string) $base_info->full_name;
 					}
 				}
+			}
+			
+			// only if a resultset was specified, so this doesn't appear in the hits page
+			
+			if ( $strResultSet != "" )
+			{
+				// link to the start of a resultset, convenience link for the
+				// full record breadcrumbs and the like 
 				
+				$strGroup =	$this->request->getProperty("group");		
+				$strStart = $this->request->getProperty("startRecord");
+				$configRecordPerPage = $this->registry->getConfig( "RECORDS_PER_PAGE", false, self::DEFAULT_RECORDS_PER_PAGE );
+				
+				$iStart = 1;
+				
+				if ( $strStart != "" )
+				{
+					$iStart = (int) $strStart;
+				}
+				
+				$arrParams = array(
+					"base" => "metasearch",
+					"action" => "results",
+					"group" => $strGroup,
+					"resultSet" => $strResultSet
+				);
+				
+				// the start record of the current page of brief results 
+				// (useful for full record view to provide a link back!)
+				
+				$iBase = ( floor( ( $iStart - 1 ) / $configRecordPerPage ) * $configRecordPerPage ) + 1;
+				$arrParams["startRecord"] = $iBase;		
+				
+				$strResultSetLink = $this->request->url_for($arrParams);
+				
+				// add these in
+				
+				$objResultSet = $objXml->createElement( "resultset_link", Xerxes_Parser::escapeXml( $strResultSetLink ) );
 				$objDatabase = $objXml->createElement( "database", Xerxes_Parser::escapeXml( $strDatabaseTitle ) );
 				$objHits = $objXml->createElement( "hits", $iTotalHits );
 				$objSort = $objXml->createElement( "sort", $strSort );
 				
+				$objXml->documentElement->appendChild( $objResultSet );
 				$objXml->documentElement->appendChild( $objDatabase );
 				$objXml->documentElement->appendChild( $objHits );
 				$objXml->documentElement->appendChild( $objSort );
 			}
+			
+
+			// pass back the url-enhanced group info status
+			
+			$objUpdatedGroup = new DOMDocument();
+			$objUpdatedGroup->loadXML($objSimple->asXML());
+
+			// append the search status xml to the response
+	
+			$objImport = $objXml->importNode( $objUpdatedGroup->getElementsByTagName( "find_group_info_response" )->item( 0 ), true );
+			$objXml->documentElement->appendChild( $objImport );
 		}
 		
 		return $objXml;
@@ -253,7 +306,6 @@ abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
 	
 	protected function addRecords($objXml, $arrRecords, $configMarcResults)
 	{    
-    
 		$objRecords = $objXml->createElement( "records" );
 		
 		$arrXerxesRecords = array();
@@ -296,11 +348,18 @@ abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
 			$arrFullText = $arrParams;
 			$arrFullText["action"] = "record";
 			
-			// this for the benefit of the merged set, mostly for people that
-			// want a <prev next> pager in the full record display
-			
-			if ( $this->request->getProperty("action") == "results" )
+			if ( $this->request->getProperty("facet") != "" )
 			{
+				// append this so the full record page knows how to get back
+				$arrFullText["return"] = Xerxes_Parser::escapeXml($this->request->getServer("REQUEST_URI"));
+			}
+			else
+			{
+				// this is a regular (non-facet) result
+				
+				// we keep current resultset and position (rather than original resultset 
+				// and recordNumber) for the benefit of the merged set where these are different
+				
 				$arrFullText["resultSet"] = $this->request->getProperty("resultSet");
 				$arrFullText["startRecord"] = $position;
 			}
@@ -308,7 +367,6 @@ abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
 			$url = $this->request->url_for( $arrFullText );
 			$objUrlFull = $objXml->createElement("url_full", $url);
 			$objRecordContainer->appendChild( $objUrlFull );
-			
 
 			// save-delete link
 			
@@ -401,7 +459,7 @@ abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
 		
 		// marc fields
 
-		$strMarcFields = "#####, OPURL";
+		$strMarcFields = self::MARC_FIELDS_FULL;
 		$configResultsFields = $this->registry->getConfig( "MARC_FIELDS_FULL", false, $strMarcFields );
 		$arrFields = split( ",", $configResultsFields );
 		

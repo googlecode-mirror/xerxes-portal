@@ -39,18 +39,14 @@ class Xerxes_Command_MetasearchResults extends Xerxes_Command_Metasearch
 		
 		// marc fields to return from metalib; we specify these here in order to keep
 		// the response size as small (and thus as fast) as possible
-
-		$strMarcFields = "LDR, 001, 007, 008, 016##, 020##, 022##, 035##, 072##, 100##, " . 
-			"24###, 260##, 500##, 505##, 513##, 514##, 520##, 546##, 6####, 773##, " . 
-			"856##, 900##, ERI##, SID, YR";
 			
-		$strMarcFields = "LDR, 0####, 1####, 2####, 3####, 4####, 5####, 6####, 7####, 8####, ERI##, SID, YR";		
+		$strMarcFields = self::MARC_FIELDS_BRIEF;
 		
 		// $strMarcFields = "#####, OPURL";
 		
 		// configuration options
 
-		$configRecordPerPage = $this->registry->getConfig( "RECORDS_PER_PAGE", false, 10 );
+		$configRecordPerPage = $this->registry->getConfig( "RECORDS_PER_PAGE", false, self::DEFAULT_RECORDS_PER_PAGE );
 		$configMarcFields = $this->registry->getConfig( "MARC_FIELDS_BRIEF", false );
 		$configIncludeMarcRecord = $this->registry->getConfig( "XERXES_BRIEF_INCLUDE_MARC", false, false );
 		$configFacets = $this->registry->getConfig( "FACETS", false, false );
