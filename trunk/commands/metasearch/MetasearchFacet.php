@@ -117,7 +117,7 @@
 			
 			// facet name
 			
-			$objXml->documentElement->appendChild($objXml->createElement("facet_name", $strFacetName));
+			$objXml->documentElement->appendChild($objXml->createElement("facet_name", Xerxes_Parser::escapeXML($strFacetName)));
 			
 			$objXml = $this->addSearchInfo($objXml, $strGroup);
 			$objXml = $this->addStatus($objXml, $strGroup, $strResultSet, $iTotalHits);
