@@ -32,7 +32,6 @@ class Xerxes_Command_MetasearchSearch extends Xerxes_Command_Metasearch
 		$strSpell = $this->request->getProperty( "spell" );
 		$strContext = $this->request->getProperty( "context" );
 		$strContextUrl = $this->request->getProperty( "context_url" );
-    
 		
 		// configuration options
 		
@@ -199,38 +198,14 @@ class Xerxes_Command_MetasearchSearch extends Xerxes_Command_Metasearch
 		$strGroup = ""; // group id number
 		$strNormalizedQuery = ""; // normalized query
 
-		// normalize query
+		// query parser provides normalization and spell check
 
 		$objQueryParser = new Xerxes_QueryParser( );
 		
-		if ( $configNormalize == true )
-		{
-			//normalize query option is still experimental (2008-01-09)
+		// normalize query option is still experimental (2009-04-16)
 			
-			$strNormalizedQuery = $objQueryParser->normalize( $strField, $strQuery );
-			if ( $strQuery2 )
-			{
-				$strNormalizedQuery2 = $objQueryParser->normalize( $strField2, $strQuery2 );
-			}
-		} 
-		else
-		{
-			$strNormalizedQuery = "$strField=($strQuery)";
-			if ( $strQuery2 )
-			{
-				$strNormalizedQuery2 = "$strField2=($strQuery2)";
-			}
-		}
+		$strFullQuery =	$objQueryParser->normalizeMetalibQuery($strField, $strQuery, $strFindOperator, $strField2, $strQuery2, $configNormalize);
 		
-		$strFullQuery = $strNormalizedQuery;
-		
-		// do we have an advanced search we need to add more stuff onto?
-		
-		if ( $strQuery2 )
-		{
-			$strFullQuery .= " $strFindOperator $strNormalizedQuery2";
-		}
-    
 		// initiate search with Metalib
 		
 		$strGroup = $objSearch->search( $strFullQuery, $arrDatabases );
@@ -291,7 +266,6 @@ class Xerxes_Command_MetasearchSearch extends Xerxes_Command_Metasearch
 				{
 					$strSpellUrl .= "&query2=" . urlencode( $strNewQuery2 ) . "&field2=" . $strField2;
 				}
-				
         
 				$strSpellUrl .= "&context=" . urlencode( $strContext );
 				$strSpellUrl .= "&context_url=" . urlencode( $strContextUrl );
@@ -316,6 +290,7 @@ class Xerxes_Command_MetasearchSearch extends Xerxes_Command_Metasearch
     
 		$arrSearch["context"] = $strContext;
 		$arrSearch["context_url"] = $strContextUrl;
+		$arrQuery["normalized"] = $strFullQuery;
 		
 		foreach ( $arrSearch as $key => $value )
 		{
@@ -329,7 +304,6 @@ class Xerxes_Command_MetasearchSearch extends Xerxes_Command_Metasearch
 		
 		$arrQuery = array ( );
 		$arrQuery["query"] = $strQuery;
-		$arrQuery["normalized"] = $strNormalizedQuery;
 		$arrQuery["field"] = $strField;
 		
 		foreach ( $arrQuery as $key => $value )
@@ -352,7 +326,6 @@ class Xerxes_Command_MetasearchSearch extends Xerxes_Command_Metasearch
 			
 			$arrQuery = array ( );
 			$arrQuery["query"] = $strQuery2;
-			$arrQuery["normalized"] = $strNormalizedQuery2;
 			$arrQuery["field"] = $strField2;
 			
 			foreach ( $arrQuery as $key => $value )
