@@ -135,7 +135,7 @@
 								</xsl:otherwise>
 							</xsl:choose>
 						</td>
-						<td>
+						<td class="hitCount">
 							<xsl:choose>
 								<xsl:when test="no_of_documents = '888888888'">
 									<xsl:text>results found</xsl:text>
@@ -153,8 +153,8 @@
 					<xsl:for-each select="//excluded_dbs/database">
 						<tr>
 							<td><xsl:value-of select="title_display"/></td>
-							<td class="error">ERROR:</td>
-							<td>
+							<td colspan="2" class="error">
+								ERROR:
 								<xsl:choose>
 									<xsl:when test="group_restriction">
 										<xsl:call-template name="db_restriction_display" />

@@ -917,7 +917,7 @@
 		<!-- add behaviors to edit collection dialog, currently just delete confirm -->
 		<script src="{$base_include}/javascript/collections.js" language="javascript" type ="text/javascript"></script>
 		
-		<!-- mango stuff -->
+		<!-- @todo remove this to mango files and create local header template for page!  mango stuff -->
 		
 		<xsl:if test="request/base = 'books'">
 			<script src="{$base_include}/javascript/availability.js" language="javascript" type="text/javascript"></script>
@@ -1080,13 +1080,12 @@
 				</a>
 			</li>
 			
-			<xsl:if test="$show_collection_links and //navbar/element[@id='saved_collections']">
+			<xsl:if test="//navbar/element[@id='saved_collections']">
 				<li id="my_databases" class="sidebarFolder">
 					<img src="{$base_include}/images/folder.gif" width="17" height="15" border="0" alt=""/><xsl:text> </xsl:text>
 					<a href="{//navbar/element[@id='saved_collections']/url}"><xsl:copy-of select="$text_header_collections"/></a>
 				</li>
 			</xsl:if>
-		
 		</ul>
 	</div>
 </xsl:template>

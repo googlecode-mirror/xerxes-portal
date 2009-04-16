@@ -209,7 +209,7 @@
 							</xsl:otherwise>
 						</xsl:choose>
 						<xsl:text> ( </xsl:text>
-						<xsl:value-of select="number(no_of_documents)" />
+						<xsl:value-of select="no_of_documents" />
 						<xsl:text> )</xsl:text>
 					</li>
 				</xsl:for-each>
@@ -239,7 +239,7 @@
 								<xsl:text>0</xsl:text>
 							</xsl:when>
 							<xsl:otherwise>
-								<xsl:value-of select="number(no_of_documents)" />
+								<xsl:value-of select="no_of_documents" />
 							</xsl:otherwise>
 						</xsl:choose>
 					</xsl:variable>
