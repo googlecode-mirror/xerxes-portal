@@ -58,46 +58,89 @@
 		}
 		
 		/**
-		 * Converts the query to AND all terms, while preserving boolean operators
-		 * and quoted phrases
+		 * Strips out ANDs and parentheses, while supporting a single OR or NOT entered 
+		 * into the first search box
 		 *
-		 * @param string $strField		field to search on
-		 * @param string $strQuery		original query
+		 * @param string $strField		first field to search on
+		 * @param string $strTerm		first set of search terms
+		 * @param string $strBoolean	[optional] boolean operator
+		 * @param string $strField2		[optional] second field to search on
+		 * @param string $strTerm2		[optional] second set of search terms
+		 * @param boolean $bolFix		[optional] whether to split query on first OR or NOT, default is false
 		 * @return string				normalized query
 		 */
 		
-		public function normalize ( $strField, $strQuery )
+		public function normalizeMetalibQuery ( $strField, $strTerm, $strBoolean = "", $strField2 = "", $strTerm2 = "", $bolFix = false )
 		{
-			$strFinal = "";			// final string to return
-			$arrWords = array();	// the query broken into a word array
+			$strQuery = "";		// final normalized query
 			
-			// strip out parens, since metalib can't handle them
+			// this strips parens and bare ANDs in the query
 			
-			if ( strstr($strQuery, "(") || strstr($strQuery, ")") )
+			$strTerm = $this->fixTerms($strTerm);
+			
+			if ( $strTerm2 != "" )
 			{
-				array_push($this->arrTips, 
-					array(self::BAD_PARENS => "parentheses stripped from query"));
+				$strTerm2 = $this->fixTerms($strTerm2);
+				$strQuery = "$strField=($strTerm) $strBoolean $strField2=($strTerm2)";
+			}
+			else
+			{
+				// if there was only one search field/term and there was an OR or NOT
+				// in the search phrase itself, split the query into two seperate 
+				// fielded searches, since this will improve the chance of the search 
+				// working correctly
 				
-				$strQuery = str_replace("(", "", $strQuery);
-				$strQuery = str_replace(")", "", $strQuery);
+				// since the fixTerms -> normalizeArray function drops the query to 
+				// lowercase and then uppercases the bare boolean operators this is
+				// only catching an actual OR or NOT not in quotes
+				
+				if ( $bolFix == true )
+				{
+					$strQuery = preg_replace("/(OR|NOT)/", ") $1 $strField=(", $strTerm, 1);
+					$strQuery = trim($strQuery);
+					$strQuery = $strField . "=(" . $strQuery . ")";	
+				}
+				else
+				{
+					$strQuery = "$strField=($strTerm)";	
+				}
 			}
 			
-			$arrWords = $this->normalizeArray($strQuery);
+			// spacing clean-up, seems to make a difference
 			
-			$strFinal = implode(" ", $arrWords);
+			$strQuery = str_replace("( ", "(", $strQuery);
+			$strQuery = str_replace(" )", ")", $strQuery);
 			
-			// split the query into two seperate fielded searches, since this
-			// seems to improve the chance of the search working correctly
-	
-			$strFinal = preg_replace("/(AND|OR|NOT)/", ") $1 $strField=(", $strFinal, 1);
+			return $strQuery;
+		}
+		
+		private function fixTerms($value)
+		{
+			// strip out parens, since metalib can't handle them
 			
-			$strFinal = trim($strFinal);
-			$strFinal = $strField . "=(" . $strFinal . ")";		
+			if ( strstr($value, "(") || strstr($value, ")") )
+			{
+				array_push($this->arrTips, array(self::BAD_PARENS => "parentheses stripped from query"));
+							
+				$value = str_replace("(", "", $value);
+				$value = str_replace(")", "", $value);
+			}
 			
-			$strFinal = str_replace("( ", "(", $strFinal);
-			$strFinal = str_replace(" )", ")", $strFinal);
+			// split the query into parts
 			
-			return $strFinal;
+			$arrWords = $this->normalizeArray($value);
+			
+			// remove non-quoted ANDs since Metalib will handle automatic AND-ing
+			
+			for ( $x = 0; $x < count($arrWords); $x++ )
+			{
+				if ( $arrWords[$x] == "AND")
+				{
+					 $arrWords[$x] = null;
+				}
+			}
+
+			return implode(" ", $arrWords);
 		}
 		
 		/**
@@ -117,9 +160,13 @@
 			$arrSmall = array();
 						
 			// split words into an array
+			
+			$strQuery = strtolower($strQuery);
+			
 			$arrWords = explode(" ", $strQuery);
 			
 			// cycle thru each word in the query
+			
 			for ( $x = 0; $x < count($arrWords); $x++ )
 			{
 				if ( $bolQuote == true )
@@ -136,9 +183,9 @@
 						
 						if ( $x + 1 < count($arrWords) )
 						{
-							if ( strtolower($arrWords[$x + 1]) != "and" && 
-							 	 strtolower($arrWords[$x + 1]) != "or" &&
-							 	 strtolower($arrWords[$x + 1]) != "not")
+							if ( $arrWords[$x + 1] != "and" && 
+							 	 $arrWords[$x + 1] != "or" &&
+							 	 $arrWords[$x + 1] != "not")
 							{
 								// the next word is not a boolean operator,
 								// so AND the current one
@@ -166,9 +213,9 @@
 					$strQuote .= " " . $arrWords[$x];
 					$bolQuote = true;
 				}				
-				elseif ( strtolower($arrWords[$x]) == "and" || 
-						 strtolower($arrWords[$x]) == "or" || 
-						 strtolower($arrWords[$x]) == "not")
+				elseif ( $arrWords[$x] == "and" || 
+						 $arrWords[$x] == "or" || 
+						 $arrWords[$x] == "not")
 				{
 					// the current word is a boolean operator
 					array_push($arrFinal, strtoupper($arrWords[$x]) );
@@ -178,16 +225,16 @@
 					$arrSmallWords = array( 'of','a','the','and','an','or','nor','but','is','if','then','else',
 						'when', 'at','from','by','on','off','for','in','out','over','to','into','with', 'as' );
 						
-					if ( in_array(strtolower($arrWords[$x]), $arrSmallWords) )
+					if ( in_array($arrWords[$x], $arrSmallWords) )
 					{
-						array_push($arrSmall, strtolower($arrWords[$x]));
+						array_push($arrSmall, $arrWords[$x]);
 					}
 						
 					if ( $x + 1 < count($arrWords) )
 					{
-						if ( strtolower($arrWords[$x + 1]) != "and" && 
-						 	 strtolower($arrWords[$x + 1]) != "or" &&
-						 	 strtolower($arrWords[$x + 1]) != "not")
+						if ( $arrWords[$x + 1] != "and" && 
+						 	 $arrWords[$x + 1] != "or" &&
+						 	 $arrWords[$x + 1] != "not")
 						{
 							// the next word is not a boolean operator,
 							// so AND the current one
