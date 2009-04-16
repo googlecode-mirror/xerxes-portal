@@ -149,17 +149,28 @@ abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
 				
 				$base_info->url = $this->request->url_for($arrParams);
 				
+				// format total number of hits
+				
+				$strTotalHits = (string) $base_info->no_of_documents;
+				
+				if ( $strTotalHits == "888888888" )
+				{
+					$strTotalHits = 1;
+				} 
+				
+				// some results are statements (e.g., "results found") so don't 
+				// format them
+				
+				if ( ! preg_match("/[a-zA-Z]{1}/", $strTotalHits) )
+				{
+					$base_info->no_of_documents = number_format( (int) $strTotalHits);
+				}
+				
 				if ( $base_info->set_number == $strResultSet )
 				{
 					$strSort = ( string ) $base_info->sort;
 					
-					$strTotalHits = $base_info->no_of_documents;
-					
-					if ( $strTotalHits == "888888888" )
-					{
-						$iTotalHits = 1;
-					} 
-					elseif ( $iTotalHits == null )
+					if ( $iTotalHits == null )
 					{
 						$iTotalHits = ( int ) $strTotalHits;
 					}
