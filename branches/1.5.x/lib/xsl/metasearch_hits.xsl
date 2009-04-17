@@ -102,12 +102,6 @@
 					</thead>
 					
 					<xsl:for-each select="//base_info">
-					
-					<!-- variables -->
-						
-					<xsl:variable name="set_number" select="set_number" />
-					<xsl:variable name="hits" select="number(no_of_documents)" />
-					<xsl:variable name="groupID" select="//find_group_info_response/@id" />
 						
 					<tr>
 						<td>
@@ -141,7 +135,7 @@
 									<xsl:text>results found</xsl:text>
 								</xsl:when>
 								<xsl:otherwise>
-									<xsl:value-of select="$hits"/>
+									<xsl:value-of select="no_of_documents"/>
 								</xsl:otherwise>
 							</xsl:choose>
 						</td>
