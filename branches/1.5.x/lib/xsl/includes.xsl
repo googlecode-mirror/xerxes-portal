@@ -1337,7 +1337,7 @@
 				<strong><xsl:value-of select="@name" /></strong> ( <xsl:value-of select="node_no_of_docs" /> )
 			</xsl:when>
 			<xsl:otherwise>
-				<a href="./?base=metasearch&amp;action=facet&amp;group={$group}&amp;resultSet={$this_result_set}&amp;facet={$facet_number}&amp;node={$node_pos}"><xsl:value-of select="@name" /></a>
+				<a href="{url}"><xsl:value-of select="@name" /></a>
 		 		(&nbsp;<xsl:value-of select="node_no_of_docs" />&nbsp;)
 			</xsl:otherwise>
 		</xsl:choose>
