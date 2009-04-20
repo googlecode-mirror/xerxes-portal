@@ -287,7 +287,29 @@ abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
 			
 			if ( $objFacetXml->documentElement != null )
 			{
-				$objImport = $objXml->importNode( $objFacetXml->getElementsByTagName( "cluster_facet_response" )->item( 0 ), true );
+				$objSimple = simplexml_import_dom( $objFacetXml );
+				
+				foreach ( $objSimple->cluster_facet_response->cluster_facet as $facet )
+				{
+					foreach ( $facet->node as $node )
+					{
+						$arrParam = array(
+							"base" => "metasearch",
+							"action" => "facet",
+							"group" => $strGroup,
+							"resultSet" => $this->request->getProperty("resultSet"),
+							"facet" => (string) $facet["position"],
+							"node" => (string) $node["position"]
+						);
+						
+						$node->url = $this->request->url_for($arrParam);
+					}
+				}
+				
+				$objUpdatedFacets = new DOMDocument();
+				$objUpdatedFacets->loadXML($objSimple->asXML());
+				
+				$objImport = $objXml->importNode( $objUpdatedFacets->getElementsByTagName( "cluster_facet_response" )->item( 0 ), true );
 				$objXml->documentElement->appendChild( $objImport );
 			}
 		} 
