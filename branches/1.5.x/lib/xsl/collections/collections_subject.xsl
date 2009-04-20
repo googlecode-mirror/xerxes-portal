@@ -17,26 +17,23 @@
 <xsl:import href="../includes.xsl" />
 <xsl:output method="html" encoding="utf-8" indent="yes" doctype-public="-//W3C//DTD HTML 4.01 Transitional//EN" doctype-system="http://www.w3.org/TR/html4/loose.dtd"/>
 
-<xsl:variable name="empty_collection_instructions">
-      <fieldset class="emptyCollectionInstructions">
-        <legend>Instructions</legend>
-        <p>Add your own list of databases to <strong><xsl:value-of select="/*/category/@name"/></strong> by choosing the <a class="categoryCommand edit">Edit</a> option above, and then choosing the <a class="categoryCommand add">Add databases</a> option.</p>
-        <p>You can also save databases by clicking the information link (<img src="{$base_url}/images/info.gif"/>) next to a database, and choosing the <a class="categoryCommand add">Save database</a> option. </p>
-      </fieldset>
-</xsl:variable>
-
 <xsl:template match="/*">
 	<xsl:call-template name="surround" />
 </xsl:template>
 
 <xsl:template name="page_name">
-  <xsl:value-of select="/*/category/@name" />
+  <xsl:value-of select="category/@name" />
+</xsl:template>
+
+<xsl:template name="breadcrumb">
+	<xsl:call-template name="breadcrumb_collection" />
+	<xsl:call-template name="page_name" />
 </xsl:template>
 
 <xsl:template name="sidebar">
 	<div id="sidebar">
 		<xsl:call-template name="account_sidebar"/>
-		<xsl:if test="/*/category/@owned_by_user = //session/username">
+		<xsl:if test="category/@owned_by_user = //session/username">
 			<xsl:call-template name="collections_sidebar"/>
 		</xsl:if>
 		<xsl:call-template name="snippet_sidebar" />
@@ -55,59 +52,52 @@
 	<input type="hidden" name="context" value="{$category_name}" />
 	<input type="hidden" name="context_url" value="{$request_uri}" />
 	
+	<h1><xsl:call-template name="page_name" /></h1>
 	
-	<div id="searchArea">
-		<div class="subject">
-			<h1><xsl:call-template name="page_name" /></h1>
-			
-			<xsl:if test="not(/*/category/@owned_by_user = //session/username)">
-				<p>Created by <xsl:value-of select="/*/category/@owned_by_user" /></p>
-			</xsl:if>
-			
-			<xsl:if test="$user_can_edit" >
-				<div class="subject_edit_commands">
-					<a class="categoryCommand edit" href="{/*/category/edit_url}">Edit</a>
-					<xsl:text> </xsl:text>
-					<xsl:choose>
-						<xsl:when test="/*/category/@published = '1'">
-							<span class="publishedStatus">Published</span>
-						</xsl:when>
-						<xsl:otherwise>
-							<span class="privateStatus">Private</span>
-						</xsl:otherwise>
-					</xsl:choose>
-				</div>
-			</xsl:if>
-		</div>
-			
-		<div id="search">
-			<xsl:variable name="should_lock_nonsearchable" select=" (/*/request/authorization_info/affiliated = 'true' or /*/request/session/role = 'guest')" />
-			
-			<!-- do we have any searchable databases? If we have any that are
-			searchable by the particular session user, or if we aren't locking
-			non-searchable dbs and have any that are searchable at all -->
-			
-			<xsl:if test="count(/*/category/subcategory/database/searchable_by_user[. = '1']) &gt; 0 or (not($should_lock_nonsearchable) and   count(/*/category/subcategory/database/searchable[. = '1']) &gt; 0)">
-			
-				<!-- defined in includes.xsl -->
-				<xsl:call-template name="search_box" />
-			</xsl:if>
-		</div>
-		
-		<!-- help text, only when the user actually owns this guy, and hasn't added any dbs yet. -->
-		
-		<xsl:if test="$user_can_edit and count(/*/category/subcategory/database) = 0">
-			<xsl:copy-of select="$empty_collection_instructions"/>
-		</xsl:if>
-		
-		<xsl:if test="not($user_can_edit and count(/*/category/subcategory/database) = 0)">
-			<div class="subjectDatabases">
-				<!-- defined in includes.xsl -->
-				<xsl:call-template name="subject_databases_list"/>
-			</div>
-		</xsl:if>
-	</div>
+	<xsl:if test="not(/*/category/@owned_by_user = //session/username)">
+		<p>Created by <xsl:value-of select="/*/category/@owned_by_user" /></p>
+	</xsl:if>
 	
+	<xsl:if test="$user_can_edit" >
+		<div class="editSubject">
+			[
+			<a href="{/*/category/edit_url}">Edit</a>
+			<xsl:text> | </xsl:text>
+			<xsl:choose>
+				<xsl:when test="/*/category/@published = '1'">
+					<span class="publishedStatus">Public</span>
+				</xsl:when>
+				<xsl:otherwise>
+					<span class="privateStatus">Private</span>
+				</xsl:otherwise>
+			</xsl:choose>
+			]
+		</div>
+	</xsl:if>
+		
+	<xsl:variable name="should_lock_nonsearchable" select=" (/*/request/authorization_info/affiliated = 'true' or /*/request/session/role = 'guest')" />
+	
+	<!-- do we have any searchable databases? If we have any that are
+	searchable by the particular session user, or if we aren't locking
+	non-searchable dbs and have any that are searchable at all -->
+	
+	<xsl:if test="count(/*/category/subcategory/database/searchable_by_user[. = '1']) &gt; 0 or 
+		(not($should_lock_nonsearchable) and count(/*/category/subcategory/database/searchable[. = '1']) &gt; 0)">
+		<xsl:call-template name="search_box" />
+	</xsl:if>
+
+	<!-- no databases added yet -->
+	
+	<xsl:if test="$user_can_edit and count(/*/category/subcategory/database) = 0">
+		<a href="./?base=collections&amp;action=edit_form&amp;username={category/@owned_by_user}&amp;subject={category/@normalized}&amp;add_to_subcategory={category/subcategory/@id}#section_{category/subcategory/@id}">
+		<img src="{$base_url}/images/famfamfam/add.png" alt="" /><xsl:text> Add databases</xsl:text>
+		</a>
+	</xsl:if>
+	
+	<xsl:if test="not($user_can_edit and count(/*/category/subcategory/database) = 0)">
+		<xsl:call-template name="subject_databases_list" />
+	</xsl:if>
+
 	</form>
 	
 </xsl:template>

@@ -9,14 +9,11 @@ body {
 h1, h2, h3, h4 {
 	font-family: Arial, Helvetica, sans-serif;
 	color: #003366;
-	padding-top: 10px;
-	padding-bottom: 10px;
+	margin-bottom: 1em;
 }
 
 h1 { 
 	font-size: 200%;
-	padding-top: 0px;
-	padding-bottom: 20px;
 }
 
 h2 { 
@@ -64,6 +61,10 @@ dt {
 
 dd {
 	margin-left: 120px;
+}
+
+p {
+	margin-bottom: 1em;
 }
 
 #doc3 #bd {
@@ -145,7 +146,7 @@ dd {
 	border-left-color: #CCCCCC;
 }
 
-/** HEADER **/
+/** BREADCRUMBS **/
 
 #breadcrumb {
 	padding: 10px;
@@ -190,9 +191,8 @@ dd {
 	margin-left: 20px;
 }
 
-#databases_categories p {
-	padding-top: 10px;
-	padding-bottom: 10px;
+#databases_categories h1, #databases_categories h2 {
+	margin-bottom: .5em;
 }
 
 .subjectSubCategory ul {
@@ -221,6 +221,35 @@ dd {
 	margin-bottom: 30px;
 	line-hright: 130%;
 }
+
+
+/** MY SAVED DATABSES **/
+
+ul.editCommands {
+	display: block;
+	margin-left: 50px;
+	margin-right: 50px;
+	padding: 10px;
+	border: 2px solid #ccc;
+	margin-bottom: 20px;
+	color: #ccc;
+}
+
+ul.editCommands li {
+	list-style: square;
+	padding: 3px;
+	color: #000;
+}
+
+.editSubject {
+	margin-top: -.75em;
+	margin-bottom: 1.25em;
+}
+
+table.reorderTable td {
+	padding: 10px;
+}
+
 
 /** AUTHENTICATION **/
 
@@ -453,12 +482,6 @@ div.autocomplete ul li {
   cursor:pointer;
   background: none;
 }
-
-
-
-
-
-
 
 
 

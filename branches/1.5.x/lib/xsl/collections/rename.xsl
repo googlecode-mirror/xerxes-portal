@@ -60,7 +60,7 @@ Edit subject page for user-created subjects.
 	</h1>
 	
 	<p>Name: <input type="text" name="new_name" value="{$old_name}"/>
-	<input type="submit" name="save" value="save"/></p>
+	<xsl:text> </xsl:text><input type="submit" name="save" value="save"/></p>
 	
 	</form>
 	

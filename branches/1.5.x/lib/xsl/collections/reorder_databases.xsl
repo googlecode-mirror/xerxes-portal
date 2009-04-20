@@ -33,7 +33,6 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
 	<xsl:variable name="subcategory_id" select="//request/subcategory" />
 	<xsl:variable name="request_uri"	select="//request/server/request_uri" />
 
-			
 	<form name="form1" method="get" action="{$base_url}/">
 	<input type="hidden" name="base" value="collections" />
 	<input type="hidden" name="action" value="reorder_databases" />
@@ -44,7 +43,7 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
 	
 	<h1><xsl:call-template name="page_name" /></h1>
 
-	<table>
+	<table class="reorderTable">
 		<xsl:for-each select="//category/subcategory[@id = $subcategory_id]/database">
 			<tr>
 				<td><xsl:value-of select="position()"/></td>
@@ -55,7 +54,7 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
 	</table>
 
 	
-	<p><input type="submit" name="save" value="save"/></p>
+	<p><input type="submit" name="save" value="Update"/></p>
 	
 	</form>
 

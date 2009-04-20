@@ -41,7 +41,7 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
 	
 	<h1><xsl:call-template name="page_name" /></h1>         
 	
-	<table>
+	<table class="reorderTable">
 		<xsl:for-each select="//category/subcategory">
 		<tr>
 			<td><xsl:value-of select="@position"/></td>
@@ -51,7 +51,7 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
 		</xsl:for-each>
 	</table>
 	
-	<p><input type="submit" name="save" value="save"/></p>
+	<p><input type="submit" name="save" value="Update"/></p>
 	
 	</form>
 	

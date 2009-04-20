@@ -271,6 +271,29 @@
 
 </xsl:template>
 
+
+<!-- 
+	TEMPLATE: BREADCRUMB COLLECTIONS
+-->
+
+<xsl:template name="breadcrumb_collection">
+	<xsl:param name="condition">1</xsl:param>
+		
+	<xsl:call-template name="breadcrumb_start" />
+	
+	<a href="{$base_url}">Home</a> <xsl:copy-of select="$text_breadcrumb_seperator" />
+	
+	<xsl:if test="not(category/@is_default_collection = 'yes')">
+		<a href="{//navbar/element[@id='saved_collections']/url}"><xsl:copy-of select="$text_header_collections"/></a> <xsl:copy-of select="$text_breadcrumb_seperator" />	
+	</xsl:if>
+
+	<xsl:if test="$condition = 2">
+		<a href="{/*/category/url}"><xsl:value-of select="/*/category/@name"/></a> <xsl:copy-of select="$text_breadcrumb_seperator" />
+	</xsl:if>	
+
+</xsl:template>
+
+
 <!-- 	
 	TEMPLATE: SEARCH BOX
 	Search box that appears in the 'hits' and 'results' page, as well as databases_subject.xsl. 
@@ -1099,7 +1122,7 @@
 <xsl:template name="collections_sidebar">
 	<div id="collections" class="box">
 		<h2>My Collections</h2>
-		<p>Collections are a way to organize databases you choose.</p>
+		<p>Collections are a way to organize your saved databases.</p>
 		<ul>
 		<!-- don't list the default collection here, that's presented differently. -->
 		<xsl:for-each select="/*/userCategories/category[name != /*/config/default_collection_name]">
@@ -1124,7 +1147,8 @@
 		
 		<input type="hidden" name="new_subcategory_name" value="{$text_collection_default_new_section_name}"/>
 		
-		Create a new collection: <input type="text" name="new_subject_name"/><input type="submit" name="add" value="Add"/>
+		<p>Create a new collection:</p>
+		<input type="text" name="new_subject_name"/><xsl:text> </xsl:text><input type="submit" name="add" value="Add" />
 		
 		</form>
 	</div>
