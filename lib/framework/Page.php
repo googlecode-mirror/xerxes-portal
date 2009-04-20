@@ -311,7 +311,13 @@ class Xerxes_Framework_Page
 		// as of metalib 4.3 we _still_ need to do this to catch html entity references that
 		// have been escaped for xml compatibility
 		
-		$html = str_replace("&amp;", "&", $html);
+		$objRegistry = Xerxes_Framework_Registry::getInstance();
+		$noEscape = $objRegistry->getConfig("FIX_AMERSANDS", false, true);
+		
+		if ( $noEscape === true)
+		{
+			$html = str_replace("&amp;", "&", $html);
+		}
 		
 		return $html;
 	}
