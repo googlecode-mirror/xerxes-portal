@@ -1272,13 +1272,13 @@
 		
 		<div id="facets" class="box">
 			<h2>Limit top results by:</h2>
-			<xsl:for-each select="//cluster_facet">
+			<xsl:for-each select="//cluster_facet[@name != 'DATABASE']">
 			
 				<xsl:variable name="name" select="@name" />
 				
 				<xsl:if test="//cluster_facet[@name = $name]/node[node_no_of_docs > 2 and @name != 'Other']">
 				
-					<xsl:variable name="facet_number" select="position()" />
+					<xsl:variable name="facet_number" select="@position" />
 					
 					<h3><xsl:value-of select="@name" /></h3>
 					

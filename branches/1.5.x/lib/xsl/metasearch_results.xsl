@@ -247,7 +247,7 @@
 					<li>
 						<xsl:choose>
 							<xsl:when test=" ( find_status = 'DONE' or find_status = 'DONE1' or find_status = 'DONE2') 
-												and no_of_documents != '000000000'">
+												and no_of_documents != '0'">
 								<xsl:choose>
 								<xsl:when test="$set_number = $this_result_set">
 									<strong>
