@@ -745,7 +745,9 @@
 							$bolToc = true;
 						}
 					}
-
+           
+          
+          
 					// empty link, skip to next foreach entry
 					
 					if ( $strUrl == "")
@@ -788,7 +790,10 @@
 					{
 						$bolToc = true;
 					}
-
+          // Mark Scopus as original_record, not full text
+          if ($this->strSource == "ELSEVIER_SCOPUS") {
+            $strLinkFormat = "original_record";
+          }
           
 					
 					if ( $bolToc == false )
@@ -809,7 +814,7 @@
 							// in the label to see if we can pin-down format, otherwise
 							// map it to the generic full-text property
 							
-							$strLinkFormat = "online";
+							if (empty($strLinkFormat)) $strLinkFormat = "online";
 							
 							if ( stristr($strDisplay, "PDF") || stristr($strUrl, "PDF") )
 							{
