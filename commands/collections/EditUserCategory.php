@@ -62,7 +62,7 @@ class Xerxes_Command_EditUserCategory extends Xerxes_Command_Collections
 			
 			if ( ! empty( $strPublished ) )
 			{
-				$boolPublished = ( boolean ) ($strPublished == "true");
+				$boolPublished = ( int ) ($strPublished == "true");
 				$category->published = $boolPublished;
 				
 				if ( $boolPublished )
