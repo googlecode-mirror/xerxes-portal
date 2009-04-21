@@ -79,17 +79,17 @@
 	
 		<div id="alphaLetters">
 		
-		<xsl:for-each select="databases/database">
-		
-			<xsl:variable name="letter" select="substring(translate(title_display,$lower,$upper), 1, 1)" />
+			<xsl:for-each select="databases/database">
 			
-			<xsl:if test="substring(translate(preceding-sibling::database[1]/title_display,$lower,$upper), 1, 1) !=  $letter">
-				<a><xsl:attribute name="href"><xsl:value-of select="/knowledge_base/request/server/request_uri" />#<xsl:value-of select="$letter" /></xsl:attribute> 
-				<xsl:value-of select="$letter" /></a>
-				<span class="letterSeperator"> | </span> 
-			</xsl:if>
-		
-		</xsl:for-each>
+				<xsl:variable name="letter" select="substring(translate(title_display,$lower,$upper), 1, 1)" />
+				
+				<xsl:if test="substring(translate(preceding-sibling::database[1]/title_display,$lower,$upper), 1, 1) !=  $letter">
+					<a><xsl:attribute name="href"><xsl:value-of select="/knowledge_base/request/server/request_uri" />#<xsl:value-of select="$letter" /></xsl:attribute> 
+					<xsl:value-of select="$letter" /></a>
+					<span class="letterSeperator"> | </span> 
+				</xsl:if>
+			
+			</xsl:for-each>
 		
 		</div>
 	</xsl:if>

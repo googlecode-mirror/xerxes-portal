@@ -263,6 +263,8 @@
 		
 	<xsl:call-template name="breadcrumb_start" />
 	
+	<a href="{$base_url}">Home</a> <xsl:copy-of select="$text_breadcrumb_seperator" />
+	
 	<xsl:choose>
 		<xsl:when test="$condition != 1">
 			<a href="{//navbar/element[@id='saved_records']}">My Saved Records</a> <xsl:copy-of select="$text_breadcrumb_seperator" />
@@ -284,11 +286,11 @@
 	<a href="{$base_url}">Home</a> <xsl:copy-of select="$text_breadcrumb_seperator" />
 	
 	<xsl:if test="not(category/@is_default_collection = 'yes')">
-		<a href="{//navbar/element[@id='saved_collections']/url}"><xsl:copy-of select="$text_header_collections"/></a> <xsl:copy-of select="$text_breadcrumb_seperator" />	
+		<a href="{navbar/element[@id='saved_collections']/url}"><xsl:copy-of select="$text_header_collections"/></a> <xsl:copy-of select="$text_breadcrumb_seperator" />	
 	</xsl:if>
 
 	<xsl:if test="$condition = 2">
-		<a href="{/*/category/url}"><xsl:value-of select="/*/category/@name"/></a> <xsl:copy-of select="$text_breadcrumb_seperator" />
+		<a href="{category/url}"><xsl:value-of select="category/@name"/></a> <xsl:copy-of select="$text_breadcrumb_seperator" />
 	</xsl:if>	
 
 </xsl:template>
@@ -678,7 +680,7 @@
 <xsl:template name="databases_search_box">
 		
 	<form method="GET" action="./">
-		<div class="raisedBox">
+		<div id="databasesSearch" class="raisedBox">
 			<input type="hidden" name="base" value="databases" />
 			<input type="hidden" name="action" value="find" />
 			
@@ -687,7 +689,7 @@
 			<input id="query" name="query" type="text" size="32">
 				<xsl:attribute name="value"><xsl:value-of select="request/query" /></xsl:attribute>
 			</input>
-			<xsl:text></xsl:text>
+			<xsl:text> </xsl:text>
 			<input type="submit" value="GO" />
 		</div>		
 	</form>
