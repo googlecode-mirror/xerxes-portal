@@ -26,9 +26,7 @@
 </xsl:template>
 
 <xsl:template name="breadcrumb">
-	<xsl:call-template name="breadcrumb_start">
-		<xsl:with-param name="condition">0</xsl:with-param>
-	</xsl:call-template>
+	<xsl:call-template name="breadcrumb_databases" />
 	<xsl:call-template name="page_name" />
 </xsl:template>
 

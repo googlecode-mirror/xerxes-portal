@@ -191,7 +191,23 @@
 <xsl:template name="sidebar" />
 <xsl:template name="categories_sidebar" />
 <xsl:template name="categories_sidebar_alt" />
-<xsl:template name="breadcrumb_start" />
+
+<!-- 
+	TEMPLATE: BREADCRUMB START
+	The start of the breadcrumb trail, which can include links to the library or campus
+	website.  Also here we break out the Xerxes 'home' link in case some section of the
+	application (my saved records, for example) that might not want to be conceptually
+	seperate
+-->
+
+
+<xsl:template name="breadcrumb_start">
+
+	<xsl:if test="not(request/base = 'databases' and request/action ='categories')">
+		<a href="{$base_url}">Home</a> <xsl:copy-of select="$text_breadcrumb_seperator" />
+	</xsl:if>
+
+</xsl:template>
 
 <!-- 
 	TEMPLATE: TITLE
@@ -211,10 +227,6 @@
 	<xsl:param name="condition" />
 	
 	<xsl:call-template name="breadcrumb_start" />
-
-	<xsl:if test="$condition != 1">
-		<a href="{$base_url}">Home</a> <xsl:copy-of select="$text_breadcrumb_seperator" />
-	</xsl:if>
 	
 	<xsl:choose>
 		<xsl:when test="$condition = 2">
@@ -239,7 +251,6 @@
 	
 	<xsl:call-template name="breadcrumb_start" />
 	
-	<a href="{$base_url}">Home</a> <xsl:copy-of select="$text_breadcrumb_seperator" />
 	<a href="{results/search/context_url}"><xsl:value-of select="results/search/context" /></a> <xsl:copy-of select="$text_breadcrumb_seperator" />
 	
 	<xsl:choose>
@@ -263,8 +274,6 @@
 		
 	<xsl:call-template name="breadcrumb_start" />
 	
-	<a href="{$base_url}">Home</a> <xsl:copy-of select="$text_breadcrumb_seperator" />
-	
 	<xsl:choose>
 		<xsl:when test="$condition != 1">
 			<a href="{//navbar/element[@id='saved_records']}">My Saved Records</a> <xsl:copy-of select="$text_breadcrumb_seperator" />
@@ -282,8 +291,6 @@
 	<xsl:param name="condition">1</xsl:param>
 		
 	<xsl:call-template name="breadcrumb_start" />
-	
-	<a href="{$base_url}">Home</a> <xsl:copy-of select="$text_breadcrumb_seperator" />
 	
 	<xsl:if test="not(category/@is_default_collection = 'yes')">
 		<a href="{navbar/element[@id='saved_collections']/url}"><xsl:copy-of select="$text_header_collections"/></a> <xsl:copy-of select="$text_breadcrumb_seperator" />	
@@ -536,11 +543,9 @@
 			
 			<label for="tags-{$id}"><xsl:copy-of select="$text_records_tags" /></label>
 			
-			<input type="text" name="tags" id="tags-{$id}" class="tagsInput" value="{$tag_list}" />
-			
-			<span class="folderLabelsSubmit">
-				<input id="submit-{$id}" type="submit" name="submitButton" value="Update" class="tagsSubmit" />
-			</span>
+			<input type="text" name="tags" id="tags-{$id}" class="tagsInput" value="{$tag_list}" />			
+			<xsl:text> </xsl:text>
+			<input id="submit-{$id}" type="submit" name="submitButton" value="Update" class="tagsSubmit" />
 		</form>
 	</div>
 	
