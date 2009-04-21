@@ -1,4 +1,4 @@
-# Create tables for user-created categories
+﻿# Create tables for user-created categories
 
 USE xerxes;
 
@@ -33,3 +33,6 @@ CREATE TABLE xerxes_user_subcategory_databases(
 	FOREIGN KEY (subcategory_id) REFERENCES xerxes_user_subcategories (id) ON DELETE CASCADE
 );
 
+# fix for performance on large saved records tables
+
+CREATE INDEX xerxes_records_original_id_idx ON xerxes_records(original_id);
