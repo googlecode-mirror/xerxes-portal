@@ -656,6 +656,7 @@
 							</a>
 						</xsl:otherwise>
 					</xsl:choose>
+					<xsl:text> </xsl:text>					
 				</div>
 					
 				<div class="subjectDatabaseInfo">
@@ -665,9 +666,12 @@
 						<xsl:attribute name="src"><xsl:value-of select="//config/base_url" />/images/info.gif</xsl:attribute>
 					</img>
 					</a>
+					<xsl:text> </xsl:text>
 				</div>
 				<xsl:if test="group_restriction">
-					<div class="subjectDatabaseRestriction"><xsl:call-template name="db_restriction_display" /></div>
+					<div class="subjectDatabaseRestriction">
+						<xsl:call-template name="db_restriction_display" />
+					</div>
 				</xsl:if>
 				
 				</li>
