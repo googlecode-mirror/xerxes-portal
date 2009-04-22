@@ -604,32 +604,34 @@
 				
 				<xsl:choose>
 				<xsl:when test="not($should_show_checkboxes)">
-				<xsl:text> </xsl:text>
+					<xsl:text> </xsl:text>
 				</xsl:when>
 				<xsl:when test="searchable = 1">
 					<xsl:choose>
-					<xsl:when test="$should_lock_nonsearchable	and searchable_by_user != '1'" >
-					<!-- if we have a logged in user (or a registered guest), but they can't search this, show them a lock. -->			
-					<img src="{$base_url}/images/lock.png" alt="restricted to campus users only" title="Restricted, click database title to search individually"/>
-					</xsl:when>
-					<xsl:otherwise>
-					<!-- if no user logged in, or user logged in and they can
-					search this, show them a checkbox. -->
-					<xsl:element name="input">
-						<xsl:attribute name="name">database</xsl:attribute>
-						<xsl:attribute name="id"><xsl:value-of select="metalib_id" /></xsl:attribute>
-						<xsl:attribute name="value"><xsl:value-of select="metalib_id" /></xsl:attribute>
-						<xsl:attribute name="type">checkbox</xsl:attribute>
-						<xsl:if test="$subcategory = 1 and $prev_checkbox_count &lt; //config/search_limit">
-							<xsl:attribute name="checked">checked</xsl:attribute>
-						</xsl:if>
-						<xsl:attribute name="class">subjectDatabaseCheckbox</xsl:attribute>
-					</xsl:element>
-					</xsl:otherwise>
+						<xsl:when test="$should_lock_nonsearchable	and searchable_by_user != '1'" >
+							<!-- if we have a logged in user (or a registered guest), but they can't search this, show them a lock. -->			
+							<img src="{$base_url}/images/lock.png" alt="restricted to campus users only" title="Restricted, click database title to search individually"/>
+							<xsl:text> </xsl:text>
+						</xsl:when>
+						<xsl:otherwise>
+							<!-- if no user logged in, or user logged in and they can
+							search this, show them a checkbox. -->
+							<xsl:element name="input">
+								<xsl:attribute name="name">database</xsl:attribute>
+								<xsl:attribute name="id"><xsl:value-of select="metalib_id" /></xsl:attribute>
+								<xsl:attribute name="value"><xsl:value-of select="metalib_id" /></xsl:attribute>
+								<xsl:attribute name="type">checkbox</xsl:attribute>
+								<xsl:if test="$subcategory = 1 and $prev_checkbox_count &lt; //config/search_limit">
+									<xsl:attribute name="checked">checked</xsl:attribute>
+								</xsl:if>
+								<xsl:attribute name="class">subjectDatabaseCheckbox</xsl:attribute>
+							</xsl:element>
+						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:when>
 				<xsl:otherwise>
 					<img src="{$base_url}/images/link-out.gif" alt="Click database title to search individually" title="Click database title to search individually"/>
+					<xsl:text> </xsl:text>
 				</xsl:otherwise>
 				</xsl:choose>
 				

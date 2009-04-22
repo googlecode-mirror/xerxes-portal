@@ -271,8 +271,9 @@
 								</xsl:call-template>
 							</xsl:otherwise>
 						</xsl:choose>
+						<xsl:text> </xsl:text>
 						<span class="nonBreaking">
-						<xsl:text> ( </xsl:text>
+						<xsl:text>( </xsl:text>
 						<xsl:choose>
 							<xsl:when test="no_of_documents = '888888888'">
 								<xsl:text>results found</xsl:text>
