@@ -139,9 +139,7 @@
 					<xsl:call-template name="main" />
 				</div>
 			</div>
-			<div class="yui-b">
-				<xsl:call-template name="sidebar" />
-			</div>
+			<xsl:call-template name="sidebar_wrapper" />
 		</div>
 		<div id="ft">
 			<xsl:call-template name="footer_div" />
@@ -189,8 +187,26 @@
 <xsl:template name="page_name" />
 <xsl:template name="breadcrumb" />
 <xsl:template name="sidebar" />
+<xsl:template name="sidebar_additional" />
 <xsl:template name="categories_sidebar" />
 <xsl:template name="categories_sidebar_alt" />
+
+
+<!--
+	TEMPLATE: SIDEBAR WRAPPER
+	This defines the overarching sidebar element.  If a page wants to fundamentally change
+	or eliminate the sidebar completely, it should re-define this template
+-->
+
+<xsl:template name="sidebar_wrapper">
+	<div class="yui-b">
+		<div id="sidebar">
+			<xsl:call-template name="sidebar" />
+			<xsl:call-template name="sidebar_additional" />
+		</div>
+	</div>
+</xsl:template>
+
 
 <!-- 
 	TEMPLATE: BREADCRUMB START
@@ -199,7 +215,6 @@
 	application (my saved records, for example) that might not want to be conceptually
 	seperate
 -->
-
 
 <xsl:template name="breadcrumb_start">
 
@@ -799,8 +814,6 @@
 -->
 
 <xsl:template name="folder_header_limit">
-	
-	<!-- @todo fix these links to use pretty scheme -->
 	
 	<xsl:if test="request/label">
 		<h2>
@@ -1637,15 +1650,38 @@
 	
 	</ul>
 
+</xsl:template>
+
+<!-- 
+	TEMPLATE HIDDEN TAG LAYERS
+	These are used in the metasearch results (but not folder results because it already has some of these) 
+	and record pages for the auto-complete tag input
+-->
+
+<xsl:template name="hidden_tag_layers">
+	
+	<div id="tag_suggestions" class="autocomplete" style="display:none;"></div>
+
+	<div id="template_tag_input" class="results_label resultsFullText" style="display:none;">
+		<xsl:call-template name="tag_input">
+			<xsl:with-param name="id">template</xsl:with-param>
+		</xsl:call-template> 
+	</div>
+
+	<div id="labelsMaster" class="folderOutput" style="display: none">
+		<xsl:call-template name="tags_display" />
+	</div>
 
 </xsl:template>
 
+
+
 <!--
-	##########################################################
-	#                                                        #
-	#   DEPRICATED TEMPLATES FOR VERSION 1.X COMPATIBILITY   #
-	#                                                        #
-	##########################################################
+	#############################
+	#                           #
+	#   DEPRICATED TEMPLATES    #
+	#                           #
+	#############################
 -->
 
 <xsl:template name="metasearch_options" />

@@ -18,9 +18,7 @@
 <xsl:output method="html" encoding="utf-8" indent="yes" />
 
 <xsl:template name="sidebar">
-	<div id="sidebar">
-		<xsl:call-template name="account_sidebar" />
-	</div>
+	<xsl:call-template name="account_sidebar" />
 </xsl:template>
 
 <xsl:template name="page_name">
@@ -420,22 +418,10 @@
 			</xsl:if>
 	
 		</xsl:for-each>
+			
+		<!-- tag input -->
 		
-		<!-- @todo factor this out to includes? -->
-		
-		<!-- used by ajax to add a tag input form after record is saved -->
-		
-		<div id="tag_suggestions" class="autocomplete" style="display:none;"></div>
-		
-		<div id="template_tag_input" class="results_label resultsFullText" style="display:none;">
-			<xsl:call-template name="tag_input">
-				<xsl:with-param name="id">template</xsl:with-param>
-			</xsl:call-template> 
-		</div>
-	
-		<div id="labelsMaster" class="folderOutput" style="display: none">
-			<xsl:call-template name="tags_display" />
-		</div>
+		<xsl:call-template name="hidden_tag_layers" />
 
 	</div>
 	

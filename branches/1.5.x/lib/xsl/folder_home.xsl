@@ -46,46 +46,44 @@
 
 <xsl:template name="sidebar">
 
-	<div id="sidebar">
-		<xsl:call-template name="account_sidebar"/>
+	<xsl:call-template name="account_sidebar"/>
+	
+	<xsl:if test="results/records/record">
+	
+		<div id="exports" class="box">
+			<h2>Export Records</h2>
+			<ul>
+				<li id="export-email"><a href="{export_functions/export_option[@id='email']/url}">Email records to yourself</a></li>
+				<li id="export-refworks"><a href="{export_functions/export_option[@id='refworks']/url}">Export to Refworks</a></li>
+				<li id="export-text"><a href="{export_functions/export_option[@id='text']/url}">Download to text file</a></li>
+				<li id="export-endnote"><a href="{export_functions/export_option[@id='endnote']/url}">Download to Endnote, Zotero, etc.</a></li>
+			</ul>
+		</div>
 		
-		<xsl:if test="results/records/record">
+		<div id="format_limit" class="box">
+			<h2>Limit by Format</h2>
+			<ul>
+			<xsl:for-each select="format_facets/facet">
+				<li>
+					<xsl:choose>
+						<xsl:when test="@name = //request/type">
+							<strong><xsl:value-of select="@name" /></strong> ( <xsl:value-of select="text()" /> )
+						</xsl:when>
+						<xsl:otherwise>
+							<a href="{@url}"><xsl:value-of select="@name" /></a> ( <xsl:value-of select="text()" /> )
+						</xsl:otherwise>
+					</xsl:choose>
+				</li>
+			</xsl:for-each>
+			</ul>
+		</div>
 		
-			<div id="exports" class="box">
-				<h2>Export Records</h2>
-				<ul>
-					<li id="export-email"><a href="{export_functions/export_option[@id='email']/url}">Email records to yourself</a></li>
-					<li id="export-refworks"><a href="{export_functions/export_option[@id='refworks']/url}">Export to Refworks</a></li>
-					<li id="export-text"><a href="{export_functions/export_option[@id='text']/url}">Download to text file</a></li>
-					<li id="export-endnote"><a href="{export_functions/export_option[@id='endnote']/url}">Download to Endnote, Zotero, etc.</a></li>
-				</ul>
+		<xsl:if test="$temporarySession != 'true'">
+			<div id="labelsMaster" class="box">
+				<xsl:call-template name="tags_display" />
 			</div>
-			
-			<div id="format_limit" class="box">
-				<h2>Limit by Format</h2>
-				<ul>
-				<xsl:for-each select="format_facets/facet">
-					<li>
-						<xsl:choose>
-							<xsl:when test="@name = //request/type">
-								<strong><xsl:value-of select="@name" /></strong> ( <xsl:value-of select="text()" /> )
-							</xsl:when>
-							<xsl:otherwise>
-								<a href="{@url}"><xsl:value-of select="@name" /></a> ( <xsl:value-of select="text()" /> )
-							</xsl:otherwise>
-						</xsl:choose>
-					</li>
-				</xsl:for-each>
-				</ul>
-			</div>
-			
-			<xsl:if test="$temporarySession != 'true'">
-				<div id="labelsMaster" class="box">
-					<xsl:call-template name="tags_display" />
-				</div>
-			</xsl:if>
 		</xsl:if>
-	</div>
+	</xsl:if>
 
 </xsl:template>
 
@@ -110,23 +108,25 @@
 					</div>
 					<div class="yui-u">
 						<xsl:if test="sort_display">
-							sort by:<xsl:text> </xsl:text>
-							<xsl:for-each select="sort_display/option">
-								<xsl:choose>
-									<xsl:when test="@active = 'true'">
-										<strong><xsl:value-of select="text()" /></strong>
-									</xsl:when>
-									<xsl:otherwise>
-										<xsl:variable name="link" select="@link" />
-										<a href="{$link}">
-											<xsl:value-of select="text()" />
-										</a>
-									</xsl:otherwise>
-								</xsl:choose>
-								<xsl:if test="following-sibling::option">
-									<xsl:text> | </xsl:text>
-								</xsl:if>
-							</xsl:for-each>
+							<div id="sortOptions">
+								sort by:<xsl:text> </xsl:text>
+								<xsl:for-each select="sort_display/option">
+									<xsl:choose>
+										<xsl:when test="@active = 'true'">
+											<strong><xsl:value-of select="text()" /></strong>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:variable name="link" select="@link" />
+											<a href="{$link}">
+												<xsl:value-of select="text()" />
+											</a>
+										</xsl:otherwise>
+									</xsl:choose>
+									<xsl:if test="following-sibling::option">
+										<xsl:text> | </xsl:text>
+									</xsl:if>
+								</xsl:for-each>
+							</div>
 						</xsl:if>
 					</div>
 				</div>
@@ -156,9 +156,7 @@
 		</xsl:choose>
 	</div>
 	
-	<!-- @todo factor this out to includes? -->
-	<!-- used by autocompleter -->
-	<div class="autocomplete" id="tag_suggestions" style="display:none"></div>
+	<div id="tag_suggestions" class="autocomplete" style="display:none;"></div>
 
 </xsl:template>
 </xsl:stylesheet>

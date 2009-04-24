@@ -15,16 +15,14 @@
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 <xsl:import href="includes.xsl" />
-<xsl:output method="xml" encoding="utf-8" indent="yes" doctype-public="-//W3C//DTD HTML 4.01 Transitional//EN" doctype-system="http://www.w3.org/TR/html4/loose.dtd"/>
+<xsl:output method="html" encoding="utf-8" indent="yes" doctype-public="-//W3C//DTD HTML 4.01 Transitional//EN" doctype-system="http://www.w3.org/TR/html4/loose.dtd"/>
 
 <xsl:template match="/*">
 	<xsl:call-template name="surround" />
 </xsl:template>
 
 <xsl:template name="sidebar">
-	<div id="sidebar">
-		<xsl:call-template name="account_sidebar" />
-	</div>
+	<xsl:call-template name="account_sidebar" />
 </xsl:template>
 
 <xsl:template name="breadcrumb">

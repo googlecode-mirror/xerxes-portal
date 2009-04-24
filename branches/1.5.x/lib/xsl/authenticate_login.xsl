@@ -25,6 +25,10 @@
 	Login
 </xsl:template>
 
+<xsl:template name="sidebar_wrapper">
+	<!-- no sidebar -->
+</xsl:template>
+
 <xsl:template name="main">
 
 	<xsl:variable name="return" 	select="request/return" />

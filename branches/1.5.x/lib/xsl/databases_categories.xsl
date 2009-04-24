@@ -31,10 +31,7 @@
 </xsl:template>
 
 <xsl:template name="sidebar">
-	<div id="sidebar">
-		<xsl:call-template name="account_sidebar" />
-		<xsl:call-template name="categories_sidebar_alt" />
-	</div>
+	<xsl:call-template name="account_sidebar" />
 </xsl:template>
 
 

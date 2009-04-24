@@ -31,13 +31,11 @@
 </xsl:template>
 
 <xsl:template name="sidebar">
-	<div id="sidebar">
-		<xsl:call-template name="account_sidebar"/>
-		<xsl:if test="category/@owned_by_user = //session/username">
-			<xsl:call-template name="collections_sidebar"/>
-		</xsl:if>
-		<xsl:call-template name="snippet_sidebar" />
-	</div>
+	<xsl:call-template name="account_sidebar"/>
+	<xsl:if test="category/@owned_by_user = //session/username">
+		<xsl:call-template name="collections_sidebar"/>
+	</xsl:if>
+	<xsl:call-template name="snippet_sidebar" />
 </xsl:template>
 
 <xsl:template name="main">
