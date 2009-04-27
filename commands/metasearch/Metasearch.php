@@ -23,7 +23,7 @@ abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
 	public function execute(Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry)
 	{
 		$this->objCache = new Xerxes_Cache( );
-    	parent::execute($objRequest, $objRegistry);
+    		parent::execute($objRequest, $objRegistry);
 	}
 	
 	/**
@@ -163,7 +163,7 @@ abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
 				
 				if ( ! preg_match("/[a-zA-Z]{1}/", $strTotalHits) )
 				{
-					$base_info->no_of_documents = number_format( (int) $strTotalHits);
+					// $base_info->no_of_documents = number_format( (int) $strTotalHits);
 				}
 				
 				if ( $base_info->set_number == $strResultSet )
