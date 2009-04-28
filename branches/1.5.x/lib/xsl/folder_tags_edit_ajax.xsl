@@ -17,7 +17,7 @@
 <xsl:include href="includes.xsl" />
 <xsl:output method="html" encoding="utf-8" indent="yes" />
 
-<xsl:template match="/folder">
+<xsl:template match="/*">
 	
 	<xsl:call-template name="tags_display" />
 	

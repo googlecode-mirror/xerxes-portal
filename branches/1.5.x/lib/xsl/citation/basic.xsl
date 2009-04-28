@@ -18,7 +18,7 @@
 <xsl:include href="../includes.xsl" />
 <xsl:output method="text" encoding="utf-8"/>
 
-<xsl:template match="/folder">
+<xsl:template match="/*">
 
 	<xsl:for-each select="//xerxes_record">
     <xsl:variable name="metalib_db_id" select="metalib_id" />

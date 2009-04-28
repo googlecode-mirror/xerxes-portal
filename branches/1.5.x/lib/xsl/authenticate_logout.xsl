@@ -17,16 +17,15 @@
 <xsl:import href="includes.xsl" />
 <xsl:output method="html" encoding="utf-8" indent="yes" doctype-public="-//W3C//DTD HTML 4.01 Transitional//EN" doctype-system="http://www.w3.org/TR/html4/loose.dtd"/>
 
-<xsl:template match="/authenticate">
-	<xsl:call-template name="surround" />
+<xsl:template match="/*">
+	<xsl:call-template name="surround">
+		<xsl:with-param name="surround_template">none</xsl:with-param>
+		<xsl:with-param name="sidebar">none</xsl:with-param>
+	</xsl:call-template>
 </xsl:template>
 
 <xsl:template name="page_name">
 	Logout
-</xsl:template>
-
-<xsl:template name="sidebar_wrapper">
-	<!-- no sidebar -->
 </xsl:template>
 
 <xsl:template name="main">

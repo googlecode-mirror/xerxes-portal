@@ -6,21 +6,25 @@
   <xsl:output method="html" />
   
   <xsl:template match="/*">
+  
     <!-- default true -->
+  
     <xsl:variable name="disp_show_desc" select="not( request/disp_show_desc = 'false' )" />
     <xsl:variable name="disp_show_info_link" select="not(request/disp_show_info_link = 'false')"/>
 
     <!-- default false -->
     <xsl:variable name="disp_embed_css" select="request/disp_embed_css = 'true'"/>
 
+  <!-- if it's a partial page and we want to include CSS anyway, do it.-->
+  <xsl:if test="$disp_embed_css">
+	<xsl:call-template name="disp_embed_css" />
+  </xsl:if>
+
   
     <xsl:for-each select="/*/databases/database[1]">  
 
 
-      <!-- if it's a partial page and we want to include CSS anyway, do it.-->
-      <xsl:if test="$disp_embed_css">
-        <xsl:call-template name="disp_embed_css" />
-      </xsl:if>
+
     
     <div id="xerxes_outer_wrapper">
         <div class="alphaTitle">

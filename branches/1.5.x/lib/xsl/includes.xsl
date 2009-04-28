@@ -71,8 +71,8 @@
 	<xsl:variable name="show_save_db_on_detail" select="//config/show_save_db_on_detail" />
 
 	
-	<xsl:variable name="document">doc2</xsl:variable>
-	<xsl:variable name="template">yui-t6</xsl:variable>
+	<xsl:variable name="document">doc</xsl:variable>
+	<xsl:variable name="template">yui-t5</xsl:variable>
 	
 	<!-- Other configurable variables -->
 	
@@ -97,6 +97,7 @@
 
 <xsl:template name="surround">
 	<xsl:param name="surround_template"><xsl:value-of select="$template" /></xsl:param>
+	<xsl:param name="sidebar" />
 
 	<html lang="eng">
 	<head>
@@ -139,7 +140,11 @@
 					<xsl:call-template name="main" />
 				</div>
 			</div>
-			<xsl:call-template name="sidebar_wrapper" />
+			
+			<xsl:if test="$sidebar != 'none'">
+				<xsl:call-template name="sidebar_wrapper" />
+			</xsl:if>
+
 		</div>
 		<div id="ft">
 			<xsl:call-template name="footer_div" />
@@ -194,8 +199,9 @@
 
 <!--
 	TEMPLATE: SIDEBAR WRAPPER
-	This defines the overarching sidebar element.  If a page wants to fundamentally change
-	or eliminate the sidebar completely, it should re-define this template
+	This defines the overarching sidebar element.  Pages normally will use sidebar template, which 
+	defines the content, but if a page can call this template to change the _structure_ of the 
+	sidebar as well
 -->
 
 <xsl:template name="sidebar_wrapper">

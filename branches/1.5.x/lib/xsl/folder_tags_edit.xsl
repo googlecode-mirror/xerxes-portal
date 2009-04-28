@@ -17,7 +17,7 @@
 <xsl:include href="includes.xsl" />
 <xsl:output method="html" encoding="utf-8" indent="yes" doctype-public="-//W3C//DTD HTML 4.01 Transitional//EN" doctype-system="http://www.w3.org/TR/html4/loose.dtd"/>
 
-<xsl:template match="/folder">
+<xsl:template match="/*">
 	<xsl:call-template name="surround" />
 </xsl:template>
 

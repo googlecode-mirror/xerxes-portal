@@ -67,10 +67,37 @@ p {
 	margin-bottom: 1em;
 }
 
+/** YUI TEMAPLTE ADDITIONS **/
+
+
 #doc3 #bd {
 	margin-left: 10px;
 	margin-right: 10px;
 }
+
+.xer-t5 {
+	margin:auto;
+	text-align:left;
+	width:57.69em;
+	*width:56.25em;
+}
+
+.xer-t5 #yui-main {
+	float:right;
+	margin-left:-25em;
+}
+
+.xer-t5 .yui-b{
+	float:left;
+	width:18.4615em;
+	*width:18.00em;
+}
+.xer-t5 #yui-main .yui-b{
+	margin-left:19.4615em;
+	*margin-left:19.125em;
+}
+
+
 
 /** SIDEBAR **/
 
@@ -161,6 +188,10 @@ p {
 	padding-bottom: 12px;
 }
 
+#databasesSearch {
+	margin-bottom: 30px;
+}
+
 #searchLabel {
 	float:left; 
 	padding-top: .3em;
@@ -220,6 +251,59 @@ p {
 	margin-top: 30px;
 	margin-bottom: 30px;
 	line-hright: 130%;
+}
+
+#alphaLetters {
+	border: 1px solid #ccc;
+	border-left: none;
+	border-right: none;
+	margin-top: 30px;
+	margin-bottom: 30px;
+	padding: 10px;
+}
+
+#snippetControl {
+	background-color: #efefef;
+	padding: 10px;
+	padding-left: 30px;
+}
+
+#snippetControl h2 {
+	margin-left: -20px;
+}
+
+#snippetDisplayTable td {
+	vertical-align: top;
+	padding-bottom: .8em;
+	padding-right: .4em;
+}
+
+#snippetSubcategories {
+	margin: 1em;
+	margin-right: 0px;
+}
+
+#snippetInclude textarea {
+	font-size: 80%;
+	height: 70px;
+	width: 100%;
+	margin-bottom: 1em;
+}
+
+#example {
+	border: 2px solid #ccc;
+	padding: 20px;	
+} 
+
+#example_legend {
+	font-size: 140%;
+}
+
+p.optionInfo {
+	color: #444;
+	font-size: 90%;
+	padding: 4px;
+	padding-left: 10px;
 }
 
 
@@ -295,9 +379,12 @@ table.reorderTable td {
 	border-bottom: 1px solid #eee;
 }
 
-/** METASEARCH RESULTS **/
+/** RESULTS **/
 
-/* records */
+#sortOptions {
+	text-align: right;
+	padding-right: 10px;
+}	
 
 .result {
 	margin-bottom: 30px;
@@ -367,8 +454,7 @@ table.reorderTable td {
 /** RECORD FULL VIEW **/
 
 #record h2 {
-	padding-top: 20px;
-	padding-bottom: 20px;
+	margin-top: 1em;
 }
 
 #record li {
