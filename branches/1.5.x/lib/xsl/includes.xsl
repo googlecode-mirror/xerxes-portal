@@ -71,8 +71,8 @@
 	<xsl:variable name="show_save_db_on_detail" select="//config/show_save_db_on_detail" />
 
 	
-	<xsl:variable name="document">doc</xsl:variable>
-	<xsl:variable name="template">yui-t5</xsl:variable>
+	<xsl:variable name="document">doc3</xsl:variable>
+	<xsl:variable name="template">yui-t6</xsl:variable>
 	
 	<!-- Other configurable variables -->
 	
@@ -251,10 +251,10 @@
 	
 	<xsl:choose>
 		<xsl:when test="$condition = 2">
-			Subject <xsl:copy-of select="$text_breadcrumb_seperator" />
+			<a href="{//category/url}"><xsl:value-of select="//category/@name" /></a> <xsl:copy-of select="$text_breadcrumb_seperator" />
 		</xsl:when>
 		<xsl:when test="$condition = 3">
-			Database <xsl:copy-of select="$text_breadcrumb_seperator" />
+			<a href="{//embed_info/direct_url}"><xsl:value-of select="//database/title_display" /></a> <xsl:copy-of select="$text_breadcrumb_seperator" />
 		</xsl:when>
 		<xsl:when test="$condition = 4">
 			<a href="{//navbar/element[@id='database_list']}">Databases A-Z</a> <xsl:copy-of select="$text_breadcrumb_seperator" />

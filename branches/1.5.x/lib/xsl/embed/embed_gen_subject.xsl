@@ -30,6 +30,13 @@
 	Generate Snippet
 </xsl:template>
 
+<xsl:template name="breadcrumb">
+	<xsl:call-template name="breadcrumb_databases">
+		<xsl:with-param name="condition">2</xsl:with-param>
+	</xsl:call-template>
+	<xsl:call-template name="page_name" />
+</xsl:template>
+
 <xsl:template name="main">
 
 	<xsl:variable name="noscript_content">
