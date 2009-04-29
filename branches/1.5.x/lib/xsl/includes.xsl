@@ -389,11 +389,11 @@
 				</option>
 			</select>
 		
-			<br id="searchBox_advanced_newline">
+			<div id="searchBox_advanced_newline">
 				<xsl:if test="not($advanced_mode)">
 					<xsl:attribute name="style">display:none;</xsl:attribute>
 				</xsl:if>
-			</br>
+			</div>
 			
 			<label id="field2label" for="field2" class="ada">
 				<xsl:if test="not($advanced_mode)">

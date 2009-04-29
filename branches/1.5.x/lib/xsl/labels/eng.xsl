@@ -3,8 +3,7 @@
 
 <!-- 
 	TEXT LABELS 
-	These are global variables that provide the text for the system.  We'll be slowly
-	replacing the text in the templates with these starting with version 1.3.
+	These are global variables that provide the text for the system.
 	
 	Variable names should follow the pattern of: text_{location}_{unique-name}
 	Keep them in alphabetical order!!

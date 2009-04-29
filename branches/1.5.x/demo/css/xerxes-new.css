@@ -173,6 +173,11 @@ p {
 	border-left-color: #CCCCCC;
 }
 
+#bd button, #bd option, #bd input[type="text"], #bd input[type="textarea"], #bd input[type="checkbox"], #bd input[type="radio"], 
+#bd input[type="reset"], #bd input[type="submit"] {
+	padding:1px;
+}
+
 /** BREADCRUMBS **/
 
 #breadcrumb {
@@ -203,6 +208,10 @@ p {
 
 #metasearch_input_toggle {
 	margin-top: 10px;
+}
+
+#searchBox_advanced_newline {
+	margin-top: 3px;
 }
 
 #sort {
@@ -427,6 +436,10 @@ table.reorderTable td {
 
 .resultsAvailability {
 	margin-top: 5px;
+}
+
+.results_label {
+	padding: 5px;
 }
 
 /* pager */
