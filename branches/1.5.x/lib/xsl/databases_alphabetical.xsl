@@ -17,10 +17,6 @@
 <xsl:import href="includes.xsl" />
 <xsl:output method="html" encoding="utf-8" indent="yes" doctype-public="-//W3C//DTD HTML 4.01 Transitional//EN" doctype-system="http://www.w3.org/TR/html4/loose.dtd"/>
 
-<!-- @todo move this to config -->
-
-<xsl:variable name="show_db_searchable_icon" select="true()" />
-
 <!-- certain operational parameters, given in request. -->
 
 <xsl:variable name="show_alpha_links" select="not(/knowledge_base/request/show_alpha_links) or /knowledge_base/request/show_alpha_links != 'false'" />
@@ -117,19 +113,15 @@
 				</a>
 				
 				<xsl:if test="title_display">
-					&#160;<a>
-					<xsl:attribute name="href"><xsl:value-of select="url" /></xsl:attribute>
-					<img alt="more information" title="more information" src="images/info.gif" class="mini_icon">
-						<xsl:attribute name="src"><xsl:value-of select="/knowledge_base/config/base_url" />/images/info.gif</xsl:attribute>
-					</img>
-					
-					<xsl:if test="searchable and $show_db_searchable_icon">
+					&#160;
+					<a href="{url}">
+
+						<img alt="more information" title="more information" src="images/info.gif" id="iconInfo">
+							<xsl:attribute name="src"><xsl:value-of select="/knowledge_base/config/base_url" />/images/info.gif</xsl:attribute>
+						</img>						
 						<xsl:text> </xsl:text>
-						<xsl:variable name="application_name" select="//config/application_name" />
-						<img class="mini_icon" alt="searchable by {$application_name}" 
-							title="searchable by {$application_name}" src="{$base_url}/images/famfamfam/magnifier.png"/>
-					</xsl:if>
-				
+						<img alt="searchable by {$app_name}" title="searchable by {$app_name}" id="iconSearchable"
+							 src="{$base_url}/images/famfamfam/magnifier.png"/>
 					</a>
 					
 					<xsl:if test="count(group_restriction) > 0" >

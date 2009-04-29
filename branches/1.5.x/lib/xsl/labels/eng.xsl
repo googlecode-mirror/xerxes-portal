@@ -23,7 +23,11 @@
 	<xsl:variable name="text_databases_az_breadcrumb_matching">Databases matching</xsl:variable>
 	
 	<xsl:variable name="text_databases_category_quick_desc">
-		Search <xsl:value-of select="count(//category[1]/subcategory[1]/database)"/> of our most popular databases
+		<xsl:text>Search </xsl:text>
+		<xsl:call-template name="text_number_to_words">
+			<xsl:with-param name="number" select="count(//category[1]/subcategory[1]/database[searchable = 1])" /> 
+		</xsl:call-template>
+		<xsl:text> of our most popular databases</xsl:text>
 	</xsl:variable>
 	<xsl:variable name="text_databases_category_subject">Search by Subject</xsl:variable>
 	<xsl:variable name="text_databases_category_subject_desc">Search databases specific to your area of study.</xsl:variable>
@@ -82,9 +86,29 @@
 
 	<xsl:variable name="text_record_citation_note">These citations are software generated and may contain errors. 
 	To verify accuracy, check the appropriate style guide.</xsl:variable>
+
+	<xsl:template name="text_number_to_words">
+		<xsl:param name="number" />
+		<xsl:choose>
+			<xsl:when test="$number = 1">one</xsl:when>
+			<xsl:when test="$number = 2">two</xsl:when>
+			<xsl:when test="$number = 3">three</xsl:when>
+			<xsl:when test="$number = 4">four</xsl:when>
+			<xsl:when test="$number = 5">five</xsl:when>
+			<xsl:when test="$number = 6">six</xsl:when>
+			<xsl:when test="$number = 7">seven</xsl:when>
+			<xsl:when test="$number = 8">eight</xsl:when>
+			<xsl:when test="$number = 9">nine</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="$number" />
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
 	
-	<xsl:variable name="text_collection_default_new_name" select="//config/default_collection_name" />
-	<xsl:variable name="text_collection_default_new_section_name" select="//config/default_collection_section_name" />
-
-
+	
+	
+	
+	
+	
+	
 </xsl:stylesheet>

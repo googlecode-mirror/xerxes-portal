@@ -19,10 +19,6 @@
 
 <!-- show database search box where available? You can override in a local xsl to false if you don't want to -->
 
-<!-- @todo remove this to config -->
-
-<xsl:variable name="show_db_detail_search" select="true()" />
-
 <xsl:template match="/*">
 	<xsl:call-template name="surround" />
 </xsl:template>
@@ -86,10 +82,8 @@
 			</xsl:choose>
 		</xsl:if>
 		
-		<div class="database_functions" style="margin-top:10px;">
-			<xsl:if test="$show_collection_links">
-				<a class="categoryCommand add" href="{add_to_collection_url}">Save database</a>
-			</xsl:if>
+		<div id="saveDatabase">
+			<a href="{add_to_collection_url}">Save database</a>
 		</div>
 		
 		<div class="databasesDescription">

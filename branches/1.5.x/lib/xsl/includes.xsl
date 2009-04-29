@@ -45,6 +45,15 @@
 	<xsl:variable name="rewrite" 		select="//config/rewrite" />
 	<xsl:variable name="search_limit"	select="//config/search_limit" />
 	<xsl:variable name="link_target"	select="//config/link_target" />
+	<xsl:variable name="document" 		select="//config/document" />
+	<xsl:variable name="template"		select="//config/template" />
+
+	<xsl:variable name="show_db_detail_search"	select="//show_db_detail_search" />
+	<xsl:variable name="homepage_use_simple_search" select="//config/homepage_use_simple_search" />
+	<xsl:variable name="categories_num_columns" select="//config/categories_num_columns" />
+	<xsl:variable name="text_collection_default_new_name" select="//config/default_collection_name" />
+	<xsl:variable name="text_collection_default_new_section_name" select="//config/default_collection_section_name" />
+	
 	<xsl:variable name="base_include">
 		<xsl:choose>
 			<xsl:when test="//request/server/https and //request/server/https != 'off'">
@@ -55,27 +64,7 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
-	
-	<xsl:variable name="categories_num_columns">
-		<xsl:choose>
-			<xsl:when test="//config/categories_num_columns">
-				<xsl:value-of select="//config/categories_num_columns" />
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:text>3</xsl:text>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:variable>
-	
-	<xsl:variable name="show_collection_links" select="//config/show_collection_links" />
-	<xsl:variable name="show_save_db_on_detail" select="//config/show_save_db_on_detail" />
-
-	
-	<xsl:variable name="document">doc3</xsl:variable>
-	<xsl:variable name="template">yui-t6</xsl:variable>
-	
-	<!-- Other configurable variables -->
-	
+		
 	<xsl:variable name="app_mini_icon_url"><xsl:value-of select="$base_url" />/images/famfamfam/page_find.png</xsl:variable>
 	
 	<xsl:variable name="global_advanced_mode" 

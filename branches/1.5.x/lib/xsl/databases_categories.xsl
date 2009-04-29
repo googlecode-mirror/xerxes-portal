@@ -58,18 +58,7 @@
 						<h1><xsl:value-of select="$quick_search_category" /></h1>
 						<p><xsl:copy-of select="$text_databases_category_quick_desc" /></p>
 						<div id="search">
-							<xsl:choose>
-								<xsl:when test="//config/homepage_use_simple_search = 'true'">
-									<div class="searchBox">
-										<label for="query">Search</label> <xsl:text>: </xsl:text>
-										<input id="query" name="query" type="text" size="30" /><xsl:text> </xsl:text>
-										<input name="submit" type="submit" value="GO" />
-									</div>
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:call-template name="search_box" />
-								</xsl:otherwise>
-							</xsl:choose>
+							<xsl:call-template name="search_box" />
 						</div>
 					</div>
 				</form>
@@ -82,7 +71,13 @@
 		<h2><xsl:copy-of select="$text_databases_category_subject" /></h2>
 		<p><xsl:copy-of select="$text_databases_category_subject_desc" /></p>
 		
-		<div class="yui-gb">
+		<div>
+			<xsl:attribute name="class">
+				<xsl:choose>
+					<xsl:when test="$categories_num_columns = 2">yui-g</xsl:when>
+					<xsl:otherwise>yui-gb</xsl:otherwise>
+				</xsl:choose>
+			</xsl:attribute>
 			<xsl:call-template name="loop_columns" />
 		</div>
 		
