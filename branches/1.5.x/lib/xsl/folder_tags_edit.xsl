@@ -18,7 +18,10 @@
 <xsl:output method="html" encoding="utf-8" indent="yes" doctype-public="-//W3C//DTD HTML 4.01 Transitional//EN" doctype-system="http://www.w3.org/TR/html4/loose.dtd"/>
 
 <xsl:template match="/*">
-	<xsl:call-template name="surround" />
+	<xsl:call-template name="surround">
+		<xsl:with-param name="surround_template">none</xsl:with-param>
+		<xsl:with-param name="sidebar">none</xsl:with-param>
+	</xsl:call-template>
 </xsl:template>
 
 <xsl:template name="main">
@@ -34,10 +37,9 @@
 		</xsl:choose>
 	</xsl:variable>
 	
-	<div id="resultsArea">
-		<h2>Your labels have been updated</h2>
-		<p>Return to <a href="{$back}"><xsl:value-of select="$context" /></a></p>	
-	</div>
+	<h1>Your labels have been updated</h1>
+	<p>Return to <a href="{$back}"><xsl:value-of select="$context" /></a></p>	
+
 	
 </xsl:template>
 </xsl:stylesheet>

@@ -770,7 +770,7 @@
 				<li>
 					<input type="checkbox" name="record" value="{id}" id="record-{id}" checked="checked" />
 					<label for="record-{id}">
-						<a href="{url_full}" class="resultsTitle"><xsl:value-of select="title" /></a><br />
+						<a href="{url_full}"><xsl:value-of select="title" /></a><br />
 						<xsl:value-of select="author" /> / <xsl:value-of select="format" /> / <xsl:value-of select="year" />
 					</label>
 				</li>
@@ -855,7 +855,7 @@
 		<li>
 		<xsl:choose>
 			<xsl:when test="@label = //request/label">
-				<strong><span class="label_list_item"><xsl:value-of select="@label" /></span></strong> ( <xsl:value-of select="@total" /> )
+				<strong><xsl:value-of select="@label" /></strong> ( <xsl:value-of select="@total" /> )
 			</xsl:when>
 			<xsl:otherwise>
 				<a href="{@url}"><span class="label_list_item"><xsl:value-of select="@label" /></span></a> ( <xsl:value-of select="@total" /> )
@@ -1520,19 +1520,23 @@
 						</xsl:when>
 						
 						<xsl:when test="$link_resolver_allowed and //fulltext/issn = standard_numbers/issn">
-							<a href="{../url_open}&amp;fulltext=1" target="{$link_target}" >
-								<img src="{$base_include}/images/html.gif" alt="" width="16" height="16" border="0" />
-								<xsl:text> </xsl:text>
-								<xsl:copy-of select="$text_link_resolver_available" />
-							</a>
+							<div class="resultsAvailableOption">
+								<a href="{../url_open}&amp;fulltext=1" target="{$link_target}" >
+									<img src="{$base_include}/images/html.gif" alt="" width="16" height="16" border="0" />
+									<xsl:text> </xsl:text>
+									<xsl:copy-of select="$text_link_resolver_available" />
+								</a>
+							</div>
 						</xsl:when>
 						
 						<xsl:when test="$link_resolver_allowed">
-							<a href="{../url_open}" target="{$link_target}" >
-								<img src="{$base_url}/images/sfx.gif" alt="" />
-								<xsl:text> </xsl:text>
-								<xsl:copy-of select="$text_link_resolver_check" />
-							</a>
+							<div class="resultsAvailableOption">
+								<a href="{../url_open}" target="{$link_target}" >
+									<img src="{$base_url}/images/sfx.gif" alt="" />
+									<xsl:text> </xsl:text>
+									<xsl:copy-of select="$text_link_resolver_check" />
+								</a>
+							</div>
 						</xsl:when>
 						
 						<!-- if no direct link or link resolver, do we have an original record link? -->
@@ -1558,13 +1562,13 @@
 					<!-- holdings (to catalog)  -->
 					
 					<xsl:if test="links/link[@type='holdings'] and (//config/show_all_holdings_links = 'true' or //config/holdings_links/database[@metalib_id=$metalib_db_id])">
-						<span class="resultsAvailableOption">
+						<div class="resultsAvailableOption">
 							<xsl:call-template name="record_link">
 								<xsl:with-param name="type">holdings</xsl:with-param>
 								<xsl:with-param name="text" select="$text_link_holdings"/>
 								<xsl:with-param name="img_src" select="concat($base_url, '/images/book.gif')"/>
 							</xsl:call-template>
-						</span>
+						</div>
 					</xsl:if>
 					
 					<xsl:choose>
@@ -1572,7 +1576,7 @@
 						
 							<!-- save facility in metasearch area -->
 							
-							<span class="resultsAvailableOption" id="saveRecordOption_{$result_set}_{$record_number}">
+							<div class="resultsAvailableOption" id="saveRecordOption_{$result_set}_{$record_number}">
 								<img id="folder_{$result_set}{$record_number}"	width="17" height="15" alt="" border="0" >
 								<xsl:attribute name="src">
 									<xsl:choose> 
@@ -1604,7 +1608,7 @@
 										(<a href="{//navbar/element[@id = 'login']/url}">login to save permanently</a>)
 									</span>
 								</xsl:if>
-							</span>
+							</div>
 							
 							<!-- label/tag input for saved records, if record is saved and it's not a temporary session -->
 							
