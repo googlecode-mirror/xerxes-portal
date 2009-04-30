@@ -31,38 +31,53 @@
 
 <!-- Footer -->
 
-<xsl:template name="footer_div" >
+<xsl:template name="footer_div">
 	
 </xsl:template>
 
 <!-- 
-	Override categories_sidebar if you'd like to put something in the sidebar on the home page. 
-
-	session_auth_info provides an example of giving the user their login/authentication details.
-	The 'additional options' list below also provides a link to the a-z database list.
+	Add additional elements to the sidebar 
+	
+	you can limit which 'page' the item appears on by using the 'base' and 'action' request
+	elements, as in the example below.  if you want it to appear on _every_ page with a sidebar
+	then add the item _outside_ of that condition
+	
 -->
 
-<!--
-	
-<xsl:template name="categories_sidebar">
-		
-		<xsl:call-template name="session_auth_info" />
-	
-		<h2>Additional Options</h2>
-		<ul>
-			<li>
-				<a>
-				<xsl:attribute name="href"><xsl:value-of select="navbar/element[@id='database_list']/url" /></xsl:attribute>
-				Database List (A-Z)
-				</a>
-			</li>
-			<li>Ask a Librarian</li>
-			<li>Example</li>
-			<li>Another Example</li>
-		</ul>
+<xsl:template name="sidebar_additional">
+
+	<xsl:choose>
+		<xsl:when test="request/base = 'databases' and request/action = 'categories'">
+
+			<!-- session_auth_info provides an example of giving the user their login/authentication details. -->
+			
+			<!-- <xsl:call-template name="session_auth_info" /> -->
+
+			<!-- link to alpha database page, plus other examples -->
+			
+			<!--
+			
+			<div id="home_additional_options" class="box">
+			
+				<h2>Additional Options</h2>
+				<ul>
+					<li>
+						<a>
+						<xsl:attribute name="href"><xsl:value-of select="navbar/element[@id='database_list']/url" /></xsl:attribute>
+						Database List (A-Z)
+						</a>
+					</li>
+					<li>Ask a Librarian</li>
+					<li>Example</li>
+					<li>Another Example</li>
+				</ul>
+				
+			</div>
+			
+			-->
+		</xsl:when>
+	</xsl:choose>
 	
 </xsl:template>
-
--->
 
 </xsl:stylesheet>
