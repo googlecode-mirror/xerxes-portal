@@ -156,7 +156,10 @@
 		</xsl:choose>
 	</div>
 	
+	<!-- tag stuff -->
+	
 	<div id="tag_suggestions" class="autocomplete" style="display:none;"></div>
+	<xsl:call-template name="safari_tag_fix" />
 
 </xsl:template>
 </xsl:stylesheet>

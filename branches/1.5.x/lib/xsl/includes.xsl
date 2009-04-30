@@ -48,7 +48,8 @@
 	<xsl:variable name="document" 		select="//config/document" />
 	<xsl:variable name="template"		select="//config/template" />
 
-	<xsl:variable name="show_db_detail_search"	select="//show_db_detail_search" />
+	<xsl:variable name="show_db_detail_search"	select="//config/show_db_detail_search" />
+	<xsl:variable name="databases_searchable"	select="//config/database_list_searchable" />
 	<xsl:variable name="homepage_use_simple_search" select="//config/homepage_use_simple_search" />
 	<xsl:variable name="categories_num_columns" select="//config/categories_num_columns" />
 	<xsl:variable name="text_collection_default_new_name" select="//config/default_collection_name" />
@@ -1652,7 +1653,7 @@
 </xsl:template>
 
 <!-- 
-	TEMPLATE HIDDEN TAG LAYERS
+	TEMPLATE: HIDDEN TAG LAYERS
 	These are used in the metasearch results (but not folder results because it already has some of these) 
 	and record pages for the auto-complete tag input
 -->
@@ -1670,6 +1671,23 @@
 	<div id="labelsMaster" class="folderOutput" style="display: none">
 		<xsl:call-template name="tags_display" />
 	</div>
+	
+	<xsl:call-template name="safari_tag_fix" />
+	
+</xsl:template>
+
+
+<!-- 
+	TEMPLATE: SAFARI TAG FIX
+	This hidden iframe essentially thwarts the Safari back/forward cache so that
+	tags don't get wacky
+-->
+
+<xsl:template name="safari_tag_fix">
+
+	<iframe style="height:0px;width:0px;visibility:hidden" src="about:blank">
+		<!-- this frame prevents back-forward cache for safari -->
+	</iframe>
 
 </xsl:template>
 

@@ -235,11 +235,7 @@
 		<!-- overall template for page design, see wiki for details! -->
 		
 		<config name="template" pass="true">yui-t6</config>
-
-		<!-- whether to show a search box in the database detail page -->
-		
-		<config name="show_db_detail_search" pass="true">true</config>
-		
+	
 		<!-- subject/category ID to use on the home page (the "categories" page) for a quicksearch search box. -->
 		
 		<config name="categories_quicksearch" pass="true">quick-search</config>
@@ -268,7 +264,11 @@
 		<!-- whether the alphabetical database list should include a search box, allowing users to search for
 			databases by name or other information -->
 		
-		<config name="show_search_box" pass="true">false</config>	
+		<config name="database_list_searchable" pass="true">false</config>
+
+		<!-- whether to show a search box in the database detail page -->
+		
+		<config name="show_db_detail_search" pass="true">true</config>
 		
 		<!-- open window for full text and sfx links.
 		

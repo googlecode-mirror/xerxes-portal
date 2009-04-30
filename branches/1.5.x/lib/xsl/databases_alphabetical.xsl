@@ -20,7 +20,6 @@
 <!-- certain operational parameters, given in request. -->
 
 <xsl:variable name="show_alpha_links" select="not(/knowledge_base/request/show_alpha_links) or /knowledge_base/request/show_alpha_links != 'false'" />
-<xsl:variable name="show_search_box" select="/knowledge_base/config/show_search_box = 'false'" />
 
 <xsl:template match="/*">
 	<xsl:call-template name="surround" />
@@ -60,7 +59,7 @@
 	
 	<h1><xsl:call-template name="page_name" /></h1>
 	
-	<xsl:if test="$show_search_box">
+	<xsl:if test="$databases_searchable = 'true'">
 		<xsl:call-template name="databases_search_box" />
 	</xsl:if>
 	
@@ -95,10 +94,19 @@
 		
 			<xsl:if test="substring(translate(preceding-sibling::database[1]/title_display,$lower,$upper), 1, 1) !=  $letter">
 			
-				<a name="{$letter}"><h2><xsl:value-of select="$letter" /></h2></a>
-				<div class="alphaBack">
-					[ <a><xsl:attribute name="href"><xsl:value-of select="/knowledge_base/request/server/request_uri" />#top</xsl:attribute>  Back to top</a> ]
+				<div class="alphaHeading">
+					<div class="yui-g">
+						<div class="yui-u first">
+							<a name="{$letter}"><h2><xsl:value-of select="$letter" /></h2></a>
+						</div>
+						<div class="yui-u">
+							<div class="alphaBack">
+								[ <a><xsl:attribute name="href"><xsl:value-of select="/knowledge_base/request/server/request_uri" />#top</xsl:attribute>  Back to top</a> ]
+							</div>
+						</div>
+					</div>
 				</div>
+				
 			</xsl:if>
 		</xsl:if>
 		

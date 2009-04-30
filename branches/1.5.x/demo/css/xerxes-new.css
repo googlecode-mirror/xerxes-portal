@@ -262,6 +262,23 @@ a:hover {
 	padding: 1em;
 }
 
+.alphaHeading {
+	padding: .5em;
+	padding-left: 1em;
+	padding-right: 1em;
+	border-top: 1px solid #ccc;
+	background-color: #efefef;
+	margin-bottom: 2em;
+}
+
+.alphaHeading h2 {
+	margin: 0;
+}
+
+.alphaBack {
+	text-align: right;
+}
+
 #snippetControl {
 	background-color: #efefef;
 	padding: 1em;
