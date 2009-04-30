@@ -46,12 +46,12 @@ a:hover {
 	text-decoration: underline;
 }
 
-dt, dd {
-	margin-bottom: .5em;
+#bd dt, #bd dd {
+	margin-bottom: .3em;
 	display: block;
 }
 
-dt { 
+#bd dt { 
 	clear: both;
 	float: left;
 	font-weight: bold;
@@ -59,12 +59,17 @@ dt {
 	text-align: right;
 }
 
-dd {
+#bd dd {
 	margin-left: 12em;
 }
 
-p {
+#bd p {
 	margin-bottom: 1em;
+}
+
+#bd button, #bd option, #bd input[type="text"], #bd input[type="textarea"], #bd input[type="checkbox"], #bd input[type="radio"], 
+#bd input[type="reset"], #bd input[type="submit"] {
+	padding: 1px;
 }
 
 /** YUI TEMAPLTE ADDITIONS **/
@@ -173,11 +178,6 @@ p {
 	border-left-color: #CCCCCC;
 }
 
-#bd button, #bd option, #bd input[type="text"], #bd input[type="textarea"], #bd input[type="checkbox"], #bd input[type="radio"], 
-#bd input[type="reset"], #bd input[type="submit"] {
-	padding: 1px;
-}
-
 /** BREADCRUMBS **/
 
 #breadcrumb {
@@ -212,15 +212,6 @@ p {
 
 #searchBox_advanced_newline {
 	margin-top: .2em;
-}
-
-#sort {
-	padding: .5em;
-	padding-top: 1em;
-	padding-bottom: 1em;
-	border-top: 1px solid #ccc;
-	background-color: #efefef;
-	margin-bottom: 2.6em;
 }
 
 /** DATABASES **/
@@ -390,9 +381,16 @@ table.reorderTable td {
 
 /** RESULTS **/
 
+#sort {
+	padding: 1em;
+	border-top: 1px solid #ccc;
+	background-color: #efefef;
+	margin-bottom: 2.6em;
+}
+
+
 #sortOptions {
 	text-align: right;
-	padding-right: 1em;
 }	
 
 .result {
@@ -408,11 +406,11 @@ table.reorderTable td {
 	border-left: 2px solid #ddd; 
 	margin-left: .3em;
 	padding-left: 1em;		
-	margin-top: .8em;
+	margin-top: .7em;
 	color: #333;
 }
 
-.resultsInfo a:link, .resultsInfo a:visited {
+.resultsInfo a:link, .resultsInfo a:visited, #recordFullText a:link, #recordFullText a:visited {
 	color: green;
 }
 
@@ -425,8 +423,8 @@ table.reorderTable td {
 }
 
 .resultsAbstract {
-	margin-top: 1em;
-	margin-bottom: 1em;
+	margin-top: .7em;
+	margin-bottom: .7em;
 }
 
 .resultsAuthor, .resultsYear, .resultsPublishing, .resultsAvailableOption {
@@ -438,6 +436,10 @@ table.reorderTable td {
 	margin-top: .5em;
 }
 
+.resultsFullTextOption, .resultsAvailableOption, .recordFullTextOption {
+	margin-bottom: .25em;
+}
+
 .folderLabels {
 	margin: .4em;
 }
@@ -445,8 +447,8 @@ table.reorderTable td {
 /* pager */
 
 .resultsPager {
-	margin-top: 10em;
-	margin-bottom: 10em;
+	margin-top: 7em;
+	margin-bottom: 7em;
 	text-align: center;
 }
 .resultsPagerList {
@@ -476,8 +478,12 @@ table.reorderTable td {
 }
 
 #recordFullText {
-	margin-top: 4em; 
-	margin-bottom: 1em;
+	margin-top: 2em; 
+	margin-bottom: 2em;
+}
+
+#recordFullText li {
+	margin-left: 0;
 }
 
 /** MY SAVED RECORDS **/
@@ -554,27 +560,40 @@ table.reorderTable td {
 /** AUTO-COMPLETE **/
 
 div.autocomplete {
-  width: 25em;
-  background: #fff;
-  border: 1px solid #888;
-  position: absolute;
+	margin: 0;
+	padding: 0;
+	width: 25em;
+	background: #fff;
+	border: 1px solid #888;
+	position: absolute;
 }
 
 div.autocomplete ul {
   list-style-type: none;
 }
 
-div.autocomplete ul li.selected { 
-  background-color: #B0E0E6;
+div.autocomplete ul li.selected {
+	margin: 0;
+	padding: 0;
+	background-color: #B0E0E6;
+}
+
+div.autocomplete ul {
+	margin: 0;
+	padding: 0;
+}
+
+#tag_suggestions li {
+	margin: 0px;
 }
 
 div.autocomplete ul li {
-  padding: .2em;
-  height: 1.2em;
-  display: block;
-  list-style-type: none;
-  cursor: pointer;
-  background: none;
+	padding: .2em;
+	height: 1.2em;
+	display: block;
+	list-style-type: none;
+	cursor: pointer;
+	background: none;
 }
 
 
