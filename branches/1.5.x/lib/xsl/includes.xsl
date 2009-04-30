@@ -139,7 +139,7 @@
 			<xsl:call-template name="footer_div" />
 		</div>
 	</div>
-	
+		
 	</body>
 	</html>
 	
@@ -628,7 +628,7 @@
 							search this, show them a checkbox. -->
 							<xsl:element name="input">
 								<xsl:attribute name="name">database</xsl:attribute>
-								<xsl:attribute name="id"><xsl:value-of select="metalib_id" /></xsl:attribute>
+								<xsl:attribute name="id"><xsl:value-of select="../@id" />_<xsl:value-of select="metalib_id" /></xsl:attribute>
 								<xsl:attribute name="value"><xsl:value-of select="metalib_id" /></xsl:attribute>
 								<xsl:attribute name="type">checkbox</xsl:attribute>
 								<xsl:if test="$subcategory = 1 and $prev_checkbox_count &lt; //config/search_limit">
@@ -655,7 +655,7 @@
 							<!-- label that is hidden from normal graphical browsers, but 
 							available for screen readers or other machine
 							processing. -->
-							<label for="{metalib_id}" class="ada">
+							<label for="{../@id}_{metalib_id}" class="ada">
 								<xsl:value-of select="title_display" />
 							</label>
 						</xsl:when>
@@ -1168,8 +1168,8 @@
 		
 		<input type="hidden" name="new_subcategory_name" value="{$text_collection_default_new_section_name}"/>
 		
-		<p>Create a new collection:</p>
-		<input type="text" name="new_subject_name"/><xsl:text> </xsl:text><input type="submit" name="add" value="Add" />
+		<p><label for="new_subject_name">Create a new collection</label>:</p>
+		<input type="text" id="new_subject_name" name="new_subject_name"/><xsl:text> </xsl:text><input type="submit" name="add" value="Add" />
 		
 		</form>
 	</div>
