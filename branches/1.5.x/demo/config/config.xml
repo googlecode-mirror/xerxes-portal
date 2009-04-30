@@ -41,6 +41,11 @@
 		<config name="http_proxy_username"></config>
 		<config name="http_proxy_password"></config>
 		
+		<!-- use curl. set this to 'true' if you have php.ini set to prevent 'remote file access', but have 
+		curl libraries installed -->
+		
+		<config name="http_use_curl"></config>
+		
 		
 	<!-- METALIB CONFIGURATION -->
 		
@@ -101,7 +106,10 @@
 		<config name="link_resolver_address"></config>
 		
 		<!--  If you want to do the SFX 'populate' action from another link resolver, perhaps because 
-			your main one is not SFX, configure this -->
+			your main one is not SFX, configure this 
+			
+			@todo change this config name to something more clear
+			-->
 		
 		<config name="sfx_resolver_address"></config>
 		
@@ -177,6 +185,7 @@
 		<config name="directory_server"></config>
 		<config name="domain"></config>
 		
+		
 		<!-- INNOVATIVE PATRON API -->
 		
 		<!-- enter the server address, include 'http://', :port number, and trailing slash '/' at the end of the url -->
@@ -187,7 +196,7 @@
 		leave blank if all users are allowed -->
 			 
 		<config name="innovative_patron_types" />
-
+		
 		
 		<!-- CAS -->
 		
@@ -200,8 +209,8 @@
 		<config name="cas_version" />
 		<config name="cas_login" />
 		<config name="cas_validate" />
-
-
+		
+		
 		<!-- SHIBBOLETH	-->
 						 
 		<!-- shib username header -->
@@ -244,6 +253,12 @@
 			enter '2' or '3', if you want more columns, you'll need to customize the page itself -->
 			
 		<config name="categories_num_columns" pass="true">3</config>
+		
+		<!-- only include the following subcategories in the subject page, 
+			seperate multiple enties by comma, will look for the presence 
+			of the words, not an exact match -->
+		
+		<config name="subcategories_include"></config>
 
 		<!-- strip out HTML tags in database description. Possible values:
 		

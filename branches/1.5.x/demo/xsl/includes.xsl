@@ -39,8 +39,8 @@
 	Add additional elements to the sidebar 
 	
 	you can limit which 'page' the item appears on by using the 'base' and 'action' request
-	elements, as in the example below.  if you want it to appear on _every_ page with a sidebar
-	then add the item _outside_ of that condition
+	elements, as in the example below.  if you want it to appear on _every_ page then add the 
+	elements _outside_ of any condition
 	
 -->
 
