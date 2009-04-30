@@ -119,7 +119,7 @@ a:hover {
 
 #sidebar .box li {
 	list-style: square;
-	margin-left: 1.8em;
+	margin-left: 1.5em;
 }
 
 #sidebar h2 {
@@ -484,6 +484,13 @@ table.reorderTable td {
 
 #recordFullText li {
 	margin-left: 0;
+}
+
+#citationNote {
+	border: 1px solid #ccc;
+	padding: .4em;
+	font-size: 80%;
+	color: #666;
 }
 
 /** MY SAVED RECORDS **/
