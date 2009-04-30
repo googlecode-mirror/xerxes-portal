@@ -396,6 +396,10 @@ table.reorderTable td {
 	border-bottom: 1px solid #eee;
 }
 
+.hitCount {
+	text-align: right;
+}
+
 /** RESULTS **/
 
 #sort {
