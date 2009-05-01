@@ -25,7 +25,7 @@
 </xsl:template>
 
 <xsl:template name="page_name">
-	Login
+	<xsl:value-of select="$text_authentication_login_pagename" />
 </xsl:template>
 
 <xsl:template name="main">
@@ -43,10 +43,10 @@
 	<div id="authentication">
 	
 		<h1><xsl:call-template name="page_name" /></h1>
-		<p>Please login with the demo user account.</p>
+		<p><xsl:copy-of select="$text_authentication_login_explain" /></p>
 		
 		<xsl:if test="error = 'authentication'">
-			<p class="error">Sorry, your username or password was incorrect.</p>
+			<p class="error"><xsl:copy-of select="$text_authentication_login_failed" /></p>
 		</xsl:if>
 		
 		<div class="box">
@@ -59,16 +59,16 @@
 				<input name="postback" type="hidden" value="true" />  
 				
 				<p>
-				<label for="username">username:</label>
+				<label for="username"><xsl:copy-of select="$text_authentication_login_username" /></label>
 				<input name="username" type="text" id="username" value="{$username}" />
 				</p>
 				
 				<p>
-				<label for="password">password:</label>
+				<label for="password"><xsl:copy-of select="$text_authentication_login_password" /></label>
 				<input name="password" type="password" id="password" />
 				</p>
 				
-				<input type="submit" class="submit" name="Submit" value="Log In" />
+				<input type="submit" class="submit" name="Submit" value="{$text_authentication_login_pagename}" />
 							
 			</form>
 			

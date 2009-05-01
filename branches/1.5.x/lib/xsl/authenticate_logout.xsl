@@ -25,7 +25,7 @@
 </xsl:template>
 
 <xsl:template name="page_name">
-	Logout
+	<xsl:value-of select="$text_authentication_logout_pagename" />
 </xsl:template>
 
 <xsl:template name="main">
@@ -38,8 +38,8 @@
 	<input name="postback" type="hidden" value="true" />
 	
 	<h1><xsl:call-template name="page_name" /></h1>
-	<p>Are you sure you want to end your session? </p>
-	<p><input type="submit" name="Submit" value="Log out" /></p>
+	<p><xsl:copy-of select="$text_authentication_logout_confirm" /></p>
+	<p><input type="submit" name="Submit" value="{$text_authentication_logout_pagename}" /></p>
 	</form>
 	
 </xsl:template>
