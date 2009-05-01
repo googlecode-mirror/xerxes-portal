@@ -40,7 +40,7 @@ collection_default_new_section_name = '<xsl:value-of select="$text_collection_de
 
   <div id="searchArea">
   
-    <xsl:for-each select="//databases/database[1]">
+    <xsl:for-each select="/*/databases/database[1]">
     <xsl:variable name="id" select="metalib_id" />
     <!-- username in request, unless they JUST logged in, then take it from
        session -->
