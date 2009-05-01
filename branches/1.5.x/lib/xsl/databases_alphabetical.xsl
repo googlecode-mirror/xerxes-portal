@@ -46,7 +46,7 @@
 </xsl:template>
 
 <xsl:template name="page_name">
-	Databases A-Z
+	<xsl:value-of select="$text_databases_az_pagename" />
 </xsl:template>
 
 <xsl:template name="sidebar">
@@ -63,7 +63,7 @@
 		<xsl:call-template name="databases_search_box" />
 	</xsl:if>
 	
-	<p><strong><xsl:value-of select="count(databases/database)" /> databases</strong></p>
+	<p><strong><xsl:value-of select="count(databases/database)" /><xsl:text> </xsl:text><xsl:copy-of select="$text_databases_az_databases" /></strong></p>
 	
 	<xsl:variable name="lower">abcdefghijklmnopqrstuvwxyz</xsl:variable>
 	<xsl:variable name="upper">ABCDEFGHIJKLMNOPQRSTUVWXYZ</xsl:variable>
@@ -101,7 +101,7 @@
 						</div>
 						<div class="yui-u">
 							<div class="alphaBack">
-								[ <a><xsl:attribute name="href"><xsl:value-of select="/knowledge_base/request/server/request_uri" />#top</xsl:attribute>  Back to top</a> ]
+								[ <a><xsl:attribute name="href"><xsl:value-of select="/knowledge_base/request/server/request_uri" />#top</xsl:attribute><xsl:copy-of select="$text_databases_az_backtop" /></a> ]
 							</div>
 						</div>
 					</div>
@@ -124,11 +124,11 @@
 					&#160;
 					<a href="{url}">
 
-						<img alt="more information" title="more information" src="images/info.gif" id="iconInfo">
+						<img alt="more information" title="{$text_databases_az_hint_info}" src="images/info.gif" id="iconInfo">
 							<xsl:attribute name="src"><xsl:value-of select="/knowledge_base/config/base_url" />/images/info.gif</xsl:attribute>
 						</img>						
 						<xsl:text> </xsl:text>
-						<img alt="searchable by {$app_name}" title="searchable by {$app_name}" id="iconSearchable"
+						<img alt="searchable by {$app_name}" title="{$text_databases_az_hint_searchable}" id="iconSearchable"
 							 src="{$base_url}/images/famfamfam/magnifier.png"/>
 					</a>
 					

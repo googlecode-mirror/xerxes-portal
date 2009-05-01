@@ -11,16 +11,14 @@
 	
 	<xsl:variable name="text_ada_version">For best results, click this link for accessible version</xsl:variable>
 	
-	<!-- authentication page -->
-	
-	<xsl:variable name="text_authentication_login_pagename">Login</xsl:variable>
 	<xsl:variable name="text_authentication_login_explain"></xsl:variable>
-	<xsl:variable name="text_authentication_login_failed">Sorry, your username or password was incorrect.</xsl:variable>
-	<xsl:variable name="text_authentication_login_username">username:</xsl:variable>
-	<xsl:variable name="text_authentication_login_password">password:</xsl:variable>
-	
+	<xsl:variable name="text_authentication_login_failed"><span style="background-color: yellow">Sorry, your username or password was incorrect.</span></xsl:variable>
+	<xsl:variable name="text_authentication_login_pagename">Login</xsl:variable>
+	<xsl:variable name="text_authentication_login_password"><span style="background-color: yellow">password:</span></xsl:variable>
+	<xsl:variable name="text_authentication_login_username"><span style="background-color: yellow">username:</span></xsl:variable>
+		
+	<xsl:variable name="text_authentication_logout_confirm"><span style="background-color: yellow">Are you sure you want to end your session?</span></xsl:variable>
 	<xsl:variable name="text_authentication_logout_pagename">Logout</xsl:variable>
-	<xsl:variable name="text_authentication_logout_confirm">Are you sure you want to end your session?</xsl:variable>
 	
 	<xsl:variable name="text_breadcrumb_seperator"> &gt; </xsl:variable>
 	
@@ -28,10 +26,15 @@
 	<xsl:variable name="text_databases_access_group_and"><span style="background-color: yellow">and</span></xsl:variable>
 	<xsl:variable name="text_databases_access_users"><span style="background-color: yellow">users</span></xsl:variable>
 	
-	<xsl:variable name="text_databases_az_search"><span style="background-color: yellow">List databases matching: </span></xsl:variable>
+	<xsl:variable name="text_databases_az_backtop"><span style="background-color: yellow">Back to top</span></xsl:variable>
 	<xsl:variable name="text_databases_az_breadcrumb_all"><span style="background-color: yellow">All databases</span></xsl:variable>
 	<xsl:variable name="text_databases_az_breadcrumb_matching"><span style="background-color: yellow">Databases matching</span></xsl:variable>
-	
+	<xsl:variable name="text_databases_az_databases"><span style="background-color: yellow">databases</span></xsl:variable>
+	<xsl:variable name="text_databases_az_hint_info">more information</xsl:variable>
+	<xsl:variable name="text_databases_az_hint_searchable">searchable by <xsl:value-of select="$app_name" /></xsl:variable>
+	<xsl:variable name="text_databases_az_pagename">Databases A-Z</xsl:variable>
+	<xsl:variable name="text_databases_az_search"><span style="background-color: yellow">List databases matching: </span></xsl:variable>
+		
 	<xsl:variable name="text_databases_category_quick_desc"><span style="background-color: yellow">
 		<xsl:text>Search </xsl:text>
 		<xsl:call-template name="text_number_to_words">
@@ -83,6 +86,7 @@
 	<xsl:variable name="text_searchbox_field_year">year</xsl:variable>
 	<xsl:variable name="text_searchbox_field_issn">ISSN</xsl:variable>
 	<xsl:variable name="text_searchbox_field_isbn">ISBN</xsl:variable>
+	<xsl:variable name="text_searchbox_go">GO</xsl:variable>
 	<xsl:variable name="text_searchbox_search"><span style="background-color: yellow">Search</span></xsl:variable>
 	<xsl:variable name="text_searchbox_spelling_error"><span style="background-color: yellow">Did you mean: </span></xsl:variable>	
 	<xsl:variable name="text_searchbox_options_fewer"><span style="background-color: yellow">Fewer Options</span></xsl:variable>

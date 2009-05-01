@@ -413,7 +413,7 @@
 				</xsl:call-template>
 				<xsl:text>&nbsp;</xsl:text>
 			</span>
-			<input id="searchbox_submit" type="submit" name="Submit" value="GO" />
+			<input id="searchbox_submit" type="submit" name="Submit" value="{$text_searchbox_go}" />
 		</div>
 		
 		<xsl:if test="results/search/spelling != ''">
