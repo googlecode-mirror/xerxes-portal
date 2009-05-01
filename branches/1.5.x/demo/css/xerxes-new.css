@@ -151,6 +151,25 @@ a:hover {
 	top: -1000px; 
 }
 
+#message_display {
+	padding: .8em;
+	margin: 2em;
+	background-color: #FFDADA;
+	display: table;
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 2px;
+	border-left-width: 1px;
+	border-top-style: solid;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-left-style: solid;
+	border-top-color: #CCCCCC;
+	border-right-color: #CCCCCC;
+	border-bottom-color: #999999;
+	border-left-color: #CCCCCC;
+}
+
 .error {
 	color: #CC0000;
 }
@@ -189,6 +208,7 @@ a:hover {
 /** SEARCH BOX **/
 
 #searchBox {
+	display: table;
 	margin-bottom: 3em;
 	padding-bottom: 1em;
 }
