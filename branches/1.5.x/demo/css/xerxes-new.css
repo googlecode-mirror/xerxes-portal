@@ -155,7 +155,8 @@ a:hover {
 	padding: .8em;
 	margin: 2em;
 	background-color: #FFDADA;
-	display: table-cell;
+	display: table;
+	max-width: 300px;
 	border-top-width: 1px;
 	border-right-width: 1px;
 	border-bottom-width: 2px;
@@ -208,7 +209,7 @@ a:hover {
 /** SEARCH BOX **/
 
 #searchBox {
-	display: table-cell;
+	display: table;
 	margin-bottom: 3em;
 	padding-bottom: 1em;
 	padding-right: 2.2em;
