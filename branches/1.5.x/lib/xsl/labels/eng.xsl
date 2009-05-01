@@ -45,6 +45,10 @@
 	<xsl:variable name="text_databases_category_subject"><span style="background-color: yellow">Search by Subject</span></xsl:variable>
 	<xsl:variable name="text_databases_category_subject_desc"><span style="background-color: yellow">Search databases specific to your area of study.</span></xsl:variable>
 
+	<xsl:variable name="text_error_databases_permission"><span style="background-color: yellow">You do not have access to search these databases</span></xsl:variable>
+	<xsl:variable name="text_error_databases_registered"><span style="background-color: yellow">Only available to registered users.</span></xsl:variable>
+	<xsl:variable name="text_error_pdo_exception"><span style="background-color: yellow">There was a problem with the database.</span></xsl:variable>
+
 	<xsl:variable name="text_folder_export_records_all"><span style="background-color: yellow">All of my saved records </span></xsl:variable>
 	<xsl:variable name="text_folder_export_records_labeled"><span style="background-color: yellow">All of my saved records labeled </span></xsl:variable>
 	<xsl:variable name="text_folder_export_records_selected"><span style="background-color: yellow">Only the records I have selected below.</span></xsl:variable>

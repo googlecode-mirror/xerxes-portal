@@ -26,13 +26,15 @@
 
 <xsl:template name="main">
 	
+	<!-- @todo i18n for error message? -->
+	
 	<h1 class="error"><xsl:value-of select="//error/heading" /></h1>
             
-	<!-- do not show mysql errors to users -->
+	<!-- do not show database errors to users -->
 	
 	<xsl:choose>
 		<xsl:when test="message[@type = 'PDOException']">
-			<p>There was a problem with the database.</p>
+			<p><xsl:copy-of select="$text_error_pdo_exception" /></p>
 		</xsl:when>              
 		<xsl:otherwise>
 			<p><xsl:value-of select="message"/></p>              
@@ -42,7 +44,7 @@
 	<!-- databases excluded from the search -->
 	
 	<xsl:if test="//excluded_dbs/database">
-		<p>You do not have access to search these databases:</p>
+		<p><xsl:copy-of select="$text_error_databases_permission" /></p>
 		<ul>
 			<xsl:for-each select="//excluded_dbs/database">
 				<li>
@@ -52,7 +54,7 @@
 							<xsl:call-template name="db_restriction_display" />
 						</xsl:when>
 						<xsl:when test="subscription = '1'">
-							Only available to registered users.
+							<xsl:copy-of select="$text_error_databases_registered" />
 						</xsl:when>
 					</xsl:choose>
 				</li>
