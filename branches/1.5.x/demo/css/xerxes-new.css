@@ -46,6 +46,8 @@ a:hover {
 	text-decoration: underline;
 }
 
+/** BASIC ELEMENTS ( but not for header, footer )**/
+
 #bd dt, #bd dd {
 	margin-bottom: .3em;
 	display: block;
@@ -101,8 +103,6 @@ a:hover {
 	margin-left:19.4615em;
 	*margin-left:19.125em;
 }
-
-
 
 /** SIDEBAR **/
 
@@ -379,8 +379,8 @@ table.reorderTable td {
 	margin: 3em;
 	border: 1px solid #ccc;
 	background-color: #efefef;
-	width: 30em;
-	padding: 3em;
+	width: 25em;
+	padding: 2em;
 }
 
 #authentication p {
@@ -388,12 +388,12 @@ table.reorderTable td {
 }
 
 #authentication .submit { 
-	margin-left: 10em;
+	margin-left: 8em;
 }
 
 #authentication label {
 	float: left;
-	width: 10em;
+	width: 7em;
 	font-weight: bold;
 	text-align: right;
 	margin-right: 1em;
