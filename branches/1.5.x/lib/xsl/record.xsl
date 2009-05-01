@@ -235,9 +235,7 @@
 			</div>
 			
 			</dl>
-			
-			<!-- @todo factor this out to includes? -->
-			
+						
 			<div id="recordFullText" class="raisedBox recordOptions">
 				
 				<!-- Full-Text -->

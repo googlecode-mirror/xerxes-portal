@@ -40,7 +40,7 @@
 	
 	<h1><xsl:call-template name="page_name" /></h1>
  
-	<xsl:for-each select="//database[1]">
+	<xsl:for-each select="/*/database[1]">
 	
 		<xsl:variable name="id" select="metalib_id" />
 		
