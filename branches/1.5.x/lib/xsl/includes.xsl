@@ -1684,10 +1684,14 @@
 -->
 
 <xsl:template name="safari_tag_fix">
-
-	<iframe style="height:0px;width:0px;visibility:hidden" src="about:blank">
-		<!-- this frame prevents back-forward cache for safari -->
-	</iframe>
+	
+	<xsl:if test="contains(//server/http_user_agent,'Safari')">
+	
+		<iframe style="height:0px;width:0px;visibility:hidden" src="about:blank">
+			<!-- this frame prevents back-forward cache for safari -->
+		</iframe>
+		
+	</xsl:if>
 
 </xsl:template>
 
