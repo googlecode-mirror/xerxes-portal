@@ -183,8 +183,6 @@
 <xsl:template name="breadcrumb" />
 <xsl:template name="sidebar" />
 <xsl:template name="sidebar_additional" />
-<xsl:template name="categories_sidebar" />
-<xsl:template name="categories_sidebar_alt" />
 
 
 <!--
@@ -1708,6 +1706,7 @@
 <xsl:template name="metasearch_options" />
 <xsl:template name="title_old" />
 <xsl:template name="folder_export_options" />
-
+<xsl:template name="categories_sidebar" />
+<xsl:template name="categories_sidebar_alt" />
 
 </xsl:stylesheet>
