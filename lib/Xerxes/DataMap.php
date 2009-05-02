@@ -801,23 +801,29 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 			// subcategories excluded by config
 			
 			$objRegistry = Xerxes_Framework_Registry::getInstance();
-			$arrExclude = explode(",", $objRegistry->getConfig( "subcategories_exclude", false ));
+			$arrInclude = explode(",", $objRegistry->getConfig( "SUBCATEGORIES_INCLUDE", false ));
 			
-			if ( count($arrExclude) > 0 )
+			if ( count($arrInclude) > 0 && $mode == self::metalibMode)
 			{							
 				// this is kind of funky, but if we simply unset the subcategory, the array keys get out
 				// of order, and the first one may therefore not be 0, which is a problem in higher parts of 
 				// the system where we look for the first subcategory as $category->subcategories[0], so
-				// we take them all out and put them all back in, excluding the ones we don't want
+				// we take them all out and put them all back in, including only the ones we want
 				
 				$arrSubjects =  $objCategory->subcategories;
 				$objCategory->subcategories = null;
 				
 				foreach ( $arrSubjects as $subcat )
 				{
-					if ( ! in_array($subcat->name, $arrExclude))
+					foreach ( $arrInclude as $strInclude )
 					{
-						$objCategory->subcategories[] = $subcat;
+						$strInclude = trim($strInclude);
+						
+						if ( stristr($subcat->name, $strInclude) )
+						{
+							$objCategory->subcategories[] = $subcat;
+							break;
+						}
 					}
 				}
 			}
