@@ -416,6 +416,7 @@
 			$objRegistry = Xerxes_Framework_Registry::getInstance();
 			
 			$proxy = $objRegistry->getConfig("HTTP_PROXY_SERVER", false);
+			$curl = $objRegistry->getConfig("HTTP_USE_CURL", false, false);
 			
 			### GET REQUEST (NON-PROXY)
 			
@@ -465,9 +466,9 @@
 				}				
 			}
 
-			### POST OR GET USING AN HTTP PROXY
+			### POST OR GET USING AN HTTP PROXY or need to use CURL
 			
-			if ( $proxy != null )
+			if ( $proxy != null || $curl != null )
 			{				
 				$response = ""; // the response
 				$ch = curl_init(); // curl object
@@ -497,16 +498,19 @@
 				
 				// proxy settings
 				
-				curl_setopt($ch, CURLOPT_PROXY, $proxy);
-
-				// proxy username and password, if necessary
-				
-				$username = $objRegistry->getConfig("HTTP_PROXY_USERNAME", false);
-				$password = $objRegistry->getConfig("HTTP_PROXY_PASSWORD", false);				
-				
-				if ( $username != null && $password != null )
+				if ( $proxy != null )
 				{
-					curl_setopt($ch, CURLOPT_PROXYUSERPWD, "$username:$password");
+					curl_setopt($ch, CURLOPT_PROXY, $proxy);
+	
+					// proxy username and password, if necessary
+					
+					$username = $objRegistry->getConfig("HTTP_PROXY_USERNAME", false);
+					$password = $objRegistry->getConfig("HTTP_PROXY_PASSWORD", false);				
+					
+					if ( $username != null && $password != null )
+					{
+						curl_setopt($ch, CURLOPT_PROXYUSERPWD, "$username:$password");
+					}
 				}
 				
 				// return the response

@@ -23,7 +23,7 @@ abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
 	public function execute(Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry)
 	{
 		$this->objCache = new Xerxes_Cache( );
-    		parent::execute($objRequest, $objRegistry);
+    	parent::execute($objRequest, $objRegistry);
 	}
 	
 	/**
@@ -134,6 +134,11 @@ abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
 			$strSort = ""; // last set sort order
 			$strDatabaseTitle = ""; // database title
 			
+			// in case we have an international implementor who wants something different
+			// like spaces or something
+			
+			$strThousSep = $this->registry->getConfig( "HITS_THOUSANDS_SEPERATOR", false, "," );
+			
 			// add links to group info and extract data for convenience
 				
 			foreach ( $objSimple->xpath( "//base_info" ) as $base_info )
@@ -156,14 +161,13 @@ abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
 				if ( $strTotalHits == "888888888" )
 				{
 					$strTotalHits = 1;
-				} 
+				}		
 				
-				// some results are statements (e.g., "results found") so don't 
-				// format them
+				// just making doubly sure in case there is text here
 				
 				if ( ! preg_match("/[a-zA-Z]{1}/", $strTotalHits) )
 				{
-					// $base_info->no_of_documents = number_format( (int) $strTotalHits);
+					$base_info->no_of_documents = number_format( (int) $strTotalHits, 0, null, $strThousSep);
 				}
 				
 				if ( $base_info->set_number == $strResultSet )
