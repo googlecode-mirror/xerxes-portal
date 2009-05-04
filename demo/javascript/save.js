@@ -1,79 +1,104 @@
-	/**
-	 * FUNCTIONS FOR SAVING RECORDS
-	 */
+/**
+* FUNCTIONS FOR SAVING RECORDS
+*/
 
-	/* CALLER REQUIREMENTS:
-	set a global js variable called numSavedRecords to the current number of records
-	in saved records area. Used to determine when to toggle saved records icon to
-	indicate presence of records 
+/* CALLER REQUIREMENTS:
+set a global js variable called numSavedRecords to the current number of records
+in saved records area. Used to determine when to toggle saved records icon to
+indicate presence of records 
 
-	set a global js variable isTemporarySession (boolean), used to determine whether to
-	ajax add a tagging input on save or not. 
-	*/
+set a global js variable isTemporarySession (boolean), used to determine whether to
+ajax add a tagging input on save or not. 
+*/
 
-  addEvent(window, 'load', loadSaveStrings );	
-	addEvent(window, 'load', addAjaxToSaveLinks);
-  addEvent(window, 'load', addDatabaseLimitChecks );
+addEvent(window, 'load', loadSaveStrings );	
+addEvent(window, 'load', addAjaxToSaveLinks);
+addEvent(window, 'load', addDatabaseLimitChecks );
+addEvent(window, 'load', addClearCheck );
   
-  function addDatabaseLimitChecks() {
-    $$('.subjectDatabaseCheckbox').each( function(checkbox) {
-        checkbox.onclick = function() {databaseLimitCheckbox(this)};
-        });
-    
-    $$('.metasearchForm').each( function(form) {
-        form.onsubmit = function () {return databaseLimit(this)};
-    });
-  }
-  
-  
-  function loadSaveStrings() {
-    /* String variables. Can be set in global js vars in calling context
-     if desired, to over-ride/customize. */
-     if (typeof(window['save_action_label']) == "undefined") {
-       save_action_label = 'Save this record';
-     }     
-     if (typeof(window['saved_permanent_label']) == "undefined") {
-       saved_permanent_label = 'Record saved';
-     }
-     if (typeof(window['saved_temporary_label']) == "undefined") {
-       saved_temporary_label = 'Temporarily saved';
-     }
-     if (typeof(window['saved_temporary_login_label']) == "undefined") {
-       saved_temporary_login_label = 'login to save permanently';
-     }
+function clearCheckedDatabases()
+{
+	var field = document.export_form.record;
 
-  }
-	
-	/**
-	 * Add onClick event to save records
-	 */
-	
-	function addAjaxToSaveLinks()
+	for (i = 0; i < field.length; i++)
 	{
-		// add onClick event to save the record
-		
-		var links = document.getElementsByTagName('a');
-		
-		for ( i = 0; i < links.length; i++)
-		{
-			if ( /saveThisRecord/.test(links[i].className) )
-			{		
-				links[i].onclick = function () {
-					return updateRecord(this.id)
-				}
+		field[i].checked = false ;
+	}
+}
+
+function addClearCheck()
+{
+	if ( $("clear_databases") )
+	{
+		$("clear_databases").onclick = function() {
+			return clearCheckedDatabases()
+		}
+	}
+}
+  
+function addDatabaseLimitChecks() {
+	$$('.subjectDatabaseCheckbox').each( function(checkbox) {
+		checkbox.onclick = function() {databaseLimitCheckbox(this)};
+	});
+	
+	$$('.metasearchForm').each( function(form) {
+		form.onsubmit = function () {return databaseLimit(this)};
+	});
+}
+  
+  
+function loadSaveStrings() {
+	
+	// string variables. Can be set in global js vars in calling context
+	// if desired, to over-ride/customize
+	
+	if (typeof(window['save_action_label']) == "undefined") {
+		save_action_label = 'Save this record';
+	}     
+	
+	if (typeof(window['saved_permanent_label']) == "undefined") {
+		saved_permanent_label = 'Record saved';
+	}
+	
+	if (typeof(window['saved_temporary_label']) == "undefined") {
+		saved_temporary_label = 'Temporarily saved';
+	}
+	
+	if (typeof(window['saved_temporary_login_label']) == "undefined") {
+		saved_temporary_login_label = 'login to save permanently';
+	}
+}
+	
+/**
+ * Add onClick event to save records
+ */
+
+function addAjaxToSaveLinks()
+{
+	// add onClick event to save the record
+	
+	var links = document.getElementsByTagName('a');
+	
+	for ( i = 0; i < links.length; i++)
+	{
+		if ( /saveThisRecord/.test(links[i].className) )
+		{		
+			links[i].onclick = function () {
+				return updateRecord(this.id)
 			}
 		}
 	}
+}
 	
-	/**
-	 * legacy function name and parameter list for backwards compatability < 1.3,
-	 * should use updateRecord(id) instead
-	 */
-	
-	function saveRecord(groupID,resultSet,recordNumber)
-	{
-		return updateRecord( "link_" + resultSet + ":" + recordNumber );
-	}
+/**
+ * legacy function name and parameter list for backwards compatability < 1.3,
+ * should use updateRecord(id) instead
+ */
+
+function saveRecord(groupID,resultSet,recordNumber)
+{
+	return updateRecord( "link_" + resultSet + ":" + recordNumber );
+}
 	
 	/**
 	 * Add or delete a record from the user's folder

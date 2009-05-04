@@ -1,416 +1,186 @@
-/**
- * Xerxes Blue Design July 2007
- *
- *  See also xerxes-blue-embeddable.css, used specifically for embedding a stylesheet with a snippet.
- *
- * @author David Walker
- * @copyright 2007 California State University
- */
+@charset "utf-8";
 
 /** BASIC ELEMENTS **/
 
-body { 
-	font-family: Verdana, Geneva, Arial, helvetica, sans-serif; 
-	margin: 0px; 
-	padding: 0px; 
-	font-size: 12px; 
-	height:100%; 
+body {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
 }
-table {
-	margin: 2px; 
-	padding: 2px;
-	border-collapse: collapse;
-	border-spacing: 0;
-}
-td { 
-	font-family: Verdana, Geneva, Arial, helvetica, sans-serif; 
-	font-size: 12px; 
-	margin: 0px; 
-	padding: 3px;
-}
-th { 
-	font-family: Verdana, Geneva, Arial, helvetica, sans-serif;
-	font-size: 12px;
-	margin: 0px;
-	padding: 2px;
-}
+
 h1, h2, h3, h4 {
-	font-family: Arial, Verdana, Geneva, Arial, helvetica, sans-serif; 
-	color: #000;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #003366;
+	margin-bottom: 1em;
+}
+
+h1 { 
+	font-size: 200%;
+}
+
+h2 { 
+	font-size: 140%;
+}
+
+h3 { 
+	font-size: 110%;
 	font-weight: bold;
-	margin-top: 10px; 
-	margin-bottom: 2px;
 }
-h1 {
-	color: #3366cc;
-	font-size: 22px;
-  margin-bottom: 20px;
-}
-h2 {
-	font-size: 16px; 
-  margin-bottom: 16px;
-}
-h3 {
-	font-size: 14px;
-}
+
 h4 {
-	font-size: 12px; 
+	font-weight: bold;
 }
-h5 {
-	font-style:italic; 
-}
-p {
-	margin-top: 8px; 
-	margin-bottom: 8px 
-}
-ul {
-	margin:.5em 0 1.25em; 
-	padding:0 0px; 
-	list-style:none;
-}
-ul li {	
-	background:url(../images/icon_arrow_sm.gif) no-repeat 2px .25em; 
-	margin:0; 
-	padding:0 0 3px 16px; 
-	margin-bottom:3px; 
-	line-height:1.4em; 
-}
-form {
-	margin: 0px;
-	padding: 0px;
-}
-legend {
-	font-family: Arial, Verdana, Geneva, Arial, helvetica, sans-serif; 
-	color: #3366cc; 
-	font-size: 14px; 
-	font-weight: bold; 
-	margin-bottom: 2px; 
-	padding: 0px;
-}
-label { 
-	margin: 0px; 
-	padding: 0px;
-}
-fieldset {
-	border: 1px solid #CCCCCC;
-	margin: 0px;
-	padding: 10px;
-}
+
 strong {
 	font-weight: bold;
 }
+
 em {
 	font-style: italic;
 }
-input {
-	padding: 3px;
-}
-a { 
+
+a:link, a:visited {
 	text-decoration: none;
+	color: #003399;
 }
-a:visited {
-	color: #0000CC; text-decoration: none; 
-}
-a:active {
-	color: #FFCC33; text-decoration: none; 
-}
+
 a:hover {
 	text-decoration: underline;
 }
-a img{ 
-	border: 0px;
+
+/** BASIC ELEMENTS ( but not for header, footer )**/
+
+#bd dt, #bd dd {
+	margin-bottom: .3em;
+	display: block;
+}
+
+#bd dt { 
+	clear: both;
+	float: left;
+	font-weight: bold;
+	width: 10em;
+	text-align: right;
+}
+
+#bd dd {
+	margin-left: 11em;
+}
+
+#bd p {
+	margin-bottom: 1em;
+}
+
+#bd button, #bd option, #bd input[type="text"], #bd input[type="textarea"], #bd input[type="checkbox"], #bd input[type="radio"], 
+#bd input[type="reset"], #bd input[type="submit"] {
+	padding: 1px;
+}
+
+/** YUI TEMAPLTE ADDITIONS **/
+
+
+#doc3 #bd {
+	margin-left: 1em;
+	margin-right: 1em;
+}
+
+.xer-t5 {
+	margin:auto;
+	text-align:left;
+	width:57.69em;
+	*width:56.25em;
+}
+
+.xer-t5 #yui-main {
+	float:right;
+	margin-left:-25em;
+}
+
+.xer-t5 .yui-b{
+	float:left;
+	width:18.4615em;
+	*width:18.00em;
+}
+.xer-t5 #yui-main .yui-b{
+	margin-left:19.4615em;
+	*margin-left:19.125em;
+}
+
+/** SIDEBAR **/
+
+#sidebar {
+	background-color: #efefef;
+	padding: 1.3em;
+	color: #333;
+}
+
+#sidebar .box {
+	margin-left: 1em;
+	margin-bottom: 2em;
+}
+
+#sidebar .box li {
+	list-style: square;
+	margin-left: 1.5em;
+}
+
+#sidebar h2 {
+	padding-top: 0;
+	margin-left: -1em;
+	font-size: 120%;
+	font-weight: 600;
+}
+
+#sidebar li {
+	padding-bottom: .5em;
+}
+
+#facets h3 {
+	text-transform: lowercase;
+	padding-top: 1em;
+}
+
+#sidebar .box li.sidebarFolder {
+	list-style: none;
+	margin-left: 0;
 }
 
 
-/** STRUCTURE **/
+/** GLOBAL STYLES **/
 
-#skipnav { 
+.ada, #skipnav {
 	position: absolute; 
 	top: -1000px; 
 }
-#header {
-	background-color: #386ace;
-	margin: 0px;
-	padding: 10px;
-}
-#breadcrumb {
-	padding: 10px;
-	padding-left: 20px;
-	background-color: #EFEFEF;
-	font-size: 90%;
-	color: #666666;
-}
-#container {
-  padding: 20px;
-	margin-top: 0px;
-	margin-bottom: 0px;
-	line-height: 130%;
-}
-.databasesAlphaMenu {
-  line-height: 1.8em;
+
+#message_display {
+	padding: .8em;
+	margin: 2em;
+	background-color: #FFDADA;
+	display: table;
+	max-width: 300px;
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 2px;
+	border-left-width: 1px;
+	border-top-style: solid;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-left-style: solid;
+	border-top-color: #CCCCCC;
+	border-right-color: #CCCCCC;
+	border-bottom-color: #999999;
+	border-left-color: #CCCCCC;
 }
 
-#databasesAlpha {
-	margin: 30px;
-}
-#sidebar, .sidebar {
-	padding: 20px 10px 10px 10px;
-	margin-left: 545px;
-}
-/* a version of sidebar CSS that floats instead of using a margin */
-#sidebar_float, .sidebar_float {
-  float:right; 
-	width: 260px; 
-	padding: 0px 10px 10px 10px;
-	margin: 0 10px 0 0; 
-}
-#sidebar_alt {
-	padding: 0px 10px 10px 0px;
-	margin-left: 545px;
-}
-#sidebar_content {
-	min-width: 150px;
-	max-width: 320px;
-}
-#searchArea {
-	float: left;
-	width: 500px;
-  margin-bottom: 40px;
+.error {
+	color: #CC0000;
 }
 
-#databaseSearchArea {
-  width: 480px;
+.nonBreaking {
+	white-space: nowrap;
 }
 
-#resultsArea {
-	clear: left;
-	margin-top: 10px;
-	padding: 20px;
-}
-#folderArea {
-	clear: both;
-	margin-top: 10px;
-	padding: 20px;
-}
-#resultsOptions {
-	float: right;
-	width: 339px;
-	font-size:97%;
-	line-height:1.5em;
-	margin: 20px;
-	margin-top: 30px;
-}
-#footer {
-	clear: both;
-	margin-top: 50px;
-	padding: 20px;
-	color: #999999;
-}
-#citation {	 
-	width: 300px; 
-	padding: 10px;  
-	background-color: #efefef;
-}
-
-/*#record { 
-	margin-top: 20px;
-}*/
-
-/** SIDEBAR STYLES **/
-
-/* session info */
-
-#sessionAuthInfo {
-	margin-bottom: 40px;
-}
-#sessionAuthInfo h2 {
-  margin-bottom: 8px;
-}
-#sessionAuthInfo h3 {
-	font-size: 12px;
-	margin: 0;
-	padding: 0;
-	display: inline;
-	font-weight: normal;
-}
-#sessionAuthInfo ul, #sessionAuthInfo li {
-	display: inline;
-	background-image: none;
-	margin: 0;
-	padding: 0;
-}
-.sessionAuthSection {
-	margin-left: 10px;
-	margin-bottom: 3px;
-}
-#sessionAuthSection strong {
-	font-weight: normal;
-}
-li.accountSidebar {
-  padding: 0 0 3px 21px;
-}
-li.mySavedRecords, li.myCollections {
-  background-image: none;
-  padding: 0 0 3px 0;
-}
-
-/* librarian */
-
-.librarian {
-	border: 1px solid #FFCC33;
-}
-.librarian td {
-	padding: 10px;
-	vertical-align: top;
-}
-.librarianName {
-	font-family: Arial, Verdana, Geneva, Arial, helvetica, sans-serif; 
-	color: #3366cc; font-size: 14px; 
-	font-weight: bold;
-}
-.librarianTitle {
-	margin-bottom: 6px;
-}
-.librarianChat td {
-	padding: 0px;
-	padding-right: 3px;
-	vertical-align: middle;
-}
-
-/** CONTENT STYLES **/
-
-
-/* breadcrumb */
-
-.trail {
-
-}
-.sessionOptions {
-	text-align: right;
-	margin-right: 10px;
-}
-
-/* subject page */
-
-.subject {
-	/*margin-bottom: 30px;*/
-}
-.subjectCheckList {
-	margin-top: 10px;
-}
-.subjectDatabaseTitle, .subjectDatabaseInfo, .subjectEditDatabase {
-	display: inline;
-	padding-left: 5px;
-}
-.subjectDatabaseRestriction {
-	color: #333;
-	font-size: 90%;
-	padding-top: 3px;
-	padding-left: 15px;
-	font-style: italic;
-}
-.subjectMetaSearch {
-	width: 500px;
-}
-.searchBox {
-  width: 460px;
-}
-
-.subjectSubCategory {
-	margin-top: 20px;
-}
-
-/* categories page */
-
-.homePage {
-	padding: 20px;
-}
-
-#main_content {
-	/*float:left;*/
-}
-.categories {
-  clear: both;
-}
-.categoriesTable td {
-	padding-right: 15px;
-}
-
-#categories_quicksearch {
-  width: 500px; 
-  float: left; 
-  margin-bottom: 20px;
-}
-
-/* databases full and a-z list */
-
-.databasesAttribute {
-	font-weight: bold;
-	text-align: right;
-}
-.databasesDescription {
-	margin-top: 30px;
-	margin-bottom: 20px;
-	line-height: 150%;
-}
-.databasesMoreInfo {
-	font-family: Arial;
-	font-size: 85%;
-	padding-left: 13px;
-	color: #666;
-}
-.databasesReturn {
-	margin-top: 20px;
-}
-.databasesTable td {
-	padding: 5px;
-	vertical-align: top;
-}
-.alphaDatabase {
-	margin-top: 20px;
-}
-.alphaTitle {
-	margin-bottom: 5px;
-}
-.alphaTitle a {
-	font-weight: bold;
-}
-
-.mini_icon {
-  vertical-align: middle;
-}
-
-.alphaDescription {
-	line-height: 130%;
-}
-
-/* search box */
-#searchLabel {
-  float:left; 
-  padding-top: .6em;
-}
-
-#searchInputs {
-  margin-left: 4.3em;
-}
-
-#metasearch_input_toggle {
-  text-align:right; 
-  margin-top: 1em; 
-}
-
-#query,#query2 {
-  width: 206px;
-}
-
-.errorSpelling {
-	color: #990000;
-	font-weight: bold;
-}
-.searchBox {
-	padding: 20px;
-	margin: 0 0 20px 0;
-	background-color: #fff;
+.raisedBox {
+	padding: 1.8em;
 	background-image: url(../images/bg.gif);
 	background-repeat: repeat-x;
 	background-position: bottom;
@@ -428,668 +198,453 @@ li.mySavedRecords, li.myCollections {
 	border-left-color: #CCCCCC;
 }
 
-/* results options */
+/** BREADCRUMBS **/
 
-.box {
-	width:240px;
-	margin-bottom: 20px;
-	padding:10px;
-	line-height:1.5em;
-	background-color: #f0f0f0;
-	background-image: url(../images/bg-long-light.gif);
-	background-repeat: repeat-x;
-	background-position: top;
-	border-top-width: 1px;
-	border-right-width: 1px;
-	border-bottom-width: 2px;
-	border-left-width: 1px;
-	border-top-style: solid;
-	border-right-style: solid;
-	border-bottom-style: solid;
-	border-left-style: solid;
-	border-top-color: #CCCCCC;
-	border-right-color: #CCCCCC;
-	border-bottom-color: #999999;
-	border-left-color: #CCCCCC;
+#breadcrumb {
+	padding: .7em;
+	color: #666;
+	margin-bottom: 1.5em;
 }
 
-#message_display {
-  padding: 10px;
-	margin-top: 20px;
-  margin-left: 20px;
-	background-color: #FFDADA;
-  display: table;
-  max-width: 480px;
-	border-top-width: 1px;
-	border-right-width: 1px;
-	border-bottom-width: 2px;
-	border-left-width: 1px;
-	border-top-style: solid;
-	border-right-style: solid;
-	border-bottom-style: solid;
-	border-left-style: solid;
-	border-top-color: #CCCCCC;
-	border-right-color: #CCCCCC;
-	border-bottom-color: #999999;
-	border-left-color: #CCCCCC;
+/** SEARCH BOX **/
+
+#searchBox {
+	display: table;
+	margin-bottom: 3em;
+	padding-bottom: 1em;
+	padding-right: 2.2em;
 }
 
-.sidebar-title, .box h2 {
-	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
-	margin:0;
-	padding:0 0 .2em;
-	border-bottom:1px dotted #fa0;
-	font-size:115%;
-	line-height:1.5em;
-	color:#333;
+#databasesSearch {
+	margin-bottom: 3em;
 }
 
-.nonBreaking {
-   white-space: nowrap;
+#searchLabel {
+	float:left; 
+	padding-top: .3em;
+}
+
+#searchInputs {
+	margin-left: 4.3em;
+}
+
+#metasearch_input_toggle {
+	margin-top: 1em;
+}
+
+#searchBox_advanced_newline {
+	margin-top: .2em;
+}
+
+/** DATABASES **/
+
+#databases_categories li {
+	list-style: disc;
+	padding-bottom: .3em;
+	margin-left: 2em;
+}
+
+#databases_categories h1, #databases_categories h2 {
+	margin-bottom: .5em;
+}
+
+.subjectSubCategory ul {
+	margin: .7em;
+	border-left: 2px solid #ccc;
+	padding-left: 1em;
+}
+
+.subjectSubCategory li {
+	padding-bottom: .3em;
+}
+
+.subjectSubCategory div {
+	display: inline;
+}
+
+.subjectSubCategory legend {
+	color: #003366;
+	font-size: 110%;
+	font-weight: bold;
+	padding: 1em;
+}
+
+.databasesDescription {
+	margin-top: 2em;
+	margin-bottom: 3em;
+	line-hright: 130%;
+}
+
+#alphaLetters {
+	border: 1px solid #ccc;
+	border-left: none;
+	border-right: none;
+	margin-top: 3em;
+	margin-bottom: 3em;
+	padding: 1em;
+}
+
+.alphaHeading {
+	padding: .5em;
+	padding-left: 1em;
+	padding-right: 1em;
+	border-top: 1px solid #ccc;
+	background-color: #efefef;
+	margin-bottom: 2em;
+}
+
+.alphaHeading h2 {
+	margin: 0;
+}
+
+.alphaBack {
+	text-align: right;
+}
+
+#snippetControl {
+	background-color: #efefef;
+	padding: 1em;
+	padding-left: 3em;
+}
+
+#snippetControl h2 {
+	margin-left: -1em;
+}
+
+#snippetDisplayTable td {
+	vertical-align: top;
+	padding-bottom: .8em;
+	padding-right: .4em;
+}
+
+#snippetSubcategories {
+	margin: 1em;
+	margin-right: 0;
+}
+
+#snippetInclude textarea {
+	font-size: 80%;
+	height: 8em;
+	width: 90%;
+	margin-bottom: 1em;
+}
+
+#example {
+	border: 2px solid #ccc;
+	padding: 2em;	
+} 
+
+#example_legend {
+	font-size: 140%;
+}
+
+p.optionInfo {
+	color: #444;
+	font-size: 90%;
+	padding: .4em;
+	padding-left: 1em;
 }
 
 
-/* results */
+/** MY SAVED DATABSES **/
 
-.results {
-  clear: left;
+ul.editCommands {
+	display: block;
+	margin-left: 5em;
+	margin-right: 5em;
+	padding: 1em;
+	border: 2px solid #ccc;
+	margin-bottom: 2em;
+	color: #ccc;
+}
+
+ul.editCommands li {
+	list-style: square;
+	padding: .3em;
+	color: #000;
+}
+
+.editSubject {
+	margin-top: -.75em;
+	margin-bottom: 1.25em;
+}
+
+table.reorderTable td {
+	padding: 1em;
+}
+
+
+/** AUTHENTICATION **/
+
+#authentication .box {
+	margin: 3em;
+	border: 1px solid #ccc;
+	background-color: #efefef;
+	width: 25em;
+	padding: 2em;
+}
+
+#authentication p {
+	padding-bottom: 1em;
+}
+
+#authentication .submit { 
+	margin-left: 8em;
+}
+
+#authentication label {
+	float: left;
+	width: 7em;
+	font-weight: bold;
+	text-align: right;
+	margin-right: 1em;
+}
+
+/*** METASEARCH HITS (PROGRESS) **/
+
+#metasearch_hits table {
+	margin-top: 2em;
+	border: 1px solid #ccc;
+}
+
+#metasearch_hits th {
+	background-color: #efefef;
+	font-weight: bold;
+	padding: .5em;
+}
+
+#metasearch_hits td {
+	padding: .4em;
+	border-bottom: 1px solid #eee;
+}
+
+.hitCount {
+	text-align: right;
+}
+
+/** RESULTS **/
+
+#sort {
+	padding: 1em;
+	border-top: 1px solid #ccc;
+	background-color: #efefef;
+	margin-bottom: 2.6em;
+}
+
+
+#sortOptions {
+	text-align: right;
+}	
+
+.result {
+	margin-bottom: 3em;
+	line-height: 130%;
+}
+
+.resultsTitle a {
+	font-weight: bold;
+}
+
+.resultsInfo {
+	border-left: 2px solid #ddd; 
+	margin-left: .3em;
+	padding-left: 1em;		
+	margin-top: .7em;
+	color: #333;
+}
+
+.resultsInfo a:link, .resultsInfo a:visited, #recordFullText a:link, #recordFullText a:visited {
+	color: green;
+}
+
+.resultsType {
+	font-weight: bold;
+}
+
+.resultsLanguage {
+	color: #CC0000;
 }
 
 .resultsAbstract {
-	margin-bottom: 10px;
-	line-height: 140%;
-	color: #333;
-}
-.resultsAuthor {
-	padding-right: 10px;
-}
-.resultsAvailability {
-	padding-top: 5px;
-} 
-.resultsAvailableOption {
-	padding-left: 6px;
-}
-.resultsFacetNav {
-	margin-top: 20px;
-}
-.resultsFullTextOption {
-	display: inline;
-	padding-right: 3px;
-}
-.resultsFullText {
-	color: #009900;
-}
-.resultsFullText:link {
-	color: #009900;
-	text-decoration:none;
-}
-.resultsFullText:visited {
-	color: #009900;
-	text-decoration:none;
-}
-.resultsFullText img {
-  vertical-align: text-bottom;
-}
-.resultsLanguage {
-	color: #990000;
-	font-weight: bold;
-}
-.resultsMain {
-	padding-bottom:23px;
-	padding-top:23px;
-}
-.resultsPageOptions {
-	margin-top: 10px;
-	margin-bottom: 20px;
+	margin-top: .7em;
+	margin-bottom: .7em;
 }
 
+.resultsAuthor, .resultsYear, .resultsPublishing, .resultsAvailableOption {
+	display: block;
+	margin-bottom: .3em;
+}
+
+.resultsAvailability {
+	margin-top: .5em;
+}
+
+.resultsFullTextOption, .resultsAvailableOption, .recordFullTextOption {
+	margin-bottom: .25em;
+}
+
+.folderLabels {
+	margin: .4em;
+}
+
+/* pager */
+
 .resultsPager {
-	margin-top: 30px;
-	margin-bottom: 20px;
+	margin-top: 7em;
+	margin-bottom: 7em;
 	text-align: center;
 }
 .resultsPagerList {
 	display: inline;
-	padding: 8px;
+	padding: .8em;
 	border: 1px solid #A2C9EF;
 	background-color: #E4F1FD;
 }
 .resultsPager li {
 	display: inline;
-	padding: 3px;
+	padding: .3em;
 	background-image: none;
 }
 .resultsPagerNext {
-	padding-left: 20px;
-}
-.resultsPageSummary {
-	width: 200px;
-}
-.resultsPublishing {
-	padding-right: 10px;
-}
-.resultsSearchLink {
-	margin: 20px;
-}
-.resultsSorting {
-	float: right;
-}
-.resultsTitle:link {
-	font-size: 12px;
-	font-weight: bold;
-}
-.resultsTitle:visited {
-	font-size: 12px;
-	font-weight: bold;
-}
-.resultsTitle:hover {
-	font-size: 12px;
-	font-weight: bold;
-	text-decoration: underline;
-}
-.resultsType {
-	font-weight: bold;
-	padding-top: 5px;
-	padding-bottom: 8px;
-}
-.resultsYear {
-	padding-right: 10px;
-}
-/* Record */
-
-.recordAbstract {
-	line-height:14pt;
-}
-.recordBasicTable {
-	margin-top: 10px;
-}
-.recordBasicTable td {
-	padding: 3px;
-}
-.recordAttribute {
-	vertical-align: top;
-	font-weight: bold;
-	text-align: left;
-	white-space: nowrap;
-}
-.recordFullText {
-	margin: 30px; 
-	padding: 20px;
-	width: 400px;
-	background-image: url(../images/bg.gif);
-	background-repeat: repeat-x;
-	background-position: bottom;
-	border-top-width: 1px;
-	border-right-width: 1px;
-	border-bottom-width: 2px;
-	border-left-width: 1px;
-	border-top-style: solid;
-	border-right-style: solid;
-	border-bottom-style: solid;
-	border-left-style: solid;
-	border-top-color: #CCCCCC;
-	border-right-color: #CCCCCC;
-	border-bottom-color: #999999;
-	border-left-color: #CCCCCC;
-}
-.recordFullTextOption {
-	margin-bottom: 10px; 
-}
-.recordNoFullText {
-	margin-bottom: 15px; 
-	color: #000; 
-	font-weight: bold;
-}
-.recordTitle {
-	font-size: 22px;
+	padding-left: 2em;
 }
 
-/* Folder */
+/** RECORD FULL VIEW **/
 
-.folderAvailability {
-	margin-top: 10px;
+#record h2 {
+	margin-top: 1em;
 }
-.folderEmailOptionsTable {
-	padding: 5px;
+
+#record li {
+	list-style: square;
+	margin-left: 3em;
 }
-.folderEmailAttribute {
-	vertical-align: top;
+
+#recordFullText {
+	margin-top: 2em; 
+	margin-bottom: 2em;
+}
+
+#recordFullText li {
+	margin-left: 0;
+}
+
+#citationNote {
+	border: 1px solid #ccc;
+	padding: .4em;
+	font-size: 80%;
+	color: #666;
+}
+
+/** MY SAVED RECORDS **/
+
+.folderReturn {
+	display: inline;
+	margin-left: 3em;
+}
+
+#folder_output_results li {
+	display: block;
+	margin-bottom: 1em;
+	clear: left;
+	padding: 1em;
+	border-bottom: 1px dashed #ccc;
+}
+
+#folder_output_results input {
+	display: block;
+	float: left;
+	width: 5em;
+}
+
+#folder_output_results label {
+	display: block;
+	margin-left: 5em;
+}
+
+#export legend {
+	font-family: Arial, Helvetica, sans-serif;
+	color: #003366;
+	padding-top: 2em;
+	padding-bottom: 2em;
+	font-size: 140%;
+}
+
+.exportOptions div {
+	display: block;
+	margin-bottom: 1em;
+	clear: left;
+}
+	
+#export_email_options label {
+	display: block;
+	float: left;
+	width: 15em;
+	font-weight: bold;
 	text-align: right;
 }
-.folderEmailSuccess {
-	margin: 20px;
-	font-weight: bold;
-	color: #006600;
-	padding: 20px;
-	width: 300px;
-	
-	background-color: #f6f6f3;
-	border-top-width: 1px;
-	border-right-width: 1px;
-	border-bottom-width: 1px;
-	border-left-width: 1px;
-	border-top-style: solid;
-	border-right-style: solid;
-	border-bottom-style: solid;
-	border-left-style: solid;
-	border-top-color: #999999;
-	border-right-color: #CCCCCC;
-	border-bottom-color: #CCCCCC;
-	border-left-color: #CCCCCC;
-}
-.folderExportSelections li {
-	background-image: none;
-	list-style: none;
-}
-.folderExportSet {
-	margin-top: 10px;
-}
-.folderExportSubmit {
-	margin-top: 20px; 
-	margin-left: 20px;
-}
-.folderHeaderArea {
-	margin-bottom: 30px;
-}
-.folderHomeHeader, .folderHomeHeader:visited {
-	color: #3366cc; 
-	text-decoration: underline
-}
-.folderLabels {
-	margin-top: 20px; 
-	margin-left: 15px
-}
-.folderLabelsSubmit {
-	padding-left: 5px;
-}
-.folderNoRecords {
-	margin: 20px;
-	margin-bottom: 100px;
-}
-.folderOptions {
-	margin: 20px;
-	margin-top: 30px;
-	width: 440px;
-	padding: 10px;
-	background-color: #f0f0f0;
-	background-image: url(../images/bg-long.gif);
-	background-repeat: repeat-x;
-	background-position: bottom;
-	border-top-width: 1px;
-	border-right-width: 1px;
-	border-bottom-width: 2px;
-	border-left-width: 1px;
-	border-top-style: solid;
-	border-right-style: solid;
-	border-bottom-style: solid;
-	border-left-style: solid;
-	border-top-color: #CCCCCC;
-	border-right-color: #CCCCCC;
-	border-bottom-color: #999999;
-	border-left-color: #CCCCCC;
-}
-.folderOptionHeader {
-	padding-bottom: 20px;
+
+#export_email_options input, #export_email_options textarea {
+	display: block;
+	margin-left: 17em;
 }
 
-.folderOutput {
-	margin-bottom: 30px;
-}
-.folderRecord {
-	padding-top: 20px;
-	padding-right: 20px;
-	padding-bottom: 10px;
-	border-top-width: 1px;
-	border-top-style: dashed;
-	border-top-color: #CCCCCC;
-	border-right-color: #CCCCCC;
-	border-bottom-color: #CCCCCC;
-	border-left-color: #CCCCCC;
-}
-/*.folderResults {
-	margin-left: 270px;
-}*/
-.folderReturn {
-	clear: both;
-	margin-top: 10px;
+#export_single {
+	margin: 2em;
 }
 
-.navReturn {
-  margin-bottom: 20px;
+#export_single {
+	font-size: 130%;
+	padding: 1em;
 }
 
-.folderReturnText {
-	margin-left: 5px;
+#export_options_endnote div {
+	margin: 1em;
 }
 
-.navReturnText {
-  margin-left: 5px;
+#export_options_endnote input {
+	margin-right: 1em;
+	margin-left: 1em;
 }
 
-.tagsSubmit {
-	font-size: 90%;
-}
-
-/* User-created categories (collections) */
-#collections_body {
-  margin-top: 30px;
-}
-
-.editSubjectHeading {
-  line-height: 20px;
-  width: 500px;
-}
-
-.emptyCollectionInstructions {
-  line-height: 28px;
-}
-.emptyCollectionInstructions p {
-  margin-bottom: 2em;
-}
-
-  
-
-.editCategory .subjectSubCategory {
-  margin-bottom: 40px;
-}
-
-.editCategory .subjectCheckList {
-  margin-top: 24px;
-  margin-bottom: 18px;
-}
-
-.miniForm {
-   background-color: #EFEFEF;
-   padding: 20px;
-   margin-top: 20px;
-   width: 400px;
-}
-
-.subject_edit_commands {
-  line-height: 34px;
-  background-color: #EFEFEF;
-  padding: 8px;
-  margin-top: 16px;
-  margin-bottom: 16px;
-}
-
-
-.editSubjectHeading .subject_edit_commands {
-  margin-top: 16px;
-  margin-bottom: 16px;
-}
-
-.editSubjectHeading .displayTextbox {
-  height: 2.5em;
-}
-
-
-a.categoryCommand, a.categoryCommand:visited, a:hover.categoryCommand {
-  margin-right: 2px;
-  margin-left: 2px;
-  /* position: relative gets around a weird IE6/7 bug with what we're trying
-     to do */
-  position: relative;
-  padding: 4px 4px 4px 24px;  
-  background-color: #F7FDCB;
-  border: 1px dotted #CCCCCC;
-  font-weight: bold;
-  font-family: Arial,Verdana,Geneva,Arial,helvetica,sans-serif;
-  color: black;
-  text-decoration: none;
-  white-space: nowrap;
-  /*background-position: 4px 4px;*/
-  background-position: 4px 4px;
-  background-position-x: 4px;
-  background-position-y: 4px;
-  background-repeat: no-repeat;
-}
-/* Require it to have an href attribute to avoid mouseover change
-   on demo example links. */
-a.categoryCommand:hover[href] {
-  	color: #FFCC33; text-decoration: none; 
-    background-color: #8C8C8C;
-}
-
-a.categoryCommand.delete {
-  background-image: url(../images/delete.gif);
-  /* For some reason only IE6 gets these *- selectors, and we turn
-     bg images off in ie6, becuase ie6 is doing weird things with them. */
-  *-background-image: none;  
-}
-a.categoryCommand.add {
-  background-image: url(../images/famfamfam/add.png);
-  /* For some reason only IE6 gets these *- selectors, and we turn
-     bg images off in ie6, becuase ie6 is doing weird things with them. */
-  *-background-image: none;  
-}
-a.categoryCommand.reorder {
-  background-image: url(../images/reorder.gif);
-  /* For some reason only IE6 gets these *- selectors, and we turn
-     bg images off in ie6, becuase ie6 is doing weird things with them. */
-  *-background-image: none;  
-}
-a.categoryCommand.edit {
-  background-image: url(../images/famfamfam/wrench.png);
-  /* For some reason only IE6 gets these *- selectors, and we turn
-     bg images off in ie6, becuase ie6 is doing weird things with them. */
-  *-background-image: none;  
-}
-a.categoryCommand.rename {
-  background-image: url(../images/famfamfam/tag_blue_edit.png);
-  /* For some reason only IE6 gets these *- selectors, and we turn
-     bg images off in ie6, becuase ie6 is doing weird things with them. */
-  *-background-image: none;  
-}
-a.categoryCommand.publishToggle, a.categoryCommand.publishToggle:hover {
-    padding-left: 8px;
-}
-
-span.publishedStatus {
-  margin-right: 2px;
-  margin-left: 2px;
-  padding: 4px; 
-  background-position: 4px 4px;
-  background-repeat: no-repeat;
-  padding-left: 24px;
-  background-image: url(../images/famfamfam/lock_open.png);
-}
-span.privateStatus {
-  margin-right: 2px;
-  margin-left: 2px;
-  padding: 4px; 
-  background-position: 4px 4px;
-  background-repeat: no-repeat;
-  padding-left: 24px;
-  background-image: url(../images/famfamfam/lock.png);
-}
-
-
-.addDatabases {
-  margin-top: 20px;
-  padding: 10px;
-  background-color: #EFEFEF;
-}
-
-ul.addDatabasesMatches {
-  *-height: 10em; /* for mysterious reasons, IE6 only gets this */
-  max-height: 10em;
-  overflow-y: auto;
-  border: 1px dotted #CCCCCC;
-}
-
-.addDatabases ul li {
-  background: none;
-  padding-left: 8px;
-}
-
-.addDatabases ul li a.addToCollection {
-  background: transparent url(../images/famfamfam/add.png) no-repeat scroll 0px 0px;
-  background-position: 0px -1px;
-  padding-left: 20px;
-  vertical-align: middle;
-}
-
-#addNewSection {
-  background-color: #EFEFEF;
-  margin-top: 20px;
-  margin-bottom: 20px;
-  padding: 20px;
-}
-
-input.reorder {
-  padding: 2px;
-  height: 1em;
-  width: 2em;
-}
-  
-
-/* Autocomplete styling, used by tag entry right now */
-
+/** AUTO-COMPLETE **/
 
 div.autocomplete {
-  margin:0px;  
-  padding:0px;  
-  width:250px;
-  background:#fff;
-  border:1px solid #888;
-  position:absolute;
+	margin: 0;
+	padding: 0;
+	width: 25em;
+	background: #fff;
+	border: 1px solid #888;
+	position: absolute;
 }
 
 div.autocomplete ul {
-  margin:0px;
-  padding:0px;
-  list-style-type:none;
+  list-style-type: none;
 }
 
-div.autocomplete ul li.selected { 
-  background-color:#B0E0E6;
+div.autocomplete ul li.selected {
+	margin: 0;
+	padding: 0;
+	background-color: #B0E0E6;
+}
+
+div.autocomplete ul {
+	margin: 0;
+	padding: 0;
+}
+
+#tag_suggestions li {
+	margin: 0px;
 }
 
 div.autocomplete ul li {
-  margin:0;
-  padding:2px;
-  height:1.2em;
-  display:block;
-  list-style-type:none;
-  cursor:pointer;
-  background: none;
+	padding: .2em;
+	height: 1.2em;
+	display: block;
+	list-style-type: none;
+	cursor: pointer;
+	background: none;
 }
 
 
-/* login page */
 
-.loginBox {
-    margin-top: 50px;
-	margin-left: 50px;
-	padding: 15px;
-	width: 300px;
-	background-color: #f0f0f0;
-	background-image: url(../images/bg-long.gif);
-	background-repeat: repeat-x;
-	background-position: bottom;
-	border-top-width: 1px;
-	border-right-width: 1px;
-	border-bottom-width: 2px;
-	border-left-width: 1px;
-	border-top-style: solid;
-	border-right-style: solid;
-	border-bottom-style: solid;
-	border-left-style: solid;
-	border-top-color: #CCCCCC;
-	border-right-color: #CCCCCC;
-	border-bottom-color: #999999;
-	border-left-color: #CCCCCC;
-}
-.longBox {
-	width: 400px;
-}
-.loginNote {
-	margin-bottom: 30px;
-}
-.error {
-	color: #990000;
-	font-weight: bold;
-}
-.errorPad {
-	margin: 30px;
-}
-
-/* citation */
-
-.citations {
-	margin-left: 20px;
-}
-
-.citationStyle {
-	margin-left: 20px; 
-	line-height: 1.3em; 
-	text-indent: -20px; 
-	margin-top: 3px;
-}
-.citationNote {
-	margin-top: 20px; 
-	border: 1px solid #ccc; 
-	padding: 10px; 
-	font-size: 80%; 
-	color: #333
-}
-
-/* options: Used on embed generators and generated embeds */
-
-
-#headingBox {
-  margin: 20px;
-}
-
-#snippet_option_column {
-  float:left; 
-  width:400px;
-}
-
-#options {
-  border: 2px solid gray;
-  margin-right: 20px;
-  margin-left: 20px;
-  margin-top: 0px; // Weird float issues
-  margin-bottom: 20px;
-}
-
-#example_container {
-  overflow:scroll;
-}
-
-#example {
-  border: 2px solid gray;
-  margin-top: 20px;
-  margin-right: 20px;
-  margin-bottom: 20px;
-  margin-left: 0;
-}
-#embedding_instructions {
-  border: 2px solid gray;
-  margin: 20px;
-}
-
-.optionRow {
-  vertical-align: top; 
-}
-.optionRow h4 {
-  margin: 0;
-  padding: 0;
-}
-#snippet_generator .optionInfo {
-  margin-left: 20px;
-}
-.displayTextbox {
-  margin-left: 5%;
-  width:70%; 
-  height: 5em;
-  background-color: #FFFBD3;
-}
-
-.ada {
-	position: absolute; 
-	left: -500px; 
-	top: -5000px
-}
