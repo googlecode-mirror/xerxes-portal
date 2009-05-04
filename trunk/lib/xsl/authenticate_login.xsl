@@ -13,19 +13,26 @@
 
 <xsl:stylesheet version="1.0"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-	xmlns:php="http://php.net/xsl">
-<xsl:include href="includes.xsl" />
-<xsl:output method="html" encoding="utf-8" indent="yes" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+	xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
+<xsl:import href="includes.xsl" />
+<xsl:output method="html" encoding="utf-8" indent="yes" doctype-public="-//W3C//DTD HTML 4.01 Transitional//EN" doctype-system="http://www.w3.org/TR/html4/loose.dtd"/>
 
-<xsl:template match="/authenticate">
-	<xsl:call-template name="surround" />
+<xsl:template match="/*">
+	<xsl:call-template name="surround">
+		<xsl:with-param name="surround_template">none</xsl:with-param>
+		<xsl:with-param name="sidebar">none</xsl:with-param>
+	</xsl:call-template>
+</xsl:template>
+
+<xsl:template name="page_name">
+	<xsl:value-of select="$text_authentication_login_pagename" />
 </xsl:template>
 
 <xsl:template name="main">
 
 	<xsl:variable name="return" 	select="request/return" />
 	<xsl:variable name="local" 	select="request/local" />
-  <xsl:variable name="authentication_source" select="request/authentication_source" />
+	<xsl:variable name="authentication_source" select="request/authentication_source" />
 
 	<xsl:variable name="username">
 		<xsl:if test="not(contains(request/session/username,'local@')) and not(contains(request/session/username,'guest@'))">
@@ -33,59 +40,40 @@
 		</xsl:if>
 	</xsl:variable>
 	
+	<div id="authentication">
+	
+		<h1><xsl:call-template name="page_name" /></h1>
+		<p><xsl:copy-of select="$text_authentication_login_explain" /></p>
 		
-	<div id="container">
-		<div class="loginBox">
-			<h2>Login</h2>
-			<p class="loginNote">This resource is restricted.  
-			Please login with the <strong>demo</strong> user account.</p>
-			
-			<xsl:choose>
-				<xsl:when test="error = 'authentication'">
-					<p class="error">Sorry, your username or password was incorrect.</p>
-				</xsl:when>
-				<xsl:when test="error = 'authorization'">
-					<p class="error">Sorry, you are not allowed to use this feature.</p>				
-				</xsl:when>
-			</xsl:choose>
-			
-			
+		<xsl:if test="error = 'authentication'">
+			<p class="error"><xsl:copy-of select="$text_authentication_login_failed" /></p>
+		</xsl:if>
+		
+		<div class="box">
+				
 			<form name="login" method="post" action="./?base=authenticate">		
 				<input name="action" type="hidden" value="login" />
 				<input name="return" type="hidden" value="{$return}" />
 				<input name="local" type="hidden" value="{$local}" />
-        <input name="authentication_source" type="hidden" value="{$authentication_source}"/>
+				<input name="authentication_source" type="hidden" value="{$authentication_source}"/>
 				<input name="postback" type="hidden" value="true" />  
-				<table border="0" cellspacing="0" cellpadding="8" summary="">
-					<tr>
-						<td><label for="username">username:</label></td>
-						<td><input name="username" type="text" id="username" value="{$username}" /></td>
-					</tr>
-					<tr>
-						<td><label for="password">password:</label></td>
-						<td><input name="password" type="password" id="password" /></td>
-					</tr>
-					<tr>
-						<td> </td>
-						<td align="right"><input type="submit" name="Submit" value="Log In" /></td>
-					</tr>
-				</table>
-			
+				
+				<p>
+				<label for="username"><xsl:copy-of select="$text_authentication_login_username" /></label>
+				<input name="username" type="text" id="username" value="{$username}" />
+				</p>
+				
+				<p>
+				<label for="password"><xsl:copy-of select="$text_authentication_login_password" /></label>
+				<input name="password" type="password" id="password" />
+				</p>
+				
+				<input type="submit" class="submit" name="Submit" value="{$text_authentication_login_pagename}" />
+							
 			</form>
-			
-			<!--
-			<form name="guest" method="post" action="./?base=authenticate">
-				<input name="action" type="hidden" value="guest" />
-				<input name="return" type="hidden" value="{$return}" />
-				<input name="postback" type="hidden" value="true" />
-				<h2>. . . or Gest Login</h2>
-				<p class="loginNote">Allows you to access and search the Library's publically available databases.</p>
-				<p><input type="submit" name="Submit2" value="Guest Login" /></p>
-			
-			</form>
-			-->
 			
 		</div>
+		
 	</div>
 	
 </xsl:template>

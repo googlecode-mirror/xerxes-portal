@@ -13,12 +13,25 @@
  
 <xsl:stylesheet version="1.0"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-	xmlns:php="http://php.net/xsl">
-<xsl:include href="includes.xsl" />
-<xsl:output method="html" encoding="utf-8" indent="yes" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+	xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
+<xsl:import href="includes.xsl" />
+<xsl:output method="html" encoding="utf-8" indent="yes" doctype-public="-//W3C//DTD HTML 4.01 Transitional//EN" doctype-system="http://www.w3.org/TR/html4/loose.dtd"/>
 
 <xsl:template match="/*">
 	<xsl:call-template name="surround" />
+</xsl:template>
+
+<xsl:template name="sidebar">
+	<xsl:call-template name="account_sidebar" />
+</xsl:template>
+
+<xsl:template name="breadcrumb">
+	<xsl:call-template name="breadcrumb_folder" />
+	<xsl:call-template name="page_name" />
+</xsl:template>
+
+<xsl:template name="page_name">
+	<xsl:value-of select="$text_folder_endnote_pagename" />
 </xsl:template>
 
 <xsl:template name="main">
@@ -26,51 +39,41 @@
 	<xsl:variable name="username" 	select="request/session/username" />
 	<xsl:variable name="sort" 		select="request/sortkeys" />
 
-	<form action="{$base_url}/" method="get">
-    <input type="hidden" name="base" value="folder" />
-	<input type="hidden" name="action" value="export" />
-	<input type="hidden" name="username" value="{$username}" />
-	
-	<div id="folderArea">
-      <div id="sidebar_float" class="sidebar_float">
-        <xsl:call-template name="account_sidebar"/>
-      </div>
-      
-	  	<xsl:call-template name="folder_header" />
-	  
-	  	<div class="folderOptions">
-		  
-			<h2 class="folderOptionHeader">Download to Endnote, Zotero, etc.</h2>
-			
-			<xsl:call-template name="folder_export_options" />
-			
-			<fieldset class="folderExportSet">
-			<legend>Download</legend>
-			
-			<ul class="folderExportSelections">
-				<li>
-					<input name="format" type="radio" value="bibliographic" checked="checked" id="bibliographic" />
-					<label for="bibliographic"> directly into Endnote, Zotero, or other citation management application</label>
-				</li>
-				<li>
-					<input name="format" type="radio" value="ris-file" id="ris" />
-					<label for="ris"> to a file I will import myself</label>
-				</li>
-			</ul>
-			
-			</fieldset>
-			
-			<div class="folderExportSubmit">
-				<input type="submit" name="Submit" value="Download" />
-			</div>
-
-		</div>
+	<div id="export">
 		
+		<form action="{$base_url}/" name="export_form" method="get">
+		<input type="hidden" name="base" value="folder" />
+		<input type="hidden" name="action" value="export" />
+		<input type="hidden" name="username" value="{$username}" />
+		
+		<h1><xsl:call-template name="page_name" /></h1>
+		
+		<xsl:call-template name="folder_header_limit" />
+	
+		<fieldset id="export_options_endnote">
+			<legend><xsl:copy-of select="$text_folder_export_download" /></legend>
+				
+			<div>
+				<input name="format" type="radio" value="bibliographic" checked="checked" id="bibliographic" />
+				<label for="bibliographic"><xsl:text> </xsl:text><xsl:copy-of select="$text_folder_endnote_direct" /></label>
+			</div>
+			
+			<div>
+				<input name="format" type="radio" value="ris-file" id="ris" />
+				<label for="ris"><xsl:text> </xsl:text><xsl:copy-of select="$text_folder_endnote_file" /></label>
+			</div>
+			
+			<div>
+				<input type="submit" name="Submit" value="{$text_folder_export_download}" />
+			</div>
+			
+		</fieldset>
+				
 		<xsl:call-template name="folder_brief_results" />
+		
+		</form>
 		
 	</div>
 
-	</form>
-	
 </xsl:template>
 </xsl:stylesheet>

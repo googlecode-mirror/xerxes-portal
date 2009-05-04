@@ -2,7 +2,7 @@
 <xsl:stylesheet version="1.0"
 	xmlns:marc="http://www.loc.gov/MARC21/slim"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-	xmlns:php="http://php.net/xsl">
+	xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 <xsl:output method="xml" encoding="utf-8"/>
 
 <xsl:template match="category">
@@ -66,8 +66,8 @@
 		<xsl:variable name="groups" select="php:functionString('Xerxes_Command_PopulateDatabases::splitToNodeset', marc:datafield[@tag='AF3']/marc:subfield[@code='a'])/item" />
 		
 		<!-- we're going to need to a case shift. sigh. -->
-		<xsl:variable name="uc" select="'ABCDEFGHIJKLMNOPQRSTUVWXYZ'"/>
-		<xsl:variable name="lc" select="'abcdefghijklmnopqrstuvwxyz'"/>	
+		<xsl:variable name="uc">ABCDEFGHIJKLMNOPQRSTUVWXYZ</xsl:variable>
+		<xsl:variable name="lc">abcdefghijklmnopqrstuvwxyz</xsl:variable>
 		
 		<guest_access>
 			<xsl:choose>
