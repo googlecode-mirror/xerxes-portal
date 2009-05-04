@@ -23,18 +23,17 @@
 	
 	<xsl:variable name="text_breadcrumb_seperator"> / </xsl:variable>
 	
-	<xsl:variable name="text_database_save_database">Save database</xsl:variable>
-	<xsl:variable name="text_database_link">	Link:</xsl:variable>
-	<xsl:variable name="text_database_go_to_database">Go to this database!</xsl:variable>
 	<xsl:variable name="text_database_availability">Availability:</xsl:variable>
 	<xsl:variable name="text_database_available_registered">Only available to registered users.</xsl:variable>
 	<xsl:variable name="text_database_available_everyone">Available to everyone.</xsl:variable>
 	<xsl:variable name="text_database_coverage">Coverage:</xsl:variable>
+	<xsl:variable name="text_database_creator">Creator</xsl:variable>
 	<xsl:variable name="text_database_guide">Guide:</xsl:variable>
 	<xsl:variable name="text_database_guide_help">Help in using this database</xsl:variable>
-	<xsl:variable name="text_database_creator">Creator</xsl:variable>
+	<xsl:variable name="text_database_go_to_database">Go to this database!</xsl:variable>
+	<xsl:variable name="text_database_link">Link:</xsl:variable>
 	<xsl:variable name="text_database_publisher">Publisher:</xsl:variable>
-	
+	<xsl:variable name="text_database_save_database">Save database</xsl:variable>	
 	
 	<xsl:variable name="text_databases_access_available">Only available to </xsl:variable>
 	<xsl:variable name="text_databases_access_group_and">and</xsl:variable>
@@ -68,18 +67,15 @@
 	<xsl:variable name="text_error_databases_registered">Only available to registered users.</xsl:variable>
 	<xsl:variable name="text_error_pdo_exception">There was a problem with the database.</xsl:variable>
 	
-	<xsl:variable name="text_folder_export_send">Send</xsl:variable>
-	<xsl:variable name="text_folder_export_export">Export</xsl:variable>
-	<xsl:variable name="text_folder_export_download">Download</xsl:variable>
 	<xsl:variable name="text_folder_endnote_direct">directly into Endnote, Zotero, or other citation management application</xsl:variable>
 	<xsl:variable name="text_folder_endnote_file">to a file I will import myself</xsl:variable>
-	
-	<xsl:variable name="text_folder_records_export">Records to export</xsl:variable>
-	<xsl:variable name="text_folder_limit_tag">Label</xsl:variable>
+	<xsl:variable name="text_folder_export_download">Download</xsl:variable>
+	<xsl:variable name="text_folder_export_export">Export</xsl:variable>
+	<xsl:variable name="text_folder_export_send">Send</xsl:variable>
 	<xsl:variable name="text_folder_limit_format">Format</xsl:variable>
-	
-	<xsl:variable name="text_record_breadcrumb">Record</xsl:variable>
-	
+	<xsl:variable name="text_folder_limit_tag">Label</xsl:variable>
+	<xsl:variable name="text_folder_records_export">Records to export</xsl:variable>
+		
 	<xsl:variable name="text_folder_header_temporary">Temporary Saved Records</xsl:variable>
 	<xsl:variable name="text_folder_login_temp">
 		( <a href="{//navbar/element[@id='login']/url}">Log-in</a> to save records beyond this session. )
@@ -157,35 +153,39 @@
 	<xsl:variable name="text_results_hint_remove_limit">remove limit</xsl:variable>
 	
 	<xsl:variable name="text_metasearch_results_error_merge_bug">Sorry, there was an error.</xsl:variable>
-	
 	<xsl:variable name="text_metasearch_results_error_merge_bug_try_again">
 		Please <a href="{//request/server/request_uri}">try again</a>
 		or select an individual set of results to the right.
 	</xsl:variable>
 	
-	<xsl:variable name="text_record_cite_this">Cite this</xsl:variable>
 	<xsl:variable name="text_record_author_corp">Corporate author</xsl:variable>
-	<xsl:variable name="text_record_conf">Conference</xsl:variable>
-	<xsl:variable name="text_record_format_label">Format</xsl:variable>
-	<xsl:variable name="text_record_inst">Institution</xsl:variable>
-	<xsl:variable name="text_record_degree">Degree</xsl:variable>
-	<xsl:variable name="text_record_publisher">Publisher</xsl:variable>
-	<xsl:variable name="text_record_database">Database</xsl:variable>
-	<xsl:variable name="text_record_summary">Summary</xsl:variable>
+	<xsl:variable name="text_record_breadcrumb">Record</xsl:variable>
 	<xsl:variable name="text_record_chapters">Chapters</xsl:variable>
+	<xsl:variable name="text_record_cite_this">Cite this</xsl:variable>
+	<xsl:variable name="text_record_citation_note">
+		These citations are software generated and  may contain errors. To verify accuracy, 
+		check the appropriate style guide.
+	</xsl:variable>	
+	<xsl:variable name="text_record_conf">Conference</xsl:variable>
 	<xsl:variable name="text_record_contents">Contents</xsl:variable>
+	<xsl:variable name="text_record_database">Database</xsl:variable>
+	<xsl:variable name="text_record_degree">Degree</xsl:variable>
+	<xsl:variable name="text_record_format_label">Format</xsl:variable>
+	<xsl:variable name="text_records_fulltext_pdf">Full-Text in PDF</xsl:variable>
+	<xsl:variable name="text_records_fulltext_html">Full-Text in HTML</xsl:variable>
+	<xsl:variable name="text_records_fulltext_available">Full-Text Available</xsl:variable>	
+	<xsl:variable name="text_record_inst">Institution</xsl:variable>
 	<xsl:variable name="text_record_language_label">Language</xsl:variable>
+	<xsl:variable name="text_record_notes">Additional Notes</xsl:variable>
+	<xsl:variable name="text_record_publisher">Publisher</xsl:variable>
+	<xsl:variable name="text_record_summary">Summary</xsl:variable>
 	<xsl:variable name="text_record_subjects">Covers the topics</xsl:variable>
 	<xsl:variable name="text_record_standard_nos">Standard Numbers</xsl:variable>
-	<xsl:variable name="text_record_notes">Additional Notes</xsl:variable>
+	<xsl:variable name="text_records_tags">Labels: </xsl:variable>
 	
+	<xsl:variable name="text_results_author">By</xsl:variable>
 	<xsl:variable name="text_results_breadcrumb">Results</xsl:variable>
 	<xsl:variable name="text_results_no_title">[ No Title ]</xsl:variable>
-	<xsl:variable name="text_results_sort_by">sort by</xsl:variable>
-	
-	<xsl:variable name="text_results_refereed">Peer Reviewed</xsl:variable>
-	<xsl:variable name="text_results_author">By</xsl:variable>
-	<xsl:variable name="text_results_year">Year</xsl:variable>
 	<xsl:variable name="text_results_published_in">Published in</xsl:variable>
 	
 	<xsl:variable name="text_results_record_saved">Record saved</xsl:variable>
@@ -193,14 +193,17 @@
 	<xsl:variable name="text_results_record_save_it">Save this record</xsl:variable>
 	<xsl:variable name="text_results_record_saved_perm">login to save permanently</xsl:variable>
 	<xsl:variable name="text_results_record_delete">Delete this record</xsl:variable>
+
+	<xsl:variable name="text_results_refereed">Peer Reviewed</xsl:variable>
+	<xsl:variable name="text_results_sort_by">sort by</xsl:variable>
+	<xsl:variable name="text_results_year">Year</xsl:variable>
 	
+	<xsl:variable name="text_metasearch_results_found">results found</xsl:variable>
+	<xsl:variable name="text_metasearch_status_error">ERROR</xsl:variable>
 	<xsl:variable name="text_metasearch_status_fetching">FETCHING</xsl:variable>
 	<xsl:variable name="text_metasearch_status_start">START</xsl:variable>
 	<xsl:variable name="text_metasearch_status_started">STARTED</xsl:variable>
 	<xsl:variable name="text_metasearch_status_stopped">STOPPED</xsl:variable>
-	<xsl:variable name="text_metasearch_status_error">ERROR</xsl:variable>
-	
-	<xsl:variable name="text_metasearch_results_found">results found</xsl:variable>
 	
 	<xsl:variable name="text_searchbox_ada_boolean">Boolean operator: </xsl:variable>
 	<xsl:variable name="text_searchbox_boolean_and">And</xsl:variable>
@@ -215,18 +218,16 @@
 	<xsl:variable name="text_searchbox_field_isbn">ISBN</xsl:variable>
 	<xsl:variable name="text_searchbox_for">for</xsl:variable>
 	<xsl:variable name="text_searchbox_go">GO</xsl:variable>
-	<xsl:variable name="text_searchbox_search">Search</xsl:variable>
-	<xsl:variable name="text_searchbox_spelling_error">Did you mean: </xsl:variable>	
 	<xsl:variable name="text_searchbox_options_fewer">Fewer Options</xsl:variable>
 	<xsl:variable name="text_searchbox_options_more">More Options</xsl:variable>
+	<xsl:variable name="text_searchbox_search">Search</xsl:variable>
+	<xsl:variable name="text_searchbox_spelling_error">Did you mean: </xsl:variable>
 	
 	<xsl:variable name="text_snippet_display_all">ALL</xsl:variable>
 	<xsl:variable name="text_snippet_display_no">no</xsl:variable>
 	<xsl:variable name="text_snippet_display_options">Display Options</xsl:variable>
 	<xsl:variable name="text_snippet_display_yes">yes</xsl:variable>
-
-	<xsl:variable name="text_snippet_example">Example</xsl:variable>
-	
+	<xsl:variable name="text_snippet_example">Example</xsl:variable>	
 	<xsl:variable name="text_snippet_include_html">HTML Source</xsl:variable>
 	<xsl:variable name="text_snippet_include_html_explain">
 		Last resort. If this is your only option, you can embed this HTML source directly into your external website. 
@@ -234,26 +235,20 @@
 		Use with care.
 	</xsl:variable>
 	<xsl:variable name="text_snippet_include_html_source">View snippet source</xsl:variable>
-	
 	<xsl:variable name="text_snippet_include_javascript">Javascript widget</xsl:variable>
 	<xsl:variable name="text_snippet_include_javascript_explain">
 		Should work in any external website that allows javascript, but viewers' browsers must support javascript.
 	</xsl:variable>
-	
 	<xsl:variable name="text_snippet_include_options">Include Options</xsl:variable>
-	
 	<xsl:variable name="text_snippet_include_server">Server-side include url</xsl:variable>
 	<xsl:variable name="text_snippet_include_server_explain">
 		Preferred method of inclusion, if your external website can support a server-side include.
 	</xsl:variable>
-		
 	<xsl:variable name="text_snippet_include_url">Pass-through URL</xsl:variable>
 	<xsl:variable name="text_snippet_include_url_explain">
 		This link serves as a persistent URL to this database, and will also provide proxy access for off-campus users.
 	</xsl:variable>
-	
-	<xsl:variable name="text_snippet_refresh">Refresh</xsl:variable>
-	
+	<xsl:variable name="text_snippet_refresh">Refresh</xsl:variable>	
 	<xsl:variable name="text_snippet_show_css">Include CSS?</xsl:variable>
 	<xsl:variable name="text_snippet_show_css_explain">
 		Including the CSS works imperfectly.  If you need to, it's better to define 
@@ -265,18 +260,6 @@
 	<xsl:variable name="text_snippet_show_searchbox">Show search box?</xsl:variable>
 	<xsl:variable name="text_snippet_show_section">Show specific section?</xsl:variable>	
 	<xsl:variable name="text_snippet_show_title">Show title?</xsl:variable>
-	
-
-	<xsl:variable name="text_records_fulltext_pdf">Full-Text in PDF</xsl:variable>
-	<xsl:variable name="text_records_fulltext_html">Full-Text in HTML</xsl:variable>
-	<xsl:variable name="text_records_fulltext_available">Full-Text Available</xsl:variable>
-	
-	<xsl:variable name="text_records_tags">Labels: </xsl:variable>
-
-	<xsl:variable name="text_record_citation_note">
-		These citations are software generated and  may contain errors. To verify accuracy, 
-		check the appropriate style guide.
-	</xsl:variable>
 
 	<xsl:template name="text_number_to_words">
 		<xsl:param name="number" />
@@ -295,6 +278,12 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
+	
+	<!-- 
+		the templates deal with text labels that are in the XML itself.  they largely
+		just take the value and print it, but one could override the template and use
+		a <xsl:choose> block to change the underlying value to something else
+	-->
 	
 	<xsl:template name="text_results_language">
 		<xsl:if test="language and language != 'English' and format != 'Video'">
