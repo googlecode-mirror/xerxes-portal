@@ -30,7 +30,7 @@
 </xsl:template>
 
 <xsl:template name="page_name">
-	My Saved Records
+	<xsl:value-of select="$text_header_savedrecords" />
 </xsl:template>
 
 <xsl:variable name="temporarySession">
@@ -51,26 +51,31 @@
 	<xsl:if test="results/records/record">
 	
 		<div id="exports" class="box">
-			<h2>Export Records</h2>
+			<h2><xsl:copy-of select="$text_folder_header_export" /></h2>
 			<ul>
-				<li id="export-email"><a href="{export_functions/export_option[@id='email']/url}">Email records to yourself</a></li>
-				<li id="export-refworks"><a href="{export_functions/export_option[@id='refworks']/url}">Export to Refworks</a></li>
-				<li id="export-text"><a href="{export_functions/export_option[@id='text']/url}">Download to text file</a></li>
-				<li id="export-endnote"><a href="{export_functions/export_option[@id='endnote']/url}">Download to Endnote, Zotero, etc.</a></li>
+				<li id="export-email"><a href="{export_functions/export_option[@id='email']/url}"><xsl:copy-of select="$text_folder_email_pagename" /></a></li>
+				<li id="export-refworks"><a href="{export_functions/export_option[@id='refworks']/url}"><xsl:copy-of select="$text_folder_refworks_pagename" /></a></li>
+				<li id="export-text"><a href="{export_functions/export_option[@id='text']/url}"><xsl:copy-of select="$text_folder_file_pagename" /></a></li>
+				<li id="export-endnote"><a href="{export_functions/export_option[@id='endnote']/url}"><xsl:copy-of select="$text_folder_endnote_pagename" /></a></li>
 			</ul>
 		</div>
 		
 		<div id="format_limit" class="box">
-			<h2>Limit by Format</h2>
+			<h2><xsl:copy-of select="$text_folder_options_format" /></h2>
 			<ul>
 			<xsl:for-each select="format_facets/facet">
+				<xsl:variable name="format_name">
+					<xsl:call-template name="text_results_format">
+						<xsl:with-param name="format" select="@name" />
+					</xsl:call-template>
+				</xsl:variable>
 				<li>
 					<xsl:choose>
 						<xsl:when test="@name = //request/type">
-							<strong><xsl:value-of select="@name" /></strong> ( <xsl:value-of select="text()" /> )
+							<strong><xsl:value-of select="$format_name" /></strong> ( <xsl:value-of select="text()" /> )
 						</xsl:when>
 						<xsl:otherwise>
-							<a href="{@url}"><xsl:value-of select="@name" /></a> ( <xsl:value-of select="text()" /> )
+							<a href="{@url}"><xsl:value-of select="$format_name" /></a> ( <xsl:value-of select="text()" /> )
 						</xsl:otherwise>
 					</xsl:choose>
 				</li>
@@ -103,13 +108,12 @@
 			<div id="sort">
 				<div class="yui-gd">
 					<div class="yui-u first">
-						Results <strong><xsl:value-of select="summary/range" /></strong> of 
-						<strong><xsl:value-of select="summary/total" /></strong>
+						<xsl:copy-of select="$text_metasearch_results_summary" />
 					</div>
 					<div class="yui-u">
 						<xsl:if test="sort_display">
 							<div id="sortOptions">
-								sort by:<xsl:text> </xsl:text>
+								<xsl:copy-of select="$text_results_sort_by" /><xsl:text>: </xsl:text>
 								<xsl:for-each select="sort_display/option">
 									<xsl:choose>
 										<xsl:when test="@active = 'true'">
@@ -139,13 +143,13 @@
 		</xsl:when>
 		<xsl:otherwise>
 			<div class="folderNoRecords">
-				<xsl:text>There are currently no saved records</xsl:text>
+				<xsl:copy-of select="$text_folder_no_records" />
 				<xsl:choose>
 					<xsl:when test="//request/label">
-						<xsl:text> with the label </xsl:text><strong><xsl:value-of select="//request/label" /></strong><xsl:text>.</xsl:text>
+						<xsl:text> </xsl:text><xsl:copy-of select="$text_folder_no_records_for" /><xsl:text> </xsl:text><strong><xsl:value-of select="//request/label" /></strong><xsl:text>.</xsl:text>
 					</xsl:when>
 					<xsl:when test="//request/type">
-						<xsl:text> that are </xsl:text><strong><xsl:value-of select="//request/type" />s</strong><xsl:text>.</xsl:text>
+						<xsl:text> </xsl:text><xsl:copy-of select="$text_folder_no_records_for" /><xsl:text> </xsl:text><strong><xsl:value-of select="//request/type" /></strong><xsl:text>.</xsl:text>
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:text>.</xsl:text>

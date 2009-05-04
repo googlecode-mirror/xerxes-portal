@@ -28,7 +28,13 @@
 	
 		<xsl:for-each select="//records/record/xerxes_record">
 		
-			<h2>Cite this <xsl:value-of select="format" />:</h2>
+			<h2>
+				<xsl:copy-of select="$text_record_cite_this" /><xsl:text> </xsl:text>
+				<xsl:call-template name="text_results_format">
+					<xsl:with-param name="format" select="format" />
+				</xsl:call-template>
+				<xsl:text> :</xsl:text>
+			</h2>
 			
 			<div class="citation" id="citation_apa">
 			
@@ -90,7 +96,7 @@
 			
 			<xsl:if test="authors/author[@type = 'personal']">
 				<div>
-				<dt>By:</dt>
+				<dt><xsl:copy-of select="$text_results_author" />:</dt>
 				<dd>
 					<xsl:for-each select="authors/author[@type = 'personal']">
 						<xsl:value-of select="aufirst" /><xsl:text> </xsl:text>
@@ -109,7 +115,7 @@
 			
 			<xsl:if test="authors/author[@type = 'corporate']">
 				<div>
-				<dt>Corporate author:</dt>
+				<dt><xsl:copy-of select="$text_record_author_corp" />:</dt>
 				<dd>
 					<xsl:for-each select="authors/author[@type = 'corporate']">
 						<xsl:value-of select="aucorp" /><xsl:text> </xsl:text>
@@ -126,7 +132,7 @@
 			
 			<xsl:if test="authors/author[@type = 'conference']">
 				<div>
-				<dt>Conference:</dt>
+				<dt><xsl:copy-of select="$text_record_conf" />:</dt>
 				<dd>
 					<xsl:for-each select="authors/author[@type = 'conference']">
 						
@@ -144,18 +150,20 @@
 			
 			<xsl:if test="format">
 				<div>
-				<dt>Format:</dt>
+				<dt><xsl:copy-of select="$text_record_format_label" />:</dt>
 				<dd>
-					<xsl:value-of select="format" />
+					<xsl:call-template name="text_results_format">
+						<xsl:with-param name="format" select="format" />
+					</xsl:call-template>
 					
 					<xsl:choose>
 					<xsl:when test="../refereed = 1 and format != 'Book Review'">
 						<xsl:text> </xsl:text><img src="images/refereed_hat.gif" width="20" height="14" alt="" />
-						<strong> Peer Reviewed</strong>
+						<xsl:text> </xsl:text><strong><xsl:copy-of select="$text_results_refereed" /></strong>
 					</xsl:when>
 					<xsl:when test="//refereed/issn = standard_numbers/issn and format != 'Book Review'">
 						<xsl:text> </xsl:text><img src="images/refereed_hat.gif" width="20" height="14" alt="" />
-						<strong> Peer Reviewed</strong>
+						<xsl:text> </xsl:text><strong><xsl:copy-of select="$text_results_refereed" /></strong>
 					</xsl:when>
 					</xsl:choose>
 				</dd>
@@ -166,7 +174,7 @@
 			
 			<xsl:if test="format">
 				<div>
-				<dt>Year:</dt>
+				<dt><xsl:copy-of select="$text_results_year" />:</dt>
 				<dd><xsl:value-of select="year" /></dd>
 				</div>
 			</xsl:if>
@@ -175,7 +183,7 @@
 			
 			<xsl:if test="institution">
 				<div>
-				<dt>Institution:</dt>
+				<dt><xsl:copy-of select="$text_record_inst" />:</dt>
 				<dd><xsl:value-of select="institution" /></dd>
 				</div>
 			</xsl:if>
@@ -184,7 +192,7 @@
 			
 			<xsl:if test="degree">
 				<div>
-				<dt class="recordAttribute">Degree:</dt>
+				<dt><xsl:copy-of select="$text_record_degree" />:</dt>
 				<dd><xsl:value-of select="degree" /></dd>
 				</div>
 			</xsl:if>
@@ -194,7 +202,7 @@
 			<div>
 			<xsl:choose>
 				<xsl:when test="journal">
-					<dt>Published in:</dt>
+					<dt><xsl:copy-of select="$text_results_published_in" />:</dt>
 					<dd>
 						<xsl:choose>
 							<xsl:when test="book_title">
@@ -207,7 +215,7 @@
 					</dd>
 				</xsl:when>
 				<xsl:when test="format = 'Book'">
-					<dt>Publisher:</dt>
+					<dt><xsl:copy-of select="$text_record_publisher" />:</dt>
 					<dd>
 						<xsl:value-of select="place" /><xsl:text>: </xsl:text>
 						<xsl:value-of select="publisher" /><xsl:text>, </xsl:text>
@@ -220,7 +228,7 @@
 			<!-- Database -->
 			
 			<div>
-			<dt>Database:</dt>
+			<dt><xsl:copy-of select="$text_record_database" />:</dt>
 			<dd>
 				<xsl:variable name="metalib_id" select="metalib_id"/>
 				
@@ -324,16 +332,24 @@
 							<xsl:choose>
 								<xsl:when test="//request/session/resultssaved[@key = $record_id]">
 									<xsl:choose>
-										<xsl:when test="//session/role = 'named'">Record saved</xsl:when>
-										<xsl:otherwise>Temporarily Saved</xsl:otherwise>
+										<xsl:when test="//session/role = 'named'">
+											<xsl:copy-of select="$text_results_record_saved" />
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:copy-of select="$text_results_record_saved_temp" />
+										</xsl:otherwise>
 									</xsl:choose>
 								</xsl:when>
-								<xsl:otherwise>Save this record</xsl:otherwise>
+								<xsl:otherwise>
+									<xsl:copy-of select="$text_results_record_save_it" />
+								</xsl:otherwise>
 							</xsl:choose>
 						</a>
 						<xsl:if test="//request/session/resultssaved[@key = $record_id] and //request/session/role != 'named'"> 
 							<span class="temporary_login_note">
-								(<a href="{//navbar/element[@id = 'login']/url}">login to save permanently</a>)
+								(<a href="{//navbar/element[@id = 'login']/url}">
+									<xsl:copy-of select="$text_results_record_saved_perm" />
+								</a>)
 							</span>
 						</xsl:if>
 					</div>
@@ -354,7 +370,7 @@
 			<!-- Abstract -->
 			
 			<xsl:if test="abstract">
-				<h2>Summary</h2>
+				<h2><xsl:copy-of select="$text_record_summary" /></h2>
 				<div class="recordAbstract">
 					<xsl:value-of select="abstract" />
 				</div>
@@ -366,10 +382,10 @@
 				<h2>
 					<xsl:choose>
 						<xsl:when test="format = 'Book'">
-							<xsl:text>Chapters:</xsl:text>
+							<xsl:copy-of select="$text_record_chapters" />:
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:text>Contents:</xsl:text>
+							<xsl:copy-of select="$text_record_contents" />:
 						</xsl:otherwise>
 					</xsl:choose>
 				</h2>
@@ -383,7 +399,8 @@
 								</xsl:when>
 								<xsl:otherwise>
 									<em><xsl:value-of select="title" /></em>
-									<xsl:text> by </xsl:text><xsl:value-of select="author" />
+									<xsl:text> </xsl:text><xsl:copy-of select="$text_results_author" /><xsl:text> </xsl:text>
+									<xsl:value-of select="author" />
 								</xsl:otherwise>
 							</xsl:choose>
 						</li>
@@ -395,7 +412,7 @@
 			<!-- Language -->
 			
 			<xsl:if test="language">
-				<h2>Language</h2>
+				<h2><xsl:copy-of select="$text_record_language_label" /></h2>
 				<ul>
 					<li><xsl:value-of select="language" /></li>
 				</ul>
@@ -404,7 +421,7 @@
 			<!-- Subjects -->
 			
 			<xsl:if test="subjects">
-				<h2>Covers the topics:</h2>
+				<h2><xsl:copy-of select="$text_record_subjects" />:</h2>
 				<ul>
 					<xsl:for-each select="subjects/subject">
 						<li><xsl:value-of select="text()" /></li>
@@ -415,7 +432,7 @@
 			<!-- Standard Numbers -->
 			
 			<xsl:if test="standard_numbers">
-				<h2>Standard Numbers:</h2>
+				<h2><xsl:copy-of select="$text_record_standard_nos" />:</h2>
 				<ul>
 				<xsl:for-each select="standard_numbers/issn">
 					<li><strong>ISSN</strong>: <xsl:value-of select="text()" /></li>
@@ -448,7 +465,7 @@
 			<!-- Notes -->
 			
 			<xsl:if test="notes">
-				<h2>Additional Notes: </h2>
+				<h2><xsl:copy-of select="$text_record_notes" />:</h2>
 				<ul>
 					<xsl:for-each select="notes/note">
 						<li><xsl:value-of select="text()" /></li>

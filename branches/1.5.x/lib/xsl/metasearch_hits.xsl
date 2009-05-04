@@ -27,7 +27,7 @@
 </xsl:template>
 
 <xsl:template name="page_name">
-	Search Status
+	<xsl:value-of select="$text_metasearch_hits_pagename" />
 </xsl:template>
 
 <xsl:template name="sidebar">
@@ -52,20 +52,18 @@
 		
 		<xsl:choose>
 			<xsl:when test="$progress = '10' and //error_code = '2007'">
-				<div class="loginBox longBox">
-					<p class="error">Sorry, we're having technical difficulties right now.</p>
-					<p>You can still search each database individually by following the links below.</p>
-					<ul>
-						<xsl:for-each select="//database_links/database[link_native_home != '']">
-						<xsl:variable name="metalib_id" select="@metalib_id" />
-						<li>
-							<a href="{link_native_home}">
-								<xsl:value-of select="//base_info[base_001 = $metalib_id]/full_name" />
-							</a>
-						</li>
-						</xsl:for-each>
-					</ul>
-				</div>
+				<h2 class="error"><xsl:copy-of select="$text_metasearch_hits_error" /></h2>
+				<p><xsl:copy-of select="$text_metasearch_hits_error_explain" /></p>
+				<ul>
+					<xsl:for-each select="//database_links/database[link_native_home != '']">
+					<xsl:variable name="metalib_id" select="@metalib_id" />
+					<li>
+						<a href="{link_native_home}">
+							<xsl:value-of select="//base_info[base_001 = $metalib_id]/full_name" />
+						</a>
+					</li>
+					</xsl:for-each>
+				</ul>
 			</xsl:when>
 			<xsl:otherwise>
 				
@@ -81,11 +79,11 @@
 				
 				<xsl:choose>
 					<xsl:when test="$progress = '10'">
-						<h2 class="error">Sorry, your search did not match any records</h2>
+						<h2 class="error"><xsl:copy-of select="$text_metasearch_hits_no_match" /></h2>
 					</xsl:when>
 					<xsl:otherwise>
-						<h2>Search Status</h2>
-						<div id="progress"><img src="images/progress_small{$progress}.gif" alt="search progress" /></div>
+						<h2><xsl:call-template name="page_name" /></h2>
+						<div id="progress"><img src="images/progress_small{$progress}.gif" alt="" /></div>
 					</xsl:otherwise>
 				</xsl:choose>
 					
@@ -93,9 +91,9 @@
 					
 					<thead>
 						<tr>
-							<th>Database</th>
-							<th>Status</th>
-							<th>Hits</th>
+							<th><xsl:copy-of select="$text_metasearch_hits_table_database" /></th>
+							<th><xsl:copy-of select="$text_metasearch_hits_table_status" /></th>
+							<th><xsl:copy-of select="$text_metasearch_hits_table_count" /></th>
 						</tr>	
 					</thead>
 					
@@ -108,19 +106,19 @@
 						<td>
 							<xsl:choose>
 								<xsl:when test="find_status = 'DONE1' or find_status = 'DONE2' or find_status = 'DONE3'">
-									<xsl:text>FETCHING</xsl:text>
+									<xsl:copy-of select="$text_metasearch_status_fetching" />
 								</xsl:when>
 								<xsl:when test="find_status = 'START'">
-									<xsl:text>START</xsl:text>
+									<xsl:copy-of select="$text_metasearch_status_start" />
 								</xsl:when>
 								<xsl:when test="find_status = 'FIND' or find_status = 'FORK'">
-									<xsl:text>STARTED</xsl:text>
+									<xsl:copy-of select="$text_metasearch_status_started" />
 								</xsl:when>
 								<xsl:when test="find_status = 'FETCH'">
-									<xsl:text>FETCHING</xsl:text>
+									<xsl:copy-of select="$text_metasearch_status_fetching" />
 								</xsl:when>
 								<xsl:when test="find_status = 'STOP'">
-									<xsl:text>STOPPED</xsl:text>
+									<xsl:copy-of select="$text_metasearch_status_stopped" />
 								</xsl:when>
 								<xsl:otherwise>
 									<xsl:value-of select="find_status" />
@@ -130,7 +128,7 @@
 						<td class="hitCount">
 							<xsl:choose>
 								<xsl:when test="no_of_documents = '888888888'">
-									<xsl:text>results found</xsl:text>
+									<xsl:copy-of select="$text_metasearch_results_found" />
 								</xsl:when>
 								<xsl:otherwise>
 									<xsl:value-of select="no_of_documents"/>
@@ -146,13 +144,13 @@
 						<tr>
 							<td><xsl:value-of select="title_display"/></td>
 							<td colspan="2" class="error">
-								ERROR:
+								<xsl:copy-of select="$text_metasearch_status_error" /><xsl:text>: </xsl:text>
 								<xsl:choose>
 									<xsl:when test="group_restriction">
 										<xsl:call-template name="db_restriction_display" />
 									</xsl:when>
 									<xsl:when test="subscription = '1'">
-										Only available to registered users.
+										<xsl:copy-of select="$text_database_available_registered" />
 									</xsl:when>
 								</xsl:choose>
 							</td>

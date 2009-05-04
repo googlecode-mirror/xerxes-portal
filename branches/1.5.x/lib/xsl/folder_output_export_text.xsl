@@ -31,7 +31,7 @@
 </xsl:template>
 
 <xsl:template name="page_name">
-	Text File
+	<xsl:value-of select="$text_folder_file_pagename" />
 </xsl:template>
 
 <xsl:template name="main">
@@ -52,7 +52,7 @@
 		<input type="hidden" name="username" value="{$username}" />
 		
 		
-		<input id="export_single" type="submit" name="Submit" value="Download" />
+		<input id="export_single" type="submit" name="Submit" value="{$text_folder_export_download}" />
 
 			
 		<xsl:call-template name="folder_brief_results" />

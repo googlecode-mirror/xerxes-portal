@@ -31,7 +31,7 @@
 </xsl:template>
 
 <xsl:template name="page_name">
-	Email
+	<xsl:value-of select="$text_folder_email_pagename" />
 </xsl:template>
 
 <xsl:template name="main">
@@ -53,31 +53,31 @@
 		<!-- @todo make this a flash message -->
 		
 		<xsl:if test="request/message = 'done'">
-			<div class="folderEmailSuccess">Email successfully sent</div>
+			<div class="folderEmailSuccess"><xsl:copy-of select="$text_folder_email_success" /></div>
 		</xsl:if>
 			
 		<fieldset id="export_email_options" class="exportOptions">
-			<legend>Email Options</legend>
+			<legend><xsl:copy-of select="$text_folder_email_options" /></legend>
 			
 			<div>
-			<label for="email">email address:</label>
+			<label for="email"><xsl:copy-of select="$text_folder_email_address" />:</label>
 				<input name="email" type="text" id="email">
 					<xsl:attribute name="value"><xsl:value-of select="//logged_in_user/email_addr"/></xsl:attribute>
 				</input>
 			</div>
 			
 			<div>
-				<label for="subject">subject:</label>
+				<label for="subject"><xsl:copy-of select="$text_folder_email_subject" />:</label>
 				<input name="subject" type="text" id="subject" />
 			</div>
 			
 			<div>
-				<label for="notes">notes:</label>
+				<label for="notes"><xsl:copy-of select="$text_folder_email_notes" />:</label>
 				<textarea rows="4" name="notes" cols="40" id="notes"></textarea>
 			</div>
 
 			<div>
-				<input type="submit" name="Submit" value="Send" />
+				<input type="submit" name="Submit" value="{$text_folder_export_send}" />
 			</div>
 
 		</fieldset>

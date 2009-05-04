@@ -10,59 +10,102 @@
 -->
 	
 	<xsl:variable name="text_ada_version">For best results, click this link for accessible version</xsl:variable>
+	<xsl:variable name="text_ada_table_for_display">for display only</xsl:variable>
 	
 	<xsl:variable name="text_authentication_login_explain"></xsl:variable>
-	<xsl:variable name="text_authentication_login_failed"><span style="background-color: yellow">Sorry, your username or password was incorrect.</span></xsl:variable>
+	<xsl:variable name="text_authentication_login_failed">Sorry, your username or password was incorrect.</xsl:variable>
 	<xsl:variable name="text_authentication_login_pagename">Login</xsl:variable>
-	<xsl:variable name="text_authentication_login_password"><span style="background-color: yellow">password:</span></xsl:variable>
-	<xsl:variable name="text_authentication_login_username"><span style="background-color: yellow">username:</span></xsl:variable>
+	<xsl:variable name="text_authentication_login_password">password:</xsl:variable>
+	<xsl:variable name="text_authentication_login_username">username:</xsl:variable>
 		
-	<xsl:variable name="text_authentication_logout_confirm"><span style="background-color: yellow">Are you sure you want to end your session?</span></xsl:variable>
+	<xsl:variable name="text_authentication_logout_confirm">Are you sure you want to end your session?</xsl:variable>
 	<xsl:variable name="text_authentication_logout_pagename">Logout</xsl:variable>
 	
-	<xsl:variable name="text_breadcrumb_seperator"> &gt; </xsl:variable>
+	<xsl:variable name="text_breadcrumb_seperator"> / </xsl:variable>
 	
-	<xsl:variable name="text_databases_access_available"><span style="background-color: yellow">Only available to </span></xsl:variable>
-	<xsl:variable name="text_databases_access_group_and"><span style="background-color: yellow">and</span></xsl:variable>
-	<xsl:variable name="text_databases_access_users"><span style="background-color: yellow">users</span></xsl:variable>
+	<xsl:variable name="text_database_save_database">Save database</xsl:variable>
+	<xsl:variable name="text_database_link">	Link:</xsl:variable>
+	<xsl:variable name="text_database_go_to_database">Go to this database!</xsl:variable>
+	<xsl:variable name="text_database_availability">Availability:</xsl:variable>
+	<xsl:variable name="text_database_available_registered">Only available to registered users.</xsl:variable>
+	<xsl:variable name="text_database_available_everyone">Available to everyone.</xsl:variable>
+	<xsl:variable name="text_database_coverage">Coverage:</xsl:variable>
+	<xsl:variable name="text_database_guide">Guide:</xsl:variable>
+	<xsl:variable name="text_database_guide_help">Help in using this database</xsl:variable>
+	<xsl:variable name="text_database_creator">Creator</xsl:variable>
+	<xsl:variable name="text_database_publisher">Publisher:</xsl:variable>
 	
-	<xsl:variable name="text_databases_az_backtop"><span style="background-color: yellow">Back to top</span></xsl:variable>
-	<xsl:variable name="text_databases_az_breadcrumb_all"><span style="background-color: yellow">All databases</span></xsl:variable>
-	<xsl:variable name="text_databases_az_breadcrumb_matching"><span style="background-color: yellow">Databases matching</span></xsl:variable>
-	<xsl:variable name="text_databases_az_databases"><span style="background-color: yellow">databases</span></xsl:variable>
+	
+	<xsl:variable name="text_databases_access_available">Only available to </xsl:variable>
+	<xsl:variable name="text_databases_access_group_and">and</xsl:variable>
+	<xsl:variable name="text_databases_access_users">users</xsl:variable>
+	
+	<xsl:variable name="text_databases_az_backtop">Back to top</xsl:variable>
+	<xsl:variable name="text_databases_az_breadcrumb_all">All databases</xsl:variable>
+	<xsl:variable name="text_databases_az_breadcrumb_matching">Databases matching</xsl:variable>
+	<xsl:variable name="text_databases_az_databases">databases</xsl:variable>
 	<xsl:variable name="text_databases_az_hint_info">more information</xsl:variable>
 	<xsl:variable name="text_databases_az_hint_searchable">searchable by <xsl:value-of select="$app_name" /></xsl:variable>
 	<xsl:variable name="text_databases_az_pagename">Databases A-Z</xsl:variable>
-	<xsl:variable name="text_databases_az_search"><span style="background-color: yellow">List databases matching: </span></xsl:variable>
+	<xsl:variable name="text_databases_az_search">List databases matching: </xsl:variable>
 		
-	<xsl:variable name="text_databases_category_quick_desc"><span style="background-color: yellow">
+	<xsl:variable name="text_databases_category_quick_desc">
 		<xsl:text>Search </xsl:text>
 		<xsl:call-template name="text_number_to_words">
 			<xsl:with-param name="number" select="count(//category[1]/subcategory[1]/database[searchable = 1])" /> 
 		</xsl:call-template>
 		<xsl:text> of our most popular databases</xsl:text>
-	</span></xsl:variable>
-	<xsl:variable name="text_databases_category_subject"><span style="background-color: yellow">Search by Subject</span></xsl:variable>
-	<xsl:variable name="text_databases_category_subject_desc"><span style="background-color: yellow">Search databases specific to your area of study.</span></xsl:variable>
+	</xsl:variable>
+	<xsl:variable name="text_databases_category_subject">Search by Subject</xsl:variable>
+	<xsl:variable name="text_databases_category_subject_desc">Search databases specific to your area of study.</xsl:variable>
 
-	<xsl:variable name="text_error_databases_permission"><span style="background-color: yellow">You do not have access to search these databases</span></xsl:variable>
-	<xsl:variable name="text_error_databases_registered"><span style="background-color: yellow">Only available to registered users.</span></xsl:variable>
-	<xsl:variable name="text_error_pdo_exception"><span style="background-color: yellow">There was a problem with the database.</span></xsl:variable>
-
-	<xsl:variable name="text_folder_export_records_all"><span style="background-color: yellow">All of my saved records </span></xsl:variable>
-	<xsl:variable name="text_folder_export_records_labeled"><span style="background-color: yellow">All of my saved records labeled </span></xsl:variable>
-	<xsl:variable name="text_folder_export_records_selected"><span style="background-color: yellow">Only the records I have selected below.</span></xsl:variable>
-	<xsl:variable name="text_folder_export_records_type"><span style="background-color: yellow">All of my saved records of the type </span></xsl:variable>
-
-	<xsl:variable name="text_folder_header_my"><span style="background-color: yellow">My Saved Records</span></xsl:variable>
-	<xsl:variable name="text_folder_header_temporary"><span style="background-color: yellow">Temporary Saved Records</span></xsl:variable>	
-	<xsl:variable name="text_folder_login_beyond"><span style="background-color: yellow">to save records beyond this session</span></xsl:variable>
-	<xsl:variable name="text_folder_login"><span style="background-color: yellow">Log-in</span></xsl:variable>
-	<xsl:variable name="text_folder_options_tags"><span style="background-color: yellow">Labels</span></xsl:variable>
-	<xsl:variable name="text_folder_return"><span style="background-color: yellow">Return to search results</span></xsl:variable>
+	<xsl:variable name="text_databases_subject_hint_direct_search">Go directly to </xsl:variable>
+	<xsl:variable name="text_databases_subject_hint_more_info_about">More information about </xsl:variable>
+	<xsl:variable name="text_databases_subject_hint_native_only">Click database title to search individually</xsl:variable>
+	<xsl:variable name="text_databases_subject_hint_restricted">Restricted, click database title to search individually</xsl:variable>
 	
-	<xsl:variable name="text_header_login"><span style="background-color: yellow">Log-in</span></xsl:variable>
-	<xsl:variable name="text_header_logout"><span style="background-color: yellow">
+	<xsl:variable name="text_error_databases_permission">You do not have access to search these databases</xsl:variable>
+	<xsl:variable name="text_error_databases_registered">Only available to registered users.</xsl:variable>
+	<xsl:variable name="text_error_pdo_exception">There was a problem with the database.</xsl:variable>
+	
+	<xsl:variable name="text_folder_export_send">Send</xsl:variable>
+	<xsl:variable name="text_folder_export_export">Export</xsl:variable>
+	<xsl:variable name="text_folder_export_download">Download</xsl:variable>
+	<xsl:variable name="text_folder_endnote_direct">directly into Endnote, Zotero, or other citation management application</xsl:variable>
+	<xsl:variable name="text_folder_endnote_file">to a file I will import myself</xsl:variable>
+	
+	<xsl:variable name="text_folder_records_export">Records to export</xsl:variable>
+	<xsl:variable name="text_folder_limit_tag">Label</xsl:variable>
+	<xsl:variable name="text_folder_limit_format">Format</xsl:variable>
+	
+	<xsl:variable name="text_record_breadcrumb">Record</xsl:variable>
+	
+	<xsl:variable name="text_folder_header_temporary">Temporary Saved Records</xsl:variable>
+	<xsl:variable name="text_folder_login_temp">
+		( <a href="{//navbar/element[@id='login']/url}">Log-in</a> to save records beyond this session. )
+	</xsl:variable>
+	<xsl:variable name="text_folder_options_tags">Labels</xsl:variable>
+	<xsl:variable name="text_folder_options_format">Limit by Format</xsl:variable>
+	<xsl:variable name="text_folder_return">Return to search results</xsl:variable>
+	
+	<xsl:variable name="text_folder_header_export">Export Records</xsl:variable>
+	<xsl:variable name="text_folder_refworks_pagename">Export to Refworks</xsl:variable>
+	<xsl:variable name="text_folder_file_pagename">Download to text file</xsl:variable>
+	<xsl:variable name="text_folder_endnote_pagename">Download to Endnote, Zotero, etc.</xsl:variable>
+	<xsl:variable name="text_folder_no_records">There are currently no saved records</xsl:variable>
+	<xsl:variable name="text_folder_no_records_for">of</xsl:variable>
+	
+	<xsl:variable name="text_folder_email_pagename">Email records to yourself</xsl:variable>
+	<xsl:variable name="text_folder_email_success">Email successfully sent</xsl:variable>
+	<xsl:variable name="text_folder_email_options">Email Options</xsl:variable>
+	<xsl:variable name="text_folder_email_address">email address</xsl:variable>
+	<xsl:variable name="text_folder_email_subject">subject</xsl:variable>
+	<xsl:variable name="text_folder_email_notes">notes</xsl:variable>
+	
+	<xsl:variable name="text_header_collections">My Saved Databases</xsl:variable>
+	
+	<xsl:variable name="text_header_login">Log-in</xsl:variable>
+	<xsl:variable name="text_header_logout">
 		<xsl:text>Log-out </xsl:text>
 		<xsl:choose>
 			<xsl:when test="//request/authorization_info/affiliated[@user_account = 'true']">
@@ -72,13 +115,93 @@
 				<xsl:text>Guest</xsl:text>
 			</xsl:when>
 		</xsl:choose>
-	</span></xsl:variable>
-	<xsl:variable name="text_header_savedrecords"><span style="background-color: yellow">My Saved Records</span></xsl:variable>
-	<xsl:variable name="text_header_collections"><span style="background-color: yellow">My Saved Databases</span></xsl:variable>
-	<xsl:variable name="text_link_resolver_available"><span style="background-color: yellow">Full text available</span></xsl:variable>
-	<xsl:variable name="text_link_resolver_check"><span style="background-color: yellow">Check for availability</span></xsl:variable>
-	<xsl:variable name="text_link_holdings"><span style="background-color: yellow">Availability</span></xsl:variable>
-	<xsl:variable name="text_link_original_record"><span style="background-color: yellow">Original record</span></xsl:variable>
+	</xsl:variable>
+	
+	<xsl:variable name="text_header_my_collections">My Collections</xsl:variable>
+	<xsl:variable name="text_header_my_collections_explain">Collections are a way to organize your saved databases.</xsl:variable>
+	<xsl:variable name="text_header_my_collections_new">Create a new collection:</xsl:variable>
+	<xsl:variable name="text_header_my_collections_add">Add</xsl:variable>
+
+	<xsl:variable name="text_header_myaccount">My Account</xsl:variable>
+	<xsl:variable name="text_header_savedrecords">My Saved Records</xsl:variable>
+		
+	<xsl:variable name="text_header_embed">Embed</xsl:variable>
+	<xsl:variable name="text_header_facets">Limit top results by:</xsl:variable>
+	
+	<xsl:variable name="text_header_snippet_generate">Generate snippet</xsl:variable>
+	
+	<xsl:variable name="text_link_holdings">Availability</xsl:variable>
+	<xsl:variable name="text_link_original_record">Original record</xsl:variable>
+	<xsl:variable name="text_link_resolver_available">Full text available</xsl:variable>
+	<xsl:variable name="text_link_resolver_check">Check for availability</xsl:variable>
+	
+	<xsl:variable name="text_metasearch_hits_pagename">Search Status</xsl:variable>
+	<xsl:variable name="text_metasearch_hits_error">Sorry, we're having technical difficulties right now.</xsl:variable>
+	<xsl:variable name="text_metasearch_hits_error_explain">You can still search each database individually by following the links below.</xsl:variable>
+	<xsl:variable name="text_metasearch_hits_no_match">Sorry, your search did not match any records</xsl:variable>
+	
+	<xsl:variable name="text_metasearch_hits_table_database">Database</xsl:variable>
+	<xsl:variable name="text_metasearch_hits_table_status">Status</xsl:variable>
+	<xsl:variable name="text_metasearch_hits_table_count">Hits</xsl:variable>
+	
+	<xsl:variable name="text_metasearch_results_limit">Limit</xsl:variable>
+	<xsl:variable name="text_metasearch_results_summary">
+		Results <strong><xsl:value-of select="//summary/range" /></strong> 
+		of <strong><xsl:value-of select="//summary/total" /></strong>	
+	</xsl:variable>
+	
+	<xsl:variable name="text_metasearch_results_native_results">View results at</xsl:variable>
+	<xsl:variable name="text_metasearch_results_search_results">Search results</xsl:variable>
+	<xsl:variable name="text_metasearch_top_results">Top Results</xsl:variable>
+	<xsl:variable name="text_metasearch_results_by_db">Results by database</xsl:variable>
+	<xsl:variable name="text_results_hint_remove_limit">remove limit</xsl:variable>
+	
+	<xsl:variable name="text_metasearch_results_error_merge_bug">Sorry, there was an error.</xsl:variable>
+	
+	<xsl:variable name="text_metasearch_results_error_merge_bug_try_again">
+		Please <a href="{//request/server/request_uri}">try again</a>
+		or select an individual set of results to the right.
+	</xsl:variable>
+	
+	<xsl:variable name="text_record_cite_this">Cite this</xsl:variable>
+	<xsl:variable name="text_record_author_corp">Corporate author</xsl:variable>
+	<xsl:variable name="text_record_conf">Conference</xsl:variable>
+	<xsl:variable name="text_record_format_label">Format</xsl:variable>
+	<xsl:variable name="text_record_inst">Institution</xsl:variable>
+	<xsl:variable name="text_record_degree">Degree</xsl:variable>
+	<xsl:variable name="text_record_publisher">Publisher</xsl:variable>
+	<xsl:variable name="text_record_database">Database</xsl:variable>
+	<xsl:variable name="text_record_summary">Summary</xsl:variable>
+	<xsl:variable name="text_record_chapters">Chapters</xsl:variable>
+	<xsl:variable name="text_record_contents">Contents</xsl:variable>
+	<xsl:variable name="text_record_language_label">Language</xsl:variable>
+	<xsl:variable name="text_record_subjects">Covers the topics</xsl:variable>
+	<xsl:variable name="text_record_standard_nos">Standard Numbers</xsl:variable>
+	<xsl:variable name="text_record_notes">Additional Notes</xsl:variable>
+	
+	<xsl:variable name="text_results_breadcrumb">Results</xsl:variable>
+	<xsl:variable name="text_results_no_title">[ No Title ]</xsl:variable>
+	<xsl:variable name="text_results_sort_by">sort by</xsl:variable>
+	
+	<xsl:variable name="text_results_refereed">Peer Reviewed</xsl:variable>
+	<xsl:variable name="text_results_author">By</xsl:variable>
+	<xsl:variable name="text_results_year">Year</xsl:variable>
+	<xsl:variable name="text_results_published_in">Published in</xsl:variable>
+	
+	<xsl:variable name="text_results_record_saved">Record saved</xsl:variable>
+	<xsl:variable name="text_results_record_saved_temp">Temporarily Saved</xsl:variable>
+	<xsl:variable name="text_results_record_save_it">Save this record</xsl:variable>
+	<xsl:variable name="text_results_record_saved_perm">login to save permanently</xsl:variable>
+	<xsl:variable name="text_results_record_delete">Delete this record</xsl:variable>
+	
+	<xsl:variable name="text_metasearch_status_fetching">FETCHING</xsl:variable>
+	<xsl:variable name="text_metasearch_status_start">START</xsl:variable>
+	<xsl:variable name="text_metasearch_status_started">STARTED</xsl:variable>
+	<xsl:variable name="text_metasearch_status_stopped">STOPPED</xsl:variable>
+	<xsl:variable name="text_metasearch_status_error">ERROR</xsl:variable>
+	
+	<xsl:variable name="text_metasearch_results_found">results found</xsl:variable>
+	
 	<xsl:variable name="text_searchbox_ada_boolean">Boolean operator: </xsl:variable>
 	<xsl:variable name="text_searchbox_boolean_and">And</xsl:variable>
 	<xsl:variable name="text_searchbox_boolean_or">Or</xsl:variable>
@@ -90,20 +213,70 @@
 	<xsl:variable name="text_searchbox_field_year">year</xsl:variable>
 	<xsl:variable name="text_searchbox_field_issn">ISSN</xsl:variable>
 	<xsl:variable name="text_searchbox_field_isbn">ISBN</xsl:variable>
+	<xsl:variable name="text_searchbox_for">for</xsl:variable>
 	<xsl:variable name="text_searchbox_go">GO</xsl:variable>
-	<xsl:variable name="text_searchbox_search"><span style="background-color: yellow">Search</span></xsl:variable>
-	<xsl:variable name="text_searchbox_spelling_error"><span style="background-color: yellow">Did you mean: </span></xsl:variable>	
-	<xsl:variable name="text_searchbox_options_fewer"><span style="background-color: yellow">Fewer Options</span></xsl:variable>
-	<xsl:variable name="text_searchbox_options_more"><span style="background-color: yellow">More Options</span></xsl:variable>
+	<xsl:variable name="text_searchbox_search">Search</xsl:variable>
+	<xsl:variable name="text_searchbox_spelling_error">Did you mean: </xsl:variable>	
+	<xsl:variable name="text_searchbox_options_fewer">Fewer Options</xsl:variable>
+	<xsl:variable name="text_searchbox_options_more">More Options</xsl:variable>
 	
-	<xsl:variable name="text_records_fulltext_pdf"><span style="background-color: yellow">Full-Text in PDF</span></xsl:variable>
-	<xsl:variable name="text_records_fulltext_html"><span style="background-color: yellow">Full-Text in HTML</span></xsl:variable>
-	<xsl:variable name="text_records_fulltext_available"><span style="background-color: yellow">Full-Text Available</span></xsl:variable>
-	
-	<xsl:variable name="text_records_tags"><span style="background-color: yellow">Labels: </span></xsl:variable>
+	<xsl:variable name="text_snippet_display_all">ALL</xsl:variable>
+	<xsl:variable name="text_snippet_display_no">no</xsl:variable>
+	<xsl:variable name="text_snippet_display_options">Display Options</xsl:variable>
+	<xsl:variable name="text_snippet_display_yes">yes</xsl:variable>
 
-	<xsl:variable name="text_record_citation_note"><span style="background-color: yellow">These citations are software generated and may contain errors. 
-	To verify accuracy, check the appropriate style guide.</span></xsl:variable>
+	<xsl:variable name="text_snippet_example">Example</xsl:variable>
+	
+	<xsl:variable name="text_snippet_include_html">HTML Source</xsl:variable>
+	<xsl:variable name="text_snippet_include_html_explain">
+		Last resort. If this is your only option, you can embed this HTML source directly into your external website. 
+		However, if data or features change here, your snippet will not reflect those changes, and may even stop working. 
+		Use with care.
+	</xsl:variable>
+	<xsl:variable name="text_snippet_include_html_source">View snippet source</xsl:variable>
+	
+	<xsl:variable name="text_snippet_include_javascript">Javascript widget</xsl:variable>
+	<xsl:variable name="text_snippet_include_javascript_explain">
+		Should work in any external website that allows javascript, but viewers' browsers must support javascript.
+	</xsl:variable>
+	
+	<xsl:variable name="text_snippet_include_options">Include Options</xsl:variable>
+	
+	<xsl:variable name="text_snippet_include_server">Server-side include url</xsl:variable>
+	<xsl:variable name="text_snippet_include_server_explain">
+		Preferred method of inclusion, if your external website can support a server-side include.
+	</xsl:variable>
+		
+	<xsl:variable name="text_snippet_include_url">Pass-through URL</xsl:variable>
+	<xsl:variable name="text_snippet_include_url_explain">
+		This link serves as a persistent URL to this database, and will also provide proxy access for off-campus users.
+	</xsl:variable>
+	
+	<xsl:variable name="text_snippet_refresh">Refresh</xsl:variable>
+	
+	<xsl:variable name="text_snippet_show_css">Include CSS?</xsl:variable>
+	<xsl:variable name="text_snippet_show_css_explain">
+		Including the CSS works imperfectly.  If you need to, it's better to define 
+		CSS styles for the snippet in the external website itself.
+	</xsl:variable>
+	<xsl:variable name="text_snippet_show_databases">Show databases?</xsl:variable>
+	<xsl:variable name="text_snippet_show_desc">Show description?</xsl:variable>
+	<xsl:variable name="text_snippet_show_info_button">Show info button?</xsl:variable>
+	<xsl:variable name="text_snippet_show_searchbox">Show search box?</xsl:variable>
+	<xsl:variable name="text_snippet_show_section">Show specific section?</xsl:variable>	
+	<xsl:variable name="text_snippet_show_title">Show title?</xsl:variable>
+	
+
+	<xsl:variable name="text_records_fulltext_pdf">Full-Text in PDF</xsl:variable>
+	<xsl:variable name="text_records_fulltext_html">Full-Text in HTML</xsl:variable>
+	<xsl:variable name="text_records_fulltext_available">Full-Text Available</xsl:variable>
+	
+	<xsl:variable name="text_records_tags">Labels: </xsl:variable>
+
+	<xsl:variable name="text_record_citation_note">
+		These citations are software generated and  may contain errors. To verify accuracy, 
+		check the appropriate style guide.
+	</xsl:variable>
 
 	<xsl:template name="text_number_to_words">
 		<xsl:param name="number" />
@@ -123,10 +296,24 @@
 		</xsl:choose>
 	</xsl:template>
 	
+	<xsl:template name="text_results_language">
+		<xsl:if test="language and language != 'English' and format != 'Video'">
+			<span class="resultsLanguage"> written in <xsl:value-of select="language" /></span>
+		</xsl:if>
+	</xsl:template>
 	
+	<xsl:template name="text_results_format">
+		<xsl:param name="format" />
+		<xsl:value-of select="$format" />
+	</xsl:template>
 	
+	<xsl:template name="text_facet_group">
+		<xsl:value-of select="@name" />
+	</xsl:template>
 	
-	
-	
+	<xsl:template name="text_results_sort_options">
+		<xsl:param name="option" />
+		<xsl:value-of select="$option" />
+	</xsl:template>		
 	
 </xsl:stylesheet>

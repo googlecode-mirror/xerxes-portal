@@ -35,7 +35,7 @@
 			</xsl:call-template>
 		</xsl:otherwise>
 	</xsl:choose>
-	Record
+	<xsl:copy-of select="$text_record_breadcrumb" />
 </xsl:template>
 
 <xsl:template name="main">

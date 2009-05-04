@@ -27,7 +27,7 @@
 </xsl:template>
 
 <xsl:template name="page_name">
-	Generate Snippet
+	<xsl:value-of select="$text_header_snippet_generate" />
 </xsl:template>
 
 <xsl:template name="breadcrumb">
@@ -40,10 +40,9 @@
 <xsl:template name="main">
 
 	<xsl:variable name="noscript_content">
-		<xsl:element name="a">
-			<xsl:attribute name="href"><xsl:value-of select="//embed_info/direct_url" /></xsl:attribute>
+		<a href="{//embed_info/direct_url}">
 			<xsl:value-of select="//category/@name" />
-		</xsl:element>
+		</a>
 	</xsl:variable>
 	
 	<script type="text/javascript">
@@ -53,7 +52,7 @@
 	
 	<script type="text/javascript" src="{$base_url}/javascript/embed-gen-update.js"></script>
 	
-	<h1><xsl:call-template name="page_name" /></h1>
+	<h1><xsl:call-template name="page_name" />: <xsl:value-of select="category/@name" /></h1>
 	
 	<div class="yui-gd">
 		
@@ -68,73 +67,73 @@
 					<input type="hidden" name="username" value="{category/@owned_by_user}"/>
 						 
 					<fieldset id="snippetDisplay">
-						<legend><h2>Display options</h2></legend>
+						<legend><h2><xsl:copy-of select="$text_snippet_display_options" /></h2></legend>
 						
-						<table id="snippetDisplayTable" summary="for display only">
+						<table id="snippetDisplayTable" summary="{$text_ada_table_for_display}">
 							<tr>
-							<td><label for="disp_show_title">Show title?</label></td>
+							<td><label for="disp_show_title"><xsl:copy-of select="$text_snippet_show_title" /></label></td>
 							<td>
 								<select id="disp_show_title" name="disp_show_title">
 									<option value="true">
 										<xsl:if test="request/disp_show_title = 'true'">
 										<xsl:attribute name="selected">selected</xsl:attribute>
 										</xsl:if>
-										yes
+										<xsl:value-of select="$text_snippet_display_yes" />
 									</option>
 									<option value="false">
 										<xsl:if test="request/disp_show_title = 'false'">
 										<xsl:attribute name="selected">selected</xsl:attribute>
 										</xsl:if>
-										no
+										<xsl:value-of select="$text_snippet_display_no" />
 									</option>
 								</select>
 							</td>
 							</tr>
 							<tr>
-							<td><label for="disp_show_search">Show search box?</label></td>
+							<td><label for="disp_show_search"><xsl:copy-of select="$text_snippet_show_searchbox" /></label></td>
 							<td>
 								<select name="disp_show_search" id="disp_show_search">
 									<option value="true">
 										<xsl:if test="request/disp_show_search = 'true'">
 										<xsl:attribute name="selected">selected</xsl:attribute>
 										</xsl:if>
-										yes
+										<xsl:value-of select="$text_snippet_display_yes" />
 									</option>
 									<option value="false">
 										<xsl:if test="request/disp_show_search = 'false'">
 										<xsl:attribute name="selected">selected</xsl:attribute>
 										</xsl:if>
-										no
+										<xsl:value-of select="$text_snippet_display_no" />
 									</option>
 								</select>
 							
 							</td>
 						</tr>
 						<tr>
-						<td><label for="disp_show_subcategories">Show databases?</label></td>
+						<td><label for="disp_show_subcategories"><xsl:copy-of select="$text_snippet_show_databases" /></label></td>
 						<td>
 							<select name="disp_show_subcategories" id="disp_show_subcategories">
 								<option value="true">
 									<xsl:if test="request/disp_show_subcategories = 'true'">
 									<xsl:attribute name="selected">selected</xsl:attribute>
 									</xsl:if>
-									yes
+									<xsl:value-of select="$text_snippet_display_yes" />
 								</option>
 								<option value="false">
 									<xsl:if test="request/disp_show_subcategories = 'false'">
 									<xsl:attribute name="selected">selected</xsl:attribute>
 									</xsl:if>      
-									no
+									<xsl:value-of select="$text_snippet_display_no" />
 								</option>
 							</select>
 						</td>
 						</tr>
 						<tr>
 						<td colspan="2">
-							<label for="disp_only_subcategory">Show specific section?</label>
+							<label for="disp_only_subcategory"><xsl:copy-of select="$text_snippet_show_section" /></label>
 							<div id="snippetSubcategories">
 								<select name="disp_only_subcategory" id="disp_only_subcategory">
-									<option value="">ALL</option>
+									<option value=""><xsl:value-of select="$text_snippet_display_all" /></option>
 									<xsl:for-each select="//subcategory">
 										<option>
 											<xsl:if test="request/disp_only_subcategory = @id">
@@ -151,48 +150,45 @@
 						</td>
 						</tr>
 						<tr>
-						<td><label for="disp_only_subcategory">Include CSS?</label></td>
+						<td><label for="disp_only_subcategory"><xsl:copy-of select="$text_snippet_show_css" /></label></td>
 						<td>
 							<select id="disp_embed_css" name="disp_embed_css">
 								<option value="true">
 									<xsl:if test="request/disp_embed_css = 'true'">
 									<xsl:attribute name="selected">selected</xsl:attribute>
 									</xsl:if>
-									yes
+									<xsl:value-of select="$text_snippet_display_yes" />
 								</option>
 								<option value="false">
 									<xsl:if test="request/disp_embed_css = 'false'">
 									<xsl:attribute name="selected">selected</xsl:attribute>
 									</xsl:if>      
-									no
+									<xsl:value-of select="$text_snippet_display_no" />
 								</option>
 							</select>
 						</td>
 						</tr>
 					</table>
 
-					<p class="optionInfo">Including the CSS works imperfectly.  If you need to, it's better to define 
-					CSS styles for the snippet in the external website itself.</p>
+					<p class="optionInfo"><xsl:copy-of select="$text_snippet_show_css_explain" /></p>
 					
-					
-					<p><input type="submit" value="refresh" /></p>
+					<p><input type="submit" value="{$text_snippet_refresh}" /></p>
 					
 					</fieldset>
 					
 					<div id="snippetInclude">
 					
-						<h2>Include Options</h2>
+						<h2><xsl:copy-of select="$text_snippet_include_options" /></h2>
 						
-						<h3>1. Server-side include url</h3>
-						<p>Preferred method of inclusion, if your external website can support a server-side include.</p>	
+						<h3>1. <xsl:copy-of select="$text_snippet_include_server" /></h3>
+						<p><xsl:copy-of select="$text_snippet_include_server_explain" /></p>	
 				
 						<textarea id="direct_url_content" readonly="yes" class="displayTextbox">
 							<xsl:value-of select="embed_info/embed_direct_url" />
 						</textarea> 
 				
-						<h3>2. Javascript widget</h3>
-						<p>Should work in any external website that allows javascript, but viewers' browsers 
-						must support javascript.</p>
+						<h3>2. <xsl:copy-of select="$text_snippet_include_javascript" /></h3>
+						<p><xsl:copy-of select="$text_snippet_include_javascript_explain" /></p>
 						
 						<textarea id="js_widget_content" readonly="yes" class="displayTextbox">
 							<script type="text/javascript" charset="utf-8" >
@@ -203,16 +199,15 @@
 							</noscript>
 						</textarea>
 				
-						<h3>3. HTML Source </h3>
-						<p>Last resort. If this is your only option, you can embed this HTML source directly into your external website. 
-						However, if data or features change here, your snippet will not reflect those changes, and may even stop working. 
-						Use with care.</p>
+						<h3>3. <xsl:copy-of select="$text_snippet_include_html" /></h3>
+						<p><xsl:copy-of select="$text_snippet_include_html_explain" /></p>
+						
 						<a target="_blank" id="view_source_link">
-						<xsl:attribute name="href" >
-						<xsl:value-of select="embed_info/embed_direct_url" />
-						<xsl:text>&amp;format=text</xsl:text>
-						</xsl:attribute>
-						View snippet source
+							<xsl:attribute name="href" >
+							<xsl:value-of select="embed_info/embed_direct_url" />
+							<xsl:text>&amp;format=text</xsl:text>
+							</xsl:attribute>
+							<xsl:copy-of select="$text_snippet_include_html_source" />
 						</a>
 					</div>
 	
@@ -222,7 +217,7 @@
 		<div class="yui-u">
 		
 			<fieldset id="example">
-				<legend id="example_legend">Example</legend>
+				<legend id="example_legend"><xsl:copy-of select="$text_snippet_example" /></legend>
 				<div id="example_container">
 				<div id="example_content">
 					<xsl:value-of disable-output-escaping="yes" select="php:functionString('Xerxes_Command_Embed::getEmbedContent', embed_info/embed_direct_url)"	/>

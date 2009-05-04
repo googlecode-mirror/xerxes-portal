@@ -26,7 +26,7 @@
 	<xsl:call-template name="breadcrumb_folder">
 		<xsl:with-param name="condition">2</xsl:with-param>
 	</xsl:call-template>
-	Record
+	<xsl:copy-of select="$text_record_breadcrumb" />
 </xsl:template>
 
 <xsl:template name="main">

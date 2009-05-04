@@ -31,7 +31,7 @@
 </xsl:template>
 
 <xsl:template name="page_name">
-	Export to Refworks
+	<xsl:value-of select="$text_folder_refworks_pagename" />
 </xsl:template>
 
 <xsl:template name="main">
@@ -50,7 +50,7 @@
 		
 		<xsl:call-template name="folder_header_limit" />
 		
-		<input id="export_single" type="submit" name="Submit" value="Export" />
+		<input id="export_single" type="submit" name="Submit" value="{$text_folder_export_export}" />
 			
 		<xsl:call-template name="folder_brief_results" />
 		

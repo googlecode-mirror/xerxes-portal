@@ -31,7 +31,7 @@
 </xsl:template>
 
 <xsl:template name="page_name">
-	Download to Endnote, Zotero, etc.
+	<xsl:value-of select="$text_folder_endnote_pagename" />
 </xsl:template>
 
 <xsl:template name="main">
@@ -51,20 +51,20 @@
 		<xsl:call-template name="folder_header_limit" />
 	
 		<fieldset id="export_options_endnote">
-			<legend>Download</legend>
+			<legend><xsl:copy-of select="$text_folder_export_download" /></legend>
 				
 			<div>
 				<input name="format" type="radio" value="bibliographic" checked="checked" id="bibliographic" />
-				<label for="bibliographic"> directly into Endnote, Zotero, or other citation management application</label>
+				<label for="bibliographic"><xsl:text> </xsl:text><xsl:copy-of select="$text_folder_endnote_direct" /></label>
 			</div>
 			
 			<div>
 				<input name="format" type="radio" value="ris-file" id="ris" />
-				<label for="ris"> to a file I will import myself</label>
+				<label for="ris"><xsl:text> </xsl:text><xsl:copy-of select="$text_folder_endnote_file" /></label>
 			</div>
 			
 			<div>
-				<input type="submit" name="Submit" value="Download" />
+				<input type="submit" name="Submit" value="{$text_folder_export_download}" />
 			</div>
 			
 		</fieldset>

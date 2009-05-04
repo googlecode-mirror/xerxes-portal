@@ -183,7 +183,7 @@
 <xsl:template name="breadcrumb" />
 <xsl:template name="sidebar" />
 <xsl:template name="sidebar_additional" />
-
+<xsl:template name="module_header" />
 
 <!--
 	TEMPLATE: SIDEBAR WRAPPER
@@ -245,7 +245,7 @@
 			<a href="{//embed_info/direct_url}"><xsl:value-of select="//database/title_display" /></a> <xsl:copy-of select="$text_breadcrumb_seperator" />
 		</xsl:when>
 		<xsl:when test="$condition = 4">
-			<a href="{//navbar/element[@id='database_list']}">Databases A-Z</a> <xsl:copy-of select="$text_breadcrumb_seperator" />
+			<a href="{//navbar/element[@id='database_list']}"><xsl:value-of select="$text_databases_az_pagename" /></a> <xsl:copy-of select="$text_breadcrumb_seperator" />
 		</xsl:when>
 	</xsl:choose>
 
@@ -260,14 +260,15 @@
 	
 	<xsl:call-template name="breadcrumb_start" />
 	
-	<a href="{results/search/context_url}"><xsl:value-of select="results/search/context" /></a> <xsl:copy-of select="$text_breadcrumb_seperator" />
+	<a href="{results/search/context_url}"><xsl:value-of select="results/search/context" /></a> 
+	<xsl:copy-of select="$text_breadcrumb_seperator" />
 	
 	<xsl:choose>
 		<xsl:when test="$condition = 2">
-			<a href="{//resultset_link}">Results</a> <xsl:copy-of select="$text_breadcrumb_seperator" />
+			<a href="{//resultset_link}"><xsl:copy-of select="$text_results_breadcrumb" /></a> <xsl:copy-of select="$text_breadcrumb_seperator" />
 		</xsl:when>
 		<xsl:when test="$condition = 3">
-			<a href="{//request/return}">Results</a> <xsl:copy-of select="$text_breadcrumb_seperator" />
+			<a href="{//request/return}"><xsl:copy-of select="$text_results_breadcrumb" /></a> <xsl:copy-of select="$text_breadcrumb_seperator" />
 		</xsl:when>
 
 	</xsl:choose>
@@ -285,7 +286,8 @@
 	
 	<xsl:choose>
 		<xsl:when test="$condition != 1">
-			<a href="{//navbar/element[@id='saved_records']}">My Saved Records</a> <xsl:copy-of select="$text_breadcrumb_seperator" />
+			<a href="{//navbar/element[@id='saved_records']}"><xsl:copy-of select="$text_header_savedrecords" /></a>
+			<xsl:copy-of select="$text_breadcrumb_seperator" />
 		</xsl:when>
 	</xsl:choose>
 
@@ -302,7 +304,8 @@
 	<xsl:call-template name="breadcrumb_start" />
 	
 	<xsl:if test="not(category/@is_default_collection = 'yes')">
-		<a href="{navbar/element[@id='saved_collections']/url}"><xsl:copy-of select="$text_header_collections"/></a> <xsl:copy-of select="$text_breadcrumb_seperator" />	
+		<a href="{navbar/element[@id='saved_collections']/url}"><xsl:copy-of select="$text_header_collections"/></a> 
+		<xsl:copy-of select="$text_breadcrumb_seperator" />	
 	</xsl:if>
 
 	<xsl:if test="$condition = 2">
@@ -508,7 +511,7 @@
 			</option>
 		</xsl:if>
 	</select>
-	<xsl:text> </xsl:text><label for="query{$input_name_suffix}">for</label><xsl:text> </xsl:text>
+	<xsl:text> </xsl:text><label for="query{$input_name_suffix}"><xsl:copy-of select="$text_searchbox_for" /></label><xsl:text> </xsl:text>
 	<input id="query{$input_name_suffix}" name="query{$input_name_suffix}" type="text" size="32" value="{$query_entered}" />
 	
 </xsl:template>
@@ -619,7 +622,7 @@
 					<xsl:choose>
 						<xsl:when test="$should_lock_nonsearchable	and searchable_by_user != '1'" >
 							<!-- if we have a logged in user (or a registered guest), but they can't search this, show them a lock. -->			
-							<img src="{$base_url}/images/lock.png" alt="restricted to campus users only" title="Restricted, click database title to search individually"/>
+							<img src="{$base_url}/images/lock.png" alt="" title="{$text_databases_subject_hint_restricted}" />
 							<xsl:text> </xsl:text>
 						</xsl:when>
 						<xsl:otherwise>
@@ -639,7 +642,7 @@
 					</xsl:choose>
 				</xsl:when>
 				<xsl:otherwise>
-					<img src="{$base_url}/images/link-out.gif" alt="Click database title to search individually" title="Click database title to search individually"/>
+					<img src="{$base_url}/images/link-out.gif" alt="" title="{$text_databases_subject_hint_native_only}"/>
 					<xsl:text> </xsl:text>
 				</xsl:otherwise>
 				</xsl:choose>
@@ -647,7 +650,7 @@
 				<div class="subjectDatabaseTitle">
 					<xsl:choose>
 						<xsl:when test="not($should_lock_nonsearchable and searchable_by_user != '1')">
-							<a title="Go directly to {title_display}">
+							<a title="{$text_databases_subject_hint_direct_search} {title_display}">
 							<xsl:attribute name="href"><xsl:value-of select="xerxes_native_link_url" /></xsl:attribute>
 								<xsl:value-of select="title_display" />
 							</a>
@@ -669,9 +672,9 @@
 				</div>
 					
 				<div class="subjectDatabaseInfo">
-					<a title="More information about {title_display}">
+					<a title="{$text_databases_subject_hint_more_info_about} {title_display}">
 					<xsl:attribute name="href"><xsl:value-of select="url" /></xsl:attribute>
-					<img alt="more information" src="images/info.gif" >
+					<img src="images/info.gif" >
 						<xsl:attribute name="src"><xsl:value-of select="//config/base_url" />/images/info.gif</xsl:attribute>
 					</img>
 					</a>
@@ -710,7 +713,7 @@
 				<xsl:attribute name="value"><xsl:value-of select="request/query" /></xsl:attribute>
 			</input>
 			<xsl:text> </xsl:text>
-			<input type="submit" value="GO" />
+			<input type="submit" value="{$text_searchbox_go}" />
 		</div>		
 	</form>
 	
@@ -760,7 +763,7 @@
 	<!-- <xsl:call-template name="folder_export_options" /> -->
 	
 	<fieldset>
-		<legend>Records to export</legend>
+		<legend><xsl:copy-of select="$text_folder_records_export" /></legend>
 		
 			<input type="button" id="clear_databases" value="clear all" />
 
@@ -794,8 +797,7 @@
 	<!-- @todo make this a singletext label variable -->
 	
 	<xsl:if test="request/session/role = 'local'">
-		<p>( <a href="{navbar/element[@id='login']/url}"><xsl:copy-of select="$text_folder_login" /><xsl:text>  </xsl:text></a> 
-		<xsl:copy-of select="$text_folder_login_beyond" />.)</p>
+		<p><xsl:copy-of select="$text_folder_login_temp" /></p>
 	</xsl:if>
 	
 	<xsl:call-template name="folder_header_limit" />
@@ -812,14 +814,14 @@
 	<xsl:if test="request/label">
 		<h2>
 			<a href="./?base=folder"><img src="{$base_url}/images/delete.gif" alt="remove limit" /></a>
-			<xsl:text>Label: </xsl:text><xsl:value-of select="request/label" />
+			<xsl:copy-of select="$text_folder_limit_tag" /><xsl:text>: </xsl:text><xsl:value-of select="request/label" />
 		</h2>
 	</xsl:if>
 	
 	<xsl:if test="request/type">
 		<h2>
 			<a href="./?base=folder"><img src="{$base_url}/images/delete.gif" alt="remove limit" /></a>
-			<xsl:text>Format: </xsl:text><xsl:value-of select="request/type" />
+			<xsl:copy-of select="$text_folder_limit_format" /><xsl:text>: </xsl:text><xsl:value-of select="request/type" />
 		</h2>
 	</xsl:if>
 
@@ -836,7 +838,7 @@
 			<xsl:copy-of select="$text_folder_header_temporary" />
 		</xsl:when>
 		<xsl:otherwise>
-			<xsl:copy-of select="$text_folder_header_my" />
+			<xsl:copy-of select="$text_header_savedrecords" />
 		</xsl:otherwise>
 	</xsl:choose>
 </xsl:template>
@@ -944,8 +946,10 @@
 		<!-- controls the saving and tracking of saved records -->
 		
 		<script type="text/javascript">
+			
 			// change numSessionSavedRecords to numSavedRecords if you prefer the folder icon to change
 			// if there are any records at all in saved records. Also fix initial display in navbar.
+			
 			numSavedRecords = parseInt('0<xsl:value-of select="navbar/element[@id='saved_records']/@numSessionSavedRecords" />', 10);
 			isTemporarySession = <xsl:choose><xsl:when test="request/session/role = 'guest' or request/session/role = 'local'">true</xsl:when><xsl:otherwise>false</xsl:otherwise></xsl:choose>
 		</script>
@@ -960,21 +964,11 @@
 		<!-- add behaviors to edit collection dialog, currently just delete confirm -->
 		<script src="{$base_include}/javascript/collections.js" language="javascript" type ="text/javascript"></script>
 		
-		<!-- @todo remove this to mango files and create local header template for page!  mango stuff -->
-		
-		<xsl:if test="request/base = 'books'">
-			<script src="{$base_include}/javascript/availability.js" language="javascript" type="text/javascript"></script>
-			<link href="{$base_include}/css/mango.css?xerxes_version={$xerxes_version}" rel="stylesheet" type="text/css" />
-			
-			<xsl:if test="request/action = 'record'">
-				<xsl:call-template name="google_preview" />
-			</xsl:if>
-			
-		</xsl:if>
-		
 	</xsl:if>
-  
-  <xsl:copy-of select="$text_extra_html_head_content"/>
+  	
+	<xsl:call-template name="module_header" />
+	
+	<xsl:copy-of select="$text_extra_html_head_content"/>
 
 </xsl:template>
 
@@ -1088,7 +1082,7 @@
 
 <xsl:template name="account_sidebar">
 	<div id="account" class="box">
-		<h2>My Account</h2>
+		<h2><xsl:copy-of select="$text_header_myaccount" /></h2>
 		<ul>
 			<li>
 				<xsl:choose>
@@ -1141,8 +1135,8 @@
 
 <xsl:template name="collections_sidebar">
 	<div id="collections" class="box">
-		<h2>My Collections</h2>
-		<p>Collections are a way to organize your saved databases.</p>
+		<h2><xsl:copy-of select="$text_header_my_collections" /></h2>
+		<p><xsl:copy-of select="$text_header_my_collections_explain" /></p>
 		<ul>
 		<!-- don't list the default collection here, that's presented differently. -->
 		<xsl:for-each select="/*/userCategories/category[name != /*/config/default_collection_name]">
@@ -1167,8 +1161,8 @@
 		
 		<input type="hidden" name="new_subcategory_name" value="{$text_collection_default_new_section_name}"/>
 		
-		<p><label for="new_subject_name">Create a new collection</label>:</p>
-		<input type="text" id="new_subject_name" name="new_subject_name"/><xsl:text> </xsl:text><input type="submit" name="add" value="Add" />
+		<p><label for="new_subject_name"><xsl:copy-of select="$text_header_my_collections_new" /></label></p>
+		<input type="text" id="new_subject_name" name="new_subject_name"/><xsl:text> </xsl:text><input type="submit" name="add" value="{$text_header_my_collections_add}" />
 		
 		</form>
 	</div>
@@ -1183,21 +1177,21 @@
 <xsl:template name="snippet_sidebar">
 	
 	<div id="snippet" class="box">
-		<h2>Embed this page?</h2>
+		<h2><xsl:copy-of select="$text_header_embed" /></h2>
 
 		<p>
 		<xsl:if test="request/base = 'databases' and request/action = 'subject'">
 			<xsl:variable name="subject" select="//category/@normalized" />
-			[ <a href="./embed/gen_subject/{$subject}">Generate Snippet</a> ]
+			[ <a href="./?base=embed&amp;action=gen_subject&amp;subject={$subject}"><xsl:copy-of select="$text_header_snippet_generate" /></a> ]
 		</xsl:if>
 		
 		<xsl:if test="request/base = 'databases' and request/action = 'database'">
 			<xsl:variable name="id" select="//database[1]/metalib_id" />
-			[ <a href="./embed/gen_database/{$id}">Generate Snippet</a> ]
+			[ <a href="./?base=embed&amp;action=gen_database&amp;id={$id}"><xsl:copy-of select="$text_header_snippet_generate" /></a> ]
 		</xsl:if>
 		
 		<xsl:if test="request/base = 'collections' and (request/action = 'subject' or request/action = 'edit_form')">
-			[ <a href="./collections/gen_embed/{//category[1]/@owned_by_user}/{//category[1]/@normalized}"> Generate Snippet </a> ]
+			[ <a href="./?base=collections&amp;action=gen_embed&amp;subject={//category[1]/@owned_by_user}/{//category[1]/@normalized}"><xsl:copy-of select="$text_header_snippet_generate" /></a> ]
 		</xsl:if>
 		
 		</p>
@@ -1282,15 +1276,17 @@
 					</xsl:when>
 					<xsl:otherwise>
 						<a href="{$link}">
-						<xsl:choose>
-							<xsl:when test="@type = 'next'">
-								<xsl:attribute name="class">resultsPagerNext</xsl:attribute>
-							</xsl:when>
-							<xsl:otherwise>
-								<xsl:attribute name="class">resultsPagerLink</xsl:attribute>
-							</xsl:otherwise>
-						</xsl:choose>
-							<xsl:value-of select="text()" />
+							<xsl:choose>
+								<xsl:when test="@type = 'next'">
+									<xsl:attribute name="class">resultsPagerNext</xsl:attribute>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:attribute name="class">resultsPagerLink</xsl:attribute>
+								</xsl:otherwise>
+							</xsl:choose>
+							<xsl:call-template name="text_results_sort_options">
+								<xsl:with-param name="option" select="text()" />
+							</xsl:call-template>
 						</a>
 					</xsl:otherwise>
 				</xsl:choose>
@@ -1315,7 +1311,7 @@
 	<xsl:if test="//cluster_facet and results/database = 'Top Results'">
 		
 		<div id="facets" class="box">
-			<h2>Limit top results by:</h2>
+			<h2><xsl:copy-of select="$text_header_facets" /></h2>
 			<xsl:for-each select="//cluster_facet[@name != 'DATABASE']">
 			
 				<xsl:variable name="name" select="@name" />
@@ -1324,7 +1320,7 @@
 				
 					<xsl:variable name="facet_number" select="@position" />
 					
-					<h3><xsl:value-of select="@name" /></h3>
+					<h3><xsl:call-template name="text_facet_group" /></h3>
 					
 					<ul>
 					
@@ -1431,7 +1427,7 @@
 						<xsl:value-of select="title_normalized" />
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:text>[ No Title ]</xsl:text>
+						<xsl:copy-of select="$text_results_no_title" />
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:variable>
@@ -1443,16 +1439,17 @@
 			<div class="resultsInfo">
 			
 				<div class="resultsType">
-					<xsl:value-of select="format" />
-					<xsl:if test="language and language != 'English' and format != 'Video'">
-						<span class="resultsLanguage"> written in <xsl:value-of select="language" /></span>
-					</xsl:if>
+					<xsl:call-template name="text_results_format">
+						<xsl:with-param name="format" select="format" />
+					</xsl:call-template>
+					
+					<xsl:call-template name="text_results_language" />
 					
 					<!-- peer reviewed -->
 					
 					<xsl:if test="$refereed = 'true'">
 						<xsl:text> </xsl:text><img src="images/refereed_hat.gif" width="20" height="14" alt="" />
-						<xsl:text> Peer Reviewed</xsl:text>
+						<xsl:text> </xsl:text><xsl:copy-of select="$text_results_refereed" />
 					</xsl:if>
 				</div>
 				
@@ -1477,20 +1474,20 @@
 				
 				<xsl:if test="primary_author">
 					<span class="resultsAuthor">
-						<strong>By: </strong><xsl:value-of select="primary_author" />
+						<strong><xsl:copy-of select="$text_results_author" />: </strong><xsl:value-of select="primary_author" />
 					</span>
 				</xsl:if>
 				
 				<xsl:if test="year">
 					<span class="resultsYear">
-						<strong>Year: </strong>
+						<strong><xsl:copy-of select="$text_results_year" />: </strong>
 						<xsl:value-of select="year" />
 					</span>
 				</xsl:if>
 				
 				<xsl:if test="journal or journal_title">
 					<span class="resultsPublishing">
-						<strong>Published in: </strong>
+						<strong><xsl:copy-of select="$text_results_published_in" />: </strong>
 						<xsl:choose>
 							<xsl:when test="journal_title">
 								<xsl:value-of select="journal_title" />
@@ -1548,12 +1545,13 @@
 							</xsl:call-template>
 						</xsl:when>
 						
-						<!-- if none of the above, but we DO have text in the record, tell them so. -->
+						<!-- @todo remove this 
+						if none of the above, but we DO have text in the record, tell them so. -->
 						
 						<xsl:when test="embeddedText/paragraph">
 							<a href="{../url_full}">
 							<img src="{$base_url}/images/famfamfam/page_go.png" alt="" />
-								Text in <xsl:value-of select="//config/application_name"/> record
+								Text in record
 							</a>
 						</xsl:when>
 					</xsl:choose>
@@ -1594,17 +1592,23 @@
 									<xsl:choose>
 										<xsl:when test="//request/session/resultssaved[@key = $record_id]">
 											<xsl:choose>
-												<xsl:when test="//session/role = 'named'">Record saved</xsl:when>
-												<xsl:otherwise>Temporarily Saved</xsl:otherwise>
+												<xsl:when test="//session/role = 'named'">
+													<xsl:copy-of select="$text_results_record_saved" />
+												</xsl:when>
+												<xsl:otherwise>
+													<xsl:copy-of select="$text_results_record_saved_temp" />
+												</xsl:otherwise>
 											</xsl:choose>
 										</xsl:when>
-										<xsl:otherwise>Save this record</xsl:otherwise>
+										<xsl:otherwise><xsl:copy-of select="$text_results_record_save_it" /></xsl:otherwise>
 									</xsl:choose>
 								</a>
 								
 								<xsl:if test="//request/session/resultssaved[@key = $record_id] and //request/session/role != 'named'"> 
 									<span class="temporary_login_note">
-										(<a href="{//navbar/element[@id = 'login']/url}">login to save permanently</a>)
+										(<a href="{//navbar/element[@id = 'login']/url}">
+											<xsl:copy-of select="$text_results_record_saved_perm" />
+										</a>)
 									</span>
 								</xsl:if>
 							</div>
@@ -1628,7 +1632,7 @@
 							<div class="folderAvailability">
 								<a class="deleteRecord resultsFullText" href="{../url_delete}">
 									<img src="{$base_url}/images/delete.gif" alt="" border="0" />
-									Delete this record
+									<xsl:copy-of select="$text_results_record_delete" />
 								 </a>
 							</div>
 							

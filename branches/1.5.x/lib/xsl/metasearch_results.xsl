@@ -28,7 +28,14 @@
 </xsl:template>
 
 <xsl:template name="page_name">
-	<xsl:value-of select="/*/results/database" />
+	<xsl:choose>
+		<xsl:when test="/*/results/database = 'Top Results'">
+			<xsl:copy-of select="$text_metasearch_top_results" />
+		</xsl:when>
+		<xsl:otherwise>
+			<xsl:value-of select="/*/results/database" />
+		</xsl:otherwise>
+	</xsl:choose>
 </xsl:template>
 
 <xsl:template name="title">
@@ -70,15 +77,15 @@
 		<xsl:call-template name="search_box" />
 	</form>
 	
-	<h2><xsl:value-of select="results/database" /></h2>
+	<h2><xsl:call-template name="page_name" /></h2>
 	
 	<xsl:choose>
 		<xsl:when test="results/facet_name != ''">
 			<h3>
 				<a href="{//base_info[base = 'MERGESET']/url}">
-					<img src="{$base_url}/images/delete.gif" alt="remove limit" />
+					<img src="{$base_url}/images/delete.gif" alt="{$text_results_hint_remove_limit}" />
 				</a>
-				Limit: <xsl:value-of select="results/facet_name" />
+				<xsl:copy-of select="$text_metasearch_results_limit" /><xsl:text>: </xsl:text><xsl:value-of select="results/facet_name" />
 			</h3>
 		</xsl:when>
 	</xsl:choose>
@@ -87,14 +94,13 @@
 		<div id="sort">
 			<div class="yui-gd">
 				<div class="yui-u first">
-					Results <strong><xsl:value-of select="summary/range" /></strong> of 
-					<strong><xsl:value-of select="summary/total" /></strong>
+					<xsl:copy-of select="$text_metasearch_results_summary" />
 				</div>
 				<div class="yui-u">
 					<xsl:choose>
 						<xsl:when test="sort_display and not(results/facet_name)">
 							<div id="sortOptions">
-								sort by:
+								<xsl:copy-of select="$text_results_sort_by" /><xsl:text>: </xsl:text>
 								<xsl:for-each select="sort_display/option">
 									<xsl:choose>
 										<xsl:when test="@active = 'true'">
@@ -122,11 +128,8 @@
 	
 	<xsl:if test="$merge_bug = 'true'">
 
-		<h2 class="error">Sorry, there was an error.</h2> 
-		<p>
-		Please <a href="{request/server/request_uri}">try again</a>
-		or select an individual set of results to the right.
-		</p>
+		<h2 class="error"><xsl:copy-of select="$text_metasearch_results_error_merge_bug" /></h2> 
+		<p><xsl:copy-of select="$text_metasearch_results_error_merge_bug_try_again" /></p>
 	
 	</xsl:if>
 	
@@ -149,14 +152,14 @@
 					<xsl:text>&amp;url=</xsl:text>
 					<xsl:value-of select="php:function('urlencode', string(//search_and_link))" />
 				</xsl:attribute>
-				View results at <xsl:value-of select="results/database" />
+				<xsl:copy-of select="$text_metasearch_results_native_results" /><xsl:text> </xsl:text><xsl:value-of select="results/database" />
 			</a>
 		</div>	
 	</xsl:if>
 	
 	<xsl:call-template name="brief_results" />
 	
-	<!-- paging Navigation -->
+	<!-- paging navigation -->
 	
 	<xsl:if test="$merge_bug = 'false'">
 		<xsl:call-template name="paging_navigation" />
@@ -185,7 +188,7 @@
 	
 		<div class="box">
 			
-			<h2>Search results</h2>
+			<h2><xsl:copy-of select="$text_metasearch_results_search_results" /></h2>
 			
 			<ul id="merged">
 			
@@ -195,10 +198,10 @@
 				<li>
 					<xsl:choose>
 						<xsl:when test="set_number = $this_result_set">
-							<strong>Top Results</strong>
+							<strong><xsl:copy-of select="$text_metasearch_top_results" /></strong>
 						</xsl:when>
 						<xsl:otherwise>
-							<a href="{url}">Top Results</a>
+							<a href="{url}"><xsl:copy-of select="$text_metasearch_top_results" /></a>
 						</xsl:otherwise>
 					</xsl:choose>
 					<xsl:text> ( </xsl:text>
@@ -219,7 +222,7 @@
 	
 		<div class="box">
 			
-			<h2>Results by database</h2>
+			<h2><xsl:copy-of select="$text_metasearch_results_by_db" /></h2>
 					
 			<ul>
 
@@ -269,13 +272,13 @@
 					<xsl:text>( </xsl:text>
 					<xsl:choose>
 						<xsl:when test="no_of_documents = '888888888'">
-							<xsl:text>results found</xsl:text>
+							<xsl:copy-of select="$text_metasearch_results_found" />
 						</xsl:when>
 						<xsl:when test="find_status = 'DONE' or find_status = 'DONE1' or find_status = 'DONE2'">
 							<xsl:value-of select="$hits"/>
 						</xsl:when>
 						<xsl:otherwise>
-							ERROR
+							<xsl:copy-of select="$text_metasearch_status_error" />
 						</xsl:otherwise>
 					</xsl:choose>
 					<xsl:text> )</xsl:text>
@@ -290,13 +293,13 @@
 				<li>
 					<xsl:value-of select="title_display"/>
 					<xsl:text> (</xsl:text>
-					ERROR: 
+					<xsl:copy-of select="$text_metasearch_status_error" /><xsl:text>: </xsl:text>
 					<xsl:choose>
 						<xsl:when test="group_restriction">
 							<xsl:call-template name="db_restriction_display" />
 						</xsl:when>
 						<xsl:when test="subscription = '1'">
-							Only available to registered users.
+							<xsl:copy-of select="$text_database_available_registered" />
 						</xsl:when>
 					</xsl:choose>
 					<xsl:text>)</xsl:text>
