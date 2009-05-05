@@ -3,8 +3,8 @@
 <!--
 
  author: David Walker
- copyright: 2007 California State University
- version: 1.1
+ copyright: 2009 California State University
+ version: 1.5
  package: Xerxes
  link: http://xerxes.calstate.edu
  license: http://www.gnu.org/licenses/
