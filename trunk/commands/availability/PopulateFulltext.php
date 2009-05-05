@@ -31,12 +31,12 @@
 			// holdings file on SFX. Either SFX specific config, or
 			// general link resolver config. 
 			
-			$configSfx = $this->registry->getConfig( "SFX_RESOLVER_ADDRESS", false, $this->registry->getConfig( "LINK_RESOLVER_ADDRESS", false ) );
+			$configSfx = $this->registry->getConfig( "ALTERNATE_FULLTEXT_HARVEST_ADDRESS", false, $this->registry->getConfig( "LINK_RESOLVER_ADDRESS", false ) );
 
 			if ( ! $configSfx )
 			{
 				throw new Exception( "Can not run populate action, no link resolver address configured. " .
-					"Need config sfx_resolver_address or link_resolver_address." );
+					"Need config ALTERNATE_FULLTEXT_HARVEST_ADDRESS or LINK_RESOLVER_ADDRESS." );
 			}
 			
 			$strUrl = $configSfx . "/cgi/public/get_file.cgi?file=institutional_holding" . $strInstance . ".xml";

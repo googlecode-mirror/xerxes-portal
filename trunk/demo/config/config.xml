@@ -111,7 +111,7 @@
 			@todo change this config name to something more clear
 			-->
 		
-		<config name="sfx_resolver_address"></config>
+		<config name="alternate_fulltext_harvest_address"></config>
 		
 		<!-- the sid that will be passed to the link resolver, xerxes will also append the name 
 			of the database to the sid -->
