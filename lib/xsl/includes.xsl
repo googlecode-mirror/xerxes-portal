@@ -647,7 +647,7 @@
 				</xsl:otherwise>
 				</xsl:choose>
 				
-				<div class="subjectDatabaseTitle">
+				<span class="subjectDatabaseTitle">
 					<xsl:choose>
 						<xsl:when test="not($should_lock_nonsearchable and searchable_by_user != '1')">
 							<a title="{$text_databases_subject_hint_direct_search} {title_display}">
@@ -669,9 +669,9 @@
 						</xsl:otherwise>
 					</xsl:choose>
 					<xsl:text> </xsl:text>					
-				</div>
+				</span>
 					
-				<div class="subjectDatabaseInfo">
+				<span class="subjectDatabaseInfo">
 					<a title="{$text_databases_subject_hint_more_info_about} {title_display}">
 					<xsl:attribute name="href"><xsl:value-of select="url" /></xsl:attribute>
 					<img src="images/info.gif" >
@@ -679,11 +679,12 @@
 					</img>
 					</a>
 					<xsl:text> </xsl:text>
-				</div>
+				</span>
+				
 				<xsl:if test="group_restriction">
-					<div class="subjectDatabaseRestriction">
+					<span class="subjectDatabaseRestriction">
 						<xsl:call-template name="db_restriction_display" />
-					</div>
+					</span>
 				</xsl:if>
 				
 				</li>
@@ -1191,7 +1192,7 @@
 		</xsl:if>
 		
 		<xsl:if test="request/base = 'collections' and (request/action = 'subject' or request/action = 'edit_form')">
-			[ <a href="./?base=collections&amp;action=gen_embed&amp;subject={//category[1]/@owned_by_user}/{//category[1]/@normalized}"><xsl:copy-of select="$text_header_snippet_generate" /></a> ]
+			[ <a href="./?base=collections&amp;action=gen_embed&amp;username={//category[1]/@owned_by_user}&amp;subject={//category[1]/@normalized}"><xsl:copy-of select="$text_header_snippet_generate" /></a> ]
 		</xsl:if>
 		
 		</p>

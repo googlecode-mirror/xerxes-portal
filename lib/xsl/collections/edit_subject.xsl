@@ -176,22 +176,23 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
 							<a href="./?base=collections&amp;action=remove_db&amp;username={//request/username}&amp;subject={//category[1]/@normalized}&amp;subcategory={../@id}&amp;id={metalib_id}&amp;return={php:function('urlencode', string(//server/request_uri))}#section_{../@id}"><img 
 								src="{$base_url}/images/delete.gif" alt="Remove" title="Remove database from section"/></a>
 
-							<div class="subjectDatabaseTitle">
+							<span class="subjectDatabaseTitle">
 								<a>
 									<xsl:attribute name="href"><xsl:value-of select="xerxes_native_link_url" /></xsl:attribute>
 									<xsl:value-of select="title_display" />
 								</a>
-							</div>
-							<div class="subjectDatabaseInfo">
+								<xsl:text> </xsl:text>
+							</span>
+							<span class="subjectDatabaseInfo">
 								<a>
 								<xsl:attribute name="href"><xsl:value-of select="url" /></xsl:attribute>
 									<img alt="more information" src="images/info.gif" >
 										<xsl:attribute name="src"><xsl:value-of select="//config/base_url" />/images/info.gif</xsl:attribute>
 									</img>
 								</a>
-							</div>
+							</span>
 							<xsl:if test="group_restriction">
-								<div class="subjectDatabaseRestriction"><xsl:call-template name="db_restriction_display" /></div>
+								<span class="subjectDatabaseRestriction"><xsl:call-template name="db_restriction_display" /></span>
 							</xsl:if>
 						</li>
 						</xsl:for-each>
