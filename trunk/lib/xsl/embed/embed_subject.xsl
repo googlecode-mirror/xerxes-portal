@@ -10,7 +10,7 @@
     <xsl:variable name="disp_show_title" select="not(request/disp_show_title = 'false')" />
     <xsl:variable name="disp_show_search" select="not(request/disp_show_search = 'false')" />
     <xsl:variable name="disp_show_subcategories" select="not(request/disp_show_subcategories = 'false')" />
-    <xsl:variable name="disp_embed_css" select="request/disp_embed_css"/>
+    <xsl:variable name="disp_embed_css" select="request/disp_embed_css = 'true'"/>
     <xsl:variable name="disp_only_subcategory" select="request/disp_only_subcategory" />
 
       <!-- if it's a partial page and we want to include CSS anyway, do it.-->
@@ -77,10 +77,36 @@
       </form>
     </div>
   </xsl:template>
-  
-  
+    
   <xsl:template name="disp_embed_css">
-    <!-- First a way that's technically HTML illegal (style tag in body) but works: --></xsl:template>
+    <!-- First a way that's technically HTML illegal (style tag in body) but works: -->
+	
+    <style type="text/css">
+       @import url(<xsl:value-of select="$base_include"/>/css/xerxes-embeddable.css);
+    </style>
+    
+    <!-- now a way that's legal, but requires javascript, and won't
+         take effect until page is completely loaded. Oh well, that's
+         why we did it the illegal way too. Need prototype. 
+         
+         Turns out this seems to cause problems with page-load time. Not
+         worth the standards compliance. Left here as an example for
+         those who think it is. 
+         
+    <script src="{$base_include}/javascript/prototype-1.6.0.2.js" type="text/javascript"></script>
+
+    <script type="text/javascript">
+      //Event.observe is Prototype
+      Event.observe(window, 'load', function() {
+          var objCSS = document.createElement('link')
+          objCSS.rel = 'stylesheet';
+          objCSS.href = 'http://testbox.mse.jhu.edu/xerxes/css/xerxes.css';
+          objCSS.type = 'text/css';
+          var objHead = document.getElementsByTagName('head');
+          objHead[0].appendChild(objCSS);
+      });
+    </script> -->
+  </xsl:template>
 
   
 </xsl:stylesheet>
