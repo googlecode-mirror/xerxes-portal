@@ -662,7 +662,7 @@
 							</label>
 						</xsl:when>
 						<xsl:otherwise>
-							<a title="Go directly to {title_display}">
+							<a title="{$text_databases_subject_hint_direct_search} {title_display}">
 							<xsl:attribute name="href"><xsl:value-of select="xerxes_native_link_url" /></xsl:attribute>
 								<xsl:value-of select="title_display" />
 							</a>
