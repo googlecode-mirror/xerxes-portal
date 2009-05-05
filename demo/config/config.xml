@@ -304,7 +304,8 @@
 		<config name="holdings_links" pass="true" xml="true">
 		</config>
 		
-		<!-- include link back to database's native interface, when present and no full text is availble -->
+		<!-- include link back to database's native interface, when present and no full text is availble 
+			enter as xml inside this config, like <database metalib_id="JHU0001" /> -->
 			
 		<config name="original_record_links" pass="true" xml="true">
 		</config>
