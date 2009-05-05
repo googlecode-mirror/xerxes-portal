@@ -623,7 +623,6 @@
 						<xsl:when test="$should_lock_nonsearchable	and searchable_by_user != '1'" >
 							<!-- if we have a logged in user (or a registered guest), but they can't search this, show them a lock. -->			
 							<img src="{$base_url}/images/lock.png" alt="" title="{$text_databases_subject_hint_restricted}" />
-							<xsl:text> </xsl:text>
 						</xsl:when>
 						<xsl:otherwise>
 							<!-- if no user logged in, or user logged in and they can
@@ -640,6 +639,7 @@
 							</xsl:element>
 						</xsl:otherwise>
 					</xsl:choose>
+					<xsl:text> </xsl:text>
 				</xsl:when>
 				<xsl:otherwise>
 					<img src="{$base_url}/images/link-out.gif" alt="" title="{$text_databases_subject_hint_native_only}"/>
