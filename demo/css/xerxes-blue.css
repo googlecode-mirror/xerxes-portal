@@ -377,6 +377,18 @@ table.reorderTable td {
 	padding: 1em;
 }
 
+#collectionsPublicURL {
+	border: 1px solid #FFCC00;
+	background-color: #FFFFCC;
+	padding: .5em;
+}
+
+.addDatabase {
+	background-image: url(../images/famfamfam/add.gif);
+	background-repeat: no-repeat;
+	padding-left: 18px;
+}
+
 
 /** AUTHENTICATION **/
 
