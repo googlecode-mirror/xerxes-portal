@@ -622,7 +622,7 @@
 					<xsl:choose>
 						<xsl:when test="$should_lock_nonsearchable	and searchable_by_user != '1'" >
 							<!-- if we have a logged in user (or a registered guest), but they can't search this, show them a lock. -->			
-							<img src="{$base_url}/images/lock.png" alt="" title="{$text_databases_subject_hint_restricted}" />
+							<img src="{$base_url}/images/lock.png" alt="{$text_databases_subject_hint_restricted}" title="{$text_databases_subject_hint_restricted}" />
 						</xsl:when>
 						<xsl:otherwise>
 							<!-- if no user logged in, or user logged in and they can
@@ -642,7 +642,7 @@
 					<xsl:text> </xsl:text>
 				</xsl:when>
 				<xsl:otherwise>
-					<img src="{$base_url}/images/link-out.gif" alt="" title="{$text_databases_subject_hint_native_only}"/>
+					<img src="{$base_url}/images/link-out.gif" alt="{$text_databases_subject_hint_restricted}" title="{$text_databases_subject_hint_native_only}"/>
 					<xsl:text> </xsl:text>
 				</xsl:otherwise>
 				</xsl:choose>
@@ -672,9 +672,9 @@
 				</span>
 					
 				<span class="subjectDatabaseInfo">
-					<a title="{$text_databases_subject_hint_more_info_about} {title_display}">
+					<a  title="{$text_databases_subject_hint_more_info_about} {title_display}">
 					<xsl:attribute name="href"><xsl:value-of select="url" /></xsl:attribute>
-					<img src="images/info.gif" >
+					<img src="images/info.gif" alt="{$text_databases_subject_hint_more_info_about} {title_display}">
 						<xsl:attribute name="src"><xsl:value-of select="//config/base_url" />/images/info.gif</xsl:attribute>
 					</img>
 					</a>
