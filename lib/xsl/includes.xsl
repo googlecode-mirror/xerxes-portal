@@ -421,7 +421,7 @@
 		
 		<xsl:if test="results/search/spelling != ''">
 			<xsl:variable name="spell_url" select="results/search/spelling_url" />
-			<p class="error"><xsl:copy-of select="$text_searchbox_spelling_error" />
+			<p id="spellSuggest" class="error"><xsl:copy-of select="$text_searchbox_spelling_error" />
 			<a href="{$spell_url}"><xsl:value-of select="//spelling" /></a></p>
 		</xsl:if>
 	
