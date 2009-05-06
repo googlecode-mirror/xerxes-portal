@@ -53,20 +53,20 @@
 	<h1><xsl:call-template name="page_name" /></h1>
 	
 	<xsl:if test="not(/*/category/@owned_by_user = //session/username)">
-		<p>Created by <xsl:value-of select="/*/category/@owned_by_user" /></p>
+		<p><xsl:copy-of select="$text_collections_created_by" /></p>
 	</xsl:if>
 	
 	<xsl:if test="$user_can_edit" >
 		<div class="editSubject">
 			[
-			<a href="{/*/category/edit_url}">Edit</a>
+			<a href="{/*/category/edit_url}"><xsl:copy-of select="$text_collections_edit" /></a>
 			<xsl:text> | </xsl:text>
 			<xsl:choose>
 				<xsl:when test="/*/category/@published = '1'">
-					<span class="publishedStatus">Public</span>
+					<span class="publishedStatus"><xsl:copy-of select="$text_collections_public" /></span>
 				</xsl:when>
 				<xsl:otherwise>
-					<span class="privateStatus">Private</span>
+					<span class="privateStatus"><xsl:copy-of select="$text_collections_private" /></span>
 				</xsl:otherwise>
 			</xsl:choose>
 			]
@@ -87,9 +87,11 @@
 	<!-- no databases added yet -->
 	
 	<xsl:if test="$user_can_edit and count(/*/category/subcategory/database) = 0">
-		<a href="./?base=collections&amp;action=edit_form&amp;username={category/@owned_by_user}&amp;subject={category/@normalized}&amp;add_to_subcategory={category/subcategory/@id}#section_{category/subcategory/@id}">
-		<img src="{$base_url}/images/famfamfam/add.png" alt="" /><xsl:text> Add databases</xsl:text>
-		</a>
+		<span class="addDatabase">
+			<a href="./?base=collections&amp;action=edit_form&amp;username={category/@owned_by_user}&amp;subject={category/@normalized}&amp;add_to_subcategory={category/subcategory/@id}#section_{category/subcategory/@id}">
+				<xsl:copy-of select="$text_collections_add_database" />
+			</a>
+		</span>
 	</xsl:if>
 	
 	<xsl:if test="not($user_can_edit and count(/*/category/subcategory/database) = 0)">

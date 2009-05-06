@@ -23,6 +23,26 @@
 	
 	<xsl:variable name="text_breadcrumb_seperator"> / </xsl:variable>
 	
+	<xsl:variable name="text_collections_created_by">Created by <xsl:value-of select="/*/category/@owned_by_user" /></xsl:variable>
+	<xsl:variable name="text_collections_edit">Edit</xsl:variable>
+	<xsl:variable name="text_collections_public">Public</xsl:variable>
+	<xsl:variable name="text_collections_private">Private</xsl:variable>
+	<xsl:variable name="text_collections_add_database">Add databases</xsl:variable>
+	<xsl:variable name="text_collections_remove_searchbox">remove search box</xsl:variable>
+	
+	<xsl:variable name="text_collections_done_editing">I'm done editing!</xsl:variable>
+	<xsl:variable name="text_collections_public_url">Public URL:</xsl:variable>
+	<xsl:variable name="text_collections_change_name">Change collection name</xsl:variable>
+	<xsl:variable name="text_collections_delete_collection">Delete collection</xsl:variable>
+	<xsl:variable name="text_collections_publish">Make collection:</xsl:variable>
+	<xsl:variable name="text_collections_change_section_order">Change section order</xsl:variable>
+	<xsl:variable name="text_collections_add_section">Add a new section:</xsl:variable>
+	<xsl:variable name="text_collections_change_section_name">Change section name</xsl:variable>
+	<xsl:variable name="text_collections_delete_section">Delete section</xsl:variable>
+	<xsl:variable name="text_collections_change_database_order">Change database order</xsl:variable>
+	<xsl:variable name="text_collections_list_databases">List databases matching: </xsl:variable>
+	<xsl:variable name="text_collections_no_matches">No databases found matching</xsl:variable>	
+	
 	<xsl:variable name="text_database_availability">Availability:</xsl:variable>
 	<xsl:variable name="text_database_available_registered">Only available to registered users.</xsl:variable>
 	<xsl:variable name="text_database_available_everyone">Available to everyone.</xsl:variable>
@@ -278,6 +298,14 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
+	
+	<xsl:template name="text_collections_add_database_section">
+		add database <xsl:value-of select="title_display" /> to this section
+	</xsl:template>
+	
+	<xsl:variable name="text_collections_remove_database">
+		remove database <xsl:value-of select="title_display" /> from section
+	</xsl:variable>
 	
 	<!-- 
 		the templates deal with text labels that are in the XML itself.  they largely
