@@ -420,7 +420,7 @@
 			
 			### GET REQUEST (NON-PROXY)
 			
-			if ( $data == null && $proxy == null )
+			if ( $data == null && $proxy == null && $curl == null )
 			{
 				return file_get_contents($url);
 			}
