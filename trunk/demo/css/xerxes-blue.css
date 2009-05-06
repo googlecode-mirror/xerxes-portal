@@ -215,6 +215,10 @@ a:hover {
 	padding-right: 2.2em;
 }
 
+#spellSuggest {
+	margin: 1em;
+}
+
 #databasesSearch {
 	margin-bottom: 3em;
 }
