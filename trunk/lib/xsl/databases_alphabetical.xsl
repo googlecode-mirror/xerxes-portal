@@ -128,8 +128,11 @@
 							<xsl:attribute name="src"><xsl:value-of select="/knowledge_base/config/base_url" />/images/info.gif</xsl:attribute>
 						</img>						
 						<xsl:text> </xsl:text>
-						<img alt="searchable by {$app_name}" title="{$text_databases_az_hint_searchable}" id="iconSearchable"
-							 src="{$base_url}/images/famfamfam/magnifier.png"/>
+            
+            <xsl:if test="searchable">
+              <img alt="searchable by {$app_name}" title="{$text_databases_az_hint_searchable}" id="iconSearchable"
+                 src="{$base_url}/images/famfamfam/magnifier.png"/>
+            </xsl:if>
 					</a>
 					
 					<xsl:if test="count(group_restriction) > 0" >
