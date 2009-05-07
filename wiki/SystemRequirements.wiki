@@ -13,12 +13,12 @@ And will optionally require these PHP extensions:
 
  * ldap – if you plan to authenticate users against a directory server
  * openssl - if you plan to use CAS authentication
- * curl - if you need Xerxes to route all http traffic through an http proxy
+ * curl - if you need Xerxes to use an http proxy or need curl for security reasons
 
 
 ==MySQL 5.0 or higher==
 
-Right now, I only have SQL scripts to create the tables in MySQL 5.  The tables are straight forward and require no specific features of MySQL 5, so it should be simple to port the scripts to another RDBMS by simply changing some of the data types.
+Right now, we only have SQL scripts to create the tables in MySQL 5.  The tables are straight forward and require no specific features of MySQL 5, so it should be simple to port the scripts to another RDBMS by simply changing some of the data types.
 
 ==Web Server==
 
