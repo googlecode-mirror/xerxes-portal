@@ -50,13 +50,19 @@
 
 ==domain==
 
+==email_from==
+
 ==ezp_exp_domain_avoid==
 
 ==ezp_exp_resourceid_omit==	
 
 ==ezp_exp_default_group==
 
+==facets==
+
 ==group==
+
+==holdings_links==
 
 ==http_proxy_server==
 
@@ -66,6 +72,8 @@
 
 ==http_use_curl==
 
+==immediately_show_merged_results==
+
 ==innovative_patron_api==
 		
 ==innovative_patron_types==
@@ -74,7 +82,13 @@
 
 ==link_resolver_address==
 
+==link_target==
+
+
+
 ==local_ip_range==
+
+==logout_url==
 
 ==marc_fields_brief==
 
@@ -88,6 +102,10 @@
 
 ==metalib_institute==	
 
+==normalize_query==
+
+==original_record_links==
+
 ==proxy_server==
 
 ==records_per_page==
@@ -96,53 +114,27 @@
 
 ==saved_records_per_page==
 
+==search_limit==
+
+==search_progress_cap==
+
+==secure_login==
+
+==shib_username_header==
+
+==show_all_holdings_links==
+
 ==show_db_detail_search==
 
 ==sort_order_primary==
 
 ==sort_order_secondary==
 
-==secure_login==
-		
-==shib_username_header==
-
 ==subcategories_include==
-
 
 ==template==
 
 ==yahoo_id==
-
-
-		
-
-		
-
-		
-==link_target==
-		
-==show_all_holdings_links==
-
-==holdings_links==
-
-==original_record_links==
-		
-==search_limit==
-		
-==email_from==
-		
-		
-==logout_url==
-		
-==normalize_query==
-
-==search_progress_cap==
-		
-==immediately_show_merged_results==
-		
-==facets==
-
-
 		
 ==xerxes_brief_include_marc==
 		
