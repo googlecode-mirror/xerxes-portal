@@ -375,6 +375,7 @@ ul.editCommands li {
 	list-style: square;
 	padding: .3em;
 	color: #000;
+  list-style-type: none;
 }
 
 .editSubject {
