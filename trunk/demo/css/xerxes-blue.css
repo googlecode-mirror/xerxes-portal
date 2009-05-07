@@ -198,6 +198,10 @@ a:hover {
 	border-left-color: #CCCCCC;
 }
 
+.miniIcon {
+  vertical-align:middle; 
+}
+
 /** BREADCRUMBS **/
 
 #breadcrumb {
