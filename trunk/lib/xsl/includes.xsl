@@ -1035,15 +1035,15 @@
 			
 				<xsl:choose>
 					<xsl:when test="@type = 'pdf'">
-						<img src="{$base_include}/images/pdf.gif" alt="" width="16" height="16" border="0" /> 
+						<img src="{$base_include}/images/pdf.gif" alt="" width="16" height="16" border="0" class="miniIcon fullTextLink pdf"/> 
 						<xsl:copy-of select="$text_records_fulltext_pdf" />
 					</xsl:when>
 					<xsl:when test="@type = 'html'">
-						<img src="{$base_include}/images/html.gif" alt="" width="16" height="16" border="0" /> 
+						<img src="{$base_include}/images/html.gif" alt="" width="16" height="16" border="0" class="miniIcon fullTextLink html"/> 
 						<xsl:copy-of select="$text_records_fulltext_html" />
 					</xsl:when>
 					<xsl:otherwise>
-						<img src="{$base_include}/images/html.gif" alt="" width="16" height="16" border="0" /> 
+						<img src="{$base_include}/images/html.gif" alt="" width="16" height="16" border="0" class="miniIcon fullTextLink unknown"/> 
 						<xsl:copy-of select="$text_records_fulltext_available" />
 					</xsl:otherwise>
 				</xsl:choose>
@@ -1082,7 +1082,7 @@
 			</xsl:attribute>
 		
 			<xsl:if test="$img_src">      
-				<img src="{$img_src}" alt="" />
+				<img src="{$img_src}" alt="" class="miniIcon {$type}Link"/>
 			</xsl:if>
 			
 			<xsl:text> </xsl:text>
@@ -1535,7 +1535,7 @@
 						<xsl:when test="$link_resolver_allowed and //fulltext/issn = standard_numbers/issn">
 							<div class="resultsAvailableOption">
 								<a href="{../url_open}&amp;fulltext=1" target="{$link_target}" >
-									<img src="{$base_include}/images/html.gif" alt="" width="16" height="16" border="0" />
+									<img src="{$base_include}/images/html.gif" alt="" width="16" height="16" border="0" class="miniIcon linkResolverLink"/>
 									<xsl:text> </xsl:text>
 									<xsl:copy-of select="$text_link_resolver_available" />
 								</a>
@@ -1545,7 +1545,7 @@
 						<xsl:when test="$link_resolver_allowed">
 							<div class="resultsAvailableOption">
 								<a href="{../url_open}" target="{$link_target}" >
-									<img src="{$base_url}/images/sfx.gif" alt="" />
+									<img src="{$base_url}/images/sfx.gif" alt="" class="miniIcon linkResolverLink "/>
 									<xsl:text> </xsl:text>
 									<xsl:copy-of select="$text_link_resolver_check" />
 								</a>
@@ -1567,7 +1567,7 @@
 						
 						<xsl:when test="embeddedText/paragraph">
 							<a href="{../url_full}">
-							<img src="{$base_url}/images/famfamfam/page_go.png" alt="" />
+							<img src="{$base_url}/images/famfamfam/page_go.png" alt="" class="miniIcon text_link"/>
 								Text in record
 							</a>
 						</xsl:when>
@@ -1591,7 +1591,7 @@
 							<!-- save facility in metasearch area -->
 							
 							<div class="resultsAvailableOption" id="saveRecordOption_{$result_set}_{$record_number}">
-								<img id="folder_{$result_set}{$record_number}"	width="17" height="15" alt="" border="0" >
+								<img id="folder_{$result_set}{$record_number}"	width="17" height="15" alt="" border="0" class="miniIcon saveRecordLink">
 								<xsl:attribute name="src">
 									<xsl:choose> 
 										<xsl:when test="//request/session/resultssaved[@key = $record_id]">images/folder_on.gif</xsl:when>
@@ -1648,7 +1648,7 @@
 						
 							<div class="folderAvailability">
 								<a class="deleteRecord resultsFullText" href="{../url_delete}">
-									<img src="{$base_url}/images/delete.gif" alt="" border="0" />
+									<img src="{$base_url}/images/delete.gif" alt="" border="0" class="miniIcon deleteRecordLink"/>
 									<xsl:copy-of select="$text_results_record_delete" />
 								 </a>
 							</div>
