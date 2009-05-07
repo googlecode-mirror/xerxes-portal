@@ -964,6 +964,22 @@
 		
 		<!-- add behaviors to edit collection dialog, currently just delete confirm -->
 		<script src="{$base_include}/javascript/collections.js" language="javascript" type ="text/javascript"></script>
+    
+    <!-- umlaut content on record detail page, when so configured -->
+    <xsl:if test="//config/umlaut_base and ( request/base='metasearch' and request/action = 'record' ) or (request/base='folder' and request/action = 'full')">
+      <!-- Need to set the OpenURL kev context object in a global js variable,
+           so the script can get it. -->
+      <script language="javascript" type="text/javascript">
+        openurl_kev_co = '<xsl:value-of select="//records/record[1]/openurl_kev_co"/>'; 
+        umlaut_base = '<xsl:value-of select="//config/umlaut_base"/>';
+      </script>
+      
+      <!-- and now call the script that will set things up for umlaut -->
+      <script language="javascript" type="text/javascript" src="{$base_include}/javascript/umlaut_record_detail.js"/>     
+      
+      <!-- and now actually call umlaut itself to do the js magic -->
+      <script type="text/javascript" src="{//config/umlaut_base}/javascripts/embed/umlaut-embed.js"></script>
+    </xsl:if>
 		
 	</xsl:if>
   	
@@ -1180,22 +1196,22 @@
 	<div id="snippet" class="box">
 		<h2><xsl:copy-of select="$text_header_embed" /></h2>
 
-		<p>
+		<ul>
 		<xsl:if test="request/base = 'databases' and request/action = 'subject'">
 			<xsl:variable name="subject" select="//category/@normalized" />
-			[ <a href="./?base=embed&amp;action=gen_subject&amp;subject={$subject}"><xsl:copy-of select="$text_header_snippet_generate" /></a> ]
+			<li> <a href="./?base=embed&amp;action=gen_subject&amp;subject={$subject}"><xsl:copy-of select="$text_header_snippet_generate" /></a> </li>
 		</xsl:if>
 		
 		<xsl:if test="request/base = 'databases' and request/action = 'database'">
 			<xsl:variable name="id" select="//database[1]/metalib_id" />
-			[ <a href="./?base=embed&amp;action=gen_database&amp;id={$id}"><xsl:copy-of select="$text_header_snippet_generate" /></a> ]
+			<li> <a href="./?base=embed&amp;action=gen_database&amp;id={$id}"><xsl:copy-of select="$text_header_snippet_generate" /></a> </li>
 		</xsl:if>
 		
 		<xsl:if test="request/base = 'collections' and (request/action = 'subject' or request/action = 'edit_form')">
-			[ <a href="./?base=collections&amp;action=gen_embed&amp;username={//category[1]/@owned_by_user}&amp;subject={//category[1]/@normalized}"><xsl:copy-of select="$text_header_snippet_generate" /></a> ]
+			<li> <a href="./?base=collections&amp;action=gen_embed&amp;username={//category[1]/@owned_by_user}&amp;subject={//category[1]/@normalized}"><xsl:copy-of select="$text_header_snippet_generate" /></a> </li>
 		</xsl:if>
 		
-		</p>
+		</ul>
 	</div>
 	
 </xsl:template>
