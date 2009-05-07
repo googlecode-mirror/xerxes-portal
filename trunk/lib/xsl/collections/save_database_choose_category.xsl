@@ -23,6 +23,19 @@
 
 <xsl:template name="page_name">Save to personal collection</xsl:template>
 
+<xsl:template name="breadcrumb">
+  <xsl:call-template name="breadcrumb_databases" />
+  <a href="{/*/databases/database/url}">
+    <xsl:value-of select="/*/databases/database/title_display" />
+  </a> <xsl:copy-of select="$text_breadcrumb_seperator" />
+  <xsl:call-template name="page_name"/>
+</xsl:template>
+
+<xsl:template name="sidebar">
+    <xsl:call-template name="account_sidebar"/>
+    <xsl:call-template name="collections_sidebar"/>
+</xsl:template>
+
 <xsl:template name="main">
 
 <!-- load js globals with some string variables the js will need -->
@@ -32,9 +45,7 @@ collection_default_new_section_name = '<xsl:value-of select="$text_collection_de
 </script>
 
 <div id="container">
-  <div id="sidebar_float" class="sidebar_float">
-    <xsl:call-template name="account_sidebar"/>
-  </div>
+
 
   <div id="searchArea">
   

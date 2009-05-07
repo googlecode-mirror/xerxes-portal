@@ -16,6 +16,14 @@
 	Save to personal collection <xsl:value-of select="/*/category/@name" />
 </xsl:template>
 
+<xsl:template name="breadcrumb">
+  <xsl:call-template name="breadcrumb_databases" />
+  <a href="{/*/databases/database/url}">
+    <xsl:value-of select="/*/databases/database/title_display" />
+  </a> <xsl:copy-of select="$text_breadcrumb_seperator" />
+  <xsl:call-template name="page_name"/>
+</xsl:template>
+
 <xsl:template name="sidebar">
 	<xsl:call-template name="account_sidebar"/>
 	<xsl:call-template name="collections_sidebar"/>
