@@ -510,7 +510,14 @@
 				<view>xsl/metasearch_record.xsl</view>
 			</action>
 		</section>
-		
+    
+    <!-- umlaut proxy for cross-domain javascript -->
+		<section name="umlaut" directory="umlaut" namespace="Xerxes" documentElement="xerxes">
+      <action name="proxy">
+        <command>UmlautProxy</command>
+      </action>
+
+    </section>		
 		<!-- mango is experimental in 1.5 -->
 
 		<section name="books" directory="mango" namespace="Mango" documentElement="metasearch" restricted="true">
