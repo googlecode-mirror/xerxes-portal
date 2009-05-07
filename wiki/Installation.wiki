@@ -1,10 +1,12 @@
 #summary 2. Manual installation
 
+==Videos==
 
-[http://library.calstate.edu/media/zip/install.zip Installing Xerxes screen cast] (.wmv)
+The screencasts below provide a visual walk-through of installing and setting-up Xerxes.  They are for somewhat older versions of Xerxes, but the steps are basically the same.
 
-[http://library.calstate.edu/media/zip/config.zip Advanced configuration screen cast] (.wmv)
+ [http://blip.tv/file/2085080 Part 1: Installing Xerxes ]
 
+ [http://blip.tv/file/2085110 Part 2: Advanced configuration]
 
 
 
