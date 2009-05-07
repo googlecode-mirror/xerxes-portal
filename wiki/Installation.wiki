@@ -1,8 +1,16 @@
 #summary 2. Manual installation
 
+
+[http://library.calstate.edu/media/zip/install.zip Installing Xerxes screen cast] (.wmv)
+
+[http://library.calstate.edu/media/zip/config.zip Advanced configuration screen cast] (.wmv)
+
+
+
+
 ==1. Download the code==
  
-You can check out the latest code from SVN or grab the .zip in the downloads section
+You can check out the latest stable code from SVN using the most recent branch, or grab the .zip in the downloads section
 
 ==2. Inspect the contents of the .zip file==
  
