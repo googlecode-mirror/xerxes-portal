@@ -77,7 +77,7 @@ Make sure to change the path accordingly. That should populate the local sfx tab
 Eventually you will want to have Xerxes automatically refresh the Metalib KB and SFX 
 institutional holding data on a regular basis.  
 
-I assume here you know how to add items to Linux crontab or Window's ScheduledTasks in order to do this.  I always make a batch file that issues the php command, and then add a crontab entry that calls the batch file.  You could just add the php command directly to the crontab if you prefer.
+I assume here you know how to add items to Linux crontab or Windows ScheduledTasks in order to do this.  I always make a batch file that issues the php command, and then add a crontab entry that calls the batch file.  You could just add the php command directly to the crontab if you prefer.
 
 I run the Metalib KB pull every hour during normal daylight hours -- that is, the time when people are most likely making changes.  We run the SFX pull at the same frequency as the institutional holding export cron on SFX, which we have set to once a week.
 
