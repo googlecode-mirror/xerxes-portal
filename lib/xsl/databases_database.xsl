@@ -79,7 +79,7 @@
 		</xsl:if>
 		
 		<div id="saveDatabase">
-			<a href="{add_to_collection_url}"><xsl:copy-of select="$text_database_save_database" /></a>
+			<a href="{add_to_collection_url}" class="iconCommand add"><xsl:copy-of select="$text_database_save_database" /></a>
 		</div>
 		
 		<div class="databasesDescription">
