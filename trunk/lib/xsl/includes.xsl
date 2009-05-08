@@ -1199,16 +1199,16 @@
       <ul>
       <xsl:if test="request/base = 'databases' and request/action = 'subject'">
         <xsl:variable name="subject" select="//category/@normalized" />
-        <li> <a href="./?base=embed&amp;action=gen_subject&amp;subject={$subject}"><xsl:copy-of select="$text_header_snippet_generate" /></a> </li>
+        <li> <a href="./?base=embed&amp;action=gen_subject&amp;subject={$subject}"><xsl:copy-of select="$text_header_snippet_generate_subject" /></a> </li>
       </xsl:if>
       
       <xsl:if test="request/base = 'databases' and request/action = 'database'">
         <xsl:variable name="id" select="//database[1]/metalib_id" />
-        <li> <a href="./?base=embed&amp;action=gen_database&amp;id={$id}"><xsl:copy-of select="$text_header_snippet_generate" /></a> </li>
+        <li> <a href="./?base=embed&amp;action=gen_database&amp;id={$id}"><xsl:copy-of select="$text_header_snippet_generate_database" /></a> </li>
       </xsl:if>
       
       <xsl:if test="request/base = 'collections' and (request/action = 'subject' or request/action = 'edit_form')">
-        <li> <a href="./?base=collections&amp;action=gen_embed&amp;username={//category[1]/@owned_by_user}&amp;subject={//category[1]/@normalized}"><xsl:copy-of select="$text_header_snippet_generate" /></a> </li>
+        <li> <a href="./?base=collections&amp;action=gen_embed&amp;username={//category[1]/@owned_by_user}&amp;subject={//category[1]/@normalized}"><xsl:copy-of select="$text_header_snippet_generate_collection" /></a> </li>
       </xsl:if>
       
       </ul>

@@ -144,7 +144,11 @@
 	<xsl:variable name="text_header_embed">Embed</xsl:variable>
 	<xsl:variable name="text_header_facets">Limit top results by:</xsl:variable>
 	
-	<xsl:variable name="text_header_snippet_generate">Generate snippet</xsl:variable>
+	<xsl:variable name="text_header_snippet_generate">Embed</xsl:variable>
+  <xsl:variable name="text_header_snippet_generate_database"><xsl:copy-of select="$text_header_snippet_generate"/><xsl:text> </xsl:text><xsl:copy-of select="$text_record_database"/></xsl:variable>
+  <xsl:variable name="text_header_snippet_generate_subject"><xsl:copy-of select="$text_header_snippet_generate"/> Subject</xsl:variable>
+  <xsl:variable name="text_header_snippet_generate_collection"><xsl:copy-of select="$text_header_snippet_generate"/> Collection</xsl:variable>
+  
 	
 	<xsl:variable name="text_link_holdings">Availability</xsl:variable>
 	<xsl:variable name="text_link_original_record">Original record</xsl:variable>
