@@ -37,7 +37,7 @@
     </script>
     <script src="{$base_url}/javascript/save.js" language="javascript" type="text/javascript" />
       
-    <div id="xerxes_outer_wrapper">
+    <div class="xerxes_outer_wrapper">
       <form name="form1" method="get" action="{$base_url}/" class="metasearchForm">
         <input type="hidden" name="base" value="metasearch" />
         <input type="hidden" name="action" value="search" />
@@ -52,7 +52,7 @@
         
         <xsl:if test="$disp_show_title">
           <div class="heading">
-              <h3 class="xerxes_heading"><xsl:value-of select="//category/@name" /></h3>
+              <h2 class="xerxes_heading"><xsl:value-of select="//category/@name" /></h2>
           </div>
         </xsl:if>
         

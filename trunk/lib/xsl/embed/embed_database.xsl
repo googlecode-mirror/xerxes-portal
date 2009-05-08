@@ -39,7 +39,7 @@
 
 
     
-    <div id="xerxes_outer_wrapper">
+    <div class="xerxes_outer_wrapper">
         <div class="alphaTitle">
               
           <span class="heading">

@@ -6,16 +6,44 @@
   
  */
 
-#xerxes_outer_wrapper a { text-decoration: none; }
-#xerxes_outer_wrapper a:visited { color: #0000CC; text-decoration: none; }
-#xerxes_outer_wrapper a:active { color: #003399; text-decoration: none; }
-#xerxes_outer_wrapper a:hover { text-decoration: underline; }
-#xerxes_outer_wrapper a img{  border: 0px; }
 
-#xerxes_outer_wrapper .searchBox {
-	padding: 20px;
-	margin: 0px;
-	background-color: #fff;
+.xerxes_outer_wrapper {
+ font-size: 13px;
+}
+.xerxes_outer_wrapper a { text-decoration: none; }
+.xerxes_outer_wrapper a:visited {  text-decoration: none; }
+.xerxes_outer_wrapper a:active {  text-decoration: none; }
+.xerxes_outer_wrapper a:hover { text-decoration: underline; }
+.xerxes_outer_wrapper img, .xerxes_outer_wrapper fieldset {  
+  border: 0 none; 
+}
+
+.xerxes_outer_wrapper #searchBox { 
+  display:table;
+  margin-bottom:3em;
+  padding-bottom:1em;
+  padding-right:2.2em;
+}
+
+.xerxes_outer_wrapper #searchLabel {
+	float:left; 
+	padding-top: .3em;
+}
+
+.xerxes_outer_wrapper #searchInputs {
+	margin-left: 4.3em;
+}
+
+.xerxes_outer_wrapper #metasearch_input_toggle {
+	margin-top: 1em;
+}
+
+.xerxes_outer_wrapper #searchBox_advanced_newline {
+	margin-top: .2em;
+}
+
+.xerxes_outer_wrapper .raisedBox {
+	padding: 1.8em;
 	background-image: url(../images/bg.gif);
 	background-repeat: repeat-x;
 	background-position: bottom;
@@ -32,24 +60,40 @@
 	border-bottom-color: #999999;
 	border-left-color: #CCCCCC;
 }
+  
 
-#xerxes_outer_wrapper .subjectSubCategory {
-	border: 1px solid #CCCCCC; 
-	padding: 10px; 
-	margin-top: 20px;
-}
 
-#xerxes_outer_wrapper .subjectSubcategory legend {
+.xerxes_outer_wrapper .subjectSubcategory legend {
 	font-family: Arial, Verdana, Geneva, Arial, helvetica, sans-serif; 
-	color: #3366cc; 
-	font-size: 14px; 
-	font-weight: bold; 
-	margin-bottom: 2px; 
+  font-size:110%;
+  font-weight:bold;
+  padding:1em;
+  margin: 0;
 }
 
-#xerxes_outer_wrapper .ada {
+.xerxes_outer_wrapper .subjectSubCategory li {
+  padding-bottom:0.3em;
+}
+
+.xerxes_outer_wrapper .subjectSubCategory input {
+  margin:0;
+  padding:0; 
+}
+
+.xerxes_outer_wrapper .subjectSubCategory ul {
+  border-left:2px solid #CCCCCC;
+  margin:0.7em;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left:1em;
+  padding-bottom: 0.3em;
+  list-style-image:none;
+  list-style-position:outside;
+  list-style-type:none;
+}
+
+.xerxes_outer_wrapper .ada, .xerxes_outer_wrapper #skipnav {
 	position: absolute; 
-	left: -500px; 
-	top: -5000px
+	top: -1000px; 
 }
 
