@@ -24,7 +24,7 @@
 	<xsl:variable name="text_breadcrumb_seperator"> / </xsl:variable>
 	
 	<xsl:variable name="text_collections_created_by">Created by <xsl:value-of select="/*/category/@owned_by_user" /></xsl:variable>
-	<xsl:variable name="text_collections_edit">Edit</xsl:variable>
+	<xsl:variable name="text_collections_edit">Add databases and Edit</xsl:variable>
 	<xsl:variable name="text_collections_public">Public</xsl:variable>
 	<xsl:variable name="text_collections_private">Private</xsl:variable>
 	<xsl:variable name="text_collections_add_database">Add databases</xsl:variable>
