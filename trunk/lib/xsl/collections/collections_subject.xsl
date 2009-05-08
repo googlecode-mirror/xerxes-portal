@@ -83,16 +83,6 @@
 		(not($should_lock_nonsearchable) and count(/*/category/subcategory/database/searchable[. = '1']) &gt; 0)">
 		<xsl:call-template name="search_box" />
 	</xsl:if>
-
-	<!-- no databases added yet -->
-	
-	<xsl:if test="$user_can_edit and count(/*/category/subcategory/database) = 0">
-		<span class="addDatabase">
-			<a href="./?base=collections&amp;action=edit_form&amp;username={category/@owned_by_user}&amp;subject={category/@normalized}&amp;add_to_subcategory={category/subcategory/@id}#section_{category/subcategory/@id}">
-				<xsl:copy-of select="$text_collections_add_database" />
-			</a>
-		</span>
-	</xsl:if>
 	
 	<xsl:if test="not($user_can_edit and count(/*/category/subcategory/database) = 0)">
 		<xsl:call-template name="subject_databases_list" />

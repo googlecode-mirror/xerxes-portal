@@ -404,12 +404,6 @@ ul.addDatabasesMatches {
   overflow-y:auto;
 }
 
-.addDatabase {
-	background-image: url(../images/famfamfam/add.gif);
-	background-repeat: no-repeat;
-	padding-left: 18px;
-}
-
 
 /** AUTHENTICATION **/
 
