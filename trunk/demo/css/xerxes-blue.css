@@ -430,6 +430,7 @@ ul.editCommands > li, div.editCommands > ul > li {
 	margin-bottom: 1.25em;
 }
 
+
 table.reorderTable td {
 	padding: 1em;
 }
@@ -543,17 +544,18 @@ ul.addDatabasesMatches {
 	margin-bottom: .7em;
 }
 
-.resultsAuthor, .resultsYear, .resultsPublishing, .resultsAvailableOption {
+.resultsAuthor, .resultsYear, .resultsPublishing {
 	display: block;
-	margin-bottom: .3em;
+	margin-bottom: 0.35em;
 }
 
-.resultsAvailability {
-	margin-top: .5em;
+/* eliminated/deprecated classes: resultsAvailability resultsFullText saveThisRecord .resultsFullTextOption, .resultsAvailableOption, .recordFullTextOption recordOptions  */
+.recordActions {
+	margin-top: .7em;
 }
-
-.resultsFullTextOption, .resultsAvailableOption, .recordFullTextOption {
-	margin-bottom: .25em;
+ .recordAction {
+  display: block;
+	margin-bottom: 0.35em;
 }
 
 .folderLabels {
