@@ -530,7 +530,7 @@
 	<xsl:param name="id" select="$record/id" /> 
 	<xsl:param name="context">the saved records page</xsl:param>
 
-	<div class="folderLabels" id="tag_input_div-{$id}">
+	<div class="folderLabels recordAction" id="tag_input_div-{$id}">
 		<form action="./" method="get" class="tags">
 		
 			<!-- note that if this event is fired with ajax, the javascript changes
@@ -1030,20 +1030,23 @@
 					</xsl:choose>
 				</xsl:attribute>
 				
-				<xsl:attribute name="class">resultsFullText</xsl:attribute>
+				<xsl:attribute name="class">recordAction <xsl:value-of select="@type"/></xsl:attribute>
 				<xsl:attribute name="target"><xsl:value-of select="$link_target" /></xsl:attribute>
 			
 				<xsl:choose>
 					<xsl:when test="@type = 'pdf'">
-						<img src="{$base_include}/images/pdf.gif" alt="" width="16" height="16" border="0" class="miniIcon fullTextLink pdf"/> 
+						<img src="{$base_include}/images/pdf.gif" alt="" width="16" height="16" border="0" class="miniIcon fullTextLink pdf"/>
+            <xsl:text> </xsl:text>
 						<xsl:copy-of select="$text_records_fulltext_pdf" />
 					</xsl:when>
 					<xsl:when test="@type = 'html'">
-						<img src="{$base_include}/images/html.gif" alt="" width="16" height="16" border="0" class="miniIcon fullTextLink html"/> 
+						<img src="{$base_include}/images/html.gif" alt="" width="16" height="16" border="0" class="miniIcon fullTextLink html"/>
+            <xsl:text> </xsl:text>
 						<xsl:copy-of select="$text_records_fulltext_html" />
 					</xsl:when>
 					<xsl:otherwise>
-						<img src="{$base_include}/images/html.gif" alt="" width="16" height="16" border="0" class="miniIcon fullTextLink unknown"/> 
+						<img src="{$base_include}/images/html.gif" alt="" width="16" height="16" border="0" class="miniIcon fullTextLink unknown"/>
+            <xsl:text> </xsl:text>
 						<xsl:copy-of select="$text_records_fulltext_available" />
 					</xsl:otherwise>
 				</xsl:choose>
@@ -1062,7 +1065,7 @@
 	 
 <xsl:template name="record_link">
     <xsl:param name="type" />
-  	<xsl:param name="class">resultsFullText</xsl:param>
+  	<xsl:param name="class">recordAction <xsl:value-of select="$type"/></xsl:param>
     <xsl:param name="text" select="$type"/>
     <xsl:param name="img_src"/>
     
@@ -1516,7 +1519,7 @@
 					</span>
 				</xsl:if>
 				
-				<div class="resultsAvailability recordOptions">
+				<div class="recordActions">
 					
 					<!-- full-text -->
 					
@@ -1526,30 +1529,24 @@
 					
 						<xsl:when test="full_text_bool">
 							
-							<xsl:call-template name="full_text_links">
-								<xsl:with-param name="class">resultsFullTextOption</xsl:with-param>
-							</xsl:call-template>
+							<xsl:call-template name="full_text_links"/>							
 								
 						</xsl:when>
 						
 						<xsl:when test="$link_resolver_allowed and //fulltext/issn = standard_numbers/issn">
-							<div class="resultsAvailableOption">
-								<a href="{../url_open}&amp;fulltext=1" target="{$link_target}" >
+								<a href="{../url_open}&amp;fulltext=1" target="{$link_target}" class="recordAction linkResolverLink">
 									<img src="{$base_include}/images/html.gif" alt="" width="16" height="16" border="0" class="miniIcon linkResolverLink"/>
 									<xsl:text> </xsl:text>
 									<xsl:copy-of select="$text_link_resolver_available" />
 								</a>
-							</div>
 						</xsl:when>
 						
 						<xsl:when test="$link_resolver_allowed">
-							<div class="resultsAvailableOption">
-								<a href="{../url_open}" target="{$link_target}" >
+								<a href="{../url_open}" target="{$link_target}" class="recordAction linkResoverLink">
 									<img src="{$base_url}/images/sfx.gif" alt="" class="miniIcon linkResolverLink "/>
 									<xsl:text> </xsl:text>
 									<xsl:copy-of select="$text_link_resolver_check" />
 								</a>
-							</div>
 						</xsl:when>
 						
 						<!-- if no direct link or link resolver, do we have an original record link? -->
@@ -1566,8 +1563,8 @@
 						if none of the above, but we DO have text in the record, tell them so. -->
 						
 						<xsl:when test="embeddedText/paragraph">
-							<a href="{../url_full}">
-							<img src="{$base_url}/images/famfamfam/page_go.png" alt="" class="miniIcon text_link"/>
+							<a href="{../url_full}" class="recordAction textLink">
+							<img src="{$base_url}/images/famfamfam/page_go.png" alt="" class="miniIcon textLink"/>
 								Text in record
 							</a>
 						</xsl:when>
@@ -1576,13 +1573,11 @@
 					<!-- holdings (to catalog)  -->
 					
 					<xsl:if test="links/link[@type='holdings'] and (//config/show_all_holdings_links = 'true' or //config/holdings_links/database[@metalib_id=$metalib_db_id])">
-						<div class="resultsAvailableOption">
 							<xsl:call-template name="record_link">
 								<xsl:with-param name="type">holdings</xsl:with-param>
 								<xsl:with-param name="text" select="$text_link_holdings"/>
 								<xsl:with-param name="img_src" select="concat($base_url, '/images/book.gif')"/>
 							</xsl:call-template>
-						</div>
 					</xsl:if>
 					
 					<xsl:choose>
@@ -1590,7 +1585,7 @@
 						
 							<!-- save facility in metasearch area -->
 							
-							<div class="resultsAvailableOption" id="saveRecordOption_{$result_set}_{$record_number}">
+							<div id="saveRecordOption_{$result_set}_{$record_number}" class="recordAction saveRecord">
 								<img id="folder_{$result_set}{$record_number}"	width="17" height="15" alt="" border="0" class="miniIcon saveRecordLink">
 								<xsl:attribute name="src">
 									<xsl:choose> 
@@ -1604,7 +1599,7 @@
 								<a id="link_{$result_set}:{$record_number}" href="{../url_save_delete}">
 									<!-- 'saved' class used as a tag by ajaxy stuff -->
 									<xsl:attribute name="class">
-										saveThisRecord resultsFullText <xsl:if test="//request/session/resultssaved[@key = $record_id]">saved</xsl:if>
+										 saveRecord <xsl:if test="//request/session/resultssaved[@key = $record_id]">saved</xsl:if>
 									</xsl:attribute>
 									<xsl:choose>
 										<xsl:when test="//request/session/resultssaved[@key = $record_id]">
@@ -1633,7 +1628,7 @@
 							<!-- label/tag input for saved records, if record is saved and it's not a temporary session -->
 							
 							<xsl:if test="//request/session/resultssaved[@key = $record_id] and not(//request/session/role = 'guest' or //request/session/role = 'local')">
-								<div class="results_label resultsFullText" id="label_{$result_set}:{$record_number}" > 
+								<div id="label_{$result_set}:{$record_number}" > 
 									<xsl:call-template name="tag_input">
 										<xsl:with-param name="record" select="//saved_records/saved[@id = $record_id]" />
 										<xsl:with-param name="context">the results page</xsl:with-param>
@@ -1646,9 +1641,10 @@
 						
 							<!-- folder -->
 						
-							<div class="folderAvailability">
-								<a class="deleteRecord resultsFullText" href="{../url_delete}">
+							<div class="folderAvailability deleteRecord">
+								<a class="recordAction deleteRecord" href="{../url_delete}">
 									<img src="{$base_url}/images/delete.gif" alt="" border="0" class="miniIcon deleteRecordLink"/>
+                  <xsl:text> </xsl:text>
 									<xsl:copy-of select="$text_results_record_delete" />
 								 </a>
 							</div>
@@ -1681,7 +1677,7 @@
 	
 	<div id="tag_suggestions" class="autocomplete" style="display:none;"></div>
 
-	<div id="template_tag_input" class="results_label resultsFullText" style="display:none;">
+	<div id="template_tag_input" class="results_label" style="display:none;">
 		<xsl:call-template name="tag_input">
 			<xsl:with-param name="id">template</xsl:with-param>
 		</xsl:call-template> 

@@ -244,7 +244,7 @@
 			
 			</dl>
 						
-			<div id="recordFullText" class="raisedBox recordOptions">
+			<div id="recordFullText" class="raisedBox recordActions">
 				
 				<!-- Full-Text -->
 				
@@ -259,23 +259,19 @@
 				<!-- original_record and holdings links, if appropriate -->
 				
 				<xsl:if test="links/link[@type='original_record'] and (//config/show_all_original_record_links = 'true' or //config/original_record_links/database[@metalib_id = $database_code])">
-					<div class="recordFullTextOption">
 						<xsl:call-template name="record_link">
 							<xsl:with-param name="type">original_record</xsl:with-param>
 							<xsl:with-param name="text" select="$text_link_original_record"/>
 							<xsl:with-param name="img_src" select="concat($base_url, '/images/famfamfam/link.png')"/>
 						</xsl:call-template>
-					</div>
 				</xsl:if>
 				
 				<xsl:if test="links/link[@type='holdings'] and (//config/show_all_holdings_links = 'true' or //config/holdings_links/database[@metalib_id=$database_code])">
-					<div class="recordFullTextOption">
 						<xsl:call-template name="record_link">
 							<xsl:with-param name="type">holdings</xsl:with-param>
 							<xsl:with-param name="text" select="$text_link_holdings"/>
 							<xsl:with-param name="img_src" select="concat($base_url, '/images/book.gif')"/>
 						</xsl:call-template>
-					</div>
 				</xsl:if>
 				
 				<div class="recordFullTextOption">
@@ -286,8 +282,8 @@
 					<!-- open url -->
 					
 					<xsl:if test="$link_resolver_allowed">
-						<a href="{../url_open}" class="resultsFullText"	target="{$link_target}" >
-							<img src="{$base_url}/images/sfx.gif" alt="" />
+						<a href="{../url_open}" class="recordAction"	target="{$link_target}" >
+							<img src="{$base_url}/images/sfx.gif" alt="" class="miniIcon"/>
 							<xsl:text> </xsl:text>
 							<xsl:copy-of select="$text_link_resolver_check" />
 						</a>
@@ -297,7 +293,7 @@
 					
 					<xsl:if test="/folder">
 
-						<div class="results_label resultsFullText" id="label_{$result_set}:{$record_number}" > 
+						<div class="results_label recordAction" id="label_{$result_set}:{$record_number}" > 
 							<xsl:call-template name="tag_input">
 								<xsl:with-param name="record" select=".." />
 								<xsl:with-param name="context">the record page</xsl:with-param>
@@ -311,8 +307,8 @@
 				<!-- save option -->
 				
 				<xsl:if test="/metasearch">
-					<div class="recordFullTextOption" id="saveRecordOption_{$result_set}_{$record_number}">
-						<img id="folder_{$result_set}{$record_number}"	width="17" height="15" alt="" border="0">
+					<div class="saveRecord recordAction" id="saveRecordOption_{$result_set}_{$record_number}">
+						<img id="folder_{$result_set}{$record_number}"	width="17" height="15" alt="" border="0" class="miniIcon">
 							<xsl:attribute name="src">
 								<xsl:choose> 
 									<xsl:when test="//request/session/resultssaved[@key = $record_id]">images/folder_on.gif</xsl:when>
@@ -322,11 +318,10 @@
 						</img>
 						<xsl:text> </xsl:text>
 						<a id="link_{$result_set}:{$record_number}"
-							href="{../url_save_delete}" 
-							class="saveThisRecord resultsFullText">
+							href="{../url_save_delete}" >
 							<!-- 'saved' class used as a tag by ajaxy stuff -->
 							<xsl:attribute name="class">
-								saveThisRecord resultsFullText <xsl:if test="//request/session/resultssaved[@key = $record_id]">saved</xsl:if>
+								saveRecord <xsl:if test="//request/session/resultssaved[@key = $record_id]">saved</xsl:if>
 							</xsl:attribute>
 							
 							<xsl:choose>
@@ -357,7 +352,7 @@
 					<!-- label/tag input for saved records, if record is saved and it's not a temporary session -->
 					
 					<xsl:if test="//request/session/resultssaved[@key = $record_id] and not(//request/session/role = 'guest' or //request/session/role = 'local')">
-						<div class="results_label resultsFullText" id="label_{$result_set}:{$record_number}" > 
+						<div class="results_label recordAction" id="label_{$result_set}:{$record_number}" > 
 							<xsl:call-template name="tag_input">
 								<xsl:with-param name="record" select="//saved_records/saved[@id = $record_id]" />
 								<xsl:with-param name="context">the record page</xsl:with-param>

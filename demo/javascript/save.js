@@ -81,7 +81,7 @@ function addAjaxToSaveLinks()
 	
 	for ( i = 0; i < links.length; i++)
 	{
-		if ( /saveThisRecord/.test(links[i].className) )
+		if ( /saveRecord/.test(links[i].className) )
 		{		
 			links[i].onclick = function () {
 				return updateRecord(this.id)
@@ -149,10 +149,14 @@ function saveRecord(groupID,resultSet,recordNumber)
 
 			// add tag input form. first need to get saved record id out
 			// of ajax response. 
+      
 			
 			var responseData = ajaxRequest.responseText.evalJSON(true);
 			var savedID = responseData.savedRecordID;
 
+
+
+      
 			if ( $(id).hasClassName("saved") )
 			{
 				numSavedRecords--;
@@ -162,7 +166,6 @@ function saveRecord(groupID,resultSet,recordNumber)
 				$('folder_' + resultSet + recordNumber).src = "images/folder.gif";
 				$(id).update( save_action_label );
 				$(id).removeClassName("saved");
-
 
 
 				// remove label input
@@ -223,7 +226,7 @@ function saveRecord(groupID,resultSet,recordNumber)
 				
 					// add it to the page, now that it's all set up.
 					
-					var parentBlock = $(id).up('.recordOptions');
+					var parentBlock = $(id).up('.recordActions');
 					
 					if (parentBlock) 
 					{
