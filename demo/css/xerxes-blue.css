@@ -207,6 +207,50 @@ a:hover {
   vertical-align:middle; 
 }
 
+/** ACTION COMMANDS with mini-icons **/
+/** Usually these classes are applied to an <a> element, but can be 
+    applied to others. Add class iconCommand plus class of your choice
+    for specific icon. **/
+
+.iconCommand, a.iconCommand, a.iconCommand:visited, a:hover.iconCommand {
+  /* padding makes space for the icon that will be a background, yes pixels
+     not ems, since our images we need to make room for are in pixels. */
+  padding: 0px 0px 0px 24px;  
+  /* position: relative gets around a weird IE6/7 bug with what we're trying
+     to do */
+  position: relative;   
+  text-decoration: none;
+  white-space: nowrap;  
+  background-repeat: no-repeat;
+  /* For some reason only IE6 gets these *- selectors, and we turn
+     bg images off in ie6, becuase ie6 is doing weird things with them. */
+  *-background-image: none;  
+}
+
+.iconCommand.rename {
+  background-image: url(../images/famfamfam/tag_blue_edit.png);
+}
+
+.iconCommand.delete {
+  background-image: url(../images/delete.gif);
+}
+
+.iconCommand.add {
+  background-image: url(../images/famfamfam/add.png);
+}
+
+.iconCommand.reorder {
+  background-image: url(../images/reorder.gif);
+}
+
+.iconCommand.edit {
+  background-image: url(../images/famfamfam/wrench.png);
+}
+
+.iconCommand.public {
+  background-image: url(../images/famfamfam/lock.png);
+}
+
 /** BREADCRUMBS **/
 
 #breadcrumb {
