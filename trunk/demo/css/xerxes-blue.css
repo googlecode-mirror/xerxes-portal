@@ -271,7 +271,7 @@ a:hover {
 	padding-bottom: .3em;
 }
 
-.subjectSubCategory div {
+.subjectSubCategory > div {
 	display: inline;
 }
 
@@ -361,17 +361,22 @@ p.optionInfo {
 
 /** MY SAVED DATABSES **/
 
-ul.editCommands {
+/* Extra div.editCommands selector is neccesary to have appropriate
+   specificity. */
+.editCommands, div.editCommands {
 	display: block;
 	margin-left: 5em;
 	margin-right: 5em;
 	padding: 1em;
 	border: 2px solid #ccc;
 	margin-bottom: 2em;
-	color: #ccc;
 }
 
-ul.editCommands li {
+div.editCommands > ul {
+	border: none;
+}
+
+ul.editCommands > li, div.editCommands > ul > li {
 	list-style: square;
 	padding: .3em;
 	color: #000;
@@ -391,6 +396,12 @@ table.reorderTable td {
 	border: 1px solid #FFCC00;
 	background-color: #FFFFCC;
 	padding: .5em;
+}
+
+ul.addDatabasesMatches {
+  border: 1px dotted #CCCCCC;
+  max-height:11em;
+  overflow-y:auto;
 }
 
 .addDatabase {

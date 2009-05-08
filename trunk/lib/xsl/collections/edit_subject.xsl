@@ -135,7 +135,8 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
 				<fieldset class="subjectSubCategory">
 					<legend><xsl:value-of select="@name" /></legend>
 					
-					<ul class="editCommands">
+          <div class="editCommands">
+					<ul>
 					
 						<xsl:if test="$show_advanced_options">
 							<li>
@@ -170,7 +171,8 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
 					<xsl:if test="/*/request/add_to_subcategory = @id">
 						<xsl:call-template name="addDatabases" />
 					</xsl:if>
-					
+					</div>
+          
 					<ul>
 						<xsl:for-each select="database">
 						<li>
@@ -222,13 +224,12 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
 		<input type="hidden" name="subject" value="{/*/category[1]/@normalized}" />
 		<input type="hidden" name="add_to_subcategory" value="{//request/add_to_subcategory}" />
 		
-			<h2>
-				<a name="addDatabases" href="./?base=collections&amp;action=edit_form&amp;username={/*/category[1]/@owned_by_user}&amp;subject={/*/category[1]/@normalized}&amp;id={metalib_id}">
-					<img src="./images/delete.gif" alt="{$text_collections_remove_searchbox}" title="{$text_collections_remove_searchbox}" />
-				</a>
-				<xsl:text> </xsl:text>
-				<xsl:copy-of select="$text_collections_add_database" />
-			</h2>
+			<p>
+				[ <a  href="./?base=collections&amp;action=edit_form&amp;username={/*/category[1]/@owned_by_user}&amp;subject={/*/category[1]/@normalized}&amp;id={metalib_id}#section_{/*/request/add_to_subcategory}">
+          <xsl:copy-of select="$text_collections_remove_searchbox" />
+				</a> ]
+			</p>	
+			
 			
 			<p>
 				<label for="collections_database_query">
@@ -236,7 +237,7 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
 				</label>
 				
 				<input type="text" id="collections_database_query" name="query" value="{/*/request/query}"/><xsl:text> </xsl:text>
-				<input type="submit" value="{$text_searchbox_go}"/>
+				<input type="submit" value="{$text_searchbox_search}"/>
 			</p>
 		
 		</form>
@@ -260,7 +261,7 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
 										
 						<xsl:if test="searchable = '1'">
 							<xsl:text> </xsl:text>
-							<img alt="searchable" title="searchable" class="mini_icon" src="{$base_url}/images/famfamfam/magnifier.png"/>
+							<img alt="searchable" title="searchable" class="miniIcon" src="{$base_url}/images/famfamfam/magnifier.png"/>
 						</xsl:if>
 						
 					</li>
