@@ -442,7 +442,7 @@ table.reorderTable td {
 
 ul.addDatabasesMatches {
   border: 1px dotted #CCCCCC;
-  max-height:11em;
+  max-height:9em;
   overflow-y:auto;
 }
 
