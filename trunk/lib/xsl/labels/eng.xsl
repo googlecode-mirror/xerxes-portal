@@ -299,13 +299,9 @@
 		</xsl:choose>
 	</xsl:template>
 	
-	<xsl:template name="text_collections_add_database_section">
-		add database <xsl:value-of select="title_display" /> to this section
-	</xsl:template>
+	<xsl:template name="text_collections_add_database_section">add database <xsl:value-of select="title_display" /> to this section</xsl:template>
 	
-	<xsl:variable name="text_collections_remove_database">
-		remove database <xsl:value-of select="title_display" /> from section
-	</xsl:variable>
+	<xsl:variable name="text_collections_remove_database">remove database <xsl:value-of select="title_display" /> from section</xsl:variable>
 	
 	<!-- 
 		the templates deal with text labels that are in the XML itself.  they largely
