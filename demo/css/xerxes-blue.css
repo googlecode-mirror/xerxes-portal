@@ -271,10 +271,6 @@ a:hover {
 	padding-bottom: .3em;
 }
 
-.subjectSubCategory > div {
-	display: inline;
-}
-
 .subjectSubCategory legend {
 	color: #003366;
 	font-size: 110%;
@@ -361,9 +357,8 @@ p.optionInfo {
 
 /** MY SAVED DATABSES **/
 
-/* Extra div.editCommands selector is neccesary to have appropriate
-   specificity. */
-.editCommands, div.editCommands {
+
+.editCommands {
 	display: block;
 	margin-left: 5em;
 	margin-right: 5em;
