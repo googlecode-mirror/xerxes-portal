@@ -17,8 +17,8 @@
 		private $objMarcXML = null;			// original marc-xml dom document
 		private $objXPath = null;			// xpath object
 		
-		//private $strResolver = "";			// base address of openurl resolver
-		//private $strReferer = "";			// rfr_id
+		private $strResolver = "";			// base address of openurl resolver
+		private $strReferer = "";			// rfr_id
 		
 		private $strMetalibID = "";			// source database id
 		private $strSource = "";			// source parser name
@@ -1495,16 +1495,13 @@
 		/**
 		 * Get an OpenURL 1.0 formatted URL
 		 *
-		 * @param string $strResolver	base url of the link resolver. Pass in an empty string to get a raw kev context object query string by itself. 
+		 * @param string $strResolver	base url of the link resolver
 		 * @param string $strReferer	referrer (unique identifier)
 		 * @return string
 		 */
 		
 		public function getOpenURL($strResolver, $strReferer = null)
 		{
-      
-
-      
 			$arrReferant = array();		// referrant values, minus author
 			$strBaseUrl = "";			// base url of openurl request
 			$strKev = "";				// key encoded values
@@ -1512,13 +1509,10 @@
 			// set base url and referrer with database name
 			
 			$strKev = "url_ver=Z39.88-2004";
-      
-      $strBaseUrl = "";
+
 			if ( $strResolver != "" ) $strBaseUrl = $strResolver . "?";
-			if ( $strReferer != "" ) {
-        $strKev .= "&rfr_id=info:sid/" .  urlencode($strReferer);
-        if ( $this->strDatabaseName != "" )  $strKev .= urlencode(" ( " . $this->strDatabaseName . ")");
-      }
+			if ( $strReferer != "" ) $strKev .= "&rfr_id=info:sid/" .  urlencode($strReferer);
+			if ( $this->strDatabaseName != "" )  $strKev .= urlencode(" ( " . $this->strDatabaseName . ")");
 			
       
       // add rft_id's

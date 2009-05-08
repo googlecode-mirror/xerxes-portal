@@ -20,7 +20,7 @@
 			
 			$objXerxesRecord = new Xerxes_Record();
 			$objXerxesRecord->loadXML($this->getRecord());
-      
+			
 			$this->request->setRedirect($objXerxesRecord->getOpenURL($configLinkResolver, $configSID));
 			
 			return 1;
