@@ -249,6 +249,9 @@ a:hover {
 
 .iconCommand.public {
   background-image: url(../images/famfamfam/lock.png);
+  /* For some reason IE6 fix is needed here too, when classes are
+     not applied to an <a>, as they are not for .public */
+  *-background-image: none;  
 }
 
 /** BREADCRUMBS **/
@@ -411,7 +414,7 @@ p.optionInfo {
 	margin-bottom: 2em;
 }
 
-div.editCommands > ul {
+div.editCommands  ul {
 	border: none;
 }
 
