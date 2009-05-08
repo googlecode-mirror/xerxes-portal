@@ -256,7 +256,7 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
 					</xsl:variable>
 					<li>
 						<a href="./?base=collections&amp;action=save_complete&amp;username={/*/category[1]/@owned_by_user}&amp;subject={/*/category[1]/@normalized}&amp;subcategory={/*/request/add_to_subcategory}&amp;id={metalib_id}&amp;return={php:function('urlencode', string(//server/request_uri))}#section_{/*/request/add_to_subcategory}">
-							<img src="{$base_url}/images/famfamfam/add.png" title="{$add_text}" alt="{$add_text}" />
+							<img src="{$base_url}/images/famfamfam/add.png" class="miniIcon" title="{$add_text}" alt="{$add_text}" />
 						</a>
 					
 						<xsl:text> </xsl:text><xsl:value-of select="title_display"/>
