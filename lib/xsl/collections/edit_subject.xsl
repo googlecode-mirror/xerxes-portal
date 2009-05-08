@@ -180,7 +180,7 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
 						<li>
 							<xsl:variable name="id_meta" select="metalib_id" />
 							<xsl:variable name="remove_text">
-								<xsl:call-template name="text_collections_add_database_section" />
+								<xsl:call-template name="text_collections_remove_database" />
 							</xsl:variable>
 
 							<a href="./?base=collections&amp;action=remove_db&amp;username={//request/username}&amp;subject={//category[1]/@normalized}&amp;subcategory={../@id}&amp;id={metalib_id}&amp;return={php:function('urlencode', string(//server/request_uri))}#section_{../@id}"><img 
