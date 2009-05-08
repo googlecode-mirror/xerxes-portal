@@ -28,7 +28,7 @@
 	<xsl:variable name="text_collections_public">Public</xsl:variable>
 	<xsl:variable name="text_collections_private">Private</xsl:variable>
 	<xsl:variable name="text_collections_add_database">Add databases</xsl:variable>
-	<xsl:variable name="text_collections_remove_searchbox">remove search box</xsl:variable>
+	<xsl:variable name="text_collections_remove_searchbox">I'm done adding databases!</xsl:variable>
 	
 	<xsl:variable name="text_collections_done_editing">I'm done editing!</xsl:variable>
 	<xsl:variable name="text_collections_public_url">Public URL:</xsl:variable>
