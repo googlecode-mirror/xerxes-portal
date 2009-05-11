@@ -308,13 +308,13 @@ a:hover {
 	margin-bottom: .5em;
 }
 
-.subjectSubCategory ul {
+ul.databaseSectionList {
 	margin: .7em;
 	border-left: 2px solid #ccc;
 	padding-left: 1em;
 }
 
-.subjectSubCategory li {
+ul.databaseSectionList li {
 	padding-bottom: .3em;
 }
 
@@ -414,11 +414,11 @@ p.optionInfo {
 	margin-bottom: 2em;
 }
 
-div.editCommands  ul {
+div.editCommands  ul.subjectSubcategoryList {
 	border: none;
 }
 
-ul.editCommands > li, div.editCommands > ul > li {
+li.editCommand {
 	list-style: square;
 	padding: .3em;
 	color: #000;
@@ -441,10 +441,18 @@ table.reorderTable td {
 	padding: .5em;
 }
 
+#addDatabases {
+  margin-top: 1.25em;
+  margin-bottom: 1.25em;
+}
+
 ul.addDatabasesMatches {
   border: 1px dotted #CCCCCC;
   max-height:9em;
   overflow-y:auto;
+}
+ul.addDatabasesMatches li {
+  padding: 0.2em;
 }
 
 
