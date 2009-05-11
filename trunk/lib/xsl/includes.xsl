@@ -1660,9 +1660,9 @@
 								
 								<xsl:if test="//request/session/resultssaved[@key = $record_id] and //request/session/role != 'named'"> 
 									<span class="temporary_login_note">
-										(<a href="{//navbar/element[@id = 'login']/url}">
+										(<xsl:text> </xsl:text><a href="{//navbar/element[@id = 'login']/url}">
 											<xsl:copy-of select="$text_results_record_saved_perm" />
-										</a>)
+										</a><xsl:text> </xsl:text>)
 									</span>
 								</xsl:if>
 							</div>
