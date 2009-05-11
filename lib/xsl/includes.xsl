@@ -996,7 +996,7 @@
 		
 		<script language="javascript" type="text/javascript">
 			var dateSearch = "<xsl:value-of select="results/search/date" />";
-			var iSearchable = "<xsl:value-of select="$search_limit" />";
+			var xerxes_iSearchable = "<xsl:value-of select="$search_limit" />";
 		</script>
 		
 		<!-- add behaviors to edit collection dialog, currently just delete confirm -->
