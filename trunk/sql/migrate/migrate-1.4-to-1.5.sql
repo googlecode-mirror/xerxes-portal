@@ -1,4 +1,4 @@
-﻿# Create tables for user-created categories
+# Create tables for user-created categories
 
 USE xerxes;
 
