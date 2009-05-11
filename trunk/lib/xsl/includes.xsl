@@ -593,7 +593,7 @@
 
 			<ul class="databaseSectionList">
 			<xsl:for-each select="database">
-				<li>
+				<li style="list-style-image:none; list-style-position:outside; list-style-type:none;" class="databaseSectionItem">
 				
 				<xsl:variable name="id_meta" select="metalib_id" />
 				
@@ -657,7 +657,7 @@
 							<!-- label that is hidden from normal graphical browsers, but 
 							available for screen readers or other machine
 							processing. -->
-							<label for="{../@id}_{metalib_id}" class="ada">
+							<label for="{../@id}_{metalib_id}" style="position: absolute; top: -1000px;" class="ada databaseSectionItemLabel">
 								<xsl:value-of select="title_display" />
 							</label>
 						</xsl:when>
