@@ -182,7 +182,7 @@ function saveRecord(groupID,resultSet,recordNumber)
         // We tell if they are logged in or not, as well as find the login
         // url, based on looking for 'login' link in the DOM. 
         if ($('login')) {
-          var temporary_login_note = ' <span class="temporary_login_note">(<a  href="' + $('login').href +'">' + saved_temporary_login_label + ' </a>)</span>';
+          var temporary_login_note = ' <span class="temporary_login_note"> ( <a  href="' + $('login').href +'">' + saved_temporary_login_label + ' </a> ) </span>';
                    
          // Put the login link back please         
          $(id).update( saved_temporary_label ); 
