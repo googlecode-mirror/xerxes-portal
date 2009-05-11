@@ -45,15 +45,57 @@
 	<xsl:variable name="rewrite" 		select="//config/rewrite" />
 	<xsl:variable name="search_limit"	select="//config/search_limit" />
 	<xsl:variable name="link_target"	select="//config/link_target" />
-	<xsl:variable name="document" 		select="//config/document" />
-	<xsl:variable name="template"		select="//config/template" />
 
-	<xsl:variable name="show_db_detail_search"	select="//config/show_db_detail_search" />
-	<xsl:variable name="databases_searchable"	select="//config/database_list_searchable" />
-	<xsl:variable name="homepage_use_simple_search" select="//config/homepage_use_simple_search" />
-	<xsl:variable name="categories_num_columns" select="//config/categories_num_columns" />
 	<xsl:variable name="text_collection_default_new_name" select="//config/default_collection_name" />
 	<xsl:variable name="text_collection_default_new_section_name" select="//config/default_collection_section_name" />
+    
+    <!-- these have defaults here and in config.xml for backwards-compatability on older configs -->
+	
+	<xsl:variable name="document">
+		<xsl:choose>
+			<xsl:when test="//config/document">
+        		<xsl:value-of select="//config/document" />
+        	</xsl:when>
+        	<xsl:otherwise>
+        		<xsl:text>doc3</xsl:text>
+			</xsl:otherwise>
+		</xsl:choose>
+    </xsl:variable>
+
+	<xsl:variable name="template">
+		<xsl:choose>
+			<xsl:when test="//config/template">
+				<xsl:value-of select="//config/template" />
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:text>yui-t6</xsl:text>
+			</xsl:otherwise>
+		</xsl:choose>
+    </xsl:variable>
+
+	<xsl:variable name="show_db_detail_search">
+		<xsl:choose>
+			<xsl:when test="//config/show_db_detail_search">
+				<xsl:value-of select="//config/show_db_detail_search" />
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:text>true</xsl:text>
+			</xsl:otherwise>
+		</xsl:choose>
+    </xsl:variable>
+
+	<xsl:variable name="databases_searchable"	select="//config/database_list_searchable" />
+    
+	<xsl:variable name="categories_num_columns">
+		<xsl:choose>
+			<xsl:when test="//config/categories_num_columns">
+				<xsl:value-of select="//config/categories_num_columns" />
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:text>3</xsl:text>
+			</xsl:otherwise>
+		</xsl:choose>
+    </xsl:variable>
 	
 	<xsl:variable name="base_include">
 		<xsl:choose>
