@@ -10,12 +10,13 @@
 	{ 
 		$$('.searchBox_toggle').each( function(toggle) {
         toggle.onclick = function () { 
-          return toggleSearchMode($(this).up('form.metasearchForm'));
+          return toggleSearchMode($(this).up('form'));
         }
     });
 	}
 
 	function toggleSearchMode(myForm) {
+
 		if ( isAdvancedMode(myForm) ) {
       hideAdvancedFeatures(myForm);
 		}
