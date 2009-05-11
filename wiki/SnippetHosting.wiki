@@ -22,7 +22,7 @@ Better, if you have control over the host page and are not scared of HTML (or ha
 In the 'head' section of your HTML, include a 'link' element to the Xerxes stylesheet:
 
 {{{
- <link href="http://yourxerxes.university.edu/css/reset.css?xerxes_version=1.4"  rel="stylesheet" type="text/css">
+ <link href="http://yourxerxes.university.edu/css/xerxes-embeddable.css"  rel="stylesheet" type="text/css">
 }}}
 
 If you'd like to customize the look and feel on your particular host page, the best way is to include that line, then AFTER that line, include some more style definitions over-riding certain aspects there. 
