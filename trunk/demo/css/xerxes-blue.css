@@ -414,10 +414,6 @@ p.optionInfo {
 	margin-bottom: 2em;
 }
 
-div.editCommands  ul.subjectSubcategoryList {
-	border: none;
-}
-
 li.editCommand {
 	list-style: square;
 	padding: .3em;

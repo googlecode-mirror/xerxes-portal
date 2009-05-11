@@ -175,7 +175,7 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
 					</xsl:if>
 					</div>
           
-					<ul>
+					<ul class="databaseSectionList">
 						<xsl:for-each select="database">
 						<li>
 							<xsl:variable name="id_meta" select="metalib_id" />
