@@ -591,7 +591,7 @@
 			
 			<xsl:variable name="subcategory" select="position()" />
 
-			<ul class="databases_subject_list">
+			<ul class="databaseSectionList">
 			<xsl:for-each select="database">
 				<li>
 				
