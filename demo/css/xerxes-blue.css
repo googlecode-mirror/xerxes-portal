@@ -264,14 +264,14 @@ a:hover {
 
 /** SEARCH BOX **/
 
-#searchBox {
+.searchBox {
 	display: table;
 	margin-bottom: 3em;
 	padding-bottom: 1em;
 	padding-right: 2.2em;
 }
 
-#spellSuggest {
+.spellSuggest {
 	margin: 1em;
 }
 
@@ -279,20 +279,20 @@ a:hover {
 	margin-bottom: 3em;
 }
 
-#searchLabel {
+.searchLabel {
 	float:left; 
 	padding-top: .3em;
 }
 
-#searchInputs {
+.searchInputs {
 	margin-left: 4.3em;
 }
 
-#metasearch_input_toggle {
+.metasearch_input_toggle {
 	margin-top: 1em;
 }
 
-#searchBox_advanced_newline {
+.searchBox_advanced_newline {
 	margin-top: .2em;
 }
 

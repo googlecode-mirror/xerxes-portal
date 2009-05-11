@@ -371,7 +371,7 @@
 
 	<!-- split contents into seperate template to make partial AJAX loading easier -->
 	
-	<div class="raisedBox" id="searchBox">
+	<div class="raisedBox searchBox">
 	
 		<!-- pull out any already existing query entries -->
 		
@@ -385,11 +385,11 @@
 		
 		<xsl:variable name="advanced_mode" select="$global_advanced_mode" />
 		
-		<div id="searchLabel">
+		<div class="searchLabel">
 			<label for="field"><xsl:copy-of select="$text_searchbox_search" /></label>
 		</div>
 		
-		<div id="searchInputs">
+		<div class="searchInputs">
 		
 			<xsl:call-template name="metasearch_input_pair">
 				<xsl:with-param name="field_selected" select="$field" />
@@ -400,7 +400,7 @@
 			<!-- advanced search stuff is output even if we are in simple mode, but with display:none. 
 			Javascriptiness may easily toggle without reload that way. -->
 			
-			<label id="find_operator1label" for="find_operator1" class="ada">
+			<label for="find_operator1" class="find_operator1label ada">
 				<xsl:if test="not($advanced_mode)">
 					<xsl:attribute name="style">display:none;</xsl:attribute>
 				</xsl:if>
@@ -409,7 +409,7 @@
 			
 			<xsl:text>&nbsp;</xsl:text>
 
-			<select id="find_operator1" name="find_operator1">
+			<select class="find_operator1" name="find_operator1">
 				<xsl:if test="not($advanced_mode)">
 					<xsl:attribute name="style">display:none;</xsl:attribute>
 				</xsl:if>
@@ -433,20 +433,20 @@
 				</option>
 			</select>
 		
-			<div id="searchBox_advanced_newline">
+			<div class="searchBox_advanced_newline">
 				<xsl:if test="not($advanced_mode)">
 					<xsl:attribute name="style">display:none;</xsl:attribute>
 				</xsl:if>
 			</div>
 			
-			<label id="field2label" for="field2" class="ada">
+			<label for="field2" class="ada field2label">
 				<xsl:if test="not($advanced_mode)">
 					<xsl:attribute name="style">display:none;</xsl:attribute>
 				</xsl:if>
 				<xsl:copy-of select="$text_searchbox_search" />
 			</label>
 			
-			<span id="searchBox_advanced_pair">
+			<span class="searchBox_advanced_pair">
 				<xsl:if test="not($advanced_mode)">
 					<xsl:attribute name="style">display:none;</xsl:attribute>
 				</xsl:if>
@@ -458,19 +458,19 @@
 				</xsl:call-template>
 				<xsl:text>&nbsp;</xsl:text>
 			</span>
-			<input id="searchbox_submit" type="submit" name="Submit" value="{$text_searchbox_go}" />
+			<input class="searchbox_submit" type="submit" name="Submit" value="{$text_searchbox_go}" />
 		</div>
 		
 		<xsl:if test="results/search/spelling != ''">
 			<xsl:variable name="spell_url" select="results/search/spelling_url" />
-			<p id="spellSuggest" class="error"><xsl:copy-of select="$text_searchbox_spelling_error" />
+			<p class="spellSuggest error"><xsl:copy-of select="$text_searchbox_spelling_error" />
 			<a href="{$spell_url}"><xsl:value-of select="//spelling" /></a></p>
 		</xsl:if>
 	
-		<div id="metasearch_input_toggle">
+		<div class="metasearch_input_toggle">
 			<xsl:choose>
 			<xsl:when test="$advanced_mode">
-				<a id="searchBox_toggle">
+				<a class="searchBox_toggle">
 				<xsl:attribute name="href">
 					<xsl:value-of select="php:functionString('Xerxes_Framework_Request::setParamInUrl', $full_page_url, 'metasearch_input_mode', 'simple')"/>
 				</xsl:attribute>
@@ -478,7 +478,7 @@
 				</a>
 			</xsl:when>
 			<xsl:otherwise>
-				<a id="searchBox_toggle">
+				<a class="searchBox_toggle">
 				<xsl:attribute name="href">
 					<xsl:value-of select="php:functionString('Xerxes_Framework_Request::setParamInUrl', $full_page_url, 'metasearch_input_mode', 'advanced')"/>
 				</xsl:attribute>
@@ -508,7 +508,7 @@
 	<xsl:param name="advanced_mode" select="false" />
 	<xsl:param name="input_name_suffix" select ="''" />
 	
-	<select id="field{$input_name_suffix}" name="field{$input_name_suffix}">
+	<select class="field{$input_name_suffix}" name="field{$input_name_suffix}">
 		<option value="WRD"><xsl:copy-of select="$text_searchbox_field_keyword" /></option>
 		<option value="WTI">
 		<xsl:if test="$field_selected = 'WTI'">
@@ -554,7 +554,7 @@
 		</xsl:if>
 	</select>
 	<xsl:text> </xsl:text><label for="query{$input_name_suffix}"><xsl:copy-of select="$text_searchbox_for" /></label><xsl:text> </xsl:text>
-	<input id="query{$input_name_suffix}" name="query{$input_name_suffix}" type="text" size="32" value="{$query_entered}" />
+	<input class="query{$input_name_suffix}" name="query{$input_name_suffix}" type="text" size="32" value="{$query_entered}" />
 	
 </xsl:template>
 
@@ -978,11 +978,6 @@
 		
 		<script src="{$base_include}/javascript/tags.js" language="javascript" type="text/javascript"></script>
 		
-		<!-- controls the toggle of the 'more options' in the search box -->
-		
-		<script type="text/javascript">
-			advancedMode = <xsl:value-of select="$global_advanced_mode" />;
-		</script>
 		
 		<script src="{$base_include}/javascript/toggle_metasearch_advanced.js" language="javascript" type="text/javascript"></script>
 		

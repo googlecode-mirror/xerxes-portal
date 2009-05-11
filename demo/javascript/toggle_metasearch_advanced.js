@@ -2,77 +2,79 @@
 	* Functions for toggling metasearch advanced/simple mode without
 	* a trip to the server.
 	*
-	* ASSUMPTION: Set global javascript variable "advancedMode" to boolean
-	* true or false in parent page, depending on initially displayed mode. 
 	*/
 	
 	addEvent(window, 'load', addToggle); 
 	
 	function addToggle()
-	{
-		if ( $('searchBox_toggle') )
-		{
-			$('searchBox_toggle').onclick = function () {
-				return toggleSearchMode();
-			}
-
-		}
+	{ 
+		$$('.searchBox_toggle').each( function(toggle) {
+        toggle.onclick = function () { 
+          return toggleSearchMode($(this).up('form.metasearchForm'));
+        }
+    });
 	}
 
-	function toggleSearchMode() {
-    /* Guess at advancedMode if it hasn't been set */
-    ensureSetAdvancedMode();
-    
-		if ( advancedMode ) {
-		hideAdvancedFeatures();
-		advancedMode = false;
+	function toggleSearchMode(myForm) {
+		if ( isAdvancedMode(myForm) ) {
+      hideAdvancedFeatures(myForm);
 		}
 		else {
-		showAdvancedFeatures();
-		advancedMode = true;
+      showAdvancedFeatures(myForm);
 		}
 		
 		return false;
-
 	}
   
-  /* If advancedMode hasn't been set in global js variable, guess and
-     set it. */
-  function ensureSetAdvancedMode() {
-    if (typeof(window['advancedMode']) == "undefined") {
-      advancedMode = ($("find_operator1") && $("find_operator1").getStyle('display') != 'none' );
-    }
+  /* By looking at the form, figure out if we're in advanced mode or not. */
+  function isAdvancedMode(myForm) {    
+      return Boolean(myForm.down(".find_operator1") && myForm.down(".find_operator1").getStyle('display') != 'none' );    
   }
 	
-	function showAdvancedFeatures() {
-		// Add options for advanced, preserve selection. 
-		selected = $("field").value;
-		$("field").insert('<option value="ISSN">ISSN</option>');
-		$("field").insert('<option value="ISBN">ISBN</option>');
-		$("field").insert('<option value="WYR">year</option>');
-		$("field").value = selected;
-		
-			
-		$("find_operator1").enable();
-		$("find_operator1").show();
-		
-		// ada labels
-		$("find_operator1label").show();
-		$("field2label").show();
+	function showAdvancedFeatures(myForm) {
+		// Add options for advanced, preserve selection.
+    myField = myForm.down(".field");
+    
 
-		$("searchBox_advanced_newline").show();
+    
+		selected = myField.value;
+		myField.insert('<option value="ISSN">ISSN</option>');
+		myField.insert('<option value="ISBN">ISBN</option>');
+		myField.insert('<option value="WYR">year</option>');
+		myField.value = selected;
 		
-		$("query2").enable();
-		$("field2").enable();
-		$("searchBox_advanced_pair").show();
+
+			
+		myForm.down(".find_operator1").enable();
+		myForm.down(".find_operator1").show();
 		
-		$("searchBox_toggle").update("Fewer options");
+
+    
+		// ada labels
+		myForm.down(".find_operator1label").show();
+		myForm.down(".field2label").show();
+    
+
+
+		myForm.down(".searchBox_advanced_newline").show();
 		
+
+    
+		myForm.down(".query2").enable();
+    
+		myForm.down(".field2").enable();
+		myForm.down(".searchBox_advanced_pair").show();
+		
+		myForm.down(".searchBox_toggle").update("Fewer options");
+		
+
+    
 	}
 	
-	function hideAdvancedFeatures() {
+	function hideAdvancedFeatures(myForm) {
+    
 		// Remove advanced options from first field. 
-		options = $("field").options;
+		options = myForm.down(".field").options;
 		//reverse iterate since we're removing in the middle
 		for(i=options.length - 1; i > 0 ;i--){
 			o = options[i];
@@ -80,23 +82,23 @@
 			if ( (value == "WYR") || 
 				 (value == "ISSN") || 
 				 (value == "ISBN") ) {
-			$("field").removeChild(o);
+			myForm.down(".field").removeChild(o);
 			}
 		}
 		
-		$("find_operator1").hide();
-		$("find_operator1").disable();
+		myForm.down(".find_operator1").hide();
+		myForm.down(".find_operator1").disable();
 		
-		$("searchBox_advanced_newline").hide();
+		myForm.down(".searchBox_advanced_newline").hide();
 		
 		// ada labels
-		$("find_operator1label").hide();
-		$("field2label").hide();
+		myForm.down(".find_operator1label").hide();
+		myForm.down(".field2label").hide();
 
-		$("searchBox_advanced_pair").hide();
-		$("query2").disable();
-		$("field2").disable();		
+		myForm.down(".searchBox_advanced_pair").hide();
+		myForm.down(".query2").disable();
+		myForm.down(".field2").disable();		
 		
-		$("searchBox_toggle").update("More options");
+		myForm.down(".searchBox_toggle").update("More options");
 	}
 
