@@ -1,4 +1,4 @@
-﻿CREATE DATABASE IF NOT EXISTS xerxes;
+CREATE DATABASE IF NOT EXISTS xerxes;
 USE xerxes;
 
 SET storage_engine = INNODB;
