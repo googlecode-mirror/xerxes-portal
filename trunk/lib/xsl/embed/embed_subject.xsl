@@ -57,7 +57,7 @@
         </xsl:if>
         
         <xsl:if test="$disp_show_search">    
-          <div id="search">  
+          <div class="search">  
             <xsl:call-template name="search_box">
               <!-- if they switch search modes in embedded mode, and don't have
                    ajax available, send them to the full subject page -->
