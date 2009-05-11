@@ -20,7 +20,7 @@
 
 .xerxes_outer_wrapper #searchBox { 
   display:table;
-  margin-bottom:3em;
+  margin-bottom:1em;
   padding-bottom:1em;
   padding-right:2.2em;
 }
@@ -64,15 +64,14 @@
 
 
 .xerxes_outer_wrapper .subjectSubcategory legend {
-	font-family: Arial, Verdana, Geneva, Arial, helvetica, sans-serif; 
   font-size:110%;
   font-weight:bold;
   padding:1em;
   margin: 0;
 }
 
-.xerxes_outer_wrapper .subjectSubCategory li {
-  padding-bottom:0.3em;
+.xerxes_outer_wrapper ul.databaseSectionList li {
+  margin-bottom:0.3em;
 }
 
 .xerxes_outer_wrapper .subjectSubCategory input {
@@ -80,13 +79,10 @@
   padding:0; 
 }
 
-.xerxes_outer_wrapper .subjectSubCategory ul {
-  border-left:2px solid #CCCCCC;
-  margin:0.7em;
-  padding-top: 0;
-  padding-bottom: 0;
-  padding-left:1em;
-  padding-bottom: 0.3em;
+.xerxes_outer_wrapper ul.databaseSectionList {
+	margin: .7em .7em .7em 1.25em;
+	border-left: 2px solid #ccc;
+	padding: 0 0 0 1em;
   list-style-image:none;
   list-style-position:outside;
   list-style-type:none;
