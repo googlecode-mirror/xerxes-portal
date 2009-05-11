@@ -33,9 +33,9 @@
     
     <!-- we need this js for the database maximum limit. -->
     <script language="javascript" type="text/javascript">
-      var iSearchable = "<xsl:value-of select="//config/search_limit" />";
+      var xerxes_iSearchable = "<xsl:value-of select="//config/search_limit" />";
     </script>
-    <script src="{$base_url}/javascript/save.js" language="javascript" type="text/javascript" />
+
       
     <div class="xerxes_outer_wrapper">
       <form name="form1" method="get" action="{$base_url}/" class="metasearchForm">

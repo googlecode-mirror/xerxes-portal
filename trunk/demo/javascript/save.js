@@ -258,7 +258,7 @@ function saveRecord(groupID,resultSet,recordNumber)
 	/**
 	 * Checks to see if user has selected more databases than is allowed or none
 	 *
-	 * @note global variable iSearchable set by include.xsl since this is set server-side
+	 * @note global variable xerxes_iSearchable set by include.xsl since this is set server-side
 	 * @param form1		form submitting the request
 	 * @return bool		true if number of selected databases is less, false otherwise
 	 */
@@ -276,9 +276,9 @@ function saveRecord(groupID,resultSet,recordNumber)
 			alert("Please select databases to search");
 			return false;
 		}
-		else if ( iTotal > iSearchable )
+		else if ( iTotal > xerxes_iSearchable )
 		{
-			alert("Sorry, you can only search up to " + iSearchable + " databases at one time");
+			alert("Sorry, you can only search up to " + xerxes_iSearchable + " databases at one time");
 			return false;
 		}
 		else
@@ -300,10 +300,10 @@ function saveRecord(groupID,resultSet,recordNumber)
   }
   
   function databaseLimitCheckbox(checkbox) {
-    var limit_reached = (numChecked(checkbox.form) > iSearchable);
+    var limit_reached = (numChecked(checkbox.form) > xerxes_iSearchable);
     
     if (limit_reached) {
-      alert("Sorry, you can only search up to " + iSearchable + " databases at one time");
+      alert("Sorry, you can only search up to " + xerxes_iSearchable + " databases at one time");
 			checkbox.checked = false;
       return false;
     }
