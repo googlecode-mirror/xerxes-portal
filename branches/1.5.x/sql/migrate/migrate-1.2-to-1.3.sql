@@ -1,4 +1,4 @@
-﻿USE xerxes;
+USE xerxes;
 
 # new tagging feature
 
