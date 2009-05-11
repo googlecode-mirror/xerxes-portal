@@ -1,4 +1,4 @@
-﻿# add index to cahce table
+# add index to cahce table
 
 USE xerxes;
 
