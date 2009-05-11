@@ -18,27 +18,27 @@
   border: 0 none; 
 }
 
-.xerxes_outer_wrapper #searchBox { 
+.xerxes_outer_wrapper .searchBox { 
   display:table;
   margin-bottom:1em;
   padding-bottom:1em;
   padding-right:2.2em;
 }
 
-.xerxes_outer_wrapper #searchLabel {
+.xerxes_outer_wrapper .searchLabel {
 	float:left; 
 	padding-top: .3em;
 }
 
-.xerxes_outer_wrapper #searchInputs {
+.xerxes_outer_wrapper .searchInputs {
 	margin-left: 4.3em;
 }
 
-.xerxes_outer_wrapper #metasearch_input_toggle {
+.xerxes_outer_wrapper .metasearch_input_toggle {
 	margin-top: 1em;
 }
 
-.xerxes_outer_wrapper #searchBox_advanced_newline {
+.xerxes_outer_wrapper .searchBox_advanced_newline {
 	margin-top: .2em;
 }
 
