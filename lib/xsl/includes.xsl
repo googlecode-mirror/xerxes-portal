@@ -409,7 +409,7 @@
 			
 			<xsl:text>&nbsp;</xsl:text>
 
-			<select class="find_operator1" name="find_operator1">
+			<select id="find_operator1" class="find_operator1" name="find_operator1">
 				<xsl:if test="not($advanced_mode)">
 					<xsl:attribute name="style">display:none;</xsl:attribute>
 				</xsl:if>
@@ -508,7 +508,7 @@
 	<xsl:param name="advanced_mode" select="false" />
 	<xsl:param name="input_name_suffix" select ="''" />
 	
-	<select class="field{$input_name_suffix}" name="field{$input_name_suffix}">
+	<select id="field{$input_name_suffix}" class="field{$input_name_suffix}" name="field{$input_name_suffix}">
 		<option value="WRD"><xsl:copy-of select="$text_searchbox_field_keyword" /></option>
 		<option value="WTI">
 		<xsl:if test="$field_selected = 'WTI'">
@@ -554,7 +554,7 @@
 		</xsl:if>
 	</select>
 	<xsl:text> </xsl:text><label for="query{$input_name_suffix}"><xsl:copy-of select="$text_searchbox_for" /></label><xsl:text> </xsl:text>
-	<input class="query{$input_name_suffix}" name="query{$input_name_suffix}" type="text" size="32" value="{$query_entered}" />
+	<input id="query{$input_name_suffix}" class="query{$input_name_suffix}" name="query{$input_name_suffix}" type="text" size="32" value="{$query_entered}" />
 	
 </xsl:template>
 
