@@ -121,14 +121,14 @@
 						
 						<h2><xsl:copy-of select="$text_snippet_include_options" /></h2>
 						
-						<h3>1. <xsl:copy-of select="$text_snippet_include_server" /></h3>
+						<h3>1. <label for="direct_url_content"><xsl:copy-of select="$text_snippet_include_server" /></label></h3>
 						<p><xsl:copy-of select="$text_snippet_include_server_explain" /></p>
 						
 						<textarea id="direct_url_content" class="displayTextbox" readonly="yes">
 							<xsl:value-of select="embed_info/embed_direct_url" />
 						</textarea> 
 						
-						<h3>2. <xsl:copy-of select="$text_snippet_include_javascript" /></h3>
+						<h3>2. <label for="js_widget_content"><xsl:copy-of select="$text_snippet_include_javascript" /></label></h3>
 						<p><xsl:copy-of select="$text_snippet_include_javascript_explain" /></p>
 						
 						<textarea id="js_widget_content" class="displayTextbox" readonly="yes">
@@ -155,7 +155,7 @@
 						
 						<xsl:variable name="passThroughURL" select="/*/databases/database[1]/xerxes_native_link_url"/>
 						
-						<h3>4. <xsl:copy-of select="$text_snippet_include_url" /></h3>
+						<h3>4. <label for="passthrough_url_display"><xsl:copy-of select="$text_snippet_include_url" /></label></h3>
 						<p><xsl:copy-of select="$text_snippet_include_url_explain" /></p>
 						
 						<p><a href="{$passThroughURL}"><xsl:copy-of select="$text_snippet_include_url" /></a></p> 
