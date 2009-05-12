@@ -150,7 +150,7 @@
 						</td>
 						</tr>
 						<tr>
-						<td><label for="disp_only_subcategory"><xsl:copy-of select="$text_snippet_show_css" /></label></td>
+						<td><label for="disp_embed_css"><xsl:copy-of select="$text_snippet_show_css" /></label></td>
 						<td>
 							<select id="disp_embed_css" name="disp_embed_css">
 								<option value="true">
@@ -180,14 +180,14 @@
 					
 						<h2><xsl:copy-of select="$text_snippet_include_options" /></h2>
 						
-						<h3>1. <xsl:copy-of select="$text_snippet_include_server" /></h3>
+						<h3>1. <label for="direct_url_content"><xsl:copy-of select="$text_snippet_include_server" /></label></h3>
 						<p><xsl:copy-of select="$text_snippet_include_server_explain" /></p>	
 				
 						<textarea id="direct_url_content" readonly="yes" class="displayTextbox">
 							<xsl:value-of select="embed_info/embed_direct_url" />
 						</textarea> 
 				
-						<h3>2. <xsl:copy-of select="$text_snippet_include_javascript" /></h3>
+						<h3>2. <label for="js_widget_content"><xsl:copy-of select="$text_snippet_include_javascript" /></label></h3>
 						<p><xsl:copy-of select="$text_snippet_include_javascript_explain" /></p>
 						
 						<textarea id="js_widget_content" readonly="yes" class="displayTextbox">
