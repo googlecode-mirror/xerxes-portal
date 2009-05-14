@@ -9,10 +9,6 @@ The screencasts below provide a visual walk-through of installing and setting-up
  * [http://blip.tv/file/2085110 Part 2: Advanced configuration] ( *update*: you can select an alternative 'quick search' category in config.xml now, so ignore the instructions for changing actions.xml )
 
 
-
-
-
-
 =Instructions=
 
 ==1. Download the code==
@@ -51,11 +47,20 @@ The main configuration file is located at 'demo/config/config.xml'.  The file in
 
 ===4b. Security issues with config.xml===
 
-Apache and IIS will, by default, serve-up the config.xml file over the web, exposing your sensitive information to anyone.
+Your web server will, by default, serve-up the config.xml file over the web, exposing your sensitive information to anyone.
 
-If you are using Apache, the .htaccess file that comes with the source code includes `FileMatch` directives to prevent this, but you must first grant your 'demo' directory, or one of its parents, sufficient privilege to enable these directives.  You can do this in httpd.conf by creating a `Directory` entry for your demo directory and giving it an `AllowOverride All` setting.
+*IIS*
 
-If you are using IIS, or cannot make the above changes in Apache, simply change the name of the config.xml to config.php.  This will prevent others from viewing the file directly over the web.
+If you are using IIS, the [InstallingIIS Installing Xerxes with IIS] page includes instructions for securing config.xml using permissions.
+
+*Apache*
+
+If you are using Apache, the .htaccess file that comes with the source code includes `FileMatch` directives to prevent Apache from serving the file over the web.  For this to work, though, you must first grant your 'demo' directory, or one of its parents, sufficient privilege to enable these directives.
+
+You can do this in httpd.conf by creating a `Directory` entry for your demo directory and giving it an `AllowOverride All` setting.
+
+If for some reason you cannot make the above changes in Apache, simply change the name of the config.xml to config.php.  This will prevent others from viewing the file directly over the web.
+
 
 ==5. Populate the local knowledgebase==
  
