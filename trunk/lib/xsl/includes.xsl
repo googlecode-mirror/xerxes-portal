@@ -33,7 +33,7 @@
 
 <!-- 
 	GLOBAL VARIABLES
-	Configuration values used throughout the templates
+	Configuration v	alues used throughout the templates
 -->
 
 	<!-- version used to prevent css caching, and possibly other places to advertise version -->
@@ -48,19 +48,19 @@
 
 	<xsl:variable name="text_collection_default_new_name" select="//config/default_collection_name" />
 	<xsl:variable name="text_collection_default_new_section_name" select="//config/default_collection_section_name" />
-    
-    <!-- these have defaults here and in config.xml for backwards-compatability on older configs -->
+	
+	<!-- these have defaults here and in config.xml for backwards-compatability on older configs -->
 	
 	<xsl:variable name="document">
 		<xsl:choose>
 			<xsl:when test="//config/document">
-        		<xsl:value-of select="//config/document" />
-        	</xsl:when>
-        	<xsl:otherwise>
-        		<xsl:text>doc3</xsl:text>
+				<xsl:value-of select="//config/document" />
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:text>doc3</xsl:text>
 			</xsl:otherwise>
 		</xsl:choose>
-    </xsl:variable>
+	</xsl:variable>
 
 	<xsl:variable name="template">
 		<xsl:choose>
@@ -71,7 +71,7 @@
 				<xsl:text>yui-t6</xsl:text>
 			</xsl:otherwise>
 		</xsl:choose>
-    </xsl:variable>
+	</xsl:variable>
 
 	<xsl:variable name="show_db_detail_search">
 		<xsl:choose>
@@ -82,10 +82,10 @@
 				<xsl:text>true</xsl:text>
 			</xsl:otherwise>
 		</xsl:choose>
-    </xsl:variable>
+	</xsl:variable>
 
 	<xsl:variable name="databases_searchable"	select="//config/database_list_searchable" />
-    
+	
 	<xsl:variable name="categories_num_columns">
 		<xsl:choose>
 			<xsl:when test="//config/categories_num_columns">
@@ -95,7 +95,7 @@
 				<xsl:text>3</xsl:text>
 			</xsl:otherwise>
 		</xsl:choose>
-    </xsl:variable>
+	</xsl:variable>
 	
 	<xsl:variable name="base_include">
 		<xsl:choose>
@@ -620,7 +620,7 @@
 	<xsl:for-each select="category/subcategory[(not($show_only_subcategory ))
 		or ($show_only_subcategory = '') or (@id = $show_only_subcategory)]">
 	
-		<fieldset class="subjectSubCategory">      
+		<fieldset class="subjectSubCategory">
 		<legend><xsl:value-of select="@name" /></legend>
 			
 			<!-- if the current session can't search this resource, should we show a lock icon? 
@@ -1001,22 +1001,24 @@
 		
 		<!-- add behaviors to edit collection dialog, currently just delete confirm -->
 		<script src="{$base_include}/javascript/collections.js" language="javascript" type ="text/javascript"></script>
-    
-    <!-- umlaut content on record detail page, when so configured -->
-    <xsl:if test="//config/umlaut_base and ( request/base='metasearch' and request/action = 'record' ) or (request/base='folder' and request/action = 'full')">
-      <!-- Need to set the OpenURL kev context object in a global js variable,
-           so the script can get it. -->
-      <script language="javascript" type="text/javascript">
-        openurl_kev_co = '<xsl:value-of select="//records/record[1]/openurl_kev_co"/>'; 
-        umlaut_base = '<xsl:value-of select="//config/umlaut_base"/>';
-      </script>
-      
-      <!-- and now call the script that will set things up for umlaut -->
-      <script language="javascript" type="text/javascript" src="{$base_include}/javascript/umlaut_record_detail.js"/>     
-      
-      <!-- and now actually call umlaut itself to do the js magic -->
-      <script type="text/javascript" src="{//config/umlaut_base}/javascripts/embed/umlaut-embed.js"></script>
-    </xsl:if>
+	
+		<!-- umlaut content on record detail page, when so configured -->
+		<xsl:if test="//config/umlaut_base and (( request/base='metasearch' and request/action = 'record' ) or (request/base='folder' and request/action = 'full'))">
+			
+			<!-- Need to set the OpenURL kev context object in a global js variable,
+			so the script can get it. -->
+			
+			<script language="javascript" type="text/javascript">
+				openurl_kev_co = '<xsl:value-of select="//records/record[1]/openurl_kev_co"/>'; 
+				umlaut_base = '<xsl:value-of select="//config/umlaut_base"/>';
+			</script>
+			
+			<!-- and now call the script that will set things up for umlaut -->
+			<script language="javascript" type="text/javascript" src="{$base_include}/javascript/umlaut_record_detail.js"/>
+			
+			<!-- and now actually call umlaut itself to do the js magic -->
+			<script type="text/javascript" src="{//config/umlaut_base}/javascripts/embed/umlaut-embed.js"></script>
+		</xsl:if>
 		
 	</xsl:if>
   	
@@ -1073,17 +1075,17 @@
 				<xsl:choose>
 					<xsl:when test="@type = 'pdf'">
 						<img src="{$base_include}/images/pdf.gif" alt="" width="16" height="16" border="0" class="miniIcon fullTextLink pdf"/>
-            <xsl:text> </xsl:text>
+						<xsl:text> </xsl:text>
 						<xsl:copy-of select="$text_records_fulltext_pdf" />
 					</xsl:when>
 					<xsl:when test="@type = 'html'">
 						<img src="{$base_include}/images/html.gif" alt="" width="16" height="16" border="0" class="miniIcon fullTextLink html"/>
-            <xsl:text> </xsl:text>
+						<xsl:text> </xsl:text>
 						<xsl:copy-of select="$text_records_fulltext_html" />
 					</xsl:when>
 					<xsl:otherwise>
 						<img src="{$base_include}/images/html.gif" alt="" width="16" height="16" border="0" class="miniIcon fullTextLink unknown"/>
-            <xsl:text> </xsl:text>
+						<xsl:text> </xsl:text>
 						<xsl:copy-of select="$text_records_fulltext_available" />
 					</xsl:otherwise>
 				</xsl:choose>
@@ -1101,13 +1103,13 @@
 -->
 	 
 <xsl:template name="record_link">
-    <xsl:param name="type" />
-  	<xsl:param name="class">recordAction <xsl:value-of select="$type"/></xsl:param>
-    <xsl:param name="text" select="$type"/>
-    <xsl:param name="img_src"/>
-    
+	<xsl:param name="type" />
+	<xsl:param name="class">recordAction <xsl:value-of select="$type"/></xsl:param>
+	<xsl:param name="text" select="$type"/>
+	<xsl:param name="img_src"/>
+	
 	<xsl:if test="links/link[@type=$type]">
-		<xsl:variable name="encoded_direct_url">				
+		<xsl:variable name="encoded_direct_url">
 			<xsl:value-of select="php:function('urlencode', string(links/link[@type=$type]))" />
 		</xsl:variable>
 	
@@ -1233,26 +1235,26 @@
 
 <xsl:template name="snippet_sidebar">
 	<xsl:if test="not(/*/category/@owned_by_user) or /*/category/@published = 1">
-    <div id="snippet" class="box">
-      <h2><xsl:copy-of select="$text_header_embed" /></h2>
-  
-      <ul>
-      <xsl:if test="request/base = 'databases' and request/action = 'subject'">
-        <xsl:variable name="subject" select="//category/@normalized" />
-        <li> <a href="./?base=embed&amp;action=gen_subject&amp;subject={$subject}"><xsl:copy-of select="$text_header_snippet_generate_subject" /></a> </li>
-      </xsl:if>
-      
-      <xsl:if test="request/base = 'databases' and request/action = 'database'">
-        <xsl:variable name="id" select="//database[1]/metalib_id" />
-        <li> <a href="./?base=embed&amp;action=gen_database&amp;id={$id}"><xsl:copy-of select="$text_header_snippet_generate_database" /></a> </li>
-      </xsl:if>
-      
-      <xsl:if test="request/base = 'collections' and (request/action = 'subject' or request/action = 'edit_form')">
-        <li> <a href="./?base=collections&amp;action=gen_embed&amp;username={//category[1]/@owned_by_user}&amp;subject={//category[1]/@normalized}"><xsl:copy-of select="$text_header_snippet_generate_collection" /></a> </li>
-      </xsl:if>
-      
-      </ul>
-    </div>
+		<div id="snippet" class="box">
+			<h2><xsl:copy-of select="$text_header_embed" /></h2>
+	
+			<ul>
+			<xsl:if test="request/base = 'databases' and request/action = 'subject'">
+				<xsl:variable name="subject" select="//category/@normalized" />
+				<li> <a href="./?base=embed&amp;action=gen_subject&amp;subject={$subject}"><xsl:copy-of select="$text_header_snippet_generate_subject" /></a> </li>
+			</xsl:if>
+			
+			<xsl:if test="request/base = 'databases' and request/action = 'database'">
+				<xsl:variable name="id" select="//database[1]/metalib_id" />
+				<li> <a href="./?base=embed&amp;action=gen_database&amp;id={$id}"><xsl:copy-of select="$text_header_snippet_generate_database" /></a> </li>
+			</xsl:if>
+			
+			<xsl:if test="request/base = 'collections' and (request/action = 'subject' or request/action = 'edit_form')">
+				<li> <a href="./?base=collections&amp;action=gen_embed&amp;username={//category[1]/@owned_by_user}&amp;subject={//category[1]/@normalized}"><xsl:copy-of select="$text_header_snippet_generate_collection" /></a> </li>
+			</xsl:if>
+			
+			</ul>
+		</div>
 	</xsl:if>
 </xsl:template>
 
@@ -1681,7 +1683,7 @@
 							<div class="folderAvailability deleteRecord">
 								<a class="recordAction deleteRecord" href="{../url_delete}">
 									<img src="{$base_url}/images/delete.gif" alt="" border="0" class="miniIcon deleteRecordLink"/>
-                  <xsl:text> </xsl:text>
+									<xsl:text> </xsl:text>
 									<xsl:copy-of select="$text_results_record_delete" />
 								 </a>
 							</div>
