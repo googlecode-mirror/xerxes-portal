@@ -187,12 +187,22 @@ class Xerxes_User extends Xerxes_Framework_DataValue
 
 class Xerxes_DataMap extends Xerxes_Framework_DataMap
 {
+	private $registry;
+
 	public function __construct()
 	{
 		$objRegistry = Xerxes_Framework_Registry::getInstance();
 		$objRegistry->init();
 		
-		$this->init( $objRegistry->getConfig( "DATABASE_CONNECTION", true ), $objRegistry->getConfig( "DATABASE_USERNAME", true ), $objRegistry->getConfig( "DATABASE_PASSWORD", true ) );
+		// make it a member variable so other functions can get it easier
+		
+		$this->registry = $objRegistry;
+		
+		$this->init( 
+			$objRegistry->getConfig( "DATABASE_CONNECTION", true ), 
+			$objRegistry->getConfig( "DATABASE_USERNAME", true ), 
+			$objRegistry->getConfig( "DATABASE_PASSWORD", true ) 
+		);
 	}
 	
 	### KNOWLEDGEBASE ADD FUNCTIONS ###
@@ -800,8 +810,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 			
 			// subcategories excluded by config
 			
-			$objRegistry = Xerxes_Framework_Registry::getInstance();
-			$strSubcatInclude = $objRegistry->getConfig( "SUBCATEGORIES_INCLUDE", false );
+			$strSubcatInclude = $this->registry->getConfig( "SUBCATEGORIES_INCLUDE", false );
 			
 			if ( $strSubcatInclude != "" && $mode == self::metalibMode)
 			{							
