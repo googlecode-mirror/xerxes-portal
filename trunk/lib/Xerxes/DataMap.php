@@ -1481,7 +1481,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 	{
 		$arrFacets = array ( );
 		
-		$strSQL = "SELECT tag as label, count(record_id) as total from xerxes_tags WHERE username = :username GROUP BY label ORDER BY label";
+		$strSQL = "SELECT tag as label, count(record_id) as total from xerxes_tags WHERE username = :username GROUP BY tag ORDER BY label";
 		$arrResults = $this->select( $strSQL, array (":username" => $strUsername ) );
 		
 		foreach ( $arrResults as $arrResult )
