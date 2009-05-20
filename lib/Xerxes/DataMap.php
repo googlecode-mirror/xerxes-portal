@@ -187,12 +187,22 @@ class Xerxes_User extends Xerxes_Framework_DataValue
 
 class Xerxes_DataMap extends Xerxes_Framework_DataMap
 {
+	private $registry;
+
 	public function __construct()
 	{
 		$objRegistry = Xerxes_Framework_Registry::getInstance();
 		$objRegistry->init();
 		
-		$this->init( $objRegistry->getConfig( "DATABASE_CONNECTION", true ), $objRegistry->getConfig( "DATABASE_USERNAME", true ), $objRegistry->getConfig( "DATABASE_PASSWORD", true ) );
+		// make it a member variable so other functions can get it easier
+		
+		$this->registry = $objRegistry;
+		
+		$this->init( 
+			$objRegistry->getConfig( "DATABASE_CONNECTION", true ), 
+			$objRegistry->getConfig( "DATABASE_USERNAME", true ), 
+			$objRegistry->getConfig( "DATABASE_PASSWORD", true ) 
+		);
 	}
 	
 	### KNOWLEDGEBASE ADD FUNCTIONS ###
@@ -224,6 +234,20 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		$this->delete( "DELETE FROM xerxes_categories" );
 		$this->delete( "DELETE FROM xerxes_types" );
 	}
+
+	/**
+	 * Remove orphaned my saved database associations
+	 */
+	
+	public function synchUserDatabases()
+	{
+		// user saved databases sit loose to the databases table, so we use this
+		// to manually enforce an 'ON CASCADE DELETE' to ensure we don't abandon
+		// databases in the my saved databases tables
+		
+		$this->delete( "DELETE FROM xerxes_user_subcategory_databases WHERE " .
+			" database_id NOT IN ( SELECT metalib_id FROM xerxes_databases )");
+	}	
 	
 	/**
 	 * Add a database to the local knowledgebase
@@ -800,8 +824,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 			
 			// subcategories excluded by config
 			
-			$objRegistry = Xerxes_Framework_Registry::getInstance();
-			$strSubcatInclude = $objRegistry->getConfig( "SUBCATEGORIES_INCLUDE", false );
+			$strSubcatInclude = $this->registry->getConfig( "SUBCATEGORIES_INCLUDE", false );
 			
 			if ( $strSubcatInclude != "" && $mode == self::metalibMode)
 			{							
@@ -1472,7 +1495,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 	{
 		$arrFacets = array ( );
 		
-		$strSQL = "SELECT tag as label, count(record_id) as total from xerxes_tags WHERE username = :username GROUP BY label ORDER BY label";
+		$strSQL = "SELECT tag as label, count(record_id) as total from xerxes_tags WHERE username = :username GROUP BY tag ORDER BY label";
 		$arrResults = $this->select( $strSQL, array (":username" => $strUsername ) );
 		
 		foreach ( $arrResults as $arrResult )
