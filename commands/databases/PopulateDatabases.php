@@ -121,6 +121,12 @@
 				}
 			}
 			
+			echo "   Synching user saved databases . . . ";
+			
+				$objData->synchUserDatabases();
+			
+			echo "done\n";
+			
 			echo "   Committing changes . . . ";
 				
 				$objData->commit();
