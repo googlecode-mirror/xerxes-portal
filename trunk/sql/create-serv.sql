@@ -16,7 +16,7 @@ DROP TABLE IF EXISTS xerxes_user_categories;
 
 
 CREATE TABLE xerxes_users (
-	username VARCHAR(50),
+	username 	VARCHAR(50),
 	last_login	DATE,
 	suspended	INTEGER(1),
 	first_name	VARCHAR(50),
@@ -79,8 +79,8 @@ CREATE INDEX xerxes_records_original_id_idx ON xerxes_records(original_id);
 
 CREATE TABLE xerxes_tags (
 	username	VARCHAR(50),
-  	record_id	MEDIUMINT,
-   	tag 		VARCHAR(100),
+	record_id	MEDIUMINT,
+	tag 		VARCHAR(100),
 
  	FOREIGN KEY (username) REFERENCES xerxes_users(username) ON DELETE CASCADE,
 	FOREIGN KEY (record_id) REFERENCES xerxes_records(id) ON DELETE CASCADE
@@ -98,32 +98,32 @@ CREATE TABLE xerxes_cache (
 CREATE INDEX xerxes_cache_grouping_idx ON xerxes_cache(grouping);
 
 CREATE TABLE xerxes_user_categories(
-	id 			      MEDIUMINT NOT NULL AUTO_INCREMENT,
-	name     		  VARCHAR(255),
-  username      VARCHAR(50),
-  published        INTEGER(1) NOT NULL DEFAULT 0, 
-	normalized		VARCHAR(255),
-
+	id 		MEDIUMINT NOT NULL AUTO_INCREMENT,
+	name		VARCHAR(255),
+	username	VARCHAR(50),
+	published	INTEGER(1) NOT NULL DEFAULT 0, 
+	normalized	VARCHAR(255),
+	
 	PRIMARY KEY (id)
 );
+
 CREATE INDEX xerxes_user_categories_normalized_idx ON xerxes_user_categories(username, normalized);
 
 CREATE TABLE xerxes_user_subcategories(
-	id        MEDIUMINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	name     	VARCHAR(255),
+	id		MEDIUMINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	name		VARCHAR(255),
 	sequence	MEDIUMINT NOT NULL,
-  category_id	MEDIUMINT NOT NULL,
+	category_id	MEDIUMINT NOT NULL,
 
- 	FOREIGN KEY (category_id) REFERENCES xerxes_user_categories(id) ON DELETE CASCADE
+	FOREIGN KEY (category_id) REFERENCES xerxes_user_categories(id) ON DELETE CASCADE
 );
 
 CREATE TABLE xerxes_user_subcategory_databases(
 
 	database_id	VARCHAR(10),
-  subcategory_id	MEDIUMINT,
-  sequence MEDIUMINT,
+	subcategory_id	MEDIUMINT,
+	sequence 	MEDIUMINT,
 
-  PRIMARY KEY(database_id, subcategory_id),
- 	FOREIGN KEY (database_id) REFERENCES xerxes_databases(metalib_id) ON DELETE CASCADE,  
+	PRIMARY KEY(database_id, subcategory_id),
 	FOREIGN KEY (subcategory_id) REFERENCES xerxes_user_subcategories (id) ON DELETE CASCADE
 );

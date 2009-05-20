@@ -234,6 +234,20 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		$this->delete( "DELETE FROM xerxes_categories" );
 		$this->delete( "DELETE FROM xerxes_types" );
 	}
+
+	/**
+	 * Remove orphaned my saved database associations
+	 */
+	
+	public function synchUserDatabases()
+	{
+		// user saved databases sit loose to the databases table, so we use this
+		// to manually enforce an 'ON CASCADE DELETE' to ensure we don't abandon
+		// databases in the my saved databases tables
+		
+		$this->delete( "DELETE FROM xerxes_user_subcategory_databases WHERE " .
+			" database_id NOT IN ( SELECT metalib_id FROM xerxes_databases )");
+	}	
 	
 	/**
 	 * Add a database to the local knowledgebase
