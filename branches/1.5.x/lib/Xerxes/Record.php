@@ -784,7 +784,7 @@
 					     stristr($this->strSource, "EVII") || 
 					     stristr($this->strSource, "WILEY_IS") || 
 					     ( stristr($this->strSource, "OXFORD_JOU") && ! strstr($strUrl, "content/full/") ) ||
-					     ( strstr($this->strSource, "GALE") && ! $this->strSource == "GALE_GVRL" && ! in_array("Text available", $this->arrNotes)  ) ||
+					     ( strstr($this->strSource, "GALE") && $this->strSource != "GALE_GVRL" && ! in_array("Text available", $this->arrNotes)  ) ||
 					     stristr($strUrl, "www.loc.gov/catdir") ||
 					     stristr($this->strSource, "IEEE_XPLORE"))
 					{
