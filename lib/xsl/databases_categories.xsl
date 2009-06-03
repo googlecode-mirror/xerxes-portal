@@ -49,7 +49,6 @@
 					<input type="hidden" name="action" value="search" />
 					<input type="hidden" name="context" value="{$quick_search_category}" />
 					<input type="hidden" name="context_url" value="{$base_url}" />
-					<input type="hidden" name="field" value="WRD" />
 					<input type="hidden" name="subject">
 						<xsl:attribute name="value"><xsl:value-of select="category/@normalized" /></xsl:attribute>
 					</input>
