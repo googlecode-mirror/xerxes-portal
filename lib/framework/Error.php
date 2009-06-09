@@ -61,7 +61,7 @@ class Xerxes_Framework_Error
 				$resultStatus = 404;
 			}
 			
-			header( ' ', true, $resultStatus ); // send back http status as internal server error or other specified status
+			header( '', true, $resultStatus ); // send back http status as internal server error or other specified status
 			
 			// for the web, we'll convert the error message to xml along with the type
 			// of exception and hand display off to the error.xsl file
