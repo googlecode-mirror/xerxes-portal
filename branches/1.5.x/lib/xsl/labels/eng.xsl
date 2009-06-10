@@ -23,25 +23,24 @@
 	
 	<xsl:variable name="text_breadcrumb_seperator"> / </xsl:variable>
 	
-	<xsl:variable name="text_collections_created_by">Created by <xsl:value-of select="/*/category/@owned_by_user" /></xsl:variable>
-	<xsl:variable name="text_collections_edit">Add databases and Edit</xsl:variable>
-	<xsl:variable name="text_collections_public">Public</xsl:variable>
-	<xsl:variable name="text_collections_private">Private</xsl:variable>
 	<xsl:variable name="text_collections_add_database">Add databases</xsl:variable>
-	<xsl:variable name="text_collections_remove_searchbox">I'm done adding databases!</xsl:variable>
-	
-	<xsl:variable name="text_collections_done_editing">I'm done editing!</xsl:variable>
-	<xsl:variable name="text_collections_public_url">Public URL:</xsl:variable>
-	<xsl:variable name="text_collections_change_name">Change collection name</xsl:variable>
-	<xsl:variable name="text_collections_delete_collection">Delete collection</xsl:variable>
-	<xsl:variable name="text_collections_publish">Make collection:</xsl:variable>
-	<xsl:variable name="text_collections_change_section_order">Change section order</xsl:variable>
 	<xsl:variable name="text_collections_add_section">Add a new section:</xsl:variable>
-	<xsl:variable name="text_collections_change_section_name">Change section name</xsl:variable>
-	<xsl:variable name="text_collections_delete_section">Delete section</xsl:variable>
 	<xsl:variable name="text_collections_change_database_order">Change database order</xsl:variable>
+	<xsl:variable name="text_collections_change_name">Change collection name</xsl:variable>
+	<xsl:variable name="text_collections_change_section_name">Change section name</xsl:variable>
+	<xsl:variable name="text_collections_change_section_order">Change section order</xsl:variable>
+	<xsl:variable name="text_collections_created_by">Created by <xsl:value-of select="/*/category/@owned_by_user" /></xsl:variable>
+	<xsl:variable name="text_collections_delete_collection">Delete collection</xsl:variable>
+	<xsl:variable name="text_collections_delete_section">Delete section</xsl:variable>
+	<xsl:variable name="text_collections_done_editing">I'm done editing!</xsl:variable>
+	<xsl:variable name="text_collections_edit">Add databases and Edit</xsl:variable>
 	<xsl:variable name="text_collections_list_databases">List databases matching: </xsl:variable>
 	<xsl:variable name="text_collections_no_matches">No databases found matching</xsl:variable>	
+	<xsl:variable name="text_collections_private">Private</xsl:variable>
+	<xsl:variable name="text_collections_public">Public</xsl:variable>
+	<xsl:variable name="text_collections_public_url">Public URL:</xsl:variable>
+	<xsl:variable name="text_collections_publish">Make collection:</xsl:variable>
+	<xsl:variable name="text_collections_remove_searchbox">I'm done adding databases!</xsl:variable>
 	
 	<xsl:variable name="text_database_availability">Availability:</xsl:variable>
 	<xsl:variable name="text_database_available_registered">Only available to registered users.</xsl:variable>
@@ -87,39 +86,39 @@
 	<xsl:variable name="text_error_databases_registered">Only available to registered users.</xsl:variable>
 	<xsl:variable name="text_error_pdo_exception">There was a problem with the database.</xsl:variable>
 	
+	<xsl:variable name="text_folder_email_address">email address</xsl:variable>
+	<xsl:variable name="text_folder_email_notes">notes</xsl:variable>
+	<xsl:variable name="text_folder_email_options">Email Options</xsl:variable>
+	<xsl:variable name="text_folder_email_pagename">Email records to yourself</xsl:variable>
+	<xsl:variable name="text_folder_email_success">Email successfully sent</xsl:variable>
+	<xsl:variable name="text_folder_email_subject">subject</xsl:variable>
+
 	<xsl:variable name="text_folder_endnote_direct">directly into Endnote, Zotero, or other citation management application</xsl:variable>
 	<xsl:variable name="text_folder_endnote_file">to a file I will import myself</xsl:variable>
+	<xsl:variable name="text_folder_endnote_pagename">Download to Endnote, Zotero, etc.</xsl:variable>
+	
 	<xsl:variable name="text_folder_export_download">Download</xsl:variable>
 	<xsl:variable name="text_folder_export_export">Export</xsl:variable>
 	<xsl:variable name="text_folder_export_send">Send</xsl:variable>
+	<xsl:variable name="text_folder_file_pagename">Download to text file</xsl:variable>
+	<xsl:variable name="text_folder_header_export">Export Records</xsl:variable>
+	<xsl:variable name="text_folder_header_temporary">Temporary Saved Records</xsl:variable>
 	<xsl:variable name="text_folder_limit_format">Format</xsl:variable>
 	<xsl:variable name="text_folder_limit_tag">Label</xsl:variable>
-	<xsl:variable name="text_folder_records_export">Records to export</xsl:variable>
-		
-	<xsl:variable name="text_folder_header_temporary">Temporary Saved Records</xsl:variable>
 	<xsl:variable name="text_folder_login_temp">
 		( <a href="{//navbar/element[@id='login']/url}">Log-in</a> to save records beyond this session. )
 	</xsl:variable>
-	<xsl:variable name="text_folder_options_tags">Labels</xsl:variable>
-	<xsl:variable name="text_folder_options_format">Limit by Format</xsl:variable>
-	<xsl:variable name="text_folder_return">Return to search results</xsl:variable>
-	
-	<xsl:variable name="text_folder_header_export">Export Records</xsl:variable>
-	<xsl:variable name="text_folder_refworks_pagename">Export to Refworks</xsl:variable>
-	<xsl:variable name="text_folder_file_pagename">Download to text file</xsl:variable>
-	<xsl:variable name="text_folder_endnote_pagename">Download to Endnote, Zotero, etc.</xsl:variable>
 	<xsl:variable name="text_folder_no_records">There are currently no saved records</xsl:variable>
 	<xsl:variable name="text_folder_no_records_for">of</xsl:variable>
-	
-	<xsl:variable name="text_folder_email_pagename">Email records to yourself</xsl:variable>
-	<xsl:variable name="text_folder_email_success">Email successfully sent</xsl:variable>
-	<xsl:variable name="text_folder_email_options">Email Options</xsl:variable>
-	<xsl:variable name="text_folder_email_address">email address</xsl:variable>
-	<xsl:variable name="text_folder_email_subject">subject</xsl:variable>
-	<xsl:variable name="text_folder_email_notes">notes</xsl:variable>
-	
+	<xsl:variable name="text_folder_options_tags">Labels</xsl:variable>
+	<xsl:variable name="text_folder_options_format">Limit by Format</xsl:variable>
+	<xsl:variable name="text_folder_records_export">Records to export</xsl:variable>
+	<xsl:variable name="text_folder_refworks_pagename">Export to Refworks</xsl:variable>
+	<xsl:variable name="text_folder_return">Return to search results</xsl:variable>
+
 	<xsl:variable name="text_header_collections">My Saved Databases</xsl:variable>
-	
+	<xsl:variable name="text_header_embed">Embed</xsl:variable>
+	<xsl:variable name="text_header_facets">Limit top results by:</xsl:variable>
 	<xsl:variable name="text_header_login">Log-in</xsl:variable>
 	<xsl:variable name="text_header_logout">
 		<xsl:text>Log-out </xsl:text>
@@ -132,55 +131,55 @@
 			</xsl:when>
 		</xsl:choose>
 	</xsl:variable>
-	
 	<xsl:variable name="text_header_my_collections">My Collections</xsl:variable>
 	<xsl:variable name="text_header_my_collections_explain">Collections are a way to organize your saved databases.</xsl:variable>
 	<xsl:variable name="text_header_my_collections_new">Create a new collection:</xsl:variable>
 	<xsl:variable name="text_header_my_collections_add">Add</xsl:variable>
-
 	<xsl:variable name="text_header_myaccount">My Account</xsl:variable>
 	<xsl:variable name="text_header_savedrecords">My Saved Records</xsl:variable>
-		
-	<xsl:variable name="text_header_embed">Embed</xsl:variable>
-	<xsl:variable name="text_header_facets">Limit top results by:</xsl:variable>
-	
 	<xsl:variable name="text_header_snippet_generate">Embed</xsl:variable>
-  <xsl:variable name="text_header_snippet_generate_database"><xsl:copy-of select="$text_header_snippet_generate"/><xsl:text> </xsl:text><xsl:copy-of select="$text_record_database"/></xsl:variable>
-  <xsl:variable name="text_header_snippet_generate_subject"><xsl:copy-of select="$text_header_snippet_generate"/> Subject</xsl:variable>
-  <xsl:variable name="text_header_snippet_generate_collection"><xsl:copy-of select="$text_header_snippet_generate"/> Collection</xsl:variable>
+	<xsl:variable name="text_header_snippet_generate_collection">
+		<xsl:copy-of select="$text_header_snippet_generate"/> Collection
+	</xsl:variable>
+	<xsl:variable name="text_header_snippet_generate_database">
+		<xsl:copy-of select="$text_header_snippet_generate"/><xsl:text> </xsl:text><xsl:copy-of select="$text_record_database"/>
+	</xsl:variable>
+	<xsl:variable name="text_header_snippet_generate_subject"><xsl:copy-of select="$text_header_snippet_generate"/> Subject</xsl:variable>
   
-	
 	<xsl:variable name="text_link_holdings">Availability</xsl:variable>
 	<xsl:variable name="text_link_original_record">Original record</xsl:variable>
 	<xsl:variable name="text_link_resolver_available">Full text available</xsl:variable>
 	<xsl:variable name="text_link_resolver_check">Check for availability</xsl:variable>
-	
-	<xsl:variable name="text_metasearch_hits_pagename">Search Status</xsl:variable>
+
 	<xsl:variable name="text_metasearch_hits_error">Sorry, we're having technical difficulties right now.</xsl:variable>
-	<xsl:variable name="text_metasearch_hits_error_explain">You can still search each database individually by following the links below.</xsl:variable>
+	<xsl:variable name="text_metasearch_hits_error_explain">
+		You can still search each database individually by following the links below.
+	</xsl:variable>
 	<xsl:variable name="text_metasearch_hits_no_match">Sorry, your search did not match any records</xsl:variable>
-	
+	<xsl:variable name="text_metasearch_hits_pagename">Search Status</xsl:variable>
 	<xsl:variable name="text_metasearch_hits_table_database">Database</xsl:variable>
 	<xsl:variable name="text_metasearch_hits_table_status">Status</xsl:variable>
 	<xsl:variable name="text_metasearch_hits_table_count">Hits</xsl:variable>
-	
 	<xsl:variable name="text_metasearch_results_limit">Limit</xsl:variable>
 	<xsl:variable name="text_metasearch_results_summary">
 		Results <strong><xsl:value-of select="//summary/range" /></strong> 
 		of <strong><xsl:value-of select="//summary/total" /></strong>	
 	</xsl:variable>
-	
 	<xsl:variable name="text_metasearch_results_native_results">View results at</xsl:variable>
 	<xsl:variable name="text_metasearch_results_search_results">Search results</xsl:variable>
-	<xsl:variable name="text_metasearch_top_results">Top Results</xsl:variable>
-	<xsl:variable name="text_metasearch_results_by_db">Results by database</xsl:variable>
-	<xsl:variable name="text_results_hint_remove_limit">remove limit</xsl:variable>
-	
+	<xsl:variable name="text_metasearch_results_by_db">Results by database</xsl:variable>	
 	<xsl:variable name="text_metasearch_results_error_merge_bug">Sorry, there was an error.</xsl:variable>
 	<xsl:variable name="text_metasearch_results_error_merge_bug_try_again">
 		Please <a href="{//request/server/request_uri}">try again</a>
 		or select an individual set of results to the right.
 	</xsl:variable>
+	<xsl:variable name="text_metasearch_results_found">results found</xsl:variable>
+	<xsl:variable name="text_metasearch_status_error">ERROR</xsl:variable>
+	<xsl:variable name="text_metasearch_status_fetching">FETCHING</xsl:variable>
+	<xsl:variable name="text_metasearch_status_start">START</xsl:variable>
+	<xsl:variable name="text_metasearch_status_started">STARTED</xsl:variable>
+	<xsl:variable name="text_metasearch_status_stopped">STOPPED</xsl:variable>
+	<xsl:variable name="text_metasearch_top_results">Top Results</xsl:variable>
 	
 	<xsl:variable name="text_record_author_corp">Corporate author</xsl:variable>
 	<xsl:variable name="text_record_breadcrumb">Record</xsl:variable>
@@ -195,9 +194,6 @@
 	<xsl:variable name="text_record_database">Database</xsl:variable>
 	<xsl:variable name="text_record_degree">Degree</xsl:variable>
 	<xsl:variable name="text_record_format_label">Format</xsl:variable>
-	<xsl:variable name="text_records_fulltext_pdf">Full-Text in PDF</xsl:variable>
-	<xsl:variable name="text_records_fulltext_html">Full-Text in HTML</xsl:variable>
-	<xsl:variable name="text_records_fulltext_available">Full-Text Available</xsl:variable>	
 	<xsl:variable name="text_record_inst">Institution</xsl:variable>
 	<xsl:variable name="text_record_language_label">Language</xsl:variable>
 	<xsl:variable name="text_record_notes">Additional Notes</xsl:variable>
@@ -206,28 +202,24 @@
 	<xsl:variable name="text_record_subjects">Covers the topics</xsl:variable>
 	<xsl:variable name="text_record_standard_nos">Standard Numbers</xsl:variable>
 	<xsl:variable name="text_records_tags">Labels: </xsl:variable>
+
+	<xsl:variable name="text_records_fulltext_pdf">Full-Text in PDF</xsl:variable>
+	<xsl:variable name="text_records_fulltext_html">Full-Text in HTML</xsl:variable>
+	<xsl:variable name="text_records_fulltext_available">Full-Text Available</xsl:variable>	
 	
 	<xsl:variable name="text_results_author">By</xsl:variable>
 	<xsl:variable name="text_results_breadcrumb">Results</xsl:variable>
+	<xsl:variable name="text_results_hint_remove_limit">remove limit</xsl:variable>
 	<xsl:variable name="text_results_no_title">[ No Title ]</xsl:variable>
 	<xsl:variable name="text_results_published_in">Published in</xsl:variable>
-	
 	<xsl:variable name="text_results_record_saved">Record saved</xsl:variable>
 	<xsl:variable name="text_results_record_saved_temp">Temporarily Saved</xsl:variable>
 	<xsl:variable name="text_results_record_save_it">Save this record</xsl:variable>
 	<xsl:variable name="text_results_record_saved_perm">login to save permanently</xsl:variable>
 	<xsl:variable name="text_results_record_delete">Delete this record</xsl:variable>
-
 	<xsl:variable name="text_results_refereed">Peer Reviewed</xsl:variable>
 	<xsl:variable name="text_results_sort_by">sort by</xsl:variable>
 	<xsl:variable name="text_results_year">Year</xsl:variable>
-	
-	<xsl:variable name="text_metasearch_results_found">results found</xsl:variable>
-	<xsl:variable name="text_metasearch_status_error">ERROR</xsl:variable>
-	<xsl:variable name="text_metasearch_status_fetching">FETCHING</xsl:variable>
-	<xsl:variable name="text_metasearch_status_start">START</xsl:variable>
-	<xsl:variable name="text_metasearch_status_started">STARTED</xsl:variable>
-	<xsl:variable name="text_metasearch_status_stopped">STOPPED</xsl:variable>
 	
 	<xsl:variable name="text_searchbox_ada_boolean">Boolean operator: </xsl:variable>
 	<xsl:variable name="text_searchbox_boolean_and">And</xsl:variable>
