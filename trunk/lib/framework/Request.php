@@ -96,8 +96,16 @@ class Xerxes_Framework_Request
 			}
 		}
 		
-		// iis fix, since it doesn't hold value for request_uri
+		### iis fixes
 		
+		// to make this consistent with apache
+		
+		if ( $_SERVER['HTTPS'] == "off" )
+		{
+			unset($_SERVER['HTTPS']);
+		}
+		
+		// since it doesn't hold value for request_uri
 
 		if ( ! isset( $_SERVER['REQUEST_URI'] ) )
 		{
