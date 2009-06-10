@@ -22,7 +22,7 @@
 </xsl:template>
 
 <xsl:template name="page_name">
-	Home
+	<xsl:value-of select="$text_databases_category_pagename" />
 </xsl:template>
 
 <xsl:template name="breadcrumb">
