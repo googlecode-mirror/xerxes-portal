@@ -66,7 +66,9 @@
 	<xsl:variable name="text_databases_az_hint_searchable">searchable by <xsl:value-of select="$app_name" /></xsl:variable>
 	<xsl:variable name="text_databases_az_pagename">Databases A-Z</xsl:variable>
 	<xsl:variable name="text_databases_az_search">List databases matching: </xsl:variable>
-		
+	
+	
+	<xsl:variable name="text_databases_category_pagename">Home</xsl:variable>
 	<xsl:variable name="text_databases_category_quick_desc">
 		<xsl:text>Search </xsl:text>
 		<xsl:call-template name="text_number_to_words">
