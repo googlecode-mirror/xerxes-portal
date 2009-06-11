@@ -116,6 +116,13 @@
 		//results/search/pair[@position ='1']/field = 'ISSN' or 
 		//results/search/pair[@position ='1']/field = 'ISBN' or 
 		//results/search/pair[@position ='1']/field = 'WYR'" />
+
+
+	<xsl:variable name="temporarySession">
+		<xsl:if test="//request/session/role = 'guest' or //request/session/role = 'local'">
+			<xsl:text>true</xsl:text>
+		</xsl:if>	
+	</xsl:variable>
 	
 	<!-- extra content to include in the HTML 'head' section -->
 	<xsl:variable name="text_extra_html_head_content" />
@@ -882,7 +889,7 @@
 
 <xsl:template name="folder_header_label">
 	<xsl:choose>
-		<xsl:when test="request/session/role = 'local' or request/session/role = 'guest'">
+		<xsl:when test="$temporarySession = 'true'">
 			<xsl:copy-of select="$text_folder_header_temporary" />
 		</xsl:when>
 		<xsl:otherwise>
@@ -994,7 +1001,7 @@
 			// if there are any records at all in saved records. Also fix initial display in navbar.
 			
 			numSavedRecords = parseInt('0<xsl:value-of select="navbar/element[@id='saved_records']/@numSessionSavedRecords" />', 10);
-			isTemporarySession = <xsl:choose><xsl:when test="request/session/role = 'guest' or request/session/role = 'local'">true</xsl:when><xsl:otherwise>false</xsl:otherwise></xsl:choose>
+			isTemporarySession = <xsl:choose><xsl:when test="$temporarySession = 'true'">true</xsl:when><xsl:otherwise>false</xsl:otherwise></xsl:choose>
 		</script>
 		
 		<script src="{$base_include}/javascript/save.js" language="javascript" type="text/javascript"></script>
@@ -1673,7 +1680,7 @@
 							
 							<!-- label/tag input for saved records, if record is saved and it's not a temporary session -->
 							
-							<xsl:if test="//request/session/resultssaved[@key = $record_id] and not(//request/session/role = 'guest' or //request/session/role = 'local')">
+							<xsl:if test="//request/session/resultssaved[@key = $record_id] and $temporarySession != 'true'">
 								<div id="label_{$result_set}:{$record_number}" > 
 									<xsl:call-template name="tag_input">
 										<xsl:with-param name="record" select="//saved_records/saved[@id = $record_id]" />

@@ -33,16 +33,6 @@
 	<xsl:value-of select="$text_header_savedrecords" />
 </xsl:template>
 
-<xsl:variable name="temporarySession">
-	<xsl:choose>
-		<xsl:when test="request/session/role = 'guest' or request/session/role = 'local'">
-			<xsl:text>true</xsl:text>
-		</xsl:when>
-		<xsl:otherwise>
-			<xsl:text>false</xsl:text>
-		</xsl:otherwise>
-	</xsl:choose>
-</xsl:variable>
 
 <xsl:template name="sidebar">
 
