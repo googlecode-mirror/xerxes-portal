@@ -226,6 +226,7 @@
 <xsl:template name="sidebar" />
 <xsl:template name="sidebar_additional" />
 <xsl:template name="module_header" />
+<xsl:template name="additional_record_links" />
 
 <!--
 	TEMPLATE: SIDEBAR WRAPPER
@@ -816,7 +817,11 @@
 					<input type="checkbox" name="record" value="{id}" id="record-{id}" checked="checked" />
 					<label for="record-{id}">
 						<a href="{url_full}"><xsl:value-of select="title" /></a><br />
-						<xsl:value-of select="author" /> / <xsl:value-of select="format" /> / <xsl:value-of select="year" />
+						<xsl:value-of select="author" /> / 
+						<xsl:call-template name="text_results_format">
+							<xsl:with-param name="format" select="format" />
+						</xsl:call-template> / 
+						<xsl:value-of select="year" />
 					</label>
 				</li>
 			</xsl:for-each>
@@ -1618,6 +1623,8 @@
 								<xsl:with-param name="img_src" select="concat($base_url, '/images/book.gif')"/>
 							</xsl:call-template>
 					</xsl:if>
+					
+					<xsl:call-template name="additional_record_links" />
 					
 					<xsl:choose>
 						<xsl:when test="/metasearch">
