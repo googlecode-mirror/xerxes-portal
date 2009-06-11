@@ -351,7 +351,7 @@
 					
 					<!-- label/tag input for saved records, if record is saved and it's not a temporary session -->
 					
-					<xsl:if test="//request/session/resultssaved[@key = $record_id] and not(//request/session/role = 'guest' or //request/session/role = 'local')">
+					<xsl:if test="//request/session/resultssaved[@key = $record_id] and $temporarySession != 'true' ">
 						<div class="results_label recordAction" id="label_{$result_set}:{$record_number}" > 
 							<xsl:call-template name="tag_input">
 								<xsl:with-param name="record" select="//saved_records/saved[@id = $record_id]" />
