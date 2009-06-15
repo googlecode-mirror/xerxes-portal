@@ -21,7 +21,7 @@
 	<xsl:variable name="text_authentication_logout_confirm">Are you sure you want to end your session?</xsl:variable>
 	<xsl:variable name="text_authentication_logout_pagename">Logout</xsl:variable>
 	
-	<xsl:variable name="text_breadcrumb_seperator"> / </xsl:variable>
+	<xsl:variable name="text_breadcrumb_seperator"> &gt; </xsl:variable>
 	
 	<xsl:variable name="text_collections_add_database">Add databases</xsl:variable>
 	<xsl:variable name="text_collections_add_section">Add a new section:</xsl:variable>
