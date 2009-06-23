@@ -423,6 +423,11 @@ abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
 			$objOpenUrl = $objXml->createElement("url_open", $url);
 			$objRecordContainer->appendChild( $objOpenUrl );			
 			
+      // openurl kev context object please
+      $configSID = $this->registry->getConfig("APPLICATION_SID", false, "calstate.edu:xerxes");
+      $kev = Xerxes_Parser::escapeXml($objXerxesRecord->getOpenURL(null, $configSID));
+			$objOpenUrl = $objXml->createElement("openurl_kev_co", $kev);
+      $objRecordContainer->appendChild( $objOpenUrl );
 			
 			// import xerxes xml
 			

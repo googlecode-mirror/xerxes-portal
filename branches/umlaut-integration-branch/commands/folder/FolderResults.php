@@ -184,7 +184,7 @@
 					$objUrlDelete = $objXml->createElement("url_delete", $url);
 			 		$objRecord->appendChild( $objUrlDelete );
 
-					// openurl
+					// openurl link
 					
 					$arrParams = array(
 						"base" => "folder",
@@ -196,7 +196,6 @@
 					$url = $this->request->url_for( $arrParams);
 					$objUrlOpen = $objXml->createElement("url_open", $url);
 			 		$objRecord->appendChild( $objUrlOpen ); 
-			 						 		
 			 		
 					foreach ( $objDataRecord->properties() as $key => $value )
 					{
@@ -218,6 +217,13 @@
 								
 							$objImportNode = $objXml->importNode($objBibRecord->documentElement, true);
 							$objRecord->appendChild($objImportNode);
+              
+              // and openurl kev context object from record
+              $configSID = $this->registry->getConfig("APPLICATION_SID", false, "calstate.edu:xerxes");
+              $kev = Xerxes_Parser::escapeXml($objXerxesRecord->getOpenURL(null, $configSID));
+              $objOpenUrl = $objXml->createElement("openurl_kev_co", $kev);
+              $objRecord->appendChild( $objOpenUrl );
+              
 						}
 						elseif ($key == "marc" && $value != null)
 						{
