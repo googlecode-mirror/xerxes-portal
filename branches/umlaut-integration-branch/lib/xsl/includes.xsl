@@ -1014,7 +1014,28 @@
 		<!-- add behaviors to edit collection dialog, currently just delete confirm -->
 		<script src="{$base_include}/javascript/collections.js" language="javascript" type ="text/javascript"></script>
 	
+		<!-- umlaut content on record detail page, when so configured -->
+		<xsl:if test="//config/umlaut_base and (( request/base='metasearch' and request/action = 'record' ) or (request/base='folder' and request/action = 'full'))">
+			
+			<!-- Need to set the OpenURL kev context object in a global js variable,
+			so the script can get it. -->
+			
+			<script language="javascript" type="text/javascript">
+				openurl_kev_co = '<xsl:value-of select="//records/record[1]/openurl_kev_co"/>'; 
+				umlaut_base = '<xsl:value-of select="//config/umlaut_base"/>';
+			</script>
+      
+      <!-- include umlaut script for expand/contract triangles that
+           might end up included on page -->
+      <script src="{//config/umlaut_base}/javascripts/expand_contract_toggle.js?1245076633" type="text/javascript"></script>
 
+			
+			<!-- and now call the script that will set things up for umlaut -->
+			<script language="javascript" type="text/javascript" src="{$base_include}/javascript/umlaut_record_detail.js"/>
+			
+			<!-- and now actually call umlaut itself to do the js magic -->
+			<script type="text/javascript" src="{//config/umlaut_base}/javascripts/embed/umlaut-embed.js"></script>
+		</xsl:if>
 		
 	</xsl:if>
   	

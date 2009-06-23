@@ -510,6 +510,15 @@
 				<view>xsl/metasearch_record.xsl</view>
 			</action>
 		</section>
+    
+    <!-- umlaut integration support -->
+    <section name="umlaut" directory="umlaut" namespace="Xerxes">
+      <!-- proxy to umlaut_base as configured, to allow cross-site js
+           and such -->
+      <action name="proxy">
+        <command>UmlautProxy</command>
+      </action>
+    </section>
 		
 		<!-- mango is experimental in 1.5 -->
 

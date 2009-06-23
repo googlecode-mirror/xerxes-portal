@@ -1495,12 +1495,13 @@
 		/**
 		 * Get an OpenURL 1.0 formatted URL
 		 *
-		 * @param string $strResolver	base url of the link resolver
+		 * @param string $strResolver	base url of the link resolver. If null, will return a KEV ContextObject, not a URL. 
 		 * @param string $strReferer	referrer (unique identifier)
+     * @param string $param_deliminter defaults to &, but you may prefer ';' or '&amp;' depending on context. 
 		 * @return string
 		 */
 		
-		public function getOpenURL($strResolver, $strReferer = null)
+		public function getOpenURL($strResolver, $strReferer = null, $param_delimiter = "&")
 		{
 			$arrReferant = array();		// referrant values, minus author
 			$strBaseUrl = "";			// base url of openurl request
@@ -1511,14 +1512,14 @@
 			$strKev = "url_ver=Z39.88-2004";
 
 			if ( $strResolver != "" ) $strBaseUrl = $strResolver . "?";
-			if ( $strReferer != "" ) $strKev .= "&rfr_id=info:sid/" .  urlencode($strReferer);
+			if ( $strReferer != "" ) $strKev .= $param_delimiter. "rfr_id=info:sid/" .  urlencode($strReferer);
 			if ( $this->strDatabaseName != "" )  $strKev .= urlencode(" ( " . $this->strDatabaseName . ")");
 			
       
       // add rft_id's
       $arrReferentId = $this->referentIdentifierArray();
       foreach ($arrReferentId as $id) {
-        $strKev .= "&rft_id=" . urlencode($id); 
+        $strKev .= $param_delimiter . "rft_id=" . urlencode($id); 
       }
       
 			// add simple referrant values
@@ -1528,7 +1529,7 @@
 			{
 				if ($value != "")
 				{
-					$strKev .= "&" . $key . "=" . urlencode($value);
+					$strKev .= $param_delimiter . $key . "=" . urlencode($value);
 				}
 			}
 			
@@ -1540,7 +1541,7 @@
 				{
 					if ( array_key_exists("last",$this->arrAuthors[0]) )
 					{
-						$strKev .= "&rft.aulast=" . urlencode($this->arrAuthors[0]["last"]);
+						$strKev .= $param_delimiter . "rft.aulast=" . urlencode($this->arrAuthors[0]["last"]);
 						
 						if ( $this->bolEditor == true )
 						{
@@ -1549,16 +1550,16 @@
 					}
 					if ( array_key_exists("first",$this->arrAuthors[0]) )
 					{
-						$strKev .= "&rft.aufirst=" . urlencode($this->arrAuthors[0]["first"]);
+						$strKev .= $param_delimiter . "rft.aufirst=" . urlencode($this->arrAuthors[0]["first"]);
 					}
 					if ( array_key_exists("init",$this->arrAuthors[0]) )
 					{
-						$strKev .= "&rft.auinit=" . urlencode($this->arrAuthors[0]["init"]);
+						$strKev .= $param_delimiter . "rft.auinit=" . urlencode($this->arrAuthors[0]["init"]);
 					}
 				}
 				else
 				{
-					$strKev .= "&rft.aucorp=" . urlencode($this->arrAuthors[0]["name"]);
+					$strKev .= $param_delimiter . "rft.aucorp=" . urlencode($this->arrAuthors[0]["name"]);
 				}
 			}
 			
