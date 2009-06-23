@@ -225,18 +225,11 @@ function saveRecord(groupID,resultSet,recordNumber)
 					}
 				
 					// add it to the page, now that it's all set up.
-					
-					var parentBlock = $(id).up('.recordActions');
-					
-					if (parentBlock) 
-					{
-						parentBlock.insert(input_div);
-						
-						// and add the autocompleter
-	
-						addAutoCompleterToID(new_form.tags.id);
-						input_div.show();
-					}
+          $(id).insert({'after' : input_div});
+          // and add the autocompleter
+          addAutoCompleterToID(new_form.tags.id);
+          input_div.show();
+         
 				}
 			}
 			
