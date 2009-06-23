@@ -5,9 +5,21 @@
  * umlaut_base     :   The Umlaut base URL. Not the OpenURL base including /resolve, but just eg "http://findit.library.jhu.edu/"
  */
  
- addEvent(window, 'load', loadUmlautContent);
+ document.observe("dom:loaded",  function() {
+     // Add a spinner please, and preserve original content.
+     spinner = '<div class="recordAction linkResolverLink umlautLoad"><img src="' + umlaut_base + '/images/spinner.gif" alt=""/> Loading content from <a href="' + umlaut_base + '/resolve?' + openurl_kev_co + '">Find It</a></div>';
+     $$('.recordAction.linkResolverLink').each ( function(item) {
+        
+         item.hide();
+         item.insert({'after': spinner});       
+      });
+ });
+   
+  loadUmlautContent(); 
  
  function loadUmlautContent() {
+   
+   
    function show_umlaut_content(count, div_id) {
      if (count > 0 && $(div_id) && ! $(div_id).visible()) {
        // tried sciptaculous SlideDown, but did weird things in IE. 
@@ -18,14 +30,8 @@
    
    // Umlaut needs this global js variable. 
    umlaut_openurl_kev_co = openurl_kev_co;
-   
-   // Add a spinner please, and preserve original content.
-   spinner = '<div class="recordAction linkResolverLink umlautLoad"><img src="' + umlaut_base + '/images/spinner.gif" alt=""/> Loading content from <a href="' + umlaut_base + '/resolve?' + openurl_kev_co + '">Find It</a></div>';
-   $$('.recordAction.linkResolverLink').each ( function(item) {
-      
-       item.hide();
-       item.insert({'after': spinner});       
-    });
+
+
    
    
    // Now we need to map Umlaut sections to divs on our page.
@@ -73,9 +79,10 @@
      'holding' : {
        'host_div_id': 'library_copies',
        'after_update': function(count) {  show_umlaut_content(count, 'library_copies');}
-     },
-     
-     // not a section map, but a final all-complete callback
+     }
+   };
+   
+   umlaut_options = {
      'all-complete-callback': function() {
             $$('.recordAction.linkResolverLink').each ( function(item) {            
                 item.show();     
@@ -83,10 +90,7 @@
             $$('.recordAction.umlautLoad').each ( function(item) {            
                 item.remove();     
             });            
-          }
+    }
    };
-   
-
-   
    
  }

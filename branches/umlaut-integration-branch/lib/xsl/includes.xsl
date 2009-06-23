@@ -1025,16 +1025,17 @@
 				umlaut_base = '<xsl:value-of select="//config/umlaut_base"/>';
 			</script>
       
-      <!-- include umlaut script for expand/contract triangles that
-           might end up included on page -->
-      <script src="{//config/umlaut_base}/javascripts/expand_contract_toggle.js?1245076633" type="text/javascript"></script>
-
 			
 			<!-- and now call the script that will set things up for umlaut -->
 			<script language="javascript" type="text/javascript" src="{$base_include}/javascript/umlaut_record_detail.js"/>
 			
 			<!-- and now actually call umlaut itself to do the js magic -->
-			<script type="text/javascript" src="{//config/umlaut_base}/javascripts/embed/umlaut-embed.js"></script>
+			<script type="text/javascript" src="{//config/umlaut_base}/javascripts/embed/umlaut-embed-func.js"></script>
+      
+      <script type="text/javascript">
+          embedUmlaut(umlaut_base, openurl_kev_co, umlaut_section_map, umlaut_options);
+
+      </script>
 		</xsl:if>
 		
 	</xsl:if>
