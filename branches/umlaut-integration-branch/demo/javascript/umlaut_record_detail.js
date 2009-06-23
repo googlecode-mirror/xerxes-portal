@@ -15,9 +15,7 @@
       });
  });
    
-  loadUmlautContent(); 
  
- function loadUmlautContent() {
    
    
    function show_umlaut_content(count, div_id) {
@@ -93,4 +91,4 @@
     }
    };
    
- }
+   embedUmlaut(umlaut_base, openurl_kev_co, umlaut_section_map, umlaut_options);
