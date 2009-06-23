@@ -749,6 +749,10 @@ div.autocomplete ul li {
   padding: 0 0 3px 21px
 }
 
+#recordFullText .umlaut_section.fulltext li.response_item a {
+  display:block; 
+}
+
 .umlaut_section.holding .umlaut_section_content, .umlaut_section.search_inside .umlaut_section_content {
   margin-left: 2em; 
 }
@@ -789,7 +793,10 @@ div.autocomplete ul li {
   padding-right: 0.8em;
 }
 
-
+.umlaut_section img.toggle_icon {
+  margin-right:2px;
+  vertical-align:top;
+}
 
 
 
