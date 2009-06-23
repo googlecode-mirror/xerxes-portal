@@ -77,6 +77,12 @@
      'holding' : {
        'host_div_id': 'library_copies',
        'after_update': function(count) {  show_umlaut_content(count, 'library_copies');}
+     },
+     'document_delivery': {
+       'host_div_id': 'document_delivery',
+       'after_update': function(count) {
+          if ($$('#recordFullText .fullTextLink').length == 0) show_umlaut_content(count, 'document_delivery');
+       }
      }
    };
    

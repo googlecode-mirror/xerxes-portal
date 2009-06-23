@@ -381,6 +381,8 @@
 
       <div id="library_copies" class="umlaut_content" style="display:none;">
       </div>
+      
+      <div id="document_delivery" class="umlaut_content" style="display:none;"></div>
         
       <div id="search_inside" class="umlaut_content" style="display:none;">        
       </div>
