@@ -8,6 +8,8 @@ Tips for applying local customizations to Xerxes in a way that minimizes the pai
 
 The key to successful local customizations is doing them carefully and surgically. 
 
+You don't need to (and shoudln't) actually make changes to files in Xerxes own lib/xsl directory. Instead, you provide 'overrides' in your local app's lib/xsl directory, that override Xerxes' definitions. This will make upgrades a lot less painful for you. 
+
 Don't copy an entire file into a local over-ride, if you can get away with just one or a few templates, variables, or other xsl elements from that file. To understand how to do that, it's better if you have some basic understanding of XSLT (there are some good books), or consult with us on the list our time allowing. 
 
 If you find yourself needing to over-ride an entire large template just to customize one tiny part of it, and this is something that's unlikely to be unique just to you -- that's a sign that we need to refactor Xerxes XSLT to give you a more granular template or variable to over-ride. 
