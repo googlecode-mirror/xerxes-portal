@@ -14,6 +14,15 @@ If you find yourself needing to over-ride an entire large template just to custo
 
 If it's likely to be a very common use case, and it's feasible to do so, we should build it into Xerxes core so you can get the functionality without over-riding any XSLT at all. Like the holdings and original_record links from Metalib I'm building into the standard distro. 
 
+== Basic XSL Over-riding process ==
+
+You don't need to customize an entire .xsl *file*, but you generally need to customize at the level of <xsl:template> tags, or <xsl:variable> tags.  So you first need to identify the smallest unit you can customize to get your desired behavior, either a template or a variable. (Lots of templates or variables are in the common includes.xsl file, not just in the particular .xsl file used for the particular page).  Then, you make a file in your local app's /xsl directory with the same name as the file you found the template or variable in, and put *just* the template or variable you want to 'override' in there with your new/changed definition. 
+
+There are some cases where this won't work though (doh!).  In those cases, you can usually just stick the variable or template you want to override in your local includes.xsl file instead.  But if you run into one of those cases, ask us, there might be a better way.
+
+== So... ==
+
+
 So you shouldn't be afraid to ask on the list about what you're doing, if we have time we can provide you hints on the best way to do it, and may also realize that Xerxes core should be changed to make it easier or more reliable to do what you want. And definitely a little bit of XSLT knowledge on your part will help you understand what you're doing, so you can make customizations while maximizing maintainability.
 
 
