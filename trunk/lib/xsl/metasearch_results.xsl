@@ -186,7 +186,7 @@
 	
 	<xsl:if test="//base_info[base = 'MERGESET']">
 	
-		<div class="box">
+		<div class="box merge_set">
 			
 			<h2><xsl:copy-of select="$text_metasearch_results_search_results" /></h2>
 			
@@ -220,7 +220,7 @@
 	
 	<xsl:if test="count(//base_info) > 1 or count(//excluded_dbs/database) > 0">
 	
-		<div class="box">
+		<div class="box database_sets">
 			
 			<h2><xsl:copy-of select="$text_metasearch_results_by_db" /></h2>
 					
