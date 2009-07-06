@@ -26,7 +26,7 @@ class Xerxes_Command_AuthenticateCasValidate extends Xerxes_Command_Authenticate
 			"&service=" . urlencode($configUrlBaseDirectory . "/?base=authenticate&action=cas-validate" .
 			"&return=" . urlencode($strReturn) );
 		
-		$strResults = file_get_contents( $strUrl );
+		$strResults = Xerxes_Parser::request( $strUrl );
 
 		// validate the request
 		
