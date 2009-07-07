@@ -290,7 +290,6 @@ class Xerxes_Command_MetasearchSearch extends Xerxes_Command_Metasearch
     
 		$arrSearch["context"] = $strContext;
 		$arrSearch["context_url"] = $strContextUrl;
-		$arrQuery["normalized"] = $strFullQuery;
 		
 		foreach ( $arrSearch as $key => $value )
 		{
@@ -305,6 +304,7 @@ class Xerxes_Command_MetasearchSearch extends Xerxes_Command_Metasearch
 		$arrQuery = array ( );
 		$arrQuery["query"] = $strQuery;
 		$arrQuery["field"] = $strField;
+		$arrQuery["normalized"] = $strFullQuery;
 		
 		foreach ( $arrQuery as $key => $value )
 		{
