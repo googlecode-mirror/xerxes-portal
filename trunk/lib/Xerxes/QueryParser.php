@@ -130,13 +130,18 @@
 			
 			$arrWords = $this->normalizeArray($value);
 			
-			// remove non-quoted ANDs since Metalib will handle automatic AND-ing
+			// remove non-quoted ANDs since Metalib will handle automatic AND-ing;
+			// but only if there is no quotes in the query, since quoted phrases
+			// and-ed together need the boolean operator in there, or so it seems
 			
-			for ( $x = 0; $x < count($arrWords); $x++ )
+			if ( ! strstr($value, "\"") )
 			{
-				if ( $arrWords[$x] == "AND")
+				for ( $x = 0; $x < count($arrWords); $x++ )
 				{
-					 $arrWords[$x] = null;
+					if ( $arrWords[$x] == "AND")
+					{
+						 $arrWords[$x] = null;
+					}
 				}
 			}
 
