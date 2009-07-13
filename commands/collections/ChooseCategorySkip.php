@@ -51,7 +51,7 @@ class Xerxes_Command_ChooseCategorySkip extends Xerxes_Command_Collections
 				"base" => "collections", 
 				"action" => "save_choose_subheading", 
 				"subject" => $normalized_name, "id" => $this->request->getProperty( "id" ), 
-				"username" => $this->request->getProperty( "username" ), 
+				"username" => $strUsername, 
 				"return" => $this->request->getProperty( "return" ) 
 				), true ); // force full url for redirect 
 				
