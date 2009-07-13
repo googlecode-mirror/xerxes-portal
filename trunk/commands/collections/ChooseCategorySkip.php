@@ -14,7 +14,10 @@ class Xerxes_Command_ChooseCategorySkip extends Xerxes_Command_Collections
 	public function doExecute()
 	{
 		$strUsername = $this->request->getProperty( "username" );
-		
+    if (empty($strUsername)) {
+      $strUsername = $this->request->getSession("username");
+    }
+    
 		$objData = new Xerxes_DataMap( );
 		
 		$existingCategoryNames = $this->request->getData( '/*/userCategories/category/normalized', null, 'ARRAY' );
