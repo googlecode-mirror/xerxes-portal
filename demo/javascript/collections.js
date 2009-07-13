@@ -52,15 +52,20 @@
   
   function changedCategoryChoice() {
     // Disable the whole form while we're working so the user doesn't interact
-    // with an incompletely setup form. 
+    // with an incompletely setup form.
+        
     $('save_database').disable();
     
     // Load the subcategory selection with appropriate values
     // for the selected category. 
+
+    // find the username by pulling it out of the form input via DOM. 
+    username = $F(this.up('form').select('input').find( function(input) {  return input.name == "username"; }));
     
-    new Ajax.Request('./?format=json&base=collections&action=subject&username=jrochki1&subject=' + this.getValue(), 
+    new Ajax.Request('./?format=json&base=collections&action=subject&username='+ username+'&subject=' + this.getValue(), 
       { onSuccess: function(transport) {
           var responseData = transport.responseText.evalJSON(true);
+          
           
           $('subcategory').options.length = 0;
           if ( responseData.category.subcategory && responseData.category.subcategory.length > 1  ) {
@@ -99,7 +104,6 @@
      dynamically change available sections based on selected collection */
   function addDynamicSectionChoice() {
     if ($('save_database')) {            
-      
       
       $('subject').onchange = changedCategoryChoice;
                   
