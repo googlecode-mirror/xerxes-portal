@@ -12,6 +12,9 @@ class Xerxes_Command_ChooseSectionSkip extends Xerxes_Command_Collections
 	{
 		$strSubjectSelection = $this->request->getProperty( "subject" );
 		$strUsername = $this->request->getProperty( "username" );
+    if (empty($strUsername)) {
+      $strUsername = $this->request->getSession("username");
+    }
 		
 		// make sure they are logged in as the user they are trying to save as
 		
@@ -48,7 +51,7 @@ class Xerxes_Command_ChooseSectionSkip extends Xerxes_Command_Collections
 				"subject" => $existingSubject->normalized, 
 				"subcategory" => $subcat_id, 
 				"id" => $this->request->getProperty( "id" ), 
-				"username" => $this->request->getProperty( "username" ), 
+				"username" => $strUsername, 
 				"return" => $this->request->getProperty( "return" ) ), true ); // force full url for redirect
 
 			$this->request->setRedirect( $fixedUrl );
