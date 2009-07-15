@@ -557,8 +557,9 @@ ul.addDatabasesMatches li {
 .recordActions {
 	margin-top: .7em;
 }
- .recordAction {
-  display: block;
+
+.recordAction {
+	display: table;
 	margin-bottom: 0.35em;
 }
 
