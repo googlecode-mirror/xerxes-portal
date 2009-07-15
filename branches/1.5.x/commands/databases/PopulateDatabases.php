@@ -28,7 +28,8 @@
 			// set a higher than normal memory limit to account for 
 			// pulling down large knowledgebases
 			
-			ini_set("memory_limit","50M");
+      			$configMemory = $this->registry->getConfig("HARVEST_MEMORY_LIMIT", false, "500M");
+			ini_set("memory_limit",$configMemory);
 			
 			echo "\n\nMETALIB KNOWLEDGEBASE PULL \n\n";
 			
