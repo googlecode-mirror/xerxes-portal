@@ -642,6 +642,15 @@ ul.addDatabasesMatches li {
 	margin-left: 5em;
 }
 
+.folderEmailSuccess {
+	display: table;
+	padding: 10px;
+	background-color: #FFFFCC;
+	border: 1px solid #FFCC00;
+	color: #009900;
+	font-weight: bold;
+}
+
 #export legend {
 	font-family: Arial, Helvetica, sans-serif;
 	color: #003366;
