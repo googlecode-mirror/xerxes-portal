@@ -96,32 +96,18 @@ class Xerxes_Framework_Request
 			}
 		}
 		
-		### iis fixes
+		// iis fix, since it doesn't hold value for request_uri
 		
-		if ( isset($_SERVER) )
+
+		if ( ! isset( $_SERVER['REQUEST_URI'] ) )
 		{
-			// to make this consistent with apache
-			
-			if ( array_key_exists('HTTPS', $_SERVER) )
+			if ( ! isset( $_SERVER['QUERY_STRING'] ) )
 			{
-				if ( $_SERVER['HTTPS'] == "off" )
-				{
-					unset($_SERVER['HTTPS']);
-				}
-			}
-			
-			// since it doesn't hold value for request_uri
-	
-			if ( ! isset( $_SERVER['REQUEST_URI'] ) )
+				$_SERVER['REQUEST_URI'] = $_SERVER["SCRIPT_NAME"];
+			} 
+			else
 			{
-				if ( ! isset( $_SERVER['QUERY_STRING'] ) )
-				{
-					$_SERVER['REQUEST_URI'] = $_SERVER["SCRIPT_NAME"];
-				} 
-				else
-				{
-					$_SERVER['REQUEST_URI'] = $_SERVER["SCRIPT_NAME"] . '?' . $_SERVER['QUERY_STRING'];
-				}
+				$_SERVER['REQUEST_URI'] = $_SERVER["SCRIPT_NAME"] . '?' . $_SERVER['QUERY_STRING'];
 			}
 		}
 	}

@@ -17,20 +17,18 @@
 	{
 		private $configIPAddress = "";			// config entry
 		private $configInstitute = "";			// config entry
-		private $configChunk = false;			// config entry
 		private $objSearch = null;				// metasearch object
 		private $arrMissing = array();			// databases assigned to a category but missing from the all db pull
 		
 		public function doExecute()
 		{
 			// in case this is being called from the web, plaintext
-			
 			header("Content-type: text/plain");
       
 			// set a higher than normal memory limit to account for 
 			// pulling down large knowledgebases
 			
-      		$configMemory = $this->registry->getConfig("HARVEST_MEMORY_LIMIT", false, "500M");
+      			$configMemory = $this->registry->getConfig("HARVEST_MEMORY_LIMIT", false, "500M");
 			ini_set("memory_limit",$configMemory);
 			
 			echo "\n\nMETALIB KNOWLEDGEBASE PULL \n\n";
@@ -39,7 +37,6 @@
 			
 			$this->configIPAddress = $this->registry->getConfig("IP_ADDRESS", true);
 			$this->configInstitute = $this->registry->getConfig("METALIB_INSTITUTE", true);
-			$this->configChunk = $this->registry->getConfig("CHUNK_KB_PULL", false, false);
 			
 			$configMetalibAddress = $this->registry->getConfig("METALIB_ADDRESS", true);
 			$configMetalibUsername = $this->registry->getConfig("METALIB_USERNAME", true);
@@ -300,7 +297,7 @@
 			// get all databases and convert to local format
 
 			$objXml = new DOMDocument();
-			$objXml = $this->objSearch->allDatabases($this->configInstitute, true, $this->configChunk);
+			$objXml = $this->objSearch->allDatabases($this->configInstitute, $this->configIPAddress, true);
 
 			
 			$strXml = Xerxes_Parser::transform($objXml, "xsl/utility/marc-to-database.xsl");

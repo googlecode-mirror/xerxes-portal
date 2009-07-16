@@ -18,10 +18,6 @@
 		private $objPDO = null;				// pdo data object
 		private $strSQL = null;				// sql statement, here for debugging
 		private $arrValues = array();		// values passed to insert or update statement, here for debugging
-
-		protected $registry;	// registry object, here for convenience
-		protected $rdbms;		// the explicit rdbms name (should be 'mysql' or 'mssql' as of 1.5.1) 
-		
 		
 		/**
 		 * Initialize the object, should be called from the constructor of the child;
@@ -137,41 +133,18 @@
 		 *
 		 * @param string $strSQL		SQL query
 		 * @param array $arrValues		paramaterized values
-		 * @param boolean $boolReturnPk  return the inserted pk value?
-		 * @return mixed				if $boolReturnPk is false, status of the request (true or false), 
-		 * as set by PDO. if $boolReturnPk is true, either the last inserted pk, or 'false' for a failed insert. 
+     * @param boolean $boolReturnPk  return the inserted pk value?
+		 * @return mixed				if $boolReturnPk is false, status of the request (true or false), as set by PDO. if $boolReturnPk is true, either the last inserted pk, or 'false' for a failed insert. 
 		 */
 		
 		public function insert($strSQL, $arrValues = null, $boolReturnPk = false)
 		{
 			$status = $this->update($strSQL, $arrValues);      
-			
-			if ($status && $boolReturnPk)
-			{
-				// ms sql server specific code
-				
-				if ( $this->rdbms == "mssql" )
-				{
-					// this returns the last primary key in the 'session', per ms website,
-					// which we hope to god is the id we just inserted above and not a 
-					// different transaction; need to watch this closely for any racing conditions
-					
-					$results = $this->select("SELECT @@IDENTITY AS 'Identity'");
-					
-					if ( $results !== false )
-					{
-						return (int) $results[0][0];
-					}
-				}
-				else
-				{
-					return $this->lastInsertId();
-				}
-			} 
-			else
-			{
-				return $status;
-			}
+      if ($status && $boolReturnPk) {
+        return $this->lastInsertId();
+      } else {
+        return $status;
+      }
 		}
 		
 		/**
@@ -186,11 +159,14 @@
 		{
 			return $this->update($strSQL, $arrValues);
 		}
-		
-		protected function lastInsertId()
-		{
-			return $this->objPDO->lastInsertId();
-		}
+    
+    protected function lastInsertId() {
+      # No, this creates segfault:
+      #return PDO::lastInsertId();
+      
+      # Yes, this seems to work:
+      return $this->objPDO->lastInsertId();      
+    }
 		
 		private function echoSQL($strSQL)
 		{

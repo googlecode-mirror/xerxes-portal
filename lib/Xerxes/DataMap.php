@@ -187,6 +187,8 @@ class Xerxes_User extends Xerxes_Framework_DataValue
 
 class Xerxes_DataMap extends Xerxes_Framework_DataMap
 {
+	private $registry;
+
 	public function __construct()
 	{
 		$objRegistry = Xerxes_Framework_Registry::getInstance();
@@ -195,12 +197,6 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		// make it a member variable so other functions can get it easier
 		
 		$this->registry = $objRegistry;
-		
-		// pdo can't tell us which rdbms we're using exactly, especially for 
-		// ms sql server, since we'll be using odbc driver, so we make this
-		// explicit in the config
-		
-		$this->rdbms = $this->registry->getConfig("RDBMS", false, "mysql");
 		
 		$this->init( 
 			$objRegistry->getConfig( "DATABASE_CONNECTION", true ), 
@@ -238,7 +234,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		$this->delete( "DELETE FROM xerxes_categories" );
 		$this->delete( "DELETE FROM xerxes_types" );
 	}
-	
+
 	/**
 	 * Remove orphaned my saved database associations
 	 */
@@ -251,7 +247,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		
 		$this->delete( "DELETE FROM xerxes_user_subcategory_databases WHERE " .
 			" database_id NOT IN ( SELECT metalib_id FROM xerxes_databases )");
-	}
+	}	
 	
 	/**
 	 * Add a database to the local knowledgebase
@@ -608,7 +604,6 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 	 * @param string $username
 	 * @return array		array of Xerxes_Data_Category objects
 	 */
-	
 	public function getUserCreatedCategories($username)
 	{
 		if ( ! $username )
@@ -644,24 +639,11 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 	{
 		if ( $mode == self::metalibMode )
 		{
-			return array (
-				"categories_table" => "xerxes_categories", 
-				"subcategories_table" => "xerxes_subcategories", 
-				"database_join_table" => "xerxes_subcategory_databases", 
-				"subcategories_pk" => "metalib_id", 
-				"extra_select" => "", "extra_where" => "" 
-			);
+			return array ("categories_table" => "xerxes_categories", "subcategories_table" => "xerxes_subcategories", "database_join_table" => "xerxes_subcategory_databases", "subcategories_pk" => "metalib_id", "extra_select" => "", "extra_where" => "" );
 		} 
 		elseif ( $mode == self::userCreatedMode )
 		{
-			return array (
-				"categories_table" => "xerxes_user_categories", 
-				"subcategories_table" => "xerxes_user_subcategories", 
-				"database_join_table" => "xerxes_user_subcategory_databases", 
-				"subcategories_pk" => "id", 
-				"extra_select" => ", xerxes_user_categories.published AS published, xerxes_user_categories.username AS username", 
-				"extra_where" => " AND xerxes_user_categories.username = :username "
-			);
+			return array ("categories_table" => "xerxes_user_categories", "subcategories_table" => "xerxes_user_subcategories", "database_join_table" => "xerxes_user_subcategory_databases", "subcategories_pk" => "id", "extra_select" => ", xerxes_user_categories.published AS published, xerxes_user_categories.username AS username", "extra_where" => " AND xerxes_user_categories.username = :username " );
 		} 
 		else
 		{
@@ -955,33 +937,19 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		} 
 		elseif ( $query != null )
 		{
-			// query for databases; we match title, descrition, or keywords.
+			// string query for databases.
+			// we match title, descrition, or keywords.
+			// MySQL specific REGEXP commands. 
 			
-			// mysql specific REGEXP query
-			
-			// before 1.5.1 release, decide if this should be factored out in favor of the 
-			// ANSI standard version below using LIKE, since they seem to do essentially the 
-			// same job; might also consider searching each term seperately rather than as a 
-			// phrase
-			
-			if ( $this->rdbms == "mysql")
-			{
-				$strSQL .= "WHERE xerxes_databases.title_display REGEXP :query1 OR xerxes_databases.title_full REGEXP :query2 OR xerxes_databases.description REGEXP :query3 OR xerxes_database_keywords.keyword REGEXP :query4 OR xerxes_database_alternate_titles.alt_title REGEXP :query5 ";
-				$searchParam = '[[:<:]]' . $query . '[[:>:]]';
-			}
-			else
-			{
-				$strSQL .= "WHERE xerxes_databases.title_display LIKE :query1 OR xerxes_databases.title_full LIKE :query2 OR xerxes_databases.description LIKE :query3 OR xerxes_database_keywords.keyword LIKE :query4 OR xerxes_database_alternate_titles.alt_title LIKE :query5 ";
-				$searchParam = '%' . $query . '%';
-			}
-
+			$strSQL .= "WHERE xerxes_databases.title_display REGEXP :query1 OR xerxes_databases.title_full REGEXP :query2 OR xerxes_databases.description REGEXP :query3 OR xerxes_database_keywords.keyword REGEXP :query4 OR xerxes_database_alternate_titles.alt_title REGEXP :query5 ";
 			$strSQL .= " ORDER BY UPPER(title_display) ";
 			
-			$arrParams[":query1"] = $searchParam;
-			$arrParams[":query2"] = $searchParam;
-			$arrParams[":query3"] = $searchParam;
-			$arrParams[":query4"] = $searchParam;
-			$arrParams[":query5"] = $searchParam;
+			$sqlQuery = '[[:<:]]' . $query . '[[:>:]]';
+			$arrParams[":query1"] = $sqlQuery;
+			$arrParams[":query2"] = $sqlQuery;
+			$arrParams[":query3"] = $sqlQuery;
+			$arrParams[":query4"] = $sqlQuery;
+			$arrParams[":query5"] = $sqlQuery;
 			
 			$arrResults = $this->select( $strSQL, $arrParams );
 		} 
@@ -1198,9 +1166,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 
 		if ( $strLabel != null )
 		{
-			$strSQL = "SELECT count(*) as total FROM xerxes_records, xerxes_tags " . 
-				" WHERE xerxes_tags.record_id = xerxes_records.id AND xerxes_records.username = :user " . 
-				" AND xerxes_tags.tag = :tag";
+			$strSQL = "SELECT count(*) as total FROM xerxes_records, xerxes_tags " . " WHERE xerxes_tags.record_id = xerxes_records.id AND xerxes_records.username = :user " . " AND xerxes_tags.tag = :tag";
 			
 			$arrParams[":user"] = $strUsername;
 			$arrParams[":tag"] = $strLabel;
@@ -1432,43 +1398,6 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		$strSQL = "SELECT * FROM 
 			(SELECT $strColumns FROM $strTable $strCriteria $strSort $strLimit ) as xerxes_records
 			LEFT OUTER JOIN xerxes_tags on xerxes_records.id = xerxes_tags.record_id";
-
-		// ms sql server specific code
-		
-		if ( $this->rdbms == "mssql")
-		{
-			// mimicking the MySQL LIMIT clause
-			
-			$strMSLimit = $iStart + $iCount;
-			
-			$strSQL = "SELECT * FROM
-				( SELECT * FROM ( SELECT $strColumns , ROW_NUMBER() OVER ( $strSort ) as row FROM $strTable $strCriteria ) 
-					as tmp WHERE row > $iStart and row <= $strMSLimit ) as xerxes_records 
-				LEFT OUTER JOIN xerxes_tags on xerxes_records.id = xerxes_tags.record_id";
-				
-			// a bug in the pdo odbc driver ??? makes this necessary
-			
-			// clean the input
-			
-			$dirtystuff = array("\"", "\\", "/", "*", "'", "=", "-", "#", ";", "<", ">", "+", "%");
-			
-			$strUsername = str_replace($dirtystuff, "", $strUsername); 
-			$strLabel = str_replace($dirtystuff, "", $strLabel);
-			$strFormat = str_replace($dirtystuff, "", $strFormat);
-			
-			// replace the paramater with the value
-				
-			$strSQL = str_replace(":username", "'$strUsername'", $strSQL); unset($arrParams[":username"]);
-			$strSQL = str_replace(":tag", "'$strLabel'", $strSQL); unset($arrParams[":tag"]);
-			$strSQL = str_replace(":format", "'$strFormat'", $strSQL); unset($arrParams[":format"]);
-			
-			for ( $x = 0 ; $x < count( $arrID ) ; $x ++ )
-			{
-				$strID = str_replace($dirtystuff, "", $arrID[$x]); 
-				$strSQL = str_replace(":id$x", "'$strID'", $strSQL); unset($arrParams[":id$x"]);
-			}
-		}
-
 		
 		#### return the objects
 		
@@ -1986,14 +1915,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		
 		foreach ( $objValueObject->properties() as $key => $value )
 		{
-			if ( $value == "" )
-			{
-				unset($objValueObject->$key);
-			}
-			else
-			{
-				$arrProperties[":$key"] = $value;
-			}
+			$arrProperties[":$key"] = $value;
 		}
 		
 		$fields = implode( ",", array_keys( $objValueObject->properties() ) );

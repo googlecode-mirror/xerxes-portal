@@ -425,72 +425,31 @@
 		 * Retrieve all databases from the Metalib database
 		 *
 		 * @param string $strInstitute		Metalib institute code
+		 * @param string $strIpAddress		IP address associated with this institute
 		 * @param bool $bolFull				whether to include full record, true by default
-		 * @param bool $bolChunk			whether we should chunk the response for a really large KB
 		 * @return DOMDocument				marc-xml collection
 		 */
 		
-		public function allDatabases( $strInstitute, $bolFull = true, $bolChunk = false )
+		public function allDatabases( $strInstitute, $strIpAddress, $bolFull = true )
 		{
 			// master xml document
-			
 			$objFinalXml = new DOMDocument();
 			$objFinalXml->loadXML("<collection />");
 			$objFinalXml->documentElement->setAttribute("metalib_version", $this->getVersion());
 			
-			$strInstitute = urlencode(trim($strInstitute));
-			
 			// set fullness flag
 
 			$strFull = "Y";
+			if ($bolFull == false) $strFull = "N";
 			
-			if ($bolFull == false) 
-			{
-				$strFull = "N";
-			}
-			
-			if ( $bolChunk == true )
-			{
-				$this->xml = new DOMDocument();
-				$this->xml->loadXML("<collection />");
-				
-				// get the list without the full record
-				
-				$this->url = $this->server . "/X?op=source_locate_request" .
-					"&locate_command=WIN=($strInstitute)" .
-					"&source_full_info_flag=N" . 
-					"&session_id=" . $this->session;
+			$this->url = $this->server . "/X?op=source_locate_request" .
+				"&locate_command=WIN=(" . urlencode(trim($strInstitute)) . ")" .
+				"&source_full_info_flag=" . $strFull .
+				"&session_id=" . $this->session;
 
-				$objXml = $this->getResponse($this->url);
-				
-				// extract the database ids and fetch the full record for each individually
-				
-				foreach ( $objXml->getElementsByTagName("source_001") as $database )
-				{
-					$this->url = $this->server . "/X?op=source_locate_request" .
-						"&locate_command=IDN=" . $database->nodeValue .
-						"&source_full_info_flag=" . $strFull . 
-						"&session_id=" . $this->session;
-					
-					$objDatabase = $this->getResponse($this->url);
-					
-					$objImport = $this->xml->importNode($objDatabase->documentElement, true);
-					$this->xml->documentElement->appendChild($objImport);
-				}
-				
-				$this->xml->save("test.xml");
-			}
-			else 
-			{
-				// load into DOM
+			// load into DOM
 
-				$this->url = $this->server . "/X?op=source_locate_request" .
-					"&locate_command=WIN=($strInstitute)" .
-					"&source_full_info_flag=" . $strFull .
-					"&session_id=" . $this->session;				
-
-				$this->xml = $this->getResponse($this->url);
-			}
+			$this->xml = $this->getResponse($this->url);			
       
 			// extract marc records
 			
