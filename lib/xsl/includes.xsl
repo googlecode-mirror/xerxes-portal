@@ -263,7 +263,7 @@
 <xsl:template name="breadcrumb_start">
 
 	<xsl:if test="not(request/base = 'databases' and request/action ='categories')">
-		<a href="{$base_url}">Home</a> <xsl:copy-of select="$text_breadcrumb_seperator" />
+		<a href="{$base_url}"><xsl:value-of select="$text_databases_category_pagename" /></a> <xsl:copy-of select="$text_breadcrumb_seperator" />
 	</xsl:if>
 
 </xsl:template>
