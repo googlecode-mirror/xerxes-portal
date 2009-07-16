@@ -1,0 +1,397 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xerxes version="1.5">
+
+	<!-- 
+	
+	BEFORE YOU GET STARTED
+	
+	Consult the Xerxes wiki, which contains more information about each config below
+	http://code.google.com/p/xerxes-portal/w/list
+	
+	 -->
+	 
+	<configuration>
+		
+	<!-- BASIC CONFIGURATION -->	
+	
+		<!-- the base web server path for your xerxes installation. 
+			NO trailing slash. If you have installed at web root, empty string. -->
+		
+		<config name="base_web_path">/demo</config>
+		
+		<!-- what is your application called? Will be used in parts of the system. -->
+			 
+		<config name="application_name" pass="true">Xerxes Demo</config>
+		
+		<!-- turns the display of php errors and warnings on in a production system; value = true | false -->
+		
+		<config name="display_errors">false</config>
+		
+		<!-- inlcude here the range of local ip addresses that should not be challenged for a login.
+		 	enter as either 144.37.*.*, with * as wildcard, or as 144.37.0.0-144.37.255.255,
+		 	seperate mutliple entries by comma -->
+			 
+		<config name="local_ip_range"></config>
+		
+		<!-- http proxy tunnel. do not confuse this with proxy_server (e.g., ezproxy) below. if all 
+			outgoing http requests from the server need to be sent through an http proxy, set server address 
+			(including port) and optionally a username and password here. -->
+		
+		<config name="http_proxy_server"></config>
+		<config name="http_proxy_username"></config>
+		<config name="http_proxy_password"></config>
+		
+		<!-- use curl. set this to 'true' if you have php.ini set to prevent 'remote file access', but have 
+		curl libraries installed -->
+		
+		<config name="http_use_curl"></config>
+		
+		
+	<!-- METALIB CONFIGURATION -->
+		
+		<!-- location, username, password, institute, for Metalib X-Server:
+		
+			* do *NOT* include the /X in the metalib address.
+			* username and password must correspond to a valid /M interface user.
+			* institute is usually the same as username. -->
+			
+		<config name="metalib_address"></config>
+		<config name="metalib_username"></config>
+		<config name="metalib_password"></config>
+		<config name="metalib_institute"></config>
+		
+		<!-- IP adress associated with this implementation. 
+			If your metalib instance is associated with a specific IP range, as you might have with a consortium, 
+			then enter a single IP address within that range here, so that Metalib knows which knowledgebase to 
+			associate with this implementation of Xerxes. -->
+		
+		<config name="ip_address"></config>
+		
+		<!-- Metalib user groups (aka 'secondary affiliations'). -->
+		
+		<!-- Extra info for display and use.
+		
+			<group id="metalib_code"> : group code id used in Metalib, ordinarily in all caps.
+			<display_name> : What to call this group of users       
+			<local_ip_range>: IP range(s) associated with this group.  Users coming from this ip range will be able 
+			to search this group's resources without first having to login. Enter as either 144.37.*.*, with * as 
+			wildcard, or as 144.37.0.0-144.37.255.255, seperate mutliple entries by comma
+			<ezp_exp_group> For use with EZProxy export function, ezproxy config group to output for this Metalib 
+			secondary affiliation. See: http://code.google.com/p/xerxes-portal/wiki/EzProxyExport? -->
+		
+		<!-- example:
+		
+		<groups>
+		<group id="SCIENCE">
+		<display_name>Science Library</display_name>
+		<local_ip_range>201.2.4.*</local_ip_range>
+		</group>
+		</groups> 
+	
+		-->
+	
+	<!-- LOCAL DATABASE -->
+	
+		<!-- Connection string, username, and password for local database: Xerxes uses PDO for database access, 
+		     so connection strings should be in that format -->
+		
+		<config name="database_connection">mysql:host=localhost;dbname=xerxes</config>
+		<config name="database_username"></config>
+		<config name="database_password"></config>
+		
+	<!-- PROXY, LINK RESOLVER, AND EXTERNAL APIS -->
+		
+		<!-- base url of link resolver -->
+		
+		<config name="link_resolver_address"></config>
+		
+		<!--  If you want to do the SFX 'populate' action from another link resolver, perhaps because 
+			your main one is not SFX, configure this 
+			
+			@todo change this config name to something more clear
+			-->
+		
+		<config name="alternate_fulltext_harvest_address"></config>
+		
+		<!-- the sid that will be passed to the link resolver, xerxes will also append the name 
+			of the database to the sid -->
+		
+		<config name="application_sid">calstate.edu:xerxes</config>
+		
+		<!-- for spell check api, doesn't hurt to leave this as 'calstate', since the usage limits are 
+			based on ip address, but better to get your own key from Yahoo -->
+		
+		<config name="yahoo_id">calstate</config>
+		
+		<!-- base url of proxy server 
+		
+			EZProxy: include the entire proxy url prefix, e.g., 'http: ezproxy.library.edu/login?qurl='
+			xerxes will url-encode the full-text link, so it is preferable to use qurl param 
+			
+			WAM Proxy: enter in your catalog information with '{WAM}' as the domain/port wildcard 
+			e.g.,	http://{WAM}.catalog.library.edu
+		 -->
+		
+		<config name="proxy_server"></config>
+		
+	<!-- EZPROXY EXPORT -->
+	
+		<!-- See http://code.google.com/p/xerxes-portal/wiki/EzProxyExport -->
+		
+		<!-- domains that should not excluded as "Domain" config in the EZProxy export, 
+			even if ordinary rules would include them -->
+		
+		<config name="ezp_exp_domain_avoid">youruniv.edu</config>
+		
+		<!-- Particular databases that should be excluded from the EZProxy
+		export, even if ordinary rules would include them. -->
+		
+		<config name="ezp_exp_resourceid_omit"></config>
+		
+		<!-- "Group" statement to output for ordinary default KB resources. -->
+		
+		<config name="ezp_exp_default_group">EzP_Group</config>
+		
+	<!-- AUTHENTICATION + AUTHORIZATION -->
+	
+		<!-- the source against which you will authenticate users; valid values include:
+		
+			* 'ldap' for a simple bind to an ldap-enabled directory server, including Active Directory
+			* 'innovative' for authentication against the Innovative patron api
+			* 'cas' for authentication against a central authentication source server
+			* 'demo' for a simple demo set-up when you don't want to configure a directory
+			* 'shibboleth' for Shibboleth authentication using a local configured shibd.
+			* 'custom' to use the script in demo/config/authentication/custom.php, where you can write
+			  you own authentication code
+		 -->
+		
+		<config name="authentication_source">demo</config>
+		
+		<!-- additional authentication_sources. 
+			Will be used from a base=authenticate action=login request with a URL parameter "authentication_source" 
+			set to an 'id' mentioned here. -->
+		
+		<!-- <config name="authentication_source" id="other">something_else</config> -->
+		
+		<!-- setting this to 'true' will cause xerxes to force all logins thru https:// -->
+		
+		<config name="secure_login">false</config>
+		
+		
+		<!-- LDAP -->
+		
+		<!-- directory server and domain -->
+		
+		<config name="directory_server"></config>
+		<config name="domain"></config>
+		
+		
+		<!-- INNOVATIVE PATRON API -->
+		
+		<!-- enter the server address, include 'http://', :port number, and trailing slash '/' at the end of the url -->
+		
+		<config name="innovative_patron_api" />
+		
+		<!-- patron types allowed to use this system remotely: seperate multilple entries by comma; 
+		leave blank if all users are allowed -->
+			 
+		<config name="innovative_patron_types" />
+		
+		
+		<!-- CAS -->
+		
+		<!--
+			cas_version = either '1.0' or '2.0'
+			cas_login = full url to the login service, typically with https://
+			cas_validate = the full url to the validate service, typically with https:// 
+		 -->
+		
+		<config name="cas_version" />
+		<config name="cas_login" />
+		<config name="cas_validate" />
+		
+		
+		<!-- SHIBBOLETH	-->
+						 
+		<!-- shib username header -->
+		
+			<!--  the HTTP header to find the username in, defaults to REMOTE_USER; for even more flexible 
+			customization, see authentication/shib_map.php --> 
+			
+		<config name="shib_username_header">REMOTE_USER</config>
+		
+		
+		<!-- DEMO -->
+		
+		<!-- list of users who can access the system without being in the local directory server 
+		     enter as username:password and seperate entries by comma -->
+		
+		<config name="demo_users"></config>
+		
+	<!-- DISPLAY AND BEHAVIOR -->
+	
+		<!-- mod_rewrite scheme
+		
+			create simpler urls using Apache mod_rewrite or IIS rewrite modules, see wiki for details.
+			see the demo/.htaccess file for specification. -->
+		
+		<config name="rewrite" pass="true">false</config>
+		
+		<!-- the overall width of the page design, see wiki for details! -->
+		
+		<config name="document" pass="true">doc3</config>
+		
+		<!-- overall template for page design, see wiki for details! -->
+		
+		<config name="template" pass="true">yui-t6</config>
+	
+		<!-- subject/category ID to use on the home page (the "categories" page) for a quicksearch search box. -->
+		
+		<config name="categories_quicksearch" pass="true">quick-search</config>
+		
+		<!-- number of columns for subjects on categories page; 
+			enter '2' or '3', if you want more columns, you'll need to customize the page itself -->
+			
+		<config name="categories_num_columns" pass="true">3</config>
+		
+		<!-- only include the following subcategories in the subject page, 
+			seperate multiple enties by comma, will look for the presence 
+			of the words, not an exact match -->
+		
+		<config name="subcategories_include"></config>
+
+		<!-- strip out HTML tags in database description. Possible values:
+		
+			escape: Escape all HTML so it shows up as source.
+			allow: Allow all HTML through as code. NOT reccommended. Suggest you use strip with some 
+			       tags in db_description_allow_tags instead. 
+			strip: Strip out all HTML tags. May be used in combination with db_description_allow_tags below. -->
+			
+		<config name="db_description_html">escape</config>
+		
+		<!-- tags NOT to strip in database descriptions.
+		
+			Only used with db_description_html=strip. Tags listed here (comma seperated) will NOT be stripped, but
+			will be allowed - they are a whitelist. All other tags will be stripped. -->
+		
+		<config name="db_description_allow_tags">b,i,strong,em,a</config>
+		
+		<!-- whether the alphabetical database list should include a search box, allowing users to search for
+			databases by name or other information -->
+		
+		<config name="database_list_searchable" pass="true">false</config>
+
+		<!-- whether to show a search box in the database detail page -->
+		
+		<config name="show_db_detail_search" pass="true">true</config>
+		
+		<!-- open window for full text and sfx links.
+		
+			You can change this value to any valid HTML anchor  target attribute value to affect the 
+			behavior of sfx and full-text links in the  search results and saved record pages.
+			'_self' causes the browser to open the links in the same window
+			'_blank' causes the browser to open the links in a new window. -->
+		
+		<config name="link_target" pass="true">_blank</config>
+		
+		<!-- show link to catalog for holdings when present -->
+		
+		<config name="show_all_holdings_links" pass="true">true</config>
+
+		<!-- show holdings links only for specific catalogs
+			enter as xml inside this config, like <database metalib_id="JHU0001" /> -->
+
+		<config name="holdings_links" pass="true" xml="true">
+		</config>
+		
+		<!-- include link back to database's native interface, when present and no full text is availble 
+			enter as xml inside this config, like <database metalib_id="JHU0001" /> -->
+			
+		<config name="original_record_links" pass="true" xml="true">
+		</config>
+		
+		<!-- this should correspond to the search limit in metalib -->
+		
+		<config name="search_limit" pass="true">10</config>
+		
+		<!-- specify here an explicit 'from' address when user emails records, otherwise the from will be
+		from the server name, or some other default if relaying thru an SMTP server -->
+		
+		<config name="email_from"></config>
+		
+		<!-- the url to send users when they logout, 
+			if left blank, then the base url of the application will be used -->
+		
+		<config name="logout_url" />	
+		
+		<!-- normalize query; this is experimental, only set this to true after reading the wiki! -->
+		
+		<config name="normalize_query">false</config>
+		
+		<!-- number of seconds before xerxes stops the search and merges available records. 
+			Note that this will not automatically change the animated search progress image, setting this higher 
+			will require a change in that display -->
+		
+		<config name="search_progress_cap">34</config>
+		
+		<!-- whether to immediately show the merged results from a search (true) or show the user the search hits
+		results with links to the merged set and individual databases -->
+		
+		<config name="immediately_show_merged_results">true</config>
+		
+		<!-- whether to create and show facets -->
+		
+		<config name="facets">false</config>
+		
+		<!-- initial and secondary sort orders for merged results, this will be the default sort order when the user 
+		is first dropped into the merged results; valid values for both include:
+			 
+		 	* 'rank'
+			* 'title'
+			* 'author'
+			* 'year'
+			* 'database'
+		 -->
+		
+		<config name="sort_order_primary">rank</config>
+		<config name="sort_order_secondary">title</config>
+		
+		<!-- maximum number of records to return per page: setting this above 10 will slow down page load times -->
+		
+		<config name="records_per_page" pass="true">10</config>
+		
+		<!-- maximum number of records to show on saved records page: this can go much higher than 'records_per_page', since 
+		the records are coming out of the local database, defaults to 10 -->
+		
+		<config name="saved_records_per_page" />
+		
+		<!-- maximum number of records that can be exported; setting this higher is untested as of 1.3; defaults to 1000 -->
+		
+		<config name="maximum_record_export_limit" />
+		
+		<!-- add 9XX marc fields to the brief results; adding fields will incur a slight performance hit; 
+		enter marc fields as a five character string consisting of 3 digit field code and 2 characters for ind1 and ind2;
+		use # as a wildcard, e.g., 948## will fetch the 948, 9#### will fetch all 9XX fields -->		
+		
+		<config name="marc_fields_brief" />
+		
+		<!-- whether to include the original marc record in the xml response, can be used to get at fields not currently
+		processed by xerxes in order to display them in the interface -->
+		
+		<config name="xerxes_brief_include_marc">false</config>
+		
+		<config name="xerxes_full_include_marc">false</config>
+		
+		<!-- location of an alternate relay script for the yahoo api. -->
+			
+		<config name="alternate_yahoo_location"></config>
+		
+		<!-- default name for new (my databases) collection and section.
+			see wiki for making changes _after_ this has been deployed
+		-->
+		<config name="default_collection_name" pass="true">My Saved Databases</config>
+		<config name="default_collection_section_name" pass="true">Databases</config>
+		
+	</configuration>
+	
+</xerxes>
