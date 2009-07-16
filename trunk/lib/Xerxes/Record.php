@@ -350,11 +350,14 @@
 				// we do it this way to ensure proper order of the subfields
 				
 				$arrJournal = array();
+				
 				array_push($arrJournal, $this->extractMarcDataField($objXPath, 773, "a"));
 				array_push($arrJournal, $this->extractMarcDataField($objXPath, 773, "t"));
 				array_push($arrJournal, $this->extractMarcDataField($objXPath, 773, "g"));
 				array_push($arrJournal, $this->extractMarcDataField($objXPath, 773, "bcdefhijklmnopqrsuvwxyz1234567890"));
+				
 				$this->strJournal .= implode(" ", $arrJournal);
+				$this->strJournal = trim($this->strJournal);
 				
 				$strJournal = $this->extractMarcDataField($objXPath, 773, "agpt");
 				$this->strJournalTitle = $this->extractMarcDataField($objXPath, 773, "t");
