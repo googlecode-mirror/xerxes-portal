@@ -559,8 +559,11 @@ ul.addDatabasesMatches li {
 }
 
 .recordAction {
-	display: table;
 	margin-bottom: 0.35em;
+}
+
+a.recordAction {
+	display: table;
 }
 
 .folderLabels {
