@@ -434,7 +434,8 @@
 		{
 			// master xml document
 			$objFinalXml = new DOMDocument();
-			$objFinalXml->loadXML("<collection></collection>");
+			$objFinalXml->loadXML("<collection />");
+			$objFinalXml->documentElement->setAttribute("metalib_version", $this->getVersion());
 			
 			// set fullness flag
 
