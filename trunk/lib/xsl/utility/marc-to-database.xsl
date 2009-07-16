@@ -187,7 +187,16 @@
 		
 		<link_guide><xsl:value-of select="marc:datafield[@tag=856][@ind1=4][@ind2=9]/marc:subfield[@code='u']" /></link_guide>
 		
-		<link_publisher><xsl:value-of select="marc:datafield[@tag=856][@ind1=4][@ind2=2]/marc:subfield[@code='a']" /></link_publisher>
+		<link_publisher>
+			<xsl:choose>
+				<xsl:when test="number(substring(/collection/@metalib_version, 1,3)) >= 4.3">
+					<xsl:value-of select="marc:datafield[@tag=856][@ind1=4][@ind2=2]/marc:subfield[@code='u']" />
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="marc:datafield[@tag=856][@ind1=4][@ind2=2]/marc:subfield[@code='a']" />
+				</xsl:otherwise>
+			</xsl:choose>
+		</link_publisher>
 		
 		
 	</database>
