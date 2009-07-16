@@ -436,6 +436,7 @@
 			
 			$objFinalXml = new DOMDocument();
 			$objFinalXml->loadXML("<collection />");
+			$objFinalXml->documentElement->setAttribute("metalib_version", $this->getVersion());
 			
 			$strInstitute = urlencode(trim($strInstitute));
 			
