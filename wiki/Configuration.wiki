@@ -97,7 +97,7 @@ List of users who can access the system without being in the local directory ser
 
 ==directory_server==
 
-If [Configuration#authentication_source authentication] is set to 'ldap', then this specifies the directory server against which you will do the LDAP authentication
+If [Configuration#authentication_source authentication_source] is set to 'ldap', then this specifies the directory server against which you will do the LDAP authentication
 
 ==display_errors==
 
@@ -122,7 +122,7 @@ If you want to use a different width, simply leave the value as 'doc3', and in y
 
 ==domain==
 
-If [Configuration#authentication_source authentication] is set to 'ldap', then this specifies the domain for the LDAP bind.
+If [Configuration#authentication_source authentication_source] is set to 'ldap', then this specifies the domain for the LDAP bind.
 
 ==email_from==
 
@@ -166,7 +166,7 @@ Example:
 
 ==holdings_links==
 
-Include individual databases that should show holdings links.  [Configuration#show_all_holdings_links See below] for more information on these type of links.  Enter as:
+Specify individual databases that should show a link to 'holdings' (i.e., a link to a library catalog to show availability). [Configuration#show_all_holdings_links See below] for more information on these type of links.  Enter as:
 
 {{{
 <config name="holdings_links" pass="true" xml="true">
@@ -177,43 +177,105 @@ Include individual databases that should show holdings links.  [Configuration#sh
 
 ==http_proxy_server==
 
+The adress of a HTTP proxy tunnel (including port).  Set this if you need to route all outgoing Xerxes requests through a proxy.  Do not confuse this with [Configuration#proxy_server proxy_server] (e.g., ezproxy).
+
 ==http_proxy_username==
+
+Username to authenticate again the HTTP Proxy.
 
 ==http_proxy_password==
 
+Password to authenticate again the HTTP Proxy.
+
 ==http_use_curl==
+
+Set this to 'true' if you want Xerxes to use the PHP CURL libraries for outgoing requests.  Requires that the CURL libraries be installed on the server.  This is useful if you've disable remote file access.
 
 ==immediately_show_merged_results==
 
+Set this to 'false' if you want Xerxes to not immediately show the user the merged set of results.  Instead, it leaves the user at the search status page.  If you set this to false, contact David about customizing the `metasearch_hits.xsl` file.
+
 ==innovative_patron_api==
+
+If [Configuration#authentication_source authentication_source] is set to 'innovative', then specify here the full URL to the server, and the Patron API port.  _INCLUDE) the trailing slash '/' at the end of the URL.
 		
 ==innovative_patron_types==
 
+Include here a white list of patron types allowed to use this system remotely: separate multiple entries by comma.  Leave blank if all users are allowed.
+
 ==ip_address==
+
+IP adress associated with this Xerxes implementation. This is typically the IP address of the server running Xerxes, or at least one that is within your campus IP Range.  
+
+This is particularly important in a consortium, or in a multi-campus Xerxes instance.  Metalib needs this to associate the correct knowledgebase with this Xerxes implementation.
 
 ==link_resolver_address==
 
+Base URL of your link resolver
+
 ==link_target==
+
+Tells Xerxes how to open link to external sites, particularly for full-text, holdigns, and OpenURL links. You can change this value to any valid HTML anchor target attribute value, for example:
+
+  * *_self* -- causes the browser to open the links in the same window
+  * *_blank* -- causes the browser to open the links in a new window.
 
 ==local_ip_range==
 
+IP range(s) associated with your campus.  Users within these ranges will not be prompted for a login when searching Xerxes.  Enter as either 144.37.`*`.`*`, with `*` as wildcard, or as 144.37.0.0-144.37.255.255.  Separate multiple entries by comma.
+
 ==logout_url==
+
+The URL Xerxes will send users after they logout.  Could be set to, for example, your library home page.  If left blank, then Xerxes returns users to its own homepage.
 
 ==marc_fields_brief==
 
+MARC 9XX fields Xerxes should include in the brief results.  Xerxes includes all control and datafields 0XX-8XX by default in the brief results.  But since some database vendors (e.g., Ebsco and OCLC) include large amounts of data in locally-defined 9XX fields, incurring noticeable slow-downs in the brief results, Xerxes excludes them.  Unless, that is, you specify them here.
+
+Enter MARCfields as a five character string consisting of 3 digit field code and 2 characters for ind1 and ind2.  Use # as a wildcard -- e.g., 948## will fetch the 948, 9#### will fetch all 9XX fields.
+
 ==maximum_record_export_limit==
+
+Maximum number of records allowed in an export.  Defaults to 1,000.  Be careful is setting it higher.
 
 ==metalib_address==
 
+Full URL to your Metalib server, including the port. _DO NOT_ include the /X in the metalib address.
+                        * institute is usually the same as username.
+
 ==metalib_username==
+
+A valid Metalib Management (/M) interface username associated with the Metalib institute you want to use with Xerxes
 
 ==metalib_password==
 
-==metalib_institute==	
+The password of the above metalib_username.
+
+==metalib_institute==
+
+The Metalib institute you wish to associate with this Xerxes instance.
 
 ==normalize_query==
 
+Setting this to 'true' instructs Xerxes slightly modify the user's query, sending it to Metalib in such a way as to support a limited number of Boolen OR or NOT operators in the search box itself.  Metalib does not natively support this, instead requiring that the drop-down be used, and then only supporting one OR or NOT.
+
+This is *experimental* and is not guaranteed to work across all resources.  It seems to work well with Z39.50 resources, but might be interpreted in different ways by databases that use XML gateways or screen scrappers.
+
 ==original_record_links==
+
+Specify those databases that should present a link to the record in the native interface.  The IRDs in the list must have a 'Link to Records in Native Interface'.    Enter as:
+
+{{{
+<config name="original_record_links" pass="true" xml="true">
+  <database metalib_id="JHU0001" />
+  <database metalib_id="JHU0002" />
+</config>
+
+}}}
+
+Xerxes will always show a direct link to the native full-text if it is available.  This option, in contrast, tells Xerxes to show a link to the record in the native interface whether full-text is available or not.
+
+The link appears in the full record page, together with other link options.  The link will appear on the brief results page _ONLY_ if (1) there is no full text link available, (2) there is no OpenURL link available, which is true if you set the IRD in Metalib to not show OpenURL links for this resource, (3) if the "original_record" link is both present _AND_ results in a link.
 
 ==proxy_server==
 
@@ -233,14 +295,13 @@ Include individual databases that should show holdings links.  [Configuration#sh
 
 ==show_all_holdings_links==
 
-Show all available links to holdings.  You can alternately specify only specific databases to do this.
+Show links to holdings for all databases that have them.  Use [Configuration#holdings_links holdings_link] to specify that only specific databases do this.
 
-Metalib supports generation of 'Link to Records in Native Interface' and 'Link to Holdings in Native Interface' on a resource-by-resource basis.  If a Metalib IRD is configured to provide such links, they can be displayed in Xerxes. 
-    
-The 'alternative' (off-campus) versions of these links in Metalib are not currently supported.
+Metalib IRDs have a field for 'Link to Records in Native Interface'.  If an IRD is configured to provide such links, they can be displayed in Xerxes.
 
-In Metalib even if you fill out a 'link to holdings' field for a resource, it may not be displayed depending on Metalib 'configuration' settings. In Xerxes, if a the 'link to holdings' field is filled out and available, it will be displayed in Xerxes according to this config, regardless of Metalib 'configuration'. Xerxes does not currently support realtime z39.50 lookup of holdings like Metalib does.
+Even if you fill out a 'link to holdings' field for a resource, the standard Metalib may not display the link, depending on 'configuration' settings.  However, Xerxes will display the link for any resource that has it, regardless of Metalib 'configuration'. 
 
+Xerxes does not currently support realtime z39.50 lookup of holdings, as in the standard Metalib interface.  Xerxes also does not support the 'alternative' (off-campus) versions of these links.
 
 ==show_db_detail_search==
 
