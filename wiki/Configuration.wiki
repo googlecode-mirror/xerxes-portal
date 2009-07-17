@@ -2,7 +2,7 @@
 
 ==alternate_fulltext_harvest_address==
 
-The URL that Xerxes should point its SFX 'availability populate' action at, if different from link_resolver_address.  This is particularly useful if you you use a different front-end application to SFX -- e.g., Umlaut -- and have the link_resolver_address configured for that.
+The URL that Xerxes should point its SFX 'availability populate' action at, if different from [Configuration#link_resolver_address link_resolver_address].  This is particularly useful if you you use a different front-end application to SFX -- e.g., Umlaut -- and have the link_resolver_address configured for that.
 
 ==alternate_yahoo_location==
 
@@ -29,7 +29,7 @@ The source against which you will authenticate users; valid values include:
 		
 ===authentication_source id=other===
 
-Specify additional authentication_sources Xerxes can accept. Set 'id' to one of the authentication sources mentioned above.  You can send users to these alternate login pages by adding `&authentication_source=id` to the login page URL, changing 'id' to the value you entered here.
+Specify additional authentication_sources Xerxes can accept. Set 'id' to one of the authentication sources [Configuration#authentication_source mentioned above].  You can send users to these alternate login pages by adding `&authentication_source=id` to the login page URL, changing 'id' to the value you entered here.
 
 ==base_web_path==
 
@@ -73,7 +73,7 @@ The username of the account that is set-up to access the (MySQL) database.
 
 ==db_description_allow_tags==
 
-A white list of HTML tags _NOT_ to strip in database descriptions. Only used if db_description_html is set to 'strip'. Tags listed here (comma separated) will NOT be stripped, but will be allowed. All other tags will be stripped.
+A white list of HTML tags _NOT_ to strip in database descriptions. Only used if [Configuration#db_description_html db_description_html] is set to 'strip'. Tags listed here (comma separated) will NOT be stripped, but will be allowed. All other tags will be stripped.
 
 ==db_description_html==
 
@@ -81,7 +81,7 @@ Instructs Xerxes to strip out HTML tags in database description. Possible values
                 
   * *escape* escapes all HTML so it shows up as source
   * *allow* allows all HTML through as code. NOT recommended. Suggest you use strip with some tags in db_description_allow_tags instead. 
-  * *strip* strips out all HTML tags. May be used in combination with db_description_allow_tags to allow for certain exceptions.
+  * *strip* strips out all HTML tags. May be used in combination with [Configuration#db_description_allow_tags db_description_allow_tags] to allow for certain exceptions.
 
 ==default_collection_name==
 
@@ -89,15 +89,15 @@ The default name that should be used for new collections in 'My Saved Databases'
 
 ==default_collection_section_name==
 
-The default name that should be used for new sections in 'My Saved Databases'.  See note above if you change this after deployment.
+The default name that should be used for new sections in 'My Saved Databases'.  See [Configuration#default_collection_name note above] if you change this after deployment.
 
 ==demo_users==
 
-List of users who can access the system without being in the local directory server. Enter as username:password and separate entries by comma.  If you have chosen a 'local' authentication option  (i.e., something other than CAS or Shibboleth), you can authenticate demo users using your _main_ login page.  If you are using CAS or Shibboleth, you'll need to point demo users to an alternate login page, as mentioned above.
+List of users who can access the system without being in the local directory server. Enter as username:password and separate entries by comma.  If you have [Configuration#authentication_source chosen a 'local' authentication option]  (i.e., something other than CAS or Shibboleth), you can authenticate demo users using your _main_ login page.  If you are using CAS or Shibboleth, you'll need to point demo users to an alternate login page, as mentioned above.
 
 ==directory_server==
 
-If authentication is set to 'ldap', then this specifies the directory server against which you will do the LDAP authentication
+If [Configuration#authentication_source authentication] is set to 'ldap', then this specifies the directory server against which you will do the LDAP authentication
 
 ==display_errors==
 
@@ -122,7 +122,7 @@ If you want to use a different width, simply leave the value as 'doc3', and in y
 
 ==domain==
 
-If authentication is set to 'ldap', then this specifies the domain for the LDAP bind.
+If [Configuration#authentication_source authentication] is set to 'ldap', then this specifies the domain for the LDAP bind.
 
 ==email_from==
 
@@ -166,6 +166,15 @@ Example:
 
 ==holdings_links==
 
+Include individual databases that should show holdings links.  [Configuration#show_all_holdings_links See below] for more information on these type of links.  Enter as:
+
+{{{
+<config name="holdings_links" pass="true" xml="true">
+  <database metalib_id="JHU0001" />
+  <database metalib_id="JHU0002" />
+</config>
+}}}
+
 ==http_proxy_server==
 
 ==http_proxy_username==
@@ -185,8 +194,6 @@ Example:
 ==link_resolver_address==
 
 ==link_target==
-
-
 
 ==local_ip_range==
 
@@ -225,6 +232,15 @@ Example:
 ==shib_username_header==
 
 ==show_all_holdings_links==
+
+Show all available links to holdings.  You can alternately specify only specific databases to do this.
+
+Metalib supports generation of 'Link to Records in Native Interface' and 'Link to Holdings in Native Interface' on a resource-by-resource basis.  If a Metalib IRD is configured to provide such links, they can be displayed in Xerxes. 
+    
+The 'alternative' (off-campus) versions of these links in Metalib are not currently supported.
+
+In Metalib even if you fill out a 'link to holdings' field for a resource, it may not be displayed depending on Metalib 'configuration' settings. In Xerxes, if a the 'link to holdings' field is filled out and available, it will be displayed in Xerxes according to this config, regardless of Metalib 'configuration'. Xerxes does not currently support realtime z39.50 lookup of holdings like Metalib does.
+
 
 ==show_db_detail_search==
 
