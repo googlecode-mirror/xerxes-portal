@@ -6,7 +6,7 @@ The URL that Xerxes should point its SFX 'availability populate' action at, if d
 
 ==alternate_yahoo_location==
 
-Location of an alternate 'rela'y script for the Yahoo Spell Check API.  Since the Yahoo API has a daily limit based on IP address, this allows you to route some spell checking through another server in order to distribute the load.  This is particularly useful if you have multiple institutions hosted on the same server.
+Location of an alternate 'relay' script for the Yahoo Spell Check API.  Since the Yahoo API has a daily limit based on IP address, this allows you to route some spell checking through another server in order to distribute the load.  This is particularly useful if you have multiple institutions hosted on the same server.
 
 ==application_name==
 
@@ -29,11 +29,11 @@ The source against which you will authenticate users; valid values include:
 		
 ===authentication_source id=other===
 
-Specify additional authentication_sources Xerxes can accept. Set 'id' to one of the authentication sources mentioned above.  You can send users to these alternate login pages by adding "&authentication_source=id" to the login page URL, changing 'id' to the value you entered here.
+Specify additional authentication_sources Xerxes can accept. Set 'id' to one of the authentication sources mentioned above.  You can send users to these alternate login pages by adding `&authentication_source=id` to the login page URL, changing 'id' to the value you entered here.
 
 ==base_web_path==
 
-The base web server path for your Xerxes installation. DO NOT add a trailing slash. If you have installed at web root, leave this value empty. 
+The base web server path for your Xerxes installation. _DO NOT_ add a trailing slash. If you have installed at web root, leave this value empty. 
 
 ==cas_version==
 
@@ -49,7 +49,7 @@ Full URL to the CAS validate service.
 
 ==categories_quicksearch==
 
-The 'normalized ID' of the category that should be used for the 'Quick Search' box on the Xerxes home page.  The normalized ID is a value that Xerxes constructs from the name of the category.  If you have Xerxes up and running, simply click on the category you want to use and look in the browser address bar.  The normalized ID is either the last part of the URL (if you have rewrite turned on) or is the value of '&subject=' if you do not.
+The 'normalized ID' of the category that should be used for the 'Quick Search' box on the Xerxes home page.  The normalized ID is a value that Xerxes constructs from the name of the category.  If you have Xerxes up and running, simply click on the category you want to use and look in the browser address bar.  The normalized ID is either the last part of the URL (if you have rewrite turned on) or is the value of `&subject=` if you do not.
 
 ==categories_num_columns==
 
@@ -73,35 +73,96 @@ The username of the account that is set-up to access the (MySQL) database.
 
 ==db_description_allow_tags==
 
-
+A white list of HTML tags _NOT_ to strip in database descriptions. Only used if db_description_html is set to 'strip'. Tags listed here (comma separated) will NOT be stripped, but will be allowed. All other tags will be stripped.
 
 ==db_description_html==
 
+Instructs Xerxes to strip out HTML tags in database description. Possible values:
+                
+  * *escape* escapes all HTML so it shows up as source
+  * *allow* allows all HTML through as code. NOT recommended. Suggest you use strip with some tags in db_description_allow_tags instead. 
+  * *strip* strips out all HTML tags. May be used in combination with db_description_allow_tags to allow for certain exceptions.
+
 ==default_collection_name==
+
+The default name that should be used for new collections in 'My Saved Databases'.  NOTE: If you change this value _after_ you have already deployed Xerxes with 'My Saved Databases' functionality, users may see somewhat confusing behavior (although no errors). Try it yourself to see. You may want to change the names of all existing collections with the older names by using direct SQL.
 
 ==default_collection_section_name==
 
+The default name that should be used for new sections in 'My Saved Databases'.  See note above if you change this after deployment.
+
 ==demo_users==
+
+List of users who can access the system without being in the local directory server. Enter as username:password and separate entries by comma.  If you have chosen a 'local' authentication option  (i.e., something other than CAS or Shibboleth), you can authenticate demo users using your _main_ login page.  If you are using CAS or Shibboleth, you'll need to point demo users to an alternate login page, as mentioned above.
 
 ==directory_server==
 
+If authentication is set to 'ldap', then this specifies the directory server against which you will do the LDAP authentication
+
 ==display_errors==
+
+Set this to 'true' to see the full stack trace error from PHP in the page instead of the Xerxes error page.
 
 ==document==
 
+Specifies a width for the interface.  Xerxes uses the [http://developer.yahoo.com/yui/grids/ Yahoo Grids CSS framework] for basic layout.  The value here represents the 'id' of the main <div> of the layout.  Pre-set widths in the Yahoo framework, include:
+
+  * *doc* -- 750px
+  * *doc2* -- 950px
+  * *doc3* -- 100%
+  * *doc4* -- 974px,
+
+If you want to use a different width, simply leave the value as 'doc3', and in your local.css file, manually set the width.  For example, set to 800px like this:
+
+{{{
+#doc3 { 
+  width: 800px;
+}
+}}}
+
 ==domain==
+
+If authentication is set to 'ldap', then this specifies the domain for the LDAP bind.
 
 ==email_from==
 
+Specify an explicit 'from' address that Xerxes will use when users email records to themselves.  If left blank, the 'from' address will be from the server, or some other default, if relaying thru an SMTP server.
+
 ==ezp_exp_domain_avoid==
 
-==ezp_exp_resourceid_omit==	
+Domains that should not excluded as "Domain" config in the EZProxy export, even if ordinary rules would include them. See the [EzProxyExport EZProxy Export page].
+
+==ezp_exp_resourceid_omit==
+
+Particular databases that should be excluded from the EZProxy export, even if ordinary rules would include them.  See the [EzProxyExport EZProxy Export page].
 
 ==ezp_exp_default_group==
 
+"Group" statement to output for ordinary default KB resources. See the [EzProxyExport EZProxy Export page].
+
 ==facets==
 
+Set this to 'true' to show the Metalib facets.  Make sure you've turned this option on in Metalib as well, or you'll get an error.
+
 ==group==
+
+Metalib user groups (aka 'secondary affiliations').  This is an XML option, different from the normal configs.
+                
+             
+  * `<group id="metalib_code">` : group code id used in Metalib, ordinarily in all caps.
+  * `<display_name>` : What to call this group of users       
+  * `<local_ip_range>`: IP range(s) associated with this group.  Users coming from this ip range will be able to search this group's resources without first having to login. Enter as either 144.37.`*`.`*`, with `*` as wildcard, or as 144.37.0.0-144.37.255.255, seperate mutliple entries by comma
+  * `<ezp_exp_group>` For use with EZProxy export function, ezproxy config group to output for this Metalib secondary affiliation. See [EzProxyExport EZProxy Export page].
+                
+Example:
+{{{                
+  <groups>
+    <group id="SCIENCE">
+      <display_name>Science Library</display_name>
+      <local_ip_range>201.2.4.*</local_ip_range>
+    </group>
+  </groups>
+}}}
 
 ==holdings_links==
 
