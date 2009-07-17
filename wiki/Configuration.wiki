@@ -2,15 +2,34 @@
 
 ==alternate_fulltext_harvest_address==
 
+The URL that Xerxes should point its SFX 'availability populate' action at, if different from link_resolver_address.  This is particularly useful if you you use a different front-end application to SFX -- e.g., Umlaut -- and have the link_resolver_address configured for that.
+
 ==alternate_yahoo_location==
+
+Location of an alternate 'rela'y script for the Yahoo Spell Check API.  Since the Yahoo API has a daily limit based on IP address, this allows you to route some spell checking through another server in order to distribute the load.  This is particularly useful if you have multiple institutions hosted on the same server.
 
 ==application_name==
 
+The 'name' of your Xerxes application.  By default, Xerxes only displays this in the browser title bar, as a prefix to each page name.  This can simply be the name of your university or library.
+
 ==application_sid==
 
+The source identifier (sid) that Xerxes will include in each OpenURL.  This can be anything, really, and is useful for distinguishing Xerxes requests in SFX, both for display logic and statistical reasons.  Xerxes will also append the full name of the database to the sid.
+
 ==authentication_source==
+
+The source against which you will authenticate users; valid values include:
+     
+  * *ldap* for a simple bind to an ldap-enabled directory server, including Active Directory
+  * *innovative* for authentication against the Innovative Patron API
+  * *cas* for authentication against a Central Authentication Source server
+  * *demo* for a simple demo set-up when you don't want to configure a directory
+  * *shibboleth* for Shibboleth authentication using a local configured shibd.
+  * *custom* to use the script in demo/config/authentication/custom.php, where you can write your own authentication code
 		
-  authentication_source id=other
+===authentication_source id=other===
+
+Specify additional authentication_sources Xerxes can accept. Set 'id' to one of the authentication sources mentioned above.  You can send users to these alternate login pages by adding "&authentication_source=id" to the login page URL, changing 'id' to the value you entered here.
 
 ==base_web_path==
 
