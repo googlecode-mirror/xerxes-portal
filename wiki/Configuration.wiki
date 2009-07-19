@@ -279,19 +279,43 @@ The link appears in the full record page, together with other link options.  The
 
 ==proxy_server==
 
+Enter the starting point URL of you proxy server.  This is what Xerxes will _prefix_ to full-text and other vendor URLs before sending the user to the site.
+                
+  * *EZProxy*: Include the entire proxy URL prefix, e.g., `http://ezproxy.library.edu/login?qurl=` Xerxes will look to URL-encode the full-text link, so it is preferable to use `qurl` param 
+                        
+  * *WAM Proxy*: Enter in your catalog information with '{WAM}' as the domain/port wildcard;  e.g.,   http://{WAM}.catalog.library.edu
+
 ==records_per_page==
-		
+
+Enter the maximum number of records Xerxes should show per-page in the brief metasearch results.  The default is 10, mostly for performance reasons.  If you have fast hardware and relatively light usage, consider making this higher, however, since users will prefer having more records per page.
+	
 ==rewrite==
+
+Setting this to 'true' instructs Xerxes to create shorter, more stable-looking URLs.  This is advantageous, since these URLs will likely be bookmarked and shared by users.
+
+Although turning this on will create the URLs, for your Web server to _handle_ them correctly, you need either Apache's mod_rewrite module or one of the various mod_rewite-like ISAPI modules available for IIS. 
+
+See the demo/.htaccess file for specifications of the rewrite scheme.
 
 ==saved_records_per_page==
 
+Maximum number of records to show on saved records page.  Default is 10.  This can go much higher than [Configuration#records_per_Page records_per_page], since the records are coming out of the local database.
+
 ==search_limit==
+
+The number of databases that can be search simultaneously.  This should correspond to the limit you have configured in Metalib.
 
 ==search_progress_cap==
 
+Number of second before Xerxes stops the search and merges available records. Note that this will not automatically change the animated search progress image, setting this higher will require a change in that display.
+
 ==secure_login==
 
+Setting this to 'true' will cause Xerxes to force all logins through `https://`.  This is useful only for the local authentication options -- where Xerxes provides the login page itself -- and is largely unnecessary for remote authentication though CAS and Shibboleth.
+
 ==shib_username_header==
+
+The HTTP header that xerxes will expect to find the Shiboleth username in. Defaults to REMOTE_USER, which seems to be what the Shib SP normally does. Can customize if needed. For even more flexible customization, see your demo/config/shibboleth/shib_map.php file.
 
 ==show_all_holdings_links==
 
