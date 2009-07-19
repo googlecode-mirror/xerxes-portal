@@ -61,7 +61,7 @@ The [http://us.php.net/manual/en/pdo.construct.php PDO connection string] to the
 
 ==database_list_searchable==
 
-Setting this to 'true' will show a search box in the alphabetical database list, allowing users to search for databases by name or other descriptive information in the Metalib IRD.  Caution: users often mistakenly think that this searches the actual databases themselves (i.e., for articles and books), rather than merely a search of their descriptions.  This is off by default for a reason.  Consider whether you really need it.
+Setting this to `true` will show a search box in the alphabetical database list, allowing users to search for databases by name or other descriptive information in the Metalib IRD.  Caution: users often mistakenly think that this searches the actual databases themselves (i.e., for articles and books), rather than merely a search of their descriptions.  This is off by default for a reason.  Consider whether you really need it.
 
 ==database_password==
 
@@ -101,11 +101,11 @@ If [Configuration#authentication_source authentication_source] is set to 'ldap',
 
 ==display_errors==
 
-Set this to 'true' to see the full stack trace error from PHP in the page instead of the Xerxes error page.
+Set this to `true` to see the full stack trace error from PHP in the page instead of the Xerxes error page.
 
 ==document==
 
-Specifies a width for the interface.  Xerxes uses the [http://developer.yahoo.com/yui/grids/ Yahoo Grids CSS framework] for basic layout.  The value here represents the 'id' of the main <div> of the layout.  Pre-set widths in the Yahoo framework, include:
+Specifies a width for the interface.  Xerxes uses the [http://developer.yahoo.com/yui/grids/ Yahoo Grids CSS framework] for basic layout.  The value here represents the 'id' of the main `<`div`>` of the layout.  Pre-set widths in the Yahoo framework, include:
 
   * *doc* -- 750px
   * *doc2* -- 950px
@@ -122,7 +122,7 @@ If you want to use a different width, simply leave the value as 'doc3', and in y
 
 ==domain==
 
-If [Configuration#authentication_source authentication_source] is set to 'ldap', then this specifies the domain for the LDAP bind.
+If [Configuration#authentication_source authentication_source] is set to `ldap`, then this specifies the domain for the LDAP bind.
 
 ==email_from==
 
@@ -142,7 +142,7 @@ Particular databases that should be excluded from the EZProxy export, even if or
 
 ==facets==
 
-Set this to 'true' to show the Metalib facets.  Make sure you've turned this option on in Metalib as well, or you'll get an error.
+Set this to `true` to show the Metalib facets.  Make sure you've turned this option on in Metalib as well, or you'll get an error.
 
 ==group==
 
@@ -166,7 +166,7 @@ Example:
 
 ==holdings_links==
 
-Specify individual databases that should show a link to 'holdings' (i.e., a link to a library catalog to show availability). [Configuration#show_all_holdings_links See below] for more information on these type of links.  Enter as:
+Specify individual databases that should show a link to 'holdings'. To show these links for _any_ database that has them, see [Configuration#show_all_holdings_links show_all_holdings_links].  Enter as:
 
 {{{
 <config name="holdings_links" pass="true" xml="true">
@@ -174,6 +174,12 @@ Specify individual databases that should show a link to 'holdings' (i.e., a link
   <database metalib_id="JHU0002" />
 </config>
 }}}
+
+About this type of link:
+
+Metalib IRDs have a field for 'Link to Records in Native Interface'.  In most cases, this is used to link to a library catalog so the user can check availability.  
+
+If you have filled out this field in the IRD, Xerxes will display it, regardless of any other configuration settings in Metalib. Xerxes does not currently support real-time z39.50 look-up of holdings, as in the standard Metalib interface.  Xerxes also does not support the 'alternative' (off-campus) versions of these links.
 
 ==http_proxy_server==
 
@@ -189,15 +195,15 @@ Password to authenticate again the HTTP Proxy.
 
 ==http_use_curl==
 
-Set this to 'true' if you want Xerxes to use the PHP CURL libraries for outgoing requests.  Requires that the CURL libraries be installed on the server.  This is useful if you've disable remote file access.
+Set this to `true` if you want Xerxes to use the PHP CURL libraries for outgoing requests.  Requires that the CURL libraries be installed on the server.  This is useful if you've disable remote file access.
 
 ==immediately_show_merged_results==
 
-Set this to 'false' if you want Xerxes to not immediately show the user the merged set of results.  Instead, it leaves the user at the search status page.  If you set this to false, contact David about customizing the `metasearch_hits.xsl` file.
+Set this to `false` if you want Xerxes to not immediately show the user the merged set of results.  Instead, it leaves the user at the search status page.  If you set this to false, contact David about customizing the `metasearch_hits.xsl` file.
 
 ==innovative_patron_api==
 
-If [Configuration#authentication_source authentication_source] is set to 'innovative', then specify here the full URL to the server, and the Patron API port.  _INCLUDE) the trailing slash '/' at the end of the URL.
+If [Configuration#authentication_source authentication_source] is set to `innovative`, then specify here the full URL to the server, and the Patron API port.  _INCLUDE) the trailing slash '/' at the end of the URL.
 		
 ==innovative_patron_types==
 
@@ -232,7 +238,7 @@ The URL Xerxes will send users after they logout.  Could be set to, for example,
 
 MARC 9XX fields Xerxes should include in the brief results.  Xerxes includes all control and datafields 0XX-8XX by default in the brief results.  But since some database vendors (e.g., Ebsco and OCLC) include large amounts of data in locally-defined 9XX fields, incurring noticeable slow-downs in the brief results, Xerxes excludes them.  Unless, that is, you specify them here.
 
-Enter MARCfields as a five character string consisting of 3 digit field code and 2 characters for ind1 and ind2.  Use # as a wildcard -- e.g., 948## will fetch the 948, 9#### will fetch all 9XX fields.
+Enter MARCfields as a five character string consisting of 3 digit field code and 2 characters for ind1 and ind2.  Use # as a wildcard -- e.g., `948##` will fetch the 948, `9####` will fetch all 9XX fields.
 
 ==maximum_record_export_limit==
 
@@ -241,7 +247,6 @@ Maximum number of records allowed in an export.  Defaults to 1,000.  Be careful 
 ==metalib_address==
 
 Full URL to your Metalib server, including the port. _DO NOT_ include the /X in the metalib address.
-                        * institute is usually the same as username.
 
 ==metalib_username==
 
@@ -257,9 +262,9 @@ The Metalib institute you wish to associate with this Xerxes instance.
 
 ==normalize_query==
 
-Setting this to 'true' instructs Xerxes slightly modify the user's query, sending it to Metalib in such a way as to support a limited number of Boolen OR or NOT operators in the search box itself.  Metalib does not natively support this, instead requiring that the drop-down be used, and then only supporting one OR or NOT.
+Setting this to `true` instructs Xerxes to (slightly) modify the user's query, sending it to Metalib in such a way as to support a limited number of Boolen OR or NOT operators in the search box itself.  Metalib does not naively support this, instead requiring that the drop-down be used, and then only supporting one OR or NOT.
 
-This is *experimental* and is not guaranteed to work across all resources.  It seems to work well with Z39.50 resources, but might be interpreted in different ways by databases that use XML gateways or screen scrappers.
+This is *experimental* and is not guaranteed to work across all databases.  It seems to work well with Z39.50 resources, but might be interpreted in different ways by databases that use XML gateways or screen scrappers.
 
 ==original_record_links==
 
@@ -279,9 +284,9 @@ The link appears in the full record page, together with other link options.  The
 
 ==proxy_server==
 
-Enter the starting point URL of you proxy server.  This is what Xerxes will _prefix_ to full-text and other vendor URLs before sending the user to the site.
+Enter the starting point URL of you proxy server.
                 
-  * *EZProxy*: Include the entire proxy URL prefix, e.g., `http://ezproxy.library.edu/login?qurl=` Xerxes will look to URL-encode the full-text link, so it is preferable to use `qurl` param 
+  * *EZProxy*: Include the entire starting-point URL prefix, e.g., `http://ezproxy.library.edu/login?qurl=`. Xerxes will look to URL-encode the full-text link, so it is preferable to use `qurl` param 
                         
   * *WAM Proxy*: Enter in your catalog information with '{WAM}' as the domain/port wildcard;  e.g.,   http://{WAM}.catalog.library.edu
 
@@ -315,31 +320,60 @@ Setting this to 'true' will cause Xerxes to force all logins through `https://`.
 
 ==shib_username_header==
 
-The HTTP header that xerxes will expect to find the Shiboleth username in. Defaults to REMOTE_USER, which seems to be what the Shib SP normally does. Can customize if needed. For even more flexible customization, see your demo/config/shibboleth/shib_map.php file.
+The HTTP header that xerxes will expect to find the Shiboleth username in. Defaults to REMOTE_USER, which seems to be what the Shib SP normally does. Can customize if needed. For even more flexible customization, see your `demo/config/shibboleth/shib_map.php` file.
 
 ==show_all_holdings_links==
 
-Show links to holdings for all databases that have them.  Use [Configuration#holdings_links holdings_link] to specify that only specific databases do this.
-
-Metalib IRDs have a field for 'Link to Records in Native Interface'.  If an IRD is configured to provide such links, they can be displayed in Xerxes.
-
-Even if you fill out a 'link to holdings' field for a resource, the standard Metalib may not display the link, depending on 'configuration' settings.  However, Xerxes will display the link for any resource that has it, regardless of Metalib 'configuration'. 
-
-Xerxes does not currently support realtime z39.50 lookup of holdings, as in the standard Metalib interface.  Xerxes also does not support the 'alternative' (off-campus) versions of these links.
+Show links to holdings for all databases that have them.  See [Configuration#holdings_links holdings_link] for more information on 'holdings' links, and to specify that only specific databases show them.
 
 ==show_db_detail_search==
 
+Set this to 'false' to not show a search box for the database on the individual database description page.
+
 ==sort_order_primary==
+
+The initial sort orders for merged results. Default is `rank`.  This will be the default sort order when the user is first dropped into the merged results; valid values include:
+
+  * rank
+  * title
+  * author
+  * year
+  * database
+
 
 ==sort_order_secondary==
 
+The _secondary_ sort criteria for sorting merged results.  Valid values are the same as for [Configuration#sort_order_primary sort_order_primary].  In the event that two or more records have the same value for the primary sort, this will further sort the items.
+
+Default here is `title`, as in Metalib, since setting it to `year` causes unusual reordering of the results in Metalib if users (manually) change their sort to something else and then go _back_ to rank.
+
 ==subcategories_include==
+
+Include here a white list of subcategories that should be included in the subject page.  If left blank, Xerxes will include all subcategories.  This can be useful if you are transitioning from the standard Metalib interface to Xerxes, and want to follow the common Xerxes pattern of 'most useful' and 'also useful' subcategories, while keeping a topical list in the standard Metalib interface.
 
 ==template==
 
+Set here the position and width of the sidebar.  Valid values include:
+
+  * *yui-t1* -- 160 on left
+  * *yui-t2* -- 180 on left
+  * *xer-t5* -- 240 on left
+  * *yui-t3* -- 300 on left
+  * *yui-t4* -- 180 on right
+  * *yui-t5* -- 240 on right
+  * *yui-t6* -- 300 on right
+
+Like [Configuration#document document] this controls default behavior in the YUI CSS Grids framework.  See `demo/css/xerxes-blue.css` for an example (xer-t5) for creating a different template.
+
 ==yahoo_id==
+
+Set here the ID for the account that will access the Yahoo Spell Check API.  It doesn't hurt to leave this as `calstate`, since the usage limits are based on IP address, but better to get your own key from Yahoo 
 		
 ==xerxes_brief_include_marc==
+
+Set to `true` to include the original MARC-XML record in the XML response for the brief results page.  This is useful if you need to customized the brief results template to show data that Xerxes does not map to its own internal format.
 		
 ==xerxes_full_include_marc==
+
+Set to `true` to include the original MARC-XML record in the XML response for the full record page.  This is useful if you need to customized `xsl/record.xsl` to show data that Xerxes does not map to its own internal format.
 		
