@@ -103,7 +103,7 @@ The 'normalized ID' of the category that should be used for the 'Quick Search' b
 
 The normalized ID is a value that Xerxes constructs from the name of the category.  If you simply create a category called 'Quick Search' in Metalib, Xerxes will display this on the homepage.  
 
-If you want to use a different category -- for example, 'General Resources', and have Xerxes up and running, simply click on the category you want to use and look in the browser address bar.  The normalized ID is either the last part of the URL (if you have rewrite turned on) or is the value of `&subject=` if you do not.
+If you want to use a different category -- for example, 'General Resources' -- and have Xerxes up and running, simply click on the category you want to use and look in the browser address bar.  The normalized ID is either the last part of the URL (if you have rewrite turned on) or is the value of `&subject=` if you do not.
 
 ==categories_num_columns==
 
@@ -125,23 +125,42 @@ If you are using MySQL and called your database/schema 'xerxes', then the defaul
 
 ==database_list_searchable==
 
+  * default value: `false`
+  * available since: 1.5
+
 Setting this to `true` will show a search box in the alphabetical database list, allowing users to search for databases by name or other descriptive information in the Metalib IRD.  Caution: users often mistakenly think that this searches the actual databases themselves (i.e., for articles and books), rather than merely a search of their descriptions.  This is off by default for a reason.  Consider whether you really need it.
 
 ==database_password==
 
 The password of the account that is set-up to access the (MySQL) database.
 
+  * default value: none
+  * available since: 1.1
+
 ==database_username==
 
 The username of the account that is set-up to access the (MySQL) database.
 
+  * default value: none
+  * available since: 1.1
+
 ==db_description_allow_tags==
 
-A white list of HTML tags _NOT_ to strip in database descriptions. Only used if [Configuration#db_description_html db_description_html] is set to 'strip'. Tags listed here (comma separated) will NOT be stripped, but will be allowed. All other tags will be stripped.
+A white list of HTML tags _NOT_ to strip in database descriptions. 
+
+  * default value: `b,i,strong,em,a`
+  * available since: 1.4
+
+Only used if [Configuration#db_description_html db_description_html] is set to `strip`. Tags listed here (comma separated) will NOT be stripped, but will be allowed. All other tags will be stripped.  Do not include angle brackets.
 
 ==db_description_html==
 
-Instructs Xerxes to strip out HTML tags in database description. Possible values:
+Instructs Xerxes to strip out HTML tags in database description. 
+
+  * default value: `escape`
+  * available since: 1.4
+
+Possible values:
                 
   * *escape* escapes all HTML so it shows up as source
   * *allow* allows all HTML through as code. NOT recommended. Suggest you use strip with some tags in db_description_allow_tags instead. 
@@ -153,7 +172,12 @@ The default name that should be used for new collections in 'My Saved Databases'
 
 ==default_collection_section_name==
 
-The default name that should be used for new sections in 'My Saved Databases'.  See [Configuration#default_collection_name note above] if you change this after deployment.
+The default name that should be used for new sections in 'My Saved Databases'.
+
+  * default value: ` My Saved Databases`
+  * available since: 1.5  
+
+See [Configuration#default_collection_name note above] if you change this after deployment.
 
 ==demo_users==
 
