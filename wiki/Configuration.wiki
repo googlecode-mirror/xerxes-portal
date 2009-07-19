@@ -2,23 +2,52 @@
 
 ==alternate_fulltext_harvest_address==
 
-The URL that Xerxes should point its SFX 'availability populate' action at, if different from [Configuration#link_resolver_address link_resolver_address].  This is particularly useful if you you use a different front-end application to SFX -- e.g., Umlaut -- and have the link_resolver_address configured for that.
+The URL that Xerxes should point its SFX 'availability populate' action at, if different from [Configuration#link_resolver_address link_resolver_address].
+
+  * default value: none
+  * available since: 1.5
+
+This is particularly useful if you you use a different front-end application to SFX -- e.g., Umlaut -- and have [Configuration#link_resolver_address link_resolver_address] configured for that.
 
 ==alternate_yahoo_location==
 
-Location of an alternate 'relay' script for the Yahoo Spell Check API.  Since the Yahoo API has a daily limit based on IP address, this allows you to route some spell checking through another server in order to distribute the load.  This is particularly useful if you have multiple institutions hosted on the same server.
+Enter here the full URL of an alternate 'relay' script for the Yahoo Spell Check API.  
+
+  * default value: none
+  * available since: 1.4
+
+Since the Yahoo API has a daily limit based on IP address, this allows you to route some spell checking through another server in order to distribute the load.  This is particularly useful if you have multiple institutions hosted on the same server.
 
 ==application_name==
 
-The 'name' of your Xerxes application.  By default, Xerxes only displays this in the browser title bar, as a prefix to each page name.  This can simply be the name of your university or library.
+The 'name' of your Xerxes application.  
+
+  * default value: `Xerxes Demo`
+  * available since: 1.1
+
+By default, Xerxes only displays this name in the browser title bar, as a prefix to each page name.  This can simply be the name of your university or library.
 
 ==application_sid==
 
-The source identifier (sid) that Xerxes will include in each OpenURL.  This can be anything, really, and is useful for distinguishing Xerxes requests in SFX, both for display logic and statistical reasons.  Xerxes will also append the full name of the database to the sid.
+The source identifier (sid) that Xerxes will include in each OpenURL.  
+
+  * default value: `calstate.edu:xerxes`
+  * available since: 1.1
+
+This can be set to any value, although following the pattern above is recommended.  Use this value to distinguish Xerxes requests in SFX, both for the purpose of display logic rules, and in statistical reports.  Xerxes will also append the full name of the database to the sid.
+
+==~~authentication_page~~==
+
+*Removed in 1.5*.  Previously used to specify a URL to the authentication page.  This was no longer deemed necessary.
 
 ==authentication_source==
 
-The source against which you will authenticate users; valid values include:
+The source against which you will authenticate users
+
+  * default value: `demo`
+  * available since: 1.1
+
+Valid values include:
      
   * *ldap* for a simple bind to an ldap-enabled directory server, including Active Directory
   * *innovative* for authentication against the Innovative Patron API
@@ -31,33 +60,68 @@ The source against which you will authenticate users; valid values include:
 
 Specify additional authentication_sources Xerxes can accept. Set 'id' to one of the authentication sources [Configuration#authentication_source mentioned above].  You can send users to these alternate login pages by adding `&authentication_source=id` to the login page URL, changing 'id' to the value you entered here.
 
+==~~authorization_source ~~==
+
+*Removed in 1.5*.  Previously allowed you to set 'innovative' as secondary check to _authorize_ users against the III Patron API.  If you need this type of authentication logic, program it into `demo/config/authentication/custom.php`
+
 ==base_web_path==
 
-The base web server path for your Xerxes installation. _DO NOT_ add a trailing slash. If you have installed at web root, leave this value empty. 
+The base web server path for your Xerxes installation.
+
+  * default value: `/demo`
+  * available since: 1.2
+
+This should reflect the path (URI) to your Xerxes instance from the root of your website.  _DO NOT_ add a trailing slash. If you have installed at web root, leave this value empty. 
 
 ==cas_version==
 
 The version of CAS you're running, either '1.0' or '2.0'.  If you are using a version higher than 2.0, just enter '2.0'.
 
+  * default value: none
+  * available since: 1.1
+
 ==cas_login==
 
 Full URL to the CAS login service.
+
+  * default value: none
+  * available since: 1.1
 
 ==cas_validate==
 
 Full URL to the CAS validate service.
 
+  * default value: none
+  * available since: 1.1
+
 ==categories_quicksearch==
 
-The 'normalized ID' of the category that should be used for the 'Quick Search' box on the Xerxes home page.  The normalized ID is a value that Xerxes constructs from the name of the category.  If you have Xerxes up and running, simply click on the category you want to use and look in the browser address bar.  The normalized ID is either the last part of the URL (if you have rewrite turned on) or is the value of `&subject=` if you do not.
+The 'normalized ID' of the category that should be used for the 'Quick Search' box on the Xerxes home page.  
+
+  * default value: `quick-search`
+  * available since: 1.4
+
+The normalized ID is a value that Xerxes constructs from the name of the category.  If you simply create a category called 'Quick Search' in Metalib, Xerxes will display this on the homepage.  
+
+If you want to use a different category -- for example, 'General Resources', and have Xerxes up and running, simply click on the category you want to use and look in the browser address bar.  The normalized ID is either the last part of the URL (if you have rewrite turned on) or is the value of `&subject=` if you do not.
 
 ==categories_num_columns==
 
-The number of columns for the list of subjects on the home page. Enter either '2' or '3'. Useful if you are working in a smaller, fixed-width design, where two columns can allow for more readable text. If you want more columns, you'll need to customize the page itself.  
+The number of columns for the list of subjects on the home page. 
+
+  * default value: `3`
+  * available since: 1.5
+
+Enter either '2' or '3'. Setting this to `2` can be useful if you are working in a smaller, fixed-width design, where two columns can allow for more readable text. If you want more than three columns, you'll need to customize the `databases_categories.xsl` page itself.  
 
 ==database_connection==
 
-The [http://us.php.net/manual/en/pdo.construct.php PDO connection string] to the database.  If you are using MySQL and called your database/schema 'xerxes', then the default value in config.xml is all you need.  If you called it something else, then change just the database name.
+The [http://us.php.net/manual/en/pdo.construct.php PDO connection string] to the database.  
+
+  * default value: `mysql:host=localhost;dbname=xerxes`
+  * available since: 1.1
+
+If you are using MySQL and called your database/schema 'xerxes', then the default value in config.xml is all you need.  If you called it something else, then change just the 'dbname' portion of the string.
 
 ==database_list_searchable==
 
@@ -317,6 +381,10 @@ Number of second before Xerxes stops the search and merges available records. No
 ==secure_login==
 
 Setting this to 'true' will cause Xerxes to force all logins through `https://`.  This is useful only for the local authentication options -- where Xerxes provides the login page itself -- and is largely unnecessary for remote authentication though CAS and Shibboleth.
+
+==~~sfx_resolver_address~~==
+
+*Renamed in 1.5*.  See [Configuration#alternate_fulltext_harvest_address alternate_fulltext_harvest_address]
 
 ==shib_username_header==
 
