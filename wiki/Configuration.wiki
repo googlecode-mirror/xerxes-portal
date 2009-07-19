@@ -645,11 +645,23 @@ Default here is `title`, as in Metalib, since setting it to `year` causes unusua
 
 ==subcategories_include==
 
-Include here a white list of subcategories that should be included in the subject page.  If left blank, Xerxes will include all subcategories.  This can be useful if you are transitioning from the standard Metalib interface to Xerxes, and want to follow the common Xerxes pattern of 'most useful' and 'also useful' subcategories, while keeping a topical list in the standard Metalib interface.
+Subcategories that should be included in the subject page.
+
+  * default value: none
+  * available since: 1.5
+
+This is a white list of subcategory names that should be included. Xerxes will show subcategory if any part of the subcategory name matches the values here.  So the value 'Articles' will march 'Article databases'. If left blank, Xerxes will include all subcategories.  
+
+This can be useful if you are transitioning from the standard Metalib interface to Xerxes, and want to follow the common Xerxes pattern of 'most useful' and 'also useful' subcategories, while keeping a topical list in the standard Metalib interface.
 
 ==template==
 
-Set here the position and width of the sidebar.  Valid values include:
+Set here the position and width of the sidebar.  
+
+  * default value: `yui-t6`
+  * available since: 1.5
+
+Valid values include:
 
   * *yui-t1* -- 160 on left
   * *yui-t2* -- 180 on left
@@ -663,13 +675,28 @@ Like [Configuration#document document] this controls default behavior in the YUI
 
 ==yahoo_id==
 
-Set here the ID for the account that will access the Yahoo Spell Check API.  It doesn't hurt to leave this as `calstate`, since the usage limits are based on IP address, but better to get your own key from Yahoo 
+The ID for the account that will access the Yahoo Spell Check API.  
+
+  * default value: `calstate`
+  * available since: 1.1
+
+It doesn't hurt to leave this as `calstate`, since the usage limits are based on IP address, but better to get your own key from Yahoo 
 		
 ==xerxes_brief_include_marc==
 
-Set to `true` to include the original MARC-XML record in the XML response for the brief results page.  This is useful if you need to customized the brief results template to show data that Xerxes does not map to its own internal format.
+Whether to include the original MARC-XML record in the XML response for the brief results page.  
+
+  * default value: `false`
+  * available since: 1.1
+
+This is useful if you need to customized the brief results template to show data that Xerxes does not map to its own internal format.
 		
 ==xerxes_full_include_marc==
 
-Set to `true` to include the original MARC-XML record in the XML response for the full record page.  This is useful if you need to customized `xsl/record.xsl` to show data that Xerxes does not map to its own internal format.
+Whether to include the original MARC-XML record in the XML response for the full record page.  
+
+  * default value: `false`
+  * available since: 1.`
+
+This is useful if you need to customized `xsl/record.xsl` to show data that Xerxes does not map to its own internal format.
 		
