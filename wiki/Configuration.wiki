@@ -58,7 +58,7 @@ Valid values include:
 		
 ===authentication_source id=other===
 
-Specify additional authentication_sources Xerxes can accept. Set 'id' to one of the authentication sources [Configuration#authentication_source mentioned above].  You can send users to these alternate login pages by adding `&authentication_source=id` to the login page URL, changing 'id' to the value you entered here.
+Specify additional authentication_sources Xerxes can accept. Set 'id' to one of the authentication sources mentioned above.  You can send users to these alternate login pages by adding `&authentication_source=id` to the login page URL, changing 'id' to the value you entered here.
 
 ==~~authorization_source ~~==
 
@@ -114,7 +114,18 @@ The number of columns for the list of subjects on the home page.
   * default value: `3`
   * available since: 1.5
 
-Enter either '2' or '3'. Setting this to `2` can be useful if you are working in a smaller, fixed-width design, where two columns can allow for more readable text. If you want more than three columns, you'll need to customize the `databases_categories.xsl` page itself.  
+Enter either '2' or '3'. Setting this to `2` can be useful if you are working in a smaller, fixed-width design, where two columns can allow for more readable text. If you want more than three columns, you'll need to customize the `databases_categories.xsl` page itself.
+
+
+==chunk_kb_pull==
+
+Whether Xerxes should do the Metalib KB pull in smaller 'chunks'.
+
+  * default value: `false`
+  * available since: 1.5.1 (in trunk)
+
+_This config must be added to config.xml_.  This is only necessary if Metalib times out during the KB pull.  This can happen if your Metalib KB is large and the server it runs on is not particularly fast.
+
 
 ==database_connection==
 
@@ -246,12 +257,12 @@ Required if [Configuration#authentication_source authentication_source] is set t
 
 ==email_from==
 
-The 'from' address that Xerxes will use when users email records to themselves.  
+The 'from' address users will see when they email records to themselves.  
 
   * default value: none
   * available since: 1.1  
 
-If left blank, the 'from' address will be from the server, or some other default, if relaying thru an SMTP server.
+If left blank, the 'from' address will be the server name, or some other default depending on how you've set-up email on your server.
 
 ==ezp_exp_domain_avoid==
 
@@ -260,7 +271,7 @@ Domains that should be excluded as "Domain" config in the EZProxy export, even i
   * default value: `youruniv.edu` (as an example)
   * available since: 1.4
 
- See the [EzProxyExport EZProxy Export page].
+See the [EzProxyExport EZProxy Export page].
 
 ==ezp_exp_resourceid_omit==
 
@@ -269,7 +280,7 @@ Particular databases that should be excluded from the EZProxy export, even if or
   * default value: none
   * available since: 1.4
 
- See the [EzProxyExport EZProxy Export page].
+See the [EzProxyExport EZProxy Export page].
 
 ==ezp_exp_default_group==
 
@@ -288,6 +299,15 @@ Whether Xerxes should include facets in the brief metasearch results page.
   * available since: 1.1
 
 Make sure you've turned this option on in Metalib as well, or you'll get an error.
+
+==fix_ampersands==
+
+Whether Xerxes should _un-escape_ ampersands before sending the HTML to the browser
+
+  * default value: `true`
+  * available since: 1.5
+
+_This config must be added to config.xml_.  Un-escaping the ampersands will better render accented letters and other non-Roman characters in the interface; but leaves the HTML (slightly) invalid.  Only set this to `false` if you care more about W3C validation than usability.
 
 ==group==
 
@@ -308,9 +328,27 @@ Example:
   </groups>
 }}}
 
+==harvest_memory_limit==
+
+The amount of memory PHP can consume for the Metaib KB and SFX full-text 'harvesting' tasks.
+
+  * default value: `500M`
+  * available since: 1.5
+
+_This config must be added to config.xml_.  You'll likely never need to increase it, since the default value is very large.
+
+==hits_thousands_seperator==
+
+The character that delimits thousands in the database hit count.
+
+  * default value: `,`
+  * available since: 1.5
+
+_This config must be added to config.xml_.  Useful if you want thousands to be separated by a period or other local, non-English convention.
+
 ==holdings_links==
 
-Individual databases that should show a link to 'holdings'.
+Individual databases that should show a link to 'holdings'. Enter as:
 
 {{{
 <config name="holdings_links" pass="true" xml="true">
@@ -319,7 +357,7 @@ Individual databases that should show a link to 'holdings'.
 </config>
 }}}
 
-To show these links for _any_ database that has them, see [Configuration#show_all_holdings_links show_all_holdings_links].  Enter as:
+To show these links for _any_ database that has them, see [Configuration#show_all_holdings_links show_all_holdings_links].
 
 About this type of link: Metalib IRDs have a field for 'Link to Records in Native Interface'.  In most cases, this is used to link to a library catalog so the user can check availability.  
 
@@ -536,14 +574,16 @@ The link appears in the full record page, together with other link options.  The
 
 ==proxy_server==
 
-Enter the URL of you proxy server.
+Enter the URL of your library proxy server.
 
   * default value: none
   * available since: 1.1
+
+The value is different based on your system:
                 
   * *EZProxy*: Include the entire starting-point URL prefix, e.g., `http://ezproxy.library.edu/login?qurl=`. Xerxes will look to URL-encode the full-text link, so it is preferable to use `qurl` param 
                         
-  * *WAM Proxy*: Enter in your catalog information with '{WAM}' as the domain/port wildcard;  e.g.,   http://{WAM}.catalog.library.edu
+  * *WAM Proxy*: Enter your catalog server information with '{WAM}' as the domain/port wildcard;  e.g.,   http://{WAM}.catalog.library.edu
 
 If left blank, no proxy server will be used.
 
@@ -555,6 +595,16 @@ Enter the maximum number of records Xerxes should show per-page in the brief met
   * available since: 1.1
 
 The default is 10, mostly for performance reasons, since a larger number will create a bigger XML response from Metalib, which will travel across the network more slowly.  If Metalib is on the same network, has fast hardware, and you expect relatively light usage, consider making this higher.  Users will prefer having more records per page.
+
+==refworks_address==
+
+The full URL to the Refworks import script.
+
+  * default value: `http://www.refworks.com/express/ExpressImport.asp`
+  * available since: 1.3
+
+_This config must be added to config.xml_. Only needed as a stop-gap in the unlikely event Refworks changes the address, and we've not updated (or you've not upgraded) Xerxes to pick-up the change.
+_
 	
 ==rewrite==
 
@@ -565,9 +615,18 @@ Whether Xerxes should create shorter, more stable-looking URLs.
 
 Although turning this on will create the URLs, for your Web server to _handle_ them correctly, you need either mod_rewrite, if you are using Apache, one of the various mod_rewite-like ISAPI modules, if you are using IIS. See the demo/.htaccess file for specifications of the rewrite scheme.
 
+==rdbms==
+
+The relational database management system (RDBMS) you are using with Xerxes.
+
+  * default value: `mysql`
+  * available since: 1.5.1 (in trunk)
+
+_This config must be added to config.xml_.  This is necessary only if you are using Xerxes with Microsoft SQL Server.  In that case, set the value to `mssql`.  We need this to unambiguously distinguish the database (the connection string alone will not do that, since we're using the ODBC driver) in order to support some MS-SQL-specific statements.
+
 ==saved_records_per_page==
 
-Maximum number of records to show on saved records page.  
+Maximum number of records to show on the saved records page.  
 
   * default value: `10`
   * available since: 1.1
@@ -576,7 +635,7 @@ This can go much higher than [Configuration#records_per_Page records_per_page], 
 
 ==search_limit==
 
-The number of databases that can be search simultaneously.  
+The number of databases that can be searched simultaneously.  
 
   * default value: `10`
   * available since: 1.1
@@ -585,7 +644,7 @@ This should correspond to the limit you have configured in Metalib.
 
 ==search_progress_cap==
 
-Number of second before Xerxes stops the search and merges available records.
+Number of seconds before Xerxes stops the search and merges available records.
 
   * default value: `34`
   * available since: 1.1
@@ -594,7 +653,12 @@ Note that this will not automatically change the animated search progress image,
 
 ==secure_login==
 
-Setting this to 'true' will cause Xerxes to force all logins through `https://`.  This is useful only for the local authentication options -- where Xerxes provides the login page itself -- and is largely unnecessary for remote authentication though CAS and Shibboleth.
+Whether Xerxes will force all logins through HTTPS.
+
+  * default value: `false`
+  * available since: 1.1
+
+This is useful only for the local authentication options -- where Xerxes provides the login page itself -- and is largely unnecessary for remote authentication though CAS and Shibboleth.
 
 ==~~sfx_resolver_address~~==
 
@@ -602,15 +666,28 @@ Setting this to 'true' will cause Xerxes to force all logins through `https://`.
 
 ==shib_username_header==
 
-The HTTP header that xerxes will expect to find the Shiboleth username in. Defaults to REMOTE_USER, which seems to be what the Shib SP normally does. Can customize if needed. For even more flexible customization, see your `demo/config/shibboleth/shib_map.php` file.
+The HTTP header that Xerxes will expect to find the Shiboleth username in. 
+
+  * default value: `false`
+  * available since: 1.2
+
+Defaults to REMOTE_USER, which seems to be what the Shib SP normally does. Can customize if needed. For even more flexible customization, see your `demo/config/shibboleth/shib_map.php` file.
 
 ==show_all_holdings_links==
 
-Show links to holdings for all databases that have them.  See [Configuration#holdings_links holdings_link] for more information on 'holdings' links, and to specify that only specific databases show them.
+Show links to holdings for all databases that have them.  
+
+  * default value: `true`
+  * available since: 1.5
+
+See [Configuration#holdings_links holdings_link] for more information on 'holdings' links, and to specify that only specific databases show them.
 
 ==show_db_detail_search==
 
-Set this to 'false' to not show a search box for the database on the individual database description page.
+Whether to show a search box on the individual database description page.
+
+  * default value: `true`
+  * available since: 1.2
 
 ==~~show_search_box~~==
 
@@ -650,13 +727,13 @@ Subcategories that should be included in the subject page.
   * default value: none
   * available since: 1.5
 
-This is a white list of subcategory names that should be included. Xerxes will show subcategory if any part of the subcategory name matches the values here.  So the value 'Articles' will march 'Article databases'. If left blank, Xerxes will include all subcategories.  
+This is a white list of subcategories that should be _included_.  Xerxes will show a subcategory if it matches any value, or part of the value, entered here.  So the entry 'Articles' will march subcategories named 'Article databases' and 'Most useful article databases'. If left blank (the default), Xerxes will include all subcategories.  
 
 This can be useful if you are transitioning from the standard Metalib interface to Xerxes, and want to follow the common Xerxes pattern of 'most useful' and 'also useful' subcategories, while keeping a topical list in the standard Metalib interface.
 
 ==template==
 
-Set here the position and width of the sidebar.  
+The position (left or right) and width of the sidebar.  
 
   * default value: `yui-t6`
   * available since: 1.5
@@ -696,7 +773,7 @@ This is useful if you need to customized the brief results template to show data
 Whether to include the original MARC-XML record in the XML response for the full record page.  
 
   * default value: `false`
-  * available since: 1.`
+  * available since: 1.1
 
 This is useful if you need to customized `xsl/record.xsl` to show data that Xerxes does not map to its own internal format.
 		
