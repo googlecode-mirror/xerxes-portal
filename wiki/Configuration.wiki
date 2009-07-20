@@ -668,7 +668,7 @@ This is useful only for the local authentication options -- where Xerxes provide
 
 The HTTP header that Xerxes will expect to find the Shiboleth username in. 
 
-  * default value: `false`
+  * default value: `REMOTE_USER`
   * available since: 1.2
 
 Defaults to REMOTE_USER, which seems to be what the Shib SP normally does. Can customize if needed. For even more flexible customization, see your `demo/config/shibboleth/shib_map.php` file.
@@ -727,7 +727,7 @@ Subcategories that should be included in the subject page.
   * default value: none
   * available since: 1.5
 
-This is a white list of subcategories that should be _included_.  Xerxes will show a subcategory if it matches any value, or part of the value, entered here.  So the entry 'Articles' will march subcategories named 'Article databases' and 'Most useful article databases'. If left blank (the default), Xerxes will include all subcategories.  
+This is a white list of subcategories that should be _included_.  Xerxes will show a subcategory if it matches any value, or part of the value, entered here.  So the entry 'Articles' will match subcategories named 'Article databases' and 'Most useful article databases'. If left blank (the default), Xerxes will include all subcategories.  
 
 This can be useful if you are transitioning from the standard Metalib interface to Xerxes, and want to follow the common Xerxes pattern of 'most useful' and 'also useful' subcategories, while keeping a topical list in the standard Metalib interface.
 
@@ -748,7 +748,7 @@ Valid values include:
   * *yui-t5* -- 240 on right
   * *yui-t6* -- 300 on right
 
-Like [Configuration#document document] this controls default behavior in the YUI CSS Grids framework.  See `demo/css/xerxes-blue.css` for an example (xer-t5) for creating a different template.
+Like [Configuration#document document] this controls default behavior in the YUI CSS Grids framework.  If you'd like to create a new option, see `demo/css/xerxes-blue.css` for an example (.xer-t5).
 
 ==yahoo_id==
 
