@@ -41,9 +41,9 @@ Xerxes will need to select, delete, update, and insert records into these tables
 
 ==4. Edit the main config file==
  
-The next step is to edit the configuration files to include information specific to your implementation, including the address of Metalib, the address of your link resolver, proxy server, and other information related to authentication and application behavior.  Many of these include empty or dummy values, so check them all out.
+The next step is to edit the configuration files to include information specific to your implementation, including the address of Metalib, the address of your link resolver, proxy server, and other information related to authentication and application behavior.  
  
-The main configuration file is located at 'demo/config/config.xml'.  The file includes some comments and examples that should guide you in how to enter the information.  Make sure to enter the database name and user account information you created in the previous section.
+The main configuration file is located at 'demo/config/config.xml'.  The file includes some minimal comments and examples.  Check out the [Configuration Configuration] page here on the wiki for a fuller set of information on each entry.  Make sure to enter the database name and user account information you created in the previous section.
 
 ===4b. Security issues with config.xml===
 
@@ -97,7 +97,7 @@ Make sure to change the path accordingly. That should populate the local sfx tab
 Eventually you will want to have Xerxes automatically refresh the Metalib KB and SFX 
 institutional holding data on a regular basis.  
 
-I assume here you know how to add items to Linux crontab or Windows ScheduledTasks in order to do this.  I always make a batch file that issues the php command, and then add a crontab entry that calls the batch file.  You could just add the php command directly to the crontab if you prefer.
+I assume here you know how to add items to Linux crontab or Windows scheduled tasks in order to do this.  I always make a batch file that issues the php command, and then add a crontab entry that calls the batch file.  You could just add the php command directly to the crontab if you prefer.
 
 I run the Metalib KB pull every hour during normal daylight hours -- that is, the time when people are most likely making changes.  We run the SFX pull at the same frequency as the institutional holding export cron on SFX, which we have set to once a week.
 
