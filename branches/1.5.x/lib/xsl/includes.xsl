@@ -234,6 +234,7 @@
 <xsl:template name="sidebar_additional" />
 <xsl:template name="module_header" />
 <xsl:template name="additional_record_links" />
+<xsl:template name="additional_brief_record_data" />
 
 <!--
 	TEMPLATE: SIDEBAR WRAPPER
@@ -1224,7 +1225,7 @@
 </xsl:template>
 
 <!-- 
-	TEMPLATE: SNIPPER SIDEBAR
+	TEMPLATE: SNIPPET SIDEBAR
 	Link to generate the snippet. Only shown for user-generated
   subjects if subject is public. 
 -->
@@ -1235,7 +1236,7 @@
 			<h2><xsl:copy-of select="$text_header_embed" /></h2>
 	
 			<ul>
-			<xsl:if test="request/base = 'databases' and request/action = 'subject'">
+			<xsl:if test="request/base = 'databases' and (request/action = 'subject' or request/action ='metasearch')">
 				<xsl:variable name="subject" select="//category/@normalized" />
 				<li> <a href="./?base=embed&amp;action=gen_subject&amp;subject={$subject}"><xsl:copy-of select="$text_header_snippet_generate_subject" /></a> </li>
 			</xsl:if>
@@ -1553,6 +1554,8 @@
 						</xsl:choose>
 					</span>
 				</xsl:if>
+				
+				<xsl:call-template name="additional_brief_record_data" />
 				
 				<div class="recordActions">
 					
