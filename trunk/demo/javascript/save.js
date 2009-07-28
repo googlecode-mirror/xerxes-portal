@@ -142,116 +142,122 @@ function saveRecord(groupID,resultSet,recordNumber)
 		$(id).update(workingText);
 		$(id).addClassName("disabled");
 		
-		new Ajax.Request(url, {"onFailure": function(ajaxRequest) {
-			alert('Sorry, an error occured, your record was not saved.');
-			},
-			"onSuccess": function (ajaxRequest) {
-
-			// add tag input form. first need to get saved record id out
-			// of ajax response. 
-      
+		new Ajax.Request(url, {
 			
-			var responseData = ajaxRequest.responseText.evalJSON(true);
-			var savedID = responseData.savedRecordID;
-
-
-
-      
-			if ( $(id).hasClassName("saved") )
-			{
-				numSavedRecords--;
-        $$('#saveRecordOption_' + resultSet+ '_' + recordNumber + ' .temporary_login_note').each(function(node) {
-          node.remove();
-        });
-				$('folder_' + resultSet + recordNumber).src = "images/folder.gif";
-				$(id).update( save_action_label );
-				$(id).removeClassName("saved");
-
-
-				// remove label input
+			"onFailure": function(ajaxRequest) {
+			
+				alert('Sorry, an error occured, your record was not saved.');
+			
+			},
+			
+			"onSuccess": function (ajaxRequest) {
+			
+				// add tag input form. first need to get saved record id out
+				// of ajax response. 
 				
-				var label_input = $('label_' + resultSet + ':' + recordNumber);
-				if (label_input) label_input.remove();
-			}
-			else
-			{
-				numSavedRecords++;
-				$('folder_' + resultSet + recordNumber).src = "images/folder_on.gif";
-
-        // Different label depending on whether they are logged in or not. 
-        // We tell if they are logged in or not, as well as find the login
-        // url, based on looking for 'login' link in the DOM. 
-        if ($('login')) {
-          var temporary_login_note = ' <span class="temporary_login_note"> ( <a  href="' + $('login').href +'">' + saved_temporary_login_label + ' </a> ) </span>';
-                   
-         // Put the login link back please         
-         $(id).update( saved_temporary_label ); 
-         $(id).insert({after: temporary_login_note  });
-        }
-        else {
-          $(id).update( saved_permanent_label );
-        }
-				$(id).addClassName("saved");
-
-				// add tag input
+				var responseData = ajaxRequest.responseText.evalJSON(true);
 				
-				if ( ! isTemporarySession && savedID)
-				{					
-					var input_div = $('template_tag_input').cloneNode(true);
-					var new_form = input_div.down('form');
-	
-					// take the template for a tag input and set it up for this particular
-					// record
-	
-					input_div.id = "label_" + resultSet + ":" + recordNumber; 
-					new_form.record.value = savedID;
-					new_form.tagsShaddow.id = 'shadow-' + savedID; 
-					new_form.tags.id = 'tags-' + savedID;
-					
-					new_form.tags.onfocus = function () {
-						activateButton(this)
-					}
-					new_form.tags.onkeypress = function () {
-						activateButton(this)
-					}
-					new_form.tags.onblur = function () {
-						deactivateButton(this)
-					}
-	
-					new_form.submitButton.id = 'submit-' + savedID;
-					new_form.submitButton.disabled = true;
-					new_form.onsubmit = function () {
-						return updateTags(this);
-					}
+				var savedID = responseData.savedRecordID;
 				
-					// add it to the page, now that it's all set up.
+				if ( $(id).hasClassName("saved") )
+				{
+					numSavedRecords--;
+					$$('#saveRecordOption_' + resultSet+ '_' + recordNumber + ' .temporary_login_note').each(function(node) {
+						node.remove();
+					});
+					$('folder_' + resultSet + recordNumber).src = "images/folder.gif";
+					$(id).update( save_action_label );
+					$(id).removeClassName("saved");
 					
-					var parentBlock = $(id).up('.recordActions');
+					// remove label input
 					
-					if (parentBlock) 
+					var label_input = $('label_' + resultSet + ':' + recordNumber);
+					if (label_input) label_input.remove();
+				}
+				else
+				{
+					numSavedRecords++;
+					$('folder_' + resultSet + recordNumber).src = "images/folder_on.gif";
+					
+					// different label depending on whether they are logged in or not. 
+					// we tell if they are logged in or not, as well as find the login
+					// url, based on looking for 'login' link in the dom.
+					
+					if ($('login'))
 					{
-						parentBlock.insert(input_div);
+						var temporary_login_note = ' <span class="temporary_login_note"> ( <a  href="' + $('login').href +'">' + saved_temporary_login_label + ' </a> ) </span>';
+					
+						// Put the login link back please 
 						
-						// and add the autocompleter
-	
-						addAutoCompleterToID(new_form.tags.id);
-						input_div.show();
+						$(id).update( saved_temporary_label ); 
+						$(id).insert({after: temporary_login_note  });
+					}
+					else
+					{
+						$(id).update( saved_permanent_label );
+					}
+					
+					$(id).addClassName("saved");
+					
+					// add tag input
+					
+					if ( ! isTemporarySession && savedID)
+					{	
+						var input_div = $('template_tag_input').cloneNode(true);
+						var new_form = input_div.down('form');
+						
+						// take the template for a tag input and set it up for this particular
+						// record
+						
+						input_div.id = "label_" + resultSet + ":" + recordNumber; 
+						new_form.record.value = savedID;
+						new_form.tagsShaddow.id = 'shadow-' + savedID; 
+						new_form.tags.id = 'tags-' + savedID;
+						
+						new_form.tags.onfocus = function () {
+							activateButton(this)
+						}
+						new_form.tags.onkeypress = function () {
+							activateButton(this)
+						}
+						new_form.tags.onblur = function () {
+							deactivateButton(this)
+						}
+						
+						new_form.submitButton.id = 'submit-' + savedID;
+						new_form.submitButton.disabled = true;
+						new_form.onsubmit = function () {
+							return updateTags(this);
+						}
+					
+						// add it to the page, now that it's all set up.
+						
+						var parentBlock = $(id).up('.recordActions');
+						
+						if (parentBlock) 
+						{
+							parentBlock.insert(input_div);
+							
+							// and add the autocompleter
+							
+							addAutoCompleterToID(new_form.tags.id);
+							input_div.show();
+						}
 					}
 				}
+				
+				$(id).removeClassName("disabled");
+				
+				// change master folder image
+				
+				if ( numSavedRecords > 0 ) {
+					$('folder').src = 'images/folder_on.gif';
+				}
+				else {
+					$('folder').src = 'images/folder.gif';
+				}
 			}
-			
-			$(id).removeClassName("disabled");
-	
-			// change master folder image
-			
-			if ( numSavedRecords > 0 ) {
-				$('folder').src = 'images/folder_on.gif';
-			}
-			else {
-				$('folder').src = 'images/folder.gif';
-			}
-		}
-	});	
+		});
 		return false;
 	}
 	
@@ -267,10 +273,11 @@ function saveRecord(groupID,resultSet,recordNumber)
 	{
 		var iTotal = numChecked(form1)
 		
-    
-    // Allow a hidden input with name="database" to get them by this check,
-    // even if they've actually checked no checkboxes. 
-    //Some forms have no checkboxes, instead having hidden field!
+		
+		// allow a hidden input with name="database" to get them by this check,
+		// even if they've actually checked no checkboxes. 
+		//some forms have no checkboxes, instead having hidden field!
+		
 		if ( iTotal == 0 && $(form1).select('input[type="hidden"][name="database"]') == "") 
 		{
 			alert("Please select databases to search");
@@ -286,31 +293,33 @@ function saveRecord(groupID,resultSet,recordNumber)
 			return true;
 		}
 	}
-  
-  /* How many checkboxes are checked in the form1 passed in as argument?
-     Returns number. Assumes checkboxes have class 'subjectDatabaseCheckbox' */
-  function numChecked(form1) {
-    var iTotal = 0;
+	
+	/* How many checkboxes are checked in the form1 passed in as argument?
+	Returns number. Assumes checkboxes have class 'subjectDatabaseCheckbox' */
+	
+	function numChecked(form1) {
+		var iTotal = 0;
 		
-    $(form1).select('input.subjectDatabaseCheckbox').each( function(checkbox) {
-          if ( checkbox.checked ) iTotal++;
-    });
-    
-    return iTotal;
-  }
-  
-  function databaseLimitCheckbox(checkbox) {
-    var limit_reached = (numChecked(checkbox.form) > xerxes_iSearchable);
-    
-    if (limit_reached) {
-      alert("Sorry, you can only search up to " + xerxes_iSearchable + " databases at one time");
-			checkbox.checked = false;
-      return false;
-    }
-    else {
-      return true; 
-    }
-  }
+		$(form1).select('input.subjectDatabaseCheckbox').each( function(checkbox) {
+			if ( checkbox.checked ) iTotal++;
+		});
+		
+		return iTotal;
+		}
+		
+		function databaseLimitCheckbox(checkbox) {
+			var limit_reached = (numChecked(checkbox.form) > xerxes_iSearchable);
+		
+			if (limit_reached) {
+				alert("Sorry, you can only search up to " + xerxes_iSearchable + " databases at one time");
+				checkbox.checked = false;
+			return false;
+		}
+		else
+		{
+			return true;
+		}
+	}
 	
 	/**
 	 * Simple alert message to confirm deletion of saved records
