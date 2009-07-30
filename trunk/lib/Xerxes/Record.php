@@ -455,8 +455,11 @@
 				
 				// gale puts issn in 773b
 				
-				$strGaleIssn = $this->extractMarcDataField($objXPath, 773, "b");
-				if ( $strGaleIssn != null ) array_push($arrIssn, $strGaleIssn);
+				if ( strstr($this->strSource,'GALE') )
+				{
+					$strGaleIssn = $this->extractMarcDataField($objXPath, 773, "b");
+					if ( $strGaleIssn != null ) array_push($arrIssn, $strGaleIssn);
+				}
 				
 				// ebsco book chapter
 				
