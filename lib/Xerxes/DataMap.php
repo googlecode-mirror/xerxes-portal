@@ -955,28 +955,15 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		} 
 		elseif ( $query != null )
 		{
-			// query for databases; we match title, descrition, or keywords.
-			
-			// mysql specific REGEXP query
-			
-			// before 1.5.1 release, decide if this should be factored out in favor of the 
-			// ANSI standard version below using LIKE, since they seem to do essentially the 
-			// same job; might also consider searching each term seperately rather than as a 
-			// phrase
-			
-			if ( $this->rdbms == "mysql")
-			{
-				$strSQL .= "WHERE xerxes_databases.title_display REGEXP :query1 OR xerxes_databases.title_full REGEXP :query2 OR xerxes_databases.description REGEXP :query3 OR xerxes_database_keywords.keyword REGEXP :query4 OR xerxes_database_alternate_titles.alt_title REGEXP :query5 ";
-				$searchParam = '[[:<:]]' . $query . '[[:>:]]';
-			}
-			else
-			{
-				$strSQL .= "WHERE xerxes_databases.title_display LIKE :query1 OR xerxes_databases.title_full LIKE :query2 OR xerxes_databases.description LIKE :query3 OR xerxes_database_keywords.keyword LIKE :query4 OR xerxes_database_alternate_titles.alt_title LIKE :query5 ";
-				$searchParam = '%' . $query . '%';
-			}
+			$strSQL .= "WHERE xerxes_databases.title_display LIKE :query1 OR " .
+				" xerxes_databases.title_full LIKE :query2 OR " .
+				" xerxes_databases.description LIKE :query3 OR " .
+				" xerxes_database_keywords.keyword LIKE :query4 OR " .
+				" xerxes_database_alternate_titles.alt_title LIKE :query5 " .
+				" ORDER BY UPPER(title_display) ";
+				
+			$searchParam = '%' . $query . '%';
 
-			$strSQL .= " ORDER BY UPPER(title_display) ";
-			
 			$arrParams[":query1"] = $searchParam;
 			$arrParams[":query2"] = $searchParam;
 			$arrParams[":query3"] = $searchParam;
@@ -1016,7 +1003,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 				}
 				
 				// if the current row's outter join value is not already stored,
-				// then then we've come to a unique value, so add it
+				// then we've come to a unique value, so add it
 
 				$arrColumns = array ("keyword" => "keywords", "usergroup" => "group_restrictions", "language" => "languages", "note" => "notes", "alt_title" => "alternate_titles", "alt_publisher" => "alternate_publishers" );
 				
