@@ -912,9 +912,9 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 	
 	public function getDatabases($id = null, $query = null)
 	{
-		
 		$arrDatabases = array ( );
 		$arrResults = array ( );
+		$arrParams = array ( );
 		
 		$strSQL = "SELECT * from xerxes_databases
 			LEFT OUTER JOIN xerxes_database_notes ON xerxes_databases.metalib_id = xerxes_database_notes.database_id
@@ -928,7 +928,6 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		{
 			// databases specified by an array of ids
 
-			$arrParams = array ( );
 			$strSQL .= " WHERE ";
 			
 			for ( $x = 0 ; $x < count( $id ) ; $x ++ )
@@ -943,8 +942,6 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 			}
 			
 			$strSQL .= " ORDER BY xerxes_databases.metalib_id";
-			
-			$arrResults = $this->select( $strSQL, $arrParams );
 		} 
 		elseif ( $id != null && ! is_array( $id ) )
 		{
@@ -969,16 +966,41 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 			$arrParams[":query3"] = $searchParam;
 			$arrParams[":query4"] = $searchParam;
 			$arrParams[":query5"] = $searchParam;
-			
-			$arrResults = $this->select( $strSQL, $arrParams );
 		} 
 		else
 		{
 			// all databases, sorted alphabetically
-
+			
+			// remove certain database types, if so configured
+			
+			$configDatabaseTypesExclude = $this->registry->getConfig("DATABASES_TYPE_EXCLUDE", false);
+			
+			if ( $configDatabaseTypesExclude != null )
+			{
+				$arrTypes = explode(",", $configDatabaseTypesExclude);
+				$arrTypeQuery = array();
+				
+				// specify that the type NOT be one of these
+				
+				for ( $q = 0; $q < count($arrTypes); $q++ )
+				{
+					array_push($arrTypeQuery, "xerxes_databases.type != :type$q");
+					$arrParams[":type$q"] = trim($arrTypes[$q]);
+				}
+				
+				// but then also catch the case where type is null
+				
+				array_push($arrTypeQuery, "xerxes_databases.type IS NULL");
+				
+				$strSQL .= " WHERE (" . implode (" OR ", $arrTypeQuery) . ")";
+			}
+			
 			$strSQL .= " ORDER BY UPPER(title_display)";
-			$arrResults = $this->select( $strSQL );
 		}
+		
+		//echo $strSQL; exit;
+		
+		$arrResults = $this->select( $strSQL, $arrParams );
 		
 		// read sql and transform to internal data objs.
 		
