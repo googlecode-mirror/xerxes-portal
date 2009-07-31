@@ -948,7 +948,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 			// single database query
 
 			$strSQL .= " WHERE xerxes_databases.metalib_id = :id ";
-			$arrResults = $this->select( $strSQL, array (":id" => $id ) );
+			$arrParams[":id"] = $id;
 		} 
 		elseif ( $query != null )
 		{
