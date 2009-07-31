@@ -126,7 +126,6 @@ Whether Xerxes should do the Metalib KB pull in smaller 'chunks'.
 
 _This config must be added to config.xml_.  This is only necessary if Metalib times out during the KB pull.  This can happen if your Metalib KB is large and the server it runs on is not particularly fast.
 
-
 ==database_connection==
 
 The [http://us.php.net/manual/en/pdo.construct.php PDO connection string] to the database.  
@@ -151,6 +150,15 @@ The password of the account that is set-up to access the (MySQL) database.
 
   * default value: none
   * available since: 1.1
+
+==databases_type_exclude==
+
+A list of database types that Xerxes should exclude from the A-Z list
+
+  * default value: none
+  * available since: 1.5.1 (in trunk)
+
+This is useful if you've created IRDs that are for websites, research guides, librarian contacts, or other resources that you want included (as secondary resources) in the subject pages, but want to keep out of the databases A-Z list page, for whatever reason.
 
 ==database_username==
 
