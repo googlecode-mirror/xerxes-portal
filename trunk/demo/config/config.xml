@@ -260,6 +260,10 @@
 		
 		<config name="subcategories_include"></config>
 
+		<!-- database types to exclude from the A-Z listing -->
+		
+		<config name="databases_type_exclude"></config>
+
 		<!-- strip out HTML tags in database description. Possible values:
 		
 			escape: Escape all HTML so it shows up as source.
