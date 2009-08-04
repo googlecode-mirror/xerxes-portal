@@ -2512,18 +2512,18 @@
 					$arrRange = explode("-", $field);
 					$strStart = $arrRange[0];
 					$strEnd = $arrRange[1];
-					$strQuery = "//marc:datafield[@tag >= $strStart and @tag < $strEnd]";
+					$strQuery = "//marc:record/marc:datafield[@tag >= $strStart and @tag < $strEnd]";
 				}
 				else
 				{
-					$strQuery = "//marc:datafield[@tag=$field]";
+					$strQuery = "//marc:record/marc:datafield[@tag=$field]";
 				}
 			}
 
 			$arrSubFields = str_split($subfields);
 			
 			$objNodeList = $objXPath->query($strQuery);
-				
+			
 			if ( $objNodeList != null )
 			{
 				foreach ( $objNodeList as $objNode )
@@ -2541,7 +2541,7 @@
 							}
 						}
 					}
-
+					
 					array_push($arrReturn, trim($strSubFieldData));
 				}
 			}
