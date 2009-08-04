@@ -1140,7 +1140,7 @@
 	<div id="account" class="box">
 		<h2><xsl:copy-of select="$text_header_myaccount" /></h2>
 		<ul>
-			<li>
+			<li id="login_option">
 				<xsl:choose>
 					<xsl:when test="//request/session/role and //request/session/role != 'local'">
 						<a id="logout">
