@@ -853,7 +853,7 @@
 	<!-- @todo make this a singletext label variable -->
 	
 	<xsl:if test="request/session/role = 'local'">
-		<p><xsl:copy-of select="$text_folder_login_temp" /></p>
+		<p class="temporary_login_note"><xsl:copy-of select="$text_folder_login_temp" /></p>
 	</xsl:if>
 	
 	<xsl:call-template name="folder_header_limit" />
