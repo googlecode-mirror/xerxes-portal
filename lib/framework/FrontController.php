@@ -20,7 +20,7 @@ class Xerxes_Framework_FrontController
 	private static $parent_directory = "";
 	
 	public static function execute()
-	{
+	{		
 		// calculate current file, this directory
 
 		$this_directory = dirname( __FILE__ );
@@ -50,7 +50,7 @@ class Xerxes_Framework_FrontController
 
 		$objRegistry = Xerxes_Framework_Registry::getInstance();
 		$objRegistry->init();
-		
+
 		$objControllerMap = Xerxes_Framework_ControllerMap::getInstance();
 		$objControllerMap->init();
 		
@@ -64,6 +64,8 @@ class Xerxes_Framework_FrontController
 		
 		session_name( $session_name );
 		session_start();
+		
+		// utility classes
 		
 		$objRequest = new Xerxes_Framework_Request( ); // processes the incoming request
 		$objPage = new Xerxes_Framework_Page( ); // assists with basic paging/navigation elements for the view
@@ -154,7 +156,7 @@ class Xerxes_Framework_FrontController
 			
 			// ControllerMap contains instructions for commands and views
 			// based on the url parameters 'base' and 'action'
-
+			
 			$strBase = $objRequest->getProperty( "base" );
 			$strAction = $objRequest->getProperty( "action" );
 			
@@ -226,30 +228,9 @@ class Xerxes_Framework_FrontController
 			$strDocumentElement = $objControllerMap->getDocumentElement();
 			$objRequest->setDocumentElement( $strDocumentElement );
 			
-			// pass any configuration options defined as type=pass to the xml
-
-			$objConfigXml = new DOMDocument( );
-			$objConfigXml->loadXML( "<config />" );
+			// pass config values that should be made available to the XSLT
 			
-			foreach ( $objRegistry->getPass() as $key => $value )
-			{
-        if ($value instanceof SimpleXMLElement) {
-          // just spit it back out again as XML, need to convert to DOMDocument.
-          $objElement = $objConfigXml->createElement($key);
-          $objConfigXml->documentElement->appendChild( $objElement );
-          foreach ($value->children() as $child) {
-            $domValue = dom_import_simplexml($child);
-            $domValue =  $objConfigXml->importNode($domValue, true);
-            $objElement->appendChild($domValue);
-          }                                
-        }
-        else {
-          $objElement = $objConfigXml->createElement( $key, Xerxes_Parser::escapeXml($value) );
-          $objConfigXml->documentElement->appendChild( $objElement );
-        }
-			}
-			
-			$objRequest->addDocument( $objConfigXml );
+			$objRequest->addDocument( $objRegistry->publicXML() );
 			
 			// the data will be built-up by calling one or more command classes
 			// which will fetch their data based on other parameters supplied in
@@ -264,6 +245,18 @@ class Xerxes_Framework_FrontController
 				$strDirectory = $arrCommand[0]; // directory where the command class is located
 				$strNamespace = $arrCommand[1]; // prefix namespace of the command class
 				$strClassFile = $arrCommand[2]; // suffix name of the command class
+				$strModule = $arrCommand[3]; // suffix name of the command class
+							
+				// directory where commands live
+				
+				$command_path = "$path_to_parent/commands/$strDirectory";
+				
+				// but modules live elsewhere!
+				
+				if ( $strModule != "" )
+				{
+					$command_path = "$path_to_parent/modules/$strDirectory/commands";
+				}
 				
 				// echo "<h3>$strClassFile</h3>";
 
@@ -272,9 +265,9 @@ class Xerxes_Framework_FrontController
 
 				$strParentClass = strtoupper( substr( $strDirectory, 0, 1 ) ) . substr( $strDirectory, 1 );
 				
-				if ( file_exists( "$path_to_parent/commands/$strDirectory/$strParentClass.php" ) )
+				if ( file_exists( "$command_path/$strParentClass.php" ) )
 				{
-					require_once ("$path_to_parent/commands/$strDirectory/$strParentClass.php");
+					require_once ("$command_path/$strParentClass.php");
 				}
 				
 				// if the specified command class exists in the commands folder, then
@@ -284,13 +277,12 @@ class Xerxes_Framework_FrontController
 				
 				$objCommand = null;
 				
-				if ( file_exists( "$path_to_parent/commands/$strDirectory/$strClassFile.php" ) )
+				if ( file_exists( "$command_path/$strClassFile.php" ) )
 				{
-					require_once ("$path_to_parent/commands/$strDirectory/$strClassFile.php");
+					require_once ("$command_path/$strClassFile.php");
 					
 					// instantiate the command class and execute it, but only
 					// if it extends xerxes_framework_command
-					
 
 					$objCommand = new $strClass( );
 					
@@ -387,7 +379,7 @@ class Xerxes_Framework_FrontController
 			
 			// RAW XML DISPLAY
 			//
-			// you can append 'format=xerxes-xml' to the querystring to have this controller spit back
+			// you can append 'format=xerxes' to the querystring to have this controller spit back
 			// the response in plain xml, which can be useful in some cases, like maybe AJAX?
 
 			if ( $format == "xerxes" )
@@ -396,25 +388,32 @@ class Xerxes_Framework_FrontController
 			} 
 			else
 			{
-					// VIEW CODE
+				// VIEW CODE
 				//
 				// ControllerMap contains instructions on what file to include for the view; typically
 				// this will be an xslt file, but could be a php file if the xslt does not
 				// provide enough flexibility; php page will inherit the xml dom document and
 				// can go from there
 				
-
 				if ( $objControllerMap->getView() == "" )
 				{
 					// No view specified, no view will be executed. 
 					return;
 				}
 				
+				// views will live either in the main lib/xsl directory, or if a module, then
+				// in the module's equivalent; register it in the Registry for XSLT
+				
+				$distro_parent_folder = $objControllerMap->getViewFolder();
+				$objRegistry->setConfig("XSL_PARENT_DIRECTORY", "$path_to_parent/$distro_parent_folder/");
+				
+				// PHP CODE
+				
 				if ( $objControllerMap->getViewType() != "xsl" && $objControllerMap->getViewType() != null )
 				{
-					
 					$file = $objControllerMap->getView();
-					$distro_file = $objRegistry->getConfig( "PATH_PARENT_DIRECTORY", true ) . "/lib/$file";
+					
+					$distro_file = $objRegistry->getConfig( "PATH_PARENT_DIRECTORY", true ) . "/$distro_parent_folder/$file";
 					
 					if ( file_exists( $file ) )
 					{
@@ -431,6 +430,8 @@ class Xerxes_Framework_FrontController
 				} 
 				else
 				{
+					// XSLT CODE
+					
 					$output = $objPage->transform( $objXml, $objControllerMap->getView(), null, $objControllerMap->getCommonXSL() );
 					
 					// EMBEDED JAVASCRIPT DISPLAY
@@ -443,11 +444,9 @@ class Xerxes_Framework_FrontController
 					{
 						// first escape any single quotes
 						
-
 						$output = str_replace( "'", "\\'", $output );
 						
 						// now break the html into lines and output with document.write('')
-						
 
 						$lines = explode( "\n", $output );
 						$new_lines = array ("// Javascript output. " );
@@ -468,10 +467,8 @@ class Xerxes_Framework_FrontController
 			}
 		} 
 
-    
 		// we'll catch all exceptions here, but the Xerxes_Error class can perform actions
 		// based on the specific type of error, such as PDOException
-		
 
 		catch ( Exception $e )
 		{
