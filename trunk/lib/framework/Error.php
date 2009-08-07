@@ -84,8 +84,9 @@ class Xerxes_Framework_Error
 			$objHeading = $objError->createElement( "heading", $heading );
 			$objError->documentElement->appendChild( $objHeading );
 			
+			// make sure we're showing the main error file
 			
-			
+			$objRegistry->setConfig("XSL_PARENT_DIRECTORY", null);
 			
 			// set the base url for the error.xsl file's benefit; don't want to assume that 
 			// the earlier code to this effect was executed before an exception, so this is redundant
@@ -158,7 +159,8 @@ class Xerxes_Framework_Error
 			{
 				header( 'Content-type: text/xml' );
 				echo $objError->saveXML();
-			} else
+			} 
+			else
 			{
 				// display it to the user. Transform will pick up local
 				// xsl for error page too, great.

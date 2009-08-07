@@ -13,13 +13,14 @@
 
 class Xerxes_Framework_Registry
 {
-	private $xml = ""; // simple xml object copy
+	protected $xml = ""; // simple xml object copy
+	protected $config_file = "config/config";
 	private $usergroups = array ( ); // user groups
 	private $authentication_sources = array ( );
 	private $arrConfig = null; // configuration settings
 	private $arrPass = array ( ); // values to pass on to the view
 	private static $instance; // singleton pattern
-	
+	private $modules = array();	// list of modules
 
 	private function __construct()
 	{
@@ -52,8 +53,8 @@ class Xerxes_Framework_Registry
 		if ( $this->arrConfig == null )
 		{
 			$file = "";
-			$file_xml = "config/config.xml";
-			$file_php = "config/config.php";
+			$file_xml = $this->config_file . ".xml";
+			$file_php = $this->config_file . ".php";
 			
 			$this->arrConfig = array ();
 			
@@ -80,21 +81,25 @@ class Xerxes_Framework_Registry
 			foreach ( $xml->configuration->config as $config )
 			{
 				$name = strtoupper( $config["name"] );
-        
-        if ( $config["xml"] == "true" ) {
-          // special XML config, already parsed as SimpleXML, leave it that way.
-          $value = $config;          
-        }
-        else {
-          //simple string        
-          $value = trim( ( string ) $config );
+				
+				if ( $config["xml"] == "true" ) 
+				{
+					// special XML config, already parsed as SimpleXML, leave it that way.
+					$value = $config;          
+				}
+				else 
+				{
+					//simple string
+					     
+					$value = trim( ( string ) $config );
             
-          // convert simple xml-encoded values to something easier 
-          // for the client code to digest
-          $value = str_replace( "&lt;", "<", $value );
-          $value = str_replace( "&gt;", ">", $value );
-          $value = str_replace( "&amp;", "&", $value );
-        }
+					// convert simple xml-encoded values to something easier 
+					// for the client code to digest
+
+					$value = str_replace( "&lt;", "<", $value );
+					$value = str_replace( "&gt;", ">", $value );
+					$value = str_replace( "&amp;", "&", $value );
+				}
         
 				// special logic for authentication_source because we can
 				// have more than one. 
@@ -141,6 +146,13 @@ class Xerxes_Framework_Registry
 					$this->usergroups[$id] = $group;
 				}
 			}
+			
+			// register modules
+			
+			if ( $xml->configuration->modules != null )
+			{
+				$this->modules = explode(",", (string) $xml->configuration->modules);
+			}
 		}
 	}
 	
@@ -161,7 +173,8 @@ class Xerxes_Framework_Registry
 		{
 			return null;
 		} 
-		elseif ( array_key_exists( $name, $this->arrConfig ) )
+		
+		if ( array_key_exists( $name, $this->arrConfig ) )
 		{
 			if ( $this->arrConfig[$name] == "true" )
 			{
@@ -170,27 +183,29 @@ class Xerxes_Framework_Registry
 			elseif ( $this->arrConfig[$name] == "false" )
 			{
 				return false;
+			}
+			elseif ( $this->arrConfig[$name] == "" || $this->arrConfig[$name] == null)
+			{
+				// let this fall to the code below
 			} 
 			else
 			{
 				return $this->arrConfig[$name];
 			}
 		} 
+
+		if ( $bolRequired == true )
+		{
+			throw new Exception( "required configuration entry $name missing" );
+		}
+			
+		if ( $default != null )
+		{
+			return $default;
+		} 
 		else
 		{
-			if ( $bolRequired == true )
-			{
-				throw new Exception( "required configuration entry $name missing" );
-			}
-			
-			if ( $default != null )
-			{
-				return $default;
-			} 
-			else
-			{
 				return null;
-			}
 		}
 	}
 	
@@ -312,9 +327,50 @@ class Xerxes_Framework_Registry
 		return $source;
 	}
 	
+	public function getModules()
+	{
+		return $this->modules;
+	}
+	
 	public function getXML()
 	{
 		return $this->xml;
+	}
+	
+	public function publicXML()
+	{
+		// pass any configuration options defined as type=pass to the xml
+
+		$objConfigXml = new DOMDocument( );
+		$objConfigXml->loadXML( "<config />" );
+			
+		foreach ( $this->getPass() as $key => $value )
+		{
+			if ($value instanceof SimpleXMLElement) 
+			{
+				// just spit it back out again as XML
+									
+				$objElement = $objConfigXml->createElement($key);
+				$objConfigXml->documentElement->appendChild( $objElement );
+				
+				foreach ($value->children() as $child) 
+				{
+					// need to convert to DOMDocument.
+					$domValue = dom_import_simplexml($child);
+					$domValue =  $objConfigXml->importNode($domValue, true);
+					$objElement->appendChild($domValue);
+				}                                
+			}
+			else 
+			{
+				// simple string value
+				
+				$objElement = $objConfigXml->createElement( $key, Xerxes_Parser::escapeXml($value) );
+				$objConfigXml->documentElement->appendChild( $objElement );
+			}
+		}
+		
+		return $objConfigXml;
 	}
 }
 ?>

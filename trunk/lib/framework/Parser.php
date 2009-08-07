@@ -91,11 +91,15 @@
 			$local_xsl_dir = $objRegistry->getConfig("APP_DIRECTORY", true);
 			$local_path =  $local_xsl_dir . "/" . $strXsltRelPath;
 			
-			// applying that relative url with a base of xerxes library install
-			// gives us our distro file, if it exists. 
+			// the 'main' application xsl lives here
 		
 			$distro_xsl_dir = $objRegistry->getConfig("PATH_PARENT_DIRECTORY", true) . '/lib/';
-			$distro_path = $distro_xsl_dir . $strXsltRelPath;
+			
+			// XSL_PARENT_DIRECTORY is the path to the xsl file, whether main (as above)
+			// or a module, in which case it's somewhere else
+			
+			$this_xsl_dir = $objRegistry->getConfig("XSL_PARENT_DIRECTORY", false, $distro_xsl_dir);
+			$distro_path =  $this_xsl_dir . $strXsltRelPath;
 			
 			$generated_xsl = new DOMDocument();
 			$generated_xsl->load( $distro_xsl_dir . "xsl/dynamic_skeleton.xsl");
@@ -108,17 +112,20 @@
 			// distro are imported. this will ensure local overrides distro.
 			
 			// import the distro
-      
-			if ( file_exists($distro_path) )
+			
+			$distro_exists = file_exists($distro_path);
+
+			// if no distro, need to directly import distro includes.xsl, since we're not
+			// importing a file that will reference it; also need to do this for modules
+			
+			if ( $distro_exists == false || $this_xsl_dir != $distro_xsl_dir )
+			{
+				self::addImportReference( $generated_xsl, $distro_xsl_dir . "xsl/includes.xsl", $importInsertionPoint );
+			}			
+			
+			if ( $distro_exists == true )
 			{	
 				self::addImportReference($generated_xsl, $distro_path, $importInsertionPoint);
-			}
-			else
-			{
-				// need to directly import distro includes.xsl, since we're not
-				// importing a distro file that will reference it. 
-				
-				self::addImportReference( $generated_xsl, $distro_xsl_dir . "xsl/includes.xsl", $importInsertionPoint );
 			}
 			
 			// additional xsl that should be included
@@ -127,7 +134,7 @@
 			{
 				foreach ( $arrInclude as $strInclude )
 				{
-					self::addImportReference( $generated_xsl, $distro_xsl_dir . $strInclude, $importInsertionPoint );
+					self::addImportReference( $generated_xsl, $this_xsl_dir . $strInclude, $importInsertionPoint );
 				}
 			}
 			
@@ -143,6 +150,7 @@
 			
 			if (! ( file_exists($local_path) || file_exists($distro_path)))
 			{
+				// throw new Exception("No xsl stylesheet found: $local_path || $distro_path");
 				throw new Exception("No xsl stylesheet found: $strXsltRelPath");
 			}
 			
@@ -165,6 +173,8 @@
 					self::addImportReference($generated_xsl, $abs_local_path, $importInsertionPoint);
 				}
 			}
+			
+			// header("Content-type: text/xml"); echo $generated_xsl->saveXML(); exit;
 			
 			return $generated_xsl;
 		}
