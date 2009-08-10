@@ -19,12 +19,9 @@
 		
 		public function onLogin()
 		{
-			$configUrlBaseDirectory = $this->registry->getConfig( "BASE_URL", true );
 			$configCasLogin = $this->registry->getConfig( "CAS_LOGIN", true );
 			
-			$strUrl = $configCasLogin . "?service=" . urlencode( $configUrlBaseDirectory . 
-				"/?base=authenticate&action=validate" . "&return=" . urlencode( $this->return ) );
-			
+			$strUrl = $configCasLogin . "?service=" . urlencode($this->validate_url);
 			$this->request->setRedirect( $strUrl );
 			
 			return true;
@@ -60,11 +57,9 @@
 			// values from the request
 			
 			$strTicket = $this->request->getProperty("ticket");
-			$strReturn = $this->request->getProperty("return");
 						
 			// configuration settings
 	
-			$configUrlBaseDirectory = $this->registry->getConfig("BASE_URL", true);
 			$configCasValidate = $this->registry->getConfig("CAS_VALIDATE", true);
 	
 			// figure out which type of response this is based on the service url
@@ -74,9 +69,7 @@
 			
 			// now get it!
 				
-			$strUrl = $configCasValidate . "?ticket=" . $strTicket . 
-				"&service=" . urlencode($configUrlBaseDirectory . "/?base=authenticate&action=validate" .
-				"&return=" . urlencode($strReturn) );
+			$strUrl = $configCasValidate . "?ticket=" . $strTicket . "&service=" . urlencode($this->validate_url);
 			
 			$strResults = Xerxes_Parser::request( $strUrl );		
 			

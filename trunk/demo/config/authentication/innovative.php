@@ -11,7 +11,7 @@ class Xerxes_InnovativePatron_Local extends Xerxes_InnovativePatron
 	
 	protected function mapUserData()
 	{
-		/* EXAMPLE: */
+		/* EXAMPLE:
 
 		$arrName = explode(",", $this->user_data["PATRN NAME"]);
 		
@@ -22,6 +22,8 @@ class Xerxes_InnovativePatron_Local extends Xerxes_InnovativePatron
 		}
 		
 		$this->user->email_addr = $this->user_data["EMAIL ADDR"];
+
+		*/
 		
 	}
 }
