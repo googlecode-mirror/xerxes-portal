@@ -73,7 +73,9 @@ The base web server path for your Xerxes installation.
 
 This should reflect the path (URI) to your Xerxes instance from the root of your website.  _DO NOT_ add a trailing slash. If you have installed at web root, leave this value empty. 
 
-==cas_version==
+==~~cas_version~~==
+
+*Removed in 1.5.1 (trunk)*.  Xerxes will use the cas_validate URL itself to determined how to handle validation.
 
 The version of CAS you're running.
 
@@ -256,12 +258,12 @@ If you want to use a different width, simply leave the value as `doc3`, and in y
 
 ==domain==
 
-The domain for the LDAP bind.
+The URL for the directory server in an ldap bind.
 
   * default value: none
   * available since: 1.1
 
-Required if [Configuration#authentication_source authentication_source] is set to `ldap`.
+Required if [Configuration#authentication_source authentication_source] is set to `ldap`.  Enter in the form of 'ldaps://ldap.example.com/'
 
 ==email_from==
 
