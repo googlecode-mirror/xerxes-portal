@@ -7,62 +7,73 @@
 	
 	abstract class Xerxes_Command_Authenticate extends Xerxes_Framework_Command
 	{
-		/**
-		 * Stores the username and role in session state, reassigns any previously
-		 * saved records under a temporary username to the new named user
-		 *
-		 * @param string $user	string username (legacy) or Xerxes_User object (preferred). 
-		 * @param string $strRole		role
-		 */
+		protected $authentication = null;
 		
-		protected function register($user, $strRole)
+		public function execute(Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry)
 		{
-			if ( is_string( $user ) )
+			// if the authentication_source is set in the request, then it takes precedence
+			
+			$override = $objRequest->getProperty("authentication_source");
+			
+			if ( $override == null )
 			{
-				$user = new Xerxes_User( $user );
-		        // Null usergroups means take what's in the db, don't overwrite
-		        // with no user groups! 
-		        $user->usergroups = null;
-			}
-			
-			// configuration settings
-			
-			$configApplication = $this->registry->getConfig( "BASE_WEB_PATH", false, "" );
-			
-			// data map
-			
-			$objData = new Xerxes_DataMap( );
-			
-			// if the user was previously active under a local username 
-			// then reassign any saved records to the new username
-			
-			if ( array_key_exists( "username", $_SESSION ) && array_key_exists( "role", $_SESSION ) )
-			{
-				if ( $_SESSION["role"] == "local" )
+				// otherwise, see if one has been set in session from a previous login
+				
+				$session_auth = $objRequest->getSession("auth");
+				
+				if ( $session_auth != "" )
 				{
-					$objData->reassignRecords( $_SESSION["username"], $user->username );
+					$override = $session_auth;
 				}
 			}
 			
-			// add or update user in the database, get any values in the db not
-			// specified here.
-			 
-			$user = $objData->touchUser( $user );
+			// now make the object
 			
-			// set properties in session
+			$configAuth = $objRegistry->getAuthenticationSource($override);
 			
-			$_SESSION["username"] = $user->username;
-			$_SESSION["role"] = $strRole;
-			$_SESSION["application"] = $configApplication;
+			switch ( $configAuth )
+			{
+				case "ldap":
+					$this->authentication = new Xerxes_LDAP($objRequest, $objRegistry);
+					break;
+					
+				case "innovative":
+					require_once("config/authentication/innovative.php");
+					$this->authentication =  new Xerxes_InnovativePatron_Local($objRequest, $objRegistry);
+					break;
+					
+				case "cas":
+					$this->authentication =  new Xerxes_CAS($objRequest, $objRegistry);
+					break;
+					
+				case "guest":
+					$this->authentication =  new Xerxes_GuestAuthentication($objRequest, $objRegistry);
+					break;					
+
+				case "demo":
+					$this->authentication =  new Xerxes_DemoAuthentication($objRequest, $objRegistry);
+					break;		
+
+				case "shibboleth":
+					require_once("config/authentication/shibboleth.php");
+					$this->authentication =  new Xerxes_Shibboleth_Local($objRequest, $objRegistry);
+					break;			
+				
+				case "custom":
+					require_once("config/authentication/custom.php");
+					$this->authentication =  new Xerxes_CustomAuth($objRequest, $objRegistry);
+					break;
+					
+				default:
+					throw new Exception("unsupported authentication type");
+			}
 			
-			// store user's properties in session, so they can be used by
-			// controller, and included in xml for views. 
+			// we set this so we can keep track of the authentication type
+			// through various requests
 			
-			$_SESSION["user_properties"] = $user->properties();
+			$this->authentication->id = $configAuth;
 			
-			//groups too. empty array not null please. 
-			
-			$_SESSION["user_groups"] = $user->usergroups;
+			parent::execute($objRequest, $objRegistry);
 		}
 	}
 

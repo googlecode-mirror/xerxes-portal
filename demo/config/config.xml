@@ -201,12 +201,10 @@
 		<!-- CAS -->
 		
 		<!--
-			cas_version = either '1.0' or '2.0'
 			cas_login = full url to the login service, typically with https://
 			cas_validate = the full url to the validate service, typically with https:// 
 		 -->
 		
-		<config name="cas_version" />
 		<config name="cas_login" />
 		<config name="cas_validate" />
 		

@@ -22,6 +22,10 @@ class Xerxes_Command_AuthenticateLogout extends Xerxes_Command_Authenticate
 		$configBaseURL = $this->registry->getConfig("BASE_URL", true);
 		$configLogoutUrl = $this->registry->getConfig("LOGOUT_URL", false, $configBaseURL);
 		
+		// perform any anuthentication scheme-specific clean-up action
+		
+		$this->authentication->onLogout();
+		
 		// release the data associated with the session
 		
 		session_destroy();			

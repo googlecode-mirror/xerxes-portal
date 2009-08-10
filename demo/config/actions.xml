@@ -222,12 +222,13 @@
 				<command>AuthenticateLogout</command>
 				<view>xsl/authenticate_logout.xsl</view>
 			</action>
+			<!-- depricated as of 1.5.1 for login actin with authentication_source=guest -->
 			<action name="guest">
 				<command>AuthenticateGuest</command>
 				<view />
 			</action>
-			<action name="cas-validate">
-				<command>AuthenticateCasValidate</command>
+			<action name="validate">
+				<command>AuthenticateValidate</command>
 				<view />
 			</action>
 		</section>

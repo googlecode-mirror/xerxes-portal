@@ -11,113 +11,50 @@
 	 * @package Xerxes
 	 */
 
-	class Xerxes_LDAP
+	class Xerxes_LDAP extends Xerxes_Framework_Authenticate 
 	{
-		private $strConroller = null;		// location of the host
-		private $iPort = null;				// port number to connect on
-		
-		/**
-		* Constructor
-		* 
-		* @param string $strHost		address of directory server or domain controller
-		* @param int $iPort				[optional] port to bind on
-		*/
-		
-		public function __construct( $strHost, $iPort = null )
-		{
-			$this->strController = $strHost;
-			$this->iPort = $iPort;
-		}
-		
 		/**
 		* Authenticates the user against the directory server
-		* 
-		* @param string $strDomain		domain for user, e.g., "calstate.edu"
-		* @param string $strUserName	username
-		* @param string $strPassword	password
-		* @param bool $bolAlias			[optional] whether the supplied username might be an alias in which
-		* 								 case will do a look-up of the uid
-		* @return bool					true on successful bind, false otherwise
 		*/
 		
-		public function authenticate( $strDomain, $strUserName, $strPassword )
+		public function onCallBack()
 		{
+			$strUsername = $this->request->getProperty( "username" );
+			$strPassword = $this->request->getProperty( "password" );
+			
+			$strController = $this->registry->getConfig( "DIRECTORY_SERVER", true );
+			$strDomain = $this->registry->getConfig( "DOMAIN", true );
+			
 			$bolAuth = false;
 			
 			// connect to ldap server
-			$objConn = ldap_connect($this->strController, $this->iPort);
+			
+			$objConn = ldap_connect($strController);
 			
 			if ($objConn)
 			{
 				if ( $strPassword != null )
 				{
-					// bind to ldap server
-					$bolAuth = ldap_bind($objConn, $strUserName . "@" . $strDomain, $strPassword);
+					// bind with username and pass
+					
+					$bolAuth = ldap_bind($objConn, $strUsername . "@" . $strDomain, $strPassword);
 				} 
 				
 				ldap_close($objConn);
 			}
-			
-			return $bolAuth;
-		}
-		
-		public function getUID( $strLdapBase, $strLdapFilter, $strAttribute, $strUserName, $strSuperUser = null, $strSuperPass = null )
-		{
-			$strUID = "";
-			
-			// connect to ldap server
-			
-			$objConn = ldap_connect($this->strController, $this->iPort);
-			
-			if ( $objConn )
+					
+			if ( $bolAuth == true )
 			{
-				// bind to the directory; if superuser and superpass are null
-				// then this is an annonymous bind
+				// register the user and stop the flow
 				
-				if (ldap_bind($objConn, $strSuperUser, $strSuperPass))
-				{
-					// lookup the user by criteria
-					
-					$objResults = ldap_search($objConn, $strLdapBase, $strLdapFilter);
-					
-					if ( $objResults )
-					{
-						// retrieve match(es)
-						
-						$arrEntries = ldap_get_entries($objConn, $objResults);
-						
-						if ( count($arrEntries) == 1)
-						{
-							if ( array_key_exists($strAttribute, $arrEntries[0]))
-							{
-								$entry = $arrEntries[0][$strAttribute];
-								
-								if ( is_array($entry) )
-								{
-									$strUID = $entry[0];
-								}
-								else
-								{
-									$strUID = $entry;
-								}
-							}
-						}
-						if ( count($arrEntries) > 1 )
-						{
-							// throw some error here?
-						}
-						
-						foreach ( $arrEntries as $arrEntry )
-						{
-							print_r($arrEntry);
-						}
-					}	
-				}
-
-				ldap_close($objConn);
+				$this->user->username = $strUsername;
+				$this->register();
+				return true;
 			}
-			
-			return $strUID;
+			else
+			{
+				return false;
+			}
 		}
 	}
 
