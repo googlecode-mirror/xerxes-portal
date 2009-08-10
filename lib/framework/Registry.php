@@ -313,7 +313,13 @@ class Xerxes_Framework_Registry
 		
 		if ( ! empty( $id ) )
 		{
-			$source = $this->authentication_sources[$id];
+			// if $id was set, make sure calling code didn't ask for the main auth, 
+			// since that has no 'id'; but code below will return the right name
+			
+			if ( $id != $this->getConfig( "AUTHENTICATION_SOURCE" ) )
+			{
+				$source = $this->authentication_sources[$id];
+			}
 		}
 		
 		if ( $source == null )
