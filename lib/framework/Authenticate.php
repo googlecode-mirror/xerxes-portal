@@ -12,6 +12,7 @@ abstract class Xerxes_Framework_Authenticate
 	protected $registry; // config object
 	protected $request; // request object
 	protected $return; // the return url to get the user back to where they are in Xerxes
+	protected $validate_url; // the url to return for a validate request, for ease of custom auths
 	
 	public function __construct($objRequest, $objRegistry)
 	{
@@ -24,6 +25,14 @@ abstract class Xerxes_Framework_Authenticate
 		{
 			$this->return = $this->registry->getConfig( "BASE_WEB_PATH", false, "/" );
 		}
+		
+		$arrVal = array(
+			"base" => "authenticate",
+			"action" => "validate",
+			"return" => $this->return
+		);
+		
+		$this->validate_url = $this->request->url_for($arrVal, true);
 	}
 	
 	/**
