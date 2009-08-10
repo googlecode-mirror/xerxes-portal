@@ -73,6 +73,8 @@ class Xerxes_Framework_Registry
 				throw new Exception( "could not find configuration file" );
 			}
 			
+			$this->authentication_sources["guest"] = "guest";
+			
 			// get it!
 
 			$xml = simplexml_load_file( $file );

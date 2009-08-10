@@ -163,23 +163,6 @@ class Xerxes_Data_Record extends Xerxes_Framework_DataValue
 	public $tags = array ( );
 }
 
-class Xerxes_User extends Xerxes_Framework_DataValue
-{
-	public $username;
-	public $last_login;
-	public $suspended;
-	public $first_name;
-	public $last_name;
-	public $email_addr;
-	public $usergroups = array ( );
-	
-	function __construct($username = null)
-	{
-		$this->username = $username;
-	}
-
-}
-
 /**
  * Functions for inserting, updating, and deleting data from the database
  *
