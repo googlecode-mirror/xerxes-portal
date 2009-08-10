@@ -553,4 +553,27 @@ class Xerxes_Framework_FrontController
 	}
 }
 
+/**
+ * We use this to catch the occassion where we're calling a class
+ * before it has been loaded; a kind of last-case include
+ *
+ * @param string $name	the name of the class
+ */
+
+function __autoload($name)
+{
+	if ( strstr($name, "Xerxes_Framework_") )
+	{
+		$file = str_replace("Xerxes_Framework_", "", $name);
+		require_once("$file.php");
+	}
+	elseif ( strstr($name, "Xerxes_") )
+	{
+		$file = str_replace("Xerxes_", "", $name);
+		
+		require_once(self::parent_directory . "lib/Xerxes/$file.php");
+		
+	}
+}
+
 ?>
