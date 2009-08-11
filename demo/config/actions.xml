@@ -26,6 +26,7 @@
 		
 		<global>
 			<command directory="helper" namespace="Xerxes">HelperNavbar</command>
+			<command directory="authenticate" namespace="Xerxes">AuthenticateCheck</command>
 		</global>
 		
 		<!-- <formats> allows you to set an http header for the response; this is useful if the response needs to be something
