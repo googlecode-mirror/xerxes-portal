@@ -321,10 +321,9 @@ abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
 		{
 			if ( $bolFacets == true )
 			{
-				// since a missing facet is not a fatal thing, we'll just warn
-				// here in case there is a problem
-
-				error_log( $e->getMessage() );
+				// may be missing because too few results or only one database selected
+				// uncomment code here to track this if it is a problem
+				// error_log( "facets not stored in cache" );
 			}
 		}
 		
