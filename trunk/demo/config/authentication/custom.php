@@ -8,8 +8,12 @@ class Xerxes_CustomAuth extends Xerxes_Framework_Auth
 		// in which case, send the user back to the authenticate/validate action together with 
 		// other querystring parameters as needed; that will in turn call onCallBack() below
 		
-		// $url = "https://some.example.edu/login";
-		// header(Location: $url); exit;
+		/* Example:
+		
+		$url = "https://some.example.edu/login?return=" . $this->validate_url;
+		$this->request->setRedirect($url);
+		return true;
+		*/
 	}
 	
 	public function onCallBack()

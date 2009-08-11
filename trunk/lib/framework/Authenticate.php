@@ -75,12 +75,13 @@ abstract class Xerxes_Framework_Authenticate
 	}
 	
 	/**
-	 * Get the user object set by authentication/validation function
+	 * This gets called on every request, so logic can be run to time-out a login,
+	 * check with SSO system, etc.; beware of performance issues, yo!
 	 */
 	
-	public function getUser()
+	public function onEveryRequest()
 	{
-		return $this->user;
+
 	}
 	
 	/**
