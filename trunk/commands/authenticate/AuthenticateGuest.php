@@ -14,7 +14,7 @@ class Xerxes_Command_AuthenticateGuest extends Xerxes_Command_Authenticate
 		$arrURL = array(
 			"base" => "authenticate",
 			"action" => "login",
-			"authenticattion_source" => "guest",
+			"authentication_source" => "guest",
 			"return" => $this->request->getProperty("return")
 		);
 		
