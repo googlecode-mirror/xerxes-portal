@@ -1750,6 +1750,79 @@
 
 </xsl:template>
 
+<!-- 
+	TEMPLATE: SUBCATEGORIES SIDEBAR
+	Display subcategories that have designated for the sidebar, with special handling
+	of librarians
+-->
+
+<xsl:template name="subcategories_sidebar">
+
+	<xsl:for-each select="sidebar/subcategory">
+		
+		<div class="box">
+			<h2><xsl:value-of select="@name" /></h2>
+			<ul>
+			<xsl:for-each select="database">
+				<li>
+					<xsl:choose>
+						<xsl:when test="type = 'Librarian'">
+							<xsl:attribute name="class">subjectLibrarian</xsl:attribute>
+							
+							<div class="librarianTitle">
+								<xsl:choose>
+									<xsl:when test="link_native_home != ''">
+										<a href="{xerxes_native_link_url}"><xsl:value-of select="title_display" /></a>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:value-of select="title_display" />
+									</xsl:otherwise>								
+								</xsl:choose>
+							</div>
+
+							<dl>
+								<xsl:if test="library_email">
+									<div>
+										<dt><xsl:value-of select="$text_databases_subject_librarian_email" /></dt>
+										<dd><xsl:value-of select="library_email" /></dd>
+									</div>
+								</xsl:if>
+								<xsl:if test="library_telephone">
+									<div>
+										<dt><xsl:value-of select="$text_databases_subject_librarian_telephone" /></dt>
+										<dd><xsl:value-of select="library_telephone" /></dd>
+									</div>
+								</xsl:if>
+								<xsl:if test="library_fax">
+									<div>
+										<dt><xsl:value-of select="$text_databases_subject_librarian_fax" /></dt>
+										<dd><xsl:value-of select="library_fax" /></dd>
+									</div>
+								</xsl:if>
+								<xsl:if test="library_address">
+									<div>
+										<dt><xsl:value-of select="$text_databases_subject_librarian_address" /></dt>
+										<dd><xsl:value-of select="library_address" /></dd>
+									</div>
+								</xsl:if>
+							</dl>
+						</xsl:when>
+						<xsl:otherwise>
+							<a>
+								<xsl:attribute name="href"><xsl:value-of select="xerxes_native_link_url" /></xsl:attribute>
+								<xsl:value-of select="title_display" />
+							</a>
+						</xsl:otherwise>
+					</xsl:choose>		
+				</li>
+			</xsl:for-each>
+			</ul>
+		</div>
+		
+	</xsl:for-each>
+
+</xsl:template>
+
 
 
 <!--
