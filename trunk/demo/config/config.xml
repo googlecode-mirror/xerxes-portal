@@ -257,10 +257,15 @@
 			of the words, not an exact match -->
 		
 		<config name="subcategories_include"></config>
+	
+		<!-- subcategories that should be taken out of the 'main' part of the subject page
+		     and made part of the sidebar -->
+		
+		<config name="subcategories_sidebar"></config>
 
 		<!-- database types to exclude from the A-Z listing -->
 		
-		<config name="databases_type_exclude"></config>
+		<config name="databases_type_exclude_az"></config>
 
 		<!-- strip out HTML tags in database description. Possible values:
 		

@@ -84,6 +84,12 @@
 	<xsl:variable name="text_databases_subject_hint_native_only">Click database title to search individually</xsl:variable>
 	<xsl:variable name="text_databases_subject_hint_restricted">Restricted, click database title to search individually</xsl:variable>
 	
+	<xsl:variable name="text_databases_subject_librarian_address">Office:</xsl:variable>
+	<xsl:variable name="text_databases_subject_librarian_email">Email:</xsl:variable>
+	<xsl:variable name="text_databases_subject_librarian_fax">Fax:</xsl:variable>
+	<xsl:variable name="text_databases_subject_librarian_telephone">Telephone:</xsl:variable>
+
+	
 	<xsl:variable name="text_error_databases_permission">You do not have access to search these databases</xsl:variable>
 	<xsl:variable name="text_error_databases_registered">Only available to registered users.</xsl:variable>
 	<xsl:variable name="text_error_pdo_exception">There was a problem with the database.</xsl:variable>

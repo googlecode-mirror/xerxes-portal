@@ -139,7 +139,7 @@ a:hover {
 }
 
 #sidebar .box li {
-	margin-left: 22px;
+	margin-left: 1.5em;
 }
 
 #sidebar .box li.sidebarFolder {
@@ -147,7 +147,31 @@ a:hover {
 	margin-left: 0;
 }
 
+#sidebar .box li.subjectLibrarian {
+	list-style: none;
+	margin-left: 0;
+}
 
+.librarianTitle {
+	font-weight: bold;
+	font-size: 110%;
+}
+
+#sidebar .box li.subjectLibrarian dl {
+	margin-top: 1em;
+	margin-left: .5em;
+}
+
+#sidebar .box li.subjectLibrarian dl div{
+	margin-bottom: .3em;
+}
+
+#sidebar .box li.subjectLibrarian dd,  #sidebar .box li.subjectLibrarian dt {
+	display: inline;
+	margin: 0px;
+	padding-right: .5em;
+	width: auto;
+}
 
 /** GLOBAL STYLES **/
 
