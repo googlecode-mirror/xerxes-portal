@@ -971,17 +971,15 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 					$arrParams[":type$q"] = trim($arrTypes[$q]);
 				}
 				
-				// but then also catch the case where type is null
+				// AND 'em but then also catch the case where type is null
 				
-				array_push($arrTypeQuery, "xerxes_databases.type IS NULL");
-				
-				$strSQL .= " WHERE (" . implode (" OR ", $arrTypeQuery) . ")";
+				$strSQL .= " WHERE (" . implode (" AND ", $arrTypeQuery) . ") OR xerxes_databases.type IS NULL ";
 			}
 			
 			$strSQL .= " ORDER BY UPPER(title_display)";
 		}
 		
-		//echo $strSQL; exit;
+		// echo $strSQL; exit;
 		
 		$arrResults = $this->select( $strSQL, $arrParams );
 		
