@@ -1,4 +1,4 @@
-#summary Installing Xerxes with IIS
+#summary 2b. Installing Xerxes with IIS
 
 Xerxes should run on IIS without any problems.  Although the application is initially developed on Apache, it does not (in it's basic configuration) require any Apache-specific modules. Here are some notes that you might find useful, however, if you're setting up Xerxes on IIS.
 
