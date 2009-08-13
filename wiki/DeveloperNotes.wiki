@@ -1,4 +1,4 @@
-#summary Some useful developer hints
+#summary Developer Notes: Some useful developer hints
 
 == Request XML for page==
 
@@ -11,13 +11,13 @@ I'm actually doing very little caching in Xerxes.  The xml config files, for exa
 I actually started off thinking I would do more caching -- obviously the config files, for example, would be perfect candidates for something like this.  But we've seen no performance problems in Xerxes, even in our central server, which hosts 10 campuses with ~ 150k students.  So, I've just left it as is, with the idea that, if we did see slow-downs, we would refactor the code to do more caching.
  
  
-There are a couple of things related to the search that we DO cache.  Commands that need to cache data send it to and receive it from a Xerxes_Cache object.  That, in turn, stores the data in a table in the database called xerxes_cache by way of the DataMap.
+There are a couple of things related to the search that we DO cache.  Commands that need to cache data send it to and receive it from a `Xerxes_Cache` object.  That, in turn, stores the data in a table in the database called xerxes_cache by way of the `DataMap`.
  
-=== MetasearchSearch ===
+=== `MetasearchSearch` ===
 caches information ABOUT the search: your search terms, what category you were in, any spelling suggestions from yahoo, and also any links to the native interfaces from the database you chose, all as a single XML fragment.  Later actions keep retrieving this data for display.
  
-=== MetasearchHits ===
+=== `MetasearchHits` ===
 caches information about the search status as it keeps polling Metalib, again so later actions can use it in the display without having to go back to Metlib.  It also caches the facets as well.
  
-=== MetasearchSort ===
+=== `MetasearchSort` ===
 updates the search status cache with the current sort order.
