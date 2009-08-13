@@ -1,4 +1,4 @@
-#summary _ Developer Notes: Access Control stuff
+#summary Developer Notes: Access Control stuff
 
 = Introduction =
 
