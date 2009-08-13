@@ -216,7 +216,7 @@ List of users who can access the system without being in the local directory ser
   * default value: none
   * available since: 1.1  
 
-Enter as username:password, and separate entries by comma.  If you have [Configuration#authentication_source chosen a 'local' authentication option]  (i.e., something other than CAS or Shibboleth), you can authenticate demo users using your _main_ login page.  If you are using CAS or Shibboleth, you'll need to point demo users to an alternate login page, as mentioned above.
+Enter as `username:password`, and separate multiple entries by comma.  You can use the demo login in _addition_ to your regular login by adding `demo` as one of the   [Configuration#authentication_source "other" login options] and directing users to that form with the query string parameter mentioned above.
 
 ==directory_server==
 
