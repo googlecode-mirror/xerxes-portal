@@ -153,14 +153,14 @@ The password of the account that is set-up to access the (MySQL) database.
   * default value: none
   * available since: 1.1
 
-==databases_type_exclude==
+==databases_type_exclude_az==
 
 A list of database types that Xerxes should exclude from the A-Z list
 
   * default value: none
   * available since: 1.5.1 (in trunk)
 
-This is useful if you've created IRDs that are for websites, research guides, librarian contacts, or other resources that you want included (as secondary resources) in the subject pages, but want to keep out of the databases A-Z list page, for whatever reason.
+This is useful if you've created IRDs that are for websites, research guides, librarian contacts, or other resources that you want included (as secondary resources) in the subject pages, but want to keep out of the databases A-Z list page, for whatever reason. See also [Configuration#subcategories_sidebar subcategories_sidebar].
 
 ==database_username==
 
@@ -740,6 +740,17 @@ Subcategories that should be included in the subject page.
 This is a white list of subcategories that should be _included_.  Xerxes will show a subcategory if it matches any value, or part of the value, entered here.  So the entry 'Articles' will match subcategories named 'Article databases' and 'Most useful article databases'. If left blank (the default), Xerxes will include all subcategories.  
 
 This can be useful if you are transitioning from the standard Metalib interface to Xerxes, and want to follow the common Xerxes pattern of 'most useful' and 'also useful' subcategories, while keeping a topical list in the standard Metalib interface.
+
+==subcategories_sidebar==
+
+Subcategories that should be shown in the sidebar of the subject page, rather than the main part of the page.
+
+  * default value: none
+  * available since: 1.5.1 (trunk)
+
+List is case-sensitive; separate multiple entries with a comma.
+
+This option is useful if you want to assign subject guides and/or a librarian contact to subjects.  You can manage the guides and librarian information in the Metalib KB, as IRDs, and then create subcategories in each category, and assign the IRDs as desired.  Enter the subcategory names here, and Xerxes will remove them from the main part of the page and put them in the sidebar.  Order is determined by the order of the subcategories in Metalib.
 
 ==template==
 
