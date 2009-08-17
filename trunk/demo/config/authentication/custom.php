@@ -1,6 +1,6 @@
 <?php
 
-class Xerxes_CustomAuth extends Xerxes_Framework_Auth
+class Xerxes_CustomAuth extends Xerxes_Framework_Authenticate
 {
 	public function onLogin()
 	{
