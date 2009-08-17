@@ -75,7 +75,7 @@ This should reflect the path (URI) to your Xerxes instance from the root of your
 
 ==~~cas_version~~==
 
-*Removed in 1.5.1 (trunk)*.  Xerxes will use the cas_validate URL itself to determined how to handle validation.
+*Removed in 1.6*.  Xerxes will use the cas_validate URL itself to determined how to handle validation.
 
 The version of CAS you're running.
 
@@ -124,7 +124,7 @@ Enter either '2' or '3'. Setting this to `2` can be useful if you are working in
 Whether Xerxes should do the Metalib KB pull in smaller 'chunks'.
 
   * default value: `false`
-  * available since: 1.5.1 (in trunk)
+  * available since: 1.6
 
 _This config must be added to config.xml_.  This is only necessary if Metalib times out during the KB pull.  This can happen if your Metalib KB is large and the server it runs on is not particularly fast.
 
@@ -158,7 +158,7 @@ The password of the account that is set-up to access the (MySQL) database.
 A list of database types that Xerxes should exclude from the A-Z list
 
   * default value: none
-  * available since: 1.5.1 (in trunk)
+  * available since: 1.6
 
 This is useful if you've created IRDs that are for websites, research guides, librarian contacts, or other resources that you want included (as secondary resources) in the subject pages, but want to keep out of the databases A-Z list page, for whatever reason. See also [Configuration#subcategories_sidebar subcategories_sidebar].
 
@@ -630,7 +630,7 @@ Although turning this on will create the URLs, for your Web server to _handle_ t
 The relational database management system (RDBMS) you are using with Xerxes.
 
   * default value: `mysql`
-  * available since: 1.5.1 (in trunk)
+  * available since: 1.6
 
 _This config must be added to config.xml_.  This is necessary only if you are using Xerxes with Microsoft SQL Server.  In that case, set the value to `mssql`.  We need this to unambiguously distinguish the database (the connection string alone will not do that, since we're using the ODBC driver) in order to support some MS-SQL-specific statements.
 
@@ -746,7 +746,7 @@ This can be useful if you are transitioning from the standard Metalib interface 
 Subcategories that should be shown in the sidebar of the subject page, rather than the main part of the page.
 
   * default value: none
-  * available since: 1.5.1 (trunk)
+  * available since: 1.6
 
 List is case-sensitive; separate multiple entries with a comma.
 
