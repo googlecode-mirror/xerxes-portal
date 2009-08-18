@@ -187,7 +187,7 @@ How Xerxes should handle HTML tags in the database description.
 
 Possible values:
                 
-  * *escape* escapes all HTML so it shows up as source
+  * *escape* escapes all angle brackets, so any HTML will show up as source.  You should use this if only if you don't include ANY html in database descriptions, so angle brackets included for another purpose will still be displayed as intended. 
   * *allow* allows all HTML through as code. NOT recommended. Suggest you use strip with some tags in db_description_allow_tags instead. 
   * *strip* strips out all HTML tags. May be used in combination with [Configuration#db_description_allow_tags db_description_allow_tags] to allow for certain exceptions.
 
