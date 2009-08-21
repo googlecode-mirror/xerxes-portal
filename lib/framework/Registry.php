@@ -22,7 +22,7 @@ class Xerxes_Framework_Registry
 	private static $instance; // singleton pattern
 	private $modules = array();	// list of modules
 
-	private function __construct()
+	protected function __construct()
 	{
 	}
 	
