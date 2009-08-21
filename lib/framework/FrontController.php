@@ -258,6 +258,10 @@ class Xerxes_Framework_FrontController
 					$command_path = "$path_to_parent/modules/$strDirectory/commands";
 				}
 				
+				// allow for a local override, even
+				
+				$local_command_path = "commands/$strDirectory";
+				
 				// echo "<h3>$strClassFile</h3>";
 
 				// first, include any parent class, assuming that the parent class will
@@ -265,21 +269,34 @@ class Xerxes_Framework_FrontController
 
 				$strParentClass = strtoupper( substr( $strDirectory, 0, 1 ) ) . substr( $strDirectory, 1 );
 				
-				if ( file_exists( "$command_path/$strParentClass.php" ) )
+				if ( file_exists( "$local_command_path/$strParentClass.php" ) )
+				{
+					require_once ("$local_command_path/$strParentClass.php");
+				}
+				elseif ( file_exists( "$command_path/$strParentClass.php" ) )
 				{
 					require_once ("$command_path/$strParentClass.php");
 				}
 				
-				// if the specified command class exists in the commands folder, then
+				// if the specified command class exists in the distro or local commands folder, then
 				// instantiate an object and execute it
 
 				$strClass = $strNamespace . "_Command_" . $strClassFile;
 				
-				$objCommand = null;
+				$local_command = file_exists( "$local_command_path/$strClassFile.php" );
 				
-				if ( file_exists( "$command_path/$strClassFile.php" ) )
+				if ( file_exists( "$command_path/$strClassFile.php" ) || $local_command )
 				{
-					require_once ("$command_path/$strClassFile.php");
+					// if the instance has a local version, take it!
+					
+					if ( $local_command )
+					{
+						require_once ("$local_command_path/$strClassFile.php");
+					}
+					else
+					{
+						require_once ("$command_path/$strClassFile.php");
+					}
 					
 					// instantiate the command class and execute it, but only
 					// if it extends xerxes_framework_command
