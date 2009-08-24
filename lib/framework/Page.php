@@ -14,6 +14,15 @@
 
 class Xerxes_Framework_Page
 {
+	protected $request;		// the request object
+	protected $registry;	// the config registry object
+		
+	public function __construct( Xerxes_Framework_Request $objRequest = null, Xerxes_Framework_Registry $objRegistry = null )
+	{
+		$this->request = $objRequest;
+		$this->registry = $objRegistry;
+	}	
+
 	/**
 	 * Displays paged information (e.g., 11-20 of 34 results)
 	 *
@@ -311,8 +320,16 @@ class Xerxes_Framework_Page
 		// as of metalib 4.3 we _still_ need to do this to catch html entity references that
 		// have been escaped for xml compatibility
 		
-		$objRegistry = Xerxes_Framework_Registry::getInstance();
-		$noEscape = $objRegistry->getConfig("FIX_AMERSANDS", false, true);
+		$noEscape = $this->registry->getConfig("FIX_AMERSANDS", false, true);
+		
+		// but make sure we don't do it on an XML output, like the open search option
+		
+		$format = $this->request->getProperty( "format" );
+
+		if ( $format == "xml")
+		{
+			$noEscape = false;
+		}
 		
 		if ( $noEscape === true)
 		{

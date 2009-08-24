@@ -15,7 +15,7 @@
     <Description>Use <xsl:value-of select="$app_name" /> to search across selected <xsl:value-of select="$subject_name"/> databases.</Description>
     <Url type="text/html">
       <xsl:attribute name="template">
-        <xsl:value-of select="$base_url" />?base=metasearch&amp;action=search&amp;subject=<xsl:value-of select="$subject_id"/>&amp;field=WRD&amp;query={searchTerms}</xsl:attribute>
+        <xsl:value-of select="$base_url" />?base=metasearch;action=search;subject=<xsl:value-of select="$subject_id"/>;field=WRD;query={searchTerms}</xsl:attribute>
     </Url>
  </OpenSearchDescription>
 </xsl:template>
