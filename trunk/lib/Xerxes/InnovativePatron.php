@@ -92,7 +92,7 @@
 		* @exception 				throws exception when iii patron api reports error
 		*/
 		
-		private function getUserData( $id )
+		protected function getUserData( $id )
 		{
 			// normalize the barcode
 			
@@ -121,7 +121,7 @@
 		* @return bool			true if valid, false if not
 		*/
 		
-		private function authenticate ( $id, $pin )
+		protected function authenticate ( $id, $pin )
 		{
 			// normalize the barcode and pin
 			
