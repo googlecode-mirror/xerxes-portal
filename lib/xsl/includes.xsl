@@ -1783,25 +1783,25 @@
 							<dl>
 								<xsl:if test="library_email">
 									<div>
-										<dt><xsl:value-of select="$text_databases_subject_librarian_email" /></dt>
-										<dd><xsl:value-of select="library_email" /></dd>
+										<dt><xsl:copy-of select="$text_databases_subject_librarian_email" /></dt>
+										<dd><xsl:call-template name="text_databases_subject_librarian_email_value" /></dd>
 									</div>
 								</xsl:if>
 								<xsl:if test="library_telephone">
 									<div>
-										<dt><xsl:value-of select="$text_databases_subject_librarian_telephone" /></dt>
+										<dt><xsl:copy-of select="$text_databases_subject_librarian_telephone" /></dt>
 										<dd><xsl:value-of select="library_telephone" /></dd>
 									</div>
 								</xsl:if>
 								<xsl:if test="library_fax">
 									<div>
-										<dt><xsl:value-of select="$text_databases_subject_librarian_fax" /></dt>
+										<dt><xsl:copy-of select="$text_databases_subject_librarian_fax" /></dt>
 										<dd><xsl:value-of select="library_fax" /></dd>
 									</div>
 								</xsl:if>
 								<xsl:if test="library_address">
 									<div>
-										<dt><xsl:value-of select="$text_databases_subject_librarian_address" /></dt>
+										<dt><xsl:copy-of select="$text_databases_subject_librarian_address" /></dt>
 										<dd><xsl:value-of select="library_address" /></dd>
 									</div>
 								</xsl:if>
