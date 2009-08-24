@@ -68,7 +68,7 @@ class Xerxes_Framework_FrontController
 		// utility classes
 		
 		$objRequest = new Xerxes_Framework_Request( ); // processes the incoming request
-		$objPage = new Xerxes_Framework_Page( ); // assists with basic paging/navigation elements for the view
+		$objPage = new Xerxes_Framework_Page($objRequest, $objRegistry); // assists with basic paging/navigation elements for the view
 		$objError = new Xerxes_Framework_Error( ); // functions for special logging or handling of errors
 		
 		// we'll put the remaining code in a try-catch block in order to show friendly error page
