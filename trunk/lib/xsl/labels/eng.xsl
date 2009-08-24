@@ -302,10 +302,15 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-	
+		
+	<xsl:template name="text_databases_subject_librarian_email_value">
+		<a href="mailto:{library_email}"><xsl:value-of select="library_email" /></a>
+	</xsl:template>
+
 	<xsl:template name="text_collections_add_database_section">add database <xsl:value-of select="title_display" /> to this section</xsl:template>
 	
 	<xsl:template name="text_collections_remove_database">remove database <xsl:value-of select="title_display" /> from section</xsl:template>
+	
 	
 	<!-- 
 		the templates deal with text labels that are in the XML itself.  they largely
@@ -331,6 +336,6 @@
 	<xsl:template name="text_results_sort_options">
 		<xsl:param name="option" />
 		<xsl:value-of select="$option" />
-	</xsl:template>		
+	</xsl:template>
 	
 </xsl:stylesheet>
