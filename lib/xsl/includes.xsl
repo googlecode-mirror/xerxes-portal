@@ -966,7 +966,7 @@
 
 	<!--opensearch autodiscovery -->
 	
-	<xsl:if test="//category">
+	<xsl:if test="category/subcategory">
 		<xsl:variable name="subject_name" select="//category[1]/@name" />
 		<xsl:variable name="subject_id" select="//category[1]/@normalized" />
 		<link rel="search"
