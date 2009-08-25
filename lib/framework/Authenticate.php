@@ -12,7 +12,7 @@ abstract class Xerxes_Framework_Authenticate
 	protected $registry; // config object
 	protected $request; // request object
 	protected $return; // the return url to get the user back to where they are in Xerxes
-	protected $validate_url; // the url to return for a validate request, for ease of custom auths
+	protected $validate_url; // the url to return for a validate request, for external auths
 	
 	public function __construct($objRequest, $objRegistry)
 	{
@@ -21,18 +21,19 @@ abstract class Xerxes_Framework_Authenticate
 		$this->user = new Xerxes_User();
 		$this->return = $this->request->getProperty( "return" );
 		
+		$base = $this->registry->getConfig( "BASE_URL", true);
+		
 		if ( $this->return == "" )
 		{
-			$this->return = $this->registry->getConfig( "BASE_WEB_PATH", false, "/" );
+			$this->return = $base;
 		}
 		
-		$arrVal = array(
-			"base" => "authenticate",
-			"action" => "validate",
-			"return" => $this->return
-		);
+		// we're explicitly _not_ using pretty-url here because some CAS servers might only
+		// be set-up with a single URL wildcard, while some other funky auth schemes get 
+		// tripped-up by the 'sub-folder' path elements that pretty-url creates
 		
-		$this->validate_url = $this->request->url_for($arrVal, true);
+		$this->validate_url = $base . "/?base=authenticate&action=validate" .
+			"&return=" . urlencode($this->return);
 	}
 	
 	/**
