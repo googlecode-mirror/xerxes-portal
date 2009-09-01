@@ -13,6 +13,15 @@
 
 	class Xerxes_Shibboleth extends Xerxes_Framework_Authenticate 
 	{
+    
+    /**
+     *  HTTP header that the username will be found in. Subclass can over-ride
+     *  if different. 
+     */
+     public function usernameHeader() {
+       return "REMOTE_USER";
+     }
+    
 		/**
 		 * For shibboleth, if user got this far, we should have authentication
 		 * params in header already from the Shib SP and apache config, just read 
@@ -21,11 +30,8 @@
 		
 		public function onLogin()
 		{
-			// get username header from configged name
-			
-			$username_header = $this->registry->getConfig( "shib_username_header", false, "REMOTE_USER" );
-			
-			$strUsername = $this->request->getServer($username_header);
+			// get username header from proper psuedo-HTTP header set by apache
+			$strUsername = $this->request->getServer( $this->usernameHeader() );
 			
 			if ( $strUsername != null )
 			{
