@@ -8,7 +8,7 @@ class Xerxes_Shibboleth_Local extends Xerxes_Shibboleth
 	 * 
 	 * User has already been authenticated when this function is called. 
 	 * 
-	 * HTTP headers are available via this->request->getServer("header_name");
+	 * HTTP headers are available via $this->request->getServer("header_name");
 	 * 
 	 * This function may:
 	 * 
@@ -16,8 +16,8 @@ class Xerxes_Shibboleth_Local extends Xerxes_Shibboleth
 	 *    you want to deny user access to logging into Xerxes at all.
 	 *    The message should explain why. 
 	 * 
-	 * 2) Set various propertes in $this->user object if you want to
-	 *    fill out some more user properties  based on attributes in headers 
+	 * 2) Set various propertes in $this->user (a Xerxes_User) object if you want
+   *    to fill out some more user properties  based on attributes in headers 
 	 *    set by Shib. You could even pick a new username, if you so choose.
 	 */
 	
@@ -25,7 +25,7 @@ class Xerxes_Shibboleth_Local extends Xerxes_Shibboleth
 	{
 		/* Example:
 		
-		$this->email = $this->request->getServer("email"); 
+		$this->user->email = $this->request->getServer("email"); 
 		
 		*/
 

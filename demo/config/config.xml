@@ -209,15 +209,6 @@
 		<config name="cas_validate" />
 		
 		
-		<!-- SHIBBOLETH	-->
-						 
-		<!-- shib username header -->
-		
-			<!--  the HTTP header to find the username in, defaults to REMOTE_USER; for even more flexible 
-			customization, see authentication/shib_map.php --> 
-			
-		<config name="shib_username_header">REMOTE_USER</config>
-		
 		
 		<!-- DEMO -->
 		
