@@ -674,7 +674,9 @@ This is useful only for the local authentication options -- where Xerxes provide
 
 *Renamed in 1.5*.  See [Configuration#alternate_fulltext_harvest_address alternate_fulltext_harvest_address]
 
-==shib_username_header==
+==~~shib_username_header~~==
+
+*Removed in 1.6*. If necessary, configure with a local Shibboleth module sub-class in config/authentication/shibboleth.php instead. 
 
 The HTTP header that Xerxes will expect to find the Shiboleth username in. 
 
