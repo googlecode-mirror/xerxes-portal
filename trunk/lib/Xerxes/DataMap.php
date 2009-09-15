@@ -99,6 +99,7 @@ class Xerxes_Data_Database extends Xerxes_Framework_DataValue
 	public $institute;
 	public $filter;
 	public $creator;
+	public $search_hints;
 	public $publisher;
 	public $publisher_description;
 	public $description;

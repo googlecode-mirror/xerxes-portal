@@ -353,6 +353,7 @@
 				$objData->new_resource_expiry = (string) $objDatabase->new_resource_expiry;
 				$objData->updated = (string) $objDatabase->updated;
 				$objData->number_sessions = (int) $objDatabase->number_sessions;
+				$objData->search_hints = (string) $objDatabase->search_hints;
 				
 				// multi-value fields
 				

@@ -39,6 +39,7 @@ CREATE TABLE xerxes_databases(
 	copyright		VARCHAR(1000),
 	note_cataloger		VARCHAR(2500),
 	note_fulltext		VARCHAR(500),
+	search_hints		VARCHAR(3000),
 	type			VARCHAR(50),
 	library_address		VARCHAR(200),
 	library_city		VARCHAR(100),
