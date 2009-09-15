@@ -777,6 +777,8 @@ Like [Configuration#document document] this controls default behavior in the YUI
 If you have an umlaut resolver, and you want to enable Umlaut functionalities in Xerxes, fill this out with the Umlaut 'true' base, without the /resolve, no trailing slash. 
     eg http://findit.library.jhu.edu 
 
+  * Available since: 1.6
+
 ==yahoo_id==
 
 The ID for the account that will access the Yahoo Spell Check API.  
