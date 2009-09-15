@@ -84,16 +84,16 @@
 		
 		<filter><xsl:value-of select="marc:datafield[@tag='FTL']/marc:subfield[@code='a']" /></filter>
 		
-    <!-- TAR$f='n' means 'link to configuration active' has been set to 'no'
-         in metalib admin. We consider that not searchable. -->
+		<!-- TAR$f='n' means 'link to configuration active' has been set to 'no'
+		 in metalib admin. We consider that not searchable. -->
 		<xsl:if test="marc:datafield[@tag='TAR']/marc:subfield[@code='a'] and not (marc:datafield[@tag='TAR']/marc:subfield[@code='f'] = 'N')">
 			<searchable>yes</searchable>
 		</xsl:if>
-    
+		
 		<xsl:if test="marc:datafield[@tag=594]/marc:subfield[@code='a'] = 'SUBSCRIPTION'">
 			<subscription>yes</subscription>
 		</xsl:if>
-
+		
 		<xsl:choose>
 			<xsl:when test="marc:datafield[@tag='PXY']/marc:subfield[@code='a'] = 'N'">
 				<proxy>no</proxy>
@@ -102,10 +102,10 @@
 				<proxy>yes</proxy>
 			</xsl:when>
 		</xsl:choose>
-
+		
 		
 		<active><xsl:value-of select="marc:datafield[@tag='STA']/marc:subfield[@code='a']" /></active>
-
+		
 		<new_resource_expiry><xsl:value-of select="marc:datafield[@tag='NWD']/marc:subfield[@code='a']" /></new_resource_expiry>
 		
 		<number_sessions><xsl:value-of select="marc:datafield[@tag='SES']/marc:subfield[@code='a']" /></number_sessions>
@@ -114,9 +114,9 @@
 		
 		<!-- creator -->
 		<xsl:comment>creator</xsl:comment>
-
+		
 		<creator><xsl:value-of select="marc:datafield[@tag=260]/marc:subfield[@code='b']" /></creator>
-
+		
 		<publisher><xsl:value-of select="marc:datafield[@tag=110]/marc:subfield[@code='a']" /></publisher>
 		
 		<xsl:for-each select="marc:datafield[@tag=710]">
@@ -127,27 +127,31 @@
 		
 		<!-- notes -->
 		<xsl:comment>notes</xsl:comment>
-
+		
 		<description><xsl:value-of select="marc:datafield[@tag=520]/marc:subfield[@code='a']" /></description>
 						
 		<coverage><xsl:value-of select="marc:datafield[@tag=500]/marc:subfield[@code='a']" /></coverage>
 		
 		<time_span><xsl:value-of select="marc:datafield[@tag=513]/marc:subfield[@code='a']" /></time_span>
-
+		
 		<xsl:for-each select="marc:datafield[@tag=546]">
 			<language><xsl:value-of select="marc:subfield[@code='a']" /></language>
 		</xsl:for-each>
 		
+		<search_hints>
+			<xsl:value-of select="marc:datafield[@tag=592 or @tag=595]/marc:subfield[@code='a']" />		
+		</search_hints>
+		
 		<copyright><xsl:value-of select="marc:datafield[@tag=540]/marc:subfield[@code='a']" /></copyright>
-
+		
 		<xsl:for-each select="marc:datafield[@tag=590]">
 			<note><xsl:value-of select="marc:subfield[@code='a']" /></note>
 		</xsl:for-each>
-
+		
 		<note_cataloger><xsl:value-of select="marc:datafield[@tag=591]/marc:subfield[@code='a']" /></note_cataloger>
-
+		
 		<note_fulltext><xsl:value-of select="marc:datafield[@tag=902]/marc:subfield[@code='a']" /></note_fulltext>
-
+		
 		<!-- subjects -->
 		<xsl:comment>subjects</xsl:comment>
 		
