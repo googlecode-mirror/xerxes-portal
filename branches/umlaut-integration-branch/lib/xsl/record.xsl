@@ -84,7 +84,7 @@
 	
 	<div id="record">
 
-		<xsl:for-each select="//records/record/xerxes_record">
+		<xsl:for-each select="/*/results/records/record/xerxes_record">
 	
 			<xsl:variable name="result_set" 	select="result_set" />
 			<xsl:variable name="record_number" 	select="record_number" />
@@ -180,7 +180,7 @@
 			
 			<!-- Year -->
 			
-			<xsl:if test="format">
+			<xsl:if test="year">
 				<div>
 				<dt><xsl:copy-of select="$text_results_year" />:</dt>
 				<dd><xsl:value-of select="year" /></dd>
@@ -223,12 +223,14 @@
 					</dd>
 				</xsl:when>
 				<xsl:when test="format = 'Book'">
-					<dt><xsl:copy-of select="$text_record_publisher" />:</dt>
-					<dd>
-						<xsl:value-of select="place" /><xsl:text>: </xsl:text>
-						<xsl:value-of select="publisher" /><xsl:text>, </xsl:text>
-						<xsl:value-of select="year" />
-					</dd>
+					<xsl:if test="publisher">
+						<dt><xsl:copy-of select="$text_record_publisher" />:</dt>
+						<dd>
+							<xsl:value-of select="place" /><xsl:text>: </xsl:text>
+							<xsl:value-of select="publisher" /><xsl:text>, </xsl:text>
+							<xsl:value-of select="year" />
+						</dd>
+					</xsl:if>
 				</xsl:when>
 			</xsl:choose>
 			</div>

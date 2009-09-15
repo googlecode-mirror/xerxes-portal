@@ -141,7 +141,7 @@ a:hover {
 }
 
 #sidebar .box li {
-	margin-left: 22px;
+	margin-left: 1.5em;
 }
 
 #sidebar .box li.sidebarFolder {
@@ -149,7 +149,31 @@ a:hover {
 	margin-left: 0;
 }
 
+#sidebar .box li.subjectLibrarian {
+	list-style: none;
+	margin-left: 0;
+}
 
+.librarianTitle {
+	font-weight: bold;
+	font-size: 110%;
+}
+
+#sidebar .box li.subjectLibrarian dl {
+	margin-top: 1em;
+	margin-left: .5em;
+}
+
+#sidebar .box li.subjectLibrarian dl div{
+	margin-bottom: .3em;
+}
+
+#sidebar .box li.subjectLibrarian dd,  #sidebar .box li.subjectLibrarian dt {
+	display: inline;
+	margin: 0px;
+	padding-right: .5em;
+	width: auto;
+}
 
 /** GLOBAL STYLES **/
 
@@ -559,9 +583,13 @@ ul.addDatabasesMatches li {
 .recordActions {
 	margin-top: .7em;
 }
- .recordAction {
-  display: block;
+
+.recordAction {
 	margin-bottom: 0.35em;
+}
+
+a.recordAction {
+	display: table;
 }
 
 .folderLabels {
@@ -641,6 +669,15 @@ ul.addDatabasesMatches li {
 #folder_output_results label {
 	display: block;
 	margin-left: 5em;
+}
+
+.folderEmailSuccess {
+	display: table;
+	padding: 10px;
+	background-color: #FFFFCC;
+	border: 1px solid #FFCC00;
+	color: #009900;
+	font-weight: bold;
 }
 
 #export legend {

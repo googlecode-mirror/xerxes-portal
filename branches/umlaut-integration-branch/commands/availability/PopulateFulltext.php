@@ -16,8 +16,8 @@
 	{
 		public function doExecute()
 		{
-      
-			ini_set("memory_limit","60M");
+      		$configMemory = $this->registry->getConfig("HARVEST_MEMORY_LIMIT", false, "500M");
+			ini_set("memory_limit",$configMemory);
 			
 			echo "\n\nSFX INSTITUTIONAL HOLDINGS POPULATION \n\n";
 			

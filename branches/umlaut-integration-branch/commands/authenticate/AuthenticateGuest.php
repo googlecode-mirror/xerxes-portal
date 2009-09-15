@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Authenticate a guest user
+ * This only here for backwards compatibility on older guest links
  *
  */
 
@@ -9,15 +9,17 @@ class Xerxes_Command_AuthenticateGuest extends Xerxes_Command_Authenticate
 {
 	public function doExecute()
 	{
-		$strReturn = $this->request->getProperty( "return" );
+		// redirect the user to the main login action with auth source = guest
 		
-		if ( $strReturn == "" )
-		{
-			$strReturn = $this->registry->getConfig( "base_web_path" );
-		}
+		$arrURL = array(
+			"base" => "authenticate",
+			"action" => "login",
+			"authentication_source" => "guest",
+			"return" => $this->request->getProperty("return")
+		);
 		
-		$this->register( "guest@" . session_id(), "guest" );
-		$this->request->setRedirect( "http://" . $this->request->getServer( 'SERVER_NAME' ) . $strReturn );
+		$url = $this->request->url_for($arrURL);
+		$this->request->setRedirect($url);
 		
 		return 1;
 	}

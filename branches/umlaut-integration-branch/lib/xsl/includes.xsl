@@ -234,6 +234,7 @@
 <xsl:template name="sidebar_additional" />
 <xsl:template name="module_header" />
 <xsl:template name="additional_record_links" />
+<xsl:template name="additional_brief_record_data" />
 
 <!--
 	TEMPLATE: SIDEBAR WRAPPER
@@ -263,7 +264,7 @@
 <xsl:template name="breadcrumb_start">
 
 	<xsl:if test="not(request/base = 'databases' and request/action ='categories')">
-		<a href="{$base_url}">Home</a> <xsl:copy-of select="$text_breadcrumb_seperator" />
+		<a href="{$base_url}"><xsl:value-of select="$text_databases_category_pagename" /></a> <xsl:copy-of select="$text_breadcrumb_seperator" />
 	</xsl:if>
 
 </xsl:template>
@@ -852,7 +853,7 @@
 	<!-- @todo make this a singletext label variable -->
 	
 	<xsl:if test="request/session/role = 'local'">
-		<p><xsl:copy-of select="$text_folder_login_temp" /></p>
+		<p class="temporary_login_note"><xsl:copy-of select="$text_folder_login_temp" /></p>
 	</xsl:if>
 	
 	<xsl:call-template name="folder_header_limit" />
@@ -965,7 +966,7 @@
 
 	<!--opensearch autodiscovery -->
 	
-	<xsl:if test="//category">
+	<xsl:if test="category/subcategory">
 		<xsl:variable name="subject_name" select="//category[1]/@name" />
 		<xsl:variable name="subject_id" select="//category[1]/@normalized" />
 		<link rel="search"
@@ -1160,7 +1161,7 @@
 	<div id="account" class="box">
 		<h2><xsl:copy-of select="$text_header_myaccount" /></h2>
 		<ul>
-			<li>
+			<li id="login_option">
 				<xsl:choose>
 					<xsl:when test="//request/session/role and //request/session/role != 'local'">
 						<a id="logout">
@@ -1245,7 +1246,7 @@
 </xsl:template>
 
 <!-- 
-	TEMPLATE: SNIPPER SIDEBAR
+	TEMPLATE: SNIPPET SIDEBAR
 	Link to generate the snippet. Only shown for user-generated
   subjects if subject is public. 
 -->
@@ -1256,7 +1257,7 @@
 			<h2><xsl:copy-of select="$text_header_embed" /></h2>
 	
 			<ul>
-			<xsl:if test="request/base = 'databases' and request/action = 'subject'">
+			<xsl:if test="request/base = 'databases' and (request/action = 'subject' or request/action ='metasearch')">
 				<xsl:variable name="subject" select="//category/@normalized" />
 				<li> <a href="./?base=embed&amp;action=gen_subject&amp;subject={$subject}"><xsl:copy-of select="$text_header_snippet_generate_subject" /></a> </li>
 			</xsl:if>
@@ -1575,6 +1576,8 @@
 					</span>
 				</xsl:if>
 				
+				<xsl:call-template name="additional_brief_record_data" />
+				
 				<div class="recordActions">
 					
 					<!-- full-text -->
@@ -1765,6 +1768,79 @@
 		</iframe>
 		
 	</xsl:if>
+
+</xsl:template>
+
+<!-- 
+	TEMPLATE: SUBCATEGORIES SIDEBAR
+	Display subcategories that have designated for the sidebar, with special handling
+	of librarians
+-->
+
+<xsl:template name="subcategories_sidebar">
+
+	<xsl:for-each select="sidebar/subcategory">
+		
+		<div class="box">
+			<h2><xsl:value-of select="@name" /></h2>
+			<ul>
+			<xsl:for-each select="database">
+				<li>
+					<xsl:choose>
+						<xsl:when test="type = 'Librarian'">
+							<xsl:attribute name="class">subjectLibrarian</xsl:attribute>
+							
+							<div class="librarianTitle">
+								<xsl:choose>
+									<xsl:when test="link_native_home != ''">
+										<a href="{xerxes_native_link_url}"><xsl:value-of select="title_display" /></a>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:value-of select="title_display" />
+									</xsl:otherwise>								
+								</xsl:choose>
+							</div>
+
+							<dl>
+								<xsl:if test="library_email">
+									<div>
+										<dt><xsl:copy-of select="$text_databases_subject_librarian_email" /></dt>
+										<dd><xsl:call-template name="text_databases_subject_librarian_email_value" /></dd>
+									</div>
+								</xsl:if>
+								<xsl:if test="library_telephone">
+									<div>
+										<dt><xsl:copy-of select="$text_databases_subject_librarian_telephone" /></dt>
+										<dd><xsl:value-of select="library_telephone" /></dd>
+									</div>
+								</xsl:if>
+								<xsl:if test="library_fax">
+									<div>
+										<dt><xsl:copy-of select="$text_databases_subject_librarian_fax" /></dt>
+										<dd><xsl:value-of select="library_fax" /></dd>
+									</div>
+								</xsl:if>
+								<xsl:if test="library_address">
+									<div>
+										<dt><xsl:copy-of select="$text_databases_subject_librarian_address" /></dt>
+										<dd><xsl:value-of select="library_address" /></dd>
+									</div>
+								</xsl:if>
+							</dl>
+						</xsl:when>
+						<xsl:otherwise>
+							<a>
+								<xsl:attribute name="href"><xsl:value-of select="xerxes_native_link_url" /></xsl:attribute>
+								<xsl:value-of select="title_display" />
+							</a>
+						</xsl:otherwise>
+					</xsl:choose>		
+				</li>
+			</xsl:for-each>
+			</ul>
+		</div>
+		
+	</xsl:for-each>
 
 </xsl:template>
 

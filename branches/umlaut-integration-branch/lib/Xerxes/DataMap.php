@@ -163,23 +163,6 @@ class Xerxes_Data_Record extends Xerxes_Framework_DataValue
 	public $tags = array ( );
 }
 
-class Xerxes_User extends Xerxes_Framework_DataValue
-{
-	public $username;
-	public $last_login;
-	public $suspended;
-	public $first_name;
-	public $last_name;
-	public $email_addr;
-	public $usergroups = array ( );
-	
-	function __construct($username = null)
-	{
-		$this->username = $username;
-	}
-
-}
-
 /**
  * Functions for inserting, updating, and deleting data from the database
  *
@@ -912,9 +895,9 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 	
 	public function getDatabases($id = null, $query = null)
 	{
-		
 		$arrDatabases = array ( );
 		$arrResults = array ( );
+		$arrParams = array ( );
 		
 		$strSQL = "SELECT * from xerxes_databases
 			LEFT OUTER JOIN xerxes_database_notes ON xerxes_databases.metalib_id = xerxes_database_notes.database_id
@@ -928,7 +911,6 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		{
 			// databases specified by an array of ids
 
-			$arrParams = array ( );
 			$strSQL .= " WHERE ";
 			
 			for ( $x = 0 ; $x < count( $id ) ; $x ++ )
@@ -943,55 +925,63 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 			}
 			
 			$strSQL .= " ORDER BY xerxes_databases.metalib_id";
-			
-			$arrResults = $this->select( $strSQL, $arrParams );
 		} 
 		elseif ( $id != null && ! is_array( $id ) )
 		{
 			// single database query
 
 			$strSQL .= " WHERE xerxes_databases.metalib_id = :id ";
-			$arrResults = $this->select( $strSQL, array (":id" => $id ) );
+			$arrParams[":id"] = $id;
 		} 
 		elseif ( $query != null )
 		{
-			// query for databases; we match title, descrition, or keywords.
-			
-			// mysql specific REGEXP query
-			
-			// before 1.5.1 release, decide if this should be factored out in favor of the 
-			// ANSI standard version below using LIKE, since they seem to do essentially the 
-			// same job; might also consider searching each term seperately rather than as a 
-			// phrase
-			
-			if ( $this->rdbms == "mysql")
-			{
-				$strSQL .= "WHERE xerxes_databases.title_display REGEXP :query1 OR xerxes_databases.title_full REGEXP :query2 OR xerxes_databases.description REGEXP :query3 OR xerxes_database_keywords.keyword REGEXP :query4 OR xerxes_database_alternate_titles.alt_title REGEXP :query5 ";
-				$searchParam = '[[:<:]]' . $query . '[[:>:]]';
-			}
-			else
-			{
-				$strSQL .= "WHERE xerxes_databases.title_display LIKE :query1 OR xerxes_databases.title_full LIKE :query2 OR xerxes_databases.description LIKE :query3 OR xerxes_database_keywords.keyword LIKE :query4 OR xerxes_database_alternate_titles.alt_title LIKE :query5 ";
-				$searchParam = '%' . $query . '%';
-			}
+			$strSQL .= "WHERE xerxes_databases.title_display LIKE :query1 OR " .
+				" xerxes_databases.title_full LIKE :query2 OR " .
+				" xerxes_databases.description LIKE :query3 OR " .
+				" xerxes_database_keywords.keyword LIKE :query4 OR " .
+				" xerxes_database_alternate_titles.alt_title LIKE :query5 " .
+				" ORDER BY UPPER(title_display) ";
+				
+			$searchParam = '%' . $query . '%';
 
-			$strSQL .= " ORDER BY UPPER(title_display) ";
-			
 			$arrParams[":query1"] = $searchParam;
 			$arrParams[":query2"] = $searchParam;
 			$arrParams[":query3"] = $searchParam;
 			$arrParams[":query4"] = $searchParam;
 			$arrParams[":query5"] = $searchParam;
-			
-			$arrResults = $this->select( $strSQL, $arrParams );
 		} 
 		else
 		{
 			// all databases, sorted alphabetically
-
+			
+			// remove certain database types, if so configured
+			
+			$configDatabaseTypesExclude = $this->registry->getConfig("DATABASES_TYPE_EXCLUDE_AZ", false);
+			
+			if ( $configDatabaseTypesExclude != null )
+			{
+				$arrTypes = explode(",", $configDatabaseTypesExclude);
+				$arrTypeQuery = array();
+				
+				// specify that the type NOT be one of these
+				
+				for ( $q = 0; $q < count($arrTypes); $q++ )
+				{
+					array_push($arrTypeQuery, "xerxes_databases.type != :type$q");
+					$arrParams[":type$q"] = trim($arrTypes[$q]);
+				}
+				
+				// AND 'em but then also catch the case where type is null
+				
+				$strSQL .= " WHERE (" . implode (" AND ", $arrTypeQuery) . ") OR xerxes_databases.type IS NULL ";
+			}
+			
 			$strSQL .= " ORDER BY UPPER(title_display)";
-			$arrResults = $this->select( $strSQL );
 		}
+		
+		// echo $strSQL; exit;
+		
+		$arrResults = $this->select( $strSQL, $arrParams );
 		
 		// read sql and transform to internal data objs.
 		
@@ -1016,7 +1006,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 				}
 				
 				// if the current row's outter join value is not already stored,
-				// then then we've come to a unique value, so add it
+				// then we've come to a unique value, so add it
 
 				$arrColumns = array ("keyword" => "keywords", "usergroup" => "group_restrictions", "language" => "languages", "note" => "notes", "alt_title" => "alternate_titles", "alt_publisher" => "alternate_publishers" );
 				

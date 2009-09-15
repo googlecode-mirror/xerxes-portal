@@ -19,7 +19,6 @@
 		private $configInstitute = "";			// config entry
 		private $configChunk = false;			// config entry
 		private $objSearch = null;				// metasearch object
-		private $arrMissing = array();			// databases assigned to a category but missing from the all db pull
 		
 		public function doExecute()
 		{
@@ -30,7 +29,8 @@
 			// set a higher than normal memory limit to account for 
 			// pulling down large knowledgebases
 			
-			ini_set("memory_limit","50M");
+      		$configMemory = $this->registry->getConfig("HARVEST_MEMORY_LIMIT", false, "500M");
+			ini_set("memory_limit",$configMemory);
 			
 			echo "\n\nMETALIB KNOWLEDGEBASE PULL \n\n";
 			
@@ -113,16 +113,6 @@
 				}
 			
 			echo "done\n";
-			
-			if ( count($this->arrMissing) > 0 )
-			{
-				echo "   The following databases were assigned subjects, but missing from the KB:\n";
-				
-				foreach ($this->arrMissing as $key => $value )
-				{
-					echo "\t $key \n";
-				}
-			}
 			
 			echo "   Synching user saved databases . . . ";
 			
@@ -221,8 +211,8 @@
 						$objData->metalib_id = $objDatabase->nodeValue;
 						
 						// add it to the subcategory object only if the database already
-						// exists in the KB, no reason why this shouldn't be the 
-						// case, but could go wrong
+						// exists in the KB, if not the case, then we've got mismatched
+						// categories and databases from different institutes
 						
 						if ( array_key_exists($objData->metalib_id, $arrDatabases) )
 						{
@@ -230,7 +220,8 @@
 						}
 						else
 						{
-							$this->arrMissing[$objData->metalib_id] = "missing";
+							throw new Exception("Could not find database assigned to category; " . 
+								"make sure config entry ip_address is part of the IP range associated with this Metalib instance");
 						}
 					}
 					

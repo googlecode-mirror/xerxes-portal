@@ -347,7 +347,18 @@
 				
 				// journal
 				
-				$this->strJournal = $this->extractMarcDataField($objXPath, 773, "*");
+				// we do it this way to ensure proper order of the subfields
+				
+				$arrJournal = array();
+				
+				array_push($arrJournal, $this->extractMarcDataField($objXPath, 773, "a"));
+				array_push($arrJournal, $this->extractMarcDataField($objXPath, 773, "t"));
+				array_push($arrJournal, $this->extractMarcDataField($objXPath, 773, "g"));
+				array_push($arrJournal, $this->extractMarcDataField($objXPath, 773, "bcdefhijklmnopqrsuvwxyz1234567890"));
+				
+				$this->strJournal .= implode(" ", $arrJournal);
+				$this->strJournal = trim($this->strJournal);
+				
 				$strJournal = $this->extractMarcDataField($objXPath, 773, "agpt");
 				$this->strJournalTitle = $this->extractMarcDataField($objXPath, 773, "t");
 				$this->strShortTitle = $this->extractMarcDataField($objXPath, 773, "p");
@@ -444,8 +455,11 @@
 				
 				// gale puts issn in 773b
 				
-				$strGaleIssn = $this->extractMarcDataField($objXPath, 773, "b");
-				if ( $strGaleIssn != null ) array_push($arrIssn, $strGaleIssn);
+				if ( strstr($this->strSource,'GALE') )
+				{
+					$strGaleIssn = $this->extractMarcDataField($objXPath, 773, "b");
+					if ( $strGaleIssn != null ) array_push($arrIssn, $strGaleIssn);
+				}
 				
 				// ebsco book chapter
 				
@@ -2499,18 +2513,18 @@
 					$arrRange = explode("-", $field);
 					$strStart = $arrRange[0];
 					$strEnd = $arrRange[1];
-					$strQuery = "//marc:datafield[@tag >= $strStart and @tag < $strEnd]";
+					$strQuery = "//marc:record/marc:datafield[@tag >= $strStart and @tag < $strEnd]";
 				}
 				else
 				{
-					$strQuery = "//marc:datafield[@tag=$field]";
+					$strQuery = "//marc:record/marc:datafield[@tag=$field]";
 				}
 			}
 
 			$arrSubFields = str_split($subfields);
 			
 			$objNodeList = $objXPath->query($strQuery);
-				
+			
 			if ( $objNodeList != null )
 			{
 				foreach ( $objNodeList as $objNode )
@@ -2528,7 +2542,7 @@
 							}
 						}
 					}
-
+					
 					array_push($arrReturn, trim($strSubFieldData));
 				}
 			}

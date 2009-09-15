@@ -12,20 +12,77 @@
 	 * @package Xerxes
 	 */
 
-	class Xerxes_InnovativePatron
+	class Xerxes_InnovativePatron extends Xerxes_Framework_Authenticate 
 	{
-		private $strServer = null;
+		protected $server;
+		protected $user_data;
+		
+		public function __construct($objRequest, $objRegistry)
+		{
+			parent::__construct($objRequest, $objRegistry);
+			
+			$this->server = $this->registry->getConfig( "INNOVATIVE_PATRON_API", true );
+		}
+		
+		public function onCallBack()
+		{
+			$strUsername = $this->request->getProperty( "username" );	// barcode
+			$strPassword = $this->request->getProperty( "password" );	// pin
+			
+			$bolAuth = $this->authenticate( $strUsername, $strPassword );
+			
+			$this->user_data = $this->getUserData($strUsername);
+
+			// print_r($this->user_data); exit;
+			
+			if ( $bolAuth == true )
+			{
+				// make sure user is in the list of approved patron types
+			
+				$configPatronTypes = $this->registry->getConfig( "INNOVATIVE_PATRON_TYPES", false );
+				
+				if ( $configPatronTypes != null )
+				{
+					$arrTypes = explode(",", $configPatronTypes);
+					
+					// make them all integers for consitency
+					
+					for ( $x = 0; $x < count($arrTypes); $x++ )
+					{
+						$arrTypes[$x] = (int) $arrTypes[$x];
+					}
+
+					if ( ! in_array( (int) $this->user_data["P TYPE"], $arrTypes) )
+					{
+						throw new Xerxes_AccessDeniedException("Sorry, our records show you are not authorized to use this service");
+					}
+				}
+				
+				// register the user and stop the flow
+				
+				$this->user->username = $strUsername;
+				
+				$this->mapUserData();
+				
+				$this->register();
+				
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
 		
 		/**
-		* Constructor
-		*
-		* @param string $strServer	server address of parton api, including port number and trailing slash
-		*/
+		 * Innovative_Local class defines this
+		 */
 		
-		public function __construct ( $strServer )
-		{				
-			$this->strServer = $strServer;
+		protected function mapUserData()
+		{
+			
 		}
+		
 		
 		/**
 		* Returns patron data from the API as array
@@ -35,7 +92,7 @@
 		* @exception 				throws exception when iii patron api reports error
 		*/
 		
-		public function getData( $id )
+		protected function getUserData( $id )
 		{
 			// normalize the barcode
 			
@@ -43,7 +100,7 @@
 			
 			// fetch data from the api
 			
-			$url = $this->strServer . "PATRONAPI/$id/dump";
+			$url = $this->server . "PATRONAPI/$id/dump";
 			$arrData = $this->getContent($url);
 			
 			// if something went wrong
@@ -64,7 +121,7 @@
 		* @return bool			true if valid, false if not
 		*/
 		
-		public function authenticate ( $id, $pin )
+		protected function authenticate ( $id, $pin )
 		{
 			// normalize the barcode and pin
 			
@@ -74,7 +131,7 @@
 			// fetch data from the api
 
 			$pin = urlencode($pin);
-			$url = $this->strServer . "PATRONAPI/$id/$pin/pintest";
+			$url = $this->server . "PATRONAPI/$id/$pin/pintest";
 			$arrData = $this->getContent($url);
 			
 			// check pin test for error message, indicating

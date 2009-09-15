@@ -25,7 +25,7 @@ class Xerxes_Command_DatabasesRedirectOneResult extends Xerxes_Command_Databases
 		
 		if ( count( $databases ) == 1 )
 		{
-			$id = $databases[0]->metalib_id;
+			$id = (string) $databases[0]->metalib_id;
 			$url = $this->request->url_for( array ("base" => "databases", "action" => "database", "id" => $id ) );
 			$this->request->setRedirect( $url );
 		}

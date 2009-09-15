@@ -84,6 +84,12 @@
 	<xsl:variable name="text_databases_subject_hint_native_only">Click database title to search individually</xsl:variable>
 	<xsl:variable name="text_databases_subject_hint_restricted">Restricted, click database title to search individually</xsl:variable>
 	
+	<xsl:variable name="text_databases_subject_librarian_address">Office:</xsl:variable>
+	<xsl:variable name="text_databases_subject_librarian_email">Email:</xsl:variable>
+	<xsl:variable name="text_databases_subject_librarian_fax">Fax:</xsl:variable>
+	<xsl:variable name="text_databases_subject_librarian_telephone">Telephone:</xsl:variable>
+
+	
 	<xsl:variable name="text_error_databases_permission">You do not have access to search these databases</xsl:variable>
 	<xsl:variable name="text_error_databases_registered">Only available to registered users.</xsl:variable>
 	<xsl:variable name="text_error_pdo_exception">There was a problem with the database.</xsl:variable>
@@ -296,10 +302,15 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-	
+		
+	<xsl:template name="text_databases_subject_librarian_email_value">
+		<a href="mailto:{library_email}"><xsl:value-of select="library_email" /></a>
+	</xsl:template>
+
 	<xsl:template name="text_collections_add_database_section">add database <xsl:value-of select="title_display" /> to this section</xsl:template>
 	
 	<xsl:template name="text_collections_remove_database">remove database <xsl:value-of select="title_display" /> from section</xsl:template>
+	
 	
 	<!-- 
 		the templates deal with text labels that are in the XML itself.  they largely
@@ -325,6 +336,6 @@
 	<xsl:template name="text_results_sort_options">
 		<xsl:param name="option" />
 		<xsl:value-of select="$option" />
-	</xsl:template>		
+	</xsl:template>
 	
 </xsl:stylesheet>

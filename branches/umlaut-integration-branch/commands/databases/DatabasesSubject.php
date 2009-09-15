@@ -15,11 +15,21 @@ class Xerxes_Command_DatabasesSubject extends Xerxes_Command_Databases
 {
 	public function doExecute()
 	{
-		$objXml = new DOMDOcument( );
+		// main list of subcategories and databases
+		
+		$objXml = new DOMDocument( );
 		$objXml->loadXML( "<category />" );
+		
+		// list of subcategories that should go in the sidebar
+		
+		$objSidebar = new DOMDocument( );
+		$objSidebar->loadXML( "<sidebar />" );
 		
 		$strOld = $this->request->getProperty( "category" );
 		$strSubject = $this->request->getProperty( "subject" );
+		
+		$configSidebar = $this->registry->getConfig("SUBCATEGORIES_SIDEBAR", false);
+		$arrSidebar = explode(",", $configSidebar);
 		
 		// look up home page default subject from config if no subject was specified, and we were 
 		// instructed to look it up with use_categories_quicksearch=true
@@ -68,11 +78,22 @@ class Xerxes_Command_DatabasesSubject extends Xerxes_Command_Databases
 					$objSubCategory->appendChild( $objDatabase );
 				}
 				
-				$objXml->documentElement->appendChild( $objSubCategory );
+				// if marked for the sidebar, put it there
+				
+				if ( in_array($objSubData->name, $arrSidebar) )
+				{
+					$objImport = $objSidebar->importNode($objSubCategory, true);
+					$objSidebar->documentElement->appendChild($objImport);
+				}
+				else
+				{
+					$objXml->documentElement->appendChild( $objSubCategory );
+				}
 			}
 		}
 		
 		$this->request->addDocument( $objXml );
+		$this->request->addDocument( $objSidebar );
 		
 		return 1;
 	}

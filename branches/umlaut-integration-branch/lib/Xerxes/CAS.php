@@ -1,7 +1,7 @@
 <?php
 
 	/**
-	 * Parses a CAS validation response
+	 * CAS authentication
 	 * 
 	 * @author David Walker
 	 * @copyright 2008 California State University
@@ -11,34 +11,71 @@
 	 * @license http://www.gnu.org/licenses/
 	 */
 
-	class Xerxes_CAS
+	class Xerxes_CAS extends Xerxes_Framework_Authenticate 
 	{
-		private $strUsername = "";		// username returned by validation request
-		
 		/**
-		 * Return the extracted username
-		 *
-		 * @return string
+		 * Redirect to the cas login service
 		 */
 		
-		public function getUsername() { return $this->strUsername; }
+		public function onLogin()
+		{
+			$configCasLogin = $this->registry->getConfig( "CAS_LOGIN", true );
 			
+			$strUrl = $configCasLogin . "?service=" . urlencode($this->validate_url);
+			$this->request->setRedirect( $strUrl );
+			
+			return true;
+		}
+		
+		public function onCallBack()
+		{
+			// validate the request
+			
+			$strUsername = $this->isValid();
+			
+			if ($strUsername === false )
+			{
+				throw new Exception("Could not validate user against CAS server");
+			}
+			else
+			{
+				$this->user->username = $strUsername;
+				$this->register();
+			}
+		}
+		
 		/**
 		 * Parses a validation response from a CAS server to see if the returning CAS request is valid
 		 *
 		 * @param string $strResults		xml or plain text response from cas server
-		 * @param string $strVersion		version of the cas response, either '1.0' or '2.0'
 		 * @return bool						true if valid, false otherwise
 		 * @exception 						throws exception if cannot parse response or invalid version
 		 */
 		
-		public function isValid($strResults, $strVersion)
+		private function isValid()
 		{
-			$iVersion = floor((int) $strVersion);
+			// values from the request
 			
-			$bolValid = false;
+			$strTicket = $this->request->getProperty("ticket");
+						
+			// configuration settings
+	
+			$configCasValidate = $this->registry->getConfig("CAS_VALIDATE", true);
+	
+			// figure out which type of response this is based on the service url
 			
-			if ( $iVersion == 1 )
+			$arrURL = explode("/", $configCasValidate);
+			$service = array_pop($arrURL);
+			
+			// now get it!
+				
+			$strUrl = $configCasValidate . "?ticket=" . $strTicket . "&service=" . urlencode($this->validate_url);
+			
+			$strResults = Xerxes_Parser::request( $strUrl );		
+			
+			// validate is plain text
+			
+			if ( $service == "validate" )
 			{
 				$arrMessage = explode("\n", $strResults);
 				
@@ -46,8 +83,7 @@
 				{
 					if ( $arrMessage[0] == "yes")
 					{
-						$bolValid = true;
-						$this->strUsername = $arrMessage[1];
+						return $arrMessage[1];
 					}
 				}
 				else
@@ -55,9 +91,9 @@
 					throw new Exception("Could not parse CAS validation response.");
 				}
 			}	
-			elseif ( $iVersion == 2 || $iVersion == 3)
+			elseif ( $service == "serviceValidate" || $service == "proxyValidate")
 			{
-				// check for username, else there was an error
+				// these are XML based
 				
 				$objXml = new DOMDocument();
 				$objXml->loadXML($strResults);
@@ -71,9 +107,7 @@
 				{
 					if ( $objUser->nodeValue != "" )
 					{
-						$bolValid = true;
-					
-						$this->strUsername = $objUser->nodeValue;
+						return $objUser->nodeValue;
 					}
 					else
 					{
@@ -99,7 +133,9 @@
 				throw new Exception("Unsupported CAS version.");
 			}
 			
-			return $bolValid;
+			// if we got this far, the request was invalid
+			
+			return false;
 		}
 
 	}

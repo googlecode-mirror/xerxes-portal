@@ -26,6 +26,7 @@
 		
 		<global>
 			<command directory="helper" namespace="Xerxes">HelperNavbar</command>
+			<command directory="authenticate" namespace="Xerxes">AuthenticateCheck</command>
 		</global>
 		
 		<!-- <formats> allows you to set an http header for the response; this is useful if the response needs to be something
@@ -222,12 +223,13 @@
 				<command>AuthenticateLogout</command>
 				<view>xsl/authenticate_logout.xsl</view>
 			</action>
+			<!-- depricated as of 1.5.1 for login actin with authentication_source=guest -->
 			<action name="guest">
 				<command>AuthenticateGuest</command>
 				<view />
 			</action>
-			<action name="cas-validate">
-				<command>AuthenticateCasValidate</command>
+			<action name="validate">
+				<command>AuthenticateValidate</command>
 				<view />
 			</action>
 		</section>
@@ -510,81 +512,6 @@
 				<view>xsl/metasearch_record.xsl</view>
 			</action>
 		</section>
-    
-    <!-- umlaut integration support -->
-    <section name="umlaut" directory="umlaut" namespace="Xerxes">
-      <!-- proxy to umlaut_base as configured, to allow cross-site js
-           and such -->
-      <action name="proxy">
-        <command>UmlautProxy</command>
-      </action>
-    </section>
-		
-		<!-- mango is experimental in 1.5 -->
 
-		<section name="books" directory="mango" namespace="Mango" documentElement="metasearch" restricted="true">
-			<include>lib/Mango/</include>
-			<common_xslt>xsl/mango/mango.xsl</common_xslt>
-			<action name="home">
-				<view>xsl/mango/mango_home.xsl</view>
-			</action>
-			<action name="advanced">
-				<request name="advancedfull">true</request>
-				<view>xsl/mango/mango_home.xsl</view>
-			</action>
-			<action name="lookup">
-				<command>MangoLookup</command>
-				<view>xsl/mango/mango_lookup.xsl</view>
-			</action>
-			<action name="results">
-				<pathParamMap>
-					<mapEntry pathIndex="2" property="source"/>
-					<mapEntry pathIndex="3" property="query"/>
-				</pathParamMap>
-				<command>MangoResults</command>
-				<command>MangoLookupInject</command>
-				<command namespace="Xerxes" directory="metasearch">MetasearchCheckSaved</command>
-				<command>MangoPaging</command>
-				<command namespace="Xerxes" directory="folder">FolderTags</command>
-				<view>xsl/mango/mango_results.xsl</view>
-			</action>
-			<action name="ill">
-				<command>MangoILL</command>
-				<view />
-			</action>
-			<action name="ill-recommend">
-				<command>MangoResults</command>
-				<command>MangoRecommend</command>
-				<command>MangoLookupInject</command>
-				<view>xsl/mango/mango_recommend.xsl</view>
-			</action>
-			<action name="missing">
-				<command>MangoMissing</command>
-				<view format="rss">xsl/mango/mango_missing.xsl</view>
-			</action>
-			<action name="record">
-				<pathParamMap>
-					<mapEntry pathIndex="2" property="oclc"/>
-				</pathParamMap>
-				<command>MangoResults</command>
-				<command>MangoAmazon</command>
-				<command>MangoRecommend</command>
-				<command>MangoLookupInject</command>
-				<command>MangoHoldings</command>
-				<command namespace="Xerxes" directory="metasearch">MetasearchCheckSaved</command>
-				<view>xsl/mango/mango_record.xsl</view>
-			</action>
-			<action name="save-delete">
-				<command>MangoSaveDelete</command>
-				<view>xsl/metasearch_save-delete.xsl</view>
-				<view format="json">xsl/metasearch_save-delete_ajax.xsl</view>
-			</action>
-			<action name="viewer">
-				<pathParamMap>
-					<mapEntry pathIndex="2" property="id"/>
-				</pathParamMap>
-				<view>xsl/mango/mango_viewer.xsl</view>
-			</action>
-		</section>
 	</commands>
 </xerxes>

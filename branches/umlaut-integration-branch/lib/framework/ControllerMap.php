@@ -17,7 +17,7 @@
 	{
 		private $file = "config/actions.xml";	// actions configuration file
 		
-		private $xml = null;				// simplexml object containing instructions for the actions
+		public $xml = null;					// simplexml object containing instructions for the actions
 		private $path_map = null;			// xerxes_framework_pathmap object.
 		private static $instance;			// singleton pattern
 	
@@ -33,6 +33,7 @@
 		private $strViewType = "";			// the folder the file lives in, important if it is 'xsl'
 		private $strViewFile = "";			// name of the file to use in view
 		private $arrViewInclude = array();	// a common file to be included among views (other than includes.xsl)
+		private $view_folder = "lib";
 		
 		private function __construct() { }
 		
@@ -59,10 +60,8 @@
 		 */
 		
 		public function init()
-		{
-			// after the initial parsing of the xml file, we'll save
-			// this object in session, so make sure we only parse the
-			// file if the xml is gone
+		{	
+			// don't parse it twice
 			
 			if ( ! $this->xml instanceof SimpleXMLElement )
 			{
@@ -75,9 +74,55 @@
 					throw new Exception("could not find configuration file");
 				}
 			}
+			
+			// add module action files
+			
+			$objRegistry = Xerxes_Framework_Registry::getInstance();
+			
+			$modules = $objRegistry->getModules();
+
+			if ( count($modules) > 0 )
+			{
+				foreach ( $modules as $module )
+				{
+					$action_file = "config/$module/actions.xml";
+					
+					if ( file_exists($action_file) )
+					{
+						$module_actions = simplexml_load_file($action_file);
+						$this->addSections($this->xml, $module_actions );
+					}
+					else
+					{
+						throw new Exception("could not find module configuration file '$action_file'");
+					}
+				}
+			}
+		}
+		
+		/**
+		 * Adds sections from a secondary/module actions.xml file into the master one
+		 */
+		
+		private function addSections( SimpleXMLElement $parent, SimpleXMLElement $actions )
+		{
+			$master = dom_import_simplexml($parent);
+			
+			$commands = $master->getElementsByTagName("commands")->item(0);
+			
+			if ( $commands == null )
+			{
+				throw  new Exception("could not find commands insertion node in actions.xml");
+			}
+			
+			foreach ( $actions->commands->section as $section )
+			{
+				$new = dom_import_simplexml($section);
+				$import = $master->ownerDocument->importNode($new, true);
+				$commands->appendChild($import);
+			}
 		}
 
-		
 		/**
 		 * Process the action in the incoming request and parse the xml file to determine
 		 * the necessary includes, command classes, and view to call. 
@@ -112,7 +157,7 @@
 			{
 				foreach ( $global_commands as $global_command )
 				{
-					$arrGlobalCommand = array((string) $global_command["directory"], (string) $global_command["namespace"], (string) $global_command);
+					$arrGlobalCommand = array((string) $global_command["directory"], (string) $global_command["namespace"], (string) $global_command, null);
 						
 					$this->addCommand($arrGlobalCommand);
 				}
@@ -141,7 +186,7 @@
 			
 			// make sure a section is defined
 			
-			$sections = $this->xml->xpath("commands/section[@name='$strSection']");
+			$sections = $this->xml->xpath("//commands/section[@name='$strSection']");
 			
 			if ( $sections == false )
 			{
@@ -159,9 +204,11 @@
 				$strNamespace = (string) $section["namespace"];
 				$strRestricted = (string) $section["restricted"];
 				$strLogin = (string) $section["login"];
+				$strModule = (string) $section["module"];
+				
 				
 				// an xslt file that is shared among the views in this section, other
-				// than includes.xsl
+				// than includes.xsl; important for modules
 				
 				foreach ( $section->common_xslt as $common_xslt )
 				{
@@ -224,7 +271,7 @@
 						$strDefaultCommand .= strtoupper(substr($strActionPart,0,1) ) . substr($strActionPart,1);
 					}
 					
-					$arrCommand = array($strDirectory, $strNamespace, $strDefaultCommand);
+					$arrCommand = array($strDirectory, $strNamespace, $strDefaultCommand, $strModule);
 					$this->addCommand($arrCommand);
 					
 					// view is similar but remains lower-case, and flip any dashes to underscore
@@ -274,13 +321,25 @@
 					{
 						$strLocalCommandDirectory = $strCommandDirectory;
 						$strLocalCommandNamespace = $strCommandNamespace;
+						$strLocalModule = $strModule;
 						
-						if ( $command["directory"] != null ) $strLocalCommandDirectory = (string) $command["directory"];
+						if ( $command["directory"] != null )
+						{
+							$strLocalCommandDirectory = (string) $command["directory"];
+							
+							// this is not part of the module
+							
+							if ( $strLocalCommandDirectory != $strCommandDirectory )
+							{
+								$strLocalModule = null;
+							}
+						}
+						
 						if ( $command["namespace"] != null ) $strLocalCommandNamespace = (string) $command["namespace"];
 						
 						// add it to the list of commands
 						
-						$arrCommand = array($strLocalCommandDirectory, $strLocalCommandNamespace, (string) $command);
+						$arrCommand = array($strLocalCommandDirectory, $strLocalCommandNamespace, (string) $command, $strLocalModule);
 						
 						$this->addCommand($arrCommand);
 					}
@@ -316,6 +375,26 @@
 								$this->strViewFile = $view;
 								$this->strViewType = $view["type"];
 							}
+						}
+					}
+					
+					// special view logic for modules
+										
+					if ( $strModule != "" )
+					{
+						// if the name of the module is in the path of the view, 
+						// then the module is specifying its own view file
+						
+						if ( strpos($this->strViewFile, "xsl/$strModule") === 0 )
+						{
+							$this->view_folder = "modules/$strDirectory/";
+						}
+						else
+						{
+							// the module has specified a view in the CORE lib/xsl,
+							// so blank any common xsl files!
+							
+							$this->arrViewInclude = array();
 						}
 					}
 				}
@@ -469,6 +548,17 @@
 		{
 			return $this->strViewFile;
 		}
+
+		/**
+		 * Get the parent folder of views, either the main 'lib' or a module
+		 *
+		 * @return string
+		 */		
+		
+		public function getViewFolder()
+		{
+			return $this->view_folder;
+		}
 		
 		/**
 		 * Get a list of directories or files that should be included for the request
@@ -480,6 +570,7 @@
 		{
 			return array_unique($this->arrIncludes);
 		}
+		
 		
 		/**
 		 * Add the command to the command array
@@ -671,11 +762,11 @@
 					 
 			// section may supply a default param-map for the section. 
 
-			$section_paths = $this->actions_xml->xpath("commands/section[@name='$section']/pathParamMap");
+			$section_paths = $this->actions_xml->xpath("//commands/section[@name='$section']/pathParamMap");
 			
 			// action may provide a param-map as well
 			
-			$action_paths = $this->actions_xml->xpath("commands/section[@name='$section']/action[@name='$action']/pathParamMap");
+			$action_paths = $this->actions_xml->xpath("//commands/section[@name='$section']/action[@name='$action']/pathParamMap");
 			
 			// assign the default section map if present
 			
@@ -705,15 +796,16 @@
 					$iIndex = (integer) $map_entry['pathIndex'];
 					$strProperty = (string) $map_entry['property'];
 					
-          //Remove conflicting session declerations
-          $oldProperty = $this->propertyForIndex($section, $action, $iIndex);
-          if ($oldProperty)     
-            unset($this->mapsByProperty[$key_name][$oldProperty]);
-          $oldIndex = $this->indexForProperty($section, $action, $strProperty);
-          if ($oldIndex)
-            unset($this->mapsByIndex[$key_name][$oldIndex]);
-          
-          //And add new ones
+					// remove conflicting session declerations
+					
+					$oldProperty = $this->propertyForIndex($section, $action, $iIndex);
+					
+					if ($oldProperty) unset($this->mapsByProperty[$key_name][$oldProperty]);
+					$oldIndex = $this->indexForProperty($section, $action, $strProperty);
+					if ($oldIndex) unset($this->mapsByIndex[$key_name][$oldIndex]);
+					
+					// and add new ones
+					
 					$this->mapsByProperty[$key_name][$strProperty] = $iIndex;
 					$this->mapsByIndex[$key_name][$iIndex] = $strProperty;
 				}
