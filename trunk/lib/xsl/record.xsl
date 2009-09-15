@@ -24,7 +24,15 @@
 <xsl:template name="sidebar">
 	<xsl:call-template name="account_sidebar" />
 	
+  <div id="similar_items" style="display:none;" class="box umlaut_content" />
+  
+  <div id="see_also" style="display:none;" class="box umlaut_content" />
+
+  
+  
+  
 	<div id="citation1" class="box">
+    
 	
 		<xsl:for-each select="//records/record/xerxes_record">
 		
@@ -248,13 +256,17 @@
 						
 			<div id="recordFullText" class="raisedBox recordActions">
 				
+      
 				<!-- Full-Text -->
+
+        <div id="umlaut_fulltext" class="umlaut_content" style="display:none;">          
+        </div>
 				
 				<xsl:variable name="database_code" select="metalib_id"/>
 				
 				<xsl:if test="full_text_bool != ''">
 					<xsl:call-template name="full_text_links">
-						<xsl:with-param name="class">recordFullTextOption</xsl:with-param>
+						<xsl:with-param name="class">recordFullTextOption fullTextLink</xsl:with-param>
 					</xsl:call-template>
 				</xsl:if>
 				
@@ -284,7 +296,7 @@
 					<!-- open url -->
 					
 					<xsl:if test="$link_resolver_allowed">
-						<a href="{../url_open}" class="recordAction"	target="{$link_target}" >
+						<a href="{../url_open}" class="recordAction linkResolverLink"	target="{$link_target}" >
 							<img src="{$base_url}/images/sfx.gif" alt="" class="miniIcon"/>
 							<xsl:text> </xsl:text>
 							<xsl:copy-of select="$text_link_resolver_check" />
@@ -305,6 +317,8 @@
 					</xsl:if>
 
 				</div>
+        
+
 				
 				<!-- save option -->
 				
@@ -362,7 +376,22 @@
 						</div>
 					</xsl:if>
 				</xsl:if>
+        
+        
 			</div>
+
+
+      <div id="library_copies" class="umlaut_content" style="display:none;">
+      </div>
+      
+      <div id="document_delivery" class="umlaut_content" style="display:none;"></div>
+        
+      <div id="search_inside" class="umlaut_content" style="display:none;">        
+      </div>
+        
+      <div id="limited_preview" class="umlaut_content" style="display:none">
+      </div>
+
 			
 			<!-- Abstract -->
 			

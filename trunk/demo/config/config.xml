@@ -113,6 +113,10 @@
 		
 		<config name="alternate_fulltext_harvest_address"></config>
 		
+    <!-- if you have an umlaut resolver, and you want to enable Umlaut functionalities in Xerxes, fill this out with the Umlaut 'true' base, without the /resolve, no trailing slash. 
+    eg http://findit.library.jhu.edu -->
+    <config name="umlaut_base" pass="true"></config>
+    
 		<!-- the sid that will be passed to the link resolver, xerxes will also append the name 
 			of the database to the sid -->
 		

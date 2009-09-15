@@ -1015,7 +1015,28 @@
 		<!-- add behaviors to edit collection dialog, currently just delete confirm -->
 		<script src="{$base_include}/javascript/collections.js" language="javascript" type ="text/javascript"></script>
 	
-
+		<!-- umlaut content on record detail page, when so configured -->
+		<xsl:if test="//config/umlaut_base and (( request/base='metasearch' and request/action = 'record' ) or (request/base='folder' and request/action = 'full'))">
+          <!-- only if this database does NOT have openurl link generation
+               suppressed. If it does, we can do nothing. This duplicates
+               code in records.xsl, sorry. -->
+      <xsl:variable name="db_metalib_id" select="//records/record[1]/xerxes_record/metalib_id" />
+      <xsl:variable name="link_resolver_allowed" select="not(//database_links/database[@metalib_id = $db_metalib_id]/sfx_suppress) or //database_links/database[@metalib_id = $db_metalib_id]/sfx_suppress != '1'" />
+			
+			<xsl:if test="$link_resolver_allowed">
+        <!-- have umlaut set up up functions for js magic -->
+        <script type="text/javascript" src="{//config/umlaut_base}/javascripts/embed/umlaut-embed-func.js"></script>
+        
+        <!-- Now call our script that will call umlaut magic with local
+             xerxes display logic. First need to set a couple of dynamically
+             generated parameters in js global vars, so xerxes js can get it.-->      			
+        <script language="javascript" type="text/javascript">
+          openurl_kev_co = '<xsl:value-of select="//records/record[1]/openurl_kev_co"/>'; 
+          umlaut_base = '<xsl:value-of select="//config/umlaut_base"/>';
+        </script>
+        <script language="javascript" type="text/javascript" src="{$base_include}/javascript/umlaut_record_detail.js"/>
+      </xsl:if>
+		</xsl:if>
 		
 	</xsl:if>
   	

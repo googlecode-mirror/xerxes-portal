@@ -15,9 +15,10 @@ class Xerxes_Command_ChooseCategorySkip extends Xerxes_Command_Collections
 	{
 		$strUsername = $this->request->getProperty( "username" );
     if (empty($strUsername)) {
-      $strUsername = $this->request->getSession("username");
+      //default to logged in user
+      $strUsername= $this->request->getSession( "username" );
     }
-    
+		
 		$objData = new Xerxes_DataMap( );
 		
 		$existingCategoryNames = $this->request->getData( '/*/userCategories/category/normalized', null, 'ARRAY' );
@@ -55,6 +56,7 @@ class Xerxes_Command_ChooseCategorySkip extends Xerxes_Command_Collections
 				"return" => $this->request->getProperty( "return" ) 
 				), true ); // force full url for redirect 
 				
+      
 			$this->request->setRedirect( $fixedUrl );
 		}
 		
