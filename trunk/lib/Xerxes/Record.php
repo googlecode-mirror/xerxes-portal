@@ -324,7 +324,13 @@
 				
 				// notes
 				
-				$this->strTOC = $this->extractMarcDataField($objXPath, 505, "agrt");				
+				$arrContentNotes = $this->extractMarcArray($objXPath, 505, "agrt");
+				
+				foreach ( $arrContentNotes as $note )
+				{
+					$this->strTOC .= $note;
+				}
+				
 				$arrAbstract = $this->extractMarcArray($objXPath, 520, "a");
 				$strLanguageNote = $this->extractMarcDataField($objXPath, 546, "a");
 				
