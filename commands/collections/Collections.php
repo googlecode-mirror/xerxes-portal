@@ -13,7 +13,7 @@ abstract class Xerxes_Command_Collections extends Xerxes_Framework_Command
 		
 		if ( $return )
 		{
-			$url = "http://" . $this->request->getServer( 'SERVER_NAME' ) . $this->request->getProperty( "return" );
+			$url = $this->registry->getConfig( "SERVER_URL" ) . $this->request->getProperty( "return" );
 		} 
 		elseif ( $arrDefaultUrl )
 		{
