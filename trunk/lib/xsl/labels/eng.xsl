@@ -52,7 +52,8 @@
 	<xsl:variable name="text_database_go_to_database">Go to this database!</xsl:variable>
 	<xsl:variable name="text_database_link">Link:</xsl:variable>
 	<xsl:variable name="text_database_publisher">Publisher:</xsl:variable>
-	<xsl:variable name="text_database_save_database">Save database</xsl:variable>	
+	<xsl:variable name="text_database_save_database">Save database</xsl:variable>
+	<xsl:variable name="text_database_search_hints">Search Hints:</xsl:variable>
 	
 	<xsl:variable name="text_databases_access_available">Only available to </xsl:variable>
 	<xsl:variable name="text_databases_access_group_and">and</xsl:variable>

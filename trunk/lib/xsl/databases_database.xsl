@@ -146,6 +146,14 @@
 					<dd><xsl:value-of select="publisher" /></dd>
 				</div>
 			</xsl:if>
+			
+			<xsl:if test="search_hints and ($show_db_detail_search = 'true' and searchable = '1')">
+				<div>
+				<dt><xsl:copy-of select="$text_database_search_hints" /></dt>
+				<dd><xsl:value-of select="search_hints" /></dd>
+				</div>
+			</xsl:if>
+
 		</dl>
 		
 	</xsl:for-each>
