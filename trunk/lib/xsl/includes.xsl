@@ -97,16 +97,7 @@
 		</xsl:choose>
 	</xsl:variable>
 	
-	<xsl:variable name="base_include">
-		<xsl:choose>
-			<xsl:when test="//request/server/https and //request/server/https != 'off'">
-				<xsl:text>https://</xsl:text><xsl:value-of select="substring-after($base_url, 'http://')" />
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:value-of select="$base_url" />
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:variable>
+	<xsl:variable name="base_include" select="$base_url" />
 		
 	<xsl:variable name="app_mini_icon_url"><xsl:value-of select="$base_url" />/images/famfamfam/page_find.png</xsl:variable>
 	

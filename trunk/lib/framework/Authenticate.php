@@ -22,11 +22,23 @@ abstract class Xerxes_Framework_Authenticate
 		$this->return = $this->request->getProperty( "return" );
 		
 		$base = $this->registry->getConfig( "BASE_URL", true);
+		$server = $this->registry->getConfig( "SERVER_URL", true);
+		
+		// if no return supplied, then send them home!
 		
 		if ( $this->return == "" )
 		{
 			$this->return = $base;
 		}
+		else
+		{
+			$this->return = $server . $this->return;
+		}
+
+		// we always send the user back on http: since shib and possibly other schemes
+		// will drop the user back in xerxes on https:, which is weird
+		
+		$this->return = str_replace("https://", "http://", $this->return);		
 		
 		// we're explicitly _not_ using pretty-url here because some CAS servers might only
 		// be set-up with a single URL wildcard, while some other funky auth schemes get 

@@ -17,7 +17,10 @@ class Xerxes_Command_AuthenticateLogin extends Xerxes_Command_Authenticate
 
 		if ( $configHttps == true && $this->request->getServer( "HTTPS" ) == null )
 		{
-			$this->request->setRedirect( "https://" . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'] );
+			$web = $this->registry->getConfig( "SERVER_URL" );
+			$web = str_replace("http://", "https://", $web);
+			
+			$this->request->setRedirect( $web . $_SERVER['REQUEST_URI'] );
 			return 1;
 		}
 		

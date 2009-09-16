@@ -140,14 +140,21 @@ class Xerxes_Framework_FrontController
 			    $port = ":" . $port;
 			}
 			
-			$web = "http://" . $this_server_name . $port . $base_path;			
+			$protocol = "http://";
 			
+			if ( $objRequest->getServer("HTTPS") )
+			{
+				$protocol = "https://";
+			}
+			
+			$web = $protocol . $this_server_name . $port;			
 			
 			// register these values
-
+			
+			$objRegistry->setConfig( "SERVER_URL", $web );
 			$objRegistry->setConfig( "PATH_PARENT_DIRECTORY", $path_to_parent );
 			$objRegistry->setConfig( "APP_DIRECTORY", $working_dir );
-			$objRegistry->setConfig( "BASE_URL", $web, true );
+			$objRegistry->setConfig( "BASE_URL", $web . $base_path , true );
 			
 
 			####################
