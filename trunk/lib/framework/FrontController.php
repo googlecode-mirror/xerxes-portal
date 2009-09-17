@@ -112,20 +112,7 @@ class Xerxes_Framework_FrontController
 			// web path for proper display of a (friendly) error page 
 			
 			$base_path = $objRegistry->getConfig( 'BASE_WEB_PATH', false, "" );
-			
-			$this_server_name = "";
-			
-			// check to see if xerxes is running behind a reverse proxy and set
-			// the web path accordingly
-			
-			if ( $objRequest->getServer( 'HTTP_X_FORWARDED_HOST' ) != null )
-			{
-				$this_server_name = $objRequest->getServer( 'HTTP_X_FORWARDED_HOST' );
-			}
-			else
-			{
-				$this_server_name = $objRequest->getServer( 'SERVER_NAME' );
-			}
+			$this_server_name = $objRequest->getServer( 'SERVER_NAME' );
 			
 			// check for a non-standard port
 						

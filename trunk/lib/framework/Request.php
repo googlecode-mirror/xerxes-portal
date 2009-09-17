@@ -96,10 +96,26 @@ class Xerxes_Framework_Request
 			}
 		}
 		
-		### iis fixes
-		
 		if ( isset($_SERVER) )
 		{
+			### reverse proxy
+			
+			// check to see if xerxes is running behind a reverse proxy and swap
+			// host and remote ip here with their http_x_forwarded counterparts
+			
+			if ( array_key_exists('HTTP_X_FORWARDED_HOST', $_SERVER) )
+			{
+				$_SERVER['SERVER_NAME'] = $_SERVER['HTTP_X_FORWARDED_HOST'];
+			}
+			
+			if ( array_key_exists('HTTP_X_FORWARDED_FOR', $_SERVER) )
+			{
+				$arrIP = explode(",", $_SERVER['HTTP_X_FORWARDED_FOR']);
+				$_SERVER['REMOTE_ADDR'] = trim(array_pop($arrIP));
+			}
+			
+			### iis fixes
+			
 			// to make this consistent with apache
 			
 			if ( array_key_exists('HTTPS', $_SERVER) )
@@ -110,7 +126,7 @@ class Xerxes_Framework_Request
 				}
 			}
 			
-			// since it doesn't hold value for request_uri
+			// since iis doesn't hold value for request_uri
 	
 			if ( ! isset( $_SERVER['REQUEST_URI'] ) )
 			{
