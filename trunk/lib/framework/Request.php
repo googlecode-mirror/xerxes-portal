@@ -98,22 +98,6 @@ class Xerxes_Framework_Request
 		
 		if ( isset($_SERVER) )
 		{
-			### reverse proxy
-			
-			// check to see if xerxes is running behind a reverse proxy and swap
-			// host and remote ip here with their http_x_forwarded counterparts
-			
-			if ( array_key_exists('HTTP_X_FORWARDED_HOST', $_SERVER) )
-			{
-				$_SERVER['SERVER_NAME'] = $_SERVER['HTTP_X_FORWARDED_HOST'];
-			}
-			
-			if ( array_key_exists('HTTP_X_FORWARDED_FOR', $_SERVER) )
-			{
-				$arrIP = explode(",", $_SERVER['HTTP_X_FORWARDED_FOR']);
-				$_SERVER['REMOTE_ADDR'] = trim(array_pop($arrIP));
-			}
-			
 			### iis fixes
 			
 			// to make this consistent with apache
@@ -357,6 +341,11 @@ class Xerxes_Framework_Request
 		{
 			return null;
 		}
+	}
+	
+	public function setServer($key, $value)
+	{
+		$_SERVER[$key] = $value;
 	}
 	
 	/**
