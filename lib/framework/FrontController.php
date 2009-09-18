@@ -71,6 +71,8 @@ class Xerxes_Framework_FrontController
 		$objPage = new Xerxes_Framework_Page($objRequest, $objRegistry); // assists with basic paging/navigation elements for the view
 		$objError = new Xerxes_Framework_Error( ); // functions for special logging or handling of errors
 		
+		// print_r($_REQUEST); print_r($objRequest->getAllProperties()); exit;
+		
 		// we'll put the remaining code in a try-catch block in order to show friendly error page
 		// for any uncaught exceptions
 		
@@ -98,6 +100,32 @@ class Xerxes_Framework_FrontController
 			#     SET PATHS    #
 			####################
 
+			### reverse proxy
+			
+			// check to see if xerxes is running behind a reverse proxy and swap
+			// host and remote ip here with their http_x_forwarded counterparts;
+			// but only if configured for this, since client can spoof the header 
+			// if xerxes is not, in fact, behind a reverse proxy
+			
+			if ( $objRegistry->getConfig("REVERSE_PROXY", false, false ) == true )
+			{
+				$forward_host = $objRequest->getServer('HTTP_X_FORWARDED_HOST');
+				$forward_address = $objRequest->getServer('HTTP_X_FORWARDED_FOR');
+				
+				if ( $forward_host != "" )
+				{
+					$objRequest->setServer('SERVER_NAME', $forward_host);
+				}
+				
+				// last ip address is the user's
+				
+				if ( $forward_address != "" )
+				{
+					$arrIP = explode(",", $forward_address);
+					$objRequest->setServer('REMOTE_ADDR', trim(array_pop($arrIP)));
+				}		
+			}
+			
 			// the working directory is the instance, so any relative paths will
 			// be executed in relation to the root directory of the instance
 						
@@ -159,6 +187,9 @@ class Xerxes_Framework_FrontController
 			####################
 			#  ACCESS CONTROL  #
 			####################
+			
+
+			
 
 			// if this part of the application is restricted to a local ip range, or requires a named login, then the
 			// Restrict class will check the user's ip address or if they have logged in; failure stops the flow 
