@@ -116,11 +116,8 @@ class Xerxes_Framework_Error
 				$protocol = "https://";
 			}
 			
-			$web = $protocol . $this_server_name . $port;	 $base_path;
+			$web = $protocol . $this_server_name . $port . $base_path;
 			
-			
-			
-						
 			$objBaseURL = $objError->createElement( "base_url", $web );
 			$objError->documentElement->appendChild( $objBaseURL );
 			
