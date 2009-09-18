@@ -87,7 +87,7 @@
 		</div>
 		
 		<dl>
-			<div>
+			<div class="databaseLink">
 			<dt><xsl:copy-of select="$text_database_link" /></dt>
 			<dd>		
 				<a>
@@ -97,7 +97,7 @@
 			</dd>
 			</div>
 			
-			<div>
+			<div class="databaseAvailability">
 			<dt><xsl:copy-of select="$text_database_availability" /></dt>
 			<dd>
 				<xsl:choose>
@@ -115,14 +115,14 @@
 			</div>
 			
 			<xsl:if test="coverage">
-				<div>
+				<div class="databaseCoverage">
 				<dt><xsl:copy-of select="$text_database_coverage" /></dt>
 				<dd><xsl:value-of select="coverage" /></dd>
 				</div>
 			</xsl:if>
 			
 			<xsl:if test="link_guide">
-				<div>
+				<div class="databaseGuide">
 				<dt><xsl:copy-of select="$text_database_guide" /></dt>
 				<dd>
 					<a>
@@ -134,21 +134,21 @@
 			</xsl:if>
 			
 			<xsl:if test="creator">
-				<div>
+				<div  class="databaseCreator">
 					<dt><xsl:copy-of select="$text_database_creator" />:</dt>
 					<dd><xsl:value-of select="creator" /></dd>
 				</div>
 			</xsl:if>
 			
 			<xsl:if test="publisher">
-				<div>
+				<div class="databasePublisher">
 					<dt><xsl:copy-of select="$text_database_publisher" /></dt>
 					<dd><xsl:value-of select="publisher" /></dd>
 				</div>
 			</xsl:if>
 			
 			<xsl:if test="search_hints and ($show_db_detail_search = 'true' and searchable = '1')">
-				<div>
+				<div class="databaseSearchHints">
 				<dt><xsl:copy-of select="$text_database_search_hints" /></dt>
 				<dd><xsl:value-of select="search_hints" /></dd>
 				</div>
