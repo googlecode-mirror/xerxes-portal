@@ -32,7 +32,10 @@ abstract class Xerxes_Framework_Authenticate
 		}
 		else
 		{
-			$this->return = $server . $this->return;
+			if ( ! strstr($this->return, $server) )
+			{
+				$this->return = $server . $this->return;
+			}
 		}
 
 		// we always send the user back on http: since shib and possibly other schemes
