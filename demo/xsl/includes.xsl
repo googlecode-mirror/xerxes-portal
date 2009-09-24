@@ -80,4 +80,8 @@
 	
 </xsl:template>
 
+  <!-- If using the Umlaut feature, you want to set this to your branded
+       link resolver name. -->
+  <!-- <xsl:variable name="text_link_resolver_name">Link Resolver</xsl:variable> -->
+
 </xsl:stylesheet>

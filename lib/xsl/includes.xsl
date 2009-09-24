@@ -1023,7 +1023,14 @@
              generated parameters in js global vars, so xerxes js can get it.-->      			
         <script language="javascript" type="text/javascript">
           openurl_kev_co = '<xsl:value-of select="//records/record[1]/openurl_kev_co"/>'; 
-          umlaut_base = '<xsl:value-of select="//config/umlaut_base"/>';
+          umlaut_base = '<xsl:value-of select="//config/umlaut_base"/>';          
+          
+          if (typeof(jsDisplayConstants) == "undefined" ) {
+             jsDisplayConstants = new Array(); 
+          }
+          jsDisplayConstants['link_resolver_name'] = '<xsl:copy-of select="$text_link_resolver_name"/>';
+          jsDisplayConstants['link_resolver_load_message'] = '<xsl:copy-of select="$text_link_resolver_load_msg"/>';
+          jsDisplayConstants['link_resolver_direct_link_prefix'] = '<xsl:copy-of select="$text_link_resolver_direct_link_prefix"/>';
         </script>
         <script language="javascript" type="text/javascript" src="{$base_include}/javascript/umlaut_record_detail.js"/>
       </xsl:if>

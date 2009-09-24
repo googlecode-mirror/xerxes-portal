@@ -159,6 +159,9 @@
 	<xsl:variable name="text_link_original_record">Original record</xsl:variable>
 	<xsl:variable name="text_link_resolver_available">Full text available</xsl:variable>
 	<xsl:variable name="text_link_resolver_check">Check for availability</xsl:variable>
+  <xsl:variable name="text_link_resolver_name">Link Resolver</xsl:variable>
+  <xsl:variable name="text_link_resolver_load_msg">Loading content from</xsl:variable>
+  <xsl:variable name="text_link_resolver_direct_link_prefix">Full-Text Available: </xsl:variable>
 
 	<xsl:variable name="text_metasearch_hits_error">Sorry, we're having technical difficulties right now.</xsl:variable>
 	<xsl:variable name="text_metasearch_hits_error_explain">
@@ -285,6 +288,7 @@
 	<xsl:variable name="text_snippet_show_searchbox">Show search box?</xsl:variable>
 	<xsl:variable name="text_snippet_show_section">Show specific section?</xsl:variable>	
 	<xsl:variable name="text_snippet_show_title">Show title?</xsl:variable>
+  
 
 	<xsl:template name="text_number_to_words">
 		<xsl:param name="number" />
