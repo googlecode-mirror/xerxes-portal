@@ -72,11 +72,6 @@ class Xerxes_Record_DocumentTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals( $record->getTitle(true), "Programming Web Services with XML-RPC");
 		$this->assertEquals( $record->getPrimaryAuthor(), "Simon St. Laurant");
 		$this->assertEquals( $record->getControlNumber(), "47278976");
-		
-		$objXml = new DOMDocument();
-		$objXml->load($this->dir . "/data/xerxes-worldcat-1.xml");
-		
-		$record->toXML()->save($this->dir . "/data/new.xml");
 	}
 	
 	/**
