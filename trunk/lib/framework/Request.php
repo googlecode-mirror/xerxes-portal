@@ -702,23 +702,6 @@ class Xerxes_Framework_Request
 	{
 		return Xerxes_Framework_Restrict::isAuthenticatedUser( $this );
 	}
-  
-  /**
-   *  Extract the client IP address from relevant headers please.
-   *  Centralize code in one place to handle special case for proxy,
-   *  and any other future special cases. 
-   *  @return string   ip address in string form
-   */
-  public function clientIpAddress() {
-    if ( $this->getServer('HTTP_X_FORWARDED_FOR') != null )
-			{
-				return $this->getServer('HTTP_X_FORWARDED_FOR');
-			}
-			else
-			{
-				return $this->getServer( 'REMOTE_ADDR' );
-			}
-  }
 	
 	/**
 	 * Retrieve master XML and all request paramaters
