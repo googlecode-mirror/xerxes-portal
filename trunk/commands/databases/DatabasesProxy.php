@@ -151,7 +151,7 @@
 				{
 					$arrMatch = array();
 					
-					if ( preg_match("/http:\/\/([^\/]*)\/{0,1}(.*)/", $strUrl, $arrMatch) != 0 )
+					if ( preg_match("/http[s]{0,1}:\/\/([^\/]*)\/{0,1}(.*)/", $strUrl, $arrMatch) != 0 )
 					{
 						$strPort = "0";
 						$arrPort = array();
@@ -167,6 +167,10 @@
 						$strBase = str_replace("{WAM}", $strPort . "-" . $arrMatch[1], $strProxyServer);
 						
 						$strFinal =  $strBase . "/" . $arrMatch[2];
+					}
+					else
+					{
+						throw new Exception("could not construct WAM link");
 					}
 				}
 				else
