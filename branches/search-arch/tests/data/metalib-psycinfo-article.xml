@@ -1,0 +1,163 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<x_server_response metalib_version="4.3.1 (602)">
+<present_response>
+<record xmlns="http://www.loc.gov/MARC21/slim"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.loc.gov/MARC21/slim
+http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd">
+<controlfield tag="001">1998-11942-009</controlfield>
+<datafield tag="245" ind1="1" ind2="0">
+<subfield code="a">Freud, traducteur de Lemancipation des femmes de J. S. Mill.</subfield>
+</datafield>
+<datafield tag="513" ind1=" " ind2=" ">
+<subfield code="a">Print</subfield>
+</datafield>
+<datafield tag="520" ind1=" " ind2=" ">
+<subfield code="a">Hypothesizes that Freud, through his German translation (1880-1881) of the last volume of J. S. Mill's (1806-1873) works, contributed to the diffusion of modern ideas. In turn, he was influenced by Mill, especially his essay &quot;The emancipation of women,&quot; although he never acknowledged it. This work mitigated some of Freud's prejudices against women. It may also have made Freud more receptive to his female analysands' complaints and grievances and it may explain Freud's appreciation of women as creative partners in psychoanalysis. This act of translating, according to French fiction writer and translator, Valery Larbaud (1881-1957), has something sexual about it: it may have generated in Freud's mind a theoretical offspring linked to &quot;femininity&quot; and its role in both sexes. (PsycINFO Database Record (c) 2009 APA, all rights reserved)</subfield>
+</datafield>
+<datafield tag="546" ind1=" " ind2=" ">
+<subfield code="a">French</subfield>
+</datafield>
+<datafield tag="513" ind1=" " ind2=" ">
+<subfield code="a">Journal</subfield>
+</datafield>
+<datafield tag="513" ind1=" " ind2=" ">
+<subfield code="a">Peer Reviewed Journal</subfield>
+</datafield>
+<datafield tag="260" ind1=" " ind2=" ">
+<subfield code="a">France</subfield>
+<subfield code="b">L'Esprit du Temps</subfield>
+</datafield>
+<controlfield tag="LDR">^^^^^naa^^2200385^^^4500</controlfield>
+<controlfield tag="005">19980101</controlfield>
+<controlfield tag="008">^^^^^^^1998^^^^^^^^^^^^^^^^^^^^^^^^Fre^^^</controlfield>
+<datafield tag="022" ind1=" " ind2=" ">
+<subfield code="a">0040-9375</subfield>
+<subfield code="b">Print</subfield>
+</datafield>
+<datafield tag="045" ind1=" " ind2=" ">
+<subfield code="a">19990401</subfield>
+</datafield>
+<datafield tag="047" ind1=" " ind2=" ">
+<subfield code="a">1998</subfield>
+</datafield>
+<datafield tag="072" ind1=" " ind2=" ">
+<subfield code="a">Psychoanalytic Theory</subfield>
+<subfield code="b">3143</subfield>
+</datafield>
+<datafield tag="100" ind1="1" ind2="0">
+<subfield code="a">Moreau Ricaud, Michelle</subfield>
+</datafield>
+<datafield tag="246" ind1=" " ind2=" ">
+<subfield code="a">Freud as translator of J. S. Mill's &quot;The emancipation of women.&quot;</subfield>
+</datafield>
+<datafield tag="361" ind1=" " ind2=" ">
+<subfield code="a">1998</subfield>
+</datafield>
+<datafield tag="ASU" ind1=" " ind2=" ">
+<subfield code="a">Human</subfield>
+</datafield>
+<datafield tag="ASU" ind1=" " ind2=" ">
+<subfield code="a">Female</subfield>
+</datafield>
+<datafield tag="ASU" ind1=" " ind2=" ">
+<subfield code="a">Freud's contribution to diffusion of modern ideas through German translation of last volume of J. S. Mill &amp; influence of Mill's essay on emancipation of women on Freud's psychoanalytic work &amp; theory</subfield>
+</datafield>
+<datafield tag="654" ind1=" " ind2=" ">
+<subfield code="a">Freud (Sigmund)</subfield>
+</datafield>
+<datafield tag="654" ind1=" " ind2=" ">
+<subfield code="a">Human Females</subfield>
+</datafield>
+<datafield tag="654" ind1=" " ind2=" ">
+<subfield code="a">Political Liberalism</subfield>
+</datafield>
+<datafield tag="654" ind1=" " ind2=" ">
+<subfield code="a">Psychoanalysis</subfield>
+</datafield>
+<datafield tag="654" ind1=" " ind2=" ">
+<subfield code="a">Sex Role Attitudes</subfield>
+</datafield>
+<datafield tag="654" ind1=" " ind2=" ">
+<subfield code="b">Psychotherapeutic Processes</subfield>
+</datafield>
+<datafield tag="656" ind1=" " ind2=" ">
+<subfield code="a">Journal Article</subfield>
+</datafield>
+<datafield tag="700" ind1="1" ind2="0">
+<subfield code="a">Moreau Ricaud, Michelle</subfield>
+</datafield>
+<datafield tag="945" ind1=" " ind2=" ">
+<subfield code="m">28</subfield>
+<subfield code="n">67</subfield>
+<subfield code="d">1998</subfield>
+<subfield code="p">127</subfield>
+</datafield>
+<datafield tag="SID" ind1=" " ind2=" ">
+<subfield code="a">Z39</subfield>
+<subfield code="b">EBSCO_PSYH</subfield>
+<subfield code="d">CAL12171</subfield>
+<subfield code="i">491895</subfield>
+<subfield code="j">000002</subfield>
+<subfield code="s">045862</subfield>
+<subfield code="t">PsycInfo</subfield>
+</datafield>
+<controlfield tag="RAN">099</controlfield>
+<datafield tag="YR " ind1=" " ind2=" ">
+<subfield code="a">1998</subfield>
+</datafield>
+<datafield tag="022" ind1=" " ind2=" ">
+<subfield code="a">0040-9375</subfield>
+</datafield>
+<datafield tag="773" ind1=" " ind2=" ">
+<subfield code="t">Topique: Revue Freudienne</subfield>
+<subfield code="b">1998</subfield>
+<subfield code="d">Vol 28(67)</subfield>
+<subfield code="g">127-139</subfield>
+</datafield>
+<controlfield tag="SET">045862</controlfield>
+<controlfield tag="SYS">077289322</controlfield>
+<openURL>
+<ctx:context-objects xmlns:ctx="info:ofi/fmt:xml:xsd:ctx" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="info:ofi/fmt:xml:xsd:ctx http://www.openurl.info/registry/docs/info:ofi/fmt:xml:xsd:ctx">
+<ctx:context-object timestamp="2004-01-16T12:13:00Z" version="Z39.88-2004" identifier="123">
+<ctx:referent>
+<ctx:metadata-by-val>
+<ctx:format>info:ofi/fmt:xml:xsd</ctx:format>
+<ctx:metadata>
+<rft:journal xmlns:rft="info:ofi/fmt:xml:xsd:journal" xsi:schemaLocation="info:ofi/fmt:xml:xsd:journal http://www.openurl.info/registry/docs/info:ofi/fmt:xml:xsd:journal">
+<rft:author rank="1">
+<rft:aulast>Moreau Ricaud</rft:aulast>
+<rft:aufirst> Michelle</rft:aufirst>
+<rft:auinit></rft:auinit>
+</rft:author>
+<rft:atitle>Freud, traducteur de Lemancipation des femmes de J. S. Mill.</rft:atitle>
+<rft:jtitle>Topique: Revue Freudienne</rft:jtitle>
+<rft:date>1998</rft:date>
+<rft:volume>28</rft:volume>
+<rft:issue>67</rft:issue>
+<rft:spage>127</rft:spage>
+<rft:epage>139</rft:epage>
+<rft:genre></rft:genre>
+<rft:issn>0040-9375</rft:issn>
+<ctx:identifier>info:doi/</ctx:identifier>
+<rft:sici></rft:sici>
+<rft:opid></rft:opid>
+</rft:journal>
+</ctx:metadata>
+</ctx:metadata-by-val>
+<ctx:metadata-by-ref>
+<ctx:format></ctx:format>
+<ctx:location>http://metalib.calstate.edu:8331/X?OP=sfx-get-doc&amp;doc-number=077289322</ctx:location>
+</ctx:metadata-by-ref>
+</ctx:referent>
+<ctx:referrer>
+<ctx:identifier>info:sid/metalib.com:EBSCO_PSYH</ctx:identifier>
+</ctx:referrer>
+</ctx:context-object>
+</ctx:context-objects>
+</openURL>
+</record>
+<session_id new_session="N">7S29PN2P7YE9PATIFB8NH1DEVEQEB6V4UT9P9P8U3CQTKIXEFC</session_id>
+</present_response>
+</x_server_response>
+ 

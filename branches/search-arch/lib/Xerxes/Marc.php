@@ -64,7 +64,7 @@ class Xerxes_Marc_Document
 	 * @param DOMDocument $objDocument
 	 */
 
-	private function parse(DOMDocument $objDocument)
+	protected function parse(DOMDocument $objDocument)
 	{
 		$objXPath = new DOMXPath($objDocument);
 		$objXPath->registerNamespace("marc", $this->namespace);
@@ -153,10 +153,7 @@ class Xerxes_Marc_Record
 			$objControlFields = $objNode->getElementsByTagName("controlfield");
 			$objDataFields = $objNode->getElementsByTagName("datafield");
 			
-			if ( $objLeader->length == 1 )
-			{
-				$this->leader = new Xerxes_Marc_Leader($objLeader->item(0));
-			}
+			$this->leader = new Xerxes_Marc_Leader($objLeader->item(0));
 			
 			foreach ( $objControlFields as $objControlField )
 			{
@@ -245,7 +242,7 @@ class Xerxes_Marc_Record
 		
 		return $return;
 	}
-	
+
 	/**
 	 * Data Field
 	 *
@@ -275,7 +272,7 @@ class Xerxes_Marc_Record
 		
 		return $list;
 	}
-	
+
 	/**
 	 * Run an xpath query against this MARC-XML record
 	 *
@@ -576,7 +573,10 @@ class Xerxes_Marc_DataFieldList extends Xerxes_Marc_FieldList
 		}
 		else
 		{
-			return $this->list[0]->subfield($code);
+			// return the first (and only the first) subfield of the 
+			// first (and only the first) datafield  
+			
+			return $this->list[0]->subfield($code)->item(0);
 		}
 	}
 }

@@ -23,16 +23,16 @@ class Xerxes_Record_DocumentTest extends PHPUnit_Framework_TestCase
 
 		$this->dir = dirname(__FILE__);
 		
-		$this->Xerxes_Record_Document = new Xerxes_Record_Document();		
-		$this->Xerxes_Record_Document->load($this->dir. "/data/worldcat-1.xml");
+		$this->Xerxes_Record_Document = new Xerxes_Record_Document();
 	}
 	
 	/**
 	 * This tests if we can do the basic MARC parsing
 	 */
 	
-	public function testWorldCatMarc()
+	public function testMarcRead()
 	{		
+		$this->Xerxes_Record_Document->load($this->dir. "/data/worldcat-book.xml");
 		$record = $this->Xerxes_Record_Document->record(1);
 		
 		// basic field parsing
@@ -41,9 +41,9 @@ class Xerxes_Record_DocumentTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals( (string) $record->controlfield("001"), "47278976");
 		$this->assertEquals( (string) $record->datafield("245")->subfield("a"), "Programming web services with XML-RPC /");
 		$this->assertEquals( (string) $record->datafield("245"), "Programming web services with XML-RPC / Simon St. Laurent, Joe Johnston, Edd Dumbill.");
-		
 		$title = $record->datafield("245")->subfield("a");
 		$this->assertEquals( (string) $title, "Programming web services with XML-RPC /");
+		$this->assertEquals( (string) $record->datafield("650")->subfield("a"), "XML (Document markup language)");
 		
 		// field-lists
 		
@@ -59,6 +59,22 @@ class Xerxes_Record_DocumentTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals( (string) $arrFields[0], "XML (Document markup language)");
 		$this->assertEquals( (string) $domnode_list->item(0)->nodeValue, "XML (Document markup language)");
 	}
+
+	public function testMarcWrite()
+	{		
+		$this->Xerxes_Record_Document->load($this->dir. "/data/worldcat-book.xml");
+		$record = $this->Xerxes_Record_Document->record(1);
+		
+			
+		$record->setLeader("happy");
+		$this->assertEquals( (string) $record->leader(), "happy");
+		
+		$record->setControlField("001", "days");
+		$this->assertEquals( (string) $record->controlfield("001"), "days");
+
+		$record->setSubField("245", null, null, "a", "Happy days are here again");
+		$this->assertEquals( (string) $record->datafield("245")->subfield("a"), "Happy days are here again");
+	}	
 	
 	/**
 	 * This tests basic book parsing
@@ -66,13 +82,35 @@ class Xerxes_Record_DocumentTest extends PHPUnit_Framework_TestCase
 	
 	public function testWorldCatBook()
 	{
+		$this->Xerxes_Record_Document->load($this->dir. "/data/worldcat-book.xml");
 		$record = $this->Xerxes_Record_Document->record(1);
 		
 		$this->assertEquals( $record->getMainTitle(), "Programming web services with XML-RPC");
 		$this->assertEquals( $record->getTitle(true), "Programming Web Services with XML-RPC");
 		$this->assertEquals( $record->getPrimaryAuthor(), "Simon St. Laurant");
+		
 		$this->assertEquals( $record->getControlNumber(), "47278976");
+		$this->assertEquals( $record->getISBN(), "0596001193");
+		$this->assertEquals( count($record->getAllISBN()), 2);
+		$this->assertEquals( $record->getCallNumber(), "QA76.76.H94 S717 2001");
+		
+		$this->assertEquals( $record->getDescription(), "213 p. : ill. ; 24 cm.");
+		$this->assertEquals( $record->getPublisher(), "O'Reilly");
+		$this->assertEquals( $record->getPlace(), "Beijing");
+		$this->assertEquals( $record->getYear(), "2001");
+		
 	}
+
+	public function testWorldCatThesis()
+	{
+		$this->Xerxes_Record_Document->load($this->dir. "/data/worldcat-thesis.xml");
+		$record = $this->Xerxes_Record_Document->record(1);
+		
+		$this->assertEquals( $record->getFormat(), "Thesis");
+		$this->assertEquals( $record->getDegree(), "M.Arch.");
+		$this->assertEquals( $record->getInstitution(), "UCLA--Architecture.");
+	}	
+	
 	
 	/**
 	 * Cleans up the environment after running a test.

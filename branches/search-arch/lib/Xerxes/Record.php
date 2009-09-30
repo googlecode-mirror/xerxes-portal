@@ -20,63 +20,63 @@ class Xerxes_Record extends Xerxes_Marc_Record
 {
 	protected $source = "";	// source database
 
-	private $format = ""; // format
-	private $format_array = array(); // possible formats
-	private $technology = ""; // technology/system format
+	protected $format = ""; // format
+	protected $format_array = array(); // possible formats
+	protected $technology = ""; // technology/system format
 
-	private $control_number = ""; // the 001 basically, OCLC or otherwise
-	private $oclc_number = ""; // oclc number
-	private $govdoc_number = ""; // gov doc number
-	private $gpo_number = ""; // gov't printing office (gpo) number
-	private $eric_number = ""; // eric document number
-	private $isbns = array ( ); // isbn
-	private $issns = array ( ); // issn
-	private $call_number = ""; // lc call number
-	private $doi = ""; // doi
+	protected $control_number = ""; // the 001 basically, OCLC or otherwise
+	protected $oclc_number = ""; // oclc number
+	protected $govdoc_number = ""; // gov doc number
+	protected $gpo_number = ""; // gov't printing office (gpo) number
+	protected $eric_number = ""; // eric document number
+	protected $isbns = array ( ); // isbn
+	protected $issns = array ( ); // issn
+	protected $call_number = ""; // lc call number
+	protected $doi = ""; // doi
 
-	private $authors = array ( ); // authors
-	private $author_from_title = ""; // author from title statement
-	private $editor = false; // whether primary author is an editor
+	protected $authors = array ( ); // authors
+	protected $author_from_title = ""; // author from title statement
+	protected $editor = false; // whether primary author is an editor
 	
-	private $non_sort = ""; // non-sort portion of title
-	private $title = ""; // main title
-	private $sub_title = ""; // subtitle	
-	private $series_title = ""; // series title
-	private $trans_title = false; // whether title is translated
+	protected $non_sort = ""; // non-sort portion of title
+	protected $title = ""; // main title
+	protected $sub_title = ""; // subtitle	
+	protected $series_title = ""; // series title
+	protected $trans_title = false; // whether title is translated
 	
-	private $place = ""; // place of publication	
-	private $publisher = ""; // publisher	
-	private $year = ""; // date of publication
+	protected $place = ""; // place of publication	
+	protected $publisher = ""; // publisher	
+	protected $year = ""; // date of publication
 
-	private $edition = ""; // edition
-	private $extent = ""; // total pages
-	private $price = ""; // price
+	protected $edition = ""; // edition
+	protected $extent = ""; // total pages
+	protected $price = ""; // price
 
-	private $book_title = ""; // book title (for book chapters)
-	private $journal_title = ""; // journal title
-	private $journal = ""; // journal source information
-	private $short_title = ""; // journal short title
-	private $volume = ""; // volume
-	private $issue = ""; // issue
-	private $start_page = ""; // start page
-	private $end_page = ""; // end page
+	protected $book_title = ""; // book title (for book chapters)
+	protected $journal_title = ""; // journal title
+	protected $journal = ""; // journal source information
+	protected $short_title = ""; // journal short title
+	protected $volume = ""; // volume
+	protected $issue = ""; // issue
+	protected $start_page = ""; // start page
+	protected $end_page = ""; // end page
 
-	private $degree = ""; // thesis degree conferred
-	private $institution = ""; // thesis granting institution
+	protected $degree = ""; // thesis degree conferred
+	protected $institution = ""; // thesis granting institution
 
-	private $description = ""; // physical description
-	private $abstract = ""; // abstract
-	private $summary = ""; // summary
-	private $language = ""; // primary language of the record
-	private $notes = array ( ); // notes that are not the abstract, language, or table of contents
-	private $subjects = array ( ); // subjects
-	private $toc = ""; // table of contents note
+	protected $description = ""; // physical description
+	protected $abstract = ""; // abstract
+	protected $summary = ""; // summary
+	protected $language = ""; // primary language of the record
+	protected $notes = array ( ); // notes that are not the abstract, language, or table of contents
+	protected $subjects = array ( ); // subjects
+	protected $toc = ""; // table of contents note
 	
-	private $links = array ( ); // all supplied links in the record both full text and non
-	private $embedded_text = array ( ); // full text embedded in document
+	protected $links = array ( ); // all supplied links in the record both full text and non
+	protected $embedded_text = array ( ); // full text embedded in document
 	
-	private $alt_script = array ( ); // alternate character-scripts like cjk or hebrew, taken from 880s
-	private $alt_script_name = ""; // the name of the alternate character-script; we'll just assume one for now, I guess
+	protected $alt_script = array ( ); // alternate character-scripts like cjk or hebrew, taken from 880s
+	protected $alt_script_name = ""; // the name of the alternate character-script; we'll just assume one for now, I guess
 	
 
 	### PUBLIC FUNCTIONS ###
@@ -87,6 +87,45 @@ class Xerxes_Record extends Xerxes_Marc_Record
 	
 	protected function map()
 	{
+		## openurl
+		
+		// the source can contain an openurl context object buried in it as well as marc-xml
+		
+		// test to see what profile the context object is using; set namespace accordingly
+
+		if ($this->document->getElementsByTagNameNS ( "info:ofi/fmt:xml:xsd:book", "book" )->item ( 0 ) != null)
+		{
+			$this->xpath->registerNamespace ( "rft", "info:ofi/fmt:xml:xsd:book" );
+		} 
+		elseif ($this->document->getElementsByTagNameNS ( "info:ofi/fmt:xml:xsd:dissertation", "dissertation" )->item ( 0 ) != null)
+		{
+			$this->xpath->registerNamespace ( "rft", "info:ofi/fmt:xml:xsd:dissertation" );
+		} 
+		else
+		{
+			$this->xpath->registerNamespace ( "rft", "info:ofi/fmt:xml:xsd:journal" );
+		}
+		
+		// context object: journal title, volume, issue, pages from context object
+
+		$objSTitle = $this->xpath->query( "//rft:stitle" )->item ( 0 );
+		$objTitle = $this->xpath->query( "//rft:title" )->item ( 0 );
+		$objVolume = $this->xpath->query( "//rft:volume" )->item ( 0 );
+		$objIssue = $this->xpath->query( "//rft:issue" )->item ( 0 );
+		$objStartPage = $this->xpath->query( "//rft:spage" )->item ( 0 );
+		$objEndPage = $this->xpath->query( "//rft:epage" )->item ( 0 );
+		$objISSN = $this->xpath->query( "//rft:issn" )->item ( 0 );
+		$objISBN = $this->xpath->query( "//rft:isbn" )->item ( 0 );
+		
+		if ($objSTitle != null) $this->short_title = $objSTitle->nodeValue;
+		if ($objVolume != null)	$this->volume = $objVolume->nodeValue;
+		if ($objIssue != null) $this->issue = $objIssue->nodeValue;
+		if ($objStartPage != null) $this->start_page = $objStartPage->nodeValue;
+		if ($objEndPage != null) $this->end_page = $objEndPage->nodeValue;
+		if ($objISBN != null) array_push($this->isbns, $objISBN->nodeValue);
+		if ($objISSN != null) array_push($this->issns, $objISSN->nodeValue);	
+		
+		
 		// control and standard numbers
 		
 		$this->control_number = (string) $this->controlfield("001");
@@ -94,11 +133,30 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		$arrIssn = $this->fieldArray("022", "a" );
 		$arrIsbn = $this->fieldArray("020", "a" );
 
-		$this->govdoc_number = $this->datafield("086")->subfield("a");
-		$this->gpo_number = $this->datafield("074")->subfield("a");
-		$this->doi = $this->datafield("024")->subfield("a");
+		$this->govdoc_number = (string) $this->datafield("086")->subfield("a");
+		$this->gpo_number = (string) $this->datafield("074")->subfield("a");
 		
-		$strJournalIssn = $this->datafield("773")->subfield("x");
+		// doi
+				
+		$this->doi = (string) $this->datafield("024")->subfield("a");
+		
+		// this is kind of iffy since the 024 is not _really_ a DOI field; but this
+		// is the most likely marc field; however need to see if the number follows the very loose
+		// pattern of the DOI of 'prefix/suffix', where prefix and suffix can be nearly anything
+		
+		if ( $this->doi != "" )
+		{
+			// strip any doi: prefix
+			
+			$this->doi = str_replace( "doi:", "", $this->doi );
+			
+			if ( ! preg_match("/.*\/.*/", $this->doi) )
+			{
+				$this->doi = "";
+			}
+		}
+		
+		$strJournalIssn = (string) $this->datafield("773")->subfield("x");
 		
 		if ( $strJournalIssn != null )
 		{
@@ -107,8 +165,8 @@ class Xerxes_Record extends Xerxes_Marc_Record
 			
 		// call number
 
-		$strCallNumber = $this->datafield("050");
-		$strCallNumberLocal = $this->datafield("090");
+		$strCallNumber = (string) $this->datafield("050");
+		$strCallNumberLocal = (string) $this->datafield("090");
 		
 		if ( $strCallNumber != null )
 		{
@@ -121,14 +179,16 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		
 		// format
 		
-		$this->technology = $this->datafield("538")->subfield("a");
+		$this->technology = (string) $this->datafield("538")->subfield("a");
 		
-		foreach ( $this->fieldArray("513", "a" ) as $strFormat )
+		$arrFormat = $this->fieldArray("513", "a");
+
+		foreach ( $arrFormat as $format )
 		{
-			array_push($this->format_array, $strFormat);
+			array_push($this->format_array, (string) $format);
 		}
 		
-		$strTitleFormat = $this->datafield("245")->subfield("k");
+		$strTitleFormat = (string) $this->datafield("245")->subfield("k");
 		
 		if ( $strTitleFormat != null )
 		{
@@ -137,16 +197,16 @@ class Xerxes_Record extends Xerxes_Marc_Record
 			
 		// thesis degree, institution, date awarded
 		
-		$strThesis = $this->datafield("502")->subfield("a");
+		$strThesis = (string) $this->datafield("502")->subfield("a");
 		
 		// authors
 
-		$strPrimaryAuthor = $this->datafield("100")->subfield("a");
+		$strPrimaryAuthor = (string) $this->datafield("100")->subfield("a");
 
-		$strCorpName = $this->datafield("110")->subfield("ab");
+		$strCorpName = (string) $this->datafield("110")->subfield("ab");
 		
-		$strConfName = $this->datafield("111")->subfield("anc");
-		$this->author_from_title = $this->datafield("245")->subfield("c" );
+		$strConfName = (string) $this->datafield("111")->subfield("anc");
+		$this->author_from_title = (string) $this->datafield("245")->subfield("c" );
 		
 		$arrAltAuthors = $this->fieldArray("700", "a" );
 		$arrAddCorp = $this->fieldArray("710", "ab" );
@@ -175,19 +235,19 @@ class Xerxes_Record extends Xerxes_Marc_Record
 			
 		// titles
 		
-		$this->title = $this->datafield("245")->subfield("a");
-		$this->sub_title = $this->datafield("245")->subfield("b");
-		$this->series_title = $this->datafield("440")->subfield("a" );
+		$this->title = (string) $this->datafield("245")->subfield("a");
+		$this->sub_title = (string) $this->datafield("245")->subfield("b");
+		$this->series_title = (string) $this->datafield("440")->subfield("a" );
 		
 		// sometimes the title appears in a 242 or even a 246 if it is translated from another
 		// language, although the latter is probably bad practice.  We will only take these
 		// if the title in the 245 is blank, and take a 242 over the 246
 
-		$strTransTitle = $this->datafield("242")->subfield("a");
-		$strTransSubTitle = $this->datafield("242")->subfield("b");
+		$strTransTitle = (string) $this->datafield("242")->subfield("a");
+		$strTransSubTitle = (string) $this->datafield("242")->subfield("b");
 		
-		$strVaryingTitle = $this->datafield("246")->subfield("a" );
-		$strVaryingSubTitle = $this->datafield("246")->subfield("b");
+		$strVaryingTitle = (string) $this->datafield("246")->subfield("a" );
+		$strVaryingSubTitle = (string) $this->datafield("246")->subfield("b");
 		
 		if ( $this->title == "" && $strTransTitle != "" )
 		{
@@ -213,25 +273,31 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		
 		// edition, extent, description
 
-		$this->edition = $this->datafield("250")->subfield("a" );
-		$this->extent = $this->datafield("300")->subfield("a" );
-		$this->description = $this->datafield("300");
-		$this->price = $this->datafield("365");
+		$this->edition = (string) $this->datafield("250")->subfield("a" );
+		$this->extent = (string) $this->datafield("300")->subfield("a" );
+		$this->description = (string) $this->datafield("300");
+		$this->price = (string) $this->datafield("365");
 		
 		// publisher
 		
-		$this->place = $this->datafield("260")->subfield("a");
-		$this->publisher = $this->datafield("260")->subfield("b");
+		$this->place = (string) $this->datafield("260")->subfield("a");
+		$this->publisher = (string) $this->datafield("260")->subfield("b");
 		
 		// date
 
-		$strDate = $this->datafield("260")->subfield("c");
+		$strDate = (string) $this->datafield("260")->subfield("c");
 		
 		// notes
 		
-		$this->toc = $this->datafield("505")->subfield("agrt");
+		$arrToc = $this->fieldArray("505", "agrt");
+
+		foreach (  $arrToc as $toc )
+		{
+			$this->toc .= (string) $toc;
+		}
+		
 		$arrAbstract = $this->fieldArray("520", "a");
-		$strLanguageNote = $this->datafield("546")->subfield("a");
+		$strLanguageNote = (string) $this->datafield("546")->subfield("a");
 		
 		// other notes
 		
@@ -255,11 +321,11 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		
 		// journal
 
-		$this->journal = $this->datafield("773");
-		$strJournal = $this->datafield("773")->subfield("agpt");
-		$this->journal_title = $this->datafield("773")->subfield("t");
-		$this->short_title = $this->datafield("773")->subfield("p");
-		$strExtentHost = $this->datafield("773")->subfield("h");
+		$this->journal = (string) $this->datafield("773");
+		$strJournal = (string) $this->datafield("773")->subfield("agpt");
+		$this->journal_title = (string) $this->datafield("773")->subfield("t");
+		$this->short_title = (string) $this->datafield("773")->subfield("p");
+		$strExtentHost = (string) $this->datafield("773")->subfield("h");
 		
 		// alternate character-scripts
 		
@@ -274,7 +340,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		// now use the $6 to figure out which character-script this is
 		// assume just one for now
 
-		$strAltScript = $this->datafield("880")->subfield("6");
+		$strAltScript = (string) $this->datafield("880")->subfield("6");
 		
 		if ( $strAltScript != null )
 		{
@@ -366,19 +432,25 @@ class Xerxes_Record extends Xerxes_Marc_Record
 
 		foreach ( $this->datafield("856") as $link )
 		{
-			$strUrl = $link->subfield("u");
-			$strDisplay = $link->subfield("z");
+			$strUrl = (string) $link->subfield("u");
+			
+			$strDisplay = (string) $link->subfield("z");
+			
+			if ( $strDisplay == "" )
+			{
+				$strDisplay = (string) $link->subfield("a");
+			}
 			
 			// no link supplied
 			
-			if ( $link->subfield("u") == "" )
+			if ( (string) $link->subfield("u") == "" )
 			{
 				continue;
 			}
 			
-			// has subfield 3 or the link includes loc but was not specified (bad catalogers!)
+			// has subfield 3 or the link includes loc url but was not specified (bad catalogers!)
 			
-			if ( $link->subfield("3") != "" )
+			if ( $link->subfield("3") != "" || stristr($strUrl, "www.loc.gov/catdir") )
 			{
 				array_push( $this->links, array (null, $link->subfield("u"), "none" ) );
 			}
@@ -404,9 +476,9 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		// oclc number can be either in the 001 or in the 035$a
 		// make sure 003 says 001 is oclc number or 001 includes an oclc prefix, 
 		
-		$str001 = $this->controlfield("001");
-		$str003 = $this->controlfield("003");
-		$str035 = $this->datafield("035")->subfield("a");
+		$str001 = (string) $this->controlfield("001");
+		$str003 = (string) $this->controlfield("003");
+		$str035 = (string) $this->datafield("035")->subfield("a");
 
 		if ( $str001 != "" && (( $str003 == "" && preg_match('/^\(?([Oo][Cc])/', $str001) ) || 
 			$str003 == "OCoLC" ))
@@ -472,15 +544,20 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		### journal title
 
 		// we'll take the journal title form the 773$t as the best option,
-		// otherwise we'll see if Metalib was able to extract the title from
-		// what will likely be the 773$a into the context object, note that 
-		// Metalib incorrectly (?) maps this to the 'rft:stitle' field, and also
-		// will map book titles to the stitle if no issn or isbn!
-		
+
 
 		if ( $this->journal_title == "" )
 		{
-			if ( $this->short_title != "" && ($this->format == "Article" || $this->format == "Journal or Newspaper") )
+			// otherwise see if context object has one
+					
+			if ( $objTitle != null )
+			{
+				$this->journal_title = $objTitle->nodeValue;
+			}
+			
+			// or see if a short title exists
+			
+			elseif ( $this->short_title != "" && ($this->format == "Article" || $this->format == "Journal or Newspaper") )
 			{
 				$this->journal_title = $this->short_title;
 			}
@@ -525,7 +602,6 @@ class Xerxes_Record extends Xerxes_Marc_Record
 			if ( array_key_exists( "epage", $arrRegExJournal ) )
 			{
 				// found an end page from our generic regular expression parser
-				
 
 				$this->end_page = $arrRegExJournal["epage"];
 			} 
@@ -546,7 +622,6 @@ class Xerxes_Record extends Xerxes_Marc_Record
 				elseif ( preg_match( "/[0-9]{1,}/", $strExtentHost, $arrExtent ) != 0 )
 				{
 					// otherwise take whole number
-					
 
 					$iStart = ( int ) $this->start_page;
 					$iEnd = ( int ) $arrExtent[0];
@@ -791,6 +866,49 @@ class Xerxes_Record extends Xerxes_Marc_Record
 				array_push( $this->authors, $arrAuthor );
 			}
 		}
+		
+		// make sure no dupes in author array
+		
+		$author_original = $this->authors;
+		$author_other = $this->authors;
+		
+		for ( $x = 0; $x < count($author_original); $x++ )
+		{
+			if ( is_array($author_original[$x]) ) // skip those set to null (i.e., was a dupe)
+			{
+				$this_author = implode(" ", $author_original[$x]);
+				
+				for ( $a = 0; $a < count($author_other); $a++ )
+				{
+					if ( $a != $x ) // compare all other authors in the array
+					{
+						if ( is_array($author_other[$a]) ) // just in case
+						{
+							$that_author = implode(" ", $author_other[$a]);
+							
+							if ( $this_author == $that_author)
+							{
+								// remove the dupe
+								
+								$author_original[$a] = null;
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		$this->authors = array(); // reset author array
+		
+		foreach ( $author_original as $author )
+		{
+			if ( is_array($author) )
+			{
+				array_push($this->authors, $author);
+			}
+		}
+		
+		
 		
 		### punctuation clean-up
 
@@ -1250,11 +1368,12 @@ class Xerxes_Record extends Xerxes_Marc_Record
 				$key == "toc" ||
 				$key == "links" || 
 				
-				// these are from the parent class
+				// these are utility variables, not to be output
 				
 				$key == "document" ||
 				$key == "xpath" || 
-				$key == "node" )
+				$key == "node" ||
+				$key == "format_array")
 			{
 				continue;
 			}
@@ -1572,7 +1691,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		// format made explicit
 
 		if ( strstr( $strDataFields, 'dissertation' ) ) $strReturn = "Dissertation"; 
-		elseif ( $this->datafield("502") != "" ) $strReturn = "Thesis"; 
+		elseif ( (string) $this->datafield("502") != "" ) $strReturn = "Thesis"; 
 		elseif ( strstr( $strDataFields, 'proceeding' ) ) $strReturn = "Conference Proceeding"; 
 		elseif ( strstr( $strDataFields, 'conference' ) ) $strReturn = "Conference Paper"; 
 		elseif ( strstr( $strDataFields, 'hearing' ) ) $strReturn = "Hearing"; 
@@ -3727,6 +3846,18 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		}
 	}
 	
+	private function isFullText($arrLink)
+	{
+		if ( $arrLink[2] == "pdf" || $arrLink[2] == "html" || $arrLink[2] == "online" )
+		{
+			return true; 
+		}
+		else
+		{
+			return false;
+		}
+	}
+	
 	### PROPERTIES ###
 	
 	// non-standard properties
@@ -3737,10 +3868,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		
 		foreach ( $this->links as $arrLink )
 		{
-			//  this should really be based on INCLUSION, which ones are
-			//  fulltext, not the current exclusion. Oh well.
-			
-			if ( $arrLink[2] != "none" && $arrLink[2] != "original_record" && $arrLink[2] != "holdings" )
+			if ( $this->isFullText($arrLink) == true )
 			{
 				$bolFullText = true;
 			}
@@ -3759,7 +3887,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 			
 			foreach ( $this->links as $arrLink )
 			{
-				if ( $arrLink[2] != "none" )
+				if ( $this->isFullText($arrLink) == true )
 				{
 					array_push( $arrFinal, $arrLink );
 				}
@@ -4106,6 +4234,11 @@ class Xerxes_Record extends Xerxes_Marc_Record
 	public function getDOI()
 	{
 		return $this->doi;
+	}
+	
+	public function getSource()
+	{
+		return $this->source;
 	}
 }
 
