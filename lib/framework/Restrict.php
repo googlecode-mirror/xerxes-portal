@@ -85,11 +85,9 @@ class Xerxes_Framework_Restrict
 	{
 		if ( $objRequest->getSession( "username" ) == null || $objRequest->getSession( "application" ) != $this->strAppName )
 		{
-			// check to see if user is coming from campus range
-			// adjust here to check for reverse-proxy as well
-						
+			// check to see if user is coming from campus range						
 
-			$bolLocal = self::isIpAddrInRanges( $objRequest->clientIpAddress(), $this->strIPRange );
+			$bolLocal = self::isIpAddrInRanges( $objRequest->getServer('REMOTE_ADDR'), $this->strIPRange );
 			
 			if ( $bolLocal == true )
 			{
