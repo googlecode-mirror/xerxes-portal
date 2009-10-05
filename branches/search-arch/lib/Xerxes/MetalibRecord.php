@@ -49,7 +49,7 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 			$leader->value = $strLeaderMetalib;
 		}
 
-		// this is not an actual namespace reference, but a bug in the metalib
+		// this is not an actual openurl namespace, but a bug in the metalib
 		// x-server that causes it to send back a mislabelled namespace (2007-02-19)
 		
 		if ($this->document->getElementsByTagNameNS ( "info:ofi/fmt:xml:xsd", "journal" )->item ( 0 ) != null)
@@ -57,7 +57,7 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 			$this->xpath->registerNamespace ( "rft", "info:ofi/fmt:xml:xsd" );
 		}
 		
-		// ebsco and some screen-scrapers have multiple authors in repeating 100, 
+		// ebsco and some screen-scrapers have multiple authors in repeating 100 fields; 
 		// invalid marc, so switch all but first to 700
 		
 		$authors = $this->datafield("100");
@@ -70,7 +70,6 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 				$author->tag = "700";
 			}
 		}
-		
 		
 		## ebsco format
 		
@@ -208,8 +207,10 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 				stristr ( $this->source, "IEEE_XPLORE" ) || 
 				$this->source == "ELSEVIER_SCOPUS" )
 			{
+				// take it out so the parent class doesn't treat it as full-text
+				
+				$link->tag = "XXX";
 				array_push ( $this->links, array ($strDisplay, $strUrl, "original_record" ) );
-				unset($link);
 			}
 			
 			// ebsco html
@@ -224,6 +225,50 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 				array_push ( $this->links, array ($strDisplay, array ("001" => $str001 ), "html" ) );
 				unset($link);
 			} 
+		}
+
+		// Gale title clean-up, because for some reason unknown to man 
+		// they put weird notes and junk at the end of the title. so remove them 
+		// here and add them to notes.
+
+		if (strstr ( $this->source, 'GALE_' ))
+		{
+			$arrMatches = array ();
+			$strGaleRegExp = "/\(([^)]*)\)/";
+			
+			$title = $this->datafield("245");
+			$title_main = $title->subfield("a");
+			$title_sub = $title->subfield("b");
+			
+			if (preg_match_all ( $strGaleRegExp, $title_main->value, $arrMatches ) != 0)
+			{
+				$title_main->value = preg_replace ( $strGaleRegExp, "", $title_main->value );
+			}
+			
+			$note_field = new Xerxes_Marc_DataField();
+			$note_field->tag = "500";
+			
+			foreach ( $arrMatches [1] as $strMatch )
+			{				
+				$subfield = new Xerxes_Marc_Subfield();
+				$subfield->code = "a";
+				$subfield->value = "From title: " . $strMatch;
+				$note_field->addSubField($subfield);
+			}
+			
+			// sub title is only these wacky these notes
+
+			if ($title_sub->value != "")
+			{
+				$subfield = new Xerxes_Marc_Subfield();
+				$subfield->code = "a";
+				$subfield->value = "From title: " . $title_sub->value;	
+				$note_field->addSubField($subfield);			
+				
+				$title_sub->value = "";
+			}
+			
+			$this->addDataField($note_field);
 		}		
 		
 		
@@ -306,9 +351,10 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 		// JSTOR book review correction: title is meaningless, but subjects
 		// contain the title of the books, so we'll swap them to the title here
 
-		if (strstr ( $this->source, 'JSTOR' ) && $this->title == "Review: [untitled]")
+		if (strstr ( $this->source, 'JSTOR' ) && $this->title == "Review")
 		{
 			$this->title = "";
+			$this->sub_title = "";
 			
 			foreach ( $this->subjects as $strSubject )
 			{
@@ -321,37 +367,29 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 			
 			$this->format = "Book Review";
 		}
+
+		// jstor links are all pdfs
 		
-		// Gale title clean-up, because for some reason unknown to man 
-		// they put weird notes and junk at the end of the title. so remove them 
-		// here and add them to notes.
-
-		if (strstr ( $this->source, 'GALE_' ))
+		if (strstr ( $this->source, 'JSTOR' ))
 		{
-			$arrMatches = array ();
-			$strGaleRegExp = "/\(([^)]*)\)/";
-			
-			if (preg_match_all ( $strGaleRegExp, $this->title, $arrMatches ) != 0)
+			for( $x = 0; $x < count($this->links); $x++ )
 			{
-				$this->title = preg_replace ( $strGaleRegExp, "", $this->title );
+				$link = $this->links[$x];
+				$link[2] = "pdf";
+				$this->links[$x] = $link;
 			}
-			
-			foreach ( $arrMatches [1] as $strMatch )
+		}		
+		
+		// CSA subject term clean-up, 
+		// since they put an asterick in front of each term (2009-09-30)
+		
+		if (strstr ( $this->source, 'CSA_' ))
+		{
+			for ( $x = 0; $x < count($this->subjects); $x++ )
 			{
-				array_push ( $this->notes, "From title: " . $strMatch );
-			}
-			
-			// subtitle only appears to be one of these notes
-
-			if ($this->sub_title != "")
-			{
-				array_push ( $this->notes, "From title: " . $this->sub_title );
-				$this->sub_title = "";
+				$this->subjects[$x] = str_replace("*", "", $this->subjects[$x]);
 			}
 		}
-		
-		// CSA subject term clean-up
-		
 	}
 	
 	### PROPERTIES ###

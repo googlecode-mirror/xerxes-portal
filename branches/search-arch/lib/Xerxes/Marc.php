@@ -319,6 +319,17 @@ class Xerxes_Marc_Record
 	{
 		return $this->document->saveXML();
 	}
+	
+	public function addControlField(Xerxes_Marc_ControlField $field)
+	{
+		array_push($this->_controlfields, $field);
+	}
+	
+	public function addDataField(Xerxes_Marc_DataField $field)
+	{
+		array_push($this->_datafields, $field);
+	}
+	
 }
 
 /**
@@ -470,6 +481,11 @@ class Xerxes_Marc_DataField
 		}
 		
 		return trim($content);
+	}
+	
+	public function addSubField(Xerxes_Marc_Subfield $field)
+	{
+		array_push($this->_subfields, $field);
 	}
 }
 
