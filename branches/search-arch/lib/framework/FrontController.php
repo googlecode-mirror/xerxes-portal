@@ -611,8 +611,7 @@ function __autoload($name)
 	{
 		$file = str_replace("Xerxes_", "", $name);
 		
-		require_once(self::parent_directory . "lib/Xerxes/$file.php");
-		
+		require_once(Xerxes_Framework_FrontController::parentDirectory() . "/lib/Xerxes/$file.php");
 	}
 }
 

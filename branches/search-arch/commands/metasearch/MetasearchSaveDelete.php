@@ -52,7 +52,7 @@
 	
 				// get record from metalib result set
 				
-				$objXerxesRecord = new Xerxes_Record( );
+				$objXerxesRecord = new Xerxes_MetalibRecord( );
 				$objXerxesRecord->loadXML( $this->getRecord() );
 				
 				// add to database

@@ -88,6 +88,7 @@ class Xerxes_MetalibRecordTest extends PHPUnit_Framework_TestCase
 		$record = $this->Xerxes_MetalibRecord_Document->record(1);
 		
 		$this->assertEquals( $record->getFormat(), "Book Chapter");
+		$this->assertEquals( $record->getYear(), "1991");
 	}
 
 	public function testEricDocument()
@@ -161,6 +162,34 @@ class Xerxes_MetalibRecordTest extends PHPUnit_Framework_TestCase
 		// testing 245$p
 		
 		$this->assertEquals( $record->getTitle(true), "Engineering for Climatic Change");		
+	}
+
+	public function testEbscoHTML()
+	{
+		$this->Xerxes_MetalibRecord_Document->load($this->dir. "/data/metalib-psycharticles.xml");
+		$record = $this->Xerxes_MetalibRecord_Document->record(1);
+		
+		// there should be two lnks, one to pdf, the other html
+		
+		$this->assertEquals( count($record->getFullText()), 2);
+	}
+	
+	public function testPsycInfoNotThesis()
+	{
+		$this->Xerxes_MetalibRecord_Document->load($this->dir. "/data/metalib-psycinfo-not-thesis.xml");
+		$record = $this->Xerxes_MetalibRecord_Document->record(1);
+		
+		// has a 502, but this is crazy
+		
+		$this->assertEquals( $record->getFormat(), "Article");
+	}
+
+	public function testPsycInfoDissertation()
+	{
+		$this->Xerxes_MetalibRecord_Document->load($this->dir. "/data/metalib-psycinfo-thesis.xml");
+		$record = $this->Xerxes_MetalibRecord_Document->record(1);
+		$this->assertEquals( $record->getFormat(), "Dissertation");
 	}	
+	
 }
 

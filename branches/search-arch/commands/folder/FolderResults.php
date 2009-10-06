@@ -134,7 +134,7 @@
         }
                 
         
-        Xerxes_Record::completeUrlTemplates($xerxes_records, $this->request, $this->registry, $database_links_dom);         
+        Xerxes_MetalibRecord::completeUrlTemplates($xerxes_records, $this->request, $this->registry, $database_links_dom);         
         
         $database_links = $objXml->importNode($database_links_dom->documentElement, true);
         

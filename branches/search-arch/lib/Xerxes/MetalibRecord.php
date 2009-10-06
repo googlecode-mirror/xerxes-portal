@@ -19,16 +19,15 @@ class Xerxes_MetalibRecord_Document extends Xerxes_Marc_Document
 
 class Xerxes_MetalibRecord extends Xerxes_Record
 {
-	private $metalib_id;
-	private $result_set;
-	private $record_number;
-	private $database_name;
+	protected $metalib_id;
+	protected $result_set;
+	protected $record_number;
 	
 	public function map()
 	{
 		$leader = $this->leader();
 
-		// source database
+		## source database
 		
 		$sid = $this->datafield ( "SID" );
 		
@@ -119,7 +118,8 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 
 		$this->eric_number = (string) $this->datafield( "ERI" )->subfield( "a" );
 
-		# full-text
+		
+		## full-text
 			
 		// some databases have full-text but no 856
 		// will capture these here and add to links array
@@ -227,9 +227,8 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 			} 
 		}
 
-		// Gale title clean-up, because for some reason unknown to man 
-		// they put weird notes and junk at the end of the title. so remove them 
-		// here and add them to notes.
+		// Gale title clean-up, because for some reason unknown to man  they put weird 
+		// notes and junk at the end of the title. so remove them here and add them to notes.
 
 		if (strstr ( $this->source, 'GALE_' ))
 		{
@@ -269,6 +268,17 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 			}
 			
 			$this->addDataField($note_field);
+		}
+		
+		// psycinfo and related databases include a 502 that is not a thesis note -- bonkers!
+		// need to make this a basic note, otherwise xerxes will assume this is a thesis
+		
+		if ( strstr($this->source, "EBSCO_PDH") || strstr($this->source, "EBSCO_PSYH"))
+		{
+			foreach ( $this->datafield("502") as $thesis )
+			{
+				$thesis->tag = "500";
+			}
 		}		
 		
 		
@@ -286,9 +296,11 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 		
 		// metalib's own year, issue, volume fields
 		
-		if ( $this->year == "" )
+		$year = (string) $this->datafield("YR ")->subfield("a");
+		
+		if ( $year != "" )
 		{
-			$this->year = (string) $this->datafield("YR")->subfield("a");
+			$this->year = $year;
 		}
 
 		if ( $this->issue == "" )
@@ -424,5 +436,198 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 	{
 		return $this->database_name;
 	}
+		
+	### until we move this elsewhere
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	static $TemplateEmptyValue = "Xerxes_Record_lookupTemplateValue_placeholder_missing";
+
+	/**
+	 * Take a Metalib-style template for a URL, including $100_a style
+	 * placeholders, and replace placeholders with actual values
+	 * taken from $this->marcXML
+	 *
+	 * @param string $template
+	 * @return string url
+	 */
+	protected function resolveUrlTemplate($template)
+	{
+		# For some reason Metalib uses $0100 placeholder to correspond
+		# to an SID field. If I understand how this works, this is nothing
+		# but a synonym for $SID_c, so we'll use that. Absolutely no idea
+		# why Metalib uses $0100 as syntactic sugar instead. 
+		$template = str_replace ( '$0100', '$SID_c', $template );
+		
+		$filled_out = preg_replace_callback ( '/\$(...)(_(.))?/', array ($this, 'lookupTemplateValue' ), $template );
+		
+		// Make sure it doesn't have our special value indicating a placeholder
+		// could not be resolved. 
+		if (strpos ( $filled_out, self::$TemplateEmptyValue ))
+		{
+			// Consistent with Metalib behavior, if a placeholder can't be resolved,
+			// there is no link generated. 
+			return null;
+		}
+		
+		return $filled_out;
+	
+	}
+	
+	/* This function is just used as a callback in resolveUrlTemplate. 
+       Takes a $matches array returned  by PHP regexp function that
+       has a MARC field in $matches[1] and a subfield in $matches[3]. 
+       Returns the value from $this->marcXML */
+	protected function lookupTemplateValue($matches)
+	{
+		$field = $matches [1];
+		$subfield = (count ( $matches ) >= 4) ? $matches [3] : null;
+		
+		$value = null;
+		if ($subfield)
+		{
+			$value = (string) $this->datafield($field)->subfield( $subfield );
+		} 
+		else
+		{
+			//assume it's a control field, those are the only ones without subfields
+			$value = (string) $this->controlfield($field );
+		}
+		if (empty ( $value ) && true)
+		{
+			// Couldn't resolve the placeholder, that means we should NOT
+			// generate a URL, in this mode. Sadly we can't just throw
+			// an exception, PHP eats it before we get it. I hate PHP. 
+			// Put a special token in there. 
+			return self::$TemplateEmptyValue;
+		}
+		//URL escape it please
+		$value = urlencode ( $value );
+		
+		return $value;
+	}
+	/* Fills out an array of Xerxes_Record to include links that are created
+       by Metalib link templates (type 'holdings', 'original_record'). 
+       
+      @param $records, an array of Xerxes_Record 
+      @param &$database_links_dom a DOMDocument containing a <database_links> section with Xerxes db information. Note that this is an optional parameter, if not given it will be calculated internally. If a variable with a null value is passed in, the variable will actually be SET to a valid DOMDocument on the way out (magic of pass by reference), so you can
+      use this method to calculate a <database_links> section for you. */
+	public static function completeUrlTemplates($records, $objRequest, $objRegistry, &$database_links_dom = null)
+	{
+		// If we weren't passed in a cached DOMDocument with a database_links
+		// section, create one. Note that the var was passed by reference,
+		// so this is available to the caller.   
+		
+
+		if ($database_links_dom == null)
+		{
+			$metalib_ids = array ();
+			
+			foreach ( $records as $r )
+			{
+				
+				array_push ( $metalib_ids, $r->getMetalibID () );
+			}
+			
+			$objData = new Xerxes_DataMap ( );
+			$databases = $objData->getDatabases ( $metalib_ids );
+			
+			$database_links_dom = new DOMDocument ( );
+			$database_links_dom->loadXML ( "<database_links/>" );
+			
+			foreach ( $databases as $db )
+			{
+				$objNodeDatabase = Xerxes_Helper::databaseToLinksNodeset ( $db, $objRequest, $objRegistry );
+				
+				$objNodeDatabase = $database_links_dom->importNode ( $objNodeDatabase, true );
+				$database_links_dom->documentElement->appendChild ( $objNodeDatabase );
+			}
+		}
+		
+		// Pick out the templates into a convenient structure
+		$linkTemplates = self::getLinkTemplates ( $database_links_dom );
+		
+		### Add link to native record and to external holdings URL too, if
+		# available from metalib template. 
+		foreach ( $records as $r )
+		{
+			if ($r->getMetalibID () && array_key_exists ( $r->getMetalibID (), $linkTemplates ))
+			{
+				
+				$arrTemplates = $linkTemplates [$r->getMetalibID ()];
+				
+				foreach ( $arrTemplates as $type => $template )
+				{
+					$filled_in_link = $r->resolveUrlTemplate ( $template );
+					if (! empty ( $filled_in_link ))
+					{
+						array_push ( $r->links, array (null, $filled_in_link, $type ) );
+					}
+				}
+			}
+		}
+	}
+	
+	/* Creates a hash data structure of metalib-style URL templates for a given
+     set of databases. Extracts this from Xerxes XML including a
+     <database_links> section. Extracts into a hash for more convenient
+     and quicker use.  Structure of hash is:
+     { metalib_id1 => { "xerxes_link_type_a" => template,
+                        "xerxes_link_type_b" => template }
+       metalib_id2 => [...]
+       
+       Input is an XML DOMDocument containing a Xerxes <database_links>
+       structure. 
+  */
+	protected function getLinkTemplates($xml)
+	{
+		
+		$link_templates = array ();
+		$dbXPath = new DOMXPath ( $xml );
+		$objDbXml = $dbXPath->evaluate ( '//database_links/database' );
+		
+		for($i = 0; $i < $objDbXml->length; $i ++)
+		{
+			$dbXml = $objDbXml->item ( $i );
+			$metalib_id = $dbXml->getAttribute ( "metalib_id" );
+			$link_templates [$metalib_id] = array ();
+			
+			for($j = 0; $j < $dbXml->childNodes->length; $j ++)
+			{
+				$node = $dbXml->childNodes->item ( $j );
+				if ($node->tagName == 'link_native_record')
+				{
+					$link_templates [$metalib_id] ["original_record"] = $node->textContent;
+				}
+				if ($node->tagName == 'link_native_holdings')
+				{
+					$link_templates [$metalib_id] ["holdings"] = $node->textContent;
+				}
+			}
+		}
+		
+		return $link_templates;
+	}
+
+	
+	
+	
 }
+
+class UrlTemplatePlaceholderMissing extends Exception {}
+
 ?>

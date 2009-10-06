@@ -18,7 +18,8 @@ class Xerxes_Record_Document extends Xerxes_Marc_Document
 
 class Xerxes_Record extends Xerxes_Marc_Record
 {
-	protected $source = "";	// source database
+	protected $source = "";	// source database id
+	protected $database_name; // source database name
 
 	protected $format = ""; // format
 	protected $format_array = array(); // possible formats
@@ -420,11 +421,11 @@ class Xerxes_Record extends Xerxes_Marc_Record
 			if ( $objLang != null )
 			{
 				$strLangCode = $objLang->position("35-37");
-			}
-			
-			if ( $strLangCode != "")
-			{
-				$this->language = $this->convertLanguageCode($strLangCode);
+
+				if ( $strLangCode != "")
+				{
+					$this->language = $this->convertLanguageCode($strLangCode);
+				}			
 			}
 		}
 		
@@ -973,9 +974,9 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		{
 			$strKev .= "&rfr_id=info:sid/" . urlencode( $strReferer );
 		}
-		if ( $this->source != "" )
+		if ( $this->database_name != "" )
 		{
-			$strKev .= urlencode( " ( " . $this->source . ")" );
+			$strKev .= urlencode( " ( " . $this->database_name . ")" );
 		}
 		
 		// add rft_id's
@@ -1177,20 +1178,30 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		// normalized title
 		
 		$strTitle = $this->getTitle(true);
-		$objTitle = $objXml->createElement("title_normalized",  $this->escapeXML($strTitle));
-		$objXml->documentElement->appendChild($objTitle);
+		
+		if ( $strTitle != "" )
+		{
+			$objTitle = $objXml->createElement("title_normalized",  $this->escapeXML($strTitle));
+			$objXml->documentElement->appendChild($objTitle);
+		}
 		
 		// primary author
 		
 		$strPrimaryAuthor = $this->getPrimaryAuthor(true);
-		$objPrimaryAuthor= $objXml->createElement("primary_author", $this->escapeXML($strPrimaryAuthor));
-		$objXml->documentElement->appendChild($objPrimaryAuthor);
 		
-		// openurl
+		if ( $strPrimaryAuthor != "")
+		{
+			$objPrimaryAuthor= $objXml->createElement("primary_author", $this->escapeXML($strPrimaryAuthor));
+			$objXml->documentElement->appendChild($objPrimaryAuthor);
+		}
 		
-		$strOpenURL = $this->getOpenURL("");
-		$objOpenURL= $objXml->createElement("open_url", $this->escapeXML($strOpenURL));
-		$objXml->documentElement->appendChild($objOpenURL);		
+		// full-text indicator
+		
+		if ($this->hasFullText())
+		{
+			$objFull= $objXml->createElement("full_text_bool", 1);
+			$objXml->documentElement->appendChild($objFull);
+		}
 		
 		// authors
 			
@@ -1406,8 +1417,8 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		return $objXml;
 	}
 	
-	### PRIVATE FUNCTIONS ###		
-	
+	### PRIVATE FUNCTIONS ###	
+
 	private function createNode($key, $value, $objDocument, $objParent)
 	{
 		if ( is_array($value) )
@@ -1911,7 +1922,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		} 
 		else
 		{
-			return $strYear;
+			return null;
 		}
 	}
 	

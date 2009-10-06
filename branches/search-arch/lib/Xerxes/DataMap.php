@@ -1491,7 +1491,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 
 					if ( array_key_exists( "marc", $arrResult ) )
 					{
-						$objXerxes_Record = new Xerxes_Record( );
+						$objXerxes_Record = new Xerxes_MetalibRecord( );
 						$objXerxes_Record->loadXML( $arrResult["marc"] );
 						$objRecord->xerxes_record = $objXerxes_Record;
 					}
