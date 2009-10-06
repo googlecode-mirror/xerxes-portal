@@ -65,14 +65,16 @@ class Xerxes_Record_DocumentTest extends PHPUnit_Framework_TestCase
 		$this->Xerxes_Record_Document->load($this->dir. "/data/worldcat-book.xml");
 		$record = $this->Xerxes_Record_Document->record(1);
 		
-			
-		$record->setLeader("happy");
+		$leader = $record->leader();
+		$leader->value = "happy";
 		$this->assertEquals( (string) $record->leader(), "happy");
 		
-		$record->setControlField("001", "days");
+		$control_field = $record->controlfield("001");
+		$control_field->value = "days";
 		$this->assertEquals( (string) $record->controlfield("001"), "days");
-
-		$record->setSubField("245", null, null, "a", "Happy days are here again");
+		
+		$subfield = $record->datafield("245")->subfield("a");
+		$subfield->value = "Happy days are here again";
 		$this->assertEquals( (string) $record->datafield("245")->subfield("a"), "Happy days are here again");
 	}	
 	

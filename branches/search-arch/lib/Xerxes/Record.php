@@ -239,6 +239,15 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		$this->sub_title = (string) $this->datafield("245")->subfield("b");
 		$this->series_title = (string) $this->datafield("440")->subfield("a" );
 		
+		// sometimes title is in subfield p
+		
+		$title_part = (string) $this->datafield("245")->subfield("p" );
+		
+		if ( $this->title == "" && $title_part != "" )
+		{
+			$this->title = $title_part;
+		}
+		
 		// sometimes the title appears in a 242 or even a 246 if it is translated from another
 		// language, although the latter is probably bad practice.  We will only take these
 		// if the title in the 245 is blank, and take a 242 over the 246

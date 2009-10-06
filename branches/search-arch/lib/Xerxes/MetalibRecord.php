@@ -256,7 +256,7 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 				$note_field->addSubField($subfield);
 			}
 			
-			// sub title is only these wacky these notes
+			// sub title is only these wacky notes
 
 			if ($title_sub->value != "")
 			{

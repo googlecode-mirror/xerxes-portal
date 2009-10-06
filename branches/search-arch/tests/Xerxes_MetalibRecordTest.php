@@ -144,6 +144,23 @@ class Xerxes_MetalibRecordTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals( $record->getDegree(), "M.Sc.");
 		$this->assertEquals( $record->getFormat(), "Thesis");
 	}
-	
+
+	public function testOCLCPapers()
+	{
+		$this->Xerxes_MetalibRecord_Document->load($this->dir. "/data/metalib-oclc-papers.xml");
+		$record = $this->Xerxes_MetalibRecord_Document->record(1);
+		$this->assertEquals( $record->getFormat(), "Conference Paper");
+	}
+
+	public function testOCLCProceedings()
+	{
+		$this->Xerxes_MetalibRecord_Document->load($this->dir. "/data/metalib-oclc-proceedings.xml");
+		$record = $this->Xerxes_MetalibRecord_Document->record(1);
+		$this->assertEquals( $record->getFormat(), "Conference Proceeding");
+
+		// testing 245$p
+		
+		$this->assertEquals( $record->getTitle(true), "Engineering for Climatic Change");		
+	}	
 }
 
