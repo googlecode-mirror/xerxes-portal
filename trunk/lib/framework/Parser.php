@@ -81,7 +81,7 @@
 		 * @static
 		*/
 		
-		public static function generateBaseXsl($strXsltRelPath, $arrInclude = "")
+		public static function generateBaseXsl($strXsltRelPath, $arrInclude = array())
 		{
 			$objRegistry = Xerxes_Framework_Registry::getInstance(); 
 		
@@ -90,7 +90,7 @@
 			
 			$local_xsl_dir = $objRegistry->getConfig("APP_DIRECTORY", true);
 			$local_path =  $local_xsl_dir . "/" . $strXsltRelPath;
-			
+			      
 			// the 'main' application xsl lives here
 		
 			$distro_xsl_dir = $objRegistry->getConfig("PATH_PARENT_DIRECTORY", true) . '/lib/';
@@ -129,14 +129,11 @@
 			}
 			
 			// additional xsl that should be included
+      foreach ( $arrInclude as $strInclude )
+      {
+        self::addImportReference( $generated_xsl, $this_xsl_dir . $strInclude, $importInsertionPoint );
+      }
 			
-			if ( $arrInclude != "" )
-			{
-				foreach ( $arrInclude as $strInclude )
-				{
-					self::addImportReference( $generated_xsl, $this_xsl_dir . $strInclude, $importInsertionPoint );
-				}
-			}
 			
 			// include local
 			
@@ -155,24 +152,29 @@
 			}
 			
 			// add any locally overridden subsidiary 'included' type files if
-			// neccesary. Right now, that's just includes.xsl.
+			// neccesary, for instance includes.xsl, but we also look through
+      // distro file to see if there's anything else we need. 
+      //
 			// includes.xsl still needs manually xsl:include'd in the distro source,
 			// but local source shouldn't, we will import local includes.xsl
 			// dynamically here. We import instead of include in case the local
 			// stylesheet does erroneously 'include', to avoid a conflict. We
 			// import LAST to make sure it takes precedence over distro. 
-			
-			$extra_xsl_names = array("xsl/includes.xsl");
-			
-			foreach ($extra_xsl_names as $rel_path )
-			{
-				$abs_local_path = $local_xsl_dir . '/' . $rel_path;
-				
-				if ( file_exists( $abs_local_path ))
+
+      $distroXml = simplexml_load_file($distro_path);
+      $distroXml->registerXPathNamespace('xsl', 'http://www.w3.org/1999/XSL/Transform');
+
+      // find anything include'd or importe'd in original base file,
+      // including but not limited to includes.xsl      
+      foreach (array_merge($distroXml->xpath("//xsl:include"),
+                           $distroXml->xpath("//xsl:import")) as $extra) {
+        // if this is over-ridden locally, where would it be?
+        $local_candidate = $local_xsl_dir . '/' . dirname($strXsltRelPath) . '/' . $extra['href'];
+        if ( file_exists( $local_candidate ))
 				{
-					self::addImportReference($generated_xsl, $abs_local_path, $importInsertionPoint);
+					self::addImportReference($generated_xsl, $local_candidate, $importInsertionPoint);
 				}
-			}
+      }
 			
 			// header("Content-type: text/xml"); echo $generated_xsl->saveXML(); exit;
 			
