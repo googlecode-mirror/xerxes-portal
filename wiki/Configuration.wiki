@@ -614,7 +614,15 @@ The full URL to the Refworks import script.
   * available since: 1.3
 
 _This config must be added to config.xml_. Only needed as a stop-gap in the unlikely event Refworks changes the address, and we've not updated (or you've not upgraded) Xerxes to pick-up the change.
-_
+
+==reverse_proxy==
+
+Whether you are running Xerxes behind a reverse-proxy server
+
+  * default value: `false`
+  * available since: 1.6
+
+This instructs Xerxes to look for the server name and user's IP address in HTTP_X_FORWARDED headers.  This entry is necessary as a security precaution in the event you are _not_ running Xerxes behind a reverse-proxy, in which case the headers can be spoofed by the client.
 	
 ==rewrite==
 
@@ -683,7 +691,6 @@ The HTTP header that Xerxes will expect to find the Shiboleth username in.
   * default value: `REMOTE_USER`
   * available since: 1.2
 
-Defaults to REMOTE_USER, which seems to be what the Shib SP normally does. Can customize if needed. For even more flexible customization, see your `demo/config/shibboleth/shib_map.php` file.
 
 ==show_all_holdings_links==
 
