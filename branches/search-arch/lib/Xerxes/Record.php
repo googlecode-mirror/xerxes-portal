@@ -101,7 +101,12 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		elseif ($this->document->getElementsByTagNameNS ( "info:ofi/fmt:xml:xsd:dissertation", "dissertation" )->item ( 0 ) != null)
 		{
 			$this->xpath->registerNamespace ( "rft", "info:ofi/fmt:xml:xsd:dissertation" );
-		} 
+		} 		
+		elseif ($this->document->getElementsByTagNameNS ( "info:ofi/fmt:xml:xsd", "journal" )->item ( 0 ) != null)
+		{
+			$this->xpath->registerNamespace ( "rft", "info:ofi/fmt:xml:xsd" );
+		}
+
 		else
 		{
 			$this->xpath->registerNamespace ( "rft", "info:ofi/fmt:xml:xsd:journal" );
@@ -124,7 +129,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		if ($objStartPage != null) $this->start_page = $objStartPage->nodeValue;
 		if ($objEndPage != null) $this->end_page = $objEndPage->nodeValue;
 		if ($objISBN != null) array_push($this->isbns, $objISBN->nodeValue);
-		if ($objISSN != null) array_push($this->issns, $objISSN->nodeValue);	
+		if ($objISSN != null) array_push($this->issns, $objISSN->nodeValue);
 		
 		
 		// control and standard numbers
@@ -330,8 +335,11 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		}
 		
 		// journal
-
-		$this->journal = (string) $this->datafield("773");
+		
+		// specify the order of the subfields in 773 for journal as $a $t $g and then everything else
+		//  in case they are out of order 
+		
+		$this->journal = (string) $this->datafield("773")->subfield("atgbcdefhijklmnopqrsuvwxyz1234567890");
 		$strJournal = (string) $this->datafield("773")->subfield("agpt");
 		$this->journal_title = (string) $this->datafield("773")->subfield("t");
 		$this->short_title = (string) $this->datafield("773")->subfield("p");
@@ -379,7 +387,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		{
 			if ( strpos( $strIssn, "^" ) === false )
 			{
-				array_push( $this->issns, str_replace( "-", "", $strIssn) );
+				array_push( $this->issns, $strIssn);
 			}
 		}
 		
@@ -387,7 +395,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		{
 			if ( strpos( $strIsbn, "^" ) === false )
 			{
-				array_push( $this->isbns, str_replace( "-", "", $strIsbn) );
+				array_push( $this->isbns, $strIsbn );
 			}
 		}
 		
@@ -877,6 +885,9 @@ class Xerxes_Record extends Xerxes_Marc_Record
 			}
 		}
 		
+		
+		## de-duping
+		
 		// make sure no dupes in author array
 		
 		$author_original = $this->authors;
@@ -918,6 +929,39 @@ class Xerxes_Record extends Xerxes_Marc_Record
 			}
 		}
 		
+		// make sure no dupes and no blanks in standard numbers
+		
+		$arrISSN = $this->issns;
+		$arrISBN = $this->isbns;
+		
+		$this->issns = array();
+		$this->isbns = array();
+		
+		foreach ( $arrISSN as $strISSN )
+		{
+			$strISSN = trim($strISSN);
+			
+			if ( $strISSN != "" )
+			{
+				$strISSN = str_replace( "-", "", $strISSN);
+				array_push($this->issns, $strISSN);
+			}
+		}
+
+		foreach ( $arrISBN as $strISBN )
+		{
+			$strISBN = trim($strISBN);
+			
+			if ( $strISBN != "" )
+			{
+				$strISBN = str_replace( "-", "", $strISBN);
+				array_push($this->isbns, $strISBN);
+			}
+		}		
+		
+		
+		$this->issns = array_unique( $this->issns ); 
+		$this->isbns = array_unique( $this->isbns );
 		
 		
 		### punctuation clean-up
@@ -1185,6 +1229,17 @@ class Xerxes_Record extends Xerxes_Marc_Record
 			$objXml->documentElement->appendChild($objTitle);
 		}
 		
+		// journal title
+		
+		$strJournalTitle = $this->getJournalTitle(true);
+		
+		if ( $strJournalTitle != "" )
+		{
+			$objJTitle = $objXml->createElement("journal_title",  $this->escapeXML($strJournalTitle));
+			$objXml->documentElement->appendChild($objJTitle);
+		}		
+		
+		
 		// primary author
 		
 		$strPrimaryAuthor = $this->getPrimaryAuthor(true);
@@ -1387,6 +1442,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 				$key == "oclc_number" ||
 				$key == "toc" ||
 				$key == "links" || 
+				$key == "journal_title" ||
 				
 				// these are utility variables, not to be output
 				
@@ -1624,6 +1680,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 				break;
 			
 			case "Book Review" :
+			case "Film Review" :
 			case "Article" :
 				
 				return "article";
@@ -1672,10 +1729,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 	/**
 	 * Determines the format/genre of the item, broken out here for clarity
 	 *
-	 * @param string $strJournal		journal title
 	 * @param string $arrFormat			format fields		
-	 * @param string $arrIsbn			all the isbns
-	 * @param array $arrIssn			all the issns
 	 * @return string					internal xerxes format designation
 	 */
 	
@@ -1717,6 +1771,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		elseif ( strstr( $strDataFields, 'hearing' ) ) $strReturn = "Hearing"; 
 		elseif ( strstr( $strDataFields, 'working' ) ) $strReturn = "Working Paper"; 
 		elseif ( strstr( $strDataFields, 'book review' ) || strstr( $strDataFields, 'review-book' ) ) $strReturn = "Book Review"; 
+		elseif ( strstr( $strDataFields, 'film review' ) || strstr( $strDataFields, 'film-book' ) ) $strReturn = "Film Review";
 		elseif ( strstr( $strDataFields, 'book art' ) || strstr( $strDataFields, 'book ch' ) || strstr( $strDataFields, 'chapter' ) ) $strReturn = "Book Chapter"; 
 		elseif ( strstr( $strDataFields, 'journal' ) ) $strReturn = "Article"; 
 		elseif ( strstr( $strDataFields, 'periodical' ) || strstr( $strDataFields, 'serial' ) ) $strReturn = "Article"; 
@@ -4088,12 +4143,12 @@ class Xerxes_Record extends Xerxes_Marc_Record
 	
 	public function getAllISSN()
 	{
-		return array_unique( $this->issns );
+		return $this->issns;
 	}
 	
 	public function getAllISBN()
 	{
-		return array_unique( $this->isbns );
+		return $this->isbns;
 	}
 	
 	public function getMainTitle()

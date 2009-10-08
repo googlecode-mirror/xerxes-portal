@@ -454,11 +454,27 @@ class Xerxes_Marc_DataField
 		
 		$list = new Xerxes_Marc_SubFieldList();
 		
-		foreach ( $this->_subfields as $subfield )
+		if ( $code == "" )
 		{
-			if ( in_array($subfield->code, $codes) || $code == "" )
+			foreach ( $this->_subfields as $subfield )
 			{
 				$list->addField($subfield);
+			}
+		}
+		else
+		{
+			// do it this way so fields are returned in the order in 
+			// which they were specified in the paramater
+			
+			foreach ( $codes as $letter )
+			{
+				foreach ( $this->_subfields as $subfield )
+				{
+					if ( $subfield->code == $letter )
+					{
+						$list->addField($subfield);
+					}
+				}
 			}
 		}
 		
@@ -589,10 +605,21 @@ class Xerxes_Marc_DataFieldList extends Xerxes_Marc_FieldList
 		}
 		else
 		{
-			// return the first (and only the first) subfield of the 
-			// first (and only the first) datafield  
-			
-			return $this->list[0]->subfield($code)->item(0);
+			if ( strlen($code) == 1)
+			{
+				// only one subfield specified, so as a convenience to caller
+				// return the first (and only the first) subfield of the 
+				// first (and only the first) datafield  
+				
+				return $this->list[0]->subfield($code)->item(0);
+			}
+			else
+			{
+				// multiple subfields specified, so return them all, but 
+				// again only from the first occurance of the datafield
+				
+				return $this->list[0]->subfield($code);
+			}
 		}
 	}
 }

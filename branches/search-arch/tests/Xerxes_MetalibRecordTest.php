@@ -179,7 +179,7 @@ class Xerxes_MetalibRecordTest extends PHPUnit_Framework_TestCase
 		$this->Xerxes_MetalibRecord_Document->load($this->dir. "/data/metalib-psycinfo-not-thesis.xml");
 		$record = $this->Xerxes_MetalibRecord_Document->record(1);
 		
-		// has a 502, but this is crazy
+		// has a 502, but not a thesus
 		
 		$this->assertEquals( $record->getFormat(), "Article");
 	}
@@ -189,7 +189,47 @@ class Xerxes_MetalibRecordTest extends PHPUnit_Framework_TestCase
 		$this->Xerxes_MetalibRecord_Document->load($this->dir. "/data/metalib-psycinfo-thesis.xml");
 		$record = $this->Xerxes_MetalibRecord_Document->record(1);
 		$this->assertEquals( $record->getFormat(), "Dissertation");
-	}	
+	}
 	
+	public function testWilsonFullText()
+	{
+		$this->Xerxes_MetalibRecord_Document->load($this->dir. "/data/metalib-wilson-fulltext.xml");
+		$record = $this->Xerxes_MetalibRecord_Document->record(1);
+		$this->assertFalse( $record->hasFullText());
+	}
+
+	public function testMuse()
+	{
+		$this->Xerxes_MetalibRecord_Document->load($this->dir. "/data/metalib-muse.xml");
+		$record = $this->Xerxes_MetalibRecord_Document->record(1);
+		
+		// 773 is out of order, so this tests the reordering in xerxes_record
+		
+		$this->assertEquals( $record->getJournal(), "Ethics & the Environment Volume 14, Number 1, Spring 2009 pp. 79-99");
+	}
+	
+	public function testWilsonFilmReview()
+	{
+		$this->Xerxes_MetalibRecord_Document->load($this->dir. "/data/metalib-wilson-film-review.xml");
+		$record = $this->Xerxes_MetalibRecord_Document->record(1);
+		$this->assertEquals( $record->getFormat(), "Film Review");
+	}
+
+	public function testSpringer()
+	{
+		$this->Xerxes_MetalibRecord_Document->load($this->dir. "/data/metalib-springer-article.xml");
+		$record = $this->Xerxes_MetalibRecord_Document->record(1);
+		
+		// original record link only
+		
+		$this->assertFalse( $record->hasFullText());
+	}
+
+	public function testMultipleISSNs()
+	{
+		$this->Xerxes_MetalibRecord_Document->load($this->dir. "/data/metalib-wos.xml");
+		$record = $this->Xerxes_MetalibRecord_Document->record(1);
+		$this->assertEquals( count($record->getAllISSN()), 1);
+	}
 }
 

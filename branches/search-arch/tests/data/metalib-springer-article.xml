@@ -1,0 +1,104 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<x_server_response metalib_version="4.3.1 (602)">
+<present_response>
+<record xmlns="http://www.loc.gov/MARC21/slim"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.loc.gov/MARC21/slim
+http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd">
+<datafield tag="520" ind1=" " ind2=" ">
+<subfield code="a">Abstract&amp;nbsp;&amp;nbsp;Motivated by the high abatement costs of the Kyoto Protocol for Germany, this paper is estimating the economic impact of global warming on agriculture in that country. The hedonic approach is used as theoretical background. Stating that land prices are – among others – determined by climatic factors, this approach can consequently be used to value global warming. To avoid a priori restrictions stemming from functional forms, the land price function is modeled as quadratic Box–Cox function that nests a wide range of specifications. In a second step, the estimated results are used to forecast the impact of climate change. The results indicate that German farmers will be winners of climate change in the short run, with maximum gains occurring at a temperature increase of +0.6�C against current levels. In the long run, there may be losses from global warming. However, the net present value from climate change is under the most probable scenarios positive.</subfield>
+</datafield>
+<datafield tag="513" ind1=" " ind2=" ">
+<subfield code="a">Journal Article</subfield>
+</datafield>
+<datafield tag="546" ind1=" " ind2=" ">
+<subfield code="a">en</subfield>
+</datafield>
+<datafield tag="260" ind1=" " ind2=" ">
+<subfield code="b">Springer Netherlands</subfield>
+</datafield>
+<datafield tag="245" ind1=" " ind2=" ">
+<subfield code="a">Where are Germany’s gains from Kyoto? Estimating the effects of global warming on agriculture</subfield>
+</datafield>
+<datafield tag="100" ind1=" " ind2=" ">
+<subfield code="a">Günter Lang</subfield>
+</datafield>
+<datafield tag="650" ind1=" " ind2=" ">
+<subfield code="a">Earth and Environmental Science</subfield>
+</datafield>
+<datafield tag="856" ind1=" " ind2=" ">
+<subfield code="u">http://www.springerlink.com/content/e4578u72x858l28n/</subfield>
+</datafield>
+<datafield tag="SID" ind1=" " ind2=" ">
+<subfield code="a">WEBCONFIG_XML</subfield>
+<subfield code="b">METAPRESS_XML</subfield>
+<subfield code="d">CAL09478</subfield>
+<subfield code="i">000000</subfield>
+<subfield code="j">000030</subfield>
+<subfield code="s">024570</subfield>
+<subfield code="t">SpringerLink Journals</subfield>
+</datafield>
+<controlfield tag="RAN">099</controlfield>
+<datafield tag="TIT" ind1="L" ind2=" ">
+<subfield code="a">Climatic Change</subfield>
+</datafield>
+<datafield tag="773" ind1=" " ind2=" ">
+<subfield code="g">Climatic Change</subfield>
+</datafield>
+<datafield tag="VOL" ind1=" " ind2=" ">
+<subfield code="a">84</subfield>
+</datafield>
+<datafield tag="YR " ind1=" " ind2=" ">
+<subfield code="a">2007</subfield>
+</datafield>
+<datafield tag="ISS" ind1="U" ind2=" ">
+<subfield code="a">3-4</subfield>
+</datafield>
+<datafield tag="773" ind1=" " ind2=" ">
+<subfield code="g">Volume 84, Numbers 3-4 / October, 2007</subfield>
+</datafield>
+<controlfield tag="SET">024570</controlfield>
+<controlfield tag="SYS">008634016</controlfield>
+<openURL>
+<ctx:context-objects xmlns:ctx="info:ofi/fmt:xml:xsd:ctx" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="info:ofi/fmt:xml:xsd:ctx http://www.openurl.info/registry/docs/info:ofi/fmt:xml:xsd:ctx">
+<ctx:context-object timestamp="2004-01-16T12:13:00Z" version="Z39.88-2004" identifier="123">
+<ctx:referent>
+<ctx:metadata-by-val>
+<ctx:format>info:ofi/fmt:xml:xsd</ctx:format>
+<ctx:metadata>
+<rft:journal xmlns:rft="info:ofi/fmt:xml:xsd" xsi:schemaLocation="info:ofi/fmt:xml:xsd          http://www.openurl.info/registry/docs/info:ofi/fmt:xml:xsd">
+<rft:author rank="1">
+<rft:aulast>Lang</rft:aulast>
+<rft:aufirst>Günter</rft:aufirst>
+<rft:auinit></rft:auinit>
+</rft:author>
+<rft:atitle>Where are Germany’s gains from Kyoto? Estimating the effects of global warming on agriculture</rft:atitle>
+<rft:title>Climatic Change</rft:title>
+<rft:date>2007</rft:date>
+<rft:volume>84</rft:volume>
+<rft:issue>3-4</rft:issue>
+<rft:spage></rft:spage>
+<rft:epage></rft:epage>
+<rft:issn></rft:issn>
+<ctx:identifier>info:doi/</ctx:identifier>
+<rft:sici></rft:sici>
+<rft:opid></rft:opid>
+</rft:journal>
+</ctx:metadata>
+</ctx:metadata-by-val>
+<ctx:metadata-by-ref>
+<ctx:format></ctx:format>
+<ctx:location>http://metalib.calstate.edu:8331/X?OP=sfx-get-doc&amp;doc-number=008634016</ctx:location>
+</ctx:metadata-by-ref>
+</ctx:referent>
+<ctx:referrer>
+<ctx:identifier>info:sid/metalib.com:METAPRESS_XML</ctx:identifier>
+</ctx:referrer>
+</ctx:context-object>
+</ctx:context-objects>
+</openURL>
+</record>
+<session_id new_session="N">HJPV52393XASHRQGVXPGVAY73RH1XN6HFA3CEKPGEQ7GB7MC4B</session_id>
+</present_response>
+</x_server_response>
+ 

@@ -47,14 +47,6 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 		{
 			$leader->value = $strLeaderMetalib;
 		}
-
-		// this is not an actual openurl namespace, but a bug in the metalib
-		// x-server that causes it to send back a mislabelled namespace (2007-02-19)
-		
-		if ($this->document->getElementsByTagNameNS ( "info:ofi/fmt:xml:xsd", "journal" )->item ( 0 ) != null)
-		{
-			$this->xpath->registerNamespace ( "rft", "info:ofi/fmt:xml:xsd" );
-		}
 		
 		// ebsco and some screen-scrapers have multiple authors in repeating 100 fields; 
 		// invalid marc, so switch all but first to 700
@@ -196,6 +188,7 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 
 			if ( stristr ( $this->source, "METAPRESS_XML" ) || 
 				stristr ( $this->source, "EBSCO_RZH" ) || 
+				( stristr ( $this->source, "WILSON_" ) && strstr($strUrl, '$3') ) ||
 				stristr ( $this->source, "CABI" ) || 
 				stristr ( $this->source, "GOOGLE_SCH" ) || 
 				stristr ( $this->source, "AMAZON" ) || 
@@ -303,14 +296,14 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 			$this->year = $year;
 		}
 
-		if ( $this->issue == "" )
+		if ( $this->issue == null )
 		{
 			$this->issue = (string) $this->datafield("ISS")->subfield("a");
 		}
 
-		if ( $this->volume == "" )
+		if ( $this->volume == null )
 		{
-			$this->issue = (string) $this->datafield("VOL")->subfield("a");
+			$this->volume = (string) $this->datafield("VOL")->subfield("a");
 		}			
 		
 		## oclc dissertation abstracts
