@@ -112,16 +112,27 @@ class Xerxes_Record extends Xerxes_Marc_Record
 			$this->xpath->registerNamespace ( "rft", "info:ofi/fmt:xml:xsd:journal" );
 		}
 		
-		// context object: journal title, volume, issue, pages from context object
+		// context object: 
 
-		$objSTitle = $this->xpath->query( "//rft:stitle" )->item ( 0 );
+		// these just in case
+		
+		$objATitle = $this->xpath->query( "//rft:atitle" )->item ( 0 );
+		$objAuthors = $this->xpath->query( "//rft:author" );
+		$objGenre = $this->xpath->query( "//rft:genre" )->item ( 0 );
+		$objDate = $this->xpath->query( "//rft:date" )->item ( 0 );
+		
+		// journal title, volume, issue, pages from context object
+		
 		$objTitle = $this->xpath->query( "//rft:title" )->item ( 0 );
+		$objSTitle = $this->xpath->query( "//rft:stitle" )->item ( 0 );
+		$objJTitle = $this->xpath->query( "//rft:jtitle" )->item ( 0 );
 		$objVolume = $this->xpath->query( "//rft:volume" )->item ( 0 );
 		$objIssue = $this->xpath->query( "//rft:issue" )->item ( 0 );
 		$objStartPage = $this->xpath->query( "//rft:spage" )->item ( 0 );
 		$objEndPage = $this->xpath->query( "//rft:epage" )->item ( 0 );
 		$objISSN = $this->xpath->query( "//rft:issn" )->item ( 0 );
 		$objISBN = $this->xpath->query( "//rft:isbn" )->item ( 0 );
+		
 		
 		if ($objSTitle != null) $this->short_title = $objSTitle->nodeValue;
 		if ($objVolume != null)	$this->volume = $objVolume->nodeValue;
@@ -130,7 +141,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		if ($objEndPage != null) $this->end_page = $objEndPage->nodeValue;
 		if ($objISBN != null) array_push($this->isbns, $objISBN->nodeValue);
 		if ($objISSN != null) array_push($this->issns, $objISSN->nodeValue);
-		
+		if ($objGenre != null) array_push($this->format_array, $objGenre->nodeValue);
 		
 		// control and standard numbers
 		
@@ -239,7 +250,8 @@ class Xerxes_Record extends Xerxes_Marc_Record
 			array_push( $this->format_array, "conference paper" );
 		}
 			
-		// titles
+		
+		### title
 		
 		$this->title = (string) $this->datafield("245")->subfield("a");
 		$this->sub_title = (string) $this->datafield("245")->subfield("b");
@@ -285,6 +297,15 @@ class Xerxes_Record extends Xerxes_Marc_Record
 			$this->sub_title = $strVaryingSubTitle;
 			$this->trans_title = true;
 		}
+		
+		// last chance, check the context object
+		
+		if ( $this->title == "" && $objATitle != null )
+		{
+			$this->title = $objATitle->nodeValue;
+		}
+		
+		
 		
 		// edition, extent, description
 
@@ -563,12 +584,15 @@ class Xerxes_Record extends Xerxes_Marc_Record
 
 		// we'll take the journal title form the 773$t as the best option,
 
-
 		if ( $this->journal_title == "" )
 		{
 			// otherwise see if context object has one
 					
-			if ( $objTitle != null )
+			if ( $objJTitle != null )
+			{
+				$this->journal_title = $objJTitle->nodeValue;
+			}
+			elseif ( $objTitle != null )
 			{
 				$this->journal_title = $objTitle->nodeValue;
 			}
@@ -802,6 +826,14 @@ class Xerxes_Record extends Xerxes_Marc_Record
 			$this->year = $this->extractYear( $this->journal );
 		}
 		
+		// last chance grab from context object
+		
+		if ( $this->year == "" && $objDate != null )
+		{
+			$this->year = $this->extractYear($objDate->nodeValue);
+		}
+		
+		
 		#### authors
 
 		// personal primary author
@@ -882,6 +914,67 @@ class Xerxes_Record extends Xerxes_Marc_Record
 			{
 				$arrAuthor = $this->splitAuthor( $strConf, "conference" );
 				array_push( $this->authors, $arrAuthor );
+			}
+		}
+		
+		// last-chance from context-object
+		
+		if ( count($this->authors) == 0 && $objAuthors != null )
+		{
+			foreach ( $objAuthors as $objAuthor )
+			{
+				$arrCtxAuthor = array();
+				
+				foreach ( $objAuthor->childNodes as $objAuthAttr )
+				{					
+					switch ( $objAuthAttr->localName )
+					{
+						case "aulast":
+							$arrCtxAuthor["last"] = $objAuthAttr->nodeValue;
+							$arrCtxAuthor["type"] = "personal";
+							break;
+
+						case "aufirst":
+							$arrCtxAuthor["first"] = $objAuthAttr->nodeValue;
+							break;
+							
+						case "auinit":
+							$arrCtxAuthor["init"] = $objAuthAttr->nodeValue;
+							break;
+							
+						case "aucorp":
+							$arrCtxAuthor["name"] = $objAuthAttr->nodeValue;
+							$arrCtxAuthor["type"] = "corporate";
+							break;							
+					}
+				}
+				
+				array_push($this->authors, $arrCtxAuthor);
+			}
+		}
+		
+		// construct a readable journal field if none supplied
+		
+		if ( $this->journal == "" )
+		{
+			if ( $this->journal_title != "" )
+			{
+				$this->journal = $this->toTitleCase($this->journal_title);
+
+				if ( $this->volume != "" ) 
+				{
+					$this->journal .= " vol. " . $this->volume;
+				}
+				
+				if ( $this->issue != "" )
+				{
+					$this->journal .= " iss. " . $this->issue;
+				}
+				
+				if ( $this->year != "" )
+				{
+					$this->journal .= " (" . $this->year . ")";
+				}
 			}
 		}
 		
@@ -1238,7 +1331,6 @@ class Xerxes_Record extends Xerxes_Marc_Record
 			$objJTitle = $objXml->createElement("journal_title",  $this->escapeXML($strJournalTitle));
 			$objXml->documentElement->appendChild($objJTitle);
 		}		
-		
 		
 		// primary author
 		

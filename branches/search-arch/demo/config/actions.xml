@@ -251,7 +251,9 @@
 				</pathParamMap>			
 				<command>FolderResults</command>
 				<!-- FolderTags for tag autocomplete --> 
-				<command directory="folder">FolderTags</command>
+				<command>FolderTags</command>
+				<command directory="metasearch">MetasearchRelated</command>
+				<command directory="availability">AvailabilityInjectFullText</command>
 				<view>xsl/folder_full.xsl</view>
 			</action>
 			<action name="output_email">
@@ -477,6 +479,7 @@
 				<command>MetasearchCheckSaved</command>
 				<command directory="folder">FolderTags</command>
 				<command>MetasearchPaging</command>
+				<command>MetasearchRelatedGroup</command>
 				<pathParamMap>
 					<mapEntry pathIndex="2" property="group"/>
 					<mapEntry pathIndex="3" property="resultSet"/>
@@ -508,7 +511,9 @@
 				<!-- FolderTags for tag autocomplete --> 
 				<command directory="folder">FolderTags</command>
 				<command directory="availability">AvailabilityInjectRefereed</command>
+				<command directory="availability">AvailabilityInjectFullText</command>
 				<command>MetasearchCheckSaved</command>
+				<command>MetasearchRelated</command>
 				<view>xsl/metasearch_record.xsl</view>
 			</action>
 		</section>

@@ -13,9 +13,9 @@
 
 class Xerxes_Marc_Document
 {
-	private $namespace = "http://www.loc.gov/MARC21/slim";
-	private $_length = 0;
-	private $_records = array();
+	protected $namespace = "http://www.loc.gov/MARC21/slim";
+	protected $_length = 0;
+	protected $_records = array();
 	protected $record_type = "Xerxes_Marc_Record";
 	
 	/**
