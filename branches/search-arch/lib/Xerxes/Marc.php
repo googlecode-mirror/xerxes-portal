@@ -145,8 +145,20 @@ class Xerxes_Marc_Record
 	 * @param DOMNode $objNode
 	 */
 	
-	public function loadXML(DOMNode $objNode = null)
+	public function loadXML($node = null)
 	{
+		$objNode = null;
+		
+		if ( is_string($node) )
+		{
+			$objNode = new DOMDocument();
+			$objNode->loadXML($node);
+		}
+		else 
+		{
+			$objNode = $node;
+		}
+		
 		if ( $objNode != null )
 		{
 			$objLeader = $objNode->getElementsByTagName("leader");

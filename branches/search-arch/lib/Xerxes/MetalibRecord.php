@@ -220,7 +220,7 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 			} 
 		}
 
-		// Gale title clean-up, because for some reason unknown to man  they put weird 
+		// Gale title clean-up, because for some reason unknown to man they put weird 
 		// notes and junk at the end of the title. so remove them here and add them to notes.
 
 		if (strstr ( $this->source, 'GALE_' ))
@@ -232,25 +232,28 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 			$title_main = $title->subfield("a");
 			$title_sub = $title->subfield("b");
 			
-			if (preg_match_all ( $strGaleRegExp, $title_main->value, $arrMatches ) != 0)
+			if ( $title_main != null )
 			{
-				$title_main->value = preg_replace ( $strGaleRegExp, "", $title_main->value );
-			}
-			
-			$note_field = new Xerxes_Marc_DataField();
-			$note_field->tag = "500";
-			
-			foreach ( $arrMatches [1] as $strMatch )
-			{				
-				$subfield = new Xerxes_Marc_Subfield();
-				$subfield->code = "a";
-				$subfield->value = "From title: " . $strMatch;
-				$note_field->addSubField($subfield);
-			}
+				if (preg_match_all ( $strGaleRegExp, $title_main->value, $arrMatches ) != 0)
+				{
+					$title_main->value = preg_replace ( $strGaleRegExp, "", $title_main->value );
+				}
+
+				$note_field = new Xerxes_Marc_DataField();
+				$note_field->tag = "500";
+				
+				foreach ( $arrMatches[1] as $strMatch )
+				{				
+					$subfield = new Xerxes_Marc_Subfield();
+					$subfield->code = "a";
+					$subfield->value = "From title: " . $strMatch;
+					$note_field->addSubField($subfield);
+				}
+			}			
 			
 			// sub title is only these wacky notes
 
-			if ($title_sub->value != "")
+			if ($title_sub != null)
 			{
 				$subfield = new Xerxes_Marc_Subfield();
 				$subfield->code = "a";
@@ -279,7 +282,7 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 		
 		######## PARENT MAPPING ###########
 		
-		parent::map ();	
+		parent::map();	
 		
 		###################################
 		
