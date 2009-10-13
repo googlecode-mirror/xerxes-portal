@@ -1715,25 +1715,7 @@
 							</xsl:if>						
 						
 						</xsl:when>
-					</xsl:choose>
-					
-					<!-- recommendations -->
-					
-					<xsl:variable name="this_position" select="position()" />
-					
-					<xsl:if test="//recommendations/recommend[position() = $this_position] = 'true'">
-					
-						<div class="resultRecommendations">
-							<a href="{../url}">
-								<img src="{$base_url}/images/famfamfam/group.png" alt="" border="0" class="miniIcon"/>
-								<xsl:text> </xsl:text>
-								There be recommendations here!
-							 </a>
-						</div>
-						
-					</xsl:if>
-					
-					
+					</xsl:choose>					
 				</div>
 			</div>
 		</li>
