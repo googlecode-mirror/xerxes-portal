@@ -1,4 +1,4 @@
-#summary Developer Notes:
+#summary Developer Notes
 
 = Request XML for page=
 
