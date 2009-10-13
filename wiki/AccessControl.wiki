@@ -1,6 +1,31 @@
-#summary Developer Notes: Access Control stuff
+#summary Developer Notes:
 
-= Introduction =
+= Request XML for page=
+
+Add `format=xerxes url` param to any page. 
+
+= Caching in Xerxes =
+
+I'm actually doing very little caching in Xerxes.  The xml config files, for example, are reprocessed with every request!
+ 
+I actually started off thinking I would do more caching -- obviously the config files, for example, would be perfect candidates for something like this.  But we've seen no performance problems in Xerxes, even in our central server, which hosts 10 campuses with ~ 150k students.  So, I've just left it as is, with the idea that, if we did see slow-downs, we would refactor the code to do more caching.
+ 
+ 
+There are a couple of things related to the search that we DO cache.  Commands that need to cache data send it to and receive it from a `Xerxes_Cache` object.  That, in turn, stores the data in a table in the database called xerxes_cache by way of the `DataMap`.
+ 
+=== `MetasearchSearch` ===
+caches information ABOUT the search: your search terms, what category you were in, any spelling suggestions from yahoo, and also any links to the native interfaces from the database you chose, all as a single XML fragment.  Later actions keep retrieving this data for display.
+ 
+=== `MetasearchHits` ===
+caches information about the search status as it keeps polling Metalib, again so later actions can use it in the display without having to go back to Metlib.  It also caches the facets as well.
+ 
+=== `MetasearchSort` ===
+updates the search status cache with the current sort order.
+
+
+=Access Control stuff=
+
+== Introduction ==
 
 Xerxes restricts access to certain parts of the application based on whether there is a logged in user, whether the IP address of the client is considered on campus, and the attributes of the logged in user. 
 
@@ -8,9 +33,9 @@ These mechanisms also cover when Xerxes will present the user with a login scree
 
 This stuff is a bit confusing, but we'll try to break it down. 
 
-= Session Characteristics =
+== Session Characteristics ==
 
-== users, real and fake ==
+=== users, real and fake ===
 
 A given session can have a 'user', or not. If the session has a 'user', then there's a 'username' set in the session. However, this is a bit confusing, because a 'user' can be an actual authenticated user from the Xerxes_User database table *or* can be a temporary fake user created just for the session. 
 
@@ -20,7 +45,7 @@ This is determined by the session property 'role'.  If the 'role' is 'named', th
 
 Temporary session 'users' can save records in the Saved Records area, but they will only be accessible for the current session. 
 
-== groups ==
+=== groups ===
 
 Metalib's user groups (aka 'secondary affiliations') can also be used by Xerxes by defining a <groups> section in the config.xml.  
 
@@ -28,18 +53,18 @@ A session can belong to a given group by:
   * having an authenticated user who is registered in the db as belonging to the group
   * having a client IP address that belongs to the range defined for the group (this can give a session access even if there is an authenticated user who does *not* belong to the group!)
 
-== info in Xerxes XML ==
+=== info in Xerxes XML ===
 
 FrontController adds information on the session's authenticatation status to the Xerxes back-end XML in an <authorization_info> block. Info here includes whether they are considered an authorized user (and whether that is by virtue of IP address or authenticated login), and their authorization for each defined group (and again, whether that authorization is via IP address or authenticated login). 
 
 
-= Action-based control =
+== Action-based control ==
 
 Sections and Actions in actions.xml can be given attributes related to access control. This is best through of as providing flow control for where and when a login screen is given to the user instead of actual security. 
 
 (Any user who knows the appropriate URL can mark their session as a 'guest' session, and thus get past all action-based control, so action-based control is not really sufficient security). 
 
-==restricted==
+===restricted===
 
 restricted=true
 
@@ -51,19 +76,19 @@ If a user is *off* campus, then the user will be presented with the login screen
 
 However, if the user is *on* campus, then the user is not presented with a login screen. Instead, Xerxes will create a temporary session-account with role 'local', and then let them into the action. The purpose of this is to allow on-campus people who may not have accounts to search, and to save records in the Saved Records section during their session. 
 
-==login==
+===login===
 
 login=true
 
 This only has effect if 'restricted' is also true. If login is also set to true, then the user must be logged into an authenticated account (*not* a temporary session-account in their session ("local" or "guest")). If the user is not logged into an authenticated account, they will be presented with a login screen when trying to use the action. 
 
-= Command/Controller based security =
+== Command/Controller based security ==
 
 You may have noted that this action-based control, in addition to not being actually secure, doesn't allow restriction based on the particular restrictions of particular Metalib resources (restricted to authorized users; restricted to certain groups; vs. publically accessible). 
 
 Controller (ie Command) code can provide secure protection based on access to individual database(s) by calling certain methods defined in the Xerxes_Framework_Restrict and Xerxes_Helper classes. 
 
-== high level ==
+=== high level ===
 
  * Xerxes_Helper::dbSearchableByUser : Checks a single database, returns true or false if it's searchable by the given session. Takes into account restrictions on the given db, and the nature of the current session. Should take into account user groups, guests, and everything else. 
 
@@ -71,14 +96,14 @@ Controller (ie Command) code can provide secure protection based on access to in
 
   This exception can be caught by the controller, or just left to be caught by FrontController. If an access denied exception makes it up to front controller, an access denied error message will be shown to the user.  (So any controller can always throw this action manually to prevent access, if convenient). 
 
-== low level ==
+=== low level ===
 
 Those functions in Xerxes_Helper are usually adequate for controllers, but they are defined in terms of some lower-level functions in Xerxes_Framework_Restrict, including:
 
   * isAuthenticatedUser
   * isIpAddrInRange
 
-== examples ==
+=== examples ===
 
 The MetasearchSearch command calls checkDbListSearchableByUser and catches the exception thrown. If any dbs were not searchable, they are removed from the search list, but added to another list so the user can be warned that they were excluded. 
 
