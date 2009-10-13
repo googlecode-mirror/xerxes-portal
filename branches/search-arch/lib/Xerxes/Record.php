@@ -117,7 +117,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		// these just in case
 		
 		$objATitle = $this->xpath->query( "//rft:atitle" )->item ( 0 );
-		$objAuthors = $this->xpath->query( "//rft:author" );
+		$objAuthors = $this->xpath->query( "//rft:author[rft:aulast != '' or rft:aucorp != '']" );
 		$objGenre = $this->xpath->query( "//rft:genre" )->item ( 0 );
 		$objDate = $this->xpath->query( "//rft:date" )->item ( 0 );
 		
