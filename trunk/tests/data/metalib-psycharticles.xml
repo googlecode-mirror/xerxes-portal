@@ -1,0 +1,181 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<x_server_response metalib_version="4.3.1 (602)">
+<present_response>
+<record xmlns="http://www.loc.gov/MARC21/slim"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.loc.gov/MARC21/slim
+http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd">
+<controlfield tag="001">pap-8-1-83</controlfield>
+<datafield tag="245" ind1="1" ind2="0">
+<subfield code="a">Psychoanalysis and femininity, Part I.</subfield>
+</datafield>
+<datafield tag="502" ind1=" " ind2=" ">
+<subfield code="a"> Lawrence Erlbaum Associates, Inc.. 1991.</subfield>
+</datafield>
+<datafield tag="516" ind1=" " ind2=" ">
+<subfield code="a">Print</subfield>
+<subfield code="b">Electronic; Print</subfield>
+</datafield>
+<datafield tag="520" ind1=" " ind2=" ">
+<subfield code="a">Reviews the books, Freud and women by Lucy Freeman and Herbert S. Strean (see record 1987-97874-000) and Psychoanalysis and women: Contemporary reappraisals by Judith L. Alpert (see record 1986-98299-000). Reviewing these books had hidden pleasures for me. In this so-called postmodern period that we are supposed to be in, in the literature, it is serotonin, not sexism, that sets the tone for psychiatric discussions. It may fall to our female colleagues among their other achievements, to become the progenitors of the psychodynamic approach. The first book examines the relationship Freud had with women: immediate family members, friends, patients, confreres, as well as fictional, mythical, and historical characters. The book, as far as I can determine, is factually accurate and written with great clarity. Although it will be understood by the laity, it does use psychoanalytic constructs in abundance in an attempt to give meaning to motives, facts, and events. In this effort the reader might find the approach too narrow and orthodox. Freeman and Strean fall victim to our chronic psychoanalytic malady of attempting to explain too much with too little; this always at the exclusion of worldly factors. In the second volume, Judith L. Alpert has edited an important book that should be in the hands of every candidate in a psychoanalytic training center. It is a compendium of essays that goes beyond criticism of past theory, to add new dimensions to psychoanalysis that the mainstream has not provided and seems unlikely to provide. This book is a gender expose that will change what we think about both men and women and their struggles in relationships. (PsycINFO Database Record (c) 2009 APA, all rights reserved)</subfield>
+</datafield>
+<datafield tag="546" ind1=" " ind2=" ">
+<subfield code="a">English</subfield>
+</datafield>
+<datafield tag="260" ind1=" " ind2=" ">
+<subfield code="a"></subfield>
+<subfield code="b">Lawrence Erlbaum Associates, Inc.</subfield>
+</datafield>
+<datafield tag="024" ind1=" " ind2=" ">
+<subfield code="a">10.1037/h0085142</subfield>
+</datafield>
+<controlfield tag="LDR">^^^^^naa^^2200889^^^4500</controlfield>
+<controlfield tag="005">19911201</controlfield>
+<controlfield tag="008">^^^^^^^1991^^^^^^^^^^^^^^^^^^^^^^^^Eng^^^</controlfield>
+<datafield tag="022" ind1=" " ind2=" ">
+<subfield code="a">0736-9735</subfield>
+<subfield code="b">Print</subfield>
+</datafield>
+<datafield tag="022" ind1=" " ind2=" ">
+<subfield code="a">1939-1331</subfield>
+<subfield code="b">Electronic</subfield>
+</datafield>
+<datafield tag="047" ind1=" " ind2=" ">
+<subfield code="a">Win, 1991</subfield>
+</datafield>
+<datafield tag="072" ind1=" " ind2=" ">
+<subfield code="a">Psychoanalytic Therapy</subfield>
+<subfield code="b">3315</subfield>
+</datafield>
+<datafield tag="072" ind1=" " ind2=" ">
+<subfield code="a">Sex Roles &amp; Women's Issues</subfield>
+<subfield code="b">2970</subfield>
+</datafield>
+<datafield tag="100" ind1="1" ind2="0">
+<subfield code="a">Seidenberg, Robert</subfield>
+</datafield>
+<datafield tag="269" ind1=" " ind2=" ">
+<subfield code="a">US</subfield>
+<subfield code="b">Educational Publishing Foundation</subfield>
+</datafield>
+<datafield tag="271" ind1=" " ind2=" ">
+<subfield code="a">Seidenberg, Robert</subfield>
+<subfield code="b">Suite 1604, State Tower Building, Syracuse, NY, US, 13202</subfield>
+</datafield>
+<datafield tag="YR " ind1=" " ind2=" ">
+<subfield code="a">1991</subfield>
+</datafield>
+<datafield tag="650" ind1=" " ind2="4">
+<subfield code="a">Human</subfield>
+<subfield code="b">10</subfield>
+</datafield>
+<datafield tag="653" ind1=" " ind2=" ">
+<subfield code="a">Freud</subfield>
+<subfield code="a">psychoanalysis</subfield>
+<subfield code="a">women</subfield>
+<subfield code="a">feminity</subfield>
+<subfield code="a">feminism</subfield>
+</datafield>
+<datafield tag="654" ind1=" " ind2=" ">
+<subfield code="a">Feminism</subfield>
+<subfield code="a">Freud (Sigmund)</subfield>
+<subfield code="a">Human Females</subfield>
+<subfield code="a">Psychoanalysis</subfield>
+</datafield>
+<datafield tag="655" ind1=" " ind2=" ">
+<subfield code="a">Journal</subfield>
+<subfield code="a">Peer Reviewed Journal</subfield>
+</datafield>
+<datafield tag="656" ind1=" " ind2=" ">
+<subfield code="a">Review-Book</subfield>
+</datafield>
+<datafield tag="700" ind1="1" ind2="0">
+<subfield code="a">Seidenberg, Robert</subfield>
+</datafield>
+<datafield tag="TIT" ind1="L" ind2=" ">
+<subfield code="a">Psychoanalytic Psychology</subfield>
+</datafield>
+<datafield tag="945" ind1=" " ind2=" ">
+<subfield code="m">8</subfield>
+<subfield code="n">1</subfield>
+<subfield code="d">1991</subfield>
+<subfield code="p">83</subfield>
+</datafield>
+<datafield tag="856" ind1=" " ind2=" ">
+<subfield code="i">TEXT*</subfield>
+</datafield>
+<datafield tag="856" ind1=" " ind2=" ">
+<subfield code="a">PDF Available</subfield>
+<subfield code="u">http://content.ebscohost.com/ContentServer.asp?T=P&amp;P=AN&amp;K=pap-8-1-83&amp;EbscoContent=dGJyMNLr40SeprQ4zdnyOLCmrlGep7VSsqi4S7CWxWXS&amp;ContentCustomer=dGJyMPHl7Ifr17mF39%2FsU%2Fipt02u&amp;D=pdh</subfield>
+</datafield>
+<datafield tag="SID" ind1=" " ind2=" ">
+<subfield code="a">Z39</subfield>
+<subfield code="b">EBSCO_PDH</subfield>
+<subfield code="d">CAL03033</subfield>
+<subfield code="i">628882</subfield>
+<subfield code="j">000005</subfield>
+<subfield code="s">058151</subfield>
+<subfield code="t">PsycArticles (EBSCO)</subfield>
+</datafield>
+<controlfield tag="RAN">100</controlfield>
+<datafield tag="PAG" ind1="E" ind2="S">
+<subfield code="a">83-107</subfield>
+</datafield>
+<datafield tag="773" ind1=" " ind2=" ">
+<subfield code="g">Psychoanalytic Psychology</subfield>
+<subfield code="g">Win, 1991</subfield>
+<subfield code="g">Vol 8(1)</subfield>
+<subfield code="g">83-107</subfield>
+</datafield>
+<datafield tag="VOL" ind1=" " ind2=" ">
+<subfield code="a">8</subfield>
+</datafield>
+<datafield tag="ISS" ind1="U" ind2=" ">
+<subfield code="a">1</subfield>
+</datafield>
+<controlfield tag="SET">058151</controlfield>
+<controlfield tag="SYS">023171817</controlfield>
+<openURL>
+<ctx:context-objects xmlns:ctx="info:ofi/fmt:xml:xsd:ctx" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="info:ofi/fmt:xml:xsd:ctx http://www.openurl.info/registry/docs/info:ofi/fmt:xml:xsd:ctx">
+<ctx:context-object timestamp="2004-01-16T12:13:00Z" version="Z39.88-2004" identifier="123">
+<ctx:referent>
+<ctx:metadata-by-val>
+<ctx:format>info:ofi/fmt:xml:xsd</ctx:format>
+<ctx:metadata>
+<rft:journal xmlns:rft="info:ofi/fmt:xml:xsd:journal" xsi:schemaLocation="info:ofi/fmt:xml:xsd:journal http://www.openurl.info/registry/docs/info:ofi/fmt:xml:xsd:journal">
+<rft:author rank="1">
+<rft:aulast>Seidenberg</rft:aulast>
+<rft:aufirst> Robert</rft:aufirst>
+<rft:auinit></rft:auinit>
+</rft:author>
+<rft:atitle>Psychoanalysis and femininity, Part I.</rft:atitle>
+<rft:jtitle>Psychoanalytic Psychology</rft:jtitle>
+<rft:date>1991</rft:date>
+<rft:volume>8</rft:volume>
+<rft:issue>1</rft:issue>
+<rft:spage>83</rft:spage>
+<rft:epage>107</rft:epage>
+<rft:genre></rft:genre>
+<rft:issn>0736-9735</rft:issn>
+<ctx:identifier>info:doi/10.1037/h0085142</ctx:identifier>
+<rft:sici></rft:sici>
+<rft:opid></rft:opid>
+</rft:journal>
+</ctx:metadata>
+</ctx:metadata-by-val>
+<ctx:metadata-by-ref>
+<ctx:format></ctx:format>
+<ctx:location>http://metalib.calstate.edu:8331/X?OP=sfx-get-doc&amp;doc-number=023171817</ctx:location>
+</ctx:metadata-by-ref>
+</ctx:referent>
+<ctx:referrer>
+<ctx:identifier>info:sid/metalib.com:EBSCO_PDH</ctx:identifier>
+</ctx:referrer>
+</ctx:context-object>
+</ctx:context-objects>
+</openURL>
+</record>
+<session_id new_session="N">KL912VRP21TKE2AGYCTYXUXBMDEHDQTAM7XK5K2FM82D9Y9SKM</session_id>
+</present_response>
+</x_server_response>
+ 

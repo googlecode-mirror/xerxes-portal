@@ -645,6 +645,20 @@ a.recordAction {
 	color: #666;
 }
 
+#recommendations {
+	margin-top: 2em;
+}
+
+#recommendations .result {
+	margin-bottom: 2em;
+}
+
+
+#recommendations li {
+	list-style: none;
+	margin-left: 1.5em;
+}
+
 /** MY SAVED RECORDS **/
 
 .folderReturn {

@@ -348,14 +348,14 @@ abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
 		
 		foreach($arrRecords as $objRecord)
 		{
-			$objXerxesRecord = new Xerxes_Record( );         
+			$objXerxesRecord = new Xerxes_MetalibRecord( );         
 			$objXerxesRecord->loadXml( $objRecord );
 			array_push($arrXerxesRecords, $objXerxesRecord);
 		 }    
 
 	    // enhance with links computed from metalib templates.
 	    
-		Xerxes_Record::completeUrlTemplates($arrXerxesRecords, $this->request, $this->registry);
+		Xerxes_MetalibRecord::completeUrlTemplates($arrXerxesRecords, $this->request, $this->registry);
 		
 		$position = $this->request->getProperty("startRecord");
 		

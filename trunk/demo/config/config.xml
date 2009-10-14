@@ -236,6 +236,10 @@
 		
 		<config name="rewrite" pass="true">false</config>
 		
+		<!-- bx recommendations -->
+		
+		<config name="bx_token"></config>		
+		
 		<!-- the overall width of the page design, see wiki for details! -->
 		
 		<config name="document" pass="true">doc3</config>

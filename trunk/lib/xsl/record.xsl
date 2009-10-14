@@ -22,14 +22,11 @@
 </xsl:template>
 
 <xsl:template name="sidebar">
+
 	<xsl:call-template name="account_sidebar" />
 	
-  <div id="similar_items" style="display:none;" class="box umlaut_content" />
-  
-  <div id="see_also" style="display:none;" class="box umlaut_content" />
-
-  
-  
+	<div id="similar_items" style="display:none;" class="box umlaut_content" />	
+	<div id="see_also" style="display:none;" class="box umlaut_content" />
   
 	<div id="citation1" class="box">
     
@@ -259,8 +256,7 @@
       
 				<!-- Full-Text -->
 
-        <div id="umlaut_fulltext" class="umlaut_content" style="display:none;">          
-        </div>
+				<div id="umlaut_fulltext" class="umlaut_content" style="display:none;"></div>
 				
 				<xsl:variable name="database_code" select="metalib_id"/>
 				
@@ -376,21 +372,14 @@
 						</div>
 					</xsl:if>
 				</xsl:if>
-        
-        
+
 			</div>
 
 
-      <div id="library_copies" class="umlaut_content" style="display:none;">
-      </div>
-      
-      <div id="document_delivery" class="umlaut_content" style="display:none;"></div>
-        
-      <div id="search_inside" class="umlaut_content" style="display:none;">        
-      </div>
-        
-      <div id="limited_preview" class="umlaut_content" style="display:none">
-      </div>
+			<div id="library_copies" class="umlaut_content" style="display:none;"></div>
+			<div id="document_delivery" class="umlaut_content" style="display:none;"></div>
+			<div id="search_inside" class="umlaut_content" style="display:none;"></div>
+			<div id="limited_preview" class="umlaut_content" style="display:none"></div>
 
 			
 			<!-- Abstract -->
@@ -401,8 +390,36 @@
 					<xsl:value-of select="abstract" />
 				</div>
 			</xsl:if>
+
+			<!-- Recommendations -->
+			
+			<xsl:if test="//recommendations/record">
+			
+				<h2><xsl:call-template name="text_recommendation_header" />:</h2>
+				<ul id="recommendations">
+					<xsl:for-each select="//recommendations/record/xerxes_record">
+						<li class="result">
+							<div class="resultsTitle">
+								<a href="{../url_open}"><xsl:value-of select="title_normalized" /></a>
+							</div>
+							<div class="resultsInfo">
+								<div class="resultsType">
+									<xsl:call-template name="text_results_format">
+										<xsl:with-param name="format" select="format" />
+									</xsl:call-template>
+								</div>
+								
+								<xsl:value-of select="$text_results_author" /><xsl:text> </xsl:text><xsl:value-of select="primary_author" /><br />
+								<xsl:value-of select="journal" />
+								<xsl:call-template name="full_text_options" />
+							</div>
+						</li>
+					</xsl:for-each>				
+				</ul>	
+			</xsl:if>
+
 	
-			<!-- Abstract -->
+			<!-- Table of contents -->
 			
 			<xsl:if test="toc">
 				<h2>
@@ -433,7 +450,7 @@
 					</xsl:for-each>
 					</ul>
 				</div>
-			</xsl:if>
+			</xsl:if>			
 			
 			<!-- Language -->
 			
