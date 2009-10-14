@@ -27,14 +27,8 @@
 				
 				$url = $configBX . "/recommender/openurl?token=" . $configToken . "&" . $open_url;
 				
-				$ch = curl_init();
-				curl_setopt($ch, CURLOPT_URL, $url);
-				curl_setopt($ch, CURLOPT_USERPWD, $configToken . ":");
-				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-				
-				$xml = curl_exec($ch);
-				
-				// $xml = file_get_contents($url);
+				$xml = Xerxes_Parser::request($url);
+
 				// header("Content-type: text/xml"); echo $xml; exit;
 				
 				$doc = new Xerxes_BxRecord_Document();
