@@ -13,14 +13,15 @@
 
 	class Xerxes_Shibboleth extends Xerxes_Framework_Authenticate 
 	{
-    
-    /**
-     *  HTTP header that the username will be found in. Subclass can over-ride
-     *  if different. 
-     */
-     public function usernameHeader() {
-       return "REMOTE_USER";
-     }
+		/**
+		 *  HTTP header that the username will be found in. Subclass can over-ride
+		 *  if different. 
+		 */
+		
+		public function usernameHeader()
+		{
+			return "REMOTE_USER";
+		}
     
 		/**
 		 * For shibboleth, if user got this far, we should have authentication

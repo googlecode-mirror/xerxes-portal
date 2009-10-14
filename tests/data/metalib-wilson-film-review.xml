@@ -1,0 +1,115 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<x_server_response metalib_version="4.3.1 (602)">
+<present_response>
+<record xmlns="http://www.loc.gov/MARC21/slim"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.loc.gov/MARC21/slim
+http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd">
+<controlfield tag="001">200823601485013</controlfield>
+<datafield tag="035" ind1=" " ind2=" ">
+<subfield code="a">200823601485013</subfield>
+</datafield>
+<datafield tag="513" ind1=" " ind2=" ">
+<subfield code="a">Film Review</subfield>
+</datafield>
+<datafield tag="520" ind1=" " ind2=" ">
+<subfield code="a">A new film called Sizzle: A global warming comedy could make a real difference in the fight against global warming.  In the film, actor and director Randy Olson takes on the character of a pompous scientist trying to make a straight documentary about global warming, which is quickly revealed to be a quixotic pursuit in an industry that cares more about celebrity hosts than about science.  The serious point underlying the comedy is that climate scientists need to adopt a more relaxed approach if they want to motivate the public to take the warnings more seriously.</subfield>
+</datafield>
+<datafield tag="546" ind1=" " ind2=" ">
+<subfield code="a">English</subfield>
+</datafield>
+<datafield tag="901" ind1=" " ind2=" ">
+<subfield code="a">Y</subfield>
+<subfield code="s">0.87</subfield>
+</datafield>
+<controlfield tag="LDR">^^^^^cam^^2200205z^^4500</controlfield>
+<controlfield tag="005">20081206</controlfield>
+<datafield tag="YR " ind1=" " ind2=" ">
+<subfield code="a">2008</subfield>
+</datafield>
+<datafield tag="022" ind1=" " ind2=" ">
+<subfield code="a">0262-4079</subfield>
+</datafield>
+<datafield tag="245" ind1=" " ind2=" ">
+<subfield code="a">Learning to laugh at global warming</subfield>
+</datafield>
+<datafield tag="300" ind1=" " ind2=" ">
+<subfield code="b">Illustration</subfield>
+</datafield>
+<datafield tag="773" ind1=" " ind2=" ">
+<subfield code="t">New Scientist v. 199 (August 23 2008) p. 46</subfield>
+</datafield>
+<datafield tag="856" ind1="4" ind2="0">
+<subfield code="u">http://vnweb.hwwilsonweb.com/hww/jumpstart.jhtml?recid=0bc05f7a67b1790ec47ee399313995675cc7ee93870a051488a3a5dea12303cf3d4f04905271ac6f&amp;fmt=C$3Citation$yArticle Citation in WilsonWeb</subfield>
+</datafield>
+<datafield tag="973" ind1=" " ind2=" ">
+<subfield code="a">New Scientist$bNew Sci$c199$fAug.$gAugust$h08$i23$j2008$k46</subfield>
+</datafield>
+<datafield tag="SID" ind1=" " ind2=" ">
+<subfield code="a">Z39</subfield>
+<subfield code="b">L_WILSON_TEMPLATE</subfield>
+<subfield code="d">CAL12102</subfield>
+<subfield code="i">652327</subfield>
+<subfield code="j">000004</subfield>
+<subfield code="s">024564</subfield>
+<subfield code="t">General Science Full Text (Wilson)</subfield>
+</datafield>
+<controlfield tag="RAN">099</controlfield>
+<datafield tag="100" ind1="#" ind2="#">
+<subfield code="a">Hayden, Thomas</subfield>
+</datafield>
+<datafield tag="650" ind1="#" ind2="#">
+<subfield code="a">Global warming/Humor, satire, etc.</subfield>
+</datafield>
+<datafield tag="650" ind1="#" ind2="#">
+<subfield code="a">Sizzle: a global warming comedy (Motion picture)/Reviews</subfield>
+</datafield>
+<datafield tag="650" ind1="#" ind2="#">
+<subfield code="a">Olson, Randy/Reviews</subfield>
+</datafield>
+<controlfield tag="SET">024564</controlfield>
+<controlfield tag="SYS">008557982</controlfield>
+<openURL>
+<ctx:context-objects xmlns:ctx="info:ofi/fmt:xml:xsd:ctx" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="info:ofi/fmt:xml:xsd:ctx http://www.openurl.info/registry/docs/info:ofi/fmt:xml:xsd:ctx">
+<ctx:context-object timestamp="2004-01-16T12:13:00Z" version="Z39.88-2004" identifier="123">
+<ctx:referent>
+<ctx:metadata-by-val>
+<ctx:format>info:ofi/fmt:xml:xsd</ctx:format>
+<ctx:metadata>
+<rft:journal xmlns:rft="info:ofi/fmt:xml:xsd:journal" xsi:schemaLocation="info:ofi/fmt:xml:xsd:journal http://www.openurl.info/registry/docs/info:ofi/fmt:xml:xsd:journal">
+<rft:author rank="1">
+<rft:aulast>Hayden</rft:aulast>
+<rft:aufirst> Thomas</rft:aufirst>
+<rft:auinit></rft:auinit>
+</rft:author>
+<rft:atitle>Learning to laugh at global warming</rft:atitle>
+<rft:jtitle>New Scientist</rft:jtitle>
+<rft:date>2008</rft:date>
+<rft:volume>199</rft:volume>
+<rft:issue></rft:issue>
+<rft:spage>46</rft:spage>
+<rft:epage></rft:epage>
+<rft:genre></rft:genre>
+<rft:issn>0262-4079</rft:issn>
+<ctx:identifier>info:doi/</ctx:identifier>
+<rft:sici></rft:sici>
+<rft:opid></rft:opid>
+</rft:journal>
+</ctx:metadata>
+</ctx:metadata-by-val>
+<ctx:metadata-by-ref>
+<ctx:format></ctx:format>
+<ctx:location>http://metalib.calstate.edu:8331/X?OP=sfx-get-doc&amp;doc-number=008557982</ctx:location>
+</ctx:metadata-by-ref>
+</ctx:referent>
+<ctx:referrer>
+<ctx:identifier>info:sid/metalib.com:L_WILSON_TEMPLATE</ctx:identifier>
+</ctx:referrer>
+</ctx:context-object>
+</ctx:context-objects>
+</openURL>
+</record>
+<session_id new_session="N">E65XS5HXG55U1VP6INEAIKTPJS59BFP3YHVYE67J3JQ3UHKKPC</session_id>
+</present_response>
+</x_server_response>
+ 

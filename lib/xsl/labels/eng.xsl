@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 
 <!-- 
 	TEXT LABELS 
@@ -289,6 +290,9 @@
 	<xsl:variable name="text_snippet_show_section">Show specific section?</xsl:variable>	
 	<xsl:variable name="text_snippet_show_title">Show title?</xsl:variable>
   
+	<xsl:template name="text_recommendation_header">
+		People who read this <xsl:value-of select="php:function('strtolower', string(format))"/> also read	
+	</xsl:template>
 
 	<xsl:template name="text_number_to_words">
 		<xsl:param name="number" />
