@@ -151,7 +151,7 @@ class Xerxes_Framework_Registry
 			
 			// register modules
 			
-			if ( $xml->configuration->modules != null )
+			if ( $xml->configuration->modules != false )
 			{
 				$this->modules = explode(",", (string) $xml->configuration->modules);
 			}

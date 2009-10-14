@@ -61,43 +61,63 @@
 		
 		public function init()
 		{	
+			$distro = Xerxes_Framework_FrontController::parentDirectory() . "/lib/" . $this->file;
+			
 			// don't parse it twice
 			
 			if ( ! $this->xml instanceof SimpleXMLElement )
 			{
-				if ( file_exists($this->file) )
+				// distro actions.xml
+				
+				if ( file_exists($distro) )
 				{
-					$this->xml = simplexml_load_file($this->file);
+					$this->xml = simplexml_load_file($distro);
 				}
 				else
 				{
 					throw new Exception("could not find configuration file");
 				}
-			}
 			
-			// add module action files
-			
-			$objRegistry = Xerxes_Framework_Registry::getInstance();
-			
-			$modules = $objRegistry->getModules();
-
-			if ( count($modules) > 0 )
-			{
-				foreach ( $modules as $module )
+				// module actions.xml file
+				
+				$objRegistry = Xerxes_Framework_Registry::getInstance();
+				
+				$modules = $objRegistry->getModules();
+				
+				if ( count($modules) > 0 )
 				{
-					$action_file = "config/$module/actions.xml";
-					
-					if ( file_exists($action_file) )
+					foreach ( $modules as $module )
 					{
-						$module_actions = simplexml_load_file($action_file);
-						$this->addSections($this->xml, $module_actions );
-					}
-					else
-					{
-						throw new Exception("could not find module configuration file '$action_file'");
+						$action_file = Xerxes_Framework_FrontController::parentDirectory() . "/modules/$module/config/actions.xml";
+						
+						if ( file_exists($action_file) )
+						{
+							$module_actions = simplexml_load_file($action_file);
+							$this->addSections($this->xml, $module_actions );
+						}
+						else
+						{
+							throw new Exception("could not find module configuration file '$action_file'");
+						}
 					}
 				}
+
+				// local actions.xml overrides, if any
+				
+				if ( file_exists($this->file) )
+				{
+					$local = simplexml_load_file($this->file);
+					
+					if ( $local === false )
+					{
+						throw new Exception("could not parse local actions.xml");
+					}
+					
+					$this->addSections($this->xml, $local );
+				}				
 			}
+
+			// header("Content-type: text/xml"); echo $this->xml->asXML(); exit;	
 		}
 		
 		/**
@@ -108,18 +128,20 @@
 		{
 			$master = dom_import_simplexml($parent);
 			
-			$commands = $master->getElementsByTagName("commands")->item(0);
+			$ref = $master->getElementsByTagName("commands")->item(0);
 			
-			if ( $commands == null )
+			if ( $ref == null )
 			{
 				throw  new Exception("could not find commands insertion node in actions.xml");
 			}
 			
-			foreach ( $actions->commands->section as $section )
+			// put everything at the end, so it takes presedence
+			
+			foreach ( $actions->commands->children() as $section )
 			{
 				$new = dom_import_simplexml($section);
 				$import = $master->ownerDocument->importNode($new, true);
-				$commands->appendChild($import);
+				$ref->appendChild($import);
 			}
 		}
 
@@ -151,7 +173,7 @@
 			
 			// get global commands that should be included with every request
 			
-			$global_commands = $this->xml->commands->global->command;
+			$global_commands = $this->xml->xpath("//global/command");
 			
 			if ( $global_commands != false )
 			{
@@ -167,8 +189,14 @@
 			
 			if ( $strSection == "" )
 			{
-				$strSection = (string) $this->xml->commands->default->section;
-				$strAction = (string) $this->xml->commands->default->action;
+				$strSection = null;
+				$strAction = null;
+				
+				$arrDefaultSections = $this->xml->xpath("//default/section");
+				$arrDefaultActions = $this->xml->xpath("//default/action");
+				
+				if ( $arrDefaultSections != false ) $strSection = (string) array_pop($arrDefaultSections);
+				if ( $arrDefaultActions != false ) $strAction = (string) array_pop($arrDefaultActions);
 				
 				$this->addRequest("base", $strSection);
 				$this->addRequest("action", $strAction);
@@ -179,10 +207,11 @@
 				}
 			}
 			
-			$strRestricted = "";		// string to be converted to bool
-			$strLogin = "";				// string to be converted to bool
 			$strDirectory = "";			// directory of the command class
 			$strNamespace = "";			// namespace of the command class
+			$strRestricted = "";		// string to be converted to bool
+			$strLogin = "";				// string to be converted to bool
+			$strModule = "";			// whether this is a module
 			
 			// make sure a section is defined
 			
@@ -193,20 +222,25 @@
 				throw new Exception("no section defined for '$strSection'");
 			}
 			
+			// get the basic configurations that apply to the section, which may
+			// be overriden by more specific entries in the actions
+			
+			$arrDocumentElement = $this->xml->xpath("//commands/section[@name='$strSection']/@documentElement");
+			$arrDirectory = $this->xml->xpath("//commands/section[@name='$strSection']/@directory");
+			$arrNamespace = $this->xml->xpath("//commands/section[@name='$strSection']/@namespace");
+			$arrRestricted = $this->xml->xpath("//commands/section[@name='$strSection']/@restricted");
+			$arrLogin = $this->xml->xpath("//commands/section[@name='$strSection']/@login");
+			$arrModule = $this->xml->xpath("//commands/section[@name='$strSection']/@module");
+
+			if ( $arrDirectory != false ) $strDirectory = (string) array_pop($arrDirectory);
+			if ( $arrNamespace != false ) $strNamespace = (string) array_pop($arrNamespace);
+			if ( $arrRestricted != false ) $strRestricted = (string) array_pop($arrRestricted);
+			if ( $arrLogin != false ) $strLogin = (string) array_pop($arrLogin);
+			if ( $arrModule != false ) $strModule = (string) array_pop($arrModule);
+			if ( $arrDocumentElement != false ) $this->strDocumentElement = (string) array_pop($arrDocumentElement);
+			
 			foreach ( $sections as $section )
 			{
-				// get the basic configurations that apply to the section, which may
-				// be overriden by more specific entries in the actions
-				
-				$this->strDocumentElement = (string) $section["documentElement"];
-				
-				$strDirectory = (string) $section["directory"];
-				$strNamespace = (string) $section["namespace"];
-				$strRestricted = (string) $section["restricted"];
-				$strLogin = (string) $section["login"];
-				$strModule = (string) $section["module"];
-				
-				
 				// an xslt file that is shared among the views in this section, other
 				// than includes.xsl; important for modules
 				
@@ -226,190 +260,193 @@
 						array_push($this->arrIncludes, (string) $include );
 					}
 				}
-				
-				// if no action is supplied, then simply grab the first command
-				// entry; you may well pay for this later!
-				
-				$xpath = "";
-				
-				if ( $strAction == "")
-				{
-					$xpath = "action[position() = 1]";
-				}
-				else
-				{
-					$xpath = "action[@name='$strAction']";
-				}
-
-				$actions = array();
-				$actions = $section->xpath($xpath);
-				
-				// if action was empty, we'll also need to grab the name out of the 
-				// resulting xpath query
-				
-				if ( $strAction == "")
-				{
-					$action = (string) $actions[0]["name"];
-					$this->addRequest("action", $action);
-				}
-				
-				// didn't find anything, so let's just set some defaults to allow for 
-				// simple convention
-				
-				if ( $actions == false )
-				{
-					// command follows the name of the section plus name of the action, 
-					// with the first letter of each capitalized.  if there is a dash or 
-					// underscore, remove those and also capitalize the fist letter
-					 
-					$strDefaultCommand = strtoupper(substr($strDirectory,0,1) ) . substr($strDirectory,1);
-					
-					$arrActionParts = split("-|_", $strAction);
-					
-					foreach ( $arrActionParts as $strActionPart )
-					{
-						$strDefaultCommand .= strtoupper(substr($strActionPart,0,1) ) . substr($strActionPart,1);
-					}
-					
-					$arrCommand = array($strDirectory, $strNamespace, $strDefaultCommand, $strModule);
-					$this->addCommand($arrCommand);
-					
-					// view is similar but remains lower-case, and flip any dashes to underscore
-					
-					$strActionFile = str_replace("-", "_", $strAction);
-					
-					$this->strViewFile = "xsl/" . $strDirectory . "_" . $strActionFile . ".xsl";
-				}
-				
-				foreach ( $actions as $action )
-				{
-					// take the section directory and namespace by default
-					
-					$strCommandDirectory = $strDirectory;
-					$strCommandNamespace = $strNamespace;
-					
-					// override any section values with these
-					
-					if ( $action["documentElement"] != null ) $this->strDocumentElement = (string) $action["documentElement"];
-					if ( $action["directory"] != null ) $strCommandDirectory = (string) $action["directory"];
-					if ( $action["namespace"] != null ) $strCommandNamespace = (string) $action["namespace"];
-					if ( $action["restricted"] != null ) $strRestricted = (string) $action["restricted"];
-					if ( $action["login"] != null ) $strLogin = (string) $action["login"];
-					
-					// check to see if this command should be restricted to the command line
-					
-					if ( $action["cli"] != null )
-					{
-						$this->bolCLI = true;
-					}
-					
-					// get additionally defined includes
-				
-					$action_includes = $action->include;
-					
-					if ( $action_includes !== false )
-					{
-						foreach ( $action_includes as $include )
-						{
-							array_push($this->arrIncludes, (string) $include );
-						}
-					}
-					
-					// commands
-					
-					foreach ( $action->command as $command )
-					{
-						$strLocalCommandDirectory = $strCommandDirectory;
-						$strLocalCommandNamespace = $strCommandNamespace;
-						$strLocalModule = $strModule;
-						
-						if ( $command["directory"] != null )
-						{
-							$strLocalCommandDirectory = (string) $command["directory"];
-							
-							// this is not part of the module
-							
-							if ( $strLocalCommandDirectory != $strCommandDirectory )
-							{
-								$strLocalModule = null;
-							}
-						}
-						
-						if ( $command["namespace"] != null ) $strLocalCommandNamespace = (string) $command["namespace"];
-						
-						// add it to the list of commands
-						
-						$arrCommand = array($strLocalCommandDirectory, $strLocalCommandNamespace, (string) $command, $strLocalModule);
-						
-						$this->addCommand($arrCommand);
-					}
-					
-					// request data
-					
-					foreach ( $action->request as $request )
-					{
-						$this->addRequest((string) $request["name"], (string) $request);
-					}
-					
-					// view
-					
-					// by default we'll take the first view file in the action
-					
-					$this->strViewFile = (string) $action->view;
-					$type = (string) $action->view["type"];
-					
-					if ( $type != null ) $this->strViewType = $type;
-          
-					// if there is a format={format-name} in the request and a seperate
-					// <view fomat="{format-name}"> that matches it, we'll take that as the
-					// view
-					
-					$format = $xerxes_request->getProperty("format");
-					
-					if ( $format != null )
-					{
-						foreach ( $action->view as $view )
-						{
-							if ( $view["format"] == $format)
-							{
-								$this->strViewFile = $view;
-								$this->strViewType = $view["type"];
-							}
-						}
-					}
-					
-					// special view logic for modules
-										
-					if ( $strModule != "" )
-					{
-						// if the name of the module is in the path of the view, 
-						// then the module is specifying its own view file
-						
-						if ( strpos($this->strViewFile, "xsl/$strModule") === 0 )
-						{
-							$this->view_folder = "modules/$strDirectory/";
-						}
-						else
-						{
-							// the module has specified a view in the CORE lib/xsl,
-							// so blank any common xsl files!
-							
-							$this->arrViewInclude = array();
-						}
-					}
-				}
 			}
-			
-			// set the strings to boolean
-			
-			if ( $strRestricted == "true") $this->bolRestricted = true;
-			if ( $strLogin == "true") $this->bolLogin = true;
-			
-			// add any predefined values to the request object from ControllerMap
-			
-			foreach ( $this->getRequests() as $key => $value )
+				
+			// if no action is supplied, then simply grab the first command
+			// entry; you may well pay for this later!
+				
+			$xpath = "";
+				
+			if ( $strAction == "")
 			{
-				$xerxes_request->setProperty($key, $value);
+				$xpath = "//commands/section[@name='$strSection']/action[position() = 1]";
+			}
+			else
+			{
+				$xpath = "//commands/section[@name='$strSection']/action[@name='$strAction']";
+			}
+
+			$actions = array();
+			$actions = $this->xml->xpath($xpath);
+				
+			// if action was empty, we'll also need to grab the name out of the 
+			// resulting xpath query
+				
+			if ( $strAction == "")
+			{
+				$action = (string) $actions[0]["name"];
+				$this->addRequest("action", $action);
+			}
+				
+			// didn't find anything, so let's just set some defaults to allow for 
+			// simple convention
+				
+			if ( $actions == false )
+			{
+				// command follows the name of the section plus name of the action, 
+				// with the first letter of each capitalized.  if there is a dash or 
+				// underscore, remove those and also capitalize the fist letter
+					 
+				$strDefaultCommand = strtoupper(substr($strDirectory,0,1) ) . substr($strDirectory,1);
+					
+				$arrActionParts = split("-|_", $strAction);
+					
+				foreach ( $arrActionParts as $strActionPart )
+				{
+					$strDefaultCommand .= strtoupper(substr($strActionPart,0,1) ) . substr($strActionPart,1);
+				}
+					
+				$arrCommand = array($strDirectory, $strNamespace, $strDefaultCommand, $strModule);
+				$this->addCommand($arrCommand);
+					
+				// view is similar but remains lower-case, and flip any dashes to underscore
+					
+				$strActionFile = str_replace("-", "_", $strAction);
+					
+				$this->strViewFile = "xsl/" . $strDirectory . "_" . $strActionFile . ".xsl";
+			}
+			else
+			{
+				// take the last one defined
+				
+				$action = array_pop($actions);
+				
+				// assume the section's directory and namespace by default
+						
+				$strCommandDirectory = $strDirectory;
+				$strCommandNamespace = $strNamespace;
+						
+				// override any section values with these
+						
+				if ( $action["documentElement"] != null ) $this->strDocumentElement = (string) $action["documentElement"];
+				if ( $action["directory"] != null ) $strCommandDirectory = (string) $action["directory"];
+				if ( $action["namespace"] != null ) $strCommandNamespace = (string) $action["namespace"];
+				if ( $action["restricted"] != null ) $strRestricted = (string) $action["restricted"];
+				if ( $action["login"] != null ) $strLogin = (string) $action["login"];
+						
+				// check to see if this command should be restricted to the command line
+						
+				if ( $action["cli"] != null )
+				{
+					$this->bolCLI = true;
+				}
+						
+				// get additionally defined includes
+					
+				$action_includes = $action->include;
+					
+				if ( $action_includes !== false )
+				{
+					foreach ( $action_includes as $include )
+					{
+						array_push($this->arrIncludes, (string) $include );
+					}
+				}
+						
+				// commands
+						
+				foreach ( $action->command as $command )
+				{
+					$strLocalCommandDirectory = $strCommandDirectory;
+					$strLocalCommandNamespace = $strCommandNamespace;
+					$strLocalModule = $strModule;
+							
+					if ( $command["directory"] != null )
+					{
+						$strLocalCommandDirectory = (string) $command["directory"];
+								
+						// this is not part of the module
+								
+						if ( $strLocalCommandDirectory != $strCommandDirectory )
+						{
+							$strLocalModule = null;
+						}
+					}
+							
+					if ( $command["namespace"] != null ) $strLocalCommandNamespace = (string) $command["namespace"];
+							
+					// add it to the list of commands
+							
+					$arrCommand = array($strLocalCommandDirectory, $strLocalCommandNamespace, (string) $command, $strLocalModule);
+							
+					$this->addCommand($arrCommand);
+				}
+						
+				// request data
+						
+				foreach ( $action->request as $request )
+				{
+					$this->addRequest((string) $request["name"], (string) $request);
+				}
+						
+				// view
+	
+				// by default we'll take the first view file in the action
+						
+				$this->strViewFile = (string) $action->view;
+				$type = (string) $action->view["type"];
+					
+				if ( $type != null ) $this->strViewType = $type;
+	          
+				// if there is a format={format-name} in the request and a seperate
+				// <view fomat="{format-name}"> that matches it, we'll take that as the
+				// view
+						
+				$format = $xerxes_request->getProperty("format");
+						
+				if ( $format != null )
+				{
+					foreach ( $action->view as $view )
+					{
+						if ( $view["format"] == $format)
+						{
+							$this->strViewFile = $view;
+							$this->strViewType = $view["type"];
+						}
+					}
+				}
+					
+				// special view logic for modules
+										
+				if ( $strModule != "" )
+				{
+					// if the name of the module is in the path of the view, 
+					// then the module is specifying its own view file
+					
+					if ( strpos($this->strViewFile, "xsl/$strModule") === 0 )
+					{
+						$this->view_folder = "modules/$strDirectory/";
+					}
+					else
+					{
+						// the module has specified a view in the CORE lib/xsl,
+						// so blank any common xsl files!
+						
+						$this->arrViewInclude = array();
+					}
+				}
+				
+				// set the strings to boolean
+				
+				if ( $strRestricted == "true") $this->bolRestricted = true;
+				if ( $strLogin == "true") $this->bolLogin = true;
+				
+				// add any predefined values to the request object from ControllerMap
+				
+				foreach ( $this->getRequests() as $key => $value )
+				{
+					$xerxes_request->setProperty($key, $value);
+				}
 			}
 		}
 		
