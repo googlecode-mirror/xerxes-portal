@@ -393,14 +393,14 @@
 
 			<!-- Recommendations -->
 			
-			<xsl:if test="//recommendations/xerxes_record">
+			<xsl:if test="//recommendations/record">
 			
-				<h2>People who read this also read:</h2>
+				<h2><xsl:call-template name="text_recommendation_header" />:</h2>
 				<ul id="recommendations">
-					<xsl:for-each select="//recommendations/xerxes_record">
+					<xsl:for-each select="//recommendations/record/xerxes_record">
 						<li class="result">
 							<div class="resultsTitle">
-								<a href="{open_url}"><xsl:value-of select="title_normalized" /></a>
+								<a href="{../url_open}"><xsl:value-of select="title_normalized" /></a>
 							</div>
 							<div class="resultsInfo">
 								<div class="resultsType">
@@ -409,8 +409,9 @@
 									</xsl:call-template>
 								</div>
 								
-								by <xsl:value-of select="primary_author" /><br />
+								<xsl:value-of select="$text_results_author" /><xsl:text> </xsl:text><xsl:value-of select="primary_author" /><br />
 								<xsl:value-of select="journal" />
+								<xsl:call-template name="full_text_options" />
 							</div>
 						</li>
 					</xsl:for-each>				

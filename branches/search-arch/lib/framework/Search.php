@@ -32,22 +32,12 @@ abstract class Xerxes_Framework_Search
 		
 	}
 	
-	public function facets()
-	{
-		
-	}
-	
-	public function facetResults()
+	public function facet()
 	{
 		
 	}
 	
 	public function record()
-	{
-		
-	}
-	
-	public function saveDelete()
 	{
 		
 	}

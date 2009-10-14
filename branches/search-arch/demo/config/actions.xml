@@ -507,12 +507,11 @@
 			</action>
 			<action name="record">
 				<command>MetasearchRecord</command>
-				<!-- FolderTags for tag autocomplete --> 
+				<command>MetasearchRelated</command>
 				<command directory="folder">FolderTags</command>
 				<command directory="availability">AvailabilityInjectRefereed</command>
 				<command directory="availability">AvailabilityInjectFullText</command>
 				<command>MetasearchCheckSaved</command>
-				<command>MetasearchRelated</command>
 				<view>xsl/metasearch_record.xsl</view>
 			</action>
 		</section>

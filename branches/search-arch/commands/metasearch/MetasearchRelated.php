@@ -1,7 +1,7 @@
 <?php	
 	
 	/**
-	 * bX recommendations
+	 * bX recommendations -- this is quick 'n dirty, to be replaced by search architecture
 	 * 
 	 * @author David Walker
 	 * @copyright 2008 California State University
@@ -15,25 +15,26 @@
 	{
 		public function doExecute()
 		{
-			$configBX = $this->registry->getConfig("BX_SERVICE_URL", false, "http://recommender.service.exlibrisgroup.com/service");
-			$configToken = $this->registry->getConfig("BX_TOKEN", false, "5AFBDC5E424D636257CD34476BBCA6DC");
-			$configBXPassword = $this->registry->getConfig("BX_SERVICE_URL", false, "1234:");
-			$configLinkResolver = $this->registry->getConfig("LINK_RESOLVER_ADDRESS", true);
-			$configSID = $this->registry->getConfig("APPLICATION_SID", false, "calstate.edu:xerxes");
-			
-			if ( $configToken != "" && $configBXPassword != "" )
+			$configToken = $this->registry->getConfig("BX_TOKEN", false);
+						
+			if ( $configToken != null )
 			{
+				$configBX = $this->registry->getConfig("BX_SERVICE_URL", false, "http://recommender.service.exlibrisgroup.com/service");
+				$configLinkResolver = $this->registry->getConfig("LINK_RESOLVER_ADDRESS", true);
+				$configSID = $this->registry->getConfig("APPLICATION_SID", false, "calstate.edu:xerxes");
+				
 				$open_url = $this->request->getData("//openurl_kev_co");
 				
 				$url = $configBX . "/recommender/openurl?token=" . $configToken . "&" . $open_url;
 				
 				$ch = curl_init();
 				curl_setopt($ch, CURLOPT_URL, $url);
-				curl_setopt($ch, CURLOPT_USERPWD, $configBXPassword);
+				curl_setopt($ch, CURLOPT_USERPWD, $configToken . ":");
 				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 				
 				$xml = curl_exec($ch);
 				
+				// $xml = file_get_contents($url);
 				// header("Content-type: text/xml"); echo $xml; exit;
 				
 				$doc = new Xerxes_BxRecord_Document();
@@ -57,13 +58,16 @@
 							continue;
 						}
 						
+						$objRecord = $objXml->createElement("record");
+						$objXml->documentElement->appendChild($objRecord);
+						
 						$objImport = $objXml->importNode($record->toXML()->documentElement, true);
-						$objXml->documentElement->appendChild($objImport);
+						$objRecord->appendChild($objImport);
 						
 						$strOpenURL = $record->getOpenURL($configLinkResolver, $configSID);
 						
-						$objOpenURL = $objXml->createElement("open_url", Xerxes_Parser::escapeXML($strOpenURL));
-						$objImport->appendChild($objOpenURL);
+						$objOpenURL = $objXml->createElement("url_open", Xerxes_Parser::escapeXML($strOpenURL));
+						$objRecord->appendChild($objOpenURL);
 					}
 				}
 				

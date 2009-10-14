@@ -1475,7 +1475,6 @@
 	
 		<xsl:variable name="result_set" 	select="result_set" />
 		<xsl:variable name="record_number" 	select="record_number" />
-		<xsl:variable name="metalib_db_id" 	select="metalib_id" />
 		
 		<!-- peer reviewed calculated differently in folder and metasearch -->
 		
@@ -1578,64 +1577,7 @@
 				
 				<div class="recordActions">
 					
-					<!-- full-text -->
-					
-					<xsl:variable name="link_resolver_allowed" select="not(//database_links/database[@metalib_id = $metalib_db_id]/sfx_suppress = '1')" />
-					
-					<xsl:choose>
-					
-						<xsl:when test="full_text_bool">
-							
-							<xsl:call-template name="full_text_links"/>							
-								
-						</xsl:when>
-						
-						<xsl:when test="$link_resolver_allowed and //fulltext/issn = standard_numbers/issn">
-								<a href="{../url_open}&amp;fulltext=1" target="{$link_target}" class="recordAction linkResolverLink">
-									<img src="{$base_include}/images/html.gif" alt="" width="16" height="16" border="0" class="miniIcon linkResolverLink"/>
-									<xsl:text> </xsl:text>
-									<xsl:copy-of select="$text_link_resolver_available" />
-								</a>
-						</xsl:when>
-						
-						<xsl:when test="$link_resolver_allowed">
-								<a href="{../url_open}" target="{$link_target}" class="recordAction linkResoverLink">
-									<img src="{$base_url}/images/sfx.gif" alt="" class="miniIcon linkResolverLink "/>
-									<xsl:text> </xsl:text>
-									<xsl:copy-of select="$text_link_resolver_check" />
-								</a>
-						</xsl:when>
-						
-						<!-- if no direct link or link resolver, do we have an original record link? -->
-						
-						<xsl:when test="links/link[@type='original_record'] and (//config/show_all_original_record_links = 'true' or //config/original_record_links/database[@metalib_id = $metalib_db_id])">
-							<xsl:call-template name="record_link">
-							<xsl:with-param name="type">original_record</xsl:with-param>
-							<xsl:with-param name="text" select="$text_link_original_record"/>
-							<xsl:with-param name="img_src" select="concat($base_url,'/images/famfamfam/link.png')"/>
-							</xsl:call-template>
-						</xsl:when>
-						
-						<!-- @todo remove this 
-						if none of the above, but we DO have text in the record, tell them so. -->
-						
-						<xsl:when test="embeddedText/paragraph">
-							<a href="{../url_full}" class="recordAction textLink">
-							<img src="{$base_url}/images/famfamfam/page_go.png" alt="" class="miniIcon textLink"/>
-								Text in record
-							</a>
-						</xsl:when>
-					</xsl:choose>
-					
-					<!-- holdings (to catalog)  -->
-					
-					<xsl:if test="links/link[@type='holdings'] and (//config/show_all_holdings_links = 'true' or //config/holdings_links/database[@metalib_id=$metalib_db_id])">
-							<xsl:call-template name="record_link">
-								<xsl:with-param name="type">holdings</xsl:with-param>
-								<xsl:with-param name="text" select="$text_link_holdings"/>
-								<xsl:with-param name="img_src" select="concat($base_url, '/images/book.gif')"/>
-							</xsl:call-template>
-					</xsl:if>
+					<xsl:call-template name="full_text_options" />
 					
 					<xsl:call-template name="additional_record_links" />
 					
@@ -1723,6 +1665,74 @@
 	</xsl:for-each>
 	
 	</ul>
+
+</xsl:template>
+
+<xsl:template name="full_text_options">
+
+	<xsl:variable name="metalib_db_id" 	select="metalib_id" />
+	<xsl:variable name="link_resolver_allowed" select="not(//database_links/database[@metalib_id = $metalib_db_id]/sfx_suppress = '1')" />
+	
+	<xsl:choose>
+	
+		<!-- native full-text -->
+	
+		<xsl:when test="full_text_bool">
+			
+			<xsl:call-template name="full_text_links"/>							
+				
+		</xsl:when>
+		
+		<!-- link resolver -->
+		
+		<xsl:when test="$link_resolver_allowed and //fulltext/issn = standard_numbers/issn">
+				<a href="{../url_open}&amp;fulltext=1" target="{$link_target}" class="recordAction linkResolverLink">
+					<img src="{$base_include}/images/html.gif" alt="" width="16" height="16" border="0" class="miniIcon linkResolverLink"/>
+					<xsl:text> </xsl:text>
+					<xsl:copy-of select="$text_link_resolver_available" />
+				</a>
+		</xsl:when>
+		
+		<xsl:when test="$link_resolver_allowed">
+				<a href="{../url_open}" target="{$link_target}" class="recordAction linkResoverLink">
+					<img src="{$base_url}/images/sfx.gif" alt="" class="miniIcon linkResolverLink "/>
+					<xsl:text> </xsl:text>
+					<xsl:copy-of select="$text_link_resolver_check" />
+				</a>
+		</xsl:when>
+		
+		<!-- if no direct link or link resolver, do we have an original record link? -->
+		
+		<xsl:when test="links/link[@type='original_record'] and (//config/show_all_original_record_links = 'true' or //config/original_record_links/database[@metalib_id = $metalib_db_id])">
+			<xsl:call-template name="record_link">
+			<xsl:with-param name="type">original_record</xsl:with-param>
+			<xsl:with-param name="text" select="$text_link_original_record"/>
+			<xsl:with-param name="img_src" select="concat($base_url,'/images/famfamfam/link.png')"/>
+			</xsl:call-template>
+		</xsl:when>
+		
+		<!-- @todo remove this 
+		if none of the above, but we DO have text in the record, tell them so. -->
+		
+		<xsl:when test="embeddedText/paragraph">
+			<a href="{../url_full}" class="recordAction textLink">
+			<img src="{$base_url}/images/famfamfam/page_go.png" alt="" class="miniIcon textLink"/>
+				Text in record
+			</a>
+		</xsl:when>
+	</xsl:choose>
+	
+	<!-- holdings (to catalog)  -->
+	
+	<xsl:if test="links/link[@type='holdings'] and (//config/show_all_holdings_links = 'true' or //config/holdings_links/database[@metalib_id=$metalib_db_id])">
+			<xsl:call-template name="record_link">
+				<xsl:with-param name="type">holdings</xsl:with-param>
+				<xsl:with-param name="text" select="$text_link_holdings"/>
+				<xsl:with-param name="img_src" select="concat($base_url, '/images/book.gif')"/>
+			</xsl:call-template>
+	</xsl:if>
+
+
 
 </xsl:template>
 
