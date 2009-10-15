@@ -1,4 +1,4 @@
-#summary 3. Branding, Labels, and Interface Customization
+#summary 3. Customization: Branding, Labels, and Interface
 
 After you get Xerxes installed and configured, you’ll want to brand the application to look like your library website, as well change the default labels to meet your preferences.
 
@@ -36,7 +36,7 @@ Virtually all of the text labels in the system are defined as XSLT variables.  I
  * The label variables can contain XSLT code in addition to text.  If you want a label to be dynamic in some way, based on the underlying XML, you can use the same `xsl:if`, `xsl:choose`, and `xsl:for-each` constructs that any XSLT template might use. 
 
 
-==Customization: XSLT==
+==Interface Customization: XSLT==
 
 All of the Xerxes interface is written in XSLT.  
 
@@ -52,7 +52,7 @@ Any files in `demo/xsl` will override its equivalent in `lib/xsl`.  By setting-u
 
  * Before you make changes, join the [http://groups.google.com/group/xerxes-portal?pli=1 listserv] and tell us what you're trying to accomplish.  We are always happy to give advice on how best to implement changes.  Or we might even fold the changes into the distribution itself (so you don't have to maintain them) if we think others will want to do the same thing.
 
-==Customization: CSS==
+==Interface Customization: CSS==
 
 The main Xerxes styles are defined in a file called `xerxes-blue.css`.  
 
