@@ -71,7 +71,16 @@ The base web server path for your Xerxes installation.
   * default value: `/demo`
   * available since: 1.2
 
-This should reflect the path (URI) to your Xerxes instance from the root of your website.  _DO NOT_ add a trailing slash. If you have installed at web root, leave this value empty. 
+This should reflect the path (URI) to your Xerxes instance from the root of your website.  _DO NOT_ add a trailing slash. If you have installed at web root, leave this value empty.
+
+==bx_token==
+
+The authentication token given to you by Ex Libris for the bX recommender service, if you have licensed it.
+
+  * default value: none
+  * available since: 1.6
+
+Adding this value will cause Xerxes to begin displaying bX recommendations in the full record page.  Do not confuse this value with the _registration_ token for bX. 
 
 ==~~cas_version~~==
 
@@ -781,10 +790,13 @@ Valid values include:
 Like [Configuration#document document] this controls default behavior in the YUI CSS Grids framework.  If you'd like to create a new option, see `demo/css/xerxes-blue.css` for an example (.xer-t5).
 
 ==umlaut_base==
-If you have an umlaut resolver, and you want to enable Umlaut functionalities in Xerxes, fill this out with the Umlaut 'true' base, without the /resolve, no trailing slash. 
-    eg http://findit.library.jhu.edu 
 
-  * Available since: 1.6
+Enable Umlaut functionalities in Xerxes, if you have an umlaut resolver.
+
+  * default value: none
+  * available since: 1.6
+
+Enter the Umlaut 'true' base, without the /resolve, no trailing slash. For example:  `http://findit.library.jhu.edu`
 
 ==yahoo_id==
 
