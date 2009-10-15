@@ -1,4 +1,4 @@
-#summary 3. Branding and Customization
+#summary 3. Branding, Labels, and Interface Customization
 
 After you get Xerxes installed and configured, you’ll want to brand the application to look like your library website, as well change the default labels to meet your preferences.
 
@@ -61,4 +61,3 @@ Rather than make changes directly to this file, you should copy-and-paste the st
 ===Tips:===
 
  * You don't need to copy-and-paste the entire style into `local.css`.  Rather, just re-define the part of the style you want to change.
-
