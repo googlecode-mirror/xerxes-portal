@@ -1,8 +1,8 @@
-#summary Xerxes feature to create an EZProxy config file from KB
+#summary Create an EZProxy config file from you Metalib KB
 
 Available in Xerxes 1.4 and on. 
 
-= Introduction =
+== Introduction ==
 
 The Metalib KB, imported into Xerxes, is a list of a lot of licensed databases. Those with EZProxy often need to list all these databases in the EZProxy config file. 
 
