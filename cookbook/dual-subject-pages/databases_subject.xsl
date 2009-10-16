@@ -31,9 +31,8 @@
 </xsl:template>
 
 <xsl:template name="sidebar">
-	<xsl:call-template name="account_sidebar" />
-	<xsl:call-template name="subcategories_sidebar" />
-	<xsl:call-template name="snippet_sidebar" />
+        <xsl:call-template name="account_sidebar" />
+        <xsl:call-template name="snippet_sidebar" />
 </xsl:template>
 
 <xsl:template name="main">
