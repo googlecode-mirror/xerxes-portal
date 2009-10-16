@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xerxes version="1.6">
+		 
+	<!-- 
+		use this file to override the directives in lib/config/actions.xml, including:
+		 
+		  * setting a new default action
+		  * overriding section attributes
+		  * redefining actions
+		  
+		please consult the wiki and the listserv before editing this file
+	-->
+	
+	<commands>
+	
+
+		<section name="databases">	
+			
+			<action name="subject">
+				<command>DatabasesSubject</command>
+				<pathParamMap>
+					<mapEntry pathIndex="2" property="subject"/>
+				</pathParamMap>
+				<view>xsl/databases_subject_nosearch.xsl</view>
+			</action>
+
+		</section>
+
+	</commands>
+</xerxes>
