@@ -129,11 +129,11 @@
 			}
 			
 			// additional xsl that should be included
-      foreach ( $arrInclude as $strInclude )
-      {
-        self::addImportReference( $generated_xsl, $this_xsl_dir . $strInclude, $importInsertionPoint );
-      }
 			
+			foreach ( $arrInclude as $strInclude )
+			{
+				self::addImportReference ( $generated_xsl, $this_xsl_dir . $strInclude, $importInsertionPoint );
+			}
 			
 			// include local
 			
@@ -153,29 +153,38 @@
 			
 			// add any locally overridden subsidiary 'included' type files if
 			// neccesary, for instance includes.xsl, but we also look through
-      // distro file to see if there's anything else we need. 
-      //
+			// distro file to see if there's anything else we need. 
+
 			// includes.xsl still needs manually xsl:include'd in the distro source,
 			// but local source shouldn't, we will import local includes.xsl
 			// dynamically here. We import instead of include in case the local
 			// stylesheet does erroneously 'include', to avoid a conflict. We
 			// import LAST to make sure it takes precedence over distro. 
-
-      $distroXml = simplexml_load_file($distro_path);
-      $distroXml->registerXPathNamespace('xsl', 'http://www.w3.org/1999/XSL/Transform');
-
-      // find anything include'd or importe'd in original base file,
-      // including but not limited to includes.xsl      
-      foreach (array_merge($distroXml->xpath("//xsl:include"),
-                           $distroXml->xpath("//xsl:import")) as $extra) {
-        // if this is over-ridden locally, where would it be?
-        $local_candidate = $local_xsl_dir . '/' . dirname($strXsltRelPath) . '/' . $extra['href'];
-        if ( file_exists( $local_candidate ))
-				{
-					self::addImportReference($generated_xsl, $local_candidate, $importInsertionPoint);
-				}
-      }
 			
+	
+			$distroXml = simplexml_load_file ( $distro_path );
+			$distroXml->registerXPathNamespace ( 'xsl', 'http://www.w3.org/1999/XSL/Transform' );
+			
+			// find anything include'd or importe'd in original base file,
+			// including but not limited to includes.xsl
+			
+			$array_merged = array_merge ( $distroXml->xpath ( "//xsl:include" ), $distroXml->xpath ( "//xsl:import" ) );
+			
+			foreach ( $array_merged as $extra )
+			{
+				// path to local copy, and the distro copy as a check
+				
+				$local_candidate = $local_xsl_dir . '/' . dirname ( $strXsltRelPath ) . '/' . $extra['href'];
+				$distro_check = $this_xsl_dir . '/' . dirname ( $strXsltRelPath ) . '/' . $extra['href'];
+				
+				// make sure it exists, and they are both not pointing at the same file 
+				
+				if ( file_exists ( $local_candidate ) && realpath($distro_check) != realpath($local_candidate) )
+				{
+					self::addImportReference ( $generated_xsl, $local_candidate, $importInsertionPoint );
+				}
+			}
+				
 			// header("Content-type: text/xml"); echo $generated_xsl->saveXML(); exit;
 			
 			return $generated_xsl;
