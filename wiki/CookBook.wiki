@@ -1,0 +1,29 @@
+#summary Recipes for Xerxes customizations
+
+=Dual Subject Pages=
+
+Sets up Xerxes so that the metasearch component is not as prominent.  When a user clicks on a category from the home page, the initial subject page that he or she sees is just a listing of databases, with a link to a separate page where they can search.
+
+Examples:
+ 
+ * [http://library.csun.edu/xerxes/ Cal State Northridge]
+ * [http://xerxes.calstate.edu/pomona/ Cal Poly Pomona]
+ * [http://xerxes.calstate.edu/sonoma/ Sonoma State University]
+
+
+== For version 1.5==
+
+  # Copy databases_subject.xsl from your lib/xsl directory into `demo/xsl`.
+  # Rename that local copy to `databases_metasearch.xsl`.
+  # [http://xerxes-portal.googlecode.com/svn/cookbook/dual-subject-pages/databases_subject.xsl Download this file] into your `demo/xsl`directory. That file is a bare-bones example of a non-metasearch subject page.  You'll certainly want to edit it and add some CSS to make it look better.
+
+== For version 1.6==
+
+  # [http://xerxes-portal.googlecode.com/svn/cookbook/dual-subject-pages/databases_subject_nosearch.xsl Download this file] into your `demo/xsl` directory.
+  # Set-up you local [http://xerxes-portal.googlecode.com/svn/cookbook/dual-subject-pages/actions.xml actions.xml like this].
+
+== Upgrading from 1.5 method to 1.6 method==
+
+  # Delete your local copy of `databases_metasearch.xsl`.
+  # Rename `databases_subject.xsl` to `databases_subject_nosearch.xsl`.
+  # Set-up your local `actions.xml` as above.
