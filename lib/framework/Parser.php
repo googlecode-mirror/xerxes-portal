@@ -130,11 +130,14 @@
 			
 			// additional xsl that should be included
 			
-			foreach ( $arrInclude as $strInclude )
+			if ( $arrInclude != null )
 			{
-				self::addImportReference ( $generated_xsl, $this_xsl_dir . $strInclude, $importInsertionPoint );
+				foreach ( $arrInclude as $strInclude )
+				{
+					self::addImportReference ( $generated_xsl, $this_xsl_dir . $strInclude, $importInsertionPoint );
+				}
 			}
-			
+				
 			// include local
 			
 			if ( file_exists($local_path) )
