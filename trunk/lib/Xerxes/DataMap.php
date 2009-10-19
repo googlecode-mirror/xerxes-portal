@@ -1430,11 +1430,17 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		{
 			// mimicking the MySQL LIMIT clause
 			
-			$strMSLimit = $iStart + $iCount;
+			$strMSPage = "";
+			
+			if ( $iCount != null)
+			{
+				$strMSLimit = $iStart + $iCount;
+				$strMSPage = "WHERE row > $iStart and row <= $strMSLimit";
+			}
 			
 			$strSQL = "SELECT * FROM
 				( SELECT * FROM ( SELECT $strColumns , ROW_NUMBER() OVER ( $strSort ) as row FROM $strTable $strCriteria ) 
-					as tmp WHERE row > $iStart and row <= $strMSLimit ) as xerxes_records 
+					as tmp $strMSPage ) as xerxes_records 
 				LEFT OUTER JOIN xerxes_tags on xerxes_records.id = xerxes_tags.record_id";
 				
 			// a bug in the pdo odbc driver ??? makes this necessary
