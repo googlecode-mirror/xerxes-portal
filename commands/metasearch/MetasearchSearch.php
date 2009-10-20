@@ -39,6 +39,43 @@ class Xerxes_Command_MetasearchSearch extends Xerxes_Command_Metasearch
 		$configBaseUrl = $this->registry->getConfig( "BASE_URL", true );
 		$configYahooID = $this->registry->getConfig( "YAHOO_ID", false, "calstate" );
 		$configSearchLimit = $this->registry->getConfig( "SEARCH_LIMIT", true );
+		$configContextUrl = $this->registry->getConfig( "LIMIT_CONTEXT_URL", false );
+		
+		
+		
+		//  if so configured, ensure that context_url is limited to certain domain(s)
+		
+		if ( $configContextUrl != null )
+		{
+			if ( strlen($strContextUrl) > 4 )
+			{
+				// only do it if it's an absolute url, local are fine
+				
+				if ( substr($strContextUrl, 0, 4) == "http" )
+				{
+					$arrAllowed = explode(",", $configContextUrl);
+					
+					// if any in our list match
+					
+					$bolPassed = false;
+					
+					foreach ( $arrAllowed as $strAllowed )
+					{
+						$strAllowed = trim(str_replace("*", "[^.]*", $strAllowed));
+						
+						if ( preg_match("/^http[s]{0,1}:\/\/$strAllowed.*/", $strContextUrl) )
+						{
+							$bolPassed = true;
+						}
+					}
+					
+					if ( $bolPassed == false )
+					{
+						throw new Exception("context_url only allowed for specified domains");	
+					}
+				}
+			}
+		}
 		
 		// database communications object
 		
