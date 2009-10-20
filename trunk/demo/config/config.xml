@@ -236,6 +236,10 @@
 		
 		<config name="rewrite" pass="true">false</config>
 		
+		<!-- limit context urls to specified domains; left blank means allow all -->
+		
+		<config name="limit_context_url"></config>
+		
 		<!-- bx recommendations -->
 		
 		<config name="bx_token"></config>		
