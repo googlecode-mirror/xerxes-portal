@@ -83,6 +83,8 @@
 		
 		public static function generateBaseXsl($strXsltRelPath, $arrInclude = array())
 		{
+			$arrImports = array(); // files to be imported
+			
 			$objRegistry = Xerxes_Framework_Registry::getInstance(); 
 		
 			// the relative path passed in should, starting from our working
@@ -120,12 +122,12 @@
 			
 			if ( $distro_exists == false || $this_xsl_dir != $distro_xsl_dir )
 			{
-				self::addImportReference( $generated_xsl, $distro_xsl_dir . "xsl/includes.xsl", $importInsertionPoint );
+				array_push($arrImports, $distro_xsl_dir . "xsl/includes.xsl");
 			}			
 			
 			if ( $distro_exists == true )
 			{	
-				self::addImportReference($generated_xsl, $distro_path, $importInsertionPoint);
+				array_push($arrImports, $distro_path);
 			}
 			
 			// additional xsl that should be included
@@ -134,7 +136,7 @@
 			{
 				foreach ( $arrInclude as $strInclude )
 				{
-					self::addImportReference ( $generated_xsl, $this_xsl_dir . $strInclude, $importInsertionPoint );
+					array_push($arrImports, $this_xsl_dir . $strInclude);
 				}
 			}
 				
@@ -184,9 +186,24 @@
 				
 				if ( file_exists ( $local_candidate ) && realpath($distro_check) != realpath($local_candidate) )
 				{
-					self::addImportReference ( $generated_xsl, $local_candidate, $importInsertionPoint );
+					array_push($arrImports, $local_candidate);
 				}
 			}
+			
+			// ensure that the local includes is in the list
+
+			// ( sorry, this is a hack for the module stuff code which we may abandon in 1.7 
+			// with the new search architecture; keep it for now )
+			
+			array_push($arrImports, $local_xsl_dir . "/xsl/includes.xsl");
+            
+			$arrImports = array_unique($arrImports);
+			
+			foreach ( $arrImports as $import )
+			{
+				self::addImportReference ( $generated_xsl, $import, $importInsertionPoint );
+			}
+			
 				
 			// header("Content-type: text/xml"); echo $generated_xsl->saveXML(); exit;
 			
