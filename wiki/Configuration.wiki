@@ -475,6 +475,20 @@ This is typically the IP address of the server running Xerxes, or at least one t
 
 *Removed in 1.4*.  If your LDAP authentication requires anything beyond a simple bind, you should implement it as a 'custom' authentication script.
 
+==limit_context_url==
+
+Limit context_url to specified domains.
+
+  * default value: none
+  * available since: 1.6
+
+If left blank, any external search form can specify any URL in the `context_url` parameter when creating a Xerxes search. Xerxes will use this URL in the breadcrumbs, usually as a link back to the external search form.
+
+Use this entry to allow only specified domains in `context_url`.  Separate multiple entries with commas.  Do not include `http://`.  You can use an asterisk as a wildcard to represent single-level subdomains.
+
+For example: `*.calstate.edu` or `*.*.calstate.edu`. 
+
+
 ==link_resolver_address==
 
 Base URL of your link resolver.
