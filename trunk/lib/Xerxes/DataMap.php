@@ -1,5 +1,6 @@
 <?php
 
+
 class Xerxes_Data_Record_Tag extends Xerxes_Framework_DataValue
 {
 	public $label;
@@ -1983,7 +1984,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		
 		foreach ( $objValueObject->properties() as $key => $value )
 		{
-			if ( $value == "" )
+			if ( ! is_int($value) && $value == "" )
 			{
 				unset($objValueObject->$key);
 			}
