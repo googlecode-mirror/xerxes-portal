@@ -20,7 +20,22 @@
 		
 		public function usernameHeader()
 		{
-			return "REMOTE_USER";
+			// apache might have this one if you are using mod_rewrite
+			
+			if ( $this->request->getServer("REDIRECT_REMOTE_USER") != "" )
+			{
+				return "REDIRECT_REMOTE_USER";
+			}
+			elseif ( $this->request->getServer("HTTP_REMOTE_USER") != "" )
+			{
+				// apache might have this if so configured; iis will always have this
+				
+				return "HTTP_REMOTE_USER";
+			}
+			else
+			{
+				return "REMOTE_USER";
+			}
 		}
     
 		/**
