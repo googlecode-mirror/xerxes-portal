@@ -116,6 +116,7 @@
 			// import the distro
 			
 			$distro_exists = file_exists($distro_path);
+			$local_exists = file_exists($local_path);
 
 			// if no distro, need to directly import distro includes.xsl, since we're not
 			// importing a file that will reference it; also need to do this for modules
@@ -142,7 +143,7 @@
 				
 			// include local
 			
-			if ( file_exists($local_path) )
+			if ( $local_exists )
 			{
 				self::addIncludeReference( $generated_xsl, $local_path);
 			}
@@ -150,7 +151,7 @@
 			// if actions.xml specified a view and we don't have a local or 
 			// a distro copy, that's a problem.
 			
-			if (! ( file_exists($local_path) || file_exists($distro_path)))
+			if (! ( $local_exists || $distro_exists) )
 			{
 				// throw new Exception("No xsl stylesheet found: $local_path || $distro_path");
 				throw new Exception("No xsl stylesheet found: $strXsltRelPath");
@@ -166,27 +167,30 @@
 			// stylesheet does erroneously 'include', to avoid a conflict. We
 			// import LAST to make sure it takes precedence over distro. 
 			
-	
-			$distroXml = simplexml_load_file ( $distro_path );
-			$distroXml->registerXPathNamespace ( 'xsl', 'http://www.w3.org/1999/XSL/Transform' );
-			
-			// find anything include'd or importe'd in original base file,
-			// including but not limited to includes.xsl
-			
-			$array_merged = array_merge ( $distroXml->xpath ( "//xsl:include" ), $distroXml->xpath ( "//xsl:import" ) );
-			
-			foreach ( $array_merged as $extra )
+			if ( $distro_exists )
 			{
-				// path to local copy, and the distro copy as a check
+				$distroXml = simplexml_load_file ( $distro_path );
+			
+				$distroXml->registerXPathNamespace ( 'xsl', 'http://www.w3.org/1999/XSL/Transform' );
 				
-				$local_candidate = $local_xsl_dir . '/' . dirname ( $strXsltRelPath ) . '/' . $extra['href'];
-				$distro_check = $this_xsl_dir . '/' . dirname ( $strXsltRelPath ) . '/' . $extra['href'];
+				// find anything include'd or importe'd in original base file,
+				// including but not limited to includes.xsl
 				
-				// make sure it exists, and they are both not pointing at the same file 
+				$array_merged = array_merge ( $distroXml->xpath ( "//xsl:include" ), $distroXml->xpath ( "//xsl:import" ) );
 				
-				if ( file_exists ( $local_candidate ) && realpath($distro_check) != realpath($local_candidate) )
+				foreach ( $array_merged as $extra )
 				{
-					array_push($arrImports, $local_candidate);
+					// path to local copy, and the distro copy as a check
+					
+					$local_candidate = $local_xsl_dir . '/' . dirname ( $strXsltRelPath ) . '/' . $extra['href'];
+					$distro_check = $this_xsl_dir . '/' . dirname ( $strXsltRelPath ) . '/' . $extra['href'];
+					
+					// make sure it exists, and they are both not pointing at the same file 
+					
+					if ( file_exists ( $local_candidate ) && realpath($distro_check) != realpath($local_candidate) )
+					{
+						array_push($arrImports, $local_candidate);
+					}
 				}
 			}
 			
