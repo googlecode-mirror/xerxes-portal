@@ -2,8 +2,14 @@
 
 /**
  * Static methods used by multiple commands, factored out here to keep
- * things clean.
+ * things clean-ish
  *
+ * @author David Walker
+ * @copyright 2009 California State University
+ * @link http://xerxes.calstate.edu
+ * @license http://www.gnu.org/licenses/
+ * @version $Id$
+ * @package Xerxes
  */
 
 class Xerxes_Helper

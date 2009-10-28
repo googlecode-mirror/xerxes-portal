@@ -4,7 +4,7 @@
 
  author: David Walker
  copyright: 2007 California State University
- version 1.1
+ version: $Id$
  package: Xerxes
  link: http://xerxes.calstate.edu
  license: http://www.gnu.org/licenses/

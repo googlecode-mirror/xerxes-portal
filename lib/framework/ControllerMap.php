@@ -6,7 +6,7 @@
 	 * 
 	 * @author David Walker
 	 * @copyright 2008 California State University
-	 * @version 1.1
+	 * @version $Id$
 	 * @package  Xerxes_Framework
 	 * @link http://xerxes.calstate.edu
 	 * @license http://www.gnu.org/licenses/
@@ -668,7 +668,7 @@
 	 * 
 	 * @author Jonathan Rochkind
 	 * @copyright 2008 Johns Hopkins University
-	 * @version 1.1
+	 * @version $Id$
 	 * @package  Xerxes_Framework
 	 * @license http://www.gnu.org/licenses/
 	 *

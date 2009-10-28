@@ -10,7 +10,7 @@
 	 * @license http://www.gnu.org/licenses/
 	 * @todo facets are still experimental in this version of xerxes, since ex libris
 	 * is still working out bugs in the x-server
-	 * @version 1.1
+	 * @version $Id$
 	 * @package Xerxes
 	 */
 	

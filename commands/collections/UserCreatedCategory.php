@@ -5,6 +5,13 @@
  * Request param should be 'subject', the normalized name of the subject as
  * saved for user-created db. The 'normalized' name is the one we will show in
  * the url. 
+ *
+ * @author Jonathan Rochkind
+ * @copyright 2009 Johns Hopkins University
+ * @link http://xerxes.calstate.edu
+ * @license http://www.gnu.org/licenses/
+ * @version $Id$
+ * @package Xerxes
  */
 
 class Xerxes_Command_UserCreatedCategory extends Xerxes_Command_Collections

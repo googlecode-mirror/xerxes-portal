@@ -1,3 +1,10 @@
+# author: David Walker
+# copyright: 2009 California State University
+# version: $VERSION$
+# package: Xerxes
+# link: http://xerxes.calstate.edu
+# license: http://www.gnu.org/licenses/
+
 CREATE DATABASE IF NOT EXISTS xerxes;
 USE xerxes;
 
