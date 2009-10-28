@@ -15,7 +15,7 @@
 
 class Xerxes_Citation
 {
-	private $data; // the supplied data object to be formatted
+	private $data; // the supplied data object to be formatted, yo!
 	private $csl; // simple-xml object csl file
 	private $formatted = ""; // final formatted citation
 	private $bibliography_options = array(); // bibliography options
