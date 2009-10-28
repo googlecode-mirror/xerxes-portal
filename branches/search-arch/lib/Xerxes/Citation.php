@@ -5,6 +5,12 @@
  *
  * TODO: look at this http://xbiblio.svn.sourceforge.net/viewvc/xbiblio/csl/schema/trunk/csl-terms.rnc?view=markup
  * 
+ * @author David Walker
+ * @copyright 2009 California State University
+ * @version $Id$
+ * @package Xerxes
+ * @link http://xerxes.calstate.edu
+ * @license http://www.gnu.org/licenses/
  */
 
 class Xerxes_Citation
