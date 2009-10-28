@@ -1,0 +1,124 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<x_server_response metalib_version="4.3.1 (602)">
+<present_response>
+<record xmlns="http://www.loc.gov/MARC21/slim"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.loc.gov/MARC21/slim
+http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd">
+<controlfield tag="001">200315206995002</controlfield>
+<datafield tag="035" ind1=" " ind2=" ">
+<subfield code="a">200315206995002</subfield>
+</datafield>
+<datafield tag="513" ind1=" " ind2=" ">
+<subfield code="a">Feature Article</subfield>
+</datafield>
+<datafield tag="520" ind1=" " ind2=" ">
+<subfield code="a">Bible scholar and archaeologist William Fulco has been recruited to translate the screenplay of Mel Gibson's film The Passion from modern English into first-century Aramaic--the language Jesus spoke--and Latin (for the Roman characters).  The film, to be released in Easter 2004, promises to be Gibson's most ambitious, and certainly his most controversial to date:  a retelling of Jesus' last 12 hours, filmed entirely in the languages spoken in first-century Palestine.  For Fulco, translating the screenplay into the vernacular of first-century Palestine was no simple matter.  Although there are many examples of written Aramaic, there are precious few clues about what the spoken language actually sounded like in the first century, and consequently a certain degree of linguistic invention was required.</subfield>
+</datafield>
+<datafield tag="546" ind1=" " ind2=" ">
+<subfield code="a">English</subfield>
+</datafield>
+<datafield tag="901" ind1=" " ind2=" ">
+<subfield code="a">Y</subfield>
+<subfield code="s">0.80</subfield>
+</datafield>
+<controlfield tag="LDR">^^^^^cam^^2200205z^^4500</controlfield>
+<controlfield tag="005">20060416</controlfield>
+<datafield tag="YR " ind1=" " ind2=" ">
+<subfield code="a">2003</subfield>
+</datafield>
+<datafield tag="022" ind1=" " ind2=" ">
+<subfield code="a">1544-2160</subfield>
+</datafield>
+<datafield tag="245" ind1=" " ind2=" ">
+<subfield code="a">Ancient Aramaic Lives! (On the Big Screen)</subfield>
+</datafield>
+<datafield tag="300" ind1=" " ind2=" ">
+<subfield code="b">Illustration</subfield>
+</datafield>
+<datafield tag="773" ind1=" " ind2=" ">
+<subfield code="t">BR v. 19 no. 3 (June 2003) p. 10-11</subfield>
+</datafield>
+<datafield tag="856" ind1="4" ind2="0">
+<subfield code="u">http://vnweb.hwwilsonweb.com/hww/jumpstart.jhtml?recid=0bc05f7a67b1790ec47ee399313995675e677643d6e69a50172491da0a9622f530a60420aa970e9c&amp;fmt=C$3Citation$yArticle Citation in WilsonWeb</subfield>
+</datafield>
+<datafield tag="973" ind1=" " ind2=" ">
+<subfield code="a">BR$bBR$c19$d3$fJune$gJune$h06$j2003$k10$l11</subfield>
+</datafield>
+<datafield tag="SID" ind1=" " ind2=" ">
+<subfield code="a">Z39</subfield>
+<subfield code="b">WILSON_TEMPLATE</subfield>
+<subfield code="d">CAL12103</subfield>
+<subfield code="i">630967</subfield>
+<subfield code="j">000002</subfield>
+<subfield code="s">065703</subfield>
+<subfield code="t">Humanities Full Text (Wilson)</subfield>
+</datafield>
+<controlfield tag="RAN">045</controlfield>
+<datafield tag="100" ind1="#" ind2="#">
+<subfield code="a">Wargo, Eric</subfield>
+</datafield>
+<datafield tag="650" ind1="#" ind2="#">
+<subfield code="a">Aramaic language</subfield>
+</datafield>
+<datafield tag="650" ind1="#" ind2="#">
+<subfield code="a">Motion pictures/Historical films</subfield>
+</datafield>
+<datafield tag="650" ind1="#" ind2="#">
+<subfield code="a">Passion of the Christ (Motion picture)</subfield>
+</datafield>
+<datafield tag="650" ind1="#" ind2="#">
+<subfield code="a">Gibson, Mel</subfield>
+</datafield>
+<datafield tag="650" ind1="#" ind2="#">
+<subfield code="a">Fulco, William J., 1936-</subfield>
+</datafield>
+<datafield tag="650" ind1="#" ind2="#">
+<subfield code="a">Jesus Christ/In motion pictures</subfield>
+</datafield>
+<controlfield tag="SET">065703</controlfield>
+<controlfield tag="SYS">026738530</controlfield>
+<openURL>
+<ctx:context-objects xmlns:ctx="info:ofi/fmt:xml:xsd:ctx" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="info:ofi/fmt:xml:xsd:ctx http://www.openurl.info/registry/docs/info:ofi/fmt:xml:xsd:ctx">
+<ctx:context-object timestamp="2004-01-16T12:13:00Z" version="Z39.88-2004" identifier="123">
+<ctx:referent>
+<ctx:metadata-by-val>
+<ctx:format>info:ofi/fmt:xml:xsd</ctx:format>
+<ctx:metadata>
+<rft:journal xmlns:rft="info:ofi/fmt:xml:xsd:journal" xsi:schemaLocation="info:ofi/fmt:xml:xsd:journal http://www.openurl.info/registry/docs/info:ofi/fmt:xml:xsd:journal">
+<rft:author rank="1">
+<rft:aulast>Wargo</rft:aulast>
+<rft:aufirst> Eric</rft:aufirst>
+<rft:auinit></rft:auinit>
+</rft:author>
+<rft:atitle>Ancient Aramaic Lives! (On the Big Screen)</rft:atitle>
+<rft:jtitle>BR</rft:jtitle>
+<rft:date>2003</rft:date>
+<rft:volume>19</rft:volume>
+<rft:issue>3</rft:issue>
+<rft:spage>10</rft:spage>
+<rft:epage>11</rft:epage>
+<rft:genre></rft:genre>
+<rft:issn>1544-2160</rft:issn>
+<ctx:identifier>info:doi/</ctx:identifier>
+<rft:sici></rft:sici>
+<rft:opid></rft:opid>
+</rft:journal>
+</ctx:metadata>
+</ctx:metadata-by-val>
+<ctx:metadata-by-ref>
+<ctx:format></ctx:format>
+<ctx:location>http://metalib.calstate.edu:8331/X?OP=sfx-get-doc&amp;doc-number=026738530</ctx:location>
+</ctx:metadata-by-ref>
+</ctx:referent>
+<ctx:referrer>
+<ctx:identifier>info:sid/metalib.com:WILSON_TEMPLATE</ctx:identifier>
+</ctx:referrer>
+</ctx:context-object>
+</ctx:context-objects>
+</openURL>
+</record>
+<session_id new_session="N">VTVSVR2I3QSMR5MRJXJ4XKHY34XHKGDRMSXLUCJU737ECXDYBB</session_id>
+</present_response>
+</x_server_response>
+ 

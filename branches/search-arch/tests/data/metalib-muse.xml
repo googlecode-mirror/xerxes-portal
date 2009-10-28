@@ -1,0 +1,115 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<x_server_response metalib_version="4.3.1 (602)">
+<present_response>
+<record xmlns="http://www.loc.gov/MARC21/slim"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.loc.gov/MARC21/slim
+http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd">
+<datafield tag="260" ind1=" " ind2=" ">
+<subfield code="b">Indiana University Press</subfield>
+<subfield code="c"></subfield>
+</datafield>
+<controlfield tag="LDR">^^^^^^^^^^2200169^^^4500</controlfield>
+<datafield tag="022" ind1=" " ind2=" ">
+<subfield code="a">1535-5306</subfield>
+</datafield>
+<datafield tag="100" ind1=" " ind2=" ">
+<subfield code="a">Allen Thompson</subfield>
+</datafield>
+<datafield tag="245" ind1=" " ind2=" ">
+<subfield code="a">Responsibility for the End of Nature</subfield>
+<subfield code="b">Or, How I Learned to Stop Worrying and Love Global Warming</subfield>
+</datafield>
+<datafield tag="300" ind1=" " ind2=" ">
+<subfield code="a">21</subfield>
+<subfield code="b">pp. 79-99</subfield>
+</datafield>
+<datafield tag="362" ind1=" " ind2=" ">
+<subfield code="a">Volume 14, Number 1, Spring 2009</subfield>
+</datafield>
+<datafield tag="440" ind1=" " ind2=" ">
+<subfield code="a">Ethics &amp; the Environment</subfield>
+<subfield code="n">1</subfield>
+<subfield code="v">14</subfield>
+</datafield>
+<datafield tag="653" ind1=" " ind2=" ">
+<subfield code="a">Global warming -- Moral and ethical aspects.</subfield>
+</datafield>
+<datafield tag="653" ind1=" " ind2=" ">
+<subfield code="a">Nature -- Effect of human beings on.</subfield>
+</datafield>
+<datafield tag="653" ind1=" " ind2=" ">
+<subfield code="a">Environmental ethics.</subfield>
+</datafield>
+<datafield tag="856" ind1=" " ind2=" ">
+<subfield code="z">Online Version</subfield>
+<subfield code="u">http://muse.jhu.edu/content/z3950/journals/ethics_and_the_environment/v014/14.1.thompson.html</subfield>
+</datafield>
+<datafield tag="856" ind1=" " ind2=" ">
+<subfield code="z">Online Version</subfield>
+<subfield code="u">http://muse.uq.edu.au/content/z3950/journals/ethics_and_the_environment/v014/14.1.thompson.html</subfield>
+</datafield>
+<datafield tag="SID" ind1=" " ind2=" ">
+<subfield code="a">Z39</subfield>
+<subfield code="b">PROJ_MUSE</subfield>
+<subfield code="d">CAL03939</subfield>
+<subfield code="i">650674</subfield>
+<subfield code="j">000001</subfield>
+<subfield code="s">018016</subfield>
+<subfield code="t">Project MUSE Premium</subfield>
+</datafield>
+<controlfield tag="RAN">099</controlfield>
+<datafield tag="773" ind1=" " ind2=" ">
+<subfield code="g">pp. 79-99</subfield>
+<subfield code="t">Volume 14, Number 1, Spring 2009</subfield>
+<subfield code="a">Ethics &amp; the Environment</subfield>
+</datafield>
+<datafield tag="YR " ind1=" " ind2=" ">
+<subfield code="a">2009</subfield>
+</datafield>
+<controlfield tag="SET">018016</controlfield>
+<controlfield tag="SYS">004703663</controlfield>
+<openURL>
+<ctx:context-objects xmlns:ctx="info:ofi/fmt:xml:xsd:ctx" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="info:ofi/fmt:xml:xsd:ctx http://www.openurl.info/registry/docs/info:ofi/fmt:xml:xsd:ctx">
+<ctx:context-object timestamp="2004-01-16T12:13:00Z" version="Z39.88-2004" identifier="123">
+<ctx:referent>
+<ctx:metadata-by-val>
+<ctx:format>info:ofi/fmt:xml:xsd</ctx:format>
+<ctx:metadata>
+<rft:journal xmlns:rft="info:ofi/fmt:xml:xsd:journal" xsi:schemaLocation="info:ofi/fmt:xml:xsd:journal http://www.openurl.info/registry/docs/info:ofi/fmt:xml:xsd:journal">
+<rft:author rank="1">
+<rft:aulast>Allen</rft:aulast>
+<rft:aufirst>Thompson</rft:aufirst>
+<rft:auinit></rft:auinit>
+</rft:author>
+<rft:atitle>Responsibility for the End of Nature</rft:atitle>
+<rft:jtitle>Ethics &amp; the Environment</rft:jtitle>
+<rft:date>2009</rft:date>
+<rft:volume>14</rft:volume>
+<rft:issue>1</rft:issue>
+<rft:spage>79</rft:spage>
+<rft:epage>99</rft:epage>
+<rft:genre></rft:genre>
+<rft:issn>1535-5306</rft:issn>
+<ctx:identifier>info:doi/</ctx:identifier>
+<rft:sici></rft:sici>
+<rft:opid></rft:opid>
+</rft:journal>
+</ctx:metadata>
+</ctx:metadata-by-val>
+<ctx:metadata-by-ref>
+<ctx:format></ctx:format>
+<ctx:location>http://metalib.calstate.edu:8331/X?OP=sfx-get-doc&amp;doc-number=004703663</ctx:location>
+</ctx:metadata-by-ref>
+</ctx:referent>
+<ctx:referrer>
+<ctx:identifier>info:sid/metalib.com:PROJ_MUSE</ctx:identifier>
+</ctx:referrer>
+</ctx:context-object>
+</ctx:context-objects>
+</openURL>
+</record>
+<session_id new_session="N">NPGRB74NBIK5SUAE5827FKSI485CG73KIYSS1FXRCI38TFX9AU</session_id>
+</present_response>
+</x_server_response>
+ 
