@@ -2,7 +2,13 @@
 
 /**
  * Little helper controller for the embed function
- * 
+ *
+ * @author Jonathan Rochkind
+ * @copyright 2009 Johns Hopkins University
+ * @link http://xerxes.calstate.edu
+ * @license http://www.gnu.org/licenses/
+ * @version $Id$
+ * @package Xerxes
  */
 
 class Xerxes_Command_EmbedGenUserCreatedCategory extends Xerxes_Command_Embed

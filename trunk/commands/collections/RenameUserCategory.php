@@ -1,12 +1,19 @@
 <?php
 
-/*
-   * Rename a user-created category or subcategory. Expects request param
-   * 'new_name', subject=>normalized-name, and possibly subcategory=>id. If 
-   *  subcategory is present, subcategory will be renamed. 
-   *
-   *  Redirects back to 'return' request param, or user created category
-   *  edit page. 
+/**
+ * Rename a user-created category or subcategory. Expects request param
+ * 'new_name', subject=>normalized-name, and possibly subcategory=>id. If 
+ *  subcategory is present, subcategory will be renamed. 
+ *
+ *  Redirects back to 'return' request param, or user created category
+ *  edit page. 
+ *
+ * @author Jonathan Rochkind
+ * @copyright 2009 Johns Hopkins University
+ * @link http://xerxes.calstate.edu
+ * @license http://www.gnu.org/licenses/
+ * @version $Id$
+ * @package Xerxes
  */
 
 class Xerxes_Command_RenameUserCategory extends Xerxes_Command_Collections

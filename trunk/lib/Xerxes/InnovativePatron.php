@@ -8,7 +8,7 @@
 	 * @author John Blyberg
 	 * @link http://xerxes.calstate.edu
 	 * @license http://www.gnu.org/licenses/
-	 * @version 1.1
+	 * @version $Id$
 	 * @package Xerxes
 	 */
 
