@@ -1,6 +1,13 @@
 /**
 * FUNCTIONS FOR SAVING RECORDS
-*/
+ *
+ * @author David Walker
+ * @copyright 2009 California State University
+ * @link http://xerxes.calstate.edu
+ * @license http://www.gnu.org/licenses/
+ * @version $Id$
+ * @package Xerxes
+ */
 
 /* CALLER REQUIREMENTS:
 set a global js variable called numSavedRecords to the current number of records
