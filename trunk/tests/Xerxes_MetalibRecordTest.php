@@ -13,6 +13,7 @@ class Xerxes_MetalibRecordTest extends PHPUnit_Framework_TestCase
 	 * @var Xerxes_MetalibRecord
 	 */
 	private $Xerxes_MetalibRecord_Document;
+	private $dir;
 	
 	/**
 	 * Prepares the environment before running a test.
@@ -22,7 +23,6 @@ class Xerxes_MetalibRecordTest extends PHPUnit_Framework_TestCase
 		parent::setUp ();
 		
 		$this->dir = dirname(__FILE__);
-		
 		$this->Xerxes_MetalibRecord_Document = new Xerxes_MetalibRecord_Document();
 	}
 	
