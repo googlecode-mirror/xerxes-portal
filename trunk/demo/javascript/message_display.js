@@ -1,6 +1,15 @@
-/* Take the status/feedback message from the page (id='message_display'), and
-   take it out of normal page flow, and use cool scriptaculous effects to fade
-   it in and out in a fixed position in browser window. */
+/**
+ * Take the status/feedback message from the page (id='message_display'), and
+ * take it out of normal page flow, and use cool scriptaculous effects to fade
+ * it in and out in a fixed position in browser window.
+ *
+ * @author Jonathan Rochkind
+ * @copyright 2009 Johns Hopkins University
+ * @link http://xerxes.calstate.edu
+ * @license http://www.gnu.org/licenses/
+ * @version $Id$
+ * @package Xerxes
+ */
 
    addEvent(window, 'load', fancyMessageDisplay);
    

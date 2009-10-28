@@ -3,6 +3,13 @@
  *  Expects global js variables to be defined:
  * openurl_kev_co  :   an OpenURL KEV context object representing this record
  * umlaut_base     :   The Umlaut base URL. Not the OpenURL base including /resolve, but just eg "http://findit.library.jhu.edu/"
+ *
+ * @author Jonathan Rochkind
+ * @copyright 2009 Johns Hopkins University
+ * @link http://xerxes.calstate.edu
+ * @license http://www.gnu.org/licenses/
+ * @version $Id$
+ * @package Xerxes
  */
  
  if (typeof(jsDisplayConstants) == "undefined" ) {
