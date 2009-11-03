@@ -537,7 +537,9 @@ class Xerxes_Framework_FrontController
 	private static function includeFiles($path, $exclude = null)
 	{
 		// check to see if this is a directory or a file
-
+		
+		$arrIncludes = array();
+		
 		if ( is_dir( $path ) )
 		{
 			// open a directory handle and grab all the php files 
@@ -548,17 +550,23 @@ class Xerxes_Framework_FrontController
 			{
 				// make sure it is a php file, and exclude
 				// any file specified by $exclude
-				
 
 				if ( strstr( $file, ".php" ) && $file != $exclude )
 				{
-					require_once ("$path/$file");
+					array_push($arrIncludes, "$path/$file");
 				}
 			}
 		} 
 		else
 		{
-			require_once ($path);
+			array_push($arrIncludes, $path);
+		}
+		
+		sort($arrIncludes);
+		
+		foreach ( $arrIncludes as $include )
+		{
+			require_once ($include);
 		}
 	}
 	
