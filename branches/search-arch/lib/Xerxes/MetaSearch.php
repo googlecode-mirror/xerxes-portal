@@ -571,7 +571,7 @@
 		 * @param string $url		url of the request
 		 */
 		
-		private function getResponse( $url )
+		private function getResponse( $url, $bolSecondTry = false )
 		{
 			// metalib takes little care to ensure propoer encoding of its xml, so we will set 
 			// recover to true here in order to allow libxml to recover from erros and continue 
@@ -587,7 +587,19 @@
 			
 			if ( $objXml->documentElement == null )
 			{
-				throw new Exception("cannot connect to metalib server");
+				// because metalib is buggy, just wait a couple of seconds and try again
+				
+				if ( $bolSecondTry == false )
+				{
+					sleep(2);
+					return $this->getResponse($url, true);
+				}
+				else
+				{
+					// already tried once, so throw exception
+					
+					throw new Exception("cannot connect to metalib server");
+				}
 			}
 			
 			// global errors will stop the application as exception?
@@ -611,6 +623,15 @@
 				
 				if ( $strError != "" && $iCode != 0 )
 				{
+					// this error means session has died, maybe because metalib was restarted
+					// so re-up it one more time, for the user's sake
+					
+					if ( $iCode == 0151 && $bolSecondTry == false )
+					{
+						$this->session = $this->session();
+						return $this->getResponse($url, true);
+					}
+					
 					throw new Exception( $strError, $iCode );
 				}
 			}

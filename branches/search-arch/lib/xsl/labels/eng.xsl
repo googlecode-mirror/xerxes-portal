@@ -172,19 +172,23 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	<xsl:variable name="text_link_original_record">Original record</xsl:variable>
 	<xsl:variable name="text_link_resolver_available">Full text available</xsl:variable>
 	<xsl:variable name="text_link_resolver_check">Check for availability</xsl:variable>
-  <xsl:variable name="text_link_resolver_name">Link Resolver</xsl:variable>
-  <xsl:variable name="text_link_resolver_load_msg">Loading content from</xsl:variable>
-  <xsl:variable name="text_link_resolver_direct_link_prefix">Full-Text Available: </xsl:variable>
+	<xsl:variable name="text_link_resolver_name">Link Resolver</xsl:variable>
+	<xsl:variable name="text_link_resolver_load_msg">Loading content from</xsl:variable>
+	<xsl:variable name="text_link_resolver_direct_link_prefix">Full-Text Available: </xsl:variable>
 
 	<xsl:variable name="text_metasearch_hits_error">Sorry, we're having technical difficulties right now.</xsl:variable>
 	<xsl:variable name="text_metasearch_hits_error_explain">
-		You can still search each database individually by following the links below.
+		You can try again later, or use the library's website to select and search databases individually.
 	</xsl:variable>
-	<xsl:variable name="text_metasearch_hits_no_match">Sorry, your search did not match any records</xsl:variable>
+	<xsl:variable name="text_metasearch_hits_no_match">Sorry, your search did not match any records.</xsl:variable>
 	<xsl:variable name="text_metasearch_hits_pagename">Search Status</xsl:variable>
 	<xsl:variable name="text_metasearch_hits_table_database">Database</xsl:variable>
 	<xsl:variable name="text_metasearch_hits_table_status">Status</xsl:variable>
 	<xsl:variable name="text_metasearch_hits_table_count">Hits</xsl:variable>
+	<xsl:variable name="text_metasearch_hits_unfinished">
+		It looks like some of the databases had technical problems.  You might want to try your search again later.
+	</xsl:variable>
+	
 	<xsl:variable name="text_metasearch_results_limit">Limit</xsl:variable>
 	<xsl:variable name="text_metasearch_results_summary">
 		Results <strong><xsl:value-of select="//summary/range" /></strong> 
