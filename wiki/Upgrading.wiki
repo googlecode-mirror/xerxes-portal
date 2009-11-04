@@ -6,7 +6,7 @@ Here are the basic steps for upgrading between versions of Xerxes.
 
 ==1. Download and update the PHP and XSLT files==
  
-Download the latest version of the code from the download section or check it out from the latest 'release-' tags in the svn repository.  
+Download the latest version of the code from the download section or check it out from the latest version branch in the svn repository.  
 
 How you update the files is up to  you.  You should be safe to _replace_ the lib/, commands/, and sql/ directories in your existing instance.  But you'll need to take care in updating the interface directory (called demo in the source) so as not to overwrite local files, particularly files you've changed in the config/ and css/ directories.
 
