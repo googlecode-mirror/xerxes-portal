@@ -80,7 +80,7 @@
 		 * @return mixed 				if wait = false, returns group number as string; else search progress as DOMDocument
 		 */
 
-		public function search( $strQuery, $arrDatabases, $bolWait = false) 
+		public function search( $strQuery, $arrDatabases, $bolWait = false, $bolSecondTry = false) 
 		{
 			$strWaitFlag = "N";			// wait flag
 			$strDatabaseList = "";		// string list of databases
@@ -123,7 +123,27 @@
 				// extract group id if this was the non-wait flag
 
 				$objGroup = $this->xml->getElementsByTagName("group_number")->item(0);
-				return $objGroup->nodeValue;
+				$strGroup = $objGroup->nodeValue;
+				
+				// something went wrong on the metalib side, but
+				// because metalib is buggy, wait and try this again
+				
+				if ( $strGroup == "" && $bolSecondTry == false)
+				{
+					if ( $bolSecondTry == fasle )
+					{
+						sleep(2);
+						return $this->search( $strQuery, $arrDatabases, $bolWait, true);
+					}
+					else 
+					{
+						throw new Exception( "Could not initiate search with Metalib server" );
+					}
+				}
+				else
+				{
+					return $strGroup;
+				}
 			}
 		}
 		
@@ -623,15 +643,6 @@
 				
 				if ( $strError != "" && $iCode != 0 )
 				{
-					// this error means session has died, maybe because metalib was restarted
-					// so re-up it one more time, for the user's sake
-					
-					if ( $iCode == 0151 && $bolSecondTry == false )
-					{
-						$this->session = $this->session();
-						return $this->getResponse($url, true);
-					}
-					
 					throw new Exception( $strError, $iCode );
 				}
 			}
