@@ -161,7 +161,7 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 		// special handling of 856
 		
 		$notes = $this->fieldArray("500", "a"); // needed for gale
-
+		
 		foreach ( $this->datafield( "856" ) as $link )
 		{
 			$strDisplay = (string) $link->subfield("z");
@@ -287,8 +287,7 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 		###################################
 		
 		
-		
-		
+
 		
 		// metalib's own year, issue, volume fields
 		
@@ -398,7 +397,27 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 				$this->subjects[$x] = str_replace("*", "", $this->subjects[$x]);
 			}
 		}
+
+		// demote links based on config
+				
+		$objConfig = Xerxes_Framework_Registry::getInstance();
+		$configIgnoreFullText = $objConfig->getConfig("FULLTEXT_IGNORE_SOURCES", false);
+		$configIgnoreFullText = str_replace(" ", "", $configIgnoreFullText);
+		$arrIgnore = explode(",", $configIgnoreFullText);
+
+		for( $x = 0; $x < count($this->links); $x++ )
+		{
+			$link = $this->links[$x];
+			
+			if ( in_array($this->source, $arrIgnore) ||	in_array($this->metalib_id, $arrIgnore) )
+			{
+				$link[2] = "original_record";
+			}			
+			
+			$this->links[$x] = $link;
+		}		
 	}
+				
 	
 	### PROPERTIES ###
 	
