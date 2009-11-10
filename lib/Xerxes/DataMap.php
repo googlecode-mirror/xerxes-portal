@@ -121,6 +121,7 @@ class Xerxes_Data_Database extends Xerxes_Framework_DataValue
 	public $note_cataloger;
 	public $note_fulltext;
 	public $type;
+	public $icon;
 	public $link_native_home;
 	public $link_native_record;
 	public $link_native_home_alternative;

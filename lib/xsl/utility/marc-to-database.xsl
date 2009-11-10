@@ -96,6 +96,8 @@
 		
 		<filter><xsl:value-of select="marc:datafield[@tag='FTL']/marc:subfield[@code='a']" /></filter>
 		
+		<icon><xsl:value-of select="marc:datafield[@tag='ICN']/marc:subfield[@code='a']" /></icon>
+
 		<!-- TAR$f='n' means 'link to configuration active' has been set to 'no'
 		 in metalib admin. We consider that not searchable. -->
 		<xsl:if test="marc:datafield[@tag='TAR']/marc:subfield[@code='a'] and not (marc:datafield[@tag='TAR']/marc:subfield[@code='f'] = 'N')">
