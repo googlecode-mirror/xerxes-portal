@@ -49,6 +49,11 @@ abstract class Xerxes_Framework_Search
 		
 	}
 	
+	public function recommendations()
+	{
+		
+	}
+	
 	protected function save()
 	{
 		

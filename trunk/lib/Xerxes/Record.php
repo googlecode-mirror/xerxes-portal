@@ -2036,6 +2036,19 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		$bolDone = false;
 		$arrPunct = str_split( $strPunct );
 		
+		if ( strlen( $strInput ) == 0 )
+		{
+			return $strInput;
+		}
+		
+		// check if the input ends in a character entity
+		// reference, in which case, leave it alone, yo!
+		
+		if ( preg_match("/\&\#[0-9a-zA-Z]{1,5}\;$/", $strInput) )
+		{
+			return $strInput;
+		}
+		
 		while ( $bolDone == false )
 		{
 			$iEnd = strlen( $strInput ) - 1;
