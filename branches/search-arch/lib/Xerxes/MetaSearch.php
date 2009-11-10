@@ -80,7 +80,7 @@
 		 * @return mixed 				if wait = false, returns group number as string; else search progress as DOMDocument
 		 */
 
-		public function search( $strQuery, $arrDatabases, $bolWait = false, $bolSecondTry = false) 
+		public function search( $strQuery, $arrDatabases, $bolWait = false) 
 		{
 			$strWaitFlag = "N";			// wait flag
 			$strDatabaseList = "";		// string list of databases
@@ -123,27 +123,7 @@
 				// extract group id if this was the non-wait flag
 
 				$objGroup = $this->xml->getElementsByTagName("group_number")->item(0);
-				$strGroup = $objGroup->nodeValue;
-				
-				// something went wrong on the metalib side, but
-				// because metalib is buggy, wait and try this again
-				
-				if ( $strGroup == "" && $bolSecondTry == false)
-				{
-					if ( $bolSecondTry == fasle )
-					{
-						sleep(2);
-						return $this->search( $strQuery, $arrDatabases, $bolWait, true);
-					}
-					else 
-					{
-						throw new Exception( "Could not initiate search with Metalib server" );
-					}
-				}
-				else
-				{
-					return $strGroup;
-				}
+				return $objGroup->nodeValue;
 			}
 		}
 		
@@ -591,7 +571,7 @@
 		 * @param string $url		url of the request
 		 */
 		
-		private function getResponse( $url, $bolSecondTry = false )
+		private function getResponse( $url )
 		{
 			// metalib takes little care to ensure propoer encoding of its xml, so we will set 
 			// recover to true here in order to allow libxml to recover from erros and continue 
@@ -607,19 +587,7 @@
 			
 			if ( $objXml->documentElement == null )
 			{
-				// because metalib is buggy, just wait a couple of seconds and try again
-				
-				if ( $bolSecondTry == false )
-				{
-					sleep(2);
-					return $this->getResponse($url, true);
-				}
-				else
-				{
-					// already tried once, so throw exception
-					
-					throw new Exception("cannot connect to metalib server");
-				}
+				throw new Exception("cannot connect to metalib server");
 			}
 			
 			// global errors will stop the application as exception?
