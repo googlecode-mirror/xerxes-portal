@@ -54,16 +54,6 @@
 			<xsl:when test="$progress = '10' and //error_code = '2007'">
 				<h2 class="error"><xsl:copy-of select="$text_metasearch_hits_error" /></h2>
 				<p><xsl:copy-of select="$text_metasearch_hits_error_explain" /></p>
-				<ul>
-					<xsl:for-each select="//database_links/database[link_native_home != '']">
-					<xsl:variable name="metalib_id" select="@metalib_id" />
-					<li>
-						<a href="{link_native_home}">
-							<xsl:value-of select="//base_info[base_001 = $metalib_id]/full_name" />
-						</a>
-					</li>
-					</xsl:for-each>
-				</ul>
 			</xsl:when>
 			<xsl:otherwise>
 				
@@ -79,7 +69,19 @@
 				
 				<xsl:choose>
 					<xsl:when test="$progress = '10'">
+					
+						<xsl:variable name="in_progress">
+							<xsl:for-each select="//base_info[find_status != 'DONE']">
+								<xsl:text>n</xsl:text>
+							</xsl:for-each>
+						</xsl:variable>
+						
 						<h2 class="error"><xsl:copy-of select="$text_metasearch_hits_no_match" /></h2>
+						
+						<xsl:if test="$in_progress != ''">
+							<h3><xsl:copy-of select="$text_metasearch_hits_unfinished" /></h3>
+						</xsl:if>
+						
 					</xsl:when>
 					<xsl:otherwise>
 						<h2><xsl:call-template name="page_name" /></h2>
