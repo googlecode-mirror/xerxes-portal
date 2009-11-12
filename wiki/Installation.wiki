@@ -92,7 +92,20 @@ Next, issue this command from the command line:
 
 Make sure to change the path accordingly. That should populate the local sfx table.
 
-==9. Set-up cron jobs for the cache==
+==9. Optional: Enable bX recommendations==
+
+If you license the bX recommendation service from Ex Libris, you can have Xerxes display recommendations it finds in the Xerxes full record display.  
+
+To do this, you first need to register the IP address of the server running Xerxes with the bX service. In SFX Admin, go to `bX Configuration` and then `change settings`.  
+
+This takes you to the bX admin site.  Go to `My Link Resolvers` and select your SFX instance from the available list.  This is your link resolver profile page.  Select `Add/remove IP addresses`, and enter the IP address of the server running Xerxes.
+
+This sends a message to the Ex Libris network administrators to update the bX firewall configuration, which should be completed in a few hours.
+
+Back on the link resolver profile page, locate the `bX authentication token`.  Once you receive confirmation from Ex Libris that the firewall is open, add the authentication token to the `bx_token` entry in `config.xml`.  Recommendations, when available, should now start appearing in your Xerxes records.
+
+
+==10. Set-up cron jobs for the cache==
 
 Eventually you will want to have Xerxes automatically refresh the Metalib KB and SFX 
 institutional holding data on a regular basis.  
