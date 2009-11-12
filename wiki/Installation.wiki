@@ -84,9 +84,9 @@ Assuming you have a subscription to Ulrich, you can ask David for an SQL file fo
 
 Xerxes can pull down and cache the institutional holdings export file from SFX, so long as you have registered and set this up on your SFX server for Google or other search engines to harvest.  Xerxes will use this to flag when articles are available online in another database.
 
-To do this, first go to SFX and edit the 'config/get_file_restriction.config_' file to include the IP address, or IP range, of the server you are hosting Xerxes on.
+To do this, first go to SFX and edit the `config/get_file_restriction.config_` file to include the IP address, or IP range, of the server you are hosting Xerxes on.
 
-Next, issue this command from the command line:
+Back on your Xerxes server, issue this command from the command line:
 
   {{{php -f /path/to/xerxes/demo/index.php action=populate base=availability}}}
 
