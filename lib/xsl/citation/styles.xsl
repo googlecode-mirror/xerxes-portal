@@ -201,7 +201,7 @@
 			</xsl:if>
 			
 			<!-- journal title -->
-			<u><xsl:value-of select="journal_title" /></u><xsl:text>, </xsl:text>
+			<i><xsl:value-of select="journal_title" /></i><xsl:text>, </xsl:text>
 			
 			<!-- volume and issue -->
 			<xsl:if test="volume">
@@ -235,7 +235,7 @@
 			
 			<!-- title -->
 			<xsl:if test="title_normalized">
-				<u><xsl:value-of select="title_normalized" /></u><xsl:text>. </xsl:text>
+				<i><xsl:value-of select="title_normalized" /></i><xsl:text>. </xsl:text>
 			</xsl:if>
 			
 			<xsl:choose>
