@@ -315,11 +315,7 @@
 			
 			// catch subtitles
 			
-			if ( preg_match("/: ([a-z])/", $strFinal, $arrMatches) )
-			{
-				$strLetter = ucwords($arrMatches[1]);
-				$strFinal = preg_replace("/: ([a-z])/", ": " . $strLetter, $strFinal );
-			}
+			$strFinal = self::capitalizeSubtitle($strFinal);
 
 			// catch words that start with double quotes
 			
@@ -348,6 +344,41 @@
 			
 			return $strFinal;
 		}
+		
+		public static function toSentenceCase($strInput)
+		{						
+			if ( strlen($strInput) > 1 )
+			{
+				// drop everything
+				
+				$strInput = strtolower($strInput);
+				
+				// capitalize the first letter
+				
+				$strInput = strtoupper(substr($strInput, 0, 1)) . substr($strInput, 1);
+				
+				// and the start of a subtitle
+				
+				$strInput = self::capitalizeSubtitle($strInput);
+			}
+			
+			return $strInput;
+		}
+		
+		private static function capitalizeSubtitle($strFinal)
+		{
+			$arrMatches = array();
+			
+			if ( preg_match("/: ([a-z])/", $strFinal, $arrMatches) )
+			{
+				$strLetter = ucwords($arrMatches[1]);
+				$strFinal = preg_replace("/: ([a-z])/", ": " . $strLetter, $strFinal );
+			}
+			
+			return $strFinal;
+		}
+		
+		
 
 		/**
 		 * Simple function to strip off the previous part of a string
