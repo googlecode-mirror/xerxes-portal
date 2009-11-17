@@ -75,7 +75,7 @@
 	
 			<!-- title -->
 			<xsl:if test="title_normalized">
-				<xsl:value-of select="title_normalized" /><xsl:text>. </xsl:text>
+				<xsl:value-of select="php:function('Xerxes_Parser::toSentenceCase', string(title_normalized))" /><xsl:text>. </xsl:text>
 			</xsl:if>
 				
 			<!-- date if no author given-->
