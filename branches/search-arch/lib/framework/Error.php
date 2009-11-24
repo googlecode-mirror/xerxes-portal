@@ -157,7 +157,7 @@ class Xerxes_Framework_Error
 				// xsl for error page too, great.
 				
 
-				echo Xerxes_Parser::transform( $objError, "xsl/error.xsl" );
+				echo Xerxes_Framework_Parser::transform( $objError, "xsl/error.xsl" );
 			}
 		}
 		

@@ -3898,7 +3898,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 	private function escapeXml($string)
 	{
 		// NOTE: if you make a change to this function, make a corresponding change 
-		// in the Xerxes_Parser class, since this one here is a duplicate function 
+		// in the Xerxes_Framework_Parser class, since this one here is a duplicate function 
 		// allowing Xerxes_Record it be as a stand-alone class 
 		
 		$string = str_replace( '&', '&amp;', $string );
@@ -3916,7 +3916,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 	private function toTitleCase($strInput)
 	{
 		// NOTE: if you make a change to this function, make a corresponding change 
-		// in the Xerxes_Parser class, since this one here is a duplicate function 
+		// in the Xerxes_Framework_Parser class, since this one here is a duplicate function 
 		// allowing Xerxes_Record to be a stand-alone class
 
 		$arrMatches = ""; // matches from regular expression

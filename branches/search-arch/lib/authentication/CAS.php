@@ -71,7 +71,7 @@
 				
 			$strUrl = $configCasValidate . "?ticket=" . $strTicket . "&service=" . urlencode($this->validate_url);
 			
-			$strResults = Xerxes_Parser::request( $strUrl );		
+			$strResults = Xerxes_Framework_Parser::request( $strUrl );		
 			
 			// validate is plain text
 			

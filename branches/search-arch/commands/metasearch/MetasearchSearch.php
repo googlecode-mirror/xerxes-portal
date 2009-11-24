@@ -330,7 +330,7 @@ class Xerxes_Command_MetasearchSearch extends Xerxes_Command_Metasearch
 		
 		foreach ( $arrSearch as $key => $value )
 		{
-			$objElement = $objXml->createElement( $key, Xerxes_Parser::escapeXml( $value ) );
+			$objElement = $objXml->createElement( $key, Xerxes_Framework_Parser::escapeXml( $value ) );
 			$objXml->documentElement->appendChild( $objElement );
 		}
 
@@ -345,7 +345,7 @@ class Xerxes_Command_MetasearchSearch extends Xerxes_Command_Metasearch
 		
 		foreach ( $arrQuery as $key => $value )
 		{
-			$objElement = $objXml->createElement( $key, Xerxes_Parser::escapeXml( $value ) );
+			$objElement = $objXml->createElement( $key, Xerxes_Framework_Parser::escapeXml( $value ) );
 			$objPair->appendChild( $objElement );
 		}
 			
@@ -367,7 +367,7 @@ class Xerxes_Command_MetasearchSearch extends Xerxes_Command_Metasearch
 			
 			foreach ( $arrQuery as $key => $value )
 			{
-				$objElement = $objXml->createElement( $key, Xerxes_Parser::escapeXml( $value ) );
+				$objElement = $objXml->createElement( $key, Xerxes_Framework_Parser::escapeXml( $value ) );
 				$objPair->appendChild( $objElement );
 			}
 		}

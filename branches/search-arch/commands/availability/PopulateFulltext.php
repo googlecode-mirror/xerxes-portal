@@ -58,7 +58,7 @@
 			
 			try
 			{
-				$strResponse = Xerxes_Parser::request($strUrl);
+				$strResponse = Xerxes_Framework_Parser::request($strUrl);
 				$objXml = new SimpleXMLElement($strResponse);
 			}
 			catch (Exception $e)

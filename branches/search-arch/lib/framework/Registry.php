@@ -373,7 +373,7 @@ class Xerxes_Framework_Registry
 			{
 				// simple string value
 				
-				$objElement = $objConfigXml->createElement( $key, Xerxes_Parser::escapeXml($value) );
+				$objElement = $objConfigXml->createElement( $key, Xerxes_Framework_Parser::escapeXml($value) );
 				$objConfigXml->documentElement->appendChild( $objElement );
 			}
 		}

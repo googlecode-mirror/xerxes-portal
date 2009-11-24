@@ -1,5 +1,16 @@
 <?php
 
+/**
+ * Extract multiple Marc records from Metalib X-Server response
+ * 
+ * @author David Walker
+ * @copyright 2009 California State University
+ * @link http://xerxes.calstate.edu
+ * @license http://www.gnu.org/licenses/
+ * @version $Id$
+ * @package Xerxes
+ */
+
 class Xerxes_MetalibRecord_Document extends Xerxes_Marc_Document 
 {
 	protected $record_type = "Xerxes_MetalibRecord";

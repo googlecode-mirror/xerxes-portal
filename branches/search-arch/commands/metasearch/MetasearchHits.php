@@ -185,7 +185,7 @@ class Xerxes_Command_MetasearchHits extends Xerxes_Command_Metasearch
 						// cache a slimmed down version of the facets as well
 						// to ease the load on the interface
 
-						$strFacetSlim = Xerxes_Parser::transform( $objFacetXml, "xsl/utility/facets-slim.xsl" );
+						$strFacetSlim = Xerxes_Framework_Parser::transform( $objFacetXml, "xsl/utility/facets-slim.xsl" );
 						$this->setCache( $strGroup, "facets-slim", $strFacetSlim );
 					}
 				}

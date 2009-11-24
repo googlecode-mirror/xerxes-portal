@@ -52,7 +52,7 @@ class Xerxes_Command_DatabasesSubject extends Xerxes_Command_Databases
 			// standard url for the category 
 
 			$arrParams = array ("base" => "databases", "action" => "subject", "subject" => $objCategoryData->normalized );
-			$url = Xerxes_Parser::escapeXml( $this->request->url_for( $arrParams ) );
+			$url = Xerxes_Framework_Parser::escapeXml( $this->request->url_for( $arrParams ) );
 			$objElement = $objXml->createElement( "url", $url );
 			$objXml->documentElement->appendChild( $objElement );
 			

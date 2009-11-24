@@ -580,7 +580,7 @@
 			$objXml = new DOMDocument();
 			$objXml->recover = true;
 			
-			$strResponse = Xerxes_Parser::request($url);
+			$strResponse = Xerxes_Framework_Parser::request($url);
 			$objXml->loadXML($strResponse);
 			
 			// no response?

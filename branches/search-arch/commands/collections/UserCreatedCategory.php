@@ -83,7 +83,7 @@ class Xerxes_Command_UserCreatedCategory extends Xerxes_Command_Collections
 				"username" => $strUser, 
 				"subject" => $objCategoryData->normalized );
 			
-			$url = Xerxes_Parser::escapeXml( $this->request->url_for( $arrParams ) );
+			$url = Xerxes_Framework_Parser::escapeXml( $this->request->url_for( $arrParams ) );
 			$objElement = $objXml->createElement( "url", $url );
 			$objXml->documentElement->appendChild( $objElement );
 			
@@ -95,7 +95,7 @@ class Xerxes_Command_UserCreatedCategory extends Xerxes_Command_Collections
 				"username" => $strUser, 
 				"subject" => $objCategoryData->normalized );
 			
-			$url = Xerxes_Parser::escapeXml( $this->request->url_for( $arrParams ) );
+			$url = Xerxes_Framework_Parser::escapeXml( $this->request->url_for( $arrParams ) );
 			$objElement = $objXml->createElement( "edit_url", $url );
 			$objXml->documentElement->appendChild( $objElement );
 			

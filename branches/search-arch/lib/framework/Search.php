@@ -133,7 +133,7 @@ abstract class Xerxes_Framework_Search
 		
 		// add in the original url for debugging
 		
-		$search_url = $results_xml->createElement( "search_url", Xerxes_Parser::escapeXml( $this->url ) );
+		$search_url = $results_xml->createElement( "search_url", Xerxes_Framework_Parser::escapeXml( $this->url ) );
 		$results_xml->documentElement->appendChild( $search_url );		
 		
 		if ( count($this->results) > 0 )
@@ -156,7 +156,7 @@ abstract class Xerxes_Framework_Search
 				
 		      	// openurl kev context object please
 		      	
-				$kev = Xerxes_Parser::escapeXml($result->getOpenURL(null, $this->sid));
+				$kev = Xerxes_Framework_Parser::escapeXml($result->getOpenURL(null, $this->sid));
 				$open_url = $results_xml->createElement("openurl_kev_co", $kev);
 				$record_container->appendChild( $open_url );				
 				
@@ -193,7 +193,7 @@ abstract class Xerxes_Framework_Search
 					
 					$open_url = $record->getOpenURL($this->link_resolver, $this->sid);
 					
-					$open_url_xml = $results_xml->createElement("url_open", Xerxes_Parser::escapeXML($open_url));
+					$open_url_xml = $results_xml->createElement("url_open", Xerxes_Framework_Parser::escapeXML($open_url));
 					$results_xml->appendChild($open_url_xml);
 				}
 			}
@@ -294,7 +294,7 @@ abstract class Xerxes_Framework_Search
 				
 			$url = $configBX . "/recommender/openurl?token=" . $configToken . "&" . $open_url;
 				
-			$xml = Xerxes_Parser::request($url);
+			$xml = Xerxes_Framework_Parser::request($url);
 
 			// header("Content-type: text/xml"); echo $xml; exit;
 				
@@ -477,7 +477,7 @@ abstract class Xerxes_Framework_Search
 	}
 }
 
-class Xerxes_Query
+class Xerxes_Framework_Search_Query
 {
 	public $list;
 	
@@ -508,7 +508,7 @@ class Xerxes_Query
 			
 			$url .= "?appid=" . $configYahooID . "&query=" . urlencode($term->phrase);
 			
-			$strResponse = Xerxes_Parser::request($url);
+			$strResponse = Xerxes_Framework_Parser::request($url);
 				
 			$objSpelling = new DOMDocument();
 			$objSpelling->loadXML($strResponse);
@@ -523,7 +523,7 @@ class Xerxes_Query
 	}
 }
 
-class Xerxes_Query_Term
+class Xerxes_Framework_Search_Query_Term
 {
 	public $field;
 	public $relation;

@@ -9,7 +9,7 @@
 	 * @license http://www.gnu.org/licenses/
 	 * @version $Id$
 	 * @package Xerxes
-	 * @uses Xerxes_Parser
+	 * @uses Xerxes_Framework_Parser
 	 * @uses lib/xslt/marc-to-database.xsl
 	 */
 
@@ -293,7 +293,7 @@
 			$objXml = $this->objSearch->allDatabases($this->configInstitute, true, $this->configChunk);
 
 			
-			$strXml = Xerxes_Parser::transform($objXml, "xsl/utility/marc-to-database.xsl");
+			$strXml = Xerxes_Framework_Parser::transform($objXml, "xsl/utility/marc-to-database.xsl");
       
 			// get just the database info
 			
