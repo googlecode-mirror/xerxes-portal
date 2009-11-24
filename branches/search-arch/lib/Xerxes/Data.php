@@ -12,13 +12,13 @@
  */
 
 
-class Xerxes_Data_Record_Tag extends Xerxes_Framework_DataValue
+class Xerxes_Data_RecordTag extends Xerxes_Framework_DataValue
 {
 	public $label;
 	public $total;
 }
 
-class Xerxes_Data_Record_Format extends Xerxes_Framework_DataValue
+class Xerxes_Data_RecordFormat extends Xerxes_Framework_DataValue
 {
 	public $format;
 	public $total;

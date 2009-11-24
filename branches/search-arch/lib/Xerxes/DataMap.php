@@ -1386,7 +1386,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		
 		foreach ( $arrResults as $arrResult )
 		{
-			$objRecord = new Xerxes_Data_Record_Format( );
+			$objRecord = new Xerxes_Data_RecordFormat( );
 			$objRecord->load( $arrResult );
 			array_push( $arrFacets, $objRecord );
 		}
@@ -1410,7 +1410,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		
 		foreach ( $arrResults as $arrResult )
 		{
-			$objRecord = new Xerxes_Data_Record_Tag( );
+			$objRecord = new Xerxes_Data_RecordTag( );
 			$objRecord->load( $arrResult );
 			array_push( $arrFacets, $objRecord );
 		}
