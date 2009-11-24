@@ -222,13 +222,13 @@ class Xerxes_Helper
   /* Ensures that specified user is logged in, or throws exception */
   public static function ensureSpecifiedUser($username, $objRequest, $objRegistry, $strMessage = "Access only allowed by specific user.") {    
     if (! ($objRequest->getSession("username") == $username)) {
-      throw new Xerxes_AccessDeniedException($strMessage);
+      throw new Xerxes_Exception_AccessDenied($strMessage);
     }
   }
   
 	/**
 	 * Checks to see if any of the databases currently being searched are restricted
-	 * to the user, throws Xerxes_DatabasesDeniedException if one is not
+	 * to the user, throws Xerxes_Exception_DatabasesDenied if one is not
 	 *
 	 * @param array $dbList							list of Xerxes_Data_Database objects
 	 * @param Xerxes_Framework_Request $objRequest	Xerxes request object
@@ -274,7 +274,7 @@ class Xerxes_Helper
 
 		if ( count( $deniedList ) > 0 )
 		{
-			$e = new Xerxes_DatabasesDeniedException( );
+			$e = new Xerxes_Exception_DatabasesDenied( );
 			$e->setDeniedDatabases( $deniedList );
 			throw $e;
 		} else

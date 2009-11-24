@@ -23,7 +23,7 @@ class Xerxes_Shibboleth_Local extends Xerxes_Shibboleth
 	 * 
 	 * This function may:
 	 * 
-	 * 1) Throw a Xerxes_AccessDeniedException if based on attributes
+	 * 1) Throw a Xerxes_Exception_AccessDenied if based on attributes
 	 *    you want to deny user access to logging into Xerxes at all.
 	 *    The message should explain why. 
 	 * 

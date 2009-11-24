@@ -47,7 +47,7 @@ class Xerxes_Command_UserCreatedCategory extends Xerxes_Command_Collections
 			} 
 			else
 			{
-				throw new Xerxes_NotFoundException( "Personal collection not found." );
+				throw new Xerxes_Exception_NotFound( "Personal collection not found." );
 			}
 		}
 		
