@@ -25,7 +25,7 @@ abstract class Xerxes_Framework_Authenticate
 	{
 		$this->request = $objRequest;
 		$this->registry = $objRegistry;
-		$this->user = new Xerxes_User();
+		$this->user = new Xerxes_Framework_Authenticate_User();
 		$this->return = $this->request->getProperty( "return" );
 		
 		$base = $this->registry->getConfig( "BASE_URL", true);
@@ -161,7 +161,7 @@ abstract class Xerxes_Framework_Authenticate
 	}
 }
 
-class Xerxes_User extends Xerxes_Framework_DataValue
+class Xerxes_Framework_Authenticate_User extends Xerxes_Framework_DataValue
 {
 	public $username;
 	public $last_login;

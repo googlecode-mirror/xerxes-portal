@@ -1,7 +1,5 @@
 <?php
 
-require_once 'Marc.php';
-
 class Xerxes_BxRecord_Document extends Xerxes_Marc_Document 
 {
 	protected $record_type = "Xerxes_BxRecord";

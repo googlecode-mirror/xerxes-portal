@@ -11,176 +11,6 @@
  * @package Xerxes
  */
 
-
-class Xerxes_Data_Record_Tag extends Xerxes_Framework_DataValue
-{
-	public $label;
-	public $total;
-}
-
-class Xerxes_Data_Record_Format extends Xerxes_Framework_DataValue
-{
-	public $format;
-	public $total;
-}
-
-class Xerxes_Data_Cache extends Xerxes_Framework_DataValue
-{
-	public $source;
-	public $grouping;
-	public $id;
-	public $data;
-	public $timestamp;
-	public $expiry;
-}
-
-class Xerxes_Data_Refereed extends Xerxes_Framework_DataValue
-{
-	public $issn;
-	public $title;
-	public $subtitle;
-	public $title_normal;
-}
-
-class Xerxes_Data_Fulltext extends Xerxes_Framework_DataValue
-{
-	public $issn;
-	public $title;
-	public $startdate;
-	public $enddate;
-	public $embargo;
-	public $updated;
-	public $live;
-}
-
-class Xerxes_Data_Category extends Xerxes_Framework_DataValue
-{
-	public $id;
-	public $name;
-	public $normalized;
-	public $old;
-	public $subcategories = array ( );
-	
-	/**
-	 * Converts a sting to a normalized (no-spaces, non-letters) string
-	 *
-	 * @param string $strSubject	original string
-	 * @return string				normalized string
-	 */
-	public static function normalize($strSubject)
-	{
-		$strNormalized = strtolower( $strSubject );
-		
-		$strNormalized = str_replace( "&amp;", "", $strNormalized );
-		$strNormalized = str_replace( "'", "", $strNormalized );
-		$strNormalized = str_replace( "+", "-", $strNormalized );
-		
-		$strNormalized = preg_replace( "/\W/", "-", $strNormalized );
-		
-		while ( strstr( $strNormalized, "--" ) )
-		{
-			$strNormalized = str_replace( "--", "-", $strNormalized );
-		}
-		
-		return $strNormalized;
-	}
-}
-
-class Xerxes_Data_Subcategory extends Xerxes_Framework_DataValue
-{
-	public $metalib_id;
-	public $name;
-	public $sequence;
-	public $category_id;
-	public $databases = array ( );
-}
-
-class Xerxes_Data_Type extends Xerxes_Framework_DataValue
-{
-	public $id;
-	public $name;
-	public $normalized;
-	public $databases = array ( );
-}
-
-class Xerxes_Data_Database extends Xerxes_Framework_DataValue
-{
-	public $metalib_id;
-	public $title_full;
-	public $title_display;
-	public $institute;
-	public $filter;
-	public $creator;
-	public $search_hints;
-	public $publisher;
-	public $publisher_description;
-	public $description;
-	public $coverage;
-	public $time_span;
-	public $copyright;
-	public $note_cataloger;
-	public $note_fulltext;
-	public $type;
-	public $link_native_home;
-	public $link_native_record;
-	public $link_native_home_alternative;
-	public $link_native_record_alternative;
-	public $link_native_holdings;
-	public $link_guide;
-	public $link_publisher;
-	public $library_address;
-	public $library_city;
-	public $library_state;
-	public $library_zipcode;
-	public $library_country;
-	public $library_telephone;
-	public $library_fax;
-	public $library_email;
-	public $library_contact;
-	public $library_note;
-	public $library_hours;
-	public $active;
-	public $proxy;
-	public $searchable;
-	public $guest_access;
-	public $subscription;
-	public $sfx_suppress;
-	public $new_resource_expiry;
-	public $updated;
-	public $number_sessions;
-	
-	public $keywords = array ( );
-	public $notes = array ( );
-	public $languages = array ( );
-	public $alternate_publishers = array ( );
-	public $alternate_titles = array ( );
-	public $group_restrictions = array ( );
-}
-
-class Xerxes_Data_Record extends Xerxes_Framework_DataValue
-{
-	public $id;
-	public $source;
-	public $original_id;
-	public $timestamp;
-	public $username;
-	public $nonsort;
-	public $title;
-	public $author;
-	public $year;
-	public $format;
-	public $refereed;
-	public $marc;
-	public $xerxes_record; // not part of table!
-
-	public $tags = array ( );
-}
-
-/**
- * Functions for inserting, updating, and deleting data from the database
- *
- */
-
 class Xerxes_DataMap extends Xerxes_Framework_DataMap
 {
 	public function __construct()
@@ -1631,16 +1461,16 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 	/**
 	 * Update the user table to include the last date of login and any other
 	 * specified attributes. Creates new user if neccesary.
-	 * If any attributes in Xerxes_User are set other than
+	 * If any attributes in Xerxes_Framework_Authenticate_User are set other than
 	 * username, those will also be written to db over-riding anything that may
-	 * have been there.  Returns Xerxes_User filled out with information matching
+	 * have been there.  Returns Xerxes_Framework_Authenticate_User filled out with information matching
 	 * db. 
 	 *
-	 * @param Xerxes_User $user
-	 * @return Xerxes_User $user
+	 * @param Xerxes_Framework_Authenticate_User $user
+	 * @return Xerxes_Framework_Authenticate_User $user
 	 */
 	
-	public function touchUser(Xerxes_User $user)
+	public function touchUser(Xerxes_Framework_Authenticate_User $user)
 	{
 		// array to pass to db updating routines. Make an array out of our
 		// properties. 
@@ -1665,9 +1495,9 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		if ( count( $arrResults ) == 1 )
 		{
 			// user already exists in database, so update the last_login time and
-			// use any data specified in our Xerxes_User record to overwrite. Start
+			// use any data specified in our Xerxes_Framework_Authenticate_User record to overwrite. Start
 			// with what's already there, overwrite with anything provided in
-			// the Xerxes_User object. 
+			// the Xerxes_Framework_Authenticate_User object. 
 			
 			$db_values = $arrResults[0];
 			
