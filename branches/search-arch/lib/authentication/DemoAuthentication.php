@@ -7,7 +7,7 @@
 	 * @copyright 2008 California State University
 	 * @link http://xerxes.calstate.edu
 	 * @license http://www.gnu.org/licenses/
-	 * @version $Id$
+	 * @version $Id: DemoAuthentication.php 974 2009-10-28 20:54:47Z dwalker@calstate.edu $
 	 * @package Xerxes
 	 */
 

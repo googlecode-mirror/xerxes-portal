@@ -73,6 +73,9 @@ class Xerxes_Record extends Xerxes_Marc_Record
 	protected $subjects = array ( ); // subjects
 	protected $toc = ""; // table of contents note
 	
+	protected $refereed = false; // whether the item is peer-reviewed
+	protected $subscription = false; // whether the item is available in library subscription
+	
 	protected $links = array ( ); // all supplied links in the record both full text and non
 	protected $embedded_text = array ( ); // full text embedded in document
 	
@@ -4423,6 +4426,33 @@ class Xerxes_Record extends Xerxes_Marc_Record
 	public function getSource()
 	{
 		return $this->source;
+	}
+	
+	public function setRefereed($bool)
+	{
+		$this->refereed = (bool) $bool;
+	}
+	
+	public function getRefereed()
+	{
+		return $this->refereed;
+	}
+	
+	public function setSubscription($bool)
+	{
+		$this->subscription = (bool) $bool;
+	}
+	
+	public function getSubscription()
+	{
+		return $this->subscription;
+	}
+	
+	public function getOriginalXML()
+	{
+		$marc = $this->getMarcXML();
+		
+		return $marc->getElementsByTagName( "record" )->item( 0 );
 	}
 }
 
