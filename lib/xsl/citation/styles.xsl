@@ -1,16 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<!--
-
- author: David Walker
- copyright: 2009 California State University
- version: $Id$
- package: Xerxes
- link: http://xerxes.calstate.edu
- license: http://www.gnu.org/licenses/
- 
- -->
-
 <xsl:stylesheet version="1.0"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
@@ -75,7 +63,7 @@
 	
 			<!-- title -->
 			<xsl:if test="title_normalized">
-				<xsl:value-of select="php:function('Xerxes_Parser::toSentenceCase', string(title_normalized))" /><xsl:text>. </xsl:text>
+				<xsl:value-of select="title_normalized" /><xsl:text>. </xsl:text>
 			</xsl:if>
 				
 			<!-- date if no author given-->
@@ -201,7 +189,7 @@
 			</xsl:if>
 			
 			<!-- journal title -->
-			<i><xsl:value-of select="journal_title" /></i><xsl:text>, </xsl:text>
+			<u><xsl:value-of select="journal_title" /></u><xsl:text>, </xsl:text>
 			
 			<!-- volume and issue -->
 			<xsl:if test="volume">
@@ -235,7 +223,7 @@
 			
 			<!-- title -->
 			<xsl:if test="title_normalized">
-				<i><xsl:value-of select="title_normalized" /></i><xsl:text>. </xsl:text>
+				<u><xsl:value-of select="title_normalized" /></u><xsl:text>. </xsl:text>
 			</xsl:if>
 			
 			<xsl:choose>

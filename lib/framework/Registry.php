@@ -7,7 +7,7 @@
  * @copyright 2008 California State University
  * @link http://xerxes.calstate.edu
  * @license http://www.gnu.org/licenses/
- * @version $Id$
+ * @version 1.1
  * @package  Xerxes_Framework
  */
 
@@ -151,7 +151,7 @@ class Xerxes_Framework_Registry
 			
 			// register modules
 			
-			if ( $xml->configuration->modules != false )
+			if ( $xml->configuration->modules != null )
 			{
 				$this->modules = explode(",", (string) $xml->configuration->modules);
 			}

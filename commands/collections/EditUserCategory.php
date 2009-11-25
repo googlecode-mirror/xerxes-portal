@@ -5,13 +5,6 @@
  * If subcategory url param is there, edit a subcategory (name).
  * Of only subject param, edit a category (name and published status)
  * 
- *
- * @author Jonathan Rochkind
- * @copyright 2009 Johns Hopkins University
- * @link http://xerxes.calstate.edu
- * @license http://www.gnu.org/licenses/
- * @version $Id$
- * @package Xerxes
  */
 
 class Xerxes_Command_EditUserCategory extends Xerxes_Command_Collections

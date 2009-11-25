@@ -4,13 +4,6 @@
  * Prior to displaying a section choice dialog, do we even have any sections
  * to choose from? If just one, skip that choice dialog. if 0, create one,
  * and skip dialog.
- *
- * @author Jonathan Rochkind
- * @copyright 2009 Johns Hopkins University
- * @link http://xerxes.calstate.edu
- * @license http://www.gnu.org/licenses/
- * @version $Id$
- * @package Xerxes
  */
 
 class Xerxes_Command_ChooseSectionSkip extends Xerxes_Command_Collections

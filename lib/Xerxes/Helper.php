@@ -2,14 +2,8 @@
 
 /**
  * Static methods used by multiple commands, factored out here to keep
- * things clean-ish
+ * things clean.
  *
- * @author David Walker
- * @copyright 2009 California State University
- * @link http://xerxes.calstate.edu
- * @license http://www.gnu.org/licenses/
- * @version $Id$
- * @package Xerxes
  */
 
 class Xerxes_Helper
@@ -44,12 +38,13 @@ class Xerxes_Helper
 		
 		foreach ( $objDatabaseData->properties() as $key => $value )
 		{
-			if ( $value != null && $key != "description" && $key != "search_hints")
+			if ( $value != null && $key != "description" )
 			{
 				$objElement = $objDom->createElement( $key, Xerxes_Parser::escapeXml( $value ) );
 				$objDatabase->appendChild( $objElement );
 				
 				// sometimes we're asked to track and record index.
+				
 
 				if ( ! is_null( $index ) && $key == "searchable" && $value == "1" )
 				{
@@ -58,50 +53,36 @@ class Xerxes_Helper
 				}
 			}
 		}
-			
-		// description we handle special for escaping setting. Note that we
-		// handle html escpaing here in controller for description, view
-		// should use disable-output-escaping="yes" on value-of of description.
-
-		$escape_behavior = $objRegistry->getConfig ( "db_description_html", false, "escape" ); // 'escape' ; 'allow' ; or 'strip'
-
-		$notes = array ();
 		
-		$notes ["description"] = $objDatabaseData->description;
-		$notes ["search_hints"] = $objDatabaseData->search_hints;
-		
-		foreach ( $notes as $name => $note_field )
-		{
-			if ($note_field != null)
-			{
-				// strip out "##" chars, not just singular "#" to allow # in markup
-				// or other places. 
+    // description we handle special for escaping setting. Note that we
+    // handle html escpaing here in controller for description, view
+    // should use disable-output-escaping="yes" on value-of of description.
+    $escape_behavior = $objRegistry->getConfig("db_description_html", false, "escape"); // 'escape' ; 'allow' ; or 'strip'
+    $note_field = $objDatabaseData->description;
+    if ( $note_field != null ) {
+      
+      //strip out "##" chars, not just singular "#" to allow # in markup
+      //or other places. 
+      $note_field = str_replace('##', '', $note_field);
+      
+      if ( $escape_behavior == "strip" ) {          
+        $allow_tag_list = $objRegistry->getConfig("db_description_allow_tags", false, '');
+        $arr_allow_tags = split(',', $allow_tag_list);
+        $param_allow_tags = '';
+        foreach ( $arr_allow_tags as $tag ) {
+          $param_allow_tags .= "<$tag>";
+        }          
+        $note_field = strip_tags($note_field, $param_allow_tags); 
+      }
+      
+      if ( $escape_behavior == "escape" ) {
+        $note_field = htmlspecialchars($note_field);   
+      }
+      $objElement = $objDom->createElement( "description", Xerxes_Parser::escapeXml($note_field) );
+      $objDatabase->appendChild( $objElement );
 
-				$note_field = str_replace ( '##', '', $note_field );
-				
-				if ($escape_behavior == "strip")
-				{
-					$allow_tag_list = $objRegistry->getConfig ( "db_description_allow_tags", false, '' );
-					$arr_allow_tags = split ( ',', $allow_tag_list );
-					$param_allow_tags = '';
+    }
 
-					foreach ( $arr_allow_tags as $tag )
-					{
-						$param_allow_tags .= "<$tag>";
-					}
-					
-					$note_field = strip_tags ( $note_field, $param_allow_tags );
-				}
-				
-				if ($escape_behavior == "escape")
-				{
-					$note_field = htmlspecialchars ( $note_field );
-				}
-				
-				$objElement = $objDom->createElement ( $name, Xerxes_Parser::escapeXml ( $note_field ) );
-				$objDatabase->appendChild ( $objElement );
-			}
-		}
     
 		// multi-value fields
 

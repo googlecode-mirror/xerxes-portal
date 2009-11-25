@@ -4,7 +4,7 @@
 
  author: David Walker
  copyright: 2009 California State University
- version: $Id$
+ version 1.5
  package: Xerxes
  link: http://xerxes.calstate.edu
  license: http://www.gnu.org/licenses/
@@ -79,9 +79,5 @@
 	</xsl:choose>
 	
 </xsl:template>
-
-  <!-- If using the Umlaut feature, you want to set this to your branded
-       link resolver name. -->
-  <!-- <xsl:variable name="text_link_resolver_name">Link Resolver</xsl:variable> -->
 
 </xsl:stylesheet>

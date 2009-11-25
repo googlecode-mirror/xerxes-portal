@@ -7,7 +7,7 @@
 	 * @copyright 2008 California State University
 	 * @link http://xerxes.calstate.edu
 	 * @license http://www.gnu.org/licenses/
-	 * @version $Id$
+	 * @version 1.1
 	 * @package Xerxes
 	 * @uses Xerxes_Parser
 	 * @uses lib/xslt/marc-to-database.xsl
@@ -284,21 +284,17 @@
 		
 		private function databases()
 		{
+
 			$arrDatabases = array();
 							
 			// get all databases and convert to local format
 
 			$objXml = new DOMDocument();
 			$objXml = $this->objSearch->allDatabases($this->configInstitute, true, $this->configChunk);
+
 			
 			$strXml = Xerxes_Parser::transform($objXml, "xsl/utility/marc-to-database.xsl");
-
-			if ( $this->request->getProperty("test") )
-			{
-				$objXml->save("metalib.xml");
-				file_put_contents("xerxes.xml", $strXml);
-			}			
-			
+      
 			// get just the database info
 			
 			$objSimple = new SimpleXMLElement($strXml);
@@ -308,6 +304,7 @@
 			
 			foreach ( $arrDBs as $objDatabase )
 			{       
+       
 				// populate data object with properties
 
 				$objData = new Xerxes_Data_Database();
@@ -357,12 +354,10 @@
 				$objData->updated = (string) $objDatabase->updated;
 				$objData->number_sessions = (int) $objDatabase->number_sessions;
 				$objData->search_hints = (string) $objDatabase->search_hints;
-				$objData->icon = (string) $objDatabase->icon;
 				
 				// multi-value fields
 				
-				foreach ($objDatabase->group_restrictions->group as $group_restriction) 
-				{
+				foreach ($objDatabase->group_restrictions->group as $group_restriction) {
 					array_push($objData->group_restrictions, (string) $group_restriction); 
 				}
 				foreach ( $objDatabase->keyword as $keyword )

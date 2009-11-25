@@ -4,7 +4,7 @@
 
  author: David Walker
  copyright: 2009 California State University
- version: $Id$
+ version: 1.5
  package: Xerxes
  link: http://xerxes.calstate.edu
  license: http://www.gnu.org/licenses/
@@ -87,7 +87,7 @@
 		</div>
 		
 		<dl>
-			<div class="databaseLink">
+			<div>
 			<dt><xsl:copy-of select="$text_database_link" /></dt>
 			<dd>		
 				<a>
@@ -97,7 +97,7 @@
 			</dd>
 			</div>
 			
-			<div class="databaseAvailability">
+			<div>
 			<dt><xsl:copy-of select="$text_database_availability" /></dt>
 			<dd>
 				<xsl:choose>
@@ -115,14 +115,14 @@
 			</div>
 			
 			<xsl:if test="coverage">
-				<div class="databaseCoverage">
+				<div>
 				<dt><xsl:copy-of select="$text_database_coverage" /></dt>
 				<dd><xsl:value-of select="coverage" /></dd>
 				</div>
 			</xsl:if>
 			
 			<xsl:if test="link_guide">
-				<div class="databaseGuide">
+				<div>
 				<dt><xsl:copy-of select="$text_database_guide" /></dt>
 				<dd>
 					<a>
@@ -134,26 +134,18 @@
 			</xsl:if>
 			
 			<xsl:if test="creator">
-				<div  class="databaseCreator">
+				<div>
 					<dt><xsl:copy-of select="$text_database_creator" />:</dt>
 					<dd><xsl:value-of select="creator" /></dd>
 				</div>
 			</xsl:if>
 			
 			<xsl:if test="publisher">
-				<div class="databasePublisher">
+				<div>
 					<dt><xsl:copy-of select="$text_database_publisher" /></dt>
 					<dd><xsl:value-of select="publisher" /></dd>
 				</div>
 			</xsl:if>
-			
-			<xsl:if test="search_hints and ($show_db_detail_search = 'true' and searchable = '1')">
-				<div class="databaseSearchHints">
-				<dt><xsl:copy-of select="$text_database_search_hints" /></dt>
-				<dd><xsl:value-of select="search_hints" /></dd>
-				</div>
-			</xsl:if>
-
 		</dl>
 		
 	</xsl:for-each>

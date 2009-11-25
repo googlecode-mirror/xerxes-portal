@@ -7,7 +7,7 @@
 	 * @copyright 2008 California State University
 	 * @link http://xerxes.calstate.edu
 	 * @license http://www.gnu.org/licenses/
-	 * @version $Id$
+	 * @version 1.1
 	 * @package Xerxes
 	 */
 	
@@ -18,7 +18,7 @@
 			$configLinkResolver = $this->registry->getConfig("LINK_RESOLVER_ADDRESS", true);
 			$configSID = $this->registry->getConfig("APPLICATION_SID", false, "calstate.edu:xerxes");
 			
-			$objXerxesRecord = new Xerxes_MetalibRecord();
+			$objXerxesRecord = new Xerxes_Record();
 			$objXerxesRecord->loadXML($this->getRecord());
 			
 			$this->request->setRedirect($objXerxesRecord->getOpenURL($configLinkResolver, $configSID));

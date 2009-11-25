@@ -3,32 +3,11 @@
  *  Expects global js variables to be defined:
  * openurl_kev_co  :   an OpenURL KEV context object representing this record
  * umlaut_base     :   The Umlaut base URL. Not the OpenURL base including /resolve, but just eg "http://findit.library.jhu.edu/"
- *
- * @author Jonathan Rochkind
- * @copyright 2009 Johns Hopkins University
- * @link http://xerxes.calstate.edu
- * @license http://www.gnu.org/licenses/
- * @version $Id$
- * @package Xerxes
  */
- 
- if (typeof(jsDisplayConstants) == "undefined" ) {
-   jsDisplayConstants = new Array(); 
- }
- 
- if (! ('link_resolver_name' in jsDisplayConstants)) {
-   jsDisplayConstants['link_resolver_name'] = 'Link Resolver';
- }
- if (!('link_resolver_load_message' in jsDisplayConstants)) {
-   jsDisplayConstants['link_resolver_load_message'] = "Loading content from";
- }
- if (!('link_resolver_direct_link_prefix' in jsDisplayConstants)) {
-   jsDisplayConstants['link_resolver_direct_link_prefix'] = "Full-Text Available: ";
- }
  
  document.observe("dom:loaded",  function() {
      // Add a spinner please, and preserve original content.
-     spinner = '<div class="recordAction linkResolverLink umlautLoad"><img src="' + umlaut_base + '/images/spinner.gif" alt=""/> '+jsDisplayConstants['link_resolver_load_message']+' <a href="' + umlaut_base + '/resolve?' + openurl_kev_co + '">'+jsDisplayConstants['link_resolver_name']+'</a></div>';
+     spinner = '<div class="recordAction linkResolverLink umlautLoad"><img src="' + umlaut_base + '/images/spinner.gif" alt=""/> Loading content from <a href="' + umlaut_base + '/resolve?' + openurl_kev_co + '">Find It</a></div>';
      $$('.recordAction.linkResolverLink').each ( function(item) {
         
          item.hide();
@@ -68,7 +47,7 @@
              $('umlaut_fulltext').down('.section_heading').hide();
              // Make the links more like Xerxes's patterns
              $$('#umlaut_fulltext .response_item a').each( function(link) {
-                 link.insert({'top': jsDisplayConstants['link_resolver_direct_link_prefix']}); 
+                 link.insert({'top': 'Full-Text Available: '}); 
              });
              // No spinner please
              $$('#umlaut_fulltext .background_progress_spinner').each(    

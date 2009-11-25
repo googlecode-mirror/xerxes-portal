@@ -2,13 +2,6 @@
 
 /**
  * Reorder subcategories. 
- *
- * @author Jonathan Rochkind
- * @copyright 2009 Johns Hopkins University
- * @link http://xerxes.calstate.edu
- * @license http://www.gnu.org/licenses/
- * @version $Id$
- * @package Xerxes
  */
 
 class Xerxes_Command_ReorderDatabases extends Xerxes_Command_Collections

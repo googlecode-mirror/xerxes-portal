@@ -1,18 +1,9 @@
  <!-- 
+  //Use prototype to have fancy fancy auto-update of example snippet on snippet 
+  // generation pages, whenoptions in form are changed. Assumes ids for various
+  // page elements, look at existing examples or code. 
  
-/** Use prototype to have fancy fancy auto-update of example snippet on snippet 
- * generation pages, whenoptions in form are changed. Assumes ids for various
- * page elements, look at existing examples or code.
- *
- * @author Jonathan Rochkind
- * @copyright 2009 Johns Hopkins University
- * @link http://xerxes.calstate.edu
- * @license http://www.gnu.org/licenses/
- * @version $Id$
- * @package Xerxes
- */   
- 
-  // Including page NEEDS to set global-scope js variable that this code uses:
+  //Including page NEEDS to set global-scope js variable that this code uses:
   
   // 1) Required variable "snip_base_url", a base complete url (with hostname)
   //    used to generate the snippet in question. 

@@ -5,7 +5,7 @@
  *
  * @author David Walker
  * @copyright 2008 California State University
- * @version $Id$
+ * @version 1.1
  * @package  Xerxes_Framework
  * @link http://xerxes.calstate.edu
  * @license http://www.gnu.org/licenses/
@@ -88,13 +88,24 @@ class Xerxes_Framework_Error
 			
 			$objRegistry->setConfig("XSL_PARENT_DIRECTORY", null);
 			
-			
-			
 			// set the base url for the error.xsl file's benefit; don't want to assume that 
 			// the earlier code to this effect was executed before an exception, so this is redundant
 			
 			$base_path = $objRegistry->getConfig( 'BASE_WEB_PATH', false, "" );
-			$this_server_name = $objRequest->getServer( 'SERVER_NAME' );
+			
+			$this_server_name = "";
+			
+			// check to see if xerxes is running behind a reverse proxy and set
+			// the web path accordingly
+			
+			if ( $objRequest->getServer( 'HTTP_X_FORWARDED_HOST' ) != null )
+			{
+				$this_server_name = $objRequest->getServer( 'HTTP_X_FORWARDED_HOST' );
+			}
+			else
+			{
+				$this_server_name = $objRequest->getServer( 'SERVER_NAME' );
+			}
 			
 			// check for a non-standard port
 						
@@ -109,19 +120,17 @@ class Xerxes_Framework_Error
 			    $port = ":" . $port;
 			}
 			
-			$protocol = "http://";
+			$web = "http://" . $this_server_name . $port . $base_path;
 			
-			if ( $objRequest->getServer("HTTPS") )
-			{
-				$protocol = "https://";
-			}
 			
-			$web = $protocol . $this_server_name . $port . $base_path;
 			
+						
 			$objBaseURL = $objError->createElement( "base_url", $web );
+			
 			$objError->documentElement->appendChild( $objBaseURL );
 			
 			// if it's a db denied exception, include info on dbs. 
+			
 
 			if ( $e instanceof Xerxes_DatabasesDeniedException )
 			{

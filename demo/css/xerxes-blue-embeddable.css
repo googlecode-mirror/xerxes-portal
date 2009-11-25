@@ -1,15 +1,11 @@
-/** 
- * This stylesheet is used for embeddable snippets, when the snippet is configured to embed a 
- * stylesheet. It is written with selectors that will only apply to embedded snippet, not other 
- * content on hosting page. 
- *  
- * @author Jonathan Rochkind
- * @copyright 2009 Johns Hopkins University
- * @link http://xerxes.calstate.edu
- * @license http://www.gnu.org/licenses/
- * @version $Id$
- * @package Xerxes
+/* CSS stylesheet. 
+
+  This stylesheet is used for embeddable snippets, when the snippet is configured to embed a 
+  stylesheet. It is written with selectors that will only apply to embedded snippet, not other 
+  content on hosting page. 
+  
  */
+
 
 .xerxes_outer_wrapper {
  font-size: 13px;

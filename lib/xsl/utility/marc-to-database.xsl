@@ -1,16 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<!--
-
- author: David Walker
- copyright: 2009 California State University
- version: $Id$
- package: Xerxes
- link: http://xerxes.calstate.edu
- license: http://www.gnu.org/licenses/
- 
- -->
-
 <xsl:stylesheet version="1.0"
 	xmlns:marc="http://www.loc.gov/MARC21/slim"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
@@ -96,8 +84,6 @@
 		
 		<filter><xsl:value-of select="marc:datafield[@tag='FTL']/marc:subfield[@code='a']" /></filter>
 		
-		<icon><xsl:value-of select="marc:datafield[@tag='ICN']/marc:subfield[@code='a']" /></icon>
-
 		<!-- TAR$f='n' means 'link to configuration active' has been set to 'no'
 		 in metalib admin. We consider that not searchable. -->
 		<xsl:if test="marc:datafield[@tag='TAR']/marc:subfield[@code='a'] and not (marc:datafield[@tag='TAR']/marc:subfield[@code='f'] = 'N')">

@@ -1,18 +1,8 @@
-<?php
+<?
 
-/**
- * Outputs an EZProxy config file from Metalib/Xerxes KB. See:
- * http://code.google.com/p/xerxes-portal/wiki/EzProxyExport
- *
- * @author Jonathan Rochkind
- * @copyright 2009 Johns Hopkins University
- * @link http://xerxes.calstate.edu
- * @license http://www.gnu.org/licenses/
- * @version $Id$
- * @package Xerxes
- */
+/* Outputs an EZProxy config file from Metalib/Xerxes KB. See:
+http://code.google.com/p/xerxes-portal/wiki/EzProxyExport
 
-/* 
 For documentation of the EZProxy config format, see:
 http://www.oclc.org/us/en/support/documentation/ezproxy/cfg/database.htm
 http://www.oclc.org/us/en/support/documentation/ezproxy/cfg/groups.htm

@@ -8,7 +8,7 @@
  * @copyright 2008 California State University
  * @link http://xerxes.calstate.edu
  * @license http://www.gnu.org/licenses/
- * @version $Id$
+ * @version 1.1
  * @package Xerxes_Framework
  * @uses Xerxes_Parser
  */
@@ -96,10 +96,10 @@ class Xerxes_Framework_Request
 			}
 		}
 		
+		### iis fixes
+		
 		if ( isset($_SERVER) )
 		{
-			### iis fixes
-			
 			// to make this consistent with apache
 			
 			if ( array_key_exists('HTTPS', $_SERVER) )
@@ -110,7 +110,7 @@ class Xerxes_Framework_Request
 				}
 			}
 			
-			// since iis doesn't hold value for request_uri
+			// since it doesn't hold value for request_uri
 	
 			if ( ! isset( $_SERVER['REQUEST_URI'] ) )
 			{
@@ -341,11 +341,6 @@ class Xerxes_Framework_Request
 		{
 			return null;
 		}
-	}
-	
-	public function setServer($key, $value)
-	{
-		$_SERVER[$key] = $value;
 	}
 	
 	/**

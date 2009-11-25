@@ -1,10 +1,3 @@
-# author: David Walker
-# copyright: 2009 California State University
-# version: $Id$
-# package: Xerxes
-# link: http://xerxes.calstate.edu
-# license: http://www.gnu.org/licenses/
-
 CREATE DATABASE IF NOT EXISTS xerxes;
 USE xerxes;
 
@@ -48,7 +41,6 @@ CREATE TABLE xerxes_databases(
 	note_fulltext		VARCHAR(500),
 	search_hints		VARCHAR(3000),
 	type			VARCHAR(50),
-	icon			VARCHAR(50),
 	library_address		VARCHAR(200),
 	library_city		VARCHAR(100),
 	library_state		VARCHAR(30),

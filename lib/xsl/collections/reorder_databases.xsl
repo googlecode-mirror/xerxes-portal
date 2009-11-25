@@ -2,17 +2,6 @@
 
 <!--
 
- author: Jonathan Rochkind
- copyright: 2009 Johns Hopkins University
- version: $Id$
- package: Xerxes
- link: http://xerxes.calstate.edu
- license: http://www.gnu.org/licenses/
- 
--->
-
-<!--
-
 Edit subject page for user-created subjects. Only used for non-AJAX version.
  
  -->

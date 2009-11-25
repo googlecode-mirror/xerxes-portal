@@ -7,7 +7,7 @@
 	 * @copyright 2008 California State University
 	 * @link http://xerxes.calstate.edu
 	 * @license http://www.gnu.org/licenses/
-	 * @version $Id$
+	 * @version 1.1
 	 * @package Xerxes
 	 */
 	
@@ -52,7 +52,7 @@
 	
 				// get record from metalib result set
 				
-				$objXerxesRecord = new Xerxes_MetalibRecord( );
+				$objXerxesRecord = new Xerxes_Record( );
 				$objXerxesRecord->loadXML( $this->getRecord() );
 				
 				// add to database

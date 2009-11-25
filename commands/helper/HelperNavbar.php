@@ -2,13 +2,7 @@
 
 /**
  * Constructs links for 'my stuff' navigation elements
- * 
- * @author David Walker
- * @copyright 2008 California State University
- * @link http://xerxes.calstate.edu
- * @license http://www.gnu.org/licenses/
- * @version $Id$
- * @package Xerxes
+ *
  */
 
 class Xerxes_Command_HelperNavbar extends Xerxes_Command_Helper

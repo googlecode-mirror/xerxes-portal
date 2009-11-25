@@ -1,18 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<!--
-
- author: David Walker
- copyright: 2009 California State University
- version: $Id$
- package: Xerxes
- link: http://xerxes.calstate.edu
- license: http://www.gnu.org/licenses/
- 
- -->
-
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 <!-- 
 	TEXT LABELS 
@@ -65,8 +52,7 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	<xsl:variable name="text_database_go_to_database">Go to this database!</xsl:variable>
 	<xsl:variable name="text_database_link">Link:</xsl:variable>
 	<xsl:variable name="text_database_publisher">Publisher:</xsl:variable>
-	<xsl:variable name="text_database_save_database">Save database</xsl:variable>
-	<xsl:variable name="text_database_search_hints">Search Hints:</xsl:variable>
+	<xsl:variable name="text_database_save_database">Save database</xsl:variable>	
 	
 	<xsl:variable name="text_databases_access_available">Only available to </xsl:variable>
 	<xsl:variable name="text_databases_access_group_and">and</xsl:variable>
@@ -172,23 +158,16 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	<xsl:variable name="text_link_original_record">Original record</xsl:variable>
 	<xsl:variable name="text_link_resolver_available">Full text available</xsl:variable>
 	<xsl:variable name="text_link_resolver_check">Check for availability</xsl:variable>
-	<xsl:variable name="text_link_resolver_name">Link Resolver</xsl:variable>
-	<xsl:variable name="text_link_resolver_load_msg">Loading content from</xsl:variable>
-	<xsl:variable name="text_link_resolver_direct_link_prefix">Full-Text Available: </xsl:variable>
 
 	<xsl:variable name="text_metasearch_hits_error">Sorry, we're having technical difficulties right now.</xsl:variable>
 	<xsl:variable name="text_metasearch_hits_error_explain">
-		You can try again later, or use the library's website to select and search databases individually.
+		You can still search each database individually by following the links below.
 	</xsl:variable>
-	<xsl:variable name="text_metasearch_hits_no_match">Sorry, your search did not match any records.</xsl:variable>
+	<xsl:variable name="text_metasearch_hits_no_match">Sorry, your search did not match any records</xsl:variable>
 	<xsl:variable name="text_metasearch_hits_pagename">Search Status</xsl:variable>
 	<xsl:variable name="text_metasearch_hits_table_database">Database</xsl:variable>
 	<xsl:variable name="text_metasearch_hits_table_status">Status</xsl:variable>
 	<xsl:variable name="text_metasearch_hits_table_count">Hits</xsl:variable>
-	<xsl:variable name="text_metasearch_hits_unfinished">
-		It looks like some of the databases had technical problems.  You might want to try your search again later.
-	</xsl:variable>
-	
 	<xsl:variable name="text_metasearch_results_limit">Limit</xsl:variable>
 	<xsl:variable name="text_metasearch_results_summary">
 		Results <strong><xsl:value-of select="//summary/range" /></strong> 
@@ -305,10 +284,6 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	<xsl:variable name="text_snippet_show_searchbox">Show search box?</xsl:variable>
 	<xsl:variable name="text_snippet_show_section">Show specific section?</xsl:variable>	
 	<xsl:variable name="text_snippet_show_title">Show title?</xsl:variable>
-  
-	<xsl:template name="text_recommendation_header">
-		People who read this <xsl:value-of select="php:function('strtolower', string(format))"/> also read	
-	</xsl:template>
 
 	<xsl:template name="text_number_to_words">
 		<xsl:param name="number" />

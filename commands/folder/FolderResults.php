@@ -7,7 +7,7 @@
 	 * @copyright 2008 California State University
 	 * @link http://xerxes.calstate.edu
 	 * @license http://www.gnu.org/licenses/
-	 * @version $Id$
+	 * @version 1.1
 	 * @package Xerxes
 	 */
 	
@@ -134,7 +134,7 @@
         }
                 
         
-        Xerxes_MetalibRecord::completeUrlTemplates($xerxes_records, $this->request, $this->registry, $database_links_dom);         
+        Xerxes_Record::completeUrlTemplates($xerxes_records, $this->request, $this->registry, $database_links_dom);         
         
         $database_links = $objXml->importNode($database_links_dom->documentElement, true);
         

@@ -1,17 +1,5 @@
 <?php
 
-/**
- * Database access mapper
- *
- * @author David Walker
- * @copyright 2009 California State University
- * @link http://xerxes.calstate.edu
- * @license http://www.gnu.org/licenses/
- * @version $Id$
- * @package Xerxes
- */
-
-
 class Xerxes_Data_Record_Tag extends Xerxes_Framework_DataValue
 {
 	public $label;
@@ -121,7 +109,6 @@ class Xerxes_Data_Database extends Xerxes_Framework_DataValue
 	public $note_cataloger;
 	public $note_fulltext;
 	public $type;
-	public $icon;
 	public $link_native_home;
 	public $link_native_record;
 	public $link_native_home_alternative;
@@ -1443,17 +1430,11 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		{
 			// mimicking the MySQL LIMIT clause
 			
-			$strMSPage = "";
-			
-			if ( $iCount != null)
-			{
-				$strMSLimit = $iStart + $iCount;
-				$strMSPage = "WHERE row > $iStart and row <= $strMSLimit";
-			}
+			$strMSLimit = $iStart + $iCount;
 			
 			$strSQL = "SELECT * FROM
 				( SELECT * FROM ( SELECT $strColumns , ROW_NUMBER() OVER ( $strSort ) as row FROM $strTable $strCriteria ) 
-					as tmp $strMSPage ) as xerxes_records 
+					as tmp WHERE row > $iStart and row <= $strMSLimit ) as xerxes_records 
 				LEFT OUTER JOIN xerxes_tags on xerxes_records.id = xerxes_tags.record_id";
 				
 			// a bug in the pdo odbc driver ??? makes this necessary
@@ -1510,7 +1491,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 
 					if ( array_key_exists( "marc", $arrResult ) )
 					{
-						$objXerxes_Record = new Xerxes_MetalibRecord( );
+						$objXerxes_Record = new Xerxes_Record( );
 						$objXerxes_Record->loadXML( $arrResult["marc"] );
 						$objRecord->xerxes_record = $objXerxes_Record;
 					}
@@ -1996,7 +1977,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		
 		foreach ( $objValueObject->properties() as $key => $value )
 		{
-			if ( ! is_int($value) && $value == "" )
+			if ( $value == "" )
 			{
 				unset($objValueObject->$key);
 			}

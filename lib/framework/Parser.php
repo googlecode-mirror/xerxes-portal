@@ -7,7 +7,7 @@
 	 * @copyright 2008 California State University
 	 * @link http://xerxes.calstate.edu
 	 * @license http://www.gnu.org/licenses/
-	 * @version $Id$
+	 * @version 1.1
 	 * @package  Xerxes_Framework
 	 */ 
 
@@ -81,10 +81,8 @@
 		 * @static
 		*/
 		
-		public static function generateBaseXsl($strXsltRelPath, $arrInclude = array())
+		public static function generateBaseXsl($strXsltRelPath, $arrInclude = "")
 		{
-			$arrImports = array(); // files to be imported
-			
 			$objRegistry = Xerxes_Framework_Registry::getInstance(); 
 		
 			// the relative path passed in should, starting from our working
@@ -92,7 +90,7 @@
 			
 			$local_xsl_dir = $objRegistry->getConfig("APP_DIRECTORY", true);
 			$local_path =  $local_xsl_dir . "/" . $strXsltRelPath;
-			      
+			
 			// the 'main' application xsl lives here
 		
 			$distro_xsl_dir = $objRegistry->getConfig("PATH_PARENT_DIRECTORY", true) . '/lib/';
@@ -116,34 +114,33 @@
 			// import the distro
 			
 			$distro_exists = file_exists($distro_path);
-			$local_exists = file_exists($local_path);
 
 			// if no distro, need to directly import distro includes.xsl, since we're not
 			// importing a file that will reference it; also need to do this for modules
 			
 			if ( $distro_exists == false || $this_xsl_dir != $distro_xsl_dir )
 			{
-				array_push($arrImports, $distro_xsl_dir . "xsl/includes.xsl");
+				self::addImportReference( $generated_xsl, $distro_xsl_dir . "xsl/includes.xsl", $importInsertionPoint );
 			}			
 			
 			if ( $distro_exists == true )
 			{	
-				array_push($arrImports, $distro_path);
+				self::addImportReference($generated_xsl, $distro_path, $importInsertionPoint);
 			}
 			
 			// additional xsl that should be included
 			
-			if ( $arrInclude != null )
+			if ( $arrInclude != "" )
 			{
 				foreach ( $arrInclude as $strInclude )
 				{
-					array_push($arrImports, $this_xsl_dir . $strInclude);
+					self::addImportReference( $generated_xsl, $this_xsl_dir . $strInclude, $importInsertionPoint );
 				}
 			}
-				
+			
 			// include local
 			
-			if ( $local_exists )
+			if ( file_exists($local_path) )
 			{
 				self::addIncludeReference( $generated_xsl, $local_path);
 			}
@@ -151,64 +148,32 @@
 			// if actions.xml specified a view and we don't have a local or 
 			// a distro copy, that's a problem.
 			
-			if (! ( $local_exists || $distro_exists) )
+			if (! ( file_exists($local_path) || file_exists($distro_path)))
 			{
 				// throw new Exception("No xsl stylesheet found: $local_path || $distro_path");
 				throw new Exception("No xsl stylesheet found: $strXsltRelPath");
 			}
 			
 			// add any locally overridden subsidiary 'included' type files if
-			// neccesary, for instance includes.xsl, but we also look through
-			// distro file to see if there's anything else we need. 
-
+			// neccesary. Right now, that's just includes.xsl.
 			// includes.xsl still needs manually xsl:include'd in the distro source,
 			// but local source shouldn't, we will import local includes.xsl
 			// dynamically here. We import instead of include in case the local
 			// stylesheet does erroneously 'include', to avoid a conflict. We
 			// import LAST to make sure it takes precedence over distro. 
 			
-			if ( $distro_exists )
-			{
-				$distroXml = simplexml_load_file ( $distro_path );
+			$extra_xsl_names = array("xsl/includes.xsl");
 			
-				$distroXml->registerXPathNamespace ( 'xsl', 'http://www.w3.org/1999/XSL/Transform' );
+			foreach ($extra_xsl_names as $rel_path )
+			{
+				$abs_local_path = $local_xsl_dir . '/' . $rel_path;
 				
-				// find anything include'd or importe'd in original base file,
-				// including but not limited to includes.xsl
-				
-				$array_merged = array_merge ( $distroXml->xpath ( "//xsl:include" ), $distroXml->xpath ( "//xsl:import" ) );
-				
-				foreach ( $array_merged as $extra )
+				if ( file_exists( $abs_local_path ))
 				{
-					// path to local copy, and the distro copy as a check
-					
-					$local_candidate = $local_xsl_dir . '/' . dirname ( $strXsltRelPath ) . '/' . $extra['href'];
-					$distro_check = $this_xsl_dir . '/' . dirname ( $strXsltRelPath ) . '/' . $extra['href'];
-					
-					// make sure it exists, and they are both not pointing at the same file 
-					
-					if ( file_exists ( $local_candidate ) && realpath($distro_check) != realpath($local_candidate) )
-					{
-						array_push($arrImports, $local_candidate);
-					}
+					self::addImportReference($generated_xsl, $abs_local_path, $importInsertionPoint);
 				}
 			}
 			
-			// ensure that the local includes is in the list
-
-			// ( sorry, this is a hack for the module stuff code which we may abandon in 1.7 
-			// with the new search architecture; keep it for now )
-			
-			array_push($arrImports, $local_xsl_dir . "/xsl/includes.xsl");
-            
-			$arrImports = array_unique($arrImports);
-			
-			foreach ( $arrImports as $import )
-			{
-				self::addImportReference ( $generated_xsl, $import, $importInsertionPoint );
-			}
-			
-				
 			// header("Content-type: text/xml"); echo $generated_xsl->saveXML(); exit;
 			
 			return $generated_xsl;
@@ -315,7 +280,11 @@
 			
 			// catch subtitles
 			
-			$strFinal = self::capitalizeSubtitle($strFinal);
+			if ( preg_match("/: ([a-z])/", $strFinal, $arrMatches) )
+			{
+				$strLetter = ucwords($arrMatches[1]);
+				$strFinal = preg_replace("/: ([a-z])/", ": " . $strLetter, $strFinal );
+			}
 
 			// catch words that start with double quotes
 			
@@ -344,41 +313,6 @@
 			
 			return $strFinal;
 		}
-		
-		public static function toSentenceCase($strInput)
-		{						
-			if ( strlen($strInput) > 1 )
-			{
-				// drop everything
-				
-				$strInput = strtolower($strInput);
-				
-				// capitalize the first letter
-				
-				$strInput = strtoupper(substr($strInput, 0, 1)) . substr($strInput, 1);
-				
-				// and the start of a subtitle
-				
-				$strInput = self::capitalizeSubtitle($strInput);
-			}
-			
-			return $strInput;
-		}
-		
-		private static function capitalizeSubtitle($strFinal)
-		{
-			$arrMatches = array();
-			
-			if ( preg_match("/: ([a-z])/", $strFinal, $arrMatches) )
-			{
-				$strLetter = ucwords($arrMatches[1]);
-				$strFinal = preg_replace("/: ([a-z])/", ": " . $strLetter, $strFinal );
-			}
-			
-			return $strFinal;
-		}
-		
-		
 
 		/**
 		 * Simple function to strip off the previous part of a string

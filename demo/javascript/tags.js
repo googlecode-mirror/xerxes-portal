@@ -7,13 +7,6 @@
 	 *	The autocompleter will take it's suggestions from things on the page
 	 *	wrapped with <span class="label_list_item"></span>. These can be in a
 	 *	hidden div, or displayed, just on the page somewhere. 
-	 *
-	 * @author Jonathan Rochkind
-	 * @copyright 2009 Johns Hopkins University
-	 * @link http://xerxes.calstate.edu
-	 * @license http://www.gnu.org/licenses/
-	 * @version $Id$
-	 * @package Xerxes
 	 */
 
 	addEvent(window, 'load', findTagElements);

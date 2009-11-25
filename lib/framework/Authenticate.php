@@ -2,13 +2,6 @@
 
 /**
  * An event-based authentication framework
- *
- * @author David Walker
- * @copyright 2009 California State University
- * @link http://xerxes.calstate.edu
- * @license http://www.gnu.org/licenses/
- * @version $Id$
- * @package Xerxes
  */
 
 abstract class Xerxes_Framework_Authenticate
@@ -39,10 +32,7 @@ abstract class Xerxes_Framework_Authenticate
 		}
 		else
 		{
-			if ( ! strstr($this->return, $server) )
-			{
-				$this->return = $server . $this->return;
-			}
+			$this->return = $server . $this->return;
 		}
 
 		// we always send the user back on http: since shib and possibly other schemes

@@ -15,13 +15,6 @@
  * new subcat is never created.  This is used when this command is used by
  * the save_complete action, for AJAXy database saving in collection,
  * and the new subcat should not be created in that case. 
- *
- * @author Jonathan Rochkind
- * @copyright 2009 Johns Hopkins University
- * @link http://xerxes.calstate.edu
- * @license http://www.gnu.org/licenses/
- * @version $Id$
- * @package Xerxes
  */
 
 class Xerxes_Command_NewUserCategory extends Xerxes_Command_Collections

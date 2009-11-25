@@ -1,17 +1,9 @@
 	/**
-	 * Functions for toggling metasearch advanced/simple mode without
-	 * a trip to the server.
-	 *
-	 *
-	 * @author Jonathan Rochkind
-	 * @copyright 2009 Johns Hopkins University
-	 * @link http://xerxes.calstate.edu
-	 * @license http://www.gnu.org/licenses/
-	 * @version $Id$
-	 * @package Xerxes
-	 */
-	 
-	 
+	* Functions for toggling metasearch advanced/simple mode without
+	* a trip to the server.
+	*
+	*/
+	
 	addEvent(window, 'load', addToggle); 
 	
 	function addToggle()

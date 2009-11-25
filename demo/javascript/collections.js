@@ -1,17 +1,9 @@
-/** 
- * functions for user-created collections
- * (aka user-created categories)
- *
- *  Adds confirm JS to delete functions on collection edit form.
- *  Also adds AJAXy goodness to the db save dialog. 
- *
- * @author Jonathan Rochkind
- * @copyright 2009 Johns Hopkins University
- * @link http://xerxes.calstate.edu
- * @license http://www.gnu.org/licenses/
- * @version $Id$
- * @package Xerxes
- */
+/** FUNCTIONS FOR USER-CREATED COLLECTIONS
+  * (aka user-created categories)
+  *
+  *  Adds confirm JS to delete functions on collection edit form.
+  *  Also adds AJAXy goodness to the db save dialog. 
+  **/
   
   
   addEvent(window, 'load', addConfirmDialogs);

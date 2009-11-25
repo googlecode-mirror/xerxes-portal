@@ -5,7 +5,7 @@
 	 *
 	 * @author David Walker
 	 * @copyright 2008 California State University
-	 * @version $Id$
+	 * @version 1.1
 	 * @package Xerxes
 	 * @link http://xerxes.calstate.edu
 	 * @license http://www.gnu.org/licenses/

@@ -2,13 +2,6 @@
 
 /**
  * Shared functions for metasearch commands
- * 
- * @author David Walker
- * @copyright 2008 California State University
- * @link http://xerxes.calstate.edu
- * @license http://www.gnu.org/licenses/
- * @version $Id$
- * @package Xerxes
  */
 
 abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
@@ -355,14 +348,14 @@ abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
 		
 		foreach($arrRecords as $objRecord)
 		{
-			$objXerxesRecord = new Xerxes_MetalibRecord( );         
+			$objXerxesRecord = new Xerxes_Record( );         
 			$objXerxesRecord->loadXml( $objRecord );
 			array_push($arrXerxesRecords, $objXerxesRecord);
 		 }    
 
 	    // enhance with links computed from metalib templates.
 	    
-		Xerxes_MetalibRecord::completeUrlTemplates($arrXerxesRecords, $this->request, $this->registry);
+		Xerxes_Record::completeUrlTemplates($arrXerxesRecords, $this->request, $this->registry);
 		
 		$position = $this->request->getProperty("startRecord");
 		

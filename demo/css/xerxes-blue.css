@@ -1,15 +1,3 @@
-
-/**
- * Base css for main interface
- *
- * @author David Walker
- * @copyright 2009 California State University
- * @link http://xerxes.calstate.edu
- * @license http://www.gnu.org/licenses/
- * @version $Id$
- * @package Xerxes
- */
-
 @charset "utf-8";
 
 /** BASIC ELEMENTS **/
@@ -655,20 +643,6 @@ a.recordAction {
 	padding: .4em;
 	font-size: 80%;
 	color: #666;
-}
-
-#recommendations {
-	margin-top: 2em;
-}
-
-#recommendations .result {
-	margin-bottom: 2em;
-}
-
-
-#recommendations li {
-	list-style: none;
-	margin-left: 1.5em;
 }
 
 /** MY SAVED RECORDS **/

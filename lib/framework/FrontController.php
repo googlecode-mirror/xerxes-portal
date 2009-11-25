@@ -5,7 +5,7 @@
  *
  * @author David Walker
  * @copyright 2008 California State University
- * @version $Id$
+ * @version 1.1
  * @package  Xerxes_Framework
  * @link http://xerxes.calstate.edu
  * @license http://www.gnu.org/licenses/
@@ -98,32 +98,6 @@ class Xerxes_Framework_FrontController
 			#     SET PATHS    #
 			####################
 
-			### reverse proxy
-			
-			// check to see if xerxes is running behind a reverse proxy and swap
-			// host and remote ip here with their http_x_forwarded counterparts;
-			// but only if configured for this, since client can spoof the header 
-			// if xerxes is not, in fact, behind a reverse proxy
-			
-			if ( $objRegistry->getConfig("REVERSE_PROXY", false, false ) == true )
-			{
-				$forward_host = $objRequest->getServer('HTTP_X_FORWARDED_HOST');
-				$forward_address = $objRequest->getServer('HTTP_X_FORWARDED_FOR');
-				
-				if ( $forward_host != "" )
-				{
-					$objRequest->setServer('SERVER_NAME', $forward_host);
-				}
-				
-				// last ip address is the user's
-				
-				if ( $forward_address != "" )
-				{
-					$arrIP = explode(",", $forward_address);
-					$objRequest->setServer('REMOTE_ADDR', trim(array_pop($arrIP)));
-				}		
-			}
-			
 			// the working directory is the instance, so any relative paths will
 			// be executed in relation to the root directory of the instance
 						
@@ -138,7 +112,20 @@ class Xerxes_Framework_FrontController
 			// web path for proper display of a (friendly) error page 
 			
 			$base_path = $objRegistry->getConfig( 'BASE_WEB_PATH', false, "" );
-			$this_server_name = $objRequest->getServer( 'SERVER_NAME' );
+			
+			$this_server_name = "";
+			
+			// check to see if xerxes is running behind a reverse proxy and set
+			// the web path accordingly
+			
+			if ( $objRequest->getServer( 'HTTP_X_FORWARDED_HOST' ) != null )
+			{
+				$this_server_name = $objRequest->getServer( 'HTTP_X_FORWARDED_HOST' );
+			}
+			else
+			{
+				$this_server_name = $objRequest->getServer( 'SERVER_NAME' );
+			}
 			
 			// check for a non-standard port
 						
@@ -185,9 +172,6 @@ class Xerxes_Framework_FrontController
 			####################
 			#  ACCESS CONTROL  #
 			####################
-			
-
-			
 
 			// if this part of the application is restricted to a local ip range, or requires a named login, then the
 			// Restrict class will check the user's ip address or if they have logged in; failure stops the flow 
@@ -537,9 +521,7 @@ class Xerxes_Framework_FrontController
 	private static function includeFiles($path, $exclude = null)
 	{
 		// check to see if this is a directory or a file
-		
-		$arrIncludes = array();
-		
+
 		if ( is_dir( $path ) )
 		{
 			// open a directory handle and grab all the php files 
@@ -550,23 +532,17 @@ class Xerxes_Framework_FrontController
 			{
 				// make sure it is a php file, and exclude
 				// any file specified by $exclude
+				
 
 				if ( strstr( $file, ".php" ) && $file != $exclude )
 				{
-					array_push($arrIncludes, "$path/$file");
+					require_once ("$path/$file");
 				}
 			}
 		} 
 		else
 		{
-			array_push($arrIncludes, $path);
-		}
-		
-		sort($arrIncludes);
-		
-		foreach ( $arrIncludes as $include )
-		{
-			require_once ($include);
+			require_once ($path);
 		}
 	}
 	
@@ -619,7 +595,8 @@ function __autoload($name)
 	{
 		$file = str_replace("Xerxes_", "", $name);
 		
-		require_once(Xerxes_Framework_FrontController::parentDirectory() . "/lib/Xerxes/$file.php");
+		require_once(self::parent_directory . "lib/Xerxes/$file.php");
+		
 	}
 }
 

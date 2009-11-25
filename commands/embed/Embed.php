@@ -3,12 +3,6 @@
 /**
  * Base class for embed commands, mostlyl used for embed generator. 
  *
- * @author Jonathan Rochkind
- * @copyright 2009 Johns Hopkins University
- * @link http://xerxes.calstate.edu
- * @license http://www.gnu.org/licenses/
- * @version $Id$
- * @package Xerxes
  */
 
 abstract class Xerxes_Command_Embed extends Xerxes_Framework_Command

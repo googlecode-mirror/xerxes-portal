@@ -46,10 +46,6 @@
 		
 		<config name="http_use_curl"></config>
 		
-		<!-- if you are running xerxes behind a reverse proxy server set this to 'true'-->
-		
-		<config name="reverse_proxy"></config>
-		
 		
 	<!-- METALIB CONFIGURATION -->
 		
@@ -117,11 +113,9 @@
 		
 		<config name="alternate_fulltext_harvest_address"></config>
 		
-		<!-- if you have an umlaut resolver, and you want to enable Umlaut functionalities in Xerxes, 
-		fill this out with the Umlaut 'true' base, without the /resolve, no trailing slash. 
-		eg http://findit.library.jhu.edu -->
-		
-		<config name="umlaut_base" pass="true"></config>
+    <!-- if you have an umlaut resolver, and you want to enable Umlaut functionalities in Xerxes, fill this out with the Umlaut 'true' base, without the /resolve, no trailing slash. 
+    eg http://findit.library.jhu.edu -->
+    <config name="umlaut_base" pass="true"></config>
     
 		<!-- the sid that will be passed to the link resolver, xerxes will also append the name 
 			of the database to the sid -->
@@ -235,14 +229,6 @@
 			see the demo/.htaccess file for specification. -->
 		
 		<config name="rewrite" pass="true">false</config>
-		
-		<!-- limit context urls to specified domains; left blank means allow all -->
-		
-		<config name="limit_context_url"></config>
-		
-		<!-- bx recommendations -->
-		
-		<config name="bx_token"></config>		
 		
 		<!-- the overall width of the page design, see wiki for details! -->
 		

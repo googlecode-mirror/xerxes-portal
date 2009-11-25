@@ -5,7 +5,7 @@
  * 
  * @author David Walker
  * @copyright 2008 California State University
- * @version $Id$
+ * @version 1.1
  * @package Xerxes
  * @link http://xerxes.calstate.edu
  * @license http://www.gnu.org/licenses/
@@ -85,9 +85,21 @@ class Xerxes_Framework_Restrict
 	{
 		if ( $objRequest->getSession( "username" ) == null || $objRequest->getSession( "application" ) != $this->strAppName )
 		{
-			// check to see if user is coming from campus range						
+			// check to see if user is coming from campus range
+			// adjust here to check for reverse-proxy as well
+			
+			$users_ip_address = "";
+			
+			if ( $objRequest->getServer('HTTP_X_FORWARDED_FOR') != null )
+			{
+				$users_ip_address = $objRequest->getServer('HTTP_X_FORWARDED_FOR');
+			}
+			else
+			{
+				$users_ip_address = $objRequest->getServer( 'REMOTE_ADDR' );
+			}
 
-			$bolLocal = self::isIpAddrInRanges( $objRequest->getServer('REMOTE_ADDR'), $this->strIPRange );
+			$bolLocal = self::isIpAddrInRanges( $users_ip_address, $this->strIPRange );
 			
 			if ( $bolLocal == true )
 			{
