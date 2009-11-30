@@ -1,5 +1,6 @@
 <?php
 
+require_once '../lib/framework/Parser.php';
 require_once '../lib/Xerxes/Marc.php';
 require_once '../lib/Xerxes/Record.php';
 
@@ -112,7 +113,17 @@ class Xerxes_Record_DocumentTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals( $record->getFormat(), "Thesis");
 		$this->assertEquals( $record->getDegree(), "M.Arch.");
 		$this->assertEquals( $record->getInstitution(), "UCLA--Architecture.");
-	}	
+	}
+
+	public function testParsing()
+	{
+		$this->Xerxes_Record_Document->load($this->dir. "/data/metalib-char-data2.xml");
+		
+		foreach ( $this->Xerxes_Record_Document->records() as $record )
+		{
+			$xml = $record->toXML()->saveXML();
+		}
+	}		
 	
 	
 	/**
