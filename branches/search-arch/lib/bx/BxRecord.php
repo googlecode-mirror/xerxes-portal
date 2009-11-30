@@ -29,7 +29,7 @@ class Xerxes_BxRecord_Document extends Xerxes_Marc_Document
  * @copyright 2009 California State University
  * @link http://xerxes.calstate.edu
  * @license http://www.gnu.org/licenses/
- * @version $Id: BxRecord.php 974 2009-10-28 20:54:47Z dwalker@calstate.edu $
+ * @version $Id$
  * @package Xerxes
  */
 

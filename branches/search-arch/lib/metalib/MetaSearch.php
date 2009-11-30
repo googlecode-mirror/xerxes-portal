@@ -8,7 +8,7 @@
 	 * @copyright 2009 California State University
 	 * @link http://xerxes.calstate.edu
 	 * @license http://www.gnu.org/licenses/
-	 * @version $Id: MetaSearch.php 992 2009-11-10 14:16:11Z dwalker@calstate.edu $
+	 * @version $Id$
 	 * @package Xerxes
 	 */
 

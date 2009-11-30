@@ -25,7 +25,7 @@ class Xerxes_MetalibRecord_Document extends Xerxes_Marc_Document
  * @copyright 2009 California State University
  * @link http://xerxes.calstate.edu
  * @license http://www.gnu.org/licenses/
- * @version $Id: MetalibRecord.php 974 2009-10-28 20:54:47Z dwalker@calstate.edu $
+ * @version $Id$
  * @todo ->__toString() madness below due to php 5.1 object-string casting problem, remove 
  *       when redhat provides php 5.2 package, since that is keeping people from upgrading
  *  * @package Xerxes
