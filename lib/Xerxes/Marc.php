@@ -8,6 +8,7 @@
  * @link http://xerxes.calstate.edu
  * @license http://www.gnu.org/licenses/
  * @version $Id$
+ * @todo ->__toString() madness below due to php 5.1 object-string casting problem
  * @package Xerxes
  */
 
@@ -126,6 +127,17 @@ class Xerxes_Marc_Document
 
 /**
  * Parse single MARC-XML record
+ * 
+ * @author David Walker
+ * @copyright 2009 California State University
+ * @link http://xerxes.calstate.edu
+ * @license http://www.gnu.org/licenses/
+ * @version $Id$
+ * @package Xerxes
+ */
+
+/**
+ * Parse single MARC-XML record
  */
 
 class Xerxes_Marc_Record
@@ -237,12 +249,12 @@ class Xerxes_Marc_Record
 	 * Control field
 	 *
 	 * @param string $tag			the marc tag number
-	 * @return Xerxes_Marc_ControlField object or null if not found
+	 * @return Xerxes_Marc_ControlField object
 	 */
 	
 	public function controlfield($tag)
 	{
-		$return = null;
+		$return = new Xerxes_Marc_ControlField();
 		
 		foreach ( $this->_controlfields as $controlfield )
 		{
@@ -315,7 +327,7 @@ class Xerxes_Marc_Record
 		{
 			foreach ( $field->subfield($subfield_code) as $subfield )
 			{
-				array_push($return, (string) $subfield );
+				array_push($return, $subfield->__toString() );
 			}
 		}
 		
@@ -505,7 +517,7 @@ class Xerxes_Marc_DataField
 		
 		foreach ( $this->_subfields as $subfield )
 		{
-			$content .= " " . $subfield;
+			$content .= " " . $subfield->__toString();
 		}
 		
 		return trim($content);
@@ -595,7 +607,7 @@ abstract class Xerxes_Marc_FieldList implements Iterator
 		
 		foreach ( $this->list as $field )
 		{
-			$content .= " " . (string) $field;
+			$content .= " " . $field->__toString();
 		}
 		
 		return trim($content);
@@ -613,7 +625,7 @@ class Xerxes_Marc_DataFieldList extends Xerxes_Marc_FieldList
 	{
 		if ( count($this->list) == 0 )
 		{
-			return null;
+			return new Xerxes_Marc_Subfield(); // return empty subfield object
 		}
 		else
 		{
@@ -623,7 +635,16 @@ class Xerxes_Marc_DataFieldList extends Xerxes_Marc_FieldList
 				// return the first (and only the first) subfield of the 
 				// first (and only the first) datafield  
 				
-				return $this->list[0]->subfield($code)->item(0);
+				$subfield = $this->list[0]->subfield($code)->item(0);
+				
+				if ( $subfield == null )
+				{
+					return new Xerxes_Marc_Subfield(); // return empty subfield object
+				}
+				else
+				{
+					return $subfield;
+				}
 			}
 			else
 			{
