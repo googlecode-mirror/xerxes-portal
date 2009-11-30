@@ -13,6 +13,8 @@ class Xerxes_Record_Document extends Xerxes_Marc_Document
  * @link http://xerxes.calstate.edu
  * @license http://www.gnu.org/licenses/
  * @version $Id$
+ * @todo ->__toString() madness below due to php 5.1 object-string casting problem, remove 
+ *       when redhat provides php 5.2 package, since that is keeping people from upgrading
  * @package Xerxes
  */
 
@@ -137,7 +139,6 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		$objISSN = $this->xpath->query( "//rft:issn" )->item ( 0 );
 		$objISBN = $this->xpath->query( "//rft:isbn" )->item ( 0 );
 		
-		
 		if ($objSTitle != null) $this->short_title = $objSTitle->nodeValue;
 		if ($objVolume != null)	$this->volume = $objVolume->nodeValue;
 		if ($objIssue != null) $this->issue = $objIssue->nodeValue;
@@ -154,12 +155,12 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		$arrIssn = $this->fieldArray("022", "a" );
 		$arrIsbn = $this->fieldArray("020", "a" );
 
-		$this->govdoc_number = (string) $this->datafield("086")->subfield("a");
-		$this->gpo_number = (string) $this->datafield("074")->subfield("a");
+		$this->govdoc_number = (string) $this->datafield("086")->subfield("a")->__toString();		
+		$this->gpo_number = (string) $this->datafield("074")->subfield("a")->__toString();
 		
 		// doi
 				
-		$this->doi = (string) $this->datafield("024")->subfield("a");
+		$this->doi = (string) $this->datafield("024")->subfield("a")->__toString();
 		
 		// this is kind of iffy since the 024 is not _really_ a DOI field; but this
 		// is the most likely marc field; however need to see if the number follows the very loose
@@ -177,7 +178,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 			}
 		}
 		
-		$strJournalIssn = (string) $this->datafield("773")->subfield("x");
+		$strJournalIssn = (string) $this->datafield("773")->subfield("x")->__toString();
 		
 		if ( $strJournalIssn != null )
 		{
@@ -186,8 +187,8 @@ class Xerxes_Record extends Xerxes_Marc_Record
 			
 		// call number
 
-		$strCallNumber = (string) $this->datafield("050");
-		$strCallNumberLocal = (string) $this->datafield("090");
+		$strCallNumber = (string) $this->datafield("050")->__toString();
+		$strCallNumberLocal = (string) $this->datafield("090")->__toString();
 		
 		if ( $strCallNumber != null )
 		{
@@ -200,7 +201,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		
 		// format
 		
-		$this->technology = (string) $this->datafield("538")->subfield("a");
+		$this->technology = (string) $this->datafield("538")->subfield("a")->__toString();
 		
 		$arrFormat = $this->fieldArray("513", "a");
 
@@ -209,7 +210,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 			array_push($this->format_array, (string) $format);
 		}
 		
-		$strTitleFormat = (string) $this->datafield("245")->subfield("k");
+		$strTitleFormat = (string) $this->datafield("245")->subfield("k")->__toString();
 		
 		if ( $strTitleFormat != null )
 		{
@@ -218,16 +219,16 @@ class Xerxes_Record extends Xerxes_Marc_Record
 			
 		// thesis degree, institution, date awarded
 		
-		$strThesis = (string) $this->datafield("502")->subfield("a");
+		$strThesis = (string) $this->datafield("502")->subfield("a")->__toString();
 		
 		// authors
 
-		$strPrimaryAuthor = (string) $this->datafield("100")->subfield("a");
+		$strPrimaryAuthor = (string) $this->datafield("100")->subfield("a")->__toString();
 
-		$strCorpName = (string) $this->datafield("110")->subfield("ab");
+		$strCorpName = (string) $this->datafield("110")->subfield("ab")->__toString();
 		
-		$strConfName = (string) $this->datafield("111")->subfield("anc");
-		$this->author_from_title = (string) $this->datafield("245")->subfield("c" );
+		$strConfName = (string) $this->datafield("111")->subfield("anc")->__toString();
+		$this->author_from_title = (string) $this->datafield("245")->subfield("c" )->__toString();
 		
 		$arrAltAuthors = $this->fieldArray("700", "a" );
 		$arrAddCorp = $this->fieldArray("710", "ab" );
@@ -257,13 +258,13 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		
 		### title
 		
-		$this->title = (string) $this->datafield("245")->subfield("a");
-		$this->sub_title = (string) $this->datafield("245")->subfield("b");
-		$this->series_title = (string) $this->datafield("440")->subfield("a" );
+		$this->title = (string) $this->datafield("245")->subfield("a")->__toString();
+		$this->sub_title = (string) $this->datafield("245")->subfield("b")->__toString();
+		$this->series_title = (string) $this->datafield("440")->subfield("a" )->__toString();
 		
 		// sometimes title is in subfield p
 		
-		$title_part = (string) $this->datafield("245")->subfield("p" );
+		$title_part = (string) $this->datafield("245")->subfield("p" )->__toString();
 		
 		if ( $this->title == "" && $title_part != "" )
 		{
@@ -274,11 +275,11 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		// language, although the latter is probably bad practice.  We will only take these
 		// if the title in the 245 is blank, and take a 242 over the 246
 
-		$strTransTitle = (string) $this->datafield("242")->subfield("a");
-		$strTransSubTitle = (string) $this->datafield("242")->subfield("b");
+		$strTransTitle = (string) $this->datafield("242")->subfield("a")->__toString();
+		$strTransSubTitle = (string) $this->datafield("242")->subfield("b")->__toString();
 		
-		$strVaryingTitle = (string) $this->datafield("246")->subfield("a" );
-		$strVaryingSubTitle = (string) $this->datafield("246")->subfield("b");
+		$strVaryingTitle = (string) $this->datafield("246")->subfield("a" )->__toString();
+		$strVaryingSubTitle = (string) $this->datafield("246")->subfield("b")->__toString();
 		
 		if ( $this->title == "" && $strTransTitle != "" )
 		{
@@ -316,31 +317,31 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		
 		// edition, extent, description
 
-		$this->edition = (string) $this->datafield("250")->subfield("a" );
-		$this->extent = (string) $this->datafield("300")->subfield("a" );
-		$this->description = (string) $this->datafield("300");
-		$this->price = (string) $this->datafield("365");
+		$this->edition = (string) $this->datafield("250")->subfield("a" )->__toString();
+		$this->extent = (string) $this->datafield("300")->subfield("a" )->__toString();
+		$this->description = (string) $this->datafield("300")->__toString();
+		$this->price = (string) $this->datafield("365")->__toString();
 		
 		// publisher
 		
-		$this->place = (string) $this->datafield("260")->subfield("a");
-		$this->publisher = (string) $this->datafield("260")->subfield("b");
+		$this->place = (string) $this->datafield("260")->subfield("a")->__toString();
+		$this->publisher = (string) $this->datafield("260")->subfield("b")->__toString();
 		
 		// date
 
-		$strDate = (string) $this->datafield("260")->subfield("c");
+		$strDate = (string) $this->datafield("260")->subfield("c")->__toString();
 		
 		// notes
 		
 		$arrToc = $this->fieldArray("505", "agrt");
 
-		foreach (  $arrToc as $toc )
+		foreach ( $arrToc as $toc )
 		{
 			$this->toc .= (string) $toc;
 		}
 		
 		$arrAbstract = $this->fieldArray("520", "a");
-		$strLanguageNote = (string) $this->datafield("546")->subfield("a");
+		$strLanguageNote = (string) $this->datafield("546")->subfield("a")->__toString();
 		
 		// other notes
 		
@@ -358,7 +359,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 
 		foreach ( $this->datafield("6XX") as $subject )
 		{
-			$subfields = (string) $subject->subfield("abcdefghijklmnopqrstuvwxyz");
+			$subfields = (string) $subject->subfield("abcdefghijklmnopqrstuvwxyz")->__toString();
 			array_push($this->subjects, $subfields);
 		}
 		
@@ -367,11 +368,11 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		// specify the order of the subfields in 773 for journal as $a $t $g and then everything else
 		//  in case they are out of order 
 		
-		$this->journal = (string) $this->datafield("773")->subfield("atgbcdefhijklmnopqrsuvwxyz1234567890");
-		$strJournal = (string) $this->datafield("773")->subfield("agpt");
-		$this->journal_title = (string) $this->datafield("773")->subfield("t");
-		$this->short_title = (string) $this->datafield("773")->subfield("p");
-		$strExtentHost = (string) $this->datafield("773")->subfield("h");
+		$this->journal = (string) $this->datafield("773")->subfield("atgbcdefhijklmnopqrsuvwxyz1234567890")->__toString();
+		$strJournal = (string) $this->datafield("773")->subfield("agpt")->__toString();
+		$this->journal_title = (string) $this->datafield("773")->subfield("t")->__toString();
+		$this->short_title = (string) $this->datafield("773")->subfield("p")->__toString();
+		$strExtentHost = (string) $this->datafield("773")->subfield("h")->__toString();
 		
 		// alternate character-scripts
 		
@@ -386,7 +387,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		// now use the $6 to figure out which character-script this is
 		// assume just one for now
 
-		$strAltScript = (string) $this->datafield("880")->subfield("6");
+		$strAltScript = (string) $this->datafield("880")->subfield("6")->__toString();
 		
 		if ( $strAltScript != null )
 		{
@@ -478,18 +479,18 @@ class Xerxes_Record extends Xerxes_Marc_Record
 
 		foreach ( $this->datafield("856") as $link )
 		{
-			$strUrl = (string) $link->subfield("u");
+			$strUrl = (string) $link->subfield("u")->__toString();
 			
-			$strDisplay = (string) $link->subfield("z");
+			$strDisplay = (string) $link->subfield("z")->__toString();
 			
 			if ( $strDisplay == "" )
 			{
-				$strDisplay = (string) $link->subfield("a");
+				$strDisplay = (string) $link->subfield("a")->__toString();
 			}
 			
 			// no link supplied
 			
-			if ( (string) $link->subfield("u") == "" )
+			if ( (string) $link->subfield("u")->__toString() == "" )
 			{
 				continue;
 			}
@@ -524,7 +525,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		
 		$str001 = (string) $this->controlfield("001");
 		$str003 = (string) $this->controlfield("003");
-		$str035 = (string) $this->datafield("035")->subfield("a");
+		$str035 = (string) $this->datafield("035")->subfield("a")->__toString();
 
 		if ( $str001 != "" && (( $str003 == "" && preg_match('/^\(?([Oo][Cc])/', $str001) ) || 
 			$str003 == "OCoLC" ))
@@ -1864,7 +1865,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		// format made explicit
 
 		if ( strstr( $strDataFields, 'dissertation' ) ) $strReturn = "Dissertation"; 
-		elseif ( (string) $this->datafield("502") != "" ) $strReturn = "Thesis"; 
+		elseif ( (string) $this->datafield("502")->__toString() != "" ) $strReturn = "Thesis"; 
 		elseif ( strstr( $strDataFields, 'proceeding' ) ) $strReturn = "Conference Proceeding"; 
 		elseif ( strstr( $strDataFields, 'conference' ) ) $strReturn = "Conference Paper"; 
 		elseif ( strstr( $strDataFields, 'hearing' ) ) $strReturn = "Hearing"; 

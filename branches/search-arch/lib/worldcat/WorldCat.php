@@ -8,12 +8,12 @@
  * @link http://xerxes.calstate.edu
  * @license http://www.gnu.org/licenses/
  * @version 1.2
- * @package WorldCat
+ * @package Xerxes
  */
 
-class WorldCat
+class Xerxes_WorldCat
 {
-	private $base = "http://worldcat.org/webservices/catalog/search/sru";
+	private $base = "http://www.worldcat.org/webservices/catalog/search/sru";
 	private $xid = "http://xisbn.worldcat.org/webservices/xid/";
 	private $url; // url of the request
 	private $total; // total number of records

@@ -25,7 +25,6 @@ class Xerxes_Framework_FrontController
 		// calculate current file, this directory
 
 		$this_directory = dirname( __FILE__ );
-		$base = basename( __FILE__ );
 		
 		// calculate root directory of the app ../../ from here
 
@@ -44,7 +43,7 @@ class Xerxes_Framework_FrontController
 				
 		// register any and all library files
 		
-		self::registerClasses( "$path_to_parent/lib", $base );
+		self::registerClasses( "$path_to_parent/lib");
 		
 		// initialize the configuration setting (Registry) and 
 		// command-view mapping (ControllerMap) objects
@@ -187,9 +186,6 @@ class Xerxes_Framework_FrontController
 			#  ACCESS CONTROL  #
 			####################
 			
-
-			
-
 			// if this part of the application is restricted to a local ip range, or requires a named login, then the
 			// Restrict class will check the user's ip address or if they have logged in; failure stops the flow 
 			// and redirects user to a login page with the current request passed as 'return' paramater in the url
@@ -532,10 +528,9 @@ class Xerxes_Framework_FrontController
 	 * A class-file mapping mechanism used for inclusion of library files
 	 *
 	 * @param string $path		path to the file or directory
-	 * @param string $exclude	a file to exclude from being included, usually this file
 	 */
 	
-	private static function registerClasses($path, $exclude = null)
+	private static function registerClasses($path)
 	{
 		global $xerxes_include_file_array;
 		
@@ -549,7 +544,9 @@ class Xerxes_Framework_FrontController
 			$file_array = explode("/", $file_path);
 			$file = array_pop($file_array);
 			
-			if ( strstr( $file_path, ".php" ) && $file != $exclude )
+			// php files only, please
+			
+			if ( strstr( $file_path, ".php" ) )
 			{
 				$class_name = str_replace(".php", "", $file);
 				

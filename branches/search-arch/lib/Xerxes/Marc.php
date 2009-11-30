@@ -624,7 +624,7 @@ class Xerxes_Marc_DataFieldList extends Xerxes_Marc_FieldList
 	{
 		if ( count($this->list) == 0 )
 		{
-			return null;
+			return new Xerxes_Marc_Subfield(); // return empty subfield object
 		}
 		else
 		{
@@ -634,7 +634,16 @@ class Xerxes_Marc_DataFieldList extends Xerxes_Marc_FieldList
 				// return the first (and only the first) subfield of the 
 				// first (and only the first) datafield  
 				
-				return $this->list[0]->subfield($code)->item(0);
+				$subfield = $this->list[0]->subfield($code)->item(0);
+				
+				if ( $subfield == null )
+				{
+					return new Xerxes_Marc_Subfield(); // return empty subfield object
+				}
+				else
+				{
+					return $subfield;
+				}
 			}
 			else
 			{

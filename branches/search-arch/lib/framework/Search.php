@@ -44,7 +44,7 @@ abstract class Xerxes_Framework_Search
 		// so we set it up here, tear it down on __sleep, and back up again on __wake
 		
 		$this->data_map = new Xerxes_DataMap();
-		$this->query = new Xerxes_Query();
+		$this->query = new Xerxes_Framework_Search_Query();
 	}
 	
 	public function initialize($objRequest, $objRegistry)
@@ -479,18 +479,20 @@ abstract class Xerxes_Framework_Search
 
 class Xerxes_Framework_Search_Query
 {
-	public $list;
+	public $list = array();
 	
 	public function addTerm($field, $relation, $phrase)
 	{
-		$term = new Xerxes_Query_Term($field, $relation, $phrase);
+		$term = new Xerxes_Framework_Search_QueryTerm($field, $relation, $phrase);
 		array_push($this->list, $term);
 	}
 
-	protected function checkSpelling()
+	public function checkSpelling()
 	{
-		$strAltYahoo = $this->registry->getConfig("ALTERNATE_YAHOO_LOCATION", false);
-		$configYahooID = $this->registry->getConfig( "YAHOO_ID", false, "calstate" );
+		$registry = Xerxes_Framework_Registry::getInstance();
+		
+		$strAltYahoo = $registry->getConfig("ALTERNATE_YAHOO_LOCATION", false);
+		$configYahooID = $registry->getConfig( "YAHOO_ID", false, "calstate" );
 		
 		for ( $x = 0; $x < count($this->list); $x++ )
 		{
@@ -523,7 +525,7 @@ class Xerxes_Framework_Search_Query
 	}
 }
 
-class Xerxes_Framework_Search_Query_Term
+class Xerxes_Framework_Search_QueryTerm
 {
 	public $field;
 	public $relation;
@@ -532,15 +534,10 @@ class Xerxes_Framework_Search_Query_Term
 	
 	public function __construct($field, $relation, $phrase)
 	{
-		$term->field = $field;
-		$term->relation = $relation;
-		$term->phrase = $phrase;		
+		$this->field = $field;
+		$this->relation = $relation;
+		$this->phrase = $phrase;		
 	}
 }
-
-
-
-
-
 
 ?>
