@@ -8,6 +8,7 @@
  * @link http://xerxes.calstate.edu
  * @license http://www.gnu.org/licenses/
  * @version $Id$
+ * @todo ->__toString() madness below due to php 5.1 object-string casting problem
  * @package Xerxes
  */
 
@@ -25,7 +26,9 @@ class Xerxes_MetalibRecord_Document extends Xerxes_Marc_Document
  * @link http://xerxes.calstate.edu
  * @license http://www.gnu.org/licenses/
  * @version $Id: MetalibRecord.php 974 2009-10-28 20:54:47Z dwalker@calstate.edu $
- * @package Xerxes
+ * @todo ->__toString() madness below due to php 5.1 object-string casting problem, remove 
+ *       when redhat provides php 5.2 package, since that is keeping people from upgrading
+ *  * @package Xerxes
  */
 
 class Xerxes_MetalibRecord extends Xerxes_Record
@@ -42,17 +45,17 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 		
 		$sid = $this->datafield ( "SID" );
 		
-		$this->metalib_id = ( string ) $sid->subfield( "d" );
-		$this->record_number = ( string ) $sid->subfield( "j" );
-		$this->result_set = ( string ) $sid->subfield( "s" );
-		$this->database_name = ( string ) $sid->subfield( "t" );
-		$this->source = ( string ) $sid->subfield( "b" );
+		$this->metalib_id = $sid->subfield( "d" )->__toString();
+		$this->record_number = $sid->subfield( "j" )->__toString();
+		$this->result_set = $sid->subfield( "s" )->__toString();
+		$this->database_name = $sid->subfield( "t" )->__toString();
+		$this->source = $sid->subfield( "b" )->__toString();
 		
 		## metalib weirdness
 		
 		// puts leader in control field
 		
-		$strLeaderMetalib = (string) $this->controlfield( "LDR" );
+		$strLeaderMetalib = $this->controlfield( "LDR" )->__toString();
 		
 		if ( $strLeaderMetalib != "" )
 		{
@@ -83,21 +86,21 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 
 			// format
 			
-			array_push($this->format_array, (string) $this->datafield( "656" )->subfield( "a" ));
-			array_push($this->format_array, (string) $this->datafield( "514" )->subfield( "a" ));
+			array_push($this->format_array, $this->datafield( "656" )->subfield( "a" )->__toString());
+			array_push($this->format_array, $this->datafield( "514" )->subfield( "a" )->__toString());
 			
-			$strEbscoType =  (string) $this->datafield( "072" )->subfield( "a" );
+			$strEbscoType =  $this->datafield( "072" )->subfield( "a" )->__toString();
 			
 			if (strstr ( $this->source, "EBSCO_PSY" ) || strstr ( $this->source, "EBSCO_PDH" ))
 			{
 				$strEbscoType = "";
 			}
 			
-			array_push($this->format_array, (string) $strEbscoType);
+			array_push($this->format_array, $strEbscoType);
 
 			// ebsco book chapter
 			
-			$strEbscoBookTitle = (string) $this->datafield ( "771" )->subfield ( "a" );
+			$strEbscoBookTitle = $this->datafield( "771" )->subfield( "a" )->__toString();
 			
 			if ($strEbscoBookTitle != "")
 			{
@@ -109,7 +112,7 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 
 		if (strstr ( $this->source, 'GALE' ))
 		{
-			$strGaleIssn = (string) $this->datafield("773")->subfield("b");
+			$strGaleIssn = $this->datafield("773")->subfield("b")->__toString();
 			
 			if ($strGaleIssn != null)
 			{
@@ -119,7 +122,7 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 		
 		// eric doc number
 
-		$this->eric_number = (string) $this->datafield( "ERI" )->subfield( "a" );
+		$this->eric_number = $this->datafield( "ERI" )->subfield( "a" )->__toString();
 
 		
 		## full-text
@@ -132,14 +135,14 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 		
 		if (stristr ( $this->database_name, "psycCRITIQUES" ))
 		{
-			array_push ( $this->links, array ("Full-Text in HTML", array ("001" => ( string ) $this->controlfield ( "001" ) ), "html" ) );
+			array_push ( $this->links, array ("Full-Text in HTML", array ("001" => $this->controlfield("001")->__toString() ), "html" ) );
 		}
 		
 		// factiva -- no indicator of full-text either, assume all to be (9/5/07)
 
 		if (stristr ( $this->source, "FACTIVA" ))
 		{
-			array_push ( $this->links, array ("Full-Text Available", array ("035_a" => ( string ) $this->datafield ( "035" )->subfield ( "a" ) ), "online" ) );
+			array_push ( $this->links, array ("Full-Text Available", array ("035_a" => $this->datafield ( "035" )->subfield ( "a" ) ), "online" ) );
 		}
 		
 		// eric -- document is recent enough to likely contain full-text;
@@ -175,9 +178,9 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 
 		foreach ( $this->datafield( "856" ) as $link )
 		{
-			$strDisplay = (string) $link->subfield("z");
-			$strUrl = (string) $link->subfield( "u" );
-			$strEbscoFullText = (string) $link->subfield( "i" );
+			$strDisplay = $link->subfield("z")->__toString();
+			$strUrl = $link->subfield( "u" )->__toString();
+			$strEbscoFullText = $link->subfield( "i" )->__toString();
 			
 			// bad links
 			
@@ -225,7 +228,7 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 
 			elseif (strstr ( $this->source, "EBSCO" ) && (strstr ( $strEbscoFullText, "T" ) || strstr ( $strDisplay, "View Full Text" )))
 			{
-				$str001 = (string) $this->controlfield("001");
+				$str001 = $this->controlfield("001")->__toString();
 				array_push ( $this->links, array ($strDisplay, array ("001" => $str001 ), "html" ) );
 				unset($link);
 			} 
@@ -303,7 +306,7 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 		
 		// metalib's own year, issue, volume fields
 		
-		$year = (string) $this->datafield("YR ")->subfield("a");
+		$year = $this->datafield("YR ")->subfield("a")->__toString();
 		
 		if ( $year != "" )
 		{
@@ -312,12 +315,12 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 
 		if ( $this->issue == null )
 		{
-			$this->issue = (string) $this->datafield("ISS")->subfield("a");
+			$this->issue = $this->datafield("ISS")->subfield("a")->__toString();
 		}
 
 		if ( $this->volume == null )
 		{
-			$this->volume = (string) $this->datafield("VOL")->subfield("a");
+			$this->volume = $this->datafield("VOL")->subfield("a")->__toString();
 		}			
 		
 		## oclc dissertation abstracts
@@ -328,9 +331,9 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 
 		if (strstr ( $this->source, "OCLC_DABS" ))
 		{
-			$this->degree = (string) $this->datafield( "904" )->subfield( "j" );
-			$this->institution = (string) $this->datafield( "904" )->subfield( "h" );
-			$this->journal_title = (string) $this->datafield( "904" )->subfield( "c" );
+			$this->degree = $this->datafield( "904" )->subfield( "j" )->__toString();
+			$this->institution = $this->datafield( "904" )->subfield( "h" )->__toString();
+			$this->journal_title = $this->datafield( "904" )->subfield( "c" )->__toString();
 			
 			$this->journal = $this->journal_title . " " . $this->journal;
 			
@@ -505,14 +508,15 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 		$subfield = (count ( $matches ) >= 4) ? $matches [3] : null;
 		
 		$value = null;
+		
 		if ($subfield)
 		{
-			$value = (string) $this->datafield($field)->subfield( $subfield );
+			$value = $this->datafield($field)->subfield( $subfield )->__toString();
 		} 
 		else
 		{
 			//assume it's a control field, those are the only ones without subfields
-			$value = (string) $this->controlfield($field );
+			$value = $this->controlfield($field )->__toString();
 		}
 		if (empty ( $value ) && true)
 		{
