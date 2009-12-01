@@ -41,9 +41,10 @@ class Xerxes_Framework_FrontController
 		
 		self::$parent_directory = $path_to_parent;
 				
-		// register any and all library files
+		// register framework any main xerxes class files
 		
-		self::registerClasses( "$path_to_parent/lib");
+		self::registerClasses( "$path_to_parent/lib/framework", "Xerxes_Framework");
+		self::registerClasses( "$path_to_parent/lib/Xerxes", "Xerxes");
 		
 		// initialize the configuration setting (Registry) and 
 		// command-view mapping (ControllerMap) objects
@@ -530,7 +531,7 @@ class Xerxes_Framework_FrontController
 	 * @param string $path		path to the file or directory
 	 */
 	
-	private static function registerClasses($path)
+	private static function registerClasses($path, $namespace = "")
 	{
 		global $xerxes_include_file_array;
 		
@@ -549,27 +550,7 @@ class Xerxes_Framework_FrontController
 			if ( strstr( $file_path, ".php" ) )
 			{
 				$class_name = str_replace(".php", "", $file);
-				
-				// exclude views
-				
-				if ( strstr( $file_path, "/php-views/" ) )
-				{
-					continue;
-				}
-				
-				// framework files
-				
-				if ( strstr( $file_path, "/framework/" ) )
-				{
-					$class_name = "Xerxes_Framework_$class_name";
-				}
-				else
-				{
-					// everything else
-					
-					$class_name = "Xerxes_$class_name";
-				}
-				
+				$class_name = $namespace . "_" . $class_name;
 				$xerxes_include_file_array[$class_name] = $file_path;
 			}	
 		}
