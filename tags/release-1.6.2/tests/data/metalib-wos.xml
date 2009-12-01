@@ -1,0 +1,178 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<x_server_response metalib_version="4.3.1 (602)">
+<present_response>
+<record xmlns="http://www.loc.gov/MARC21/slim"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.loc.gov/MARC21/slim
+http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd">
+<datafield tag="513" ind1=" " ind2=" ">
+<subfield code="a">Article</subfield>
+</datafield>
+<datafield tag="546" ind1=" " ind2=" ">
+<subfield code="a">English</subfield>
+</datafield>
+<datafield tag="520" ind1=" " ind2=" ">
+<subfield code="a">Elucidating the spatio-temporal distributions of terrestrial plants is a key for interpreting the origin of distribution patterns and the tempo of intercontinental disjunction. Nordenskioeldia was distributed in eastern Asia and North America from the Late Cretaceous to the Miocene. Its fossil record provides important information on former patterns of disjunction and dispersal in the Northern Hemisphere. New specimens from the Paleocene of China allow us to further extend the history of the group and provide the impetus to review its distribution in space and time. The comparative morphological survey on fossil Nordenskioeldia found in the Paleocene sediments in both eastern Asia and North America confirms that they belonged to the same morpho-species, which indicates a close floristic continuity between both continents due to land connection available during that time. The spatio-temporal distributions of Nordenskioeldia indicate that the taxon probably expanded eastward from eastern Asia into North America by the end of Early/Middle Maastrichtian, subsequently colonized Greenland, northeastern North America and Spitsbergen in the Early Paleocene, and finally became extinct in the Miocene. The fluctuations in its northern limits took place in response to climate changes: warming from the Paleocene to the Eocene, cooling during the Eocene-Oligocene and amelioration during the Late Oligocene-Mid-Miocene. Crown Copyright (C) 2009 Published by Elsevier B.V.</subfield>
+</datafield>
+<datafield tag="520" ind1=" " ind2=" ">
+<subfield code="a"> All rights reserved.</subfield>
+</datafield>
+<datafield tag="ISS" ind1=" " ind2=" ">
+<subfield code="a">183552398</subfield>
+</datafield>
+<datafield tag="AN " ind1=" " ind2=" ">
+<subfield code="a">000269990600014</subfield>
+</datafield>
+<datafield tag="PID" ind1=" " ind2=" ">
+<subfield code="a">0130472523</subfield>
+</datafield>
+<datafield tag="245" ind1=" " ind2=" ">
+<subfield code="a">The Phytogeography of the extinct angiosperm Nordenskioeldia (Trochodendraceae) and its response to climate changes</subfield>
+</datafield>
+<datafield tag="PAG" ind1="E" ind2="S">
+<subfield code="a">183-192</subfield>
+</datafield>
+<datafield tag="YR " ind1=" " ind2=" ">
+<subfield code="a">2009</subfield>
+</datafield>
+<datafield tag="VOL" ind1=" " ind2=" ">
+<subfield code="a">280</subfield>
+</datafield>
+<datafield tag="100" ind1=" " ind2=" ">
+<subfield code="a">Wang, YH</subfield>
+</datafield>
+<datafield tag="700" ind1=" " ind2=" ">
+<subfield code="a">Ferguson, DK</subfield>
+</datafield>
+<datafield tag="700" ind1=" " ind2=" ">
+<subfield code="a">Feng, GP</subfield>
+</datafield>
+<datafield tag="700" ind1=" " ind2=" ">
+<subfield code="a">Wang, YF</subfield>
+</datafield>
+<datafield tag="700" ind1=" " ind2=" ">
+<subfield code="a">Zhilin, SG</subfield>
+</datafield>
+<datafield tag="700" ind1=" " ind2=" ">
+<subfield code="a">Li, CS</subfield>
+</datafield>
+<datafield tag="700" ind1=" " ind2=" ">
+<subfield code="a">Svetlana, PT</subfield>
+</datafield>
+<datafield tag="700" ind1=" " ind2=" ">
+<subfield code="a">Yang, J</subfield>
+</datafield>
+<datafield tag="700" ind1=" " ind2=" ">
+<subfield code="a">Ablaev, AG</subfield>
+</datafield>
+<datafield tag="650" ind1=" " ind2=" ">
+<subfield code="a">Cenozoic</subfield>
+</datafield>
+<datafield tag="650" ind1=" " ind2=" ">
+<subfield code="a">Global climate</subfield>
+</datafield>
+<datafield tag="650" ind1=" " ind2=" ">
+<subfield code="a">Eastern Asia</subfield>
+</datafield>
+<datafield tag="650" ind1=" " ind2=" ">
+<subfield code="a">North America</subfield>
+</datafield>
+<datafield tag="650" ind1=" " ind2=" ">
+<subfield code="a">Nordenskioeldia</subfield>
+</datafield>
+<datafield tag="650" ind1=" " ind2=" ">
+<subfield code="a">Phytogeography</subfield>
+</datafield>
+<datafield tag="651" ind1=" " ind2=" ">
+<subfield code="a">PALEOCENE WUYUN FLORA</subfield>
+</datafield>
+<datafield tag="651" ind1=" " ind2=" ">
+<subfield code="a">WESTERN NORTH-AMERICA</subfield>
+</datafield>
+<datafield tag="651" ind1=" " ind2=" ">
+<subfield code="a">EASTERN ASIA</subfield>
+</datafield>
+<datafield tag="651" ind1=" " ind2=" ">
+<subfield code="a">EARLY TERTIARY</subfield>
+</datafield>
+<datafield tag="651" ind1=" " ind2=" ">
+<subfield code="a">TAXONOMIC RICHNESS</subfield>
+</datafield>
+<datafield tag="651" ind1=" " ind2=" ">
+<subfield code="a">WASHINGTON-STATE</subfield>
+</datafield>
+<datafield tag="651" ind1=" " ind2=" ">
+<subfield code="a">FLOWERING PLANTS</subfield>
+</datafield>
+<datafield tag="651" ind1=" " ind2=" ">
+<subfield code="a">TEMPERATE PLANTS</subfield>
+</datafield>
+<datafield tag="651" ind1=" " ind2=" ">
+<subfield code="a">VASCULAR PLANTS</subfield>
+</datafield>
+<datafield tag="651" ind1=" " ind2=" ">
+<subfield code="a">UNITED-STATES</subfield>
+</datafield>
+<datafield tag="022" ind1=" " ind2=" ">
+<subfield code="a">0031-0182</subfield>
+</datafield>
+<datafield tag="SID" ind1=" " ind2=" ">
+<subfield code="a">EXTERNAL</subfield>
+<subfield code="b">ISI_WOS_XML</subfield>
+<subfield code="d">CAL02906</subfield>
+<subfield code="i">000000</subfield>
+<subfield code="j">000003</subfield>
+<subfield code="s">024567</subfield>
+<subfield code="t">Web of Science (Thomson)</subfield>
+</datafield>
+<controlfield tag="RAN">027</controlfield>
+<datafield tag="773" ind1=" " ind2=" ">
+<subfield code="t">PALAEOGEOGRAPHY PALAEOCLIMATOLOGY PALAEOECOLOGY</subfield>
+<subfield code="g">280 (1-2): 183-192 SEP 1 2009</subfield>
+</datafield>
+<controlfield tag="SET">024567</controlfield>
+<controlfield tag="SYS">008610485</controlfield>
+<openURL>
+<ctx:context-objects xmlns:ctx="info:ofi/fmt:xml:xsd:ctx" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="info:ofi/fmt:xml:xsd:ctx http://www.openurl.info/registry/docs/info:ofi/fmt:xml:xsd:ctx">
+<ctx:context-object timestamp="2004-01-16T12:13:00Z" version="Z39.88-2004" identifier="123">
+<ctx:referent>
+<ctx:metadata-by-val>
+<ctx:format>info:ofi/fmt:xml:xsd</ctx:format>
+<ctx:metadata>
+<rft:journal xmlns:rft="info:ofi/fmt:xml:xsd:journal" xsi:schemaLocation="info:ofi/fmt:xml:xsd:journal http://www.openurl.info/registry/docs/info:ofi/fmt:xml:xsd:journal">
+<rft:author rank="1">
+<rft:aulast>Wang</rft:aulast>
+<rft:aufirst> YH</rft:aufirst>
+<rft:auinit>YH</rft:auinit>
+</rft:author>
+<rft:atitle>The Phytogeography of the extinct angiosperm Nordenskioeldia (Trochodendraceae) and its response to climate changes</rft:atitle>
+<rft:jtitle>PALAEOGEOGRAPHY PALAEOCLIMATOLOGY PALAEOECOLOGY</rft:jtitle>
+<rft:date>2009</rft:date>
+<rft:volume>280</rft:volume>
+<rft:issue>1-2</rft:issue>
+<rft:spage>183</rft:spage>
+<rft:epage>192</rft:epage>
+<rft:genre></rft:genre>
+<rft:issn>0031-0182</rft:issn>
+<ctx:identifier>info:doi/</ctx:identifier>
+<rft:sici></rft:sici>
+<rft:opid></rft:opid>
+</rft:journal>
+</ctx:metadata>
+</ctx:metadata-by-val>
+<ctx:metadata-by-ref>
+<ctx:format></ctx:format>
+<ctx:location>http://metalib.calstate.edu:8331/X?OP=sfx-get-doc&amp;doc-number=008610485</ctx:location>
+</ctx:metadata-by-ref>
+</ctx:referent>
+<ctx:referrer>
+<ctx:identifier>info:sid/metalib.com:ISI_WOS_XML</ctx:identifier>
+</ctx:referrer>
+</ctx:context-object>
+</ctx:context-objects>
+</openURL>
+</record>
+<session_id new_session="N">VAN3R9HH39AGTFSNSTMMN8JQ745BS6SSMT32HBIR37UXBC7YYP</session_id>
+</present_response>
+</x_server_response>
+ 

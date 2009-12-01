@@ -1,0 +1,139 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<x_server_response metalib_version="4.3.1 (602)">
+<present_response>
+<record xmlns="http://www.loc.gov/MARC21/slim"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.loc.gov/MARC21/slim
+http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd">
+<controlfield tag="001">200925954</controlfield>
+<datafield tag="520" ind1=" " ind2=" ">
+<subfield code="a">In imagining how their lives might turn out, 100 young New Zealanders aged between 16 and 18 years wrote descriptions of their future lifecourse. Their descriptions of themselves at the nominal age of 80 years form the basis of the research reported in this paper. For these young people, ageing and old age are understood as accomplishments in the context of an imagined lifecourse. They see personal ageing as shaped by a common temporal ordering of life events that ensures material security, financial success, and an enduring intimate relationship. In imagining themselves aged 80 years, three key themes that constitute a discourse of 'accomplished ageing' were identified: the experience of old age would be contingent on achievements throughout the lifecourse; old age would be a time for harvest; and while people may look old they can continue to 'be' young. Although their images of bodily appearance included some negative stereotypes of old age, appearance and bodily function were understood as amenable to life-long self-management. The young people imagined themselves as life-long active agents, and framed a positive image and homogeneous social identity for older people. The 'accomplished ageing' discourse has implications for how ageing is understood by young people. In particular, the social identity that accomplished ageing implies may shape how they relate to those who do not accomplish ageing in the imagined optimistic and homogeneous way. Adapted from the source document.</subfield>
+</datafield>
+<datafield tag="545" ind1=" " ind2=" ">
+<subfield code="a">[mailto:L.Patterson@massey.ac.nz]</subfield>
+</datafield>
+<datafield tag="546" ind1=" " ind2=" ">
+<subfield code="a">English</subfield>
+</datafield>
+<datafield tag="513" ind1=" " ind2=" ">
+<subfield code="a">Journal Article</subfield>
+</datafield>
+<datafield tag="270" ind1=" " ind2=" ">
+<subfield code="d">United Kingdom</subfield>
+</datafield>
+<datafield tag="260" ind1=" " ind2=" ">
+<subfield code="b">Cambridge University Press, UK</subfield>
+</datafield>
+<datafield tag="024" ind1=" " ind2=" ">
+<subfield code="a">10.1017/S0144686X08007940</subfield>
+</datafield>
+<datafield tag="245" ind1=" " ind2=" ">
+<subfield code="a">Happy, stable and contented: Accomplished ageing in the imagined futures of young New Zealanders</subfield>
+</datafield>
+<datafield tag="100" ind1=" " ind2=" ">
+<subfield code="a">Patterson, Lesley G.</subfield>
+</datafield>
+<datafield tag="100" ind1=" " ind2=" ">
+<subfield code="a">Forbes, Katherine E.</subfield>
+</datafield>
+<datafield tag="100" ind1=" " ind2=" ">
+<subfield code="a">Peace, Robin M.</subfield>
+</datafield>
+<datafield tag="773" ind1=" " ind2=" ">
+<subfield code="a">Ageing &amp; Society, vol. 29, no. 3, pp. 431-454, Apr 2009</subfield>
+</datafield>
+<datafield tag="022" ind1=" " ind2=" ">
+<subfield code="a">0144-686X</subfield>
+</datafield>
+<datafield tag="650" ind1=" " ind2=" ">
+<subfield code="a">*New Zealand</subfield>
+</datafield>
+<datafield tag="650" ind1=" " ind2=" ">
+<subfield code="a">*Retirement</subfield>
+</datafield>
+<datafield tag="650" ind1=" " ind2=" ">
+<subfield code="a">*Goals</subfield>
+</datafield>
+<datafield tag="650" ind1=" " ind2=" ">
+<subfield code="a">*Young Adults</subfield>
+</datafield>
+<datafield tag="650" ind1=" " ind2=" ">
+<subfield code="a">*Aging</subfield>
+</datafield>
+<datafield tag="030" ind1=" " ind2=" ">
+<subfield code="a">AGSOD9</subfield>
+</datafield>
+<datafield tag="YR " ind1=" " ind2=" ">
+<subfield code="a">2009</subfield>
+</datafield>
+<datafield tag="ASU" ind1=" " ind2=" ">
+<subfield code="a">2143 social problems and social welfare</subfield>
+</datafield>
+<datafield tag="ASU" ind1=" " ind2=" ">
+<subfield code="a">social gerontology</subfield>
+</datafield>
+<datafield tag="SID" ind1=" " ind2=" ">
+<subfield code="a">Z39</subfield>
+<subfield code="b">CSA_SOCIOABS</subfield>
+<subfield code="d">CAL00191</subfield>
+<subfield code="i">510434</subfield>
+<subfield code="j">000003</subfield>
+<subfield code="s">017225</subfield>
+<subfield code="t">Sociological Abstracts (CSA)</subfield>
+</datafield>
+<controlfield tag="RAN">000</controlfield>
+<datafield tag="VOL" ind1=" " ind2=" ">
+<subfield code="a">29</subfield>
+</datafield>
+<datafield tag="ISS" ind1="U" ind2=" ">
+<subfield code="a">3</subfield>
+</datafield>
+<datafield tag="SP " ind1=" " ind2=" ">
+<subfield code="a">431</subfield>
+</datafield>
+<controlfield tag="SET">017225</controlfield>
+<controlfield tag="SYS">003480405</controlfield>
+<openURL>
+<ctx:context-objects xmlns:ctx="info:ofi/fmt:xml:xsd:ctx" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="info:ofi/fmt:xml:xsd:ctx http://www.openurl.info/registry/docs/info:ofi/fmt:xml:xsd:ctx">
+<ctx:context-object timestamp="2004-01-16T12:13:00Z" version="Z39.88-2004" identifier="123">
+<ctx:referent>
+<ctx:metadata-by-val>
+<ctx:format>info:ofi/fmt:xml:xsd</ctx:format>
+<ctx:metadata>
+<rft:journal xmlns:rft="info:ofi/fmt:xml:xsd:journal" xsi:schemaLocation="info:ofi/fmt:xml:xsd:journal http://www.openurl.info/registry/docs/info:ofi/fmt:xml:xsd:journal">
+<rft:author rank="1">
+<rft:aulast>Patterson</rft:aulast>
+<rft:aufirst> Lesley G</rft:aufirst>
+<rft:auinit></rft:auinit>
+</rft:author>
+<rft:atitle>Happy, stable and contented: Accomplished ageing in the imagined futures of young New Zealanders</rft:atitle>
+<rft:jtitle>Ageing &amp; Society</rft:jtitle>
+<rft:date>2009</rft:date>
+<rft:volume>29</rft:volume>
+<rft:issue>3</rft:issue>
+<rft:spage>431</rft:spage>
+<rft:epage>454</rft:epage>
+<rft:genre></rft:genre>
+<rft:issn>0144-686X</rft:issn>
+<ctx:identifier>info:doi/</ctx:identifier>
+<rft:sici></rft:sici>
+<rft:opid></rft:opid>
+</rft:journal>
+</ctx:metadata>
+</ctx:metadata-by-val>
+<ctx:metadata-by-ref>
+<ctx:format></ctx:format>
+<ctx:location>http://metalib.calstate.edu:8331/X?OP=sfx-get-doc&amp;doc-number=003480405</ctx:location>
+</ctx:metadata-by-ref>
+</ctx:referent>
+<ctx:referrer>
+<ctx:identifier>info:sid/metalib.com:CSA_SOCIOABS</ctx:identifier>
+</ctx:referrer>
+</ctx:context-object>
+</ctx:context-objects>
+</openURL>
+</record>
+<session_id new_session="N">U7PAXP4Y3EL2EMXILYEB4U6NGAB9T9IQ37M4HKJGKS66BEFDNH</session_id>
+</present_response>
+</x_server_response>
+ 
