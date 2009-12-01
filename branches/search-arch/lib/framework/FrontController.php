@@ -531,7 +531,7 @@ class Xerxes_Framework_FrontController
 	 * @param string $path		path to the file or directory
 	 */
 	
-	private static function registerClasses($path, $namespace = "")
+	public static function registerClasses($path, $namespace = "")
 	{
 		global $xerxes_include_file_array;
 		
