@@ -76,7 +76,7 @@ CREATE TABLE xerxes_records (
 	year		SMALLINT(4),
 	format 		VARCHAR(50),
 	refereed 	SMALLINT(1),
-	marc		TEXT,
+	marc		MEDIUMTEXT,
 
 	PRIMARY KEY (id)
 );
