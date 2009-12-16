@@ -1,6 +1,6 @@
 #summary 1. Server requirements for setting-up Xerxes.
 
-==PHP 5.2 or higher==
+==PHP 5.1 or higher==
 
 Xerxes also requires these PHP extensions:
 
