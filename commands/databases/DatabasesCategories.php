@@ -43,7 +43,7 @@
 					{
 						if ( $value != null )
 						{
-							$objElement = $objXml->createElement("$key", Xerxes_Parser::escapeXml($value));
+							$objElement = $objXml->createElement("$key", Xerxes_Framework_Parser::escapeXml($value));
 							$objCategory->appendChild($objElement);
 						}
 					}
@@ -56,7 +56,7 @@
 						"subject" => $objCategoryData->normalized
 					);
 					
-					$url = Xerxes_Parser::escapeXml($this->request->url_for($arrParams));
+					$url = Xerxes_Framework_Parser::escapeXml($this->request->url_for($arrParams));
 					
 					$objElement = $objXml->createElement("url", $url); 
 					$objCategory->appendChild($objElement);

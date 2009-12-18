@@ -5,7 +5,7 @@
 	 * 
 	 * @author David Walker
 	 * @copyright 2008 California State University
-	 * @version $Id$
+	 * @version $Id: CAS.php 1009 2009-11-30 21:34:21Z dwalker@calstate.edu $
 	 * @package Xerxes
 	 * @link http://xerxes.calstate.edu
 	 * @license http://www.gnu.org/licenses/
@@ -71,7 +71,7 @@
 				
 			$strUrl = $configCasValidate . "?ticket=" . $strTicket . "&service=" . urlencode($this->validate_url);
 			
-			$strResults = Xerxes_Parser::request( $strUrl );		
+			$strResults = Xerxes_Framework_Parser::request( $strUrl );		
 			
 			// validate is plain text
 			

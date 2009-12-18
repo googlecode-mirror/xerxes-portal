@@ -52,7 +52,7 @@
 			// transform the documents to a basic style for now
 			// will give them citation style options in the future
       
-			$strRecords = Xerxes_Parser::transform($objXml, "xsl/citation/basic.xsl");
+			$strRecords = Xerxes_Framework_Parser::transform($objXml, "xsl/citation/basic.xsl");
       
 			// add notes and records to body
 			

@@ -89,7 +89,7 @@ abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
 		
 		// add in the original metalib url for debugging
 		
-		$objMetalibUrl = $objXml->createElement( "metalib_url", Xerxes_Parser::escapeXml( $this->objSearch->getUrl() ) );
+		$objMetalibUrl = $objXml->createElement( "metalib_url", Xerxes_Framework_Parser::escapeXml( $this->objSearch->getUrl() ) );
 		$objXml->documentElement->appendChild( $objMetalibUrl );
 		
 		return $objXml;
@@ -234,8 +234,8 @@ abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
 				
 				// add these in
 				
-				$objResultSet = $objXml->createElement( "resultset_link", Xerxes_Parser::escapeXml( $strResultSetLink ) );
-				$objDatabase = $objXml->createElement( "database", Xerxes_Parser::escapeXml( $strDatabaseTitle ) );
+				$objResultSet = $objXml->createElement( "resultset_link", Xerxes_Framework_Parser::escapeXml( $strResultSetLink ) );
+				$objDatabase = $objXml->createElement( "database", Xerxes_Framework_Parser::escapeXml( $strDatabaseTitle ) );
 				$objHits = $objXml->createElement( "hits", $iTotalHits );
 				$objSort = $objXml->createElement( "sort", $strSort );
 				
@@ -394,7 +394,7 @@ abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
 			if ( $this->request->getProperty("facet") != "" )
 			{
 				// append this so the full record page knows how to get back
-				$arrFullText["return"] = Xerxes_Parser::escapeXml($this->request->getServer("REQUEST_URI"));
+				$arrFullText["return"] = Xerxes_Framework_Parser::escapeXml($this->request->getServer("REQUEST_URI"));
 			}
 			else
 			{
@@ -431,7 +431,7 @@ abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
 			
       // openurl kev context object please
       $configSID = $this->registry->getConfig("APPLICATION_SID", false, "calstate.edu:xerxes");
-      $kev = Xerxes_Parser::escapeXml($objXerxesRecord->getOpenURL(null, $configSID));
+      $kev = Xerxes_Framework_Parser::escapeXml($objXerxesRecord->getOpenURL(null, $configSID));
 			$objOpenUrl = $objXml->createElement("openurl_kev_co", $kev);
       $objRecordContainer->appendChild( $objOpenUrl );
 			

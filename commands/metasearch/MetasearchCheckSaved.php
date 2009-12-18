@@ -83,7 +83,7 @@
 						
 						foreach ( $objSavedRecord->tags as $tag )
 						{
-							$objTagXml = $objXml->createElement( "tag", Xerxes_Parser::escapeXml( $tag ) );
+							$objTagXml = $objXml->createElement( "tag", Xerxes_Framework_Parser::escapeXml( $tag ) );
 							$objSavedRecordXml->appendChild( $objTagXml );
 						}
 							

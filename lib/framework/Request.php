@@ -10,7 +10,7 @@
  * @license http://www.gnu.org/licenses/
  * @version $Id$
  * @package Xerxes_Framework
- * @uses Xerxes_Parser
+ * @uses Xerxes_Framework_Parser
  */
 
 class Xerxes_Framework_Request
@@ -193,7 +193,7 @@ class Xerxes_Framework_Request
         $request_uri = substr_replace( $request_uri, '', 0, strlen($configBase) + 1);
       }
       # remove query string
-			$request_uri = Xerxes_Parser::removeRight( $request_uri, "?" );
+			$request_uri = Xerxes_Framework_Parser::removeRight( $request_uri, "?" );
 			
 			// now get the elements
 
@@ -822,13 +822,13 @@ class Xerxes_Framework_Request
 					}
 					else
 					{
-						$objElement->nodeValue = Xerxes_Parser::escapeXml( $strValue );
+						$objElement->nodeValue = Xerxes_Framework_Parser::escapeXml( $strValue );
 					}
 				}
 			}
 			else
 			{
-				$objElement = $objXml->createElement( $strSafeKey, Xerxes_Parser::escapeXml( $value ) );
+				$objElement = $objXml->createElement( $strSafeKey, Xerxes_Framework_Parser::escapeXml( $value ) );
 				$objAppend->appendChild( $objElement );
 			}
 		}

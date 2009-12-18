@@ -52,11 +52,11 @@ class Xerxes_Framework_Error
 
 			$resultStatus = 500;
 			
-			if ( $e instanceof Xerxes_AccessDeniedException )
+			if ( $e instanceof Xerxes_Exception_AccessDenied )
 			{
 				$resultStatus = 403;
 			} 
-			else if ( $e instanceof Xerxes_NotFoundException )
+			else if ( $e instanceof Xerxes_Exception_NotFound )
 			{
 				$resultStatus = 404;
 			}
@@ -123,7 +123,7 @@ class Xerxes_Framework_Error
 			
 			// if it's a db denied exception, include info on dbs. 
 
-			if ( $e instanceof Xerxes_DatabasesDeniedException )
+			if ( $e instanceof Xerxes_Exception_DatabasesDenied )
 			{
 				$excluded_xml = $objError->createElement( "excluded_dbs" );
 				$objError->documentElement->appendChild( $excluded_xml );
@@ -157,7 +157,7 @@ class Xerxes_Framework_Error
 				// xsl for error page too, great.
 				
 
-				echo Xerxes_Parser::transform( $objError, "xsl/error.xsl" );
+				echo Xerxes_Framework_Parser::transform( $objError, "xsl/error.xsl" );
 			}
 		}
 		

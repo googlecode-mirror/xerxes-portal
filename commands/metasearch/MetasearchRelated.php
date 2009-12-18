@@ -27,7 +27,7 @@
 				
 				$url = $configBX . "/recommender/openurl?token=" . $configToken . "&" . $open_url;
 				
-				$xml = Xerxes_Parser::request($url);
+				$xml = Xerxes_Framework_Parser::request($url);
 
 				// header("Content-type: text/xml"); echo $xml; exit;
 				
@@ -60,7 +60,7 @@
 						
 						$strOpenURL = $record->getOpenURL($configLinkResolver, $configSID);
 						
-						$objOpenURL = $objXml->createElement("url_open", Xerxes_Parser::escapeXML($strOpenURL));
+						$objOpenURL = $objXml->createElement("url_open", Xerxes_Framework_Parser::escapeXML($strOpenURL));
 						$objRecord->appendChild($objOpenURL);
 					}
 				}

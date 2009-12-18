@@ -216,7 +216,7 @@ class Xerxes_Command_MetasearchSearch extends Xerxes_Command_Metasearch
 		
 		if ( count( $arrDatabases ) < 1 && count( $excludedDbs ) > 0 )
 		{
-			$e = new Xerxes_DatabasesDeniedException( "You are not authorized to search the databases you selected. Please choose other databases and try again." );
+			$e = new Xerxes_Exception_DatabasesDenied( "You are not authorized to search the databases you selected. Please choose other databases and try again." );
 			$e->setDeniedDatabases( $excludedDbs );
 			throw $e;
 		} 
@@ -330,7 +330,7 @@ class Xerxes_Command_MetasearchSearch extends Xerxes_Command_Metasearch
 		
 		foreach ( $arrSearch as $key => $value )
 		{
-			$objElement = $objXml->createElement( $key, Xerxes_Parser::escapeXml( $value ) );
+			$objElement = $objXml->createElement( $key, Xerxes_Framework_Parser::escapeXml( $value ) );
 			$objXml->documentElement->appendChild( $objElement );
 		}
 
@@ -345,7 +345,7 @@ class Xerxes_Command_MetasearchSearch extends Xerxes_Command_Metasearch
 		
 		foreach ( $arrQuery as $key => $value )
 		{
-			$objElement = $objXml->createElement( $key, Xerxes_Parser::escapeXml( $value ) );
+			$objElement = $objXml->createElement( $key, Xerxes_Framework_Parser::escapeXml( $value ) );
 			$objPair->appendChild( $objElement );
 		}
 			
@@ -367,7 +367,7 @@ class Xerxes_Command_MetasearchSearch extends Xerxes_Command_Metasearch
 			
 			foreach ( $arrQuery as $key => $value )
 			{
-				$objElement = $objXml->createElement( $key, Xerxes_Parser::escapeXml( $value ) );
+				$objElement = $objXml->createElement( $key, Xerxes_Framework_Parser::escapeXml( $value ) );
 				$objPair->appendChild( $objElement );
 			}
 		}

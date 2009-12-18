@@ -11,7 +11,7 @@
 	 * @package  Xerxes_Framework
 	 */ 
 
-	class Xerxes_Parser
+	class Xerxes_Framework_Parser
 	{
 		/**
 		 * Simple XSLT transformation function
@@ -262,7 +262,7 @@
 		public static function toTitleCase( $strInput )
 		{
 			// NOTE: if you make a change to this function, make a corresponding change 
-			// in the Xerxes_Parser class, since this one here is a duplicate function 
+			// in the Xerxes_Framework_Parser class, since this one here is a duplicate function 
 			// allowing Xerxes_Record to be a stand-alone class
 			
 			

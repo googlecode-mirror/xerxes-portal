@@ -1,7 +1,5 @@
 <?php
 
-require_once 'Marc.php';
-
 class Xerxes_BxRecord_Document extends Xerxes_Marc_Document 
 {
 	protected $record_type = "Xerxes_BxRecord";
@@ -31,12 +29,14 @@ class Xerxes_BxRecord_Document extends Xerxes_Marc_Document
  * @copyright 2009 California State University
  * @link http://xerxes.calstate.edu
  * @license http://www.gnu.org/licenses/
- * @version $Id$
+ * @version $Id: BxRecord.php 1009 2009-11-30 21:34:21Z dwalker@calstate.edu $
  * @package Xerxes
  */
 
 class Xerxes_BxRecord extends Xerxes_Record
 {
+	protected $database_name = "bX";
+	
 	public function map()
 	{
 		parent::map();

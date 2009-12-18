@@ -46,7 +46,7 @@ class Xerxes_Helper
 		{
 			if ( $value != null && $key != "description" && $key != "search_hints")
 			{
-				$objElement = $objDom->createElement( $key, Xerxes_Parser::escapeXml( $value ) );
+				$objElement = $objDom->createElement( $key, Xerxes_Framework_Parser::escapeXml( $value ) );
 				$objDatabase->appendChild( $objElement );
 				
 				// sometimes we're asked to track and record index.
@@ -98,7 +98,7 @@ class Xerxes_Helper
 					$note_field = htmlspecialchars ( $note_field );
 				}
 				
-				$objElement = $objDom->createElement ( $name, Xerxes_Parser::escapeXml ( $note_field ) );
+				$objElement = $objDom->createElement ( $name, Xerxes_Framework_Parser::escapeXml ( $note_field ) );
 				$objDatabase->appendChild ( $objElement );
 			}
 		}
@@ -118,7 +118,7 @@ class Xerxes_Helper
 				
 				if ( $value != null )
 				{
-					$objElement = $objDom->createElement( $single, Xerxes_Parser::escapeXml( $value ) );
+					$objElement = $objDom->createElement( $single, Xerxes_Framework_Parser::escapeXml( $value ) );
 					
 					//group restriction needs another attribute
 					if ( $multi == "group_restrictions" )
@@ -191,7 +191,7 @@ class Xerxes_Helper
           $key == "sfx_suppress"
           )
         {
-          $objElement = $objXml->createElement( $key, Xerxes_Parser::escapeXml( $value ) );
+          $objElement = $objXml->createElement( $key, Xerxes_Framework_Parser::escapeXml( $value ) );
           $objNodeDatabase->appendChild( $objElement );
         }
       }
@@ -207,7 +207,7 @@ class Xerxes_Helper
       {
         if ( $restriction != "")
         {
-          $objElement = $objXml->createElement( "group_restriction", Xerxes_Parser::escapeXml( $restriction ) );
+          $objElement = $objXml->createElement( "group_restriction", Xerxes_Framework_Parser::escapeXml( $restriction ) );
           $objRestictions->appendChild( $objElement );
         }
       }
@@ -222,13 +222,13 @@ class Xerxes_Helper
   /* Ensures that specified user is logged in, or throws exception */
   public static function ensureSpecifiedUser($username, $objRequest, $objRegistry, $strMessage = "Access only allowed by specific user.") {    
     if (! ($objRequest->getSession("username") == $username)) {
-      throw new Xerxes_AccessDeniedException($strMessage);
+      throw new Xerxes_Exception_AccessDenied($strMessage);
     }
   }
   
 	/**
 	 * Checks to see if any of the databases currently being searched are restricted
-	 * to the user, throws Xerxes_DatabasesDeniedException if one is not
+	 * to the user, throws Xerxes_Exception_DatabasesDenied if one is not
 	 *
 	 * @param array $dbList							list of Xerxes_Data_Database objects
 	 * @param Xerxes_Framework_Request $objRequest	Xerxes request object
@@ -274,7 +274,7 @@ class Xerxes_Helper
 
 		if ( count( $deniedList ) > 0 )
 		{
-			$e = new Xerxes_DatabasesDeniedException( );
+			$e = new Xerxes_Exception_DatabasesDenied( );
 			$e->setDeniedDatabases( $deniedList );
 			throw $e;
 		} else
