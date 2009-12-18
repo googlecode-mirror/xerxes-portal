@@ -44,7 +44,12 @@ abstract class Xerxes_Framework_Search
 		// so we set it up here, tear it down on __sleep, and back up again on __wake
 		
 		$this->data_map = new Xerxes_DataMap();
-		$this->query = new Xerxes_Framework_Search_Query();
+		$this->query = $this->registerQueryObject(); 
+	}
+	
+	protected function registerQueryObject()
+	{
+		return new Xerxes_Framework_Search_Query(); 
 	}
 	
 	public function initialize($objRequest, $objRegistry)
@@ -481,9 +486,9 @@ class Xerxes_Framework_Search_Query
 {
 	public $list = array();
 	
-	public function addTerm($field, $relation, $phrase)
+	public function addTerm($boolean, $field, $relation, $phrase)
 	{
-		$term = new Xerxes_Framework_Search_QueryTerm($field, $relation, $phrase);
+		$term = new Xerxes_Framework_Search_QueryTerm($boolean, $field, $relation, $phrase);
 		array_push($this->list, $term);
 	}
 
@@ -527,13 +532,15 @@ class Xerxes_Framework_Search_Query
 
 class Xerxes_Framework_Search_QueryTerm
 {
+	public $boolean;
 	public $field;
 	public $relation;
 	public $phrase;
 	public $spell_correct;
 	
-	public function __construct($field, $relation, $phrase)
+	public function __construct($boolean, $field, $relation, $phrase)
 	{
+		$this->boolean = $boolean;
 		$this->field = $field;
 		$this->relation = $relation;
 		$this->phrase = $phrase;		
