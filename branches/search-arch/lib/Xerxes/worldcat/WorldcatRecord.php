@@ -38,7 +38,17 @@ class Xerxes_WorldCatRecord extends Xerxes_Record
 	public function getRecordNumber()
 	{
 		return $this->record_number;
-	}	
+	}
+	
+	public function getOpenURL($strResolver, $strReferer = null, $param_delimiter = "&")
+	{
+		$url = parent::getOpenURL($strResolver, $strReferer, $param_delimiter);
+		
+		// always ignore dates for journals and books, since worldcat is describing
+		// the item as a whole, not any specific issue or part
+		
+		return $url . "&sfx.ignore_date_threshold=1";
+	}
 	
 }
 

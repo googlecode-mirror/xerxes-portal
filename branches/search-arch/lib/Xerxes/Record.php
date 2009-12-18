@@ -1116,7 +1116,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		}
 		if ( $strReferer != "" )
 		{
-			$strKev .= "&rfr_id=info:sid/" . urlencode( $strReferer );
+			$strKev .= $param_delimiter . "rfr_id=info:sid/" . urlencode( $strReferer );
 		}
 		if ( $this->database_name != "" )
 		{
@@ -1140,7 +1140,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		{
 			if ( $value != "" )
 			{
-				$strKev .= "&" . $key . "=" . urlencode( $value );
+				$strKev .= $param_delimiter . $key . "=" . urlencode( $value );
 			}
 		}
 		
@@ -1152,7 +1152,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 			{
 				if ( array_key_exists( "last", $this->authors[0] ) )
 				{
-					$strKev .= "&rft.aulast=" . urlencode( $this->authors[0]["last"] );
+					$strKev .= $param_delimiter . "rft.aulast=" . urlencode( $this->authors[0]["last"] );
 					
 					if ( $this->editor == true )
 					{
@@ -1161,16 +1161,16 @@ class Xerxes_Record extends Xerxes_Marc_Record
 				}
 				if ( array_key_exists( "first", $this->authors[0] ) )
 				{
-					$strKev .= "&rft.aufirst=" . urlencode( $this->authors[0]["first"] );
+					$strKev .= $param_delimiter. "rft.aufirst=" . urlencode( $this->authors[0]["first"] );
 				}
 				if ( array_key_exists( "init", $this->authors[0] ) )
 				{
-					$strKev .= "&rft.auinit=" . urlencode( $this->authors[0]["init"] );
+					$strKev .= $param_delimiter . "rft.auinit=" . urlencode( $this->authors[0]["init"] );
 				}
 			} 
 			else
 			{
-				$strKev .= "&rft.aucorp=" . urlencode( $this->authors[0]["name"] );
+				$strKev .= $param_delimiter . "rft.aucorp=" . urlencode( $this->authors[0]["name"] );
 			}
 		}
 		
