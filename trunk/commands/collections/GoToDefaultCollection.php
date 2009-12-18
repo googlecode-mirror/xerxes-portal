@@ -36,7 +36,7 @@ class Xerxes_Command_GoToDefaultCollection extends Xerxes_Command_Collections
 		
 		if ( $username == null || ! Xerxes_Framework_Restrict::isAuthenticatedUser( $this->request ) )
 		{
-			throw new Xerxes_AccessDeniedException( "You must be logged in to use this function." );
+			throw new Xerxes_Exception_AccessDenied( "You must be logged in to use this function." );
 		}
 		
 		$objData = new Xerxes_DataMap( );

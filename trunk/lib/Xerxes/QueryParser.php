@@ -8,7 +8,7 @@
 	 * @link http://xerxes.calstate.edu
 	 * @license http://www.gnu.org/licenses/
 	 * @version $Id$
-	 * @uses Xerxes_Parser
+	 * @uses Xerxes_Framework_Parser
 	 */
 
 	class Xerxes_QueryParser
@@ -42,7 +42,7 @@
 				$strYahooId . "&query=" . urlencode($strQuery);
 			}
 			
-			$strResponse = Xerxes_Parser::request($this->url);
+			$strResponse = Xerxes_Framework_Parser::request($this->url);
 				
 			$objSpelling = new DOMDocument();
 			$objSpelling->loadXML($strResponse);

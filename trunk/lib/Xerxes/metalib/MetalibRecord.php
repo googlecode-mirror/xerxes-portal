@@ -7,7 +7,7 @@
  * @copyright 2009 California State University
  * @link http://xerxes.calstate.edu
  * @license http://www.gnu.org/licenses/
- * @version $Id$
+ * @version $Id: MetalibRecord.php 1009 2009-11-30 21:34:21Z dwalker@calstate.edu $
  * @todo ->__toString() madness below due to php 5.1 object-string casting problem
  * @package Xerxes
  */
@@ -25,7 +25,7 @@ class Xerxes_MetalibRecord_Document extends Xerxes_Marc_Document
  * @copyright 2009 California State University
  * @link http://xerxes.calstate.edu
  * @license http://www.gnu.org/licenses/
- * @version $Id$
+ * @version $Id: MetalibRecord.php 1009 2009-11-30 21:34:21Z dwalker@calstate.edu $
  * @todo ->__toString() madness below due to php 5.1 object-string casting problem, remove 
  *       when redhat provides php 5.2 package, since that is keeping people from upgrading
  *  * @package Xerxes

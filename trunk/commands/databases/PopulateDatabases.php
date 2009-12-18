@@ -9,7 +9,7 @@
 	 * @license http://www.gnu.org/licenses/
 	 * @version $Id$
 	 * @package Xerxes
-	 * @uses Xerxes_Parser
+	 * @uses Xerxes_Framework_Parser
 	 * @uses lib/xslt/marc-to-database.xsl
 	 */
 
@@ -299,6 +299,8 @@
 				file_put_contents("xerxes.xml", $strXml);
 			}			
 			
+			$strXml = Xerxes_Framework_Parser::transform($objXml, "xsl/utility/marc-to-database.xsl");
+      
 			// get just the database info
 			
 			$objSimple = new SimpleXMLElement($strXml);

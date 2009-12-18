@@ -8,7 +8,7 @@
 	 * @author John Blyberg
 	 * @link http://xerxes.calstate.edu
 	 * @license http://www.gnu.org/licenses/
-	 * @version $Id$
+	 * @version $Id: InnovativePatron.php 1009 2009-11-30 21:34:21Z dwalker@calstate.edu $
 	 * @package Xerxes
 	 */
 
@@ -54,7 +54,7 @@
 
 					if ( ! in_array( (int) $this->user_data["P TYPE"], $arrTypes) )
 					{
-						throw new Xerxes_AccessDeniedException("Sorry, our records show you are not authorized to use this service");
+						throw new Xerxes_Exception_AccessDenied("Sorry, our records show you are not authorized to use this service");
 					}
 				}
 				
@@ -161,7 +161,7 @@
 			
 			// get the data and strip out html tags
 			
-			$strResponse = Xerxes_Parser::request($url);
+			$strResponse = Xerxes_Framework_Parser::request($url);
 			$strResponse = trim(strip_tags($strResponse));
 			
 			if ( $strResponse == "" )

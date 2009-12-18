@@ -220,7 +220,7 @@
               
               // and openurl kev context object from record
               $configSID = $this->registry->getConfig("APPLICATION_SID", false, "calstate.edu:xerxes");
-              $kev = Xerxes_Parser::escapeXml($objXerxesRecord->getOpenURL(null, $configSID));
+              $kev = Xerxes_Framework_Parser::escapeXml($objXerxesRecord->getOpenURL(null, $configSID));
               $objOpenUrl = $objXml->createElement("openurl_kev_co", $kev);
               $objRecord->appendChild( $objOpenUrl );
               
@@ -246,7 +246,7 @@
 						}
 						else
 						{
-							$objElement = $objXml->createElement($key, Xerxes_Parser::escapeXml($value));
+							$objElement = $objXml->createElement($key, Xerxes_Framework_Parser::escapeXml($value));
 							$objRecord->appendChild($objElement);
 						}
 					}
@@ -263,7 +263,7 @@
 							
 							if ( $value != null )
 							{
-								$objElement = $objXml->createElement($single, Xerxes_Parser::escapeXml($value));
+								$objElement = $objXml->createElement($single, Xerxes_Framework_Parser::escapeXml($value));
 								$objRecord->appendChild($objElement);
 							}
 						}

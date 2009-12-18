@@ -1,5 +1,6 @@
 <?php
 
+
 /**
  * Provides the framework for performing actions in the system
  *
@@ -24,7 +25,6 @@ class Xerxes_Framework_FrontController
 		// calculate current file, this directory
 
 		$this_directory = dirname( __FILE__ );
-		$base = basename( __FILE__ );
 		
 		// calculate root directory of the app ../../ from here
 
@@ -41,9 +41,9 @@ class Xerxes_Framework_FrontController
 		
 		self::$parent_directory = $path_to_parent;
 				
-		// include the framework files
+		// register framework any main xerxes class files
 		
-		self::includeFiles( $this_directory, $base );
+		self::registerClasses( "$path_to_parent/lib/framework", "Xerxes_Framework");
 		
 		// initialize the configuration setting (Registry) and 
 		// command-view mapping (ControllerMap) objects
@@ -186,9 +186,6 @@ class Xerxes_Framework_FrontController
 			#  ACCESS CONTROL  #
 			####################
 			
-
-			
-
 			// if this part of the application is restricted to a local ip range, or requires a named login, then the
 			// Restrict class will check the user's ip address or if they have logged in; failure stops the flow 
 			// and redirects user to a login page with the current request passed as 'return' paramater in the url
@@ -239,7 +236,7 @@ class Xerxes_Framework_FrontController
 			
 			foreach ( $objControllerMap->getIncludes() as $path_to_include )
 			{
-				self::includeFiles( $path_to_parent . "/$path_to_include" );
+				self::registerClasses( $path_to_parent . "/$path_to_include" );
 			}
 			
 			####################
@@ -528,47 +525,69 @@ class Xerxes_Framework_FrontController
 	}
 	
 	/**
-	 * require_once() all php files or directories specified
+	 * A class-file mapping mechanism used for inclusion of library files
 	 *
 	 * @param string $path		path to the file or directory
-	 * @param string $exclude	a file to exclude from being included, usually this file
 	 */
 	
-	private static function includeFiles($path, $exclude = null)
+	public static function registerClasses($path, $namespace = "Xerxes")
 	{
-		// check to see if this is a directory or a file
+		global $xerxes_include_file_array;
 		
-		$arrIncludes = array();
+		// recursively grab all the php files
 		
-		if ( is_dir( $path ) )
+		$files = self::directoryToArray($path, true);
+		
+		foreach ( $files as $file_path )
 		{
-			// open a directory handle and grab all the php files 
+			$file_path = str_replace("\\", "/", $file_path);
+			$file_array = explode("/", $file_path);
+			$file = array_pop($file_array);
 			
-			$directory = opendir( $path );
+			// php files only, please
 			
-			while ( ($file = readdir( $directory )) !== false )
+			if ( strstr( $file_path, ".php" ) )
 			{
-				// make sure it is a php file, and exclude
-				// any file specified by $exclude
-
-				if ( strstr( $file, ".php" ) && $file != $exclude )
-				{
-					array_push($arrIncludes, "$path/$file");
-				}
-			}
-		} 
-		else
-		{
-			array_push($arrIncludes, $path);
-		}
-		
-		sort($arrIncludes);
-		
-		foreach ( $arrIncludes as $include )
-		{
-			require_once ($include);
+				$class_name = str_replace(".php", "", $file);
+				$class_name = $namespace . "_" . $class_name;
+				$xerxes_include_file_array[$class_name] = $file_path;
+			}	
 		}
 	}
+	
+	private function directoryToArray($directory, $recursive)
+	{
+		$array_items = array ();
+		
+		if ($handle = opendir ( $directory ))
+		{
+			while ( false !== ($file = readdir ( $handle )) )
+			{
+				if ($file != "." && $file != "..")
+				{
+					if (is_dir ( $directory . "/" . $file ))
+					{
+						if ($recursive)
+						{
+							$array_items = array_merge ( $array_items, self::directoryToArray ( $directory . "/" . $file, $recursive ) );
+						}
+						
+						$file = $directory . "/" . $file;
+						$array_items[] = preg_replace ( "/\/\//si", "/", $file );
+					} 
+					else
+					{
+						$file = $directory . "/" . $file;
+						$array_items[] = preg_replace ( "/\/\//si", "/", $file );
+					}
+				}
+			}
+			closedir ( $handle );
+		}
+		
+		return $array_items;
+	}
+	
 	
 	private function setHeader($format)
 	{
@@ -601,26 +620,39 @@ class Xerxes_Framework_FrontController
 	}
 }
 
+$xerxes_include_file_array = array();
+
 /**
- * We use this to catch the occassion where we're calling a class
- * before it has been loaded; a kind of last-case include
+ * Include library files
  *
  * @param string $name	the name of the class
  */
 
 function __autoload($name)
 {
-	if ( strstr($name, "Xerxes_Framework_") )
+	global $xerxes_include_file_array;
+	
+	if ( array_key_exists($name, $xerxes_include_file_array) )
 	{
-		$file = str_replace("Xerxes_Framework_", "", $name);
-		require_once("$file.php");
+		require_once $xerxes_include_file_array[$name];
 	}
-	elseif ( strstr($name, "Xerxes_") )
+	else
 	{
-		$file = str_replace("Xerxes_", "", $name);
+		// could be a secondary class in the file, so check the stub
+		// form of the name
 		
-		require_once(Xerxes_Framework_FrontController::parentDirectory() . "/lib/Xerxes/$file.php");
+		$name_array = explode("_", $name);
+		array_pop($name_array);
+		$stub = implode("_", $name_array);
+		
+		if ( array_key_exists($stub, $xerxes_include_file_array) )
+		{
+			require_once $xerxes_include_file_array[$stub];
+		}
+		else
+		{
+			throw new Exception("could not find a file for the class '$name'");	
+		}
 	}
 }
-
 ?>

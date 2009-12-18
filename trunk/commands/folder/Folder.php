@@ -118,7 +118,7 @@ abstract class Xerxes_Command_Folder extends Xerxes_Framework_Command
 			
 			$objTag->setAttribute("label", $label);
 			$objTag->setAttribute("total", $total);
-			$objTag->setAttribute("url", Xerxes_Parser::escapeXml($this->request->url_for($arrUrl)));
+			$objTag->setAttribute("url", Xerxes_Framework_Parser::escapeXml($this->request->url_for($arrUrl)));
 		}
 		
 		$this->request->addDocument($objXml);

@@ -9,7 +9,7 @@
  * @license http://www.gnu.org/licenses/
  * @version $Id$
  * @package  Xerxes_Framework
- * @uses Xerxes_Parser
+ * @uses Xerxes_Framework_Parser
  */
 
 class Xerxes_Framework_Page
@@ -190,7 +190,7 @@ class Xerxes_Framework_Page
 				
 				$strLink = $this->build_link( $strPage, $params, $strAdditional, $objRequest );
 				
-				$objPage->setAttribute( "link", Xerxes_Parser::escapeXml( $strLink ) );
+				$objPage->setAttribute( "link", Xerxes_Framework_Parser::escapeXml( $strLink ) );
 				$objPage->setAttribute( "type", "first" );
 				$objXml->documentElement->appendChild( $objPage );
 			}
@@ -218,7 +218,7 @@ class Xerxes_Framework_Page
 						
 						$strLink = $this->build_link( $strPage, $params, $strAdditional, $objRequest );
 						
-						$objPage->setAttribute( "link", Xerxes_Parser::escapeXml( $strLink ) );
+						$objPage->setAttribute( "link", Xerxes_Framework_Parser::escapeXml( $strLink ) );
 						$objXml->documentElement->appendChild( $objPage );
 					
 					}
@@ -243,7 +243,7 @@ class Xerxes_Framework_Page
 				
 				$strLink = $this->build_link( $strPage, $params, $strAdditional, $objRequest );
 				
-				$objPage->setAttribute( "link", Xerxes_Parser::escapeXml( $strLink ) );
+				$objPage->setAttribute( "link", Xerxes_Framework_Parser::escapeXml( $strLink ) );
 				$objPage->setAttribute( "type", "next" );
 				$objXml->documentElement->appendChild( $objPage );
 			}
@@ -293,7 +293,7 @@ class Xerxes_Framework_Page
 			{
 				$objHere = $objXml->createElement( "option", $value );
 				$objHere->setAttribute( "active", "false" );
-				$objHere->setAttribute( "link", Xerxes_Parser::escapeXml( "$strBase=$key" ) );
+				$objHere->setAttribute( "link", Xerxes_Framework_Parser::escapeXml( "$strBase=$key" ) );
 				$objXml->documentElement->appendChild( $objHere );
 			}
 			
@@ -315,7 +315,7 @@ class Xerxes_Framework_Page
 	
 	public function transform($xml, $strXslt, $arrParams = null, $arrIncludes = null)
 	{
-		$html =  Xerxes_Parser::transform( $xml, $strXslt, $arrParams, false, $arrIncludes );
+		$html =  Xerxes_Framework_Parser::transform( $xml, $strXslt, $arrParams, false, $arrIncludes );
 		
 		// as of metalib 4.3 we _still_ need to do this to catch html entity references that
 		// have been escaped for xml compatibility
