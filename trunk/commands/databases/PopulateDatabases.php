@@ -291,7 +291,7 @@
 			$objXml = new DOMDocument();
 			$objXml = $this->objSearch->allDatabases($this->configInstitute, true, $this->configChunk);
 			
-			$strXml = Xerxes_Parser::transform($objXml, "xsl/utility/marc-to-database.xsl");
+			$strXml = Xerxes_Framework_Parser::transform($objXml, "xsl/utility/marc-to-database.xsl");
 
 			if ( $this->request->getProperty("test") )
 			{
