@@ -1,7 +1,7 @@
 <?php
 require_once '../lib/Xerxes/Marc.php';
 require_once '../lib/Xerxes/Record.php';
-require_once '../lib/metalib/MetalibRecord.php';
+require_once '../lib/Xerxes/metalib/MetalibRecord.php';
 
 /**
  * Xerxes_MetalibRecord test case.
