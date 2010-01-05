@@ -82,7 +82,7 @@ class Xerxes_Framework_Registry
 				
 			foreach ( $xml->configuration->config as $config )
 			{
-				$name = strtoupper( $config["name"] );
+				$name = Xerxes_Framework_Parser::strtoupper( $config["name"] );
 				
 				if ( $config["xml"] == "true" ) 
 				{
@@ -129,7 +129,7 @@ class Xerxes_Framework_Registry
 					
 					if ( ( string ) $config["pass"] == "true" )
 					{
-						$this->arrPass[strtolower( $name )] = $value;
+						$this->arrPass[Xerxes_Framework_Parser::strtolower( $name )] = $value;
 					}
 				}
 			}
@@ -169,7 +169,7 @@ class Xerxes_Framework_Registry
 	
 	public function getConfig($name, $bolRequired = false, $default = null)
 	{
-		$name = strtoupper( $name );
+		$name = Xerxes_Framework_Parser::strtoupper( $name );
 		
 		if ( $this->arrConfig == null )
 		{
@@ -243,11 +243,11 @@ class Xerxes_Framework_Registry
 	
 	public function setConfig($key, $value, $bolPass = false)
 	{
-		$this->arrConfig[strtoupper( $key )] = $value;
+		$this->arrConfig[Xerxes_Framework_Parser::strtoupper( $key )] = $value;
 		
 		if ( $bolPass == true )
 		{
-			$this->arrPass[strtolower( $key )] = $value;
+			$this->arrPass[Xerxes_Framework_Parser::strtolower( $key )] = $value;
 		}
 	}
 	

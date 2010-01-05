@@ -287,7 +287,7 @@ class Xerxes_Framework_FrontController
 				// first, include any parent class, assuming that the parent class will
 				// follow the naming convention of having the same name as the directory
 
-				$strParentClass = strtoupper( substr( $strDirectory, 0, 1 ) ) . substr( $strDirectory, 1 );
+				$strParentClass = Xerxes_Framework_Parser::strtoupper( substr( $strDirectory, 0, 1 ) ) . substr( $strDirectory, 1 );
 				
 				if ( file_exists( "$local_command_path/$strParentClass.php" ) )
 				{

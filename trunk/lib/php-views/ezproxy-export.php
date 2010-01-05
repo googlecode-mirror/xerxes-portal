@@ -197,7 +197,7 @@ class EzProxyExportGen {
     // Any access restrictions?
     $hash['group_restrictions'] = array();        
     foreach ($xmlDatabase->group_restriction as $restriction) {
-      array_push( $hash['group_restrictions'], strtoupper((string) $restriction)); 
+      array_push( $hash['group_restrictions'], Xerxes_Framework_Parser::strtoupper((string) $restriction)); 
     }
     if (count($hash['group_restrictions']) == 0) {
       $hash['group_restrictions'] = array('Default');

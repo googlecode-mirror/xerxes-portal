@@ -90,7 +90,7 @@
 					
 					$objFullText->title = (string) $objItem->title;
 					$objFullText->title = preg_replace("/\W/","",$objFullText->title);
-					$objFullText->title = substr(strtolower($objFullText->title),0, 100);
+					$objFullText->title = substr(Xerxes_Framework_Parser::strtolower($objFullText->title),0, 100);
 					
 					$objFullText->startdate = (int) $objCoverage->from->year;
 					

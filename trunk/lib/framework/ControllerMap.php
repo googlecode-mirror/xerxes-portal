@@ -297,13 +297,13 @@
 				// with the first letter of each capitalized.  if there is a dash or 
 				// underscore, remove those and also capitalize the fist letter
 					 
-				$strDefaultCommand = strtoupper(substr($strDirectory,0,1) ) . substr($strDirectory,1);
+				$strDefaultCommand = Xerxes_Framework_Parser::strtoupper(substr($strDirectory,0,1) ) . substr($strDirectory,1);
 					
 				$arrActionParts = split("-|_", $strAction);
 					
 				foreach ( $arrActionParts as $strActionPart )
 				{
-					$strDefaultCommand .= strtoupper(substr($strActionPart,0,1) ) . substr($strActionPart,1);
+					$strDefaultCommand .= Xerxes_Framework_Parser::strtoupper(substr($strActionPart,0,1) ) . substr($strActionPart,1);
 				}
 					
 				$arrCommand = array($strDirectory, $strNamespace, $strDefaultCommand, $strModule);

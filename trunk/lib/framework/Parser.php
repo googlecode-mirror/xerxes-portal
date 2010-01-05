@@ -283,7 +283,7 @@
 
 			if ($iMatch == 0 && strlen($strInput) > 10)
 			{
-				$strInput = strtolower($strInput);
+				$strInput = Xerxes_Framework_Parser::strtolower($strInput);
 			}
 			
 			// array of small words
@@ -299,13 +299,13 @@
 			{ 
 					// if this word is the first, or it's not one of our small words, capitalise it 
 					
-					if ( $key == 0 || !in_array( strtolower($word), $arrSmallWords) )
+					if ( $key == 0 || !in_array( Xerxes_Framework_Parser::strtolower($word), $arrSmallWords) )
 					{
 						$arrWords[$key] = ucwords($word);
 					}
-					elseif ( in_array( strtolower($word), $arrSmallWords) )
+					elseif ( in_array( Xerxes_Framework_Parser::strtolower($word), $arrSmallWords) )
 					{
-						$arrWords[$key] = strtolower($word);
+						$arrWords[$key] = Xerxes_Framework_Parser::strtolower($word);
 					}
 			} 
 			
@@ -351,11 +351,11 @@
 			{
 				// drop everything
 				
-				$strInput = strtolower($strInput);
+				$strInput = Xerxes_Framework_Parser::strtolower($strInput);
 				
 				// capitalize the first letter
 				
-				$strInput = strtoupper(substr($strInput, 0, 1)) . substr($strInput, 1);
+				$strInput = Xerxes_Framework_Parser::strtoupper(substr($strInput, 0, 1)) . substr($strInput, 1);
 				
 				// and the start of a subtitle
 				
@@ -476,6 +476,44 @@
 			
 			return $string;
 		}
+		
+		/**
+		 * use multi-byte string lower case if available
+		 * 
+		 * @param string $string the string to drop to lower case
+		 */
+		
+		public static function strtolower($string)
+		{
+			if ( function_exists("mb_strtolower") )
+			{
+				return mb_strtolower($string, "UTF-8");
+			}
+			else
+			{
+				return strtolower($string);
+			}
+		}
+
+		
+		/**
+		 * use multi-byte string upper case if availablee
+		 * 
+		 * @param string $string the string to raise to upper case
+		 */
+
+		public static function strtoupper($string)
+		{
+			if ( function_exists("mb_strtoupper") )
+			{
+				return mb_strtoupper($string, "UTF-8");
+			}
+			else
+			{
+				return strtolower($string);
+			}
+		}		
+		
 		
 		/**
 		 * Send a request as either GET or POST
