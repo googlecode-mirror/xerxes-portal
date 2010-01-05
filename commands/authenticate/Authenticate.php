@@ -103,7 +103,7 @@
 					// if so, then use it; this supports multiple custom schemes
 					
 					$local_file = "config/authentication/$configAuth.php";
-					$class_name = "Xerxes_CustomAuth_" . strtoupper( substr( $configAuth, 0, 1 ) ) . substr( $configAuth, 1 );
+					$class_name = "Xerxes_CustomAuth_" . Xerxes_Framework_Parser::strtoupper( substr( $configAuth, 0, 1 ) ) . substr( $configAuth, 1 );
 					
 					if ( file_exists($local_file) )
 					{

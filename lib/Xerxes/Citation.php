@@ -101,7 +101,7 @@ class Xerxes_Citation
 				$target = $map[$key];
 			}
 			
-			$method = strtoupper(substr($target, 0, 1));
+			$method = Xerxes_Framework_Parser::strtoupper(substr($target, 0, 1));
 			$method .= substr($target, 1);
 			$method = "get$method";
 			
@@ -281,16 +281,16 @@ class Xerxes_Citation
 			switch ( (string) $node["text-case"] )
 			{
 				case "lowercase":
-					$data = strtolower($data);
+					$data = Xerxes_Framework_Parser::strtolower($data);
 					break;
 					
 				case "uppercase":
-					$data = strtoupper($data);
+					$data = Xerxes_Framework_Parser::strtoupper($data);
 					break;
 					
 				case "capitalize-first":
 				case "sentence":
-					$data = strtoupper(substr($data, 0, 1)) . substr($data, 1);
+					$data = Xerxes_Framework_Parser::strtoupper(substr($data, 0, 1)) . substr($data, 1);
 					break;
 					
 				case "capitalize-all":

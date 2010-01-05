@@ -795,17 +795,17 @@ class Xerxes_Record extends Xerxes_Marc_Record
 
 		if ( strlen( $this->title ) > 4 )
 		{
-			if ( strtolower( substr( $this->title, 0, 4 ) ) == "the " )
+			if ( Xerxes_Framework_Parser::strtolower( substr( $this->title, 0, 4 ) ) == "the " )
 			{
 				$this->non_sort .= substr( $this->title, 0, 4 );
 				$this->title = substr( $this->title, 4 );
 			} 
-			elseif ( strtolower( substr( $this->title, 0, 2 ) ) == "a " )
+			elseif ( Xerxes_Framework_Parser::strtolower( substr( $this->title, 0, 2 ) ) == "a " )
 			{
 				$this->non_sort .= substr( $this->title, 0, 2 );
 				$this->title = substr( $this->title, 2 );
 			} 
-			elseif ( strtolower( substr( $this->title, 0, 3 ) ) == "an " )
+			elseif ( Xerxes_Framework_Parser::strtolower( substr( $this->title, 0, 3 ) ) == "an " )
 			{
 				$this->non_sort .= substr( $this->title, 0, 3 );
 				$this->title = substr( $this->title, 3 );
@@ -1847,7 +1847,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		
 		foreach ( $arrFormat as $strFormat )
 		{
-			$strDataFields .= " " . strtolower( $strFormat );
+			$strDataFields .= " " . Xerxes_Framework_Parser::strtolower( $strFormat );
 		}
 		
 		if ( strlen( $this->leader()->__toString() ) >= 8 )
@@ -1934,7 +1934,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		// we'll drop the whole thing to lower case and padd it
 		// with spaces to make parsing easier
 		
-		$strJournalInfo = " " . strtolower( $strJournalInfo ) . " ";
+		$strJournalInfo = " " . Xerxes_Framework_Parser::strtolower( $strJournalInfo ) . " ";
 		
 		// volume
 
@@ -2097,7 +2097,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 	{
 		if ( $bolTwo == true )
 		{
-			switch ( strtoupper( $strCode ) )
+			switch ( Xerxes_Framework_Parser::strtoupper( $strCode ) )
 			{
 				case "AA" :
 					return "Afar";
@@ -2513,7 +2513,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		} 
 		else
 		{
-			switch ( strtolower( $strCode ) )
+			switch ( Xerxes_Framework_Parser::strtolower( $strCode ) )
 			{
 				case "aar" :
 					return "Afar";
@@ -3934,7 +3934,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		
 		if ( $iMatch == 0 && strlen( $strInput ) > 10 )
 		{
-			$strInput = strtolower( $strInput );
+			$strInput = Xerxes_Framework_Parser::strtolower( $strInput );
 		}
 		
 		// array of small words
@@ -3950,13 +3950,13 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		{
 			// if this word is the first, or it's not one of our small words, capitalise it 
 
-			if ( $key == 0 || ! in_array( strtolower( $word ), $arrSmallWords ) )
+			if ( $key == 0 || ! in_array( Xerxes_Framework_Parser::strtolower( $word ), $arrSmallWords ) )
 			{
 				$arrWords[$key] = ucwords( $word );
 			} 
-			elseif ( in_array( strtolower( $word ), $arrSmallWords ) )
+			elseif ( in_array( Xerxes_Framework_Parser::strtolower( $word ), $arrSmallWords ) )
 			{
-				$arrWords[$key] = strtolower( $word );
+				$arrWords[$key] = Xerxes_Framework_Parser::strtolower( $word );
 			}
 		}
 		

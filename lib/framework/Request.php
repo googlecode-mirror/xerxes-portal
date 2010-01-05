@@ -530,7 +530,7 @@ class Xerxes_Framework_Request
 			return $this->xml;
 		}
 		
-		$strReturnType = strtoupper( $strReturnType );
+		$strReturnType = Xerxes_Framework_Parser::strtoupper( $strReturnType );
 		
 		if ( $strReturnType != null && $strReturnType != "DOMNODELIST" && $strReturnType != "ARRAY" )
 		{
@@ -805,7 +805,7 @@ class Xerxes_Framework_Request
 			// need to make sure the xml element has a valid name
 			// and not something crazy with spaces or commas, etc.
 
-			$strSafeKey = strtolower( preg_replace( '/\W/', '_', $key ) );
+			$strSafeKey = Xerxes_Framework_Parser::strtolower( preg_replace( '/\W/', '_', $key ) );
 			
 			if ( is_array( $value ) )
 			{

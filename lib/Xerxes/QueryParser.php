@@ -166,7 +166,7 @@
 						
 			// split words into an array
 			
-			$strQuery = strtolower($strQuery);
+			$strQuery = Xerxes_Framework_Parser::strtolower($strQuery);
 			
 			$arrWords = explode(" ", $strQuery);
 			
@@ -223,7 +223,7 @@
 						 $arrWords[$x] == "not")
 				{
 					// the current word is a boolean operator
-					array_push($arrFinal, strtoupper($arrWords[$x]) );
+					array_push($arrFinal, Xerxes_Framework_Parser::strtoupper($arrWords[$x]) );
 				}
 				else
 				{

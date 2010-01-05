@@ -28,12 +28,12 @@ class Xerxes_Command_FolderTagsEdit extends Xerxes_Command_Folder
 		
 		for ( $x = 0 ; $x < count( $arrTags ) ; $x ++ )
 		{
-			$arrTags[$x] = strtolower( trim( $arrTags[$x] ) );
+			$arrTags[$x] = Xerxes_Framework_Parser::strtolower( trim( $arrTags[$x] ) );
 		}
 		
 		for ( $x = 0 ; $x < count( $arrShadow ) ; $x ++ )
 		{
-			$arrShadow[$x] = strtolower( trim( $arrShadow[$x] ) );
+			$arrShadow[$x] = Xerxes_Framework_Parser::strtolower( trim( $arrShadow[$x] ) );
 		}
 		
 		// remove any duplicates
@@ -61,7 +61,7 @@ class Xerxes_Command_FolderTagsEdit extends Xerxes_Command_Folder
 		{
 			foreach ( $arrStored as $strStoredKey => $iStoredValue )
 			{
-				if ( strtoupper( $strTag ) == strtoupper( $strStoredKey ) )
+				if ( Xerxes_Framework_Parser::strtoupper( $strTag ) == Xerxes_Framework_Parser::strtoupper( $strStoredKey ) )
 				{
 					$iStoredValue = ( int ) $iStoredValue;
 					
@@ -91,7 +91,7 @@ class Xerxes_Command_FolderTagsEdit extends Xerxes_Command_Folder
 				
 				foreach ( $arrStored as $strStoredKey => $iStoredValue )
 				{
-					if ( strtoupper( $strTag ) == strtoupper( $strStoredKey ) )
+					if ( Xerxes_Framework_Parser::strtoupper( $strTag ) == Xerxes_Framework_Parser::strtoupper( $strStoredKey ) )
 					{
 						// there is one in here already so increment
 
