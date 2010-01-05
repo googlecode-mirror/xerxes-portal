@@ -510,7 +510,7 @@
 			}
 			else
 			{
-				return strtolower($string);
+				return strtoupper($string);
 			}
 		}		
 		
