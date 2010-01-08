@@ -87,7 +87,7 @@
 			// update the session
       		// Sorry this gets a bit confusing, the api hasn't stayed entirely consistent.
 			
-			list($date, $resultSet, $recordNumber) = split(':',$strID);
+			list($date, $resultSet, $recordNumber) = explode(':',$strID);
 			Xerxes_Helper::unmarkSaved($resultSet, $recordNumber);
 			
 			// send the user back out, so they don't step on this again

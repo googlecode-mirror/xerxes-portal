@@ -96,7 +96,7 @@
 
 			// set marc fields to return in response
 			
-			$arrFields = split(",", $configMarcFields);
+			$arrFields = explode(",", $configMarcFields);
 			
 			// get marc-xml results from metalib
 			

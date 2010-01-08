@@ -509,7 +509,7 @@ abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
 
 		$strMarcFields = self::MARC_FIELDS_FULL;
 		$configResultsFields = $this->registry->getConfig( "MARC_FIELDS_FULL", false, $strMarcFields );
-		$arrFields = split( ",", $configResultsFields );
+		$arrFields = explode( ",", $configResultsFields );
 		
 		// fetch record from metalib
 

@@ -91,7 +91,7 @@ class Xerxes_Command_MetasearchResults extends Xerxes_Command_Metasearch
 		
 		// set marc fields to return in response
 
-		$arrFields = split( ",", $configMarcFields );
+		$arrFields = explode( ",", $configMarcFields );
 		
 		// get results from metalib
 
