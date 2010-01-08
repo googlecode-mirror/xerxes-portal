@@ -428,7 +428,7 @@
 	   		$dom = new domdocument;
 	   		$dom->loadXML("<list />");
 	   		$docEl = $dom->documentElement;
-	   		$arr = split($seperator, $strList);
+	   		$arr = explode($seperator, $strList);
 	   		
 	   		$found = false;
 	   		foreach ($arr as $item)

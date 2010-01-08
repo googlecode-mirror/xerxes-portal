@@ -111,7 +111,7 @@ class EzProxyExportGen {
     // Now we've grouped by restriction, let's output. 
     
     foreach (array_keys( $this->index_by_restriction ) as $restriction_key) {
-      $groups = split(';', $restriction_key);
+      $groups = explode(';', $restriction_key);
       
       $ezproxy_groups = "";
       foreach ($groups as $group) {
@@ -215,7 +215,7 @@ class EzProxyExportGen {
     if (preg_match("/^(\d|\.)+$/", $host)) {
       return $host;
     }
-    $components = split("\.", $host);
+    $components = explode("\.", $host);
     if ( count($components) > 2 ) {
       $domain = join('.', array_slice($components, 1));
       
@@ -241,7 +241,7 @@ class EzProxyExportGen {
   
   protected function shouldAvoidDomain($domain) {
      $avoidList = $this->objRegistry->getConfig('ezp_exp_domain_avoid', false, '');
-      foreach( split(',', $avoidList) as $avoid) {
+      foreach( explode(',', $avoidList) as $avoid) {
         if (trim($avoid) == $domain) {
           # nevermind, can't use that domain, just use the host.
           return true;
@@ -252,7 +252,7 @@ class EzProxyExportGen {
   
   protected function shouldOmitResourceId($resourceID) {
    $avoidList = $this->objRegistry->getConfig('ezp_exp_resourceid_omit', false, '');
-    foreach( split(',', $avoidList) as $avoid) {
+    foreach( explode(',', $avoidList) as $avoid) {
       if (trim($avoid) == $resourceID) {
         # nevermind, can't use that domain, just use the host.
         return true;
