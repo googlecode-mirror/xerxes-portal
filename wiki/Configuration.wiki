@@ -328,6 +328,17 @@ Whether Xerxes should _un-escape_ ampersands before sending the HTML to the brow
 
 _This config must be added to config.xml_.  Un-escaping the ampersands will better render accented letters and other non-Roman characters in the interface; but leaves the HTML (slightly) invalid.  Only set this to `false` if you care more about W3C validation than usability.
 
+==fulltext_ignore_sources==
+
+Suppress full-text links in the specified databases.  
+
+  * default value: none
+  * available since: 1.7
+
+Enter the "source" (the parser name) or metalib ID of the databases that should not show their full-text link.  Separate multiple entries with a comma.  
+
+For example: `JSTOR_XML, CAL10458`.  In this example, `JSTOR_XML` would cover all JSTOR databases.  While `CAL10458` would cover one specific database in our Metalib KB (this one happens to be Project Muse in our test instance).  So you can mix and match source names and IDs. 
+
 ==group==
 
 Metalib user groups (aka 'secondary affiliations').
