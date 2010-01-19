@@ -310,6 +310,10 @@
 		
 		<config name="link_target" pass="true">_blank</config>
 		
+		<!-- suppress full-text links in the specified databases. -->
+		
+		<config name="fulltext_ignore_sources"></config> 
+		
 		<!-- show link to catalog for holdings when present -->
 		
 		<config name="show_all_holdings_links" pass="true">true</config>
