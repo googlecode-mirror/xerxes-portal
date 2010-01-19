@@ -512,7 +512,19 @@
 			{
 				return strtoupper($string);
 			}
-		}		
+		}
+		
+		public static function preg_replace($pattern, $replacement, $subject)
+		{
+			if ( function_exists("mb_ereg_replace") )
+			{
+				return mb_ereg_replace($pattern, $replacement, $subject);
+			}
+			else
+			{
+				return preg_replace($pattern, $replacement, $subject);
+			}			
+		}
 		
 		
 		/**

@@ -75,7 +75,9 @@ class Xerxes_Data_Category extends Xerxes_Framework_DataValue
 		$strNormalized = str_replace( "'", "", $strNormalized );
 		$strNormalized = str_replace( "+", "-", $strNormalized );
 		
-		$strNormalized = preg_replace( "/\W/", "-", $strNormalized );
+		$strNormalized = Xerxes_Framework_Parser::preg_replace( "/\W/", "-", $strNormalized );
+		
+		echo $strNormalized . "\n";
 		
 		while ( strstr( $strNormalized, "--" ) )
 		{
