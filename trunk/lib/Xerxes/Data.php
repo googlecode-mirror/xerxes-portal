@@ -38,7 +38,6 @@ class Xerxes_Data_Refereed extends Xerxes_Framework_DataValue
 {
 	public $issn;
 	public $title;
-	public $subtitle;
 	public $title_normal;
 }
 
@@ -74,10 +73,9 @@ class Xerxes_Data_Category extends Xerxes_Framework_DataValue
 		$strNormalized = str_replace( "&amp;", "", $strNormalized );
 		$strNormalized = str_replace( "'", "", $strNormalized );
 		$strNormalized = str_replace( "+", "-", $strNormalized );
+		$strNormalized = str_replace( " ", "-", $strNormalized );
 		
 		$strNormalized = Xerxes_Framework_Parser::preg_replace( "/\W/", "-", $strNormalized );
-		
-		echo $strNormalized . "\n";
 		
 		while ( strstr( $strNormalized, "--" ) )
 		{
