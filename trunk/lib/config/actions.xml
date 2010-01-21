@@ -460,6 +460,11 @@
 				<command>PopulateFulltext</command>
 				<view />
 			</action>
+			<action name="populate-refereed" cli="true">
+				<command>PopulateRefereed</command>
+				<view />
+			</action>
+
 		</section>
 		
 		<section name="metasearch" directory="metasearch" namespace="Xerxes" documentElement="metasearch" restricted="true">	
