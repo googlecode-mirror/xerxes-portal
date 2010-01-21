@@ -1738,7 +1738,32 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 	}
 	
 	/**
-	 * get a list of journals from the refereed table
+	 * Delete all records for refereed journals
+	 */
+	
+	public function flushRefereed()
+	{
+		$this->delete( "DELETE FROM xerxes_refereed_sfx" );
+	}
+	
+	/**
+	 * Add a refereed title
+	 * 
+	 * @param Xerxes_Data_Refereed $objTitle peer reviewed journal object
+	 */
+	
+	public function addRefereed(Xerxes_Data_Refereed $objTitle)
+	{
+		$objTitle->issn = str_replace("-", "", $objTitle->issn);
+		$objTitle->title_normal = strtolower($objTitle->title);
+		$objTitle->title_normal = str_replace(" ", "", $objTitle->title_normal);
+		
+		$this->doSimpleInsert("xerxes_refereed_sfx", $objTitle);
+	}
+	
+	
+	/**
+	 * Get a list of journals from the refereed table
 	 *
 	 * @param mixed $issn		[string or array] ISSN or multiple ISSNs
 	 * @return array			array of Xerxes_Data_Refereed objects
