@@ -1743,7 +1743,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 	
 	public function flushRefereed()
 	{
-		$this->delete( "DELETE FROM xerxes_refereed_sfx" );
+		$this->delete( "DELETE FROM xerxes_refereed" );
 	}
 	
 	/**
@@ -1755,10 +1755,25 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 	public function addRefereed(Xerxes_Data_Refereed $objTitle)
 	{
 		$objTitle->issn = str_replace("-", "", $objTitle->issn);
-		$objTitle->title_normal = strtolower($objTitle->title);
-		$objTitle->title_normal = str_replace(" ", "", $objTitle->title_normal);
+		// $objTitle->timestamp = date("Ymd");
 		
-		$this->doSimpleInsert("xerxes_refereed_sfx", $objTitle);
+		$this->doSimpleInsert("xerxes_refereed", $objTitle);
+	}
+	
+	public function getAllRefereed()
+	{
+		$arrPeer = array();
+		$arrResults = $this->select( "SELECT * FROM xerxes_refereed");
+		
+		foreach ( $arrResults as $arrResult )
+		{
+			$objPeer = new Xerxes_Data_Refereed( );
+			$objPeer->load( $arrResult );
+			
+			array_push( $arrPeer, $objPeer );
+		}		
+		
+		return $arrPeer;
 	}
 	
 	
