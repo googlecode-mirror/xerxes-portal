@@ -159,21 +159,24 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		
 		// doi
 				
-		$this->doi =  $this->datafield("024")->subfield("a")->__toString();
-		
 		// this is kind of iffy since the 024 is not _really_ a DOI field; but this
 		// is the most likely marc field; however need to see if the number follows the very loose
 		// pattern of the DOI of 'prefix/suffix', where prefix and suffix can be nearly anything
 		
-		if ( $this->doi != "" )
+		$field_024 = $this->fieldArray("024", "a");
+		
+		foreach ( $field_024 as $doi )
 		{
 			// strip any doi: prefix
 			
-			$this->doi = str_replace( "doi:", "", $this->doi );
+			$doi = str_replace( "doi:", "", $doi );
 			
-			if ( ! preg_match("/.*\/.*/", $this->doi) )
+			// got it!
+			
+			if ( preg_match("/.*\/.*/", $doi) )
 			{
-				$this->doi = "";
+				$this->doi = $doi;
+				break;
 			}
 		}
 		
