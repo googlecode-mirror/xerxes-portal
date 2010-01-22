@@ -38,7 +38,7 @@ class Xerxes_Data_Refereed extends Xerxes_Framework_DataValue
 {
 	public $issn;
 	public $title;
-	public $title_normal;
+	public $timestamp;
 }
 
 class Xerxes_Data_Fulltext extends Xerxes_Framework_DataValue

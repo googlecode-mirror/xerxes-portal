@@ -42,9 +42,8 @@ CREATE INDEX xerxes_sfx_issn_idx ON xerxes_sfx(issn);
 
 CREATE TABLE xerxes_refereed (
 	issn		VARCHAR(8),
-	title		VARCHAR(150),
-	subtitle	VARCHAR(200),
-	title_normal	VARCHAR(150)
+	title		VARCHAR(1000),
+	timestamp	VARCHAR(8)
 );
 
 CREATE INDEX xerxes_refereed_issn_idx ON xerxes_refereed(issn);
