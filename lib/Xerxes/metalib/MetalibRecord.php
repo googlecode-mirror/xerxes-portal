@@ -500,10 +500,11 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 		# For some reason Metalib uses $0100 placeholder to correspond
 		# to an SID field. If I understand how this works, this is nothing
 		# but a synonym for $SID_c, so we'll use that. Absolutely no idea
-		# why Metalib uses $0100 as syntactic sugar instead. 
+		# why Metalib uses $0100 as syntactic sugar instead.
+		
 		$template = str_replace ( '$0100', '$SID_c', $template );
 		
-		$filled_out = preg_replace_callback ( '/\$(...)(_(.))?/', array ($this, 'lookupTemplateValue' ), $template );
+		$filled_out = preg_replace_callback ( '/\$([a-zA-Z0-9]{2,3})(_(.))?/', array ($this, 'lookupTemplateValue' ), $template );
 		
 		// Make sure it doesn't have our special value indicating a placeholder
 		// could not be resolved. 
@@ -525,6 +526,7 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 	protected function lookupTemplateValue($matches)
 	{
 		$field = $matches [1];
+		
 		$subfield = (count ( $matches ) >= 4) ? $matches [3] : null;
 		
 		$value = null;
