@@ -489,6 +489,9 @@ class Xerxes_Record extends Xerxes_Marc_Record
 			{
 				$strDisplay =  $link->subfield("a")->__toString();
 			}
+
+			$strLinkFormatType = $link->subfield("q")->__toString();
+			$strLinkText = $link->subfield("y")->__toString();			
 			
 			// no link supplied
 			
@@ -507,11 +510,16 @@ class Xerxes_Record extends Xerxes_Marc_Record
 			{
 				$strLinkFormat = "online";
 					
-				if ( stristr( $strDisplay, "PDF" ) || stristr( $strUrl, "PDF" ) )
+				if ( stristr( $strDisplay, "PDF" ) || 
+					stristr( $strUrl, "PDF" ) || 
+					stristr($strLinkFormatType, "PDF" ) || 
+					stristr($strLinkText, "PDF" ) )
 				{
 					$strLinkFormat = "pdf";
 				} 
-				elseif ( stristr( $strDisplay, "HTML" ) )
+				elseif ( stristr( $strDisplay, "HTML" ) || 
+					stristr($strLinkFormatType, "HTML" ) ||  
+					stristr($strLinkText, "HTML" ) )
 				{
 					$strLinkFormat = "html";
 				}
