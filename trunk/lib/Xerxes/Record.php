@@ -80,7 +80,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 	protected $links = array ( ); // all supplied links in the record both full text and non
 	protected $embedded_text = array ( ); // full text embedded in document
 	
-	protected $alt_script = array ( ); // alternate character-scripts like cjk or hebrew, taken from 880s
+	protected $alt_scripts = array ( ); // alternate character-scripts like cjk or hebrew, taken from 880s
 	protected $alt_script_name = ""; // the name of the alternate character-script; we'll just assume one for now, I guess
 	
 
@@ -384,7 +384,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		
 		// we get every field except for the $6 which is a linking field
 
-		$this->alt_script = $this->fieldArray("880", "abcdefghijklmnopqrstuvwxyz12345789" );
+		$this->alt_scripts = $this->fieldArray("880", "abcdefghijklmnopqrstuvwxyz12345789" );
 		
 		// now use the $6 to figure out which character-script this is
 		// assume just one for now
@@ -397,7 +397,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 			
 			$arrScriptCodes = array ("(3" => "Arabic", "(B" => "Latin", '$1' => "CJK", "(N" => "Cyrillic", "(S" => "Greek", "(2" => "Hebrew" );
 			
-			if ( preg_match( "/[0-9]{3}-[0-9]{2}\/(.*)/", $strAltScript, $arrMatchCodes ) )
+			if ( preg_match( "/[0-9]{3}-[0-9]{2}\/([^\/]*)/", $strAltScript, $arrMatchCodes ) )
 			{
 				if ( array_key_exists( $arrMatchCodes[1], $arrScriptCodes ) )
 				{
