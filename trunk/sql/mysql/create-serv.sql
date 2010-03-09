@@ -75,6 +75,7 @@ CREATE TABLE xerxes_records (
 	year		SMALLINT(4),
 	format 		VARCHAR(50),
 	refereed 	SMALLINT(1),
+	record_type	VARCHAR(100),
 	marc		MEDIUMTEXT,
 
 	PRIMARY KEY (id)
@@ -96,7 +97,7 @@ CREATE TABLE xerxes_cache (
 	source		VARCHAR(20),
 	grouping	VARCHAR(20),
 	id 		VARCHAR(20),
-	data		TEXT,
+	data		MEDIUMTEXT,
 	timestamp	INTEGER,
 	expiry		INTEGER
 );

@@ -1,8 +1,9 @@
 USE xerxes;
 
-# increase space for saved records
+# increase space for saved records and cache
 
 ALTER TABLE xerxes_records MODIFY marc MEDIUMTEXT;
+ALTER TABLE xerxes_cache MODIFY data MEDIUMTEXT;
 
 # new refereed data
 
@@ -15,3 +16,7 @@ CREATE TABLE xerxes_refereed (
 );
 
 CREATE INDEX xerxes_refereed_issn_idx ON xerxes_refereed(issn);
+
+# for search arch
+
+ALTER TABLE xerxes_records ADD record_type VARCHAR(100);
