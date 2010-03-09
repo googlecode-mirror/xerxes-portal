@@ -60,6 +60,7 @@ CREATE TABLE xerxes_records (
 	year		SMALLINT,
 	format 		VARCHAR(50),
 	refereed 	SMALLINT,
+	record_type	VARCHAR(100),
 	marc		TEXT,
 
 	PRIMARY KEY (id)
