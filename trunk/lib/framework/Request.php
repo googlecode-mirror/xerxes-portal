@@ -79,6 +79,20 @@ class Xerxes_Framework_Request
 			{
 				$this->extractParamsFromPath();
 			}
+
+			// set mobile
+			
+			if ( $this->getSession('is_mobile') == null )
+			{
+				$this->setSession('is_mobile', (string) $this->isMobileDevice());
+			}
+
+			// troubleshooting mobile
+			
+			if ( $this->getProperty("is_mobile") != "" )
+			{
+				$this->setSession('is_mobile', $this->getProperty("is_mobile"));
+			}
 		} 
 		else
 		{
@@ -145,6 +159,107 @@ class Xerxes_Framework_Request
 	}
 	
 	/**
+	 * Simple function to detect if the user has a mobile device
+	 * http://www.russellbeattie.com/blog/mobile-browser-detection-in-php
+	 */
+	
+	public function isMobileDevice()
+	{
+		$isMobile = false;
+		
+		$op = strtolower($this->getServer('HTTP_X_OPERAMINI_PHONE'));
+		$ua = strtolower($this->getServer('HTTP_USER_AGENT'));
+		$ac = strtolower($this->getServer('HTTP_ACCEPT'));
+		
+		$isMobile = strpos($ac, 'application/vnd.wap.xhtml+xml') !== false
+			|| $op != ''
+			|| strpos($ua, 'sony') !== false 
+			|| strpos($ua, 'symbian') !== false 
+			|| strpos($ua, 'nokia') !== false 
+			|| strpos($ua, 'samsung') !== false 
+			|| strpos($ua, 'mobile') !== false
+			|| strpos($ua, 'windows ce') !== false
+			|| strpos($ua, 'epoc') !== false
+			|| strpos($ua, 'opera mini') !== false
+			|| strpos($ua, 'nitro') !== false
+			|| strpos($ua, 'j2me') !== false
+			|| strpos($ua, 'midp-') !== false
+			|| strpos($ua, 'cldc-') !== false
+			|| strpos($ua, 'netfront') !== false
+			|| strpos($ua, 'mot') !== false
+			|| strpos($ua, 'up.browser') !== false
+			|| strpos($ua, 'up.link') !== false
+			|| strpos($ua, 'audiovox') !== false
+			|| strpos($ua, 'blackberry') !== false
+			|| strpos($ua, 'ericsson,') !== false
+			|| strpos($ua, 'panasonic') !== false
+			|| strpos($ua, 'philips') !== false
+			|| strpos($ua, 'sanyo') !== false
+			|| strpos($ua, 'sharp') !== false
+			|| strpos($ua, 'sie-') !== false
+			|| strpos($ua, 'portalmmm') !== false
+			|| strpos($ua, 'blazer') !== false
+			|| strpos($ua, 'avantgo') !== false
+			|| strpos($ua, 'danger') !== false
+			|| strpos($ua, 'palm') !== false
+			|| strpos($ua, 'series60') !== false
+			|| strpos($ua, 'palmsource') !== false
+			|| strpos($ua, 'pocketpc') !== false
+			|| strpos($ua, 'smartphone') !== false
+			|| strpos($ua, 'rover') !== false
+			|| strpos($ua, 'ipaq') !== false
+			|| strpos($ua, 'au-mic,') !== false
+			|| strpos($ua, 'alcatel') !== false
+			|| strpos($ua, 'ericy') !== false
+			|| strpos($ua, 'up.link') !== false
+			|| strpos($ua, 'vodafone/') !== false
+			|| strpos($ua, 'wap1.') !== false
+			|| strpos($ua, 'wap2.') !== false;
+			
+		return $isMobile;		
+	}
+
+	/**
+	 * Simple function to detect if the user is a crawler
+	 * http://www.russellbeattie.com/blog/mobile-browser-detection-in-php
+	 */
+	
+	public function isBot()
+	{
+		$isBot = false;
+		
+		$ua = strtolower($this->getServer('HTTP_USER_AGENT'));
+		$ip = $this->getServer('REMOTE_ADDR');
+		
+		$isBot =  $ip == '66.249.65.39' 
+			|| strpos($ua, 'googlebot') !== false 
+			|| strpos($ua, 'mediapartners') !== false 
+			|| strpos($ua, 'yahooysmcm') !== false 
+			|| strpos($ua, 'baiduspider') !== false
+			|| strpos($ua, 'msnbot') !== false
+			|| strpos($ua, 'slurp') !== false
+			|| strpos($ua, 'ask') !== false
+			|| strpos($ua, 'teoma') !== false
+			|| strpos($ua, 'spider') !== false 
+			|| strpos($ua, 'heritrix') !== false 
+			|| strpos($ua, 'attentio') !== false 
+			|| strpos($ua, 'twiceler') !== false 
+			|| strpos($ua, 'irlbot') !== false 
+			|| strpos($ua, 'fast crawler') !== false                        
+			|| strpos($ua, 'fastmobilecrawl') !== false 
+			|| strpos($ua, 'jumpbot') !== false
+			|| strpos($ua, 'googlebot-mobile') !== false
+			|| strpos($ua, 'yahooseeker') !== false
+			|| strpos($ua, 'motionbot') !== false
+			|| strpos($ua, 'mediobot') !== false
+			|| strpos($ua, 'chtml generic') !== false
+			|| strpos($ua, 'nokia6230i/. fast crawler') !== false;
+			
+		return $isBot;
+	}
+	
+	
+	/**
 	 * Extract params from pretty-urls when turned on in config. Requires base url to be set in config.
 	 * will get from $_SERVER['REQUEST_URI'], first stripping base url.
 	 */
@@ -187,12 +302,16 @@ class Xerxes_Framework_Request
 			// get the path by stripping off base url + querystring
 
 			$configBase = $objRegistry->getConfig( 'BASE_WEB_PATH', false, "" );
-      # remove base path, which might be simply '/'
-      if (substr($request_uri, 0, strlen($configBase) +1) == $configBase . "/") {
-        #$request_uri = str_replace( $configBase . "/", "", $request_uri );
-        $request_uri = substr_replace( $request_uri, '', 0, strlen($configBase) + 1);
-      }
-      # remove query string
+			
+			// remove base path, which might be simply '/'
+			if (substr ( $request_uri, 0, strlen ( $configBase ) + 1 ) == $configBase . "/")
+			{
+				// $request_uri = str_replace( $configBase . "/", "", $request_uri );
+				$request_uri = substr_replace ( $request_uri, '', 0, strlen ( $configBase ) + 1 );
+			}
+			
+      		// remove query string
+			
 			$request_uri = Xerxes_Framework_Parser::removeRight( $request_uri, "?" );
 			
 			// now get the elements
@@ -615,9 +734,11 @@ class Xerxes_Framework_Request
 		{
 			throw new Exception( "no base/section supplied in url_for." );
 		}
-    if ( $force_secure ) {
-      $full = true;
-    }
+		
+		if ($force_secure)
+		{
+			$full = true;
+		}
 		
 		$config = Xerxes_Framework_Registry::getInstance();
 		
@@ -630,9 +751,11 @@ class Xerxes_Framework_Request
 		if ( $this->getProperty( "gen_full_urls" ) == 'true' || $full )
 		{
 			$base_path = $config->getConfig( 'BASE_URL', true ) . "/";
-      if ( $force_secure ) {
-        $base_path = ereg_replace("^http\:\/\/", "https://", $base_path);  
-      }
+			
+			if ($force_secure)
+			{
+				$base_path = ereg_replace ( "^http\:\/\/", "https://", $base_path );
+			}
 		}
 		
 		$extra_path = "";
