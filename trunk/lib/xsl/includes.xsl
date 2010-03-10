@@ -38,7 +38,7 @@
 
 	<!-- version used to prevent css caching, and possibly other places to advertise version -->
 	
-	<xsl:variable name="xerxes_version">1.5</xsl:variable>
+	<xsl:variable name="xerxes_version">1.7</xsl:variable>
 	
 	<xsl:variable name="base_url"		select="//base_url" />
 	<xsl:variable name="app_name"		select="//config/application_name" />
@@ -48,6 +48,7 @@
 
 	<xsl:variable name="text_collection_default_new_name" select="//config/default_collection_name" />
 	<xsl:variable name="text_collection_default_new_section_name" select="//config/default_collection_section_name" />
+	<xsl:variable name="is_mobile" select="//request/session/is_mobile" />
 	
 	<!-- these have defaults here and in config.xml for backwards-compatability on older configs -->
 	
@@ -151,9 +152,25 @@
 		</xsl:if>
 	</div>
 
-	<div id="{$document}" class="{$surround_template}">
+	<div>
+		<xsl:choose>
+			<xsl:when test="$is_mobile = 1">
+				<xsl:attribute name="class">mobile</xsl:attribute>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:attribute name="id"><xsl:value-of select="$document" /></xsl:attribute>
+				<xsl:attribute name="class"><xsl:value-of select="$surround_template" /></xsl:attribute>
+			</xsl:otherwise>
+		</xsl:choose>
 		<div id="hd">
-			<xsl:call-template name="header_div" />
+			<xsl:choose>
+				<xsl:when test="$is_mobile = '1'">
+					<xsl:call-template name="mobile_header" />
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:call-template name="header_div" />
+				</xsl:otherwise>
+			</xsl:choose>
 			<div id="breadcrumb">
 				<div class="trail">
 					<xsl:call-template name="breadcrumb" />
@@ -171,13 +188,20 @@
 				</div>
 			</div>
 			
-			<xsl:if test="$sidebar != 'none'">
+			<xsl:if test="$sidebar != 'none' and $is_mobile != '1'">
 				<xsl:call-template name="sidebar_wrapper" />
 			</xsl:if>
 
 		</div>
 		<div id="ft">
-			<xsl:call-template name="footer_div" />
+			<xsl:choose>
+				<xsl:when test="$is_mobile = '1'">
+					<xsl:call-template name="mobile_footer" />
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:call-template name="footer_div" />
+				</xsl:otherwise>
+			</xsl:choose>
 		</div>
 	</div>
 		
@@ -194,7 +218,29 @@
 
 	<link href="{$base_include}/css/reset-fonts-grids.css?xerxes_version={$xerxes_version}" rel="stylesheet" type="text/css" />
 	<link href="{$base_include}/css/xerxes-blue.css?xerxes_version={$xerxes_version}" rel="stylesheet" type="text/css" />
-	<link href="{$base_include}/css/local.css?xerxes_version={$xerxes_version}" rel="stylesheet" type="text/css" />	
+		
+	<xsl:choose>
+		<xsl:when test="$is_mobile = '1'">
+		
+			<!-- mobile devices get their own stylesheet (to neutralize the main one, plus  it's own
+			 definitions), and a local override stylesheet -->
+			 
+			<link href="{$base_include}/css/xerxes-mobile.css?xerxes_version={$xerxes_version}" rel="stylesheet" type="text/css" />
+			<link href="{$base_include}/css/local-mobile.css?xerxes_version={$xerxes_version}" rel="stylesheet" type="text/css" />
+			
+			<!-- this is necessary for the iPhone to not start out with a zoomed view, other 
+			browsers should ignore -->
+			
+			<meta name="viewport" content="width=360" />
+		</xsl:when>
+		<xsl:otherwise>
+			
+			<!-- local override for the main stylesheet -->
+			<link href="{$base_include}/css/local.css?xerxes_version={$xerxes_version}" rel="stylesheet" type="text/css" />	
+			
+		</xsl:otherwise>
+	</xsl:choose>
+
 	<link href="{$base_include}/css/xerxes-print.css?xerxes_version={$xerxes_version}" rel="stylesheet" type="text/css" media="print" />
 
 </xsl:template>
@@ -363,6 +409,22 @@
 -->
 
 <xsl:template name="search_box">
+	<xsl:choose>
+		<xsl:when test="$is_mobile = '1'">
+			<xsl:call-template name="mobile_metalib_search_box" />
+		</xsl:when>
+		<xsl:otherwise>
+			<xsl:call-template name="metalib_search_box" />
+		</xsl:otherwise>
+	</xsl:choose>
+</xsl:template>
+
+<!-- 	
+	TEMPLATE: METALIB SEARCH BOX
+	This one used for regular web browsers, not mobile
+-->
+
+<xsl:template name="metalib_search_box">
 
 	<xsl:param name="full_page_url" select="//request/server/request_uri"/>
 		
@@ -635,7 +697,7 @@
 
 			<ul class="databaseSectionList">
 			<xsl:for-each select="database">
-				<li style="list-style-image:none; list-style-position:outside; list-style-type:none;" class="databaseSectionItem">
+				<li class="databaseSectionItem">
 				
 				<xsl:variable name="id_meta" select="metalib_id" />
 				
@@ -1850,6 +1912,64 @@
 		
 	</xsl:for-each>
 
+</xsl:template>
+
+<!-- 
+	TEMPLATE: MOBILE HEADER
+	A special (slimmed-down) header to use when displaying for a mobile device
+-->
+
+<xsl:template name="mobile_header" >
+
+	<div style="background-color: #336699; padding: 10px; padding-bottom: 2px;">
+		<a href="{$base_url}" style="color: #fff; font-weight: bold; text-decoration:none">
+			<xsl:value-of select="//config/application_name" />
+		</a>
+	</div>
+
+</xsl:template>
+
+<!-- 
+	TEMPLATE: MOBILE FOOTER
+	A special (slimmed-down) footer to use when displaying for a mobile device
+-->
+
+<xsl:template name="mobile_footer" />
+
+<!-- 
+	TEMPLATE: MOBILE METALIB SEARCH BOX
+	A special (slimmed-down) search box, with metalib added hidden fields
+-->
+
+<xsl:template name="mobile_metalib_search_box">
+	<xsl:variable name="search_query" select="//results/search/pair[@position = '1']/query" />
+	<xsl:call-template name="mobile_search_box">
+		<xsl:with-param name="query" select="$search_query" />
+	</xsl:call-template>
+
+	<xsl:for-each select="//base_info">
+		<xsl:if test="base_001">
+			<input type="hidden" name="database" value="{base_001}" />
+		</xsl:if>
+	</xsl:for-each>
+		
+</xsl:template>
+
+
+<!-- 
+	TEMPLATE: MOBILE SEARCH BOX
+	Just the search box and go itself, sued for mobile
+-->
+
+<xsl:template name="mobile_search_box">
+	<xsl:param name="query" />
+	
+	<div style="margin-bottom: 1em">
+		<input type="text" name="query" value="{$query}" />
+		<xsl:text> </xsl:text>
+		<input class="searchbox_submit" type="submit" name="Submit" value="{$text_searchbox_go}" />
+	</div>
+	
 </xsl:template>
 
 
