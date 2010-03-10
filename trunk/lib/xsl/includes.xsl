@@ -155,7 +155,7 @@
 	<div>
 		<xsl:choose>
 			<xsl:when test="$is_mobile = 1">
-				<xsl:attribute name="class">mobile</xsl:attribute>
+				<xsl:attribute name="id">mobile</xsl:attribute>
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:attribute name="id"><xsl:value-of select="$document" /></xsl:attribute>
