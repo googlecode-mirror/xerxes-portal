@@ -1,0 +1,184 @@
+
+/** mobile reset **/
+
+body {
+	text-align: left;
+}
+
+#mobile {
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	text-align: left;
+}
+
+#bd div, #bd ul, #bd legend {
+	width: 100%;
+	float: none;
+	margin: 0;
+	padding: 0;
+	border: none;
+	background: none;
+	margin-top: .5em;
+	margin-bottom: .5em;
+	text-align: left;
+}
+
+.yui-t6 #yui-main, .yui-t6 #yui-main .yui-b,  .yui-t6 .yui-b {
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	float: none;
+}
+
+h1, h2, h3, h4 {
+	font-weight: bold;
+	font-size: 110%;
+	margin-top: .5em;
+	margin-bottom: .5em;
+	color: #000;
+}
+
+/** layout **/
+
+#bd {
+	padding: 1em;
+	padding-top: 0;
+}
+
+#breadcrumb {
+	padding: .5em;
+	margin: 0;
+}
+
+#sidebar {
+	display: none;
+}
+
+
+/*
+html {
+	background: #efefef;
+}
+
+#record, #databases_categories li, .result {
+	background-color: #fff;
+}
+*/
+
+/** database selection **/
+
+#bd legend {
+	padding-top: .7em;
+	padding-bottom: .7em;
+}
+
+/** short results **/
+
+#databases_categories li, .result { 
+	margin-bottom: .2em;
+	border: 2px solid #ccc;
+	background-color: #fff;
+	padding: .2em;
+	margin-left: 0;
+	paddin-left: 0;
+	list-style-type: none;
+}
+
+#databases_categories li a, .result a {
+	display: block;
+}
+
+.resultsInfo, #sortOptions { 
+	display: none;
+}
+
+/** pager **/
+
+#mobile div.resultsPager {
+	margin: 1em;
+}
+
+.resultsPager li {
+	margin: 0;
+	padding: 0;
+}
+
+.resultsPagerList li strong, .resultsPagerList li a.resultsPagerLink {
+	display: none;
+}
+
+.resultsPagerNext {
+	padding: 3px;
+	margin: 3px;
+	margin-top: 10px;
+	border: 1px solid #FFCC00;
+	background-color: #FFFFCC;
+}
+
+/** full record **/
+
+#bd dt, #bd dd {
+	margin-bottom: .3em;
+	display: block;
+}
+
+#bd dt { 
+	margin: 0;
+	padding: 0;
+	float: none;
+	font-weight: bold;
+	width: 100%;
+	text-align: left;
+}
+
+#bd dd {
+	margin-left: 1em;
+}
+
+#record li {
+	margin-left: 1em;
+}
+
+/** record **/
+
+
+#bd div.recordActions {
+	border: 2px solid #ccc;
+	margin-top: 1em;
+	margin-bottom: 1em;
+	padding: .5em;
+}
+
+/** books **/
+
+ul#tabnav, ul#tabnav li, ul#tabnav li.here a, ul#tabnav li a, ul#tabnav a:hover, ul#tabnav span {
+	display: none;
+	background: none;
+	border: none;
+	margin: 0;
+	padding: 0;
+	font-weight: normal;
+	color: #000;
+}
+
+ul#tabnav li {
+	display: list-item;
+	list-style: disc;
+	margin-left: 8px;
+	margin-bottom: 2px;
+}
+
+.worldcatBookCover, #worldcatRecordBookCover, #worldcatAdvancedMore {
+	display: none;
+}
+
+.worldcatAvailable, .worldcatAvailableRecord, table.holdingsTable {
+	margin: 0;
+	padding: 0;
+}
+
+table.holdingsTable {
+	margin-top: 1em;
+	margin-bottom: 1em;
+}

@@ -354,6 +354,9 @@ ul.databaseSectionList {
 
 ul.databaseSectionList li {
 	padding-bottom: .3em;
+	list-style-image:none; 
+	list-style-position:outside; 
+	list-style-type:none;
 }
 
 .subjectSubCategory legend {
