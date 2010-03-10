@@ -55,17 +55,6 @@ h1, h2, h3, h4 {
 	display: none;
 }
 
-
-/*
-html {
-	background: #efefef;
-}
-
-#record, #databases_categories li, .result {
-	background-color: #fff;
-}
-*/
-
 /** database selection **/
 
 #bd legend {
@@ -77,12 +66,17 @@ html {
 
 #databases_categories li, .result { 
 	margin-bottom: .2em;
-	border: 2px solid #ccc;
+	border-bottom: 2px solid #ccc;
 	background-color: #fff;
-	padding: .2em;
+	padding: .4em;
+	padding-right: 18px;
 	margin-left: 0;
 	paddin-left: 0;
 	list-style-type: none;
+	font-size: 130%;
+	background-image: url(../images/mobile-arrow.gif);
+	background-position: right center;
+	background-repeat: no-repeat;
 }
 
 #databases_categories li a, .result a {
@@ -95,7 +89,7 @@ html {
 
 /** pager **/
 
-#mobile div.resultsPager {
+#bd div.resultsPager {
 	margin: 1em;
 }
 
@@ -109,11 +103,10 @@ html {
 }
 
 .resultsPagerNext {
-	padding: 3px;
-	margin: 3px;
-	margin-top: 10px;
-	border: 1px solid #FFCC00;
-	background-color: #FFFFCC;
+	font-size: 150%;
+	padding: .5em;
+	border: 1px solid #ccc;
+	background-color: #fff
 }
 
 /** full record **/
@@ -140,14 +133,13 @@ html {
 	margin-left: 1em;
 }
 
-/** record **/
-
-
 #bd div.recordActions {
 	border: 2px solid #ccc;
 	margin-top: 1em;
 	margin-bottom: 1em;
 	padding: .5em;
+	width: 90%;
+	background-color: #fff;
 }
 
 /** books **/
