@@ -13,75 +13,50 @@
 
 abstract class Xerxes_Framework_Search
 {
-	public $id; // some id to keep this thing separate from other instances
-	public $search_engine; // name of the underlying search engine
-	public $databases; // some subset of the search engine
-	
-	public $sort_options; // available sorting options
-	public $sort; // sort order
-	public $spelling_correction; // spelling correction
-	public $url; // url to web service
+	public $id; // name of this search engine
 	public $total; // total number of hits
+	public $sort; // sort order
 	
 	public $query; // query object
-	public $status;
+	
+	protected $query_object_type = "Xerxes_Framework_Search_Query";
+	protected $record_object_type = "Xerxes_Record";
+
 	public $results = array();
 	public $facets;
 	public $recommendations = array();
-
+	
 	protected $max; // maximum records per page
 	protected $sid; // sid for open url identification
 	protected $link_resolver; // based address of link resolver	
 	
 	protected $request; // xerxes request object
 	protected $registry; // xerxes config values
-	protected $search_object;
-	protected $data_map;
+	protected $search_object; // search object
+	protected $data_map; // data map
 	
-	public function __construct()
+	public function __construct($objRequest, $objRegistry)
 	{
-		// Xerxes_DataMap contains a pdo object, which cannot be serialized,
-		// so we set it up here, tear it down on __sleep, and back up again on __wake
+		// make these available
 		
-		$this->data_map = new Xerxes_DataMap();
-		$this->query = $this->registerQueryObject(); 
-	}
-	
-	protected function registerQueryObject()
-	{
-		return new Xerxes_Framework_Search_Query(); 
-	}
-	
-	public function initialize($objRequest, $objRegistry)
-	{
 		$this->request = $objRequest;
 		$this->registry = $objRegistry;
+		
+		// database access object
+				
+		$this->data_map = new Xerxes_DataMap();
+		
+		// set an instance of the query object
+		
+		$query_object = $this->query_object_type;
+		$this->query = new $query_object(); 
+	
+		// config stuff
 		
 		$this->link_resolver = $this->registry->getConfig("LINK_RESOLVER_ADDRESS", true);
 		$this->sid = $this->registry->getConfig("APPLICATION_SID", false, "calstate.edu:xerxes");
 		$this->max = $this->registry->getConfig("RECORDS_PER_PAGE", false, 10);
 		$this->include_original = $this->registry->getConfig("INCLUDE_ORIGINAL_XML", false, false);
-	}
-	
-	public function __sleep()
-	{
-		$this->data_map = null;
-		$this->request = null;
-		$this->registry = null;
-		
-		$keys = array();
-		
-		foreach ( $this as $key => $value )
-		{
-			array_push($keys, $key);
-		}
-		
-		return $keys;
-	}
-	
-	public function __wakeup()
-	{
-		$this->__construct();
 	}
 	
 	public function __destruct()
@@ -91,7 +66,28 @@ abstract class Xerxes_Framework_Search
 	
 	public function search()
 	{
+		// get the 'search' related params out of the url, these are things like 
+		// query, field, boolean
 		
+		$terms = $this->extractSearchParams();
+		
+		// add them to our query object
+		
+		foreach ( $terms as $term )
+		{
+			$this->query->addTerm($term["id"], $term["boolean"], $term["field"], $term["relation"], $term["query"]);
+		}
+		
+		// check spelling
+		
+		$spelling = $this->query->checkSpelling();
+		
+		foreach ( $spelling as $key => $correction )
+		{
+			$this->request->setProperty("spelling_$key", $correction);
+		}
+		
+		// echo $this->query->toQuery(); exit;
 	}
 	
 	public function progress()
@@ -101,7 +97,31 @@ abstract class Xerxes_Framework_Search
 	
 	public function results()
 	{
+		// max records
 		
+		$configMaxRecords = $this->registry->getConfig("MAX_RECORDS_PER_PAGE", false, 10);		
+		
+		// start, stop, source, sort properties
+		
+		$start = $this->request->getProperty("startRecord");
+		$max = $this->request->getProperty("maxRecords");
+		$sort = $this->request->getProperty("sortKeys");
+
+		// set some explicit defaults
+		
+		if ( $start == null || $start == 0 ) $start = 1;
+		if ( $max != null && $max <= $configMaxRecords ) $configMaxRecords = $max;
+		
+		$search = $this->query->toQuery();
+		
+		// get results and convert them to xerxes_record
+		
+		$xml = $this->search_object->searchRetrieve($search, $start, $configMaxRecords, $sort);
+		$this->results = $this->convertToXerxesRecords($xml);
+		
+		// done
+		
+		return $this->resultsXML();
 	}
 
 	public function facet()
@@ -111,20 +131,81 @@ abstract class Xerxes_Framework_Search
 	
 	public function record()
 	{
+		$id = $this->request->getProperty("id");
 		
+		$xml = $this->search_object->record($id);
+		$this->results = $this->convertToXerxesRecords($xml);
+		
+		return $this->resultsXML();
 	}
 	
-	protected function save()
+	public function saveDelete()
 	{
+		$username = $this->request->getSession("username");
+		$original_id = $this->request->getProperty("id");
+		$inserted_id = "";
 		
+		$already_added = $this->isMarkedSaved( $original_id );
+		
+		## insert or delete the record
+		
+		if ( $already_added == true )
+		{
+			// delete command
+	
+			$this->data_map->deleteRecordBySource( $username, $this->id, $original_id );
+			$this->unmarkSaved( $original_id );
+		}
+		else
+		{
+			// add command
+	
+			// get record 
+			
+			$xml = $this->search_object->record($original_id);
+			
+			// convert it
+				
+			$record = new Xerxes_MetalibRecord();
+			$record->loadXML($xml);
+				
+			// add to database
+	
+			$this->data_map->addRecord( $username, $this->id, $original_id, $record );
+			
+			$inserted_id = $record->id;
+				
+			// mark saved for feedback on search results
+				
+			$this->markSaved( $original_id, $inserted_id );
+		} 
+
+
+		## build a response
+	
+		$objXml = new DOMDocument( );
+		$objXml->loadXML( "<results />" );
+			
+		if ( $already_added == true )
+		{
+			// flag this as being a delete comand in the view, in the event
+			// user has javascript turned off and we need to show them an actual page
+
+			$objDelete = $objXml->createElement( "delete", "1" );
+			$objXml->documentElement->appendChild( $objDelete );
+		} 
+		else
+		{
+			// add inserted id for ajax response
+			
+			$objInsertedId = $objXml->createElement( "savedRecordID", $inserted_id );
+			$objXml->documentElement->appendChild( $objInsertedId );
+		}
+		
+		return $objXml;		
 	}
 	
-	protected function delete()
-	{
-		
-	}
-	
-	public function toXML()
+	public function resultsXML()
 	{
 		$this->url = $this->search_object->getURL();
 		
@@ -219,22 +300,14 @@ abstract class Xerxes_Framework_Search
 				$import = $results_xml->importNode( $summary_xml->documentElement, true );
 				$results_xml->documentElement->appendChild($import);
 			}
-
 			
 			## sorting
 
-			// @todo make this overrideable
-			
-			$arrParams = array(
-				"base" => "metasearch",
-				"action" => "sort",
-			);
+			$arrParams = $this->sortLinkParams();
 				
 			$query_string = $this->request->url_for($arrParams);
 			
-			// @todo make this overrideable
-			
-			$sort_options = array("rank" => "relevance", "year" => "date", "title" => "title",  "author" => "author");
+			$sort_options = $this->sortOptions();
 			
 			$current_sort = $this->sort;
 			
@@ -247,18 +320,10 @@ abstract class Xerxes_Framework_Search
 
 			$import = $results_xml->importNode( $sort_xml->documentElement, true );
 			$results_xml->documentElement->appendChild($import);
-
 			
 			## pager
 			
-			// @todo make this overrideable
-			
-			$arrParams = array(
-				"base" => "metasearch",
-				"action" => $this->request->getProperty("action"),
-				"group" => $this->request->getProperty("group"),
-				"resultSet" => $this->request->getProperty("resultSet") 
-			);
+			$arrParams = $this->pagerLinkParams();
 			
 			$pager_xml = $objPage->pager_dom(
 				$arrParams,
@@ -274,9 +339,74 @@ abstract class Xerxes_Framework_Search
 		return $results_xml;
 	}
 	
+	protected function sortOptions()
+	{
+		return array();
+	}
+	
+	protected function pagerLinkParams()
+	{
+		return array(
+			"base" => $this->request->getProperty("base"),
+			"action" => "results",
+		);
+	}
+	
+	protected function sortLinkParams()
+	{
+		return array(
+			"base" => $this->request->getProperty("base"),
+			"action" => "sort",
+		);		
+	}
+
+	protected function extractSearchParams()
+	{
+		$arrFinal = array();
+		
+		foreach ( $this->request->getAllProperties() as $key => $value )
+		{
+			$key = urldecode($key);
+				
+			// if we see a 'query' in the params, check if there are corresponding
+			// entries for field and boolean; these will have a number after them
+			// if coming from the advanced form
+				
+			if ( strstr($key, "query"))
+			{
+				if ( $value == "" )
+				{
+					continue;
+				}
+				
+				$arrTerm = array();
+				$arrTerm["id"] = $key;
+				$arrTerm["relation"] = "=";
+				
+				$id = str_replace("query", "", $key);
+				
+				$boolean_id = "";
+			
+				if ( is_numeric($id) )
+				{
+					$boolean_id = $id - 1;
+				}
+				
+				$arrTerm["query"] = $value;
+				$arrTerm["field"] = $this->request->getProperty("field$id");
+				$arrTerm["boolean"] = $this->request->getProperty("boolean" . ( $boolean_id ) );
+				
+				array_push($arrFinal, $arrTerm);
+			}
+		}
+		
+		return $arrFinal;
+	}
+	
 	protected function convertToXerxesRecords(DOMDocument $xml)
 	{
-		$xerxes_doc = new Xerxes_Record_Document();
+		$doc_type = $this->record_object_type . "_Document";
+		$xerxes_doc = new $doc_type();
 		$xerxes_doc->loadXML($xml);
 		
 		return $xerxes_doc->records();
@@ -424,8 +554,7 @@ abstract class Xerxes_Framework_Search
 
 	// Functions for saving saved record state from a result set in session
 	// This is used for knowing whether to add or delete on a 'toggle' command
-	// (MetasearchSaveDelete), and also used for knowing whether to display
-	// a result line as saved or not. 
+	// and also used for knowing whether to display a result line as saved or not. 
 	
 	protected function markSaved($original_id, $saved_id)
 	{
@@ -484,14 +613,31 @@ abstract class Xerxes_Framework_Search
 
 class Xerxes_Framework_Search_Query
 {
-	public $list = array();
+	protected $query_list = array();
+	protected $limit_list = array();
 	
-	public function addTerm($boolean, $field, $relation, $phrase)
+	public function getQueryTerms()
 	{
-		$term = new Xerxes_Framework_Search_QueryTerm($boolean, $field, $relation, $phrase);
-		array_push($this->list, $term);
+		return $this->query_list;
 	}
 
+	public function getLimits()
+	{
+		return $this->limit_list;
+	}	
+	
+	public function addTerm($id, $boolean, $field, $relation, $phrase)
+	{
+		$term = new Xerxes_Framework_Search_QueryTerm($id, $boolean, $field, $relation, $phrase);
+		array_push($this->query_list , $term);
+	}
+	
+	public function addLimit($boolean, $field, $relation, $phrase)
+	{
+		$term = new Xerxes_Framework_Search_LimitTerm($boolean, $field, $relation, $phrase);
+		array_push($this->limit_list , $term);
+	}
+	
 	public function checkSpelling()
 	{
 		$registry = Xerxes_Framework_Registry::getInstance();
@@ -499,9 +645,11 @@ class Xerxes_Framework_Search_Query
 		$strAltYahoo = $registry->getConfig("ALTERNATE_YAHOO_LOCATION", false);
 		$configYahooID = $registry->getConfig( "YAHOO_ID", false, "calstate" );
 		
-		for ( $x = 0; $x < count($this->list); $x++ )
+		$spell_return = array(); // we'll return this one
+		
+		for ( $x = 0; $x < count($this->query_list); $x++ )
 		{
-			$term = $this->list[$x];
+			$term = $this->query_list[$x];
 			$url = "";
 			
 			if ( $strAltYahoo != "" )
@@ -523,28 +671,44 @@ class Xerxes_Framework_Search_Query
 			if ( $objSpelling->getElementsByTagName("Result")->item(0) != null )
 			{
 				$term->spell_correct = $objSpelling->getElementsByTagName("Result")->item(0)->nodeValue;
+				$spell_return[$term->id] = $term->spell_correct;
 			}
-		
-			$this->list[$x] = $term;
+			
+			// also put it here so we can return it
+			
+			$this->query_list[$x] = $term;
 		}
+		
+		return $spell_return;
+	}
+	
+	protected function toQuery()
+	{
+		
 	}
 }
 
 class Xerxes_Framework_Search_QueryTerm
 {
+	public $id;
 	public $boolean;
 	public $field;
 	public $relation;
 	public $phrase;
 	public $spell_correct;
 	
-	public function __construct($boolean, $field, $relation, $phrase)
+	public function __construct($id, $boolean, $field, $relation, $phrase)
 	{
+		$this->id = $id;
 		$this->boolean = $boolean;
 		$this->field = $field;
 		$this->relation = $relation;
 		$this->phrase = $phrase;		
 	}
+}
+
+class Xerxes_Framework_Search_LimitTerm extends Xerxes_Framework_Search_QueryTerm
+{
 }
 
 ?>
