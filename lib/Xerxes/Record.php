@@ -1791,6 +1791,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 			
 			case "Book Review" :
 			case "Film Review" :
+			case "Review" :
 			case "Article" :
 				
 				return "article";
@@ -1808,12 +1809,16 @@ class Xerxes_Record extends Xerxes_Marc_Record
 				break;
 			
 			case "Book" :
-				
+			case "Pamphlet":
+
+                                //take this over 'Pamphlet'?
 				return "book";
 				break;
-			
+
 			case "Book Chapter" :
-				
+			case "Essay" :
+
+				//take this over 'Essay'?
 				return "bookitem";
 				break;
 			
@@ -1882,11 +1887,14 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		elseif ( strstr( $strDataFields, 'working' ) ) $strReturn = "Working Paper"; 
 		elseif ( strstr( $strDataFields, 'book review' ) || strstr( $strDataFields, 'review-book' ) ) $strReturn = "Book Review"; 
 		elseif ( strstr( $strDataFields, 'film review' ) || strstr( $strDataFields, 'film-book' ) ) $strReturn = "Film Review";
+		elseif ( strstr( $strDataFields, 'review' ) ) $strReturn = "Review"; //ATLA Review means book review, not sure if always
 		elseif ( strstr( $strDataFields, 'book art' ) || strstr( $strDataFields, 'book ch' ) || strstr( $strDataFields, 'chapter' ) ) $strReturn = "Book Chapter"; 
 		elseif ( strstr( $strDataFields, 'journal' ) ) $strReturn = "Article"; 
 		elseif ( strstr( $strDataFields, 'periodical' ) || strstr( $strDataFields, 'serial' ) ) $strReturn = "Article"; 
-		elseif ( strstr( $strDataFields, 'book' ) ) $strReturn = "Book"; 
-		elseif ( strstr( $strDataFields, 'article' ) ) $strReturn = "Article"; 
+		elseif ( strstr( $strDataFields, 'book' ) ) $strReturn = "Book";
+                elseif ( strstr( $strDataFields, 'pamphlet' ) ) $strReturn = "Pamphlet";  // for CINAHL so pamphlet doesn't default to article
+                elseif ( strstr( $strDataFields, 'essay' ) ) $strReturn = "Essay";  // for ATLA so essay doesn't default to article
+		elseif ( strstr( $strDataFields, 'article' ) ) $strReturn = "Article";
 
 		// format from other sources
 
