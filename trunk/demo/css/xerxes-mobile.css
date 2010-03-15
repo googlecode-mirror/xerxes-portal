@@ -5,7 +5,7 @@ body {
 	text-align: left;
 }
 
-#bd div, #bd ul, #bd legend, #mobile .box {
+#bd div, #bd ul, #bd legend, #authentication .box {
 	width: 100%;
 	float: none;, 
 	margin: 0;
@@ -17,7 +17,7 @@ body {
 	text-align: left;
 }
 
-.yui-t6 #yui-main, .yui-t6 #yui-main .yui-b,  .yui-t6 .yui-b {
+.yui-t6 #yui-main, .yui-t6 #yui-main .yui-b, .yui-t6 .yui-b {
 	width: 100%;
 	margin: 0;
 	padding: 0;
@@ -48,9 +48,19 @@ h1, h2, h3, h4 {
 	display: none;
 }
 
+/** hacks, can't figure why this is necessary **/
+
+#bd ul.databaseSectionList, #databases_categories .yui-u  {
+	margin-left: 0px;
+}
+
+#bd .recordActions div {
+	width: 96%;
+}
+
 /** lists **/
 
-ul.databaseSectionList li, #databases_categories li, .result { 
+ul.databaseSectionList li, #databases_categories li, .result, #bd .recordActions div { 
 	margin-bottom: .2em;
 	border-bottom: 2px solid #ccc;
 	background-color: #fff;
@@ -65,7 +75,7 @@ ul.databaseSectionList li, #databases_categories li, .result {
 	background-repeat: no-repeat;
 }
 
-#databases_categories li a, .result a {
+#databases_categories li a, .result a, .recordFullTextOption a, a.recordAction  {
 	display: block;
 }
 
@@ -74,10 +84,6 @@ ul.databaseSectionList li, #databases_categories li, .result {
 #bd legend {
 	padding-top: .7em;
 	padding-bottom: .7em;
-}
-
-#bd ul.databaseSectionList {
-	margin-left: 0px;
 }
 
 /** login **/
@@ -140,14 +146,14 @@ ul.databaseSectionList li, #databases_categories li, .result {
 	margin-left: 1em;
 }
 
+/*
+
 #bd div.recordActions {
-	border: 2px solid #ccc;
 	margin-top: 1em;
 	margin-bottom: 1em;
-	padding: .5em;
-	width: 90%;
-	background-color: #fff;
 }
+
+*/
 
 /** books **/
 
