@@ -60,7 +60,7 @@ h1, h2, h3, h4 {
 
 /** lists **/
 
-ul.databaseSectionList li, #databases_categories li, .result, #bd .recordActions div { 
+ul.databaseSectionList li, #databases_categories li, .result, #bd .recordFullTextOption { 
 	margin-bottom: .2em;
 	border-bottom: 2px solid #ccc;
 	background-color: #fff;
@@ -75,7 +75,7 @@ ul.databaseSectionList li, #databases_categories li, .result, #bd .recordActions
 	background-repeat: no-repeat;
 }
 
-#databases_categories li a, .result a, .recordFullTextOption a, a.recordAction  {
+#databases_categories li a, .result a {
 	display: block;
 }
 
@@ -146,16 +146,13 @@ ul.databaseSectionList li, #databases_categories li, .result, #bd .recordActions
 	margin-left: 1em;
 }
 
-/*
+/** hide for now, will add later **/
 
-#bd div.recordActions {
-	margin-top: 1em;
-	margin-bottom: 1em;
+#bd .saveRecord {
+	display: none;
 }
 
-*/
-
-/** books **/
+/** books: this is hacked in here until we get the search arch finished **/
 
 ul#tabnav, ul#tabnav li, ul#tabnav li.here a, ul#tabnav li a, ul#tabnav a:hover, ul#tabnav span {
 	display: none;
@@ -186,4 +183,25 @@ ul#tabnav li {
 table.holdingsTable {
 	margin-top: 1em;
 	margin-bottom: 1em;
+}
+
+/** holdings: dupped here, remove this when search arch in place **/
+
+.holdingsTable {
+	border-collapse:collapse;
+	border-spacing:0;
+	border: 1px solid #ccc;
+	margin: 15px;
+}
+
+.holdingsTable th, .holdingsTable td {
+	text-align: left;
+	margin: 0px;
+	padding: 5px;
+	padding-right: 10px;
+	border-bottom: 1px solid #eee;
+}
+
+.holdingsTable th {
+	background-color: #efefef;
 }
