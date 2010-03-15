@@ -229,7 +229,24 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 			elseif (strstr ( $this->source, "EBSCO" ) && (strstr ( $strEbscoFullText, "T" ) || strstr ( $strDisplay, "View Full Text" )))
 			{
 				$str001 = $this->controlfield("001")->__toString();
-				array_push ( $this->links, array ($strDisplay, array ("001" => $str001 ), "html" ) );
+				$str016 = $this->datafield("016")->subfield("a")->__toString();
+				
+				// see if there are any non-numeric characters in the 001
+				
+				$bolAlpha001 = preg_match("/\D/", $str001);
+				
+				// if so, and there is a 016, use that instead, if not go ahead and use 
+				// the 001; if neither do nothing
+				
+				if ( $bolAlpha001 == true && $str016 != "" )
+				{
+					array_push ( $this->links, array ($strDisplay, array ("016" => $str016 ), "html" ) );
+				}
+				elseif ( $bolAlpha001 == false )
+				{
+					array_push ( $this->links, array ($strDisplay, array ("001" => $str001 ), "html" ) );
+				}
+
 				unset($link);
 			} 
 		}
