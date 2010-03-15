@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xerxes version="1.6">
+<xerxes version="$Rev$">
 
 	<!-- <commands> define the basic behaviors of the system, mapping actions specified in the url or from the 
 			 command line to command classes that fetch or update data as well as files for displaying the results 
