@@ -34,6 +34,7 @@
 		private $strViewFile = "";			// name of the file to use in view
 		private $arrViewInclude = array();	// a common file to be included among views (other than includes.xsl)
 		private $view_folder = "lib";
+		private $version;					// xerxes version number
 		
 		private function __construct() { }
 		
@@ -72,6 +73,7 @@
 				if ( file_exists($distro) )
 				{
 					$this->xml = simplexml_load_file($distro);
+					$this->version = (string) $this->xml["version"];
 				}
 				else
 				{
@@ -606,6 +608,15 @@
 		public function getIncludes()
 		{
 			return array_unique($this->arrIncludes);
+		}
+		
+		/**
+		 * Get the Xerxes version number
+		 */
+		
+		public function getVersion()
+		{
+			return $this->version;
 		}
 		
 		

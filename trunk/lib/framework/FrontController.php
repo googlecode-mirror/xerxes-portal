@@ -54,6 +54,10 @@ class Xerxes_Framework_FrontController
 		$objControllerMap = Xerxes_Framework_ControllerMap::getInstance();
 		$objControllerMap->init();
 		
+		// set the version number, for interface or other places
+		
+		$objRegistry->setConfig("XERXES_VERSION", $objControllerMap->getVersion(), true);
+		
 		// give our session a name to keep sessions distinct between multiple
 		// instances of xerxes on one server.  use base_path (preferably) or
 		// application_name config directives.
