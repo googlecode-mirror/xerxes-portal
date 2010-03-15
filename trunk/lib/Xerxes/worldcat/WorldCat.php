@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Search and retrieve records from an SRU server
+ * Search and retrieve records from worldcat api
  *
  * @author David Walker
  * @copyright 2008 California State University
  * @link http://xerxes.calstate.edu
  * @license http://www.gnu.org/licenses/
- * @version 1.2
+ * @version $Id$
  * @package Xerxes
  */
 
@@ -192,9 +192,10 @@ class Xerxes_WorldCat
 		
 		// get the response from the server
 		
+		
 		$objXml = new DOMDocument( );
 		$objXml->load( $this->url );
-		
+
 		// make sure we got something
 		
 		if ( $objXml->documentElement == null )

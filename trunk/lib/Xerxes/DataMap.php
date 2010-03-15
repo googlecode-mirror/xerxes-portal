@@ -1604,9 +1604,9 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		}
 		
 		$strSQL = "INSERT INTO xerxes_records 
-			( source, original_id, timestamp, username, nonsort, title, author, year, format, refereed, marc )
+			( source, original_id, timestamp, username, nonsort, title, author, year, format, refereed, record_type, marc )
 			VALUES 
-			( :source, :original_id, :timestamp, :username, :nonsort, :title, :author, :year, :format, :refereed, :marc)";
+			( :source, :original_id, :timestamp, :username, :nonsort, :title, :author, :year, :format, :refereed, :record_type, :marc)";
 		
 		$arrValues[":source"] = $source;
 		$arrValues[":original_id"] = $id;
@@ -1618,7 +1618,19 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		$arrValues[":year"] = $iYear;
 		$arrValues[":format"] = $objXerxesRecord->getFormat();
 		$arrValues[":refereed"] = $iRefereed;
-		$arrValues[":marc"] = $objXerxesRecord->getMarcXMLString();
+		
+		$strMarc = $objXerxesRecord->getMarcXMLString();
+		
+		if ( $strMarc != "" )
+		{
+			$arrValues[":marc"] = $strMarc;
+			$arrValues[":record_type"] = "marc"; 
+		}
+		else
+		{
+			$arrValues[":marc"] = serialize($objXerxesRecord);
+			$arrValues[":record_type"] = "xerxes_record"; 			
+		}
 		
 		$status = $this->insert( $strSQL, $arrValues );
 		
