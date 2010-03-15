@@ -38,7 +38,7 @@
 
 	<!-- version used to prevent css caching, and possibly other places to advertise version -->
 	
-	<xsl:variable name="xerxes_version">1.7</xsl:variable>
+	<xsl:variable name="xerxes_version" select="//config/xerxes_version" />
 	
 	<xsl:variable name="base_url"		select="//base_url" />
 	<xsl:variable name="app_name"		select="//config/application_name" />
@@ -155,7 +155,7 @@
 	<div>
 		<xsl:choose>
 			<xsl:when test="$is_mobile = 1">
-				<xsl:attribute name="id">mobile</xsl:attribute>
+				<xsl:attribute name="class">mobile</xsl:attribute>
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:attribute name="id"><xsl:value-of select="$document" /></xsl:attribute>
