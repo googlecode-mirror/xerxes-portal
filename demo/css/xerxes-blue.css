@@ -594,7 +594,6 @@ ul.addDatabasesMatches li {
 	margin-bottom: 0.35em;
 }
 
-/* eliminated/deprecated classes: resultsAvailability resultsFullText saveThisRecord .resultsFullTextOption, .resultsAvailableOption, .recordFullTextOption recordOptions  */
 .recordActions {
 	margin-top: .7em;
 }
