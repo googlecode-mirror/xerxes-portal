@@ -1923,7 +1923,7 @@
 
 	<div style="background-color: #336699; padding: 10px; padding-bottom: 2px;">
 		<a href="{$base_url}" style="color: #fff; font-weight: bold; text-decoration:none">
-			<xsl:value-of select="//config/application_name" />
+			<xsl:value-of select="$app_name" />
 		</a>
 	</div>
 
