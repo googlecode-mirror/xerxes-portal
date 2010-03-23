@@ -197,7 +197,7 @@
 			<xsl:for-each select="//base_info[base = 'MERGESET']">
 				<li>
 					<xsl:choose>
-						<xsl:when test="set_number = $this_result_set">
+						<xsl:when test="set_number = $this_result_set and not(//request/action = 'facet')">
 							<strong><xsl:copy-of select="$text_metasearch_top_results" /></strong>
 						</xsl:when>
 						<xsl:otherwise>
