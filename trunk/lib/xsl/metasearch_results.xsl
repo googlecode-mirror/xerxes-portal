@@ -90,7 +90,7 @@
 		</xsl:when>
 	</xsl:choose>
 
-	<xsl:if test="$merge_bug = 'false'">
+	<xsl:if test="$merge_bug = 'false' and //search_and_link = ''">
 		<div id="sort">
 			<div class="yui-gd">
 				<div class="yui-u first">
@@ -161,7 +161,7 @@
 	
 	<!-- paging navigation -->
 	
-	<xsl:if test="$merge_bug = 'false'">
+	<xsl:if test="$merge_bug = 'false' and //search_and_link = ''">
 		<xsl:call-template name="paging_navigation" />
 	</xsl:if>
 	
