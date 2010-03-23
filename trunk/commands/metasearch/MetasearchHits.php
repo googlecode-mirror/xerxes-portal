@@ -109,26 +109,43 @@ class Xerxes_Command_MetasearchHits extends Xerxes_Command_Metasearch
 
 			$objSimpleXml = simplexml_import_dom( $objStatus->documentElement );
 			
+			$bolSearchLinkHit = false;
+			$strSearchLinkSet = "";
+			
 			foreach ( $objSimpleXml->xpath( "//base_info" ) as $objBase )
 			{
-				if ( ( string ) $objBase->no_of_documents != "888888888" )
+				if ( ( string ) $objBase->no_of_documents == "888888888" )
 				{
-					if ( ( int ) $objBase->no_of_documents > 0 )
-					{
-						// we'll only count the databases with hits
+					$bolSearchLinkHit = true;
+					$strSearchLinkSet = ( string ) $objBase->set_number;
+				}
+				elseif ( ( int ) $objBase->no_of_documents > 0 )
+				{
+					// we'll only count the databases with hits
 
-						$iGroupTotal += ( int ) $objBase->no_of_documents;
-						array_push( $arrDatabaseHits, ( string ) $objBase->set_number );
+					$iGroupTotal += ( int ) $objBase->no_of_documents;
+					array_push( $arrDatabaseHits, ( string ) $objBase->set_number );
 					
-					}
 				}
 			}
 			
-			// we'll only issue the merge command if there is more than one database
-			// with hits, otherwise there's no point
+			// only got a search-and-link database
+			
+			if ( $iGroupTotal == 0 && $bolSearchLinkHit == true )
+			{
+				$arrParams["resultSet"] = $strSearchLinkSet;
+				$this->request->setRedirect($this->request->url_for($arrParams));
+				
+				return 1;
+			}
+			
+			// got hits
 
 			if ( $iGroupTotal > 0 )
 			{
+				// we'll only issue the merge command if there is more than one database
+				// with hits, otherwise there's no point
+				
 				if ( count( $arrDatabaseHits ) == 1 )
 				{
 					$strSetNumber = $arrDatabaseHits[0];
