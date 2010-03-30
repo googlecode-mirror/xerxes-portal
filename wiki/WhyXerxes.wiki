@@ -1,4 +1,4 @@
-#summary 20 reasons to use Xerxes instead of the standard Metalib interface
+#summary Twenty reasons to use Xerxes instead of the standard Metalib interface
 
 Thinking about installing Xerxes?  Here are some of the benefits Xerxes provides over the standard Metalib interface.
 
