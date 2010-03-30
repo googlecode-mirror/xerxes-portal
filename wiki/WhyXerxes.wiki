@@ -11,13 +11,13 @@ Thinking about installing Xerxes?  Here are some of the benefits Xerxes provides
 
 Probably the most complex and confusing feature of Metalib is the "Metasearch" module.  It provides a number of different options for selecting databases by category, subcategory, quick set, format, or previously saved favorites, as well as options for searching for databases by title, keyword, and vendor.   Users then select the databases they want from those groupings or queries, and enter their search terms.
 
-In other words, there are way too many options -- all of them crammed into a single screen.  To make matters worse, new users easily overlook the crowded pull-down menus on the left, often just skipping right to the search box to enter their terms, defeating the very purpose of the Metasearch module.
+In other words, there are _way_ too many options crammed into a single screen.  To make matters worse, new users easily overlook the crowded pull-down menus on the left, often just skipping right to the search box to enter their terms, defeating the very purpose of the Metasearch module.
 
 Xerxes, on the other hand, eliminates this confusion by simply dividing the process of selected categories and databases into two different screens.  
 
 [http://library.calstate.edu/media/png/xerxes-why-databases-categories.png The home page lists the categories].  Instead of hiding them away in a pull-down menu, as Metalib does, Xerxes displays the subject list prominently, so users can more easily notice and select their area of study.  
 
-Once users have chosen a category, they are, in most Xerxes implementations, presented with the [http://library.calstate.edu/media/png/xerxes-why-databases-subject.png databases organized into "most useful" and "also useful" subcategories], with the former group pre-selected.  Users can, and often do, go straight to the search box and enter their search terms.  Since the most useful databases for that discipline are pre-selected, these databases often produce useful results.  But more advanced users can also easily select or unselect databases as them see fit.
+Once users have chosen a category, they are, in most Xerxes implementations, presented with the [http://library.calstate.edu/media/png/xerxes-why-databases-subject.png databases organized into "most useful" and "also useful" subcategories], with the former group pre-selected.  Users can, and often do, go straight to the search box and enter their search terms.  Since the most useful databases for that discipline are pre-selected, these databases often produce useful results.  But more advanced users can also easily select or un-select databases as they see fit.
 
 ===A single workflow for selecting categories and databases===
 
@@ -49,11 +49,11 @@ Xerxes also allows libraries to [http://library.calstate.edu/media/png/xerxes-wh
 
 ==Search results==
 
-===Xerxes doesn’t break the back button===
+===Doesn’t break the back button===
 
-One major frustration for users of Metalib is that they cannot use their browser back button.  If you perform a search in Metalib, and then chose a search result, you can’t navigate back to the brief results using your back button.  Try it yourself, it creates very confusing behavior.  Breaking the back button is a fundamental design mistake.
+One major frustration for users of Metalib is that they cannot use their browser back button.  If you perform a search in Metalib, and then chose a search result, you can’t navigate back to the brief results using your back button.  Try it yourself.  Breaking the back button is a fundamental design mistake.
 
-In Xerxes, the back button behaves as you would expect.   This is simple stuff, really, but it makes a big difference in the usability of the system.
+In Xerxes, the back button behaves as you would expect.   This is simple stuff.  But it makes a big difference in the usability of the system.
 
 ===Handles sessions better===
 
@@ -63,13 +63,13 @@ Xerxes has longer session time-outs, for starters.  But, even if the session end
 
 ===Spell checker===
 
-Xerxes taps into the Yahoo Spell Check API in order to offer [http://library.calstate.edu/media/png/xerxes-why-search-spell.png spelling corrections], including those for proper names and places.  Your users need this.
+Xerxes taps into the Yahoo in order to offer [http://library.calstate.edu/media/png/xerxes-why-search-spell.png spelling corrections], including those for proper names and places.  Your users need this.
 
 ===Peer-reviewed flag, full-text indicators, and abstracts in the brief results===
 
-Xerxes highlights search results that are from peer-reviewed journals, and also highlights when search results have full-text (either natively from that database, or in another database via SFX).  It highlights this information at the brief results level, where users value this information. 
+Xerxes highlights search results that are from peer-reviewed journals, and also highlights when search results have full-text (either natively from that database, or in another database via SFX).  Moreover, it provides this information at the brief results level, where users value it the most. 
 
-Xerxes has also always displayed a portion of the abstract at the brief results level -- again, a feature users say they highly value. 
+Xerxes has also always displayed a portion of the abstract at the brief results level -- again, a feature users say they highly value.
 
 ===Format indicator===
 
@@ -103,7 +103,7 @@ Metalib makes it easy to save records.  It makes it easy to select or delete sav
 
 ===Export groups of records to citation management systems===
 
-In addition to emailing records to yourself, Xerxes provides a full set of [http://library.calstate.edu/media/png/xerxes-why-save-refworks.png export options to Refworks, Endnote, Zotero, etc].
+In addition to emailing records to yourself, Xerxes provides a full set of [http://library.calstate.edu/media/png/xerxes-why-save-refworks.png export options to Refworks, Endnote, Zotero, etc.]
 
 Future version of Xerxes will also include options to format saved records in various citation styles directly in Xerxes.
 
@@ -125,4 +125,4 @@ The Xerxes interface is completely separate from Metalib, and that makes it immu
 
 ===Mobile interface===
 
-The latest version of Xerxes recognizes and adjust its display specifically for mobile devices, giving users simpler [http://library.calstate.edu/media/png/xerxes-why-mobile-categories.png category], subject pages, and [http://library.calstate.edu/media/png/xerxes-why-mobile-results.png results].
+The latest version of Xerxes recognizes and adjust its display, giving users simpler versions of the [http://library.calstate.edu/media/png/xerxes-why-mobile-categories.png search] and [http://library.calstate.edu/media/png/xerxes-why-mobile-results.png results] pages specifically for mobile devices.
