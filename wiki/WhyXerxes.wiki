@@ -125,4 +125,4 @@ The Xerxes interface is completely separate from Metalib, and that makes it immu
 
 ===Mobile interface===
 
-The latest version of Xerxes recognizes and adjust its display, giving users simpler versions of the [http://library.calstate.edu/media/png/xerxes-why-mobile-categories.png search] and [http://library.calstate.edu/media/png/xerxes-why-mobile-results.png results] pages specifically for mobile devices.
+The latest version of Xerxes recognizes mobile devices and adjust its display, giving users slimmed-down versions of the [http://library.calstate.edu/media/png/xerxes-why-mobile-categories.png search] and [http://library.calstate.edu/media/png/xerxes-why-mobile-results.png results] pages specifically designed for the smaller display.
