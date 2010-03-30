@@ -75,6 +75,12 @@ Xerxes has also always displayed a portion of the abstract at the brief results 
 
 Usability studies have shown that users of metasearch systems would like a clear indication of the format of each search result -- that is, whether it is a book, article, video, or something else.  Xerxes provides a detailed format designation for each result, including such designations as book review, thesis, pamphlet, and so on. 
 
+===Language indicator===
+
+Many databases include abstracts written in English for articles actually published in another language.  It's very easy for users to not see the language note saying an article is published in, say, Japanese -- even in most native interfaces.
+
+Xerxes prominently notifies users when an article is not in English, although you could change this, if you prefer.
+
 ===Better OpenURL linking===
 
 Xerxes supplements, and even corrects, the OpenURL that Metalib generates from the metadata in the bibliographic record.  That makes for fuller, more accurate OpenURLs, which benefits SFX and interlibrary loan.
