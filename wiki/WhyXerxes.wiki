@@ -7,7 +7,7 @@ Thinking about installing Xerxes?  Here are some of the benefits Xerxes provides
 
 ==Selecting categories and databases==
 
-===Xerxes provides a much simpler and more intuitive method for selecting categories and databases===
+===More intuitive method for selecting categories and databases===
 
 Probably the most complex and confusing feature of Metalib is the "Metasearch" module.  It provides a number of different options for selecting databases by category, subcategory, quick set, format, or previously saved favorites, as well as options for searching for databases by title, keyword, and vendor.   Users then select the databases they want from those groupings or queries, and enter their search terms.
 
@@ -15,11 +15,11 @@ In other words, there are way too many options -- all of them crammed into a sin
 
 Xerxes, on the other hand, eliminates this confusion by simply dividing the process of selected categories and databases into two different screens.  
 
-The home page lists the categories.  Instead of hiding them away in a pull-down menu, as Metalib does, Xerxes displays the subject list prominently, so users can more easily notice and select their area of study.  
+[http://library.calstate.edu/media/png/xerxes-why-databases-categories.png The home page lists the categories].  Instead of hiding them away in a pull-down menu, as Metalib does, Xerxes displays the subject list prominently, so users can more easily notice and select their area of study.  
 
-Once users have chosen a category, they are, in most Xerxes implementations, presented with the databases organized into "most useful" and "also useful" subcategories, with the former group pre-selected.  Users can, and often do, go straight to the search box and enter their search terms.  Since the most useful databases for that discipline are pre-selected, these databases often produce useful results.  But more advanced users can also easily select or unselect databases as them see fit.
+Once users have chosen a category, they are, in most Xerxes implementations, presented with the [http://library.calstate.edu/media/png/xerxes-why-databases-subject.png databases organized into "most useful" and "also useful" subcategories], with the former group pre-selected.  Users can, and often do, go straight to the search box and enter their search terms.  Since the most useful databases for that discipline are pre-selected, these databases often produce useful results.  But more advanced users can also easily select or unselect databases as them see fit.
 
-===A single workflow for selecting categories and databases instead of different "modules," as in Metalib===
+===A single workflow for selecting categories and databases===
 
 Recognizing the confusion of the Metasearch module, Ex Libris developed the "Quick Set" module as a way of providing a simpler method for searching.  It allows users to select a high-level category and enter their search terms.   
 
@@ -35,17 +35,17 @@ All things being equal, one way of doing things is better than two.  Less for us
 
 Metalb URLs contain session-specific information that prevents them from being persistent links.  This makes it difficult for librarians or faculty to link into Metalib from their own web pages.  To compensate, Metalib even has a management module for "generating" deep-links, so the library might give their users instructions on how to link into the system.
 
-That’s crazy.  Xerxes creates simple, stable URLs.  You want to link to a subject category in Xerxes?  Just cut-and-paste the URL from your browser into your web page.  Done.  No need to "generate" a link.  No need for instructions.
+That’s crazy.  Xerxes creates simple, stable URLs.  You want to link to a subject category in Xerxes?  [http://library.calstate.edu/media/png/xerxes-why-databases-deep.png Just cut-and-paste the URL from your browser] into your web page.  Done.  No need to "generate" a link.  No need for instructions.
 
 ===Powerful embedding feature===
 
-Xerxes goes one step further than deep-linking.  It provides an easy way for faculty and librarians to actually embed the search box and databases for a category into an external website, like LibGuides or a learning management system.  Users can customize how this looks before adding the code to their external site.
+Xerxes goes one step further than deep-linking.  It provides an easy way for faculty and librarians to actually [http://library.calstate.edu/media/png/xerxes-why-databases-embed-full.png embed the search box and databases for a category into an external website], like Lib Guides or a learning management system.  Users can customize how this looks before adding the code to their external site.
 
-===Librarian contact info and related resources in subjects===
+===Add librarian contact info and related resources to categories===
 
 With Xerxes, you can use the Metalib KB to add librarian contact info to each category.  Simply create a "librarian" IRD in Metalib (just create an IRD with a type of "librarian"), and assign it to a category.  Xerxes will, in turn, display that as actual contact information in the subject.  
 
-Xerxes also allows libraries to designate that certain subcategories display in the sidebar of the subject page.  This is a handy mechanism for adding related websites to each subject without overwhelming the display.
+Xerxes also allows libraries to [http://library.calstate.edu/media/png/xerxes-why-databases-sidebar.png designate that specific subcategories display in the sidebar of the subject page].  This is a handy mechanism for adding related websites to each subject without overwhelming the display.
 
 ==Search results==
 
@@ -63,23 +63,23 @@ Xerxes has longer session time-outs, for starters.  But, even if the session end
 
 ===Spell checker===
 
-Xerxes taps into the Yahoo Spell Check API in order to offer spelling corrections, including those for proper names and places.  Your users need this.
+Xerxes taps into the Yahoo Spell Check API in order to offer [http://library.calstate.edu/media/png/xerxes-why-search-spell.png spelling corrections], including those for proper names and places.  Your users need this.
 
 ===Peer-reviewed flag, full-text indicators, and abstracts in the brief results===
 
-Xerxes highlights search results that are from peer-reviewed journals, and also highlights when search results have full-text (either natively from that database, or in another database via SFX).  It offers these flags at the brief results level, where users value this information. 
+Xerxes highlights search results that are from peer-reviewed journals, and also highlights when search results have full-text (either natively from that database, or in another database via SFX).  It highlights this information at the brief results level, where users value this information. 
 
 Xerxes has also always displayed a portion of the abstract at the brief results level -- again, a feature users say they highly value. 
 
 ===Format indicator===
 
-Usability studies have shown that users of metasearch systems would like a clear indication of the format of each search result -- that is, whether it is a book, article, video, or something else.  Xerxes provides a detailed format designation for each result, including such designations as book review, thesis, pamphlet, and so on. 
+Usability studies have shown that users of metasearch systems would like a clear indication of the format of each search result -- that is, whether it is a book, article, video, or something else.  Xerxes provides a [http://library.calstate.edu/media/png/xerxes-why-search-format.png detailed format designation] for each result, including such designations as book review, thesis, pamphlet, and so on. 
 
 ===Language indicator===
 
 Many databases include abstracts written in English for articles actually published in another language.  It's very easy for users to not see the language note saying an article is published in, say, Japanese -- even in most native interfaces.
 
-Xerxes prominently notifies users when an article is not in English, although you could change this, if you prefer.
+Xerxes prominently [http://library.calstate.edu/media/png/xerxes-why-search_language.png notifies users when an article is not in English].  Feel free to change this behavior too, if you prefer.
 
 ===Better OpenURL linking===
 
@@ -87,11 +87,11 @@ Xerxes supplements, and even corrects, the OpenURL that Metalib generates from t
 
 ===Recommendations via bX===
 
-Xerxes will display related articles using Ex Libris’ bX recommendation service in the full record display.
+Xerxes will display [http://library.calstate.edu/media/png/xerxes-why-search-bx.png related articles] using Ex Libris’ bX recommendation service in the full record display.
 
 ===Citation style help===
 
-Xerxes offers in the full record display the bibliographic data formatted in three common citation styles.  This is a quick and dirty way for users to add the record to their bibliography.
+Xerxes offers in the full record display the bibliographic data [http://library.calstate.edu/media/png/xerxes-why-serch-citation.png formatted in three common citation styles].  This is a quick and dirty way for users to add the record to their bibliography.
 
 ==Saving and export options==
 
@@ -101,15 +101,15 @@ Probably the second most confusing module in Metalib is the “My Research” mo
 
 Metalib makes it easy to save records.  It makes it easy to select or delete saved records.  But new users are left scratching their heads as to how they actually do anything with their saved records.  The reason is because the My Research module is just not well designed.  Options for exporting the records are buried.  And, even if the user stumbles across it, it’s limited mostly to emailing the records to yourself.
 
-===Export groups of records to Refworks, Endnote, and Zotero===
+===Export groups of records to citation management systems===
 
-In addition to emailing records to yourself, Xerxes provides a full set of export options to a wide variety of citation management systems.   
+In addition to emailing records to yourself, Xerxes provides a full set of [http://library.calstate.edu/media/png/xerxes-why-save-refworks.png export options to Refworks, Endnote, Zotero, etc].
 
 Future version of Xerxes will also include options to format saved records in various citation styles directly in Xerxes.
 
 ===Tagging===
 
-Users can organize their records in groups, or simply add a note to a record, using a simple but powerful tagging mechanism.  This allows students to keep their History 201 research separate from their  Psychology 202 research.
+Users can organize their records in groups, or simply add a note to a record, using a simple but powerful [http://library.calstate.edu/media/png/xerxes-why-save-labels.png tagging mechanism].  This allows students to keep their History 201 research separate from their  Psychology 202 research.
 
 ==General==
 
@@ -125,4 +125,4 @@ The Xerxes interface is completely separate from Metalib, and that makes it immu
 
 ===Mobile interface===
 
-The latest version of Xerxes recognizes and adjust its display specifically for mobile devices.  This, like everything else in Xerxes, is completely customizable. 
+The latest version of Xerxes recognizes and adjust its display specifically for mobile devices, giving users simpler [http://library.calstate.edu/media/png/xerxes-why-mobile-categories.png category], subject pages, and [http://library.calstate.edu/media/png/xerxes-why-mobile-results.png results].
