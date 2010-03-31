@@ -843,10 +843,10 @@
 		<xsl:value-of select="@display_name" />
 		<xsl:choose>
 			<xsl:when test="count(following-sibling::group_restriction) = 1">
-				<xsl:copy-of select="$text_databases_access_group_and" />
+				<xsl:text> </xsl:text><xsl:copy-of select="$text_databases_access_group_and" /><xsl:text> </xsl:text>
 			</xsl:when>
 			<xsl:when test="count(following-sibling::group_restriction) > 1">
-			, 
+			,<xsl:text> </xsl:text>
 			</xsl:when>
 		</xsl:choose>
 	</xsl:for-each>
