@@ -90,7 +90,7 @@
 		</xsl:when>
 	</xsl:choose>
 
-	<xsl:if test="$merge_bug = 'false' and //search_and_link = ''">
+	<xsl:if test="$merge_bug = 'false' and not(//search_and_link)">
 		<div id="sort">
 			<div class="yui-gd">
 				<div class="yui-u first">
@@ -133,7 +133,7 @@
 	
 	</xsl:if>
 	
-	<xsl:if test="//search_and_link != ''">
+	<xsl:if test="//search_and_link">
 	
 		<xsl:variable name="database_metalib_id">
 			<xsl:for-each select="//base_info">
@@ -161,7 +161,7 @@
 	
 	<!-- paging navigation -->
 	
-	<xsl:if test="$merge_bug = 'false' and //search_and_link = ''">
+	<xsl:if test="$merge_bug = 'false' and not(//search_and_link)">
 		<xsl:call-template name="paging_navigation" />
 	</xsl:if>
 	
