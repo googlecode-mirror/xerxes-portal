@@ -409,12 +409,17 @@
 -->
 
 <xsl:template name="search_box">
+	
+	<xsl:param name="full_page_url" select="//request/server/request_uri"/>
+	
 	<xsl:choose>
 		<xsl:when test="$is_mobile = '1'">
 			<xsl:call-template name="mobile_metalib_search_box" />
 		</xsl:when>
 		<xsl:otherwise>
-			<xsl:call-template name="metalib_search_box" />
+			<xsl:call-template name="metalib_search_box">
+				<xsl:with-param name="full_page_url" select="$full_page_url"/>
+			</xsl:call-template>
 		</xsl:otherwise>
 	</xsl:choose>
 </xsl:template>
@@ -426,7 +431,7 @@
 
 <xsl:template name="metalib_search_box">
 
-	<xsl:param name="full_page_url" select="//request/server/request_uri"/>
+	<xsl:param name="full_page_url" />
 		
 	<!-- "base" url used for switching search modes. Defaults to just our current url, but for embed purposes 
 	may be provided differently. -->
