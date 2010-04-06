@@ -1,5 +1,6 @@
 <?php
 require_once '../lib/framework/Parser.php';
+require_once '../lib/framework/Registry.php';
 require_once '../lib/Xerxes/Marc.php';
 require_once '../lib/Xerxes/Record.php';
 require_once '../lib/Xerxes/metalib/MetalibRecord.php';
@@ -172,9 +173,10 @@ class Xerxes_MetalibRecordTest extends PHPUnit_Framework_TestCase
 		$this->Xerxes_MetalibRecord_Document->load($this->dir. "/data/metalib-psycharticles.xml");
 		$record = $this->Xerxes_MetalibRecord_Document->record(1);
 		
-		// there should be two lnks, one to pdf, the other html
+		// there are two links, one to pdf, the other html, but since the 001 is bad, this should
+		// only bring back one link
 		
-		$this->assertEquals( count($record->getFullText()), 2);
+		$this->assertEquals( count($record->getFullText()), 1);
 	}
 	
 	public function testPsycInfoNotThesis()
