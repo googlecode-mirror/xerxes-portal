@@ -84,8 +84,23 @@
 						
 					</xsl:when>
 					<xsl:otherwise>
-						<h2><xsl:call-template name="page_name" /></h2>
-						<div id="progress"><img src="images/progress_small{$progress}.gif" alt="" /></div>
+					
+						<!-- let users of screen readers and phones manually refresh the page -->
+						
+						<xsl:choose>
+							<xsl:when test="$is_mobile = 1 or request/session/ada">
+								<p><xsl:text>Your search is still in progress. </xsl:text></p>
+								<form action="{//request/server/request_uri}" method="get">
+									<input type="submit" value="Check the status of the search" />
+									<input type="hidden" name="group" value="{//request/group}" />
+								</form>
+							</xsl:when>
+							<xsl:otherwise>						
+								<h2><xsl:call-template name="page_name" /></h2>
+								<div id="progress"><img src="images/progress_small{$progress}.gif" alt="" /></div>
+							</xsl:otherwise>
+						</xsl:choose>
+							
 					</xsl:otherwise>
 				</xsl:choose>
 					

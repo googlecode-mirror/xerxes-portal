@@ -1017,9 +1017,12 @@
 <xsl:template name="header">
 	
 	<!-- metasearch refresh -->
+	<!-- don't do this if this is a screen reader or a phone, since we'll let the user push a button to refresh -->
 	
-	<xsl:if test="request/action = 'hits' and results/progress &lt; 10">
-		<meta http-equiv="refresh" content="6" />
+	<xsl:if test="$is_mobile != 1 and not(request/session/ada)">
+		<xsl:if test="request/action = 'hits' and results/progress &lt; 10">
+			<meta http-equiv="refresh" content="6" />
+		</xsl:if>
 	</xsl:if>
 
 	<!--opensearch autodiscovery -->
