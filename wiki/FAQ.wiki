@@ -1,5 +1,7 @@
 #summary Frequently asked questions about Xerxes (and Metalib)
 
+<wiki:toc max_depth="2" />
+
 == Xerxes seems to produce fewer hits than Metalib. Is there a limit to the search results? ==
 
 No.  But one difference between Xerxes and Metalib lies in the _presentation_ of the total number of hits.
@@ -21,3 +23,13 @@ That being said, the _need_ to fetch more records is often mitigated by the fact
 Yes.  However, in Xerxes we use a 'tagging' metaphor rather than a 'folder' metaphor for organizing records.  
 
 We like tagging as an organizing idiom a bit better than folders because it allows users to create and assign records to a group in a single action.  A lot of users, interestingly, use the tag field as a kind of pseudo-notes field in Xerxes, too.
+
+== Does Xerxes work with other link resolvers besides SFX? ==
+
+Yes, in fact, it should work better than in Metalib.  
+
+The regular link resolver button stuff is the same, of course.  That's the beauty of OpenURL, it works with all link resolvers.
+
+But, whereas Metalib uses SFX-specific technology for looking-up full-text availability, Xerxes uses the Google Scholar export instead, which all major links resolvers support.
+
+So, even though, as a matter of habit, we reference "SFX" in the documentation, there's nothing SFX-specific in Xerxes.
