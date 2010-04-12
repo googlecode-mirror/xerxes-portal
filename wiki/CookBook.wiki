@@ -27,3 +27,34 @@ Examples:
   # Delete your local copy of `databases_metasearch.xsl`.
   # Rename `databases_subject.xsl` to `databases_subject_nosearch.xsl`.
   # Set-up your local `actions.xml` as above.
+
+=External Search Box=
+Xerxes comes with a feature for [Embed dynamically embedding the search box], and optionally the databases, in external pages.  But if you need more control, here's the HTML and search syntax:
+
+{{{
+<form method="get" action="http://xerxes.example.com/demo">
+  <input type="hidden" name="base" value="metasearch" />
+  <input type="hidden" name="action" value="search" />
+
+  <input type="hidden" name="context" value="Your Name for the Search" />
+        
+  <input type="hidden" name="context_url" value="http://library.example.com/" />
+
+  <input name="query" type="text" />
+  <input type="submit" name="Submit" value="GO" />
+
+  <input name="database" value="CAL01039" type="hidden" />
+</form>
+}}}
+
+`context` is the name you are giving this grouping of databases -- typically a subject or name like 'Quick Search'.  This will appear in the Xerxes search results pages themselves, in the page header and the breadcrumbs.
+
+`context_url` is the URL of the (external) page you are embedded this search box.  Together with the name given in `context`, Xerxes will use this to construct breadcrumbs back to this page.  For added security, you may also limit this to [Configuration#limit_context_url allowed domains] in config.xml.
+
+You can include as many `database` inputs as you like, up to the search limit set in Metalib.  Do *not* put brackets `[]` at the end of the name, a PHP workaround that Xerxes does not recognize.
+
+Here is the resulting URL:
+
+{{{
+http://xerxes.example.com/demo?base=metasearch&action=search&context=Your+Name+for+the+Search&context_url=http%3A%2F%2Flibrary.example.com%2F&query=xml&database=CAL01039
+}}}
