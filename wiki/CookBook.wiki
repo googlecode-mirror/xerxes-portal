@@ -56,5 +56,10 @@ You can include as many `database` inputs as you like, up to the search limit se
 Here is the resulting URL:
 
 {{{
-http://xerxes.example.com/demo?base=metasearch&action=search&context=Your+Name+for+the+Search&context_url=http%3A%2F%2Flibrary.example.com%2F&query=xml&database=CAL01039
+http://xerxes.example.com/demo?
+  base=metasearch
+  &action=search
+  &context=Your+Name+for+the+Search
+  &context_url=http%3A%2F%2Flibrary.example.com%2F
+  &query=xml&database=CAL01039
 }}}
