@@ -1055,6 +1055,10 @@ class Xerxes_Record extends Xerxes_Marc_Record
 			if ( $strISSN != "" )
 			{
 				$strISSN = str_replace( "-", "", $strISSN);
+				//extract the issn number leaving behind extra chars and comments
+				if(preg_match("/[0-9]{8,8}/", $strISSN, $match)){
+                                   $strISSN = $match[0];
+                                   }
 				array_push($this->issns, $strISSN);
 			}
 		}
