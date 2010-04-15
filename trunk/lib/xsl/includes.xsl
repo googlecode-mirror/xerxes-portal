@@ -1408,11 +1408,11 @@
 
 <xsl:template name="paging_navigation">
 
-	<xsl:if test="pager/page">
+	<xsl:if test="//pager/page">
 		<div class="resultsPager">
 
 			<ul class="resultsPagerList">
-			<xsl:for-each select="pager/page">
+			<xsl:for-each select="//pager/page">
 				<li>
 				<xsl:variable name="link" select="@link" />
 				<xsl:choose>
