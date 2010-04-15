@@ -102,7 +102,9 @@ This takes you to the bX admin site.  Go to `My Link Resolvers` and select your 
 
 This sends a message to the Ex Libris network administrators to update the bX firewall configuration, which should be completed in a few hours.
 
-Back on the link resolver profile page, locate the `bX authentication token`.  Once you receive confirmation from Ex Libris that the firewall is open, add the authentication token to the `bx_token` entry in `config.xml`.  Recommendations, when available, should now start appearing in your Xerxes records.
+Back on the link resolver profile page, locate the `bX authentication token`.  *Note*: There are two different bX tokens, the registration token and the authentication token.  You want to use the _authentication_ token.  If your enter the wrong one in Xerxes, you'll see an error.
+
+Once you receive confirmation from Ex Libris that the firewall is open, add the authentication token to the `bx_token` entry in `config.xml`.  Recommendations, when available, should now start appearing in your Xerxes records.
 
 
 ==10. Set-up cron jobs for the cache==
