@@ -134,6 +134,7 @@
 	<head>
 	<title><xsl:value-of select="//config/application_name" />: <xsl:call-template name="title" /></title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<xsl:call-template name="header_refresh" />	
 	<base href="{$base_include}/" />
 	<xsl:call-template name="css_include" />
 	<xsl:call-template name="header" />	
@@ -1008,14 +1009,13 @@
 
 </xsl:template>
 
-
 <!-- 	
-	TEMPLATE: HEADER
-	header content, such as Javascript functions that should appear on specific page.
+	TEMPLATE: HEADER REFRESH
+	Refresh the page on the metasearch hits progress
 -->
 
-<xsl:template name="header">
-	
+<xsl:template name="header_refresh">
+
 	<!-- metasearch refresh -->
 	<!-- don't do this if this is a screen reader or a phone, since we'll let the user push a button to refresh -->
 	
@@ -1024,6 +1024,16 @@
 			<meta http-equiv="refresh" content="6" />
 		</xsl:if>
 	</xsl:if>
+
+
+</xsl:template>
+
+<!-- 	
+	TEMPLATE: HEADER
+	header content, such as Javascript functions that should appear on specific page.
+-->
+
+<xsl:template name="header">
 
 	<!--opensearch autodiscovery -->
 	
