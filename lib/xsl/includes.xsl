@@ -134,9 +134,9 @@
 	<head>
 	<title><xsl:value-of select="//config/application_name" />: <xsl:call-template name="title" /></title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<xsl:call-template name="css_include" />
-	<xsl:call-template name="header" />
 	<base href="{$base_include}/" />
+	<xsl:call-template name="css_include" />
+	<xsl:call-template name="header" />	
 	</head>
 	<body>
 	<xsl:if test="request/action = 'subject' or request/action = 'categories'">
