@@ -518,6 +518,12 @@
 		{
 			if ( function_exists("mb_ereg_replace") )
 			{
+				// preg strings have / at the start and end, so we need to take those
+				// off for this mb_ereg one (annoying!) for it to work correctly
+				 
+				$pattern = substr($pattern,1);
+				$pattern = substr($pattern,0,-1);
+				
 				return mb_ereg_replace($pattern, $replacement, $subject);
 			}
 			else
