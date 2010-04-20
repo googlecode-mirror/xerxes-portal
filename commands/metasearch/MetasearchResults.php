@@ -112,6 +112,62 @@ class Xerxes_Command_MetasearchResults extends Xerxes_Command_Metasearch
 		{
 			$objImport = $objXml->importNode( $objResultsXml->documentElement, true );
 			$objXml->documentElement->appendChild( $objImport );
+			
+			// this is a http post submission, so we need to see if we have added the post
+			// data to the alternate record link in the IRD, since X-Server bug prevents this
+			// from coming through in the response
+			
+			$objSearchType = $objResultsXml->getElementsByTagName( "search_and_link_type" )->item( 0 );
+			
+			if ( $objSearchType != null )
+			{
+				if ( $objSearchType->nodeValue == "POST")
+				{
+					$objSearchXml = $this->getCache( $strGroup, "search", "SimpleXML" );
+					
+					// the form action
+					
+					$post = (string) $objSearchXml->database_links->database->link_search_post;
+					
+					// the data to be posted
+					
+					$data = (string) $objSearchXml->database_links->database->link_native_record_alternative;
+					
+					if ( $post == "" || $data == "" )
+					{
+						throw new Exception("cannot create http post elements for search-and-link database");
+					}
+					
+					// xml close to what we need in html, just to make this easy
+					
+					$objPostXML = $objXml->createElement("post");
+					$objXml->documentElement->appendChild($objPostXML);
+					
+					$objForm = $objXml->createElement("form");
+					$objForm->setAttribute("action", Xerxes_Framework_Parser::escapeXml($post));
+					$objPostXML->appendChild($objForm);
+					
+					foreach ( explode("&", $data) as $pair )
+					{
+						$arrKeys = explode("=", $pair);
+						$key = $arrKeys[0];
+						$value = $arrKeys[1];
+						
+						// metalib docs say only TERM1 is used in the 'URL mask', 
+						
+						if ( $value == "TERM1" )
+						{ 
+								$value = (string) $objSearchXml->pair[0]->query;
+						}
+						
+						$objInput = $objXml->createElement("input");
+						$objInput->setAttribute("name", $key);
+						$objInput->setAttribute("value", $value);
+						
+						$objForm->appendChild($objInput);
+					}
+				}
+			}
 		} 
 		else
 		{
