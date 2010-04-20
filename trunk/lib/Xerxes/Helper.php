@@ -105,7 +105,7 @@ class Xerxes_Helper
     
 		// multi-value fields
 
-		$arrMulti = array ("keywords", "languages", "notes", "alternate_titles", "alternate_publishers", "group_restrictions" );
+		$arrMulti = array("keywords", "languages", "notes", "alternate_titles", "alternate_publishers", "group_restrictions" );
 		
 		foreach ( $arrMulti as $multi )
 		{
@@ -141,90 +141,86 @@ class Xerxes_Helper
 
 		$objElement = $objDom->createElement( "url", $objRequest->url_for( array ("base" => "databases", "action" => "database", "id" => htmlentities( $objDatabaseData->metalib_id ) ) ) );
 		$objDatabase->appendChild( $objElement );
-    
-    // The 'add to personal collection' url for logged in user--if no
-    // logged in user, generate link anyway, but it's going to have
-    // an empty user. User should be required to log in before continuing
-    // with action. 
-    
-    $url = $objRequest->url_for( array ("base" => "collections", "action" => "save_choose_collection", "id" => $objDatabaseData->metalib_id, "username" => $objRequest->getSession("username"), "return" => $objRequest->getServer('REQUEST_URI') ) );
-          
-    $objElement = $objDom->createElement( "add_to_collection_url", $url );
-    $objDatabase->appendChild( $objElement );
+			
+		// The 'add to personal collection' url for logged in user--if no
+		// logged in user, generate link anyway, but it's going to have
+		// an empty user. User should be required to log in before continuing
+		// with action. 
+		
+
+		$url = $objRequest->url_for( array ("base" => "collections", "action" => "save_choose_collection", "id" => $objDatabaseData->metalib_id, "username" => $objRequest->getSession( "username" ), "return" => $objRequest->getServer( 'REQUEST_URI' ) ) );
+		
+		$objElement = $objDom->createElement( "add_to_collection_url", $url );
+		$objDatabase->appendChild( $objElement );
 		
 		//add an element for url to xerxes-mediated direct link to db. 
 		
 
-		$objElement = $objDom->createElement( "xerxes_native_link_url", $objRequest->url_for( array ("base" => "databases", "action" => "proxy", "database" => htmlentities( $objDatabaseData->metalib_id ) ) ) );
+		$objElement = $objDom->createElement( "xerxes_native_link_url", $objRequest->url_for( array("base" => "databases", "action" => "proxy", "database" => htmlentities( $objDatabaseData->metalib_id ) ) ) );
 		$objDatabase->appendChild( $objElement );
 		
 		return $objDatabase;
 	}
-  
-  /* Sadly, we serialize a xerxes database record to a slightly different format
+		
+	/* Sadly, we serialize a xerxes database record to a slightly different format
      for use with <database_links> element. This probably ought to have been
      consistent with the format in databaseToNodeset, but oh well, it's not. */
-  public static function databaseToLinksNodeset($objDatabase, $objRequest, $objRegistry) {
-    $objXml = new DOMDocument( );
-		$objXml->loadXML( "<database/>" );
-    
-    $objNodeDatabase = $objXml->documentElement;
-        
-    $objNodeDatabase->setAttribute( "metalib_id", $objDatabase->metalib_id );
-		
-    //add an element for url to xerxes detail page for this db
-		$objElement = $objXml->createElement( "url", $objRequest->url_for( array ("base" => "databases", "action" => "database", "id" => htmlentities( $objDatabase->metalib_id ) ) ) );
-		$objNodeDatabase->appendChild( $objElement );
-    
-    
-    // attach all the links, database name, and restriction info
-      
-    foreach ( $objDatabase->properties() as $key => $value )
-    {
-      if ( $value != "")
-      {
-        if (
-          strstr( $key, "link_" ) || 
-          $key == "title_display" ||
-          $key == "searchable" ||
-          $key == "guest_access" ||
-          $key == "sfx_suppress"
-          )
-        {
-          $objElement = $objXml->createElement( $key, Xerxes_Framework_Parser::escapeXml( $value ) );
-          $objNodeDatabase->appendChild( $objElement );
-        }
-      }
-    }
-			
-      
-    if ( count($objDatabase->group_restrictions) > 0 )
-    {
-      $objRestictions  = 	$objXml->createElement( "group_restrictions");
-      $objNodeDatabase->appendChild( $objRestictions );
-    
-      foreach ( $objDatabase->group_restrictions as $restriction )
-      {
-        if ( $restriction != "")
-        {
-          $objElement = $objXml->createElement( "group_restriction", Xerxes_Framework_Parser::escapeXml( $restriction ) );
-          $objRestictions->appendChild( $objElement );
-        }
-      }
-    }
-    
-    return $objXml->documentElement;
-  }
-
-   
-    
 	
-  /* Ensures that specified user is logged in, or throws exception */
-  public static function ensureSpecifiedUser($username, $objRequest, $objRegistry, $strMessage = "Access only allowed by specific user.") {    
-    if (! ($objRequest->getSession("username") == $username)) {
-      throw new Xerxes_Exception_AccessDenied($strMessage);
-    }
-  }
+	public static function databaseToLinksNodeset($objDatabase, $objRequest, $objRegistry)
+	{
+		$objXml = new DOMDocument ( );
+		$objXml->loadXML ( "<database/>" );
+		
+		$objNodeDatabase = $objXml->documentElement;
+		
+		$objNodeDatabase->setAttribute ( "metalib_id", $objDatabase->metalib_id );
+		
+		//add an element for url to xerxes detail page for this db
+		
+		$objElement = $objXml->createElement ( "url", $objRequest->url_for( array ("base" => "databases", "action" => "database", "id" => htmlentities( $objDatabase->metalib_id ) ) ) );
+		$objNodeDatabase->appendChild ( $objElement );
+		
+		// attach all the links, database name, and restriction info
+
+		foreach ( $objDatabase->properties () as $key => $value )
+		{
+			if ($value != "")
+			{
+				if (strstr( $key, "link_" ) || $key == "title_display" || $key == "searchable" || $key == "guest_access" || $key == "sfx_suppress")
+				{
+					$objElement = $objXml->createElement ( $key, Xerxes_Framework_Parser::escapeXml( $value ) );
+					$objNodeDatabase->appendChild ( $objElement );
+				}
+			}
+		}
+		
+		if (count ( $objDatabase->group_restrictions ) > 0)
+		{
+			$objRestictions = $objXml->createElement( "group_restrictions" );
+			$objNodeDatabase->appendChild( $objRestictions );
+			
+			foreach ( $objDatabase->group_restrictions as $restriction )
+			{
+				if ($restriction != "")
+				{
+					$objElement = $objXml->createElement( "group_restriction", Xerxes_Framework_Parser::escapeXml( $restriction ) );
+					$objRestictions->appendChild( $objElement );
+				}
+			}
+		}
+		
+		return $objXml->documentElement;
+	}
+		
+	/* Ensures that specified user is logged in, or throws exception */
+	
+	public static function ensureSpecifiedUser($username, $objRequest, $objRegistry, $strMessage = "Access only allowed by specific user.")
+	{
+		if (! ($objRequest->getSession ( "username" ) == $username))
+		{
+			throw new Xerxes_Exception_AccessDenied ( $strMessage );
+		}
+	}
   
 	/**
 	 * Checks to see if any of the databases currently being searched are restricted
