@@ -216,7 +216,12 @@
 			</xsl:choose>
 		</link_publisher>
 		
-		
+		<link_search_post>
+			<xsl:if test="substring(marc:datafield[@tag='ZHS']/marc:subfield[@code='a'],1,4) = 'POST'">
+				<xsl:value-of select="substring(marc:datafield[@tag='ZHS']/marc:subfield[@code='a'],6)" />
+			</xsl:if>
+		</link_search_post>
+				
 	</database>
 			
 </xsl:template>

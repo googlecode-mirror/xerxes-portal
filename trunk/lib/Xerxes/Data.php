@@ -128,6 +128,7 @@ class Xerxes_Data_Database extends Xerxes_Framework_DataValue
 	public $link_native_holdings;
 	public $link_guide;
 	public $link_publisher;
+	public $link_search_post;
 	public $library_address;
 	public $library_city;
 	public $library_state;

@@ -338,6 +338,7 @@
 				$objData->link_native_holdings = (string) $objDatabase->link_native_holdings;
 				$objData->link_guide = (string) $objDatabase->link_guide;
 				$objData->link_publisher = (string) $objDatabase->link_publisher;
+				$objData->link_search_post = (string) $objDatabase->link_search_post;
 				$objData->library_address = (string) $objDatabase->library_address;
 				$objData->library_city = (string) $objDatabase->library_city;
 				$objData->library_state = (string) $objDatabase->library_state;

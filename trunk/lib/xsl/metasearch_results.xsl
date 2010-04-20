@@ -135,26 +135,49 @@
 	
 	<xsl:if test="//search_and_link">
 	
-		<xsl:variable name="database_metalib_id">
-			<xsl:for-each select="//base_info">
-				<xsl:if test="set_number = $this_result_set">
-					<xsl:value-of select="base_001" />
-				</xsl:if>
-			</xsl:for-each>
-		</xsl:variable>
+		<xsl:choose>
+			<xsl:when test="//search_and_link_type = 'POST'">
+				
+				<form method="post" action="{//post/form/@action}">
+					<xsl:for-each select="//post/form/input">
+						<input name="{@name}" value="{@value}" type="hidden" />
+					</xsl:for-each>
+					
+					<input type="submit">
+						<xsl:attribute name="value">
+							<xsl:copy-of select="$text_metasearch_results_native_results" /><xsl:text> </xsl:text>
+							<xsl:value-of select="results/database" />
+						</xsl:attribute>
+					</input>	
+				</form>
+				
+			</xsl:when>
+			<xsl:otherwise>
 	
-		<div class="resultsSearchLink">
-			<a target="{$link_target}">
-				<xsl:attribute name="href">
-					<xsl:text>./?base=databases&amp;action=proxy</xsl:text>
-					<xsl:text>&amp;database=</xsl:text>
-					<xsl:value-of select="$database_metalib_id" />
-					<xsl:text>&amp;url=</xsl:text>
-					<xsl:value-of select="php:function('urlencode', string(//search_and_link))" />
-				</xsl:attribute>
-				<xsl:copy-of select="$text_metasearch_results_native_results" /><xsl:text> </xsl:text><xsl:value-of select="results/database" />
-			</a>
-		</div>	
+				<xsl:variable name="database_metalib_id">
+					<xsl:for-each select="//base_info">
+						<xsl:if test="set_number = $this_result_set">
+							<xsl:value-of select="base_001" />
+						</xsl:if>
+					</xsl:for-each>
+				</xsl:variable>
+			
+				<div class="resultsSearchLink">
+					<a target="{$link_target}">
+						<xsl:attribute name="href">
+							<xsl:text>./?base=databases&amp;action=proxy</xsl:text>
+							<xsl:text>&amp;database=</xsl:text>
+							<xsl:value-of select="$database_metalib_id" />
+							<xsl:text>&amp;url=</xsl:text>
+							<xsl:value-of select="php:function('urlencode', string(//search_and_link))" />
+						</xsl:attribute>
+						<xsl:copy-of select="$text_metasearch_results_native_results" /><xsl:text> </xsl:text><xsl:value-of select="results/database" />
+					</a>
+				</div>	
+				
+			</xsl:otherwise>
+		</xsl:choose>
+		
 	</xsl:if>
 	
 	<xsl:call-template name="brief_results" />
