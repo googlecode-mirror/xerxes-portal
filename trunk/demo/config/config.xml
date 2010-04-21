@@ -309,6 +309,10 @@
 			'_blank' causes the browser to open the links in a new window. -->
 		
 		<config name="link_target" pass="true">_blank</config>
+
+		<!-- open window for links to databases (for values see above), by default no new window -->
+		
+		<config name="link_target_databases" pass="true"></config>
 		
 		<!-- suppress full-text links in the specified databases. -->
 		

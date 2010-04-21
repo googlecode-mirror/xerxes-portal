@@ -45,6 +45,7 @@
 	<xsl:variable name="rewrite" 		select="//config/rewrite" />
 	<xsl:variable name="search_limit"	select="//config/search_limit" />
 	<xsl:variable name="link_target"	select="//config/link_target" />
+	<xsl:variable name="link_target_databases" select="//config/link_target_databases" />
 
 	<xsl:variable name="text_collection_default_new_name" select="//config/default_collection_name" />
 	<xsl:variable name="text_collection_default_new_section_name" select="//config/default_collection_section_name" />
@@ -760,7 +761,7 @@
 				<span class="subjectDatabaseTitle">
 					<xsl:choose>
 						<xsl:when test="not($should_lock_nonsearchable and searchable_by_user != '1')">
-							<a title="{$text_databases_subject_hint_direct_search} {title_display}">
+							<a title="{$text_databases_subject_hint_direct_search} {title_display}" target="{$link_target_databases}">
 							<xsl:attribute name="href"><xsl:value-of select="xerxes_native_link_url" /></xsl:attribute>
 								<xsl:value-of select="title_display" />
 							</a>
