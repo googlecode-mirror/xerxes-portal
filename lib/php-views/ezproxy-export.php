@@ -117,7 +117,7 @@ class EzProxyExportGen {
       foreach ($groups as $group) {
         array_push($ezproxy_groups, $this->getEzProxyGroup($group));
       }
-      if ($ezproxy_groups != "") {
+      if (count($ezproxy_groups) > 0) {
         print "\n\n#EZProxy group for metalib secondary affiliations: $restriction_key\n";
         print ("Group " . implode("+", $ezproxy_groups) . "\n\n");
       }
