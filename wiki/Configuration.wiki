@@ -509,15 +509,22 @@ Base URL of your link resolver.
 
 ==link_target==
 
-Behavior of links to external sites, particularly for full-text, holdigns, and OpenURL links.
+Behavior of links to external sites for full-text, holdings, and OpenURL links.
 
-  * default value: none
-  * available since: `_blank`
+  * default value: `_blank`
+  * available since: 1.1
 
 You can change this value to any valid HTML anchor target attribute value, for example:
 
   * *_self* -- causes the browser to open the links in the same window
   * *_blank* -- causes the browser to open the links in a new window.
+
+==link_target_databases==
+
+Same as [Configuration#link_target link_target], but for links to databases on the subject, alphabetical listing, and full database record pages.
+
+  * default value: none
+  * available since: 1.7
 
 ==local_ip_range==
 
