@@ -72,6 +72,8 @@
 			</xsl:for-each>
 		</xsl:for-each>
 		
+		<xsl:text>&#013;&#010;</xsl:text><xsl:text>DO  - </xsl:text><xsl:value-of select="doi" />
+		
 		<xsl:if test="full_text_html != ''">			
 			<xsl:text>&#013;&#010;</xsl:text><xsl:text>L1  - </xsl:text>
 			
