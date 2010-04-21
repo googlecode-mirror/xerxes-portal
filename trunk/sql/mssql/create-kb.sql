@@ -33,6 +33,7 @@ CREATE TABLE xerxes_databases(
 	note_fulltext		VARCHAR(500),
 	search_hints		VARCHAR(3000),
 	type			VARCHAR(50),
+	icon			VARCHAR(50),
 	library_address		VARCHAR(200),
 	library_city		VARCHAR(100),
 	library_state		VARCHAR(30),
@@ -51,6 +52,7 @@ CREATE TABLE xerxes_databases(
 	link_native_holdings		VARCHAR(500),
 	link_guide			VARCHAR(500),
 	link_publisher			VARCHAR(500),
+	link_search_post		VARCHAR(500),
 
 	PRIMARY KEY (metalib_id)
 );
