@@ -43,7 +43,6 @@
     
         // Update our instruction urls
         $("direct_url_content").update( complete_url );
-        
 
         
         js_widget_content = 
@@ -58,7 +57,7 @@
         
         // Don't use prototype update, because it will execute the
         // js that we want as source!
-        $("js_widget_content").inner_html = js_widget_content;
+        $("js_widget_content").value = js_widget_content.replace("&lt", "<").replace("&gt", ">").replace("&amp", "&");
         
 
         
