@@ -57,6 +57,10 @@ abstract class Xerxes_Framework_Search
 		$this->sid = $this->registry->getConfig("APPLICATION_SID", false, "calstate.edu:xerxes");
 		$this->max = $this->registry->getConfig("RECORDS_PER_PAGE", false, 10);
 		$this->include_original = $this->registry->getConfig("INCLUDE_ORIGINAL_XML", false, false);
+		
+		// used in a couple of place
+
+		$this->sort = $this->request->getProperty("sortKeys");
 	}
 	
 	public function __destruct()
@@ -105,7 +109,6 @@ abstract class Xerxes_Framework_Search
 		
 		$start = $this->request->getProperty("startRecord");
 		$max = $this->request->getProperty("maxRecords");
-		$sort = $this->request->getProperty("sortKeys");
 
 		// set some explicit defaults
 		
@@ -116,7 +119,7 @@ abstract class Xerxes_Framework_Search
 		
 		// get results and convert them to xerxes_record
 		
-		$xml = $this->search_object->searchRetrieve($search, $start, $configMaxRecords, $sort);
+		$xml = $this->search_object->searchRetrieve($search, $start, $configMaxRecords, $this->sort);
 		$this->results = $this->convertToXerxesRecords($xml);
 		
 		// done
@@ -165,8 +168,10 @@ abstract class Xerxes_Framework_Search
 			$xml = $this->search_object->record($original_id);
 			
 			// convert it
+			
+			$record_object_type = $this->record_object_type;
 				
-			$record = new Xerxes_MetalibRecord();
+			$record = new $record_object_type();
 			$record->loadXML($xml);
 				
 			// add to database
@@ -235,10 +240,16 @@ abstract class Xerxes_Framework_Search
 				$records_xml->appendChild( $record_container );				
 				
 				// full-record link
-				// @todo make this overrideable
+
+				$record_link = Xerxes_Framework_Parser::escapeXml($this->linkFullRecord($result));
+				$link_full = $results_xml->createElement("url", $record_link);
+				$record_container->appendChild( $link_full );				
 				
-				// open-url redirect link
-				// @todo make this overrideable
+				// open-url link (which may be a redirect)
+
+				$record_openurl = Xerxes_Framework_Parser::escapeXml($this->linkOpenURL($result));
+				$link_full = $results_xml->createElement("url_open", $record_openurl);
+				$record_container->appendChild( $link_full );
 				
 		      	// openurl kev context object please
 		      	
@@ -313,7 +324,7 @@ abstract class Xerxes_Framework_Search
 			
 			if ( $current_sort == null )
 			{ 
-				$current_sort = $this->registry->getConfig("SORT_ORDER_PRIMARY", false, "rank");
+				$current_sort = $this->registry->getConfig("SORT_ORDER_PRIMARY", false, "Score");
 			}
 					
 			$sort_xml = $objPage->sortDisplay( $query_string, $current_sort, $sort_options);
@@ -339,6 +350,22 @@ abstract class Xerxes_Framework_Search
 		return $results_xml;
 	}
 	
+	protected function linkFullRecord($result)
+	{
+		$arrParams = array(
+			"base" => $this->request->getProperty("base"),
+			"action" => "record",
+			"id" => $result->getControlNumber()
+		);
+		
+		return $this->request->url_for($arrParams);
+	}
+	
+	protected function linkOpenURL($result)
+	{
+		return $result->getOpenURL($this->link_resolver, $this->sid);
+	}
+	
 	protected function sortOptions()
 	{
 		return array();
@@ -348,7 +375,7 @@ abstract class Xerxes_Framework_Search
 	{
 		return array(
 			"base" => $this->request->getProperty("base"),
-			"action" => "results",
+			"action" => $this->request->getProperty("action"),
 		);
 	}
 	
@@ -356,7 +383,7 @@ abstract class Xerxes_Framework_Search
 	{
 		return array(
 			"base" => $this->request->getProperty("base"),
-			"action" => "sort",
+			"action" => $this->request->getProperty("action"),
 		);		
 	}
 
@@ -593,7 +620,7 @@ abstract class Xerxes_Framework_Search
 		return $num;
 	}
 
-	private function extractISSNs()
+	protected function extractISSNs()
 	{
 		$issns = array();
 		
@@ -608,6 +635,37 @@ abstract class Xerxes_Framework_Search
 		$issns = array_unique($issns);
 		
 		return $issns;
+	}
+	
+	protected function extractISBNs()
+	{
+		$isbns = array();
+		
+		foreach ( $this->results as $record )
+		{
+			foreach ( $record->getAllISBN() as $record_isbn )
+			{
+				array_push($isbns, $record_isbn);
+			}
+		}
+		
+		$isbns = array_unique($isbns);
+		
+		return $isbns;
+	}
+	
+	protected function extractOCLCNumbers()
+	{
+		$oclc = array();
+		
+		foreach ( $this->results as $record )
+		{
+			array_push($oclc, $record->getOCLCNumber() );
+		}
+		
+		$oclc = array_unique($oclc);
+		
+		return $oclc;
 	}
 }
 
