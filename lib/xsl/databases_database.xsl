@@ -90,7 +90,7 @@
 			<div class="databaseLink">
 			<dt><xsl:copy-of select="$text_database_link" /></dt>
 			<dd>		
-				<a>
+				<a target="{$link_target_databases}">
 				<xsl:attribute name="href"><xsl:value-of select="xerxes_native_link_url" /></xsl:attribute>
 				<xsl:copy-of select="$text_database_go_to_database" />
 				</a>
