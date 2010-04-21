@@ -113,13 +113,13 @@ class EzProxyExportGen {
     foreach (array_keys( $this->index_by_restriction ) as $restriction_key) {
       $groups = explode(';', $restriction_key);
       
-      $ezproxy_groups = "";
+      $ezproxy_groups = array();
       foreach ($groups as $group) {
-        $ezproxy_groups .= $this->getEzProxyGroup($group) . "+";
+        array_push($ezproxy_groups, $this->getEzProxyGroup($group));
       }
       if ($ezproxy_groups != "") {
         print "\n\n#EZProxy group for metalib secondary affiliations: $restriction_key\n";
-        print "Group $ezproxy_groups\n\n";
+        print ("Group " . implode("+", $ezproxy_groups) . "\n\n");
       }
       
       foreach ( $this->index_by_restriction[$restriction_key] as $domainList ) {
