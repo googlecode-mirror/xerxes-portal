@@ -45,6 +45,7 @@ CREATE TABLE xerxes_databases(
 	library_contact		VARCHAR(200),
 	library_note		VARCHAR(200),
 	library_hours		VARCHAR(150),
+	library_access		VARCHAR(500),
 	link_native_home	VARCHAR(500),
 	link_native_record		VARCHAR(500),
 	link_native_home_alternative	VARCHAR(500),
@@ -134,7 +135,7 @@ CREATE TABLE xerxes_subcategory_databases(
 
 	database_id	VARCHAR(10),
   	subcategory_id	VARCHAR(20),
-    sequence INT,
+    	sequence INT,
 
  	FOREIGN KEY (database_id) REFERENCES xerxes_databases(metalib_id) ON DELETE CASCADE,
 	FOREIGN KEY (subcategory_id) REFERENCES xerxes_subcategories(metalib_id) ON DELETE CASCADE

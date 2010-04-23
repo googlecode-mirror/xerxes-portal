@@ -350,6 +350,7 @@
 				$objData->library_contact = (string) $objDatabase->library_contact;
 				$objData->library_note = (string) $objDatabase->library_note;
 				$objData->library_hours = (string) $objDatabase->library_hours;
+				$objData->library_access = (string) $objDatabase->library_access;
 				$objData->active = (string) $objDatabase->active;
 				$objData->proxy = (string) $objDatabase->proxy;
 				$objData->searchable = (string) $objDatabase->searchable;

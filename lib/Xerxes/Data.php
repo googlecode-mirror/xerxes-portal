@@ -139,6 +139,7 @@ class Xerxes_Data_Database extends Xerxes_Framework_DataValue
 	public $library_contact;
 	public $library_note;
 	public $library_hours;
+	public $library_access;
 	public $active;
 	public $proxy;
 	public $searchable;
