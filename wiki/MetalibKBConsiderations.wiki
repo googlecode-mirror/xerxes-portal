@@ -1,4 +1,6 @@
-#summary 3. Metalib Knowledgebase considerations with Xerxes
+#summary 3. Optimizing the Metalib Knowledgebase for Xerxes
+
+For a variety of reasons, Xerxes displays the Metalib Knowledgebase differently than the standard Metalib interface.  It also allows you to to achieve some additional functionality beyond what Metalib normally provides by simply following some naming conventions in the Metalib KB.
 
 =Changes in Categories Admin=
 
@@ -6,7 +8,7 @@ After making any changes in Metalib's Categories Admin module -- such as creatin
 
 If you don't perform this step, the Xerxes populate/databases action will not pick up your category changes. This is a bug in Metalib, and one you will find yourself tripping over more than once.
 
-=Design of categories in Xerxes versus Metalib=
+=Display of categories in Xerxes versus Metalib=
 
 Xerxes employs a different philosophy for arranging categories and subcategories than Metalib.  As you implement Xerxes, you will find that you may need to rethink (and, in turn, re-organize) your categories based on this difference in philosophy.
 
@@ -18,7 +20,7 @@ We think a flat, discipline-based hierarchy makes more sense to users, since the
 
 =Subcategories and Librarian contact information in the sidebar=
 
-You can have Xerxes display certain subcategories in the sidebar versus the main part of the subject page.  This is useful for adding supplementary information to a category, like the librarian assigned to that subject area, or links to subject guides or secondary websites.
+You can have Xerxes display certain subcategories in the sidebar versus the main part of the subject page.  This is useful for adding supplementary information to a category, like librarian contact information, or links to subject guides or secondary websites.
 
 Here's a [http://xerxes.calstate.edu/sacramento/databases/subject/nursing working example from Sacramento State].
 
@@ -48,7 +50,7 @@ For these resources, you'll need to go into the Metalib Management interface:
 
 Now, usually the `URL Mask` field is disabled, which means you can't select and copy it directly.  Bummer.  So, you'll need to look at the HTML source code to get this information.
 
-In your browser, go to `view` > `Source` (or in Firefox `Page source`), and then use crtl+f on your keyboard to bring-up the browser's search facility, and search for `REG_EXP_1`.
+In your browser, go to `view` > `Source` (or in Firefox `Page source`), and then use `crtl+f` on your keyboard to bring-up the browser's search facility, and search for `REG_EXP_1`.
 
 That should take you directly to an HTML tag that looks like this one from TOXNET:
 
