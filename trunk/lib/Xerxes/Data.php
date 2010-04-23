@@ -111,7 +111,6 @@ class Xerxes_Data_Database extends Xerxes_Framework_DataValue
 	public $institute;
 	public $filter;
 	public $creator;
-	public $search_hints;
 	public $publisher;
 	public $publisher_description;
 	public $description;
@@ -149,6 +148,7 @@ class Xerxes_Data_Database extends Xerxes_Framework_DataValue
 	public $new_resource_expiry;
 	public $updated;
 	public $number_sessions;
+	public $search_hints;
 	public $icon;
 	
 	public $keywords = array ( );
