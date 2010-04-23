@@ -76,9 +76,13 @@ You should now be able to visit your.server.edu/xerxes/demo to see a functioning
 
 If you kept the mod_rewrite scheme setting, and are using Apache, make sure to edit the accompanying 'demo/.htaccess' file to reflect the name and location of the 'demo' directory.
 
-==7. Optional: Load the peer-review titles==
+==7. Load the peer-review titles==
 
-Assuming you have a subscription to Ulrich, you can ask David for an SQL file for creating a local dataset of peer reviewed journal titles.  Xerxes will use this to flag articles from peer reviewed journals in the interface.
+Return to the command line, and issue the following command to load the peer-reviewed dataset into the xerxes_refereed table:
+
+  {{{php -f /path/to/xerxes/demo/index.php action=populate-refereed base=availability}}}
+
+Xerxes will use this to flag articles from peer reviewed journals in the interface.
 
 ==8. Optional: Create a cache of the SFX Knowledgebase==
 
