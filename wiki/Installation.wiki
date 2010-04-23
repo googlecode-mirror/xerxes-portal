@@ -76,7 +76,7 @@ You should now be able to visit your.server.edu/xerxes/demo to see a functioning
 
 If you kept the mod_rewrite scheme setting, and are using Apache, make sure to edit the accompanying 'demo/.htaccess' file to reflect the name and location of the 'demo' directory.
 
-==7. Load the peer-review titles==
+==7. Populate the peer-reviewed journal titles==
 
 Return to the command line, and issue the following command to load the peer-reviewed dataset into the xerxes_refereed table:
 
