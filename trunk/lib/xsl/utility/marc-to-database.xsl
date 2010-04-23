@@ -61,6 +61,8 @@
 		
 		<title_display><xsl:value-of select="marc:datafield[@tag=210]/marc:subfield[@code='a']" /></title_display>	
 		
+		<title_cjk_trans><xsl:value-of select="marc:datafield[@tag='TRN']/marc:subfield[@code='a']" /></title_cjk_trans>
+		
 		<xsl:for-each select="marc:datafield[@tag=246]">
 			<title_alternate><xsl:value-of select="marc:subfield[@code='a']" /></title_alternate>
 		</xsl:for-each>
@@ -152,6 +154,8 @@
 			<language><xsl:value-of select="marc:subfield[@code='a']" /></language>
 		</xsl:for-each>
 		
+		<cjk_language><xsl:value-of select="marc:datafield[@tag='CJK']/marc:subfield[@code='a']" /></cjk_language>
+		
 		<search_hints>
 			<xsl:value-of select="marc:datafield[@tag=592 or @tag=595]/marc:subfield[@code='a']" />		
 		</search_hints>
@@ -189,6 +193,10 @@
 		<library_contact><xsl:value-of select="marc:datafield[@tag=270]/marc:subfield[@code='p']" /></library_contact>
 		<library_note><xsl:value-of select="marc:datafield[@tag=270]/marc:subfield[@code='z']" /></library_note>
 		<library_hours><xsl:value-of select="marc:datafield[@tag=307]/marc:subfield[@code=8]" /></library_hours>
+		<library_transportation><xsl:value-of select="marc:datafield[@tag=574]/marc:subfield[@code='a']" /></library_transportation>
+		<library_disabled><xsl:value-of select="marc:datafield[@tag=575]/marc:subfield[@code='a']" /></library_disabled>
+		<library_access><xsl:value-of select="marc:datafield[@tag=531]/marc:subfield[@code='a']" /></library_access>
+		<library_loan><xsl:value-of select="marc:datafield[@tag=532]/marc:subfield[@code='a']" /></library_loan>
 		
 		<!-- links -->
 		<xsl:comment>links</xsl:comment>
@@ -221,6 +229,30 @@
 				<xsl:value-of select="substring(marc:datafield[@tag='ZHS']/marc:subfield[@code='a'],6)" />
 			</xsl:if>
 		</link_search_post>
+
+		<!-- local -->
+		<xsl:comment>local</xsl:comment>
+		
+		<local_1><xsl:value-of select="marc:datafield[@tag='LCL' and @ind1=1]/marc:subfield[@code='a']" /></local_1>
+		<local_2><xsl:value-of select="marc:datafield[@tag='LCL' and @ind1=2]/marc:subfield[@code='a']" /></local_2>
+		<local_3><xsl:value-of select="marc:datafield[@tag='LCL' and @ind1=3]/marc:subfield[@code='a']" /></local_3>
+		<local_4><xsl:value-of select="marc:datafield[@tag='LCL' and @ind1=4]/marc:subfield[@code='a']" /></local_4>
+		<local_5><xsl:value-of select="marc:datafield[@tag='LCL' and @ind1=5]/marc:subfield[@code='a']" /></local_5>
+
+		<!-- verde -->
+		<xsl:comment>verde</xsl:comment>
+	
+		<verde>
+			<xsl:choose>
+				<xsl:when test="marc:datafield[@tag='VRD' and @ind1=1]/marc:subfield[@code='a'] = 'N'">
+					<proxy>no</proxy>
+				</xsl:when>
+				<xsl:when test="marc:datafield[@tag='VRD' and @ind1=1]/marc:subfield[@code='a'] = 'Y'">
+					<proxy>yes</proxy>
+				</xsl:when>
+			</xsl:choose>
+		</verde>
+		<verde_access_type><xsl:value-of select="marc:datafield[@tag='VRD' and @ind1=2]/marc:subfield[@code='a']" /></verde_access_type>
 				
 	</database>
 			

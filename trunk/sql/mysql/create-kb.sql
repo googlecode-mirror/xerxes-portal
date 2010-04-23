@@ -60,6 +60,7 @@ CREATE TABLE xerxes_databases(
 	library_contact		VARCHAR(200),
 	library_note		VARCHAR(200),
 	library_hours		VARCHAR(150),
+	library_access		VARCHAR(500),
 	link_native_home	VARCHAR(500),
 	link_native_record		VARCHAR(500),
 	link_native_home_alternative	VARCHAR(500),
