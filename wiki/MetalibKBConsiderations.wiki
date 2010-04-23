@@ -1,2 +1,17 @@
-#summary 3. Metalib KB considerations with Xerxes
+#summary 3. Metalib Knowledgebase considerations with Xerxes
 
+=Changes in Categories Admin=
+
+After making a change in Metalib's Categories Admin module -- such as creating or renaming a category, or database assignments -- you need to click on the "ALL Subcategories" link at the top of the page.  This re-indexes your category assignments. The process takes just a few seconds to run.
+
+If you don't perform this step, the Xerxes populate/databases action will not pick up your category changes. This is a bug in Metalib, and one you will find yourself tripping over more than once.
+
+=Design of the categories in Xerxes versus Metalib=
+
+Xerxes employs a different philosophy for how you should arrange your categories and subcategories.  As you implement Xerxes, you will find that you may need to rethink (and, in turn) re-organize your categories based on this difference in philosophy.
+
+Metalib assumes that you have large, overarching categories (e.g., Social Sciences or Humanities) and then topical subcategories focused around disciplines (e.g., History).  The Metalib interface is set-up to support this model by displaying subcategories individually.
+
+Xerxes, on the other hand, is set-up for a flat hierarchy where the categories are disciplines (e.g., History) and the subcategories convey either some sense of usefulness ("Most useful" and "Also useful") or format ("Books" and "Articles"), or both.  Xerxes inlines the display of subcategories, so users seem them all together on the same page, rather than having to select them individually.
+
+We think a flat, discipline-based hierarchy makes more sense to users, since they can more readily identify with the course they are taking -- I'm in History 301, so I'll chose the 'History' category -- then having to divine that the subject they want is contained within a super-grouping like Social Sciences or Humanities.
