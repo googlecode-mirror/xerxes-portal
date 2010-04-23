@@ -1,4 +1,4 @@
-#summary 5. Upgrading between versions
+#summary 6. Upgrading between versions
 
 = Upgrading between versions =
 
