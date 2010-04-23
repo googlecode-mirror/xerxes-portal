@@ -1,1 +1,0 @@
-#summary 5. Customization: Behavior and functionality
