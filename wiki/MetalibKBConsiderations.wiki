@@ -16,6 +16,23 @@ Xerxes, on the other hand, is set-up for a flat hierarchy where the categories a
 
 We think a flat, discipline-based hierarchy makes more sense to users, since they can more readily identify with the course they are taking -- I'm in History 301, so I'll choose the 'History' category -- then having to divine that the subject they want is contained within a super-grouping like Social Sciences or Humanities.
 
+=Subcategories and Librarian contact information in the sidebar=
+
+You can have Xerxes display certain subcategories in the sidebar versus the main part of the subject page.  This is useful for adding supplementary information to a category, like the librarian assigned to that subject area, or links to subject guides or secondary websites.
+
+Here's a [http://xerxes.calstate.edu/sacramento/databases/subject/nursing working example from Sacramento State].
+
+In this example, all of the research guides and the librarian contact are just IRDs in Metalib.  In each category, Sacramento has created the necessary subcategories for both, and assigned the IRDs as necessary.
+
+The name and the order of the subcategories is not important, so you can control the order in which they appear and the headings that display purely in Categories Admin.  Consistency is import, though, since you need to list the names of the subcategories that should display in the sidebar in a config.xml entry -- [Configuration#subcategories_sidebar subcategories_sidebar].
+
+The one 'trick' is the Librarian contact.  What we've done here is created a new 'type' in Metalib called 'Librarian'.  You can create new types at any time in Metalib with a config file on  the Metalib side.  When Xerxes sees a type of 'Librarian' (in the sidebar) it knows to display the contact info as you see it in the example above.
+
+The data you see in the example -- office, email, telephone, etc. -- is taken from the 'Library' tab of the IRD, where there are fields for all of this.  If you just swap the word 'library' for 'librarian' in your mind when setting this up in Metalib, it should all make sense, and make this seem a little less hacky.
+
+There is also a new config.xml entry called [Configuration#databases_type_exclude_az databases_type_exclude_az] that allows you to exclude certain IRDs from the A-Z database listing based on their 'type'.  This could be useful for other reasons, but one thing it allows you to do is remove these Librarian IRDs that we've created from the A-Z list.
+
+
 =Search-and-link databases that use HTTP POST=
 
 The Metalib X-Server currently contains a bug that prevents it from properly handling search-and-link databases that require HTTP POST (as opposed to GET) to link to the external website's search results.
@@ -41,6 +58,6 @@ Now copy the data in the `value` part of that input field:
 
   {{{ queryxxx=TERM1&revisesearch=/home/httpd/htdocs/html/TOXLINE.htm&second_search=1&database=toxline&and=1&Stemming=1&max=50000 }}}
 
-Use your browser's back button to go back to the IRD, to the `Subscription` tab.  Paste the data into the `Alternative Link to Records in Native Interface` field.  Note that this is the *Alternate* link, not the main one.
+Use your browser's back button to go back to the IRD, to the `Subscription` tab.  Paste the data into the `Alternative Link to Records in Native Interface` field.  Note that this is the *alternate* link to records, not the main one.
 
 After you run the `databases/populate` command again, Xerxes should be able to correctly search and link to this resource.
