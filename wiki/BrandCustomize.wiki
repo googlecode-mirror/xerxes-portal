@@ -1,4 +1,4 @@
-#summary 3. Customization: Branding, Labels, and Interface
+#summary 4. Customization: Branding, Labels, and Interface
 
 After you get Xerxes installed and configured, you’ll want to brand the application to look like your library website, as well change the default labels to meet your preferences.
 
