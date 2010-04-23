@@ -68,8 +68,6 @@ Assuming you having PHP set-up with the CLI (command line interface) option, you
  
   {{{php -f /path/to/xerxes/demo/index.php action=populate base=databases}}}
 
-*NOTE*: After you've made changes to Category assignments in Metalib management interface, you need to click on the "ALL Subcategories" option in the Metalib Categories Admin section, in order for Metalib to re-index your category assignments. Without this action, Xerxes populate action will not pick up your changes. 
-
 ==6. Check to see if everything is working==
 
 You should now be able to visit your.server.edu/xerxes/demo to see a functioning implementation.  
