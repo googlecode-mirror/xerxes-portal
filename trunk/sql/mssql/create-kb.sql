@@ -11,7 +11,7 @@ CREATE TABLE xerxes_databases(
 	metalib_id     		VARCHAR(10),
 	title_full     		VARCHAR(255),
 	title_display		VARCHAR(100),
-	institute		VARCHAR(5),
+	institute		VARCHAR(10),
 	filter			VARCHAR(50),
 	searchable		INT,
 	guest_access  		INT,
