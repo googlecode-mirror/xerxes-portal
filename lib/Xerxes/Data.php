@@ -149,6 +149,7 @@ class Xerxes_Data_Database extends Xerxes_Framework_DataValue
 	public $new_resource_expiry;
 	public $updated;
 	public $number_sessions;
+	public $icon;
 	
 	public $keywords = array ( );
 	public $notes = array ( );
