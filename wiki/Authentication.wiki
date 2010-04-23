@@ -41,7 +41,7 @@ For the SSO schemes, that will be via a different action called 'validate'.  For
 
 CAS uses this function to validate the login request with the SSO service, for example.  The local authentication schemes would use this function to actually send the user's credential to the authentication system (via LDAP, HTTP, etc.) and decide whether the user has supplied the correct credentials. 
 
-In both cases, if the user is deemed to be 'good', then the scheme 'registers' the user by assigning properties to a Xerxes_User object, which the abstract class will make available to the sub-classes as one if its properties ( the other properties will be the familiar registry and request objects ). 
+In both cases, if the user is deemed to be 'good', then the scheme 'registers' the user by assigning properties to a `Xerxes_User` object, which the abstract class will make available to the sub-classes as one if its properties ( the other properties will be the familiar registry and request objects ). 
 
 The scheme will at a minimum need to assign the username, but, if other data is available -- like email, last name, first name, etc. -- then it can assign those as well. 
 
