@@ -2,16 +2,45 @@
 
 =Changes in Categories Admin=
 
-After making a change in Metalib's Categories Admin module -- such as creating or renaming a category, or database assignments -- you need to click on the "ALL Subcategories" link at the top of the page.  This re-indexes your category assignments. The process takes just a few seconds to run.
+After making any changes in Metalib's Categories Admin module -- such as creating or renaming a category, or assigning databases to a subcategory -- you need to click on the "ALL Subcategories" link at the top of the page.  This re-indexes your category assignments. The process takes just a few seconds to run.
 
 If you don't perform this step, the Xerxes populate/databases action will not pick up your category changes. This is a bug in Metalib, and one you will find yourself tripping over more than once.
 
-=Design of the categories in Xerxes versus Metalib=
+=Design of categories in Xerxes versus Metalib=
 
-Xerxes employs a different philosophy for how you should arrange your categories and subcategories.  As you implement Xerxes, you will find that you may need to rethink (and, in turn) re-organize your categories based on this difference in philosophy.
+Xerxes employs a different philosophy for arranging categories and subcategories than Metalib.  As you implement Xerxes, you will find that you may need to rethink (and, in turn, re-organize) your categories based on this difference in philosophy.
 
-Metalib assumes that you have large, overarching categories (e.g., Social Sciences or Humanities) and then topical subcategories focused around disciplines (e.g., History).  The Metalib interface is set-up to support this model by displaying subcategories individually.
+Metalib basically assumes that you have large, overarching categories (e.g., Social Sciences or Humanities) and then topical subcategories focused around disciplines (e.g., History).  The Metalib interface is set-up to support this model by displaying subcategories individually.
 
-Xerxes, on the other hand, is set-up for a flat hierarchy where the categories are disciplines (e.g., History) and the subcategories convey either some sense of usefulness ("Most useful" and "Also useful") or format ("Books" and "Articles"), or both.  Xerxes inlines the display of subcategories, so users seem them all together on the same page, rather than having to select them individually.
+Xerxes, on the other hand, is set-up for a flat hierarchy where the categories are disciplines (e.g., History) and the subcategories convey either some sense of usefulness ("Most useful" and "Also useful") or format ("Books" and "Articles"), or both.  Xerxes inlines the display of subcategories, so users see them together on the same page, rather than individually, as in Metalib.
 
-We think a flat, discipline-based hierarchy makes more sense to users, since they can more readily identify with the course they are taking -- I'm in History 301, so I'll chose the 'History' category -- then having to divine that the subject they want is contained within a super-grouping like Social Sciences or Humanities.
+We think a flat, discipline-based hierarchy makes more sense to users, since they can more readily identify with the course they are taking -- I'm in History 301, so I'll choose the 'History' category -- then having to divine that the subject they want is contained within a super-grouping like Social Sciences or Humanities.
+
+=Search-and-link databases that use HTTP POST=
+
+The Metalib X-Server currently contains a bug that prevents it from properly handling search-and-link databases that require HTTP POST (as opposed to GET) to link to the external website's search results.
+
+By necessity, Xerxes employs a workaround for this problem.  Basically, you're going to copy one field in the search configuration into the IRD, so that Xerxes can gain access to the data necessary for creating the HTTP POST request, which Xerxes will now do itself.
+
+For these resources, you'll need to go into the Metalib Management interface:
+
+ * Locate the IRD.
+ * On the `Subscription` tab, select the `Configuration Code`.
+ * Once you are in the search configuration, chose the `Term Transformations` tab.
+ * Copy the `URL Mask` field.
+
+Now, usually the `URL Mask` field is disabled, which means you can't select and copy it directly.  Bummer.  So, you'll need to look at the HTML source code to get this information.
+
+In your browser, go to `view` > `Source` (or in Firefox `Page source`), and then use crtl+f on your keyboard to bring-up the browser's search facility, and search for `REG_EXP_1`.
+
+That should take you directly to an HTML tag that looks like this one from TOXNET:
+
+  {{{<input name="REG_EXP_1" value="queryxxx=TERM1&revisesearch=/home/httpd/htdocs/html/TOXLINE.htm&second_search=1&database=toxline&and=1&Stemming=1&max=50000" size=65 maxlength="500" disabled=Y>}}}  
+
+Now copy the data in the `value` part of that input field:  
+
+  {{{ queryxxx=TERM1&revisesearch=/home/httpd/htdocs/html/TOXLINE.htm&second_search=1&database=toxline&and=1&Stemming=1&max=50000 }}}
+
+Use your browser's back button to go back to the IRD, to the `Subscription` tab.  Paste the data into the `Alternative Link to Records in Native Interface` field.  Note that this is the *Alternate* link, not the main one.
+
+After you run the `databases/populate` command again, Xerxes should be able to correctly search and link to this resource.
