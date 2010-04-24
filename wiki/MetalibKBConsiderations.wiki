@@ -1,6 +1,6 @@
 #summary 3. Optimizing the Metalib Knowledgebase for Xerxes
 
-For a variety of reasons, Xerxes displays the Metalib Knowledgebase differently than the standard Metalib interface.  It also allows you to to achieve some additional functionality beyond what Metalib normally provides by simply following some naming conventions in the Metalib KB.
+For a variety of reasons, Xerxes displays the Metalib Knowledgebase differently than the standard Metalib interface.  It also allows you to to achieve some additional functionality beyond what Metalib normally provides by simply following some conventions in the Metalib KB.
 
 =Changes in Categories Admin=
 
@@ -10,23 +10,23 @@ If you don't perform this step, the Xerxes populate/databases action will not pi
 
 =Display of categories in Xerxes versus Metalib=
 
-Xerxes employs a different philosophy for arranging categories and subcategories than Metalib.  As you implement Xerxes, you will find that you may need to rethink (and, in turn, re-organize) your categories based on this difference in philosophy.
+Xerxes employs a different philosophy for arranging categories and subcategories than Metalib.  As you implement Xerxes, you will find that you may need to rethink (and, in turn, re-organize) your categories.
 
 Metalib basically assumes that you have large, overarching categories (e.g., Social Sciences or Humanities) and then topical subcategories focused around disciplines (e.g., History).  The Metalib interface is set-up to support this model by displaying subcategories individually.
 
 Xerxes, on the other hand, is set-up for a flat hierarchy where the categories are disciplines (e.g., History) and the subcategories convey either some sense of usefulness ("Most useful" and "Also useful") or format ("Books" and "Articles"), or both.  Xerxes inlines the display of subcategories, so users see them together on the same page, rather than individually, as in Metalib.
 
-We think a flat, discipline-based hierarchy makes more sense to users, since they can more readily identify with the course they are taking -- I'm in History 301, so I'll choose the 'History' category -- then having to divine that the subject they want is contained within a super-grouping like Social Sciences or Humanities.
+We think a flat, discipline-based hierarchy makes more sense to students, since they can more readily identify with the course they are taking -- I'm in History 301, so I'll choose the 'History' category -- then having to divine that the subject they want is contained within a super-grouping like Social Sciences or Humanities.
 
 =Subcategories and Librarian contact information in the sidebar=
 
-You can have Xerxes display certain subcategories in the sidebar versus the main part of the subject page.  This is useful for adding supplementary information to a category, like librarian contact information, or links to subject guides or secondary websites.
+You can have Xerxes display certain subcategories in the sidebar versus the main part of the subject page.  This is useful for adding supplementary information to a category, like librarian contact information, or links to subject guides and secondary websites.
 
 Here's a [http://xerxes.calstate.edu/sacramento/databases/subject/nursing working example from Sacramento State].
 
 In this example, all of the research guides and the librarian contact are just IRDs in Metalib.  In each category, Sacramento has created the necessary subcategories for both, and assigned the IRDs as necessary.
 
-The name and the order of the subcategories is not important, so you can control the order in which they appear and the headings that display purely in Categories Admin.  Consistency is import, though, since you need to list the names of the subcategories that should display in the sidebar in a config.xml entry -- [Configuration#subcategories_sidebar subcategories_sidebar].
+The name and order of the subcategories is not important, so you can control the order in which they appear and the headings that display purely in Categories Admin.  Consistency is import, though, since you need to list the names of the subcategories that should display in the sidebar in a config.xml entry -- [Configuration#subcategories_sidebar subcategories_sidebar].
 
 The one 'trick' is the Librarian contact.  What we've done here is created a new 'type' in Metalib called 'Librarian'.  You can create new types at any time in Metalib with a config file on  the Metalib side.  When Xerxes sees a type of 'Librarian' (in the sidebar) it knows to display the contact info as you see it in the example above.
 
@@ -37,9 +37,9 @@ There is also a new config.xml entry called [Configuration#databases_type_exclud
 
 =Search-and-link databases that use HTTP POST=
 
-The Metalib X-Server currently contains a bug that prevents it from properly handling search-and-link databases that require HTTP POST (as opposed to GET) to link to the external website's search results.
+The Metalib X-Server currently contains a bug that prevents it from properly handling search-and-link databases that require HTTP POST (as opposed to GET) to link to the website's search results.
 
-By necessity, Xerxes employs a workaround for this problem.  Basically, you're going to copy one field in the search configuration into the IRD, so that Xerxes can gain access to the data necessary for creating the HTTP POST request, which Xerxes will now do itself.
+By necessity, Xerxes employs a workaround for this problem.  Basically, you're going to copy a field in the search configuration into the IRD, so that Xerxes can gain access to the data necessary to create the HTTP POST request itself.
 
 For these resources, you'll need to go into the Metalib Management interface:
 
