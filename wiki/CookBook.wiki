@@ -17,7 +17,7 @@ Examples:
   # Rename that local copy to `databases_metasearch.xsl`.
   # [http://xerxes-portal.googlecode.com/svn/cookbook/dual-subject-pages/databases_subject.xsl Download this file] into your `demo/xsl`directory. That file is a bare-bones example of a non-metasearch subject page.  You'll certainly want to edit it and add some CSS to make it look better.
 
-== For version 1.6==
+== For version 1.6 or higher==
 
   # [http://xerxes-portal.googlecode.com/svn/cookbook/dual-subject-pages/databases_subject_nosearch.xsl Download this file] into your `demo/xsl` directory.
   # Set-up you local [http://xerxes-portal.googlecode.com/svn/cookbook/dual-subject-pages/actions.xml actions.xml like this].
