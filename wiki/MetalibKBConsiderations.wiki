@@ -2,13 +2,13 @@
 
 For a variety of reasons, Xerxes displays the Metalib Knowledgebase differently than the standard Metalib interface.  It also allows you to to achieve some additional functionality beyond what Metalib normally provides by simply following some conventions in the Metalib KB.
 
-=Changes in Categories Admin=
+==Changes in Categories Admin==
 
 After making any changes in Metalib's Categories Admin module -- such as creating or renaming a category, or assigning databases to a subcategory -- you need to click on the "ALL Subcategories" link at the top of the page.  This re-indexes your category assignments. The process takes just a few seconds to run.
 
 If you don't perform this step, the Xerxes populate/databases action will not pick up your category changes. This is a bug in Metalib, and one you will find yourself tripping over more than once.
 
-=Display of categories in Xerxes versus Metalib=
+==Display of categories in Xerxes versus Metalib==
 
 Xerxes employs a different philosophy for arranging categories and subcategories than Metalib.  As you implement Xerxes, you will find that you may need to rethink (and, in turn, re-organize) your categories.
 
@@ -18,7 +18,7 @@ Xerxes, on the other hand, is set-up for a flat hierarchy where the categories a
 
 We think a flat, discipline-based hierarchy makes more sense to students, since they can more readily identify with the course they are taking -- I'm in History 301, so I'll choose the 'History' category -- then having to divine that the subject they want is contained within a super-grouping like Social Sciences or Humanities.
 
-=Subcategories and Librarian contact information in the sidebar=
+==Subcategories and Librarian contact information in the sidebar==
 
 You can have Xerxes display certain subcategories in the sidebar versus the main part of the subject page.  This is useful for adding supplementary information to a category, like librarian contact information, or links to subject guides and secondary websites.
 
@@ -35,7 +35,7 @@ The data you see in the example -- office, email, telephone, etc. -- is taken fr
 There is also a new config.xml entry called [Configuration#databases_type_exclude_az databases_type_exclude_az] that allows you to exclude certain IRDs from the A-Z database listing based on their 'type'.  This could be useful for other reasons, but one thing it allows you to do is remove these Librarian IRDs that we've created from the A-Z list.
 
 
-=Search-and-link databases that use HTTP POST=
+==Search-and-link databases that use HTTP POST==
 
 The Metalib X-Server currently contains a bug that prevents it from properly handling search-and-link databases that require HTTP POST (as opposed to GET) to link to the website's search results.
 
