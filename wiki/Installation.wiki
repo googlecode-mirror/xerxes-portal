@@ -6,7 +6,7 @@ The screencasts below provide a visual walk-through of installing and setting-up
 
  * [http://blip.tv/file/2085080 Part 1: Installing Xerxes ]
 
- * [http://blip.tv/file/2085110 Part 2: Advanced configuration] ( *update*: you can select an alternative 'quick search' category in config.xml now, so ignore the instructions for changing actions.xml )
+ * [http://blip.tv/file/2085110 Part 2: Advanced configuration] ( *update*: you can select an alternative 'quick search' category in config.xml now, so ignore the instructions for changing actions.xml.  *update*: As of version 1.7, the instructions for populating the peer-reviewed data set is now different, see step 7 below. )
 
 
 =Instructions=
@@ -70,13 +70,15 @@ Assuming you having PHP set-up with the CLI (command line interface) option, you
 
 ==6. Check to see if everything is working==
 
-You should now be able to visit your.server.edu/xerxes/demo to see a functioning implementation.  
+You should now be able to visit xerxes.example.edu/xerxes/demo to see a functioning implementation.  
 
 If you kept the mod_rewrite scheme setting, and are using Apache, make sure to edit the accompanying 'demo/.htaccess' file to reflect the name and location of the 'demo' directory.
 
 ==7. Populate the peer-reviewed journal titles==
 
-Return to the command line, and issue the following command to load the peer-reviewed dataset into the xerxes_refereed table:
+Contact David (dwalker at calstate dot edu ) to get the peer-reviewed data set.  This depends on you having an SFX license, so we just need to verify that.
+
+Put that file in the `lib/data` directory.  Return to the command line, and issue the following command to load the peer-reviewed data set into the `xerxes_refereed` table:
 
   {{{php -f /path/to/xerxes/demo/index.php action=populate-refereed base=availability}}}
 
@@ -107,7 +109,6 @@ This sends a message to the Ex Libris network administrators to update the bX fi
 Back on the link resolver profile page, locate the `bX authentication token`.  *Note*: There are two different bX tokens, the registration token and the authentication token.  You want to use the _authentication_ token.  If your enter the wrong one in Xerxes, you'll see an error.
 
 Once you receive confirmation from Ex Libris that the firewall is open, add the authentication token to the `bx_token` entry in `config.xml`.  Recommendations, when available, should now start appearing in your Xerxes records.
-
 
 ==10. Set-up cron jobs for the cache==
 
