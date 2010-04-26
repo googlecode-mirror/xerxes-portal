@@ -8,7 +8,7 @@ The PHP code basically performs one or more tasks -- for example, fetching searc
 
 In Xerxes, you can freely combine multiple commands together to fetch data or perform other actions, and, use multiple different views to display that data.  A single file -- lib/config/actions.xml – controls the mapping of commands and views to create each "page."
 
-The parameters `base` and `action` in each Xerxes URL corresponds to the `<section>` and `<action>` XML blocks in actions.xml, respectively.  The `<action>` block further defines which commands and view to use to create the page.  See the comments in actions.xml and the advanced configuration video in the video sections of the [Installation installation instructions] for more information.
+The parameters `base` and `action` in each Xerxes URL corresponds to the `<section>` and `<action>` XML blocks in actions.xml, respectively.  The `<action>` block further defines which commands and view to use to create the page.  See the comments in actions.xml for more information.
 
 ==Customizing commands==
 
