@@ -6,7 +6,7 @@ The screencasts below provide a visual walk-through of installing and setting-up
 
  * [http://blip.tv/file/2085080 Part 1: Installing Xerxes ]
 
- * [http://blip.tv/file/2085110 Part 2: Advanced configuration] ( *update*: you can select an alternative 'quick search' category in config.xml now, so ignore the instructions for changing actions.xml.  *update*: As of version 1.7, the instructions for populating the peer-reviewed data set is now different, see step 7 below. )
+ * [http://blip.tv/file/2085110 Part 2: Advanced configuration] ( *update*: you can select an alternative 'quick search' category in config.xml now, so ignore the instructions for changing actions.xml.  *update*: As of version 1.7, the instructions for loading the peer-reviewed data set is now different, see step 7 below. )
 
 
 =Instructions=
