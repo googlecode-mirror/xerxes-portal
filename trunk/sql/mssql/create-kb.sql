@@ -1,9 +1,10 @@
-# author: David Walker
-# copyright: 2009 California State University
-# version: $Id$
-# package: Xerxes
-# link: http://xerxes.calstate.edu
-# license: http://www.gnu.org/licenses/
+/* author: David Walker
+   copyright: 2009 California State University
+   version: $Id$
+   package: Xerxes
+   link: http://xerxes.calstate.edu
+   license: http://www.gnu.org/licenses/
+*/
 
 USE xerxes;
 
@@ -61,7 +62,7 @@ CREATE TABLE xerxes_databases(
 CREATE TABLE xerxes_database_alternate_titles (
 	id			INT IDENTITY,
 	database_id     	VARCHAR(10),
-	alt_title		VARCHAR(100),
+	alt_title		VARCHAR(255),
 
 	PRIMARY KEY (id),
 	FOREIGN KEY (database_id) REFERENCES xerxes_databases(metalib_id) ON DELETE CASCADE

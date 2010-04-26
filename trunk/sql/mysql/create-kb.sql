@@ -76,7 +76,7 @@ CREATE TABLE xerxes_databases(
 CREATE TABLE xerxes_database_alternate_titles (
 	id			MEDIUMINT NOT NULL AUTO_INCREMENT,
 	database_id     	VARCHAR(10),
-	alt_title		VARCHAR(100),
+	alt_title		VARCHAR(255),
 
 	PRIMARY KEY (id),
 	FOREIGN KEY (database_id) REFERENCES xerxes_databases(metalib_id) ON DELETE CASCADE
