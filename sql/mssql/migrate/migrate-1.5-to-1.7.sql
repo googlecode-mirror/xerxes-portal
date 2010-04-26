@@ -1,11 +1,11 @@
 USE xerxes;
 
-# mysql scripts included changes to MEDIUMTEXT to increase space 
-# for saved records and cache, that is unnecessary for sql server, 
-# since the TEXT type is already equivalent to mysql MEDIUMTEXT
+/* mysql scripts included changes to MEDIUMTEXT to increase space 
+   for saved records and cache, that is unnecessary for sql server, 
+   since the TEXT type is already equivalent to mysql MEDIUMTEXT
+*/
 
-
-# new refereed data
+/* new refereed data */
 
 DROP TABLE xerxes_refereed;
 
@@ -17,6 +17,6 @@ CREATE TABLE xerxes_refereed (
 
 CREATE INDEX xerxes_refereed_issn_idx ON xerxes_refereed(issn);
 
-# for search arch
+/* for search arch */
 
 ALTER TABLE xerxes_records ADD record_type VARCHAR(100);
