@@ -133,7 +133,7 @@
 	
 	</xsl:if>
 	
-	<xsl:if test="//search_and_link">
+	<xsl:if test="//search_and_link and $merge_bug = 'false'">
 	
 		<xsl:choose>
 			<xsl:when test="//search_and_link_type = 'POST'">
