@@ -250,6 +250,12 @@ abstract class Xerxes_Framework_Search
 				$record_openurl = Xerxes_Framework_Parser::escapeXml($this->linkOpenURL($result));
 				$link_full = $results_xml->createElement("url_open", $record_openurl);
 				$record_container->appendChild( $link_full );
+
+				// save or delete link
+
+				$record_save = Xerxes_Framework_Parser::escapeXml($this->linkSaveRecord($result));
+				$link_save = $results_xml->createElement("url_save", $record_save);
+				$record_container->appendChild( $link_save );				
 				
 		      	// openurl kev context object please
 		      	
@@ -360,6 +366,17 @@ abstract class Xerxes_Framework_Search
 		
 		return $this->request->url_for($arrParams);
 	}
+
+	protected function linkSaveRecord($result)
+	{
+		$arrParams = array(
+			"base" => $this->request->getProperty("base"),
+			"action" => "save-delete",
+			"id" => $result->getControlNumber()
+		);
+		
+		return $this->request->url_for($arrParams);
+	}	
 	
 	protected function linkOpenURL($result)
 	{
