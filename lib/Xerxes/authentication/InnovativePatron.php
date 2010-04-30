@@ -8,7 +8,7 @@
 	 * @author John Blyberg
 	 * @link http://xerxes.calstate.edu
 	 * @license http://www.gnu.org/licenses/
-	 * @version $Id: InnovativePatron.php 1009 2009-11-30 21:34:21Z dwalker@calstate.edu $
+	 * @version $Id$
 	 * @package Xerxes
 	 */
 

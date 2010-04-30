@@ -5,7 +5,7 @@
 	 * 
 	 * @author David Walker
 	 * @copyright 2008 California State University
-	 * @version $Id: CAS.php 1009 2009-11-30 21:34:21Z dwalker@calstate.edu $
+	 * @version $Id$
 	 * @package Xerxes
 	 * @link http://xerxes.calstate.edu
 	 * @license http://www.gnu.org/licenses/
