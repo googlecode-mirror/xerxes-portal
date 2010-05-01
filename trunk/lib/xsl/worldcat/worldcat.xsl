@@ -1064,8 +1064,8 @@
 						<xsl:with-param name="printAvailable" select="$printAvailable" />
 					</xsl:call-template>			
 				</xsl:when>
-				<xsl:when test="$type = 'innreach'">
-					<xsl:call-template name="holdings_lookup_innreach">
+				<xsl:when test="$type = 'consortium'">
+					<xsl:call-template name="holdings_lookup_consortium">
 						<xsl:with-param name="isbn" select="$isbn_prefix" />
 						<xsl:with-param name="oclc" select="$oclc_prefix" />
 						<xsl:with-param name="printAvailable" select="$printAvailable" />
@@ -1104,11 +1104,11 @@
 </xsl:template>
 
 <!-- 	
-	TEMPLATE: INNREACH LOOKUP ( BRIEF RESULTS )
-	For groups with an innreach server lookup
+	TEMPLATE: CONSORTIUM LOOKUP ( BRIEF RESULTS )
+	For groups with an consortium server lookup
 -->
 
-<xsl:template name="holdings_lookup_innreach">
+<xsl:template name="holdings_lookup_consortium">
 	<xsl:param name="isbn" />
 	<xsl:param name="oclc" />
 	<xsl:param name="printAvailable" />
@@ -1213,9 +1213,9 @@
 	<xsl:param name="printAvailable" />
 	
 	<xsl:variable name="group" select="//request/source" />
-	<xsl:variable name="innreach">
+	<xsl:variable name="consortium">
 		<xsl:choose>
-			<xsl:when test="//worldcat_groups/group[@id = $group]/lookup/display = 'innreach'">
+			<xsl:when test="//worldcat_groups/group[@id = $group]/lookup/display = 'consortium'">
 				<xsl:text>true</xsl:text>
 			</xsl:when>
 			<xsl:otherwise>
@@ -1226,8 +1226,8 @@
 	
 	<xsl:if test="$printCopies != '0'">
 	
-		<xsl:if test="$printAvailable > 0 and $innreach = 'true'">
-			<div class="worldcatInnreachRequest">
+		<xsl:if test="$printAvailable > 0 and $consortium = 'true'">
+			<div class="worldcatConsortiumRequest">
 				<form action="{//cached/object[contains(@id,$isbn) or contains(@id,$oclc)]//holdings:resourceIdentifier/holdings:value}" method="get">
 					<input type="submit" value="Request this item" />
 				</form>
@@ -1244,7 +1244,7 @@
 			
 			<table class="holdingsTable">
 			<tr>
-				<xsl:if test="$innreach = 'true'">
+				<xsl:if test="$consortium = 'true'">
 					<th>Institution</th>
 				</xsl:if>
 				<th>Location</th>
