@@ -93,15 +93,11 @@
 			$local_xsl_dir = $objRegistry->getConfig("APP_DIRECTORY", true);
 			$local_path =  $local_xsl_dir . "/" . $strXsltRelPath;
 			      
-			// the 'main' application xsl lives here
+			// the 'distro' application xsl lives here
 		
 			$distro_xsl_dir = $objRegistry->getConfig("PATH_PARENT_DIRECTORY", true) . '/lib/';
 			
-			// XSL_PARENT_DIRECTORY is the path to the xsl file, whether main (as above)
-			// or a module, in which case it's somewhere else
-			
-			$this_xsl_dir = $objRegistry->getConfig("XSL_PARENT_DIRECTORY", false, $distro_xsl_dir);
-			$distro_path =  $this_xsl_dir . $strXsltRelPath;
+			$distro_path =  $distro_xsl_dir . $strXsltRelPath;
 			
 			$generated_xsl = new DOMDocument();
 			$generated_xsl->load( $distro_xsl_dir . "xsl/dynamic_skeleton.xsl");
@@ -121,7 +117,7 @@
 			// if no distro, need to directly import distro includes.xsl, since we're not
 			// importing a file that will reference it; also need to do this for modules
 			
-			if ( $distro_exists == false || $this_xsl_dir != $distro_xsl_dir )
+			if ( $distro_exists == false || $distro_xsl_dir != $distro_xsl_dir )
 			{
 				array_push($arrImports, $distro_xsl_dir . "xsl/includes.xsl");
 			}			
@@ -137,7 +133,7 @@
 			{
 				foreach ( $arrInclude as $strInclude )
 				{
-					array_push($arrImports, $this_xsl_dir . $strInclude);
+					array_push($arrImports, $distro_xsl_dir . $strInclude);
 				}
 			}
 				
@@ -183,7 +179,7 @@
 					// path to local copy, and the distro copy as a check
 					
 					$local_candidate = $local_xsl_dir . '/' . dirname ( $strXsltRelPath ) . '/' . $extra['href'];
-					$distro_check = $this_xsl_dir . '/' . dirname ( $strXsltRelPath ) . '/' . $extra['href'];
+					$distro_check = $distro_xsl_dir . '/' . dirname ( $strXsltRelPath ) . '/' . $extra['href'];
 					
 					// make sure it exists, and they are both not pointing at the same file 
 					
