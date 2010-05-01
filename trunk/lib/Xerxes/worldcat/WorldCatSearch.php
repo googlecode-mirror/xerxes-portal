@@ -98,6 +98,8 @@ class Xerxes_WorldCatSearch extends Xerxes_Framework_Search
 	
 	public function record()
 	{
+		$this->addConfigToResponse();
+		
 		$xml = parent::record();
 		$this->getHoldingsInject();
 		
