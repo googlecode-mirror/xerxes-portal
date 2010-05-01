@@ -571,6 +571,54 @@ class Xerxes_WorldCatSearch extends Xerxes_Framework_Search
 		
 		return $strILL;
 	}
+
+	protected function linkOther($result, $results_xml, $record_container)
+	{
+		// author links
+			
+		$arrAuthorsReverse = $result->getAuthors(false, true, true);
+		$arrAuthorsForward = $result->getAuthors(false, true);
+
+		for ( $a = 0; $a < count($arrAuthorsReverse); $a++ )
+		{
+			$strAuthorReverse = $arrAuthorsReverse[$a];
+			$strAuthorForward = $arrAuthorsForward[$a];
+				
+			$arrLink = array(
+				"base" => $this->request->getProperty("base"),
+				"action" => "search",
+				"query" => Xerxes_Framework_Parser::escapeXML($strAuthorReverse),
+				"field" => "author",
+				"exact" => "true",
+				"spell" => "none"
+			);
+				
+			$author_url = $this->request->url_for($arrLink);
+			$objAuthorLink = $results_xml->createElement("author_link", Xerxes_Framework_Parser::escapeXML($strAuthorForward));
+			$objAuthorLink->setAttribute("link", $author_url);
+				
+			$record_container->appendChild($objAuthorLink);
+		}			
+			
+		// lateral subject links
+			
+		foreach ( $result->getSubjects() as $subject )
+		{
+			$arrLink = array(
+				"base" => $this->request->getProperty("base"),
+				"action" => "search",
+				"query" => Xerxes_Framework_Parser::escapeXML($subject),
+				"field" => "subject",
+				"spell" => "none"
+			);
+			
+			$subject_url = $this->request->url_for($arrLink);
+			$objSubjectLink = $results_xml->createElement("subject_link", Xerxes_Framework_Parser::escapeXML($subject));
+			$objSubjectLink->setAttribute("link", $subject_url);
+			
+			$record_container->appendChild($objSubjectLink);
+		}			
+	}
 }
 
 class Xerxes_WorldCatSearch_Query extends Xerxes_Framework_Search_Query 

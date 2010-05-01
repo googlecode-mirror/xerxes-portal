@@ -261,7 +261,11 @@ abstract class Xerxes_Framework_Search
 		      	
 				$kev = Xerxes_Framework_Parser::escapeXml($result->getOpenURL(null, $this->sid));
 				$open_url = $results_xml->createElement("openurl_kev_co", $kev);
-				$record_container->appendChild( $open_url );				
+				$record_container->appendChild( $open_url );
+
+				// other links (probably things like author, subject links)
+				
+				$this->linkOther($result, $results_xml, $record_container);
 				
 				// xerxes-record
 				
@@ -381,6 +385,11 @@ abstract class Xerxes_Framework_Search
 	protected function linkOpenURL($result)
 	{
 		return $result->getOpenURL($this->link_resolver, $this->sid);
+	}
+	
+	protected function linkOther($result, $results_xml, $record_container)
+	{
+		
 	}
 	
 	protected function sortOptions()
