@@ -142,7 +142,7 @@
 		</xsl:if>
 		
 		<div id="worldcatAdvancedMore">
-			<xsl:if test="//request/session/role != 'guest'">
+			<xsl:if test="not(//request/session/role) or //request/session/role != 'guest'">
 				<a href="./?base=search&amp;action=advanced"><xsl:value-of select="$text_searchbox_options_more" /></a>
 			</xsl:if>
 		</div>		
