@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<searchRetrieveResponse xmlns="http://www.loc.gov/zing/srw/" xmlns:oclcterms="http://purl.org/oclc/terms/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:diag="http://www.loc.gov/zing/srw/diagnostic/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<version>1.1</version>
+<numberOfRecords>1</numberOfRecords>
+<records>
+<record>
+<recordSchema>marcxml</recordSchema>
+<recordPacking>xml</recordPacking>
+<recordData>
+<record xmlns="http://www.loc.gov/MARC21/slim">
+    <leader>00000cam a2200000Ia 4500</leader>
+
+    <controlfield tag="001">47278976</controlfield>
+    <controlfield tag="008">010711s2001    ch a          001 0 eng d</controlfield>
+    <controlfield tag="009">2095</controlfield>
+    <datafield ind1=" " ind2=" " tag="010">
+      <subfield code="a">  2002279543</subfield>
+    </datafield>
+
+    <datafield ind1=" " ind2=" " tag="040">
+      <subfield code="a">CDU</subfield>
+      <subfield code="c">CDU</subfield>
+      <subfield code="d">IXA</subfield>
+      <subfield code="d">ZQP</subfield>
+      <subfield code="d">DLC</subfield>
+
+      <subfield code="d">UKM</subfield>
+      <subfield code="d">OCLCQ</subfield>
+      <subfield code="d">BAKER</subfield>
+      <subfield code="d">NLGGC</subfield>
+      <subfield code="d">BTCTA</subfield>
+      <subfield code="d">YDXCP</subfield>
+
+    </datafield>
+    <datafield ind1=" " ind2=" " tag="015">
+      <subfield code="a">GBA1-69394</subfield>
+    </datafield>
+    <datafield ind1=" " ind2=" " tag="020">
+      <subfield code="a">0596001193</subfield>
+    </datafield>
+    <datafield ind1=" " ind2=" " tag="020">
+
+      <subfield code="a">9780596001193</subfield>
+    </datafield>
+    <datafield ind1="1" ind2=" " tag="029">
+      <subfield code="a">UKM</subfield>
+      <subfield code="b">bA169394</subfield>
+    </datafield>
+    <datafield ind1="1" ind2=" " tag="029">
+
+      <subfield code="a">NLGGC</subfield>
+      <subfield code="b">227201302</subfield>
+    </datafield>
+    <datafield ind1="1" ind2=" " tag="029">
+      <subfield code="a">NZ1</subfield>
+      <subfield code="b">6539459</subfield>
+    </datafield>
+
+    <datafield ind1="1" ind2=" " tag="029">
+      <subfield code="a">AU@</subfield>
+      <subfield code="b">000023833646</subfield>
+    </datafield>
+    <datafield ind1="1" ind2=" " tag="029">
+      <subfield code="a">AU@</subfield>
+      <subfield code="b">000023113593</subfield>
+
+    </datafield>
+    <datafield ind1="1" ind2=" " tag="029">
+      <subfield code="a">AU@</subfield>
+      <subfield code="b">000024204099</subfield>
+    </datafield>
+    <datafield ind1="0" ind2="0" tag="050">
+      <subfield code="a">QA76.76.H94</subfield>
+
+      <subfield code="b">S717 2001</subfield>
+    </datafield>
+    <datafield ind1="0" ind2="0" tag="082">
+      <subfield code="a">005.7/2</subfield>
+      <subfield code="2">21</subfield>
+    </datafield>
+    <datafield ind1=" " ind2=" " tag="084">
+
+      <subfield code="a">54.65</subfield>
+      <subfield code="2">bcl</subfield>
+    </datafield>
+    <datafield ind1="1" ind2=" " tag="100">
+      <subfield code="a">St. Laurant, Simon.</subfield>
+    </datafield>
+    <datafield ind1="1" ind2="0" tag="245">
+
+      <subfield code="a">Programming web services with XML-RPC /</subfield>
+      <subfield code="c">Simon St. Laurent, Joe Johnston, Edd Dumbill.</subfield>
+    </datafield>
+    <datafield ind1=" " ind2=" " tag="260">
+      <subfield code="a">Beijing ;</subfield>
+      <subfield code="a">Cambridge [Mass.] :</subfield>
+      <subfield code="b">O'Reilly,</subfield>
+
+      <subfield code="c">c2001.</subfield>
+    </datafield>
+    <datafield ind1=" " ind2=" " tag="300">
+      <subfield code="a">213 p. :</subfield>
+      <subfield code="b">ill. ;</subfield>
+      <subfield code="c">24 cm.</subfield>
+    </datafield>
+
+    <datafield ind1=" " ind2=" " tag="500">
+      <subfield code="a">"Creating web application gateways"--At head of front cover.</subfield>
+    </datafield>
+    <datafield ind1=" " ind2=" " tag="500">
+      <subfield code="a">Includes index.</subfield>
+    </datafield>
+    <datafield ind1=" " ind2="0" tag="650">
+      <subfield code="a">XML (Document markup language)</subfield>
+
+    </datafield>
+    <datafield ind1="0" ind2="4" tag="630">
+      <subfield code="a">Remote procedure call library.</subfield>
+    </datafield>
+    <datafield ind1="1" ind2="7" tag="650">
+      <subfield code="a">Websites.</subfield>
+      <subfield code="2">gtt</subfield>
+
+    </datafield>
+    <datafield ind1="1" ind2="7" tag="650">
+      <subfield code="a">XML.</subfield>
+      <subfield code="2">gtt</subfield>
+    </datafield>
+    <datafield ind1="1" ind2="7" tag="650">
+      <subfield code="a">Programmatuurtechniek.</subfield>
+
+      <subfield code="2">gtt</subfield>
+    </datafield>
+    <datafield ind1="1" ind2=" " tag="700">
+      <subfield code="a">Johnston, Joe.</subfield>
+    </datafield>
+    <datafield ind1="1" ind2=" " tag="700">
+      <subfield code="a">Dumbill, Edd.</subfield>
+
+    </datafield>
+    <datafield ind1="4" ind2="2" tag="856">
+      <subfield code="3">Publisher description</subfield>
+      <subfield code="u">http://www.loc.gov/catdir/enhancements/fy0715/2002279543-d.html</subfield>
+    </datafield>
+    <datafield ind1="4" ind2="2" tag="856">
+      <subfield code="3">Contributor biographical information</subfield>
+
+      <subfield code="u">http://www.loc.gov/catdir/enhancements/fy0912/2002279543-b.html</subfield>
+    </datafield>
+    <datafield ind1=" " ind2=" " tag="938">
+      <subfield code="a">Baker &amp; Taylor</subfield>
+      <subfield code="b">BKTY</subfield>
+      <subfield code="c">34.95</subfield>
+
+      <subfield code="d">26.21</subfield>
+      <subfield code="i">0596001193</subfield>
+      <subfield code="n">0003633634</subfield>
+      <subfield code="s">active</subfield>
+    </datafield>
+    <datafield ind1=" " ind2=" " tag="938">
+      <subfield code="a">Baker and Taylor</subfield>
+
+      <subfield code="b">BTCP</subfield>
+      <subfield code="n">bl2001007135</subfield>
+    </datafield>
+    <datafield ind1=" " ind2=" " tag="938">
+      <subfield code="a">YBP Library Services</subfield>
+      <subfield code="b">YANK</subfield>
+      <subfield code="n">1754995</subfield>
+
+    </datafield>
+  </record>
+</recordData>
+</record>
+</records>
+<nextRecordPosition/>
+<resultSetIdleTime/>
+<echoedSearchRetrieveRequest xmlns:srw="http://www.loc.gov/zing/srw/">
+<version>1.1</version>
+<query> srw.no= "47278976"  AND ( srw.li="CFI"  ) NOT srw.mt="per"  NOT srw.mt="new" </query>
+<maximumRecords>10</maximumRecords>
+
+<recordPacking>xml</recordPacking>
+<startRecord>1</startRecord>
+<sortKeys>Score,,0</sortKeys>
+<wskey></wskey>
+<frbrGrouping>off</frbrGrouping>
+<servicelevel>full</servicelevel>
+</echoedSearchRetrieveRequest>
+</searchRetrieveResponse>
