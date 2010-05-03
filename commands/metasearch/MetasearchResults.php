@@ -124,14 +124,33 @@ class Xerxes_Command_MetasearchResults extends Xerxes_Command_Metasearch
 				if ( $objSearchType->nodeValue == "POST")
 				{
 					$objSearchXml = $this->getCache( $strGroup, "search", "SimpleXML" );
+					$objGroupXml = $this->getCache( $strGroup, "group", "SimpleXML" );
+					
+					$databases_id = $objGroupXml->xpath("//base_info[set_number = '$strResultSet']/base_001");
+					
+					if ( count($databases_id) != 1 )
+					{
+						throw new Exception("cannot find search-and-link database in group cache");
+					}
+					
+					$metalib_id = (string) $databases_id[0];
+					
+					$databases = $objSearchXml->xpath("//database[@metalib_id='$metalib_id']");
+
+					if ( count($databases) != 1 )
+					{
+						throw new Exception("cannot find database '$metalib_id' in search cache");
+					}
+					
+					$database = $databases[0];
 					
 					// the form action
 					
-					$post = (string) $objSearchXml->database_links->database->link_search_post;
+					$post = (string) $database->link_search_post;
 					
 					// the data to be posted
 					
-					$data = (string) $objSearchXml->database_links->database->link_native_record_alternative;
+					$data = (string) $database->link_native_record_alternative;
 					
 					if ( $post == "" || $data == "" )
 					{
