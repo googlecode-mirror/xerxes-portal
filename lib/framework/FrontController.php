@@ -269,10 +269,18 @@ class Xerxes_Framework_FrontController
 				$strDirectory = $arrCommand[0]; // directory where the command class is located
 				$strNamespace = $arrCommand[1]; // prefix namespace of the command class
 				$strClassFile = $arrCommand[2]; // suffix name of the command class
+				$strModule = $arrCommand[3]; // suffix name of the command class
 							
 				// directory where commands live
 				
 				$command_path = "$path_to_parent/commands/$strDirectory";
+				
+				// but modules live elsewhere!
+				
+				if ( $strModule != "" )
+				{
+					$command_path = "$path_to_parent/modules/$strDirectory/commands";
+				}
 				
 				// allow for a local override, even
 				
@@ -434,13 +442,19 @@ class Xerxes_Framework_FrontController
 					return;
 				}
 				
+				// views will live either in the main lib/xsl directory, or if a module, then
+				// in the module's equivalent; register it in the Registry for XSLT
+				
+				$distro_parent_folder = $objControllerMap->getViewFolder();
+				$objRegistry->setConfig("XSL_PARENT_DIRECTORY", "$path_to_parent/$distro_parent_folder/");
+				
 				// PHP CODE
 				
 				if ( $objControllerMap->getViewType() != "xsl" && $objControllerMap->getViewType() != null )
 				{
 					$file = $objControllerMap->getView();
 					
-					$distro_file = $objRegistry->getConfig( "PATH_PARENT_DIRECTORY", true ) . "/lib/$file";
+					$distro_file = $objRegistry->getConfig( "PATH_PARENT_DIRECTORY", true ) . "/$distro_parent_folder/$file";
 					
 					if ( file_exists( $file ) )
 					{

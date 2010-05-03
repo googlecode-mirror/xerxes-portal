@@ -250,22 +250,12 @@ abstract class Xerxes_Framework_Search
 				$record_openurl = Xerxes_Framework_Parser::escapeXml($this->linkOpenURL($result));
 				$link_full = $results_xml->createElement("url_open", $record_openurl);
 				$record_container->appendChild( $link_full );
-
-				// save or delete link
-
-				$record_save = Xerxes_Framework_Parser::escapeXml($this->linkSaveRecord($result));
-				$link_save = $results_xml->createElement("url_save", $record_save);
-				$record_container->appendChild( $link_save );				
 				
 		      	// openurl kev context object please
 		      	
 				$kev = Xerxes_Framework_Parser::escapeXml($result->getOpenURL(null, $this->sid));
 				$open_url = $results_xml->createElement("openurl_kev_co", $kev);
-				$record_container->appendChild( $open_url );
-
-				// other links (probably things like author, subject links)
-				
-				$this->linkOther($result, $results_xml, $record_container);
+				$record_container->appendChild( $open_url );				
 				
 				// xerxes-record
 				
@@ -370,26 +360,10 @@ abstract class Xerxes_Framework_Search
 		
 		return $this->request->url_for($arrParams);
 	}
-
-	protected function linkSaveRecord($result)
-	{
-		$arrParams = array(
-			"base" => $this->request->getProperty("base"),
-			"action" => "save-delete",
-			"id" => $result->getControlNumber()
-		);
-		
-		return $this->request->url_for($arrParams);
-	}	
 	
 	protected function linkOpenURL($result)
 	{
 		return $result->getOpenURL($this->link_resolver, $this->sid);
-	}
-	
-	protected function linkOther($result, $results_xml, $record_container)
-	{
-		
 	}
 	
 	protected function sortOptions()
