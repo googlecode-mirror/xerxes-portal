@@ -558,7 +558,17 @@ abstract class Xerxes_Framework_Search
 				
 				$arrTerm["query"] = $value;
 				$arrTerm["field"] = $this->request->getProperty("field$id");
-				$arrTerm["boolean"] = $this->request->getProperty("boolean" . ( $boolean_id ) );
+				
+				// boolean only counts if this is not the first quert term
+				
+				if ( count($arrFinal) > 0 )
+				{
+					$arrTerm["boolean"] = $this->request->getProperty("boolean" . ( $boolean_id ) );
+				}
+				else
+				{
+					$arrTerm["boolean"] = "";
+				}
 				
 				array_push($arrFinal, $arrTerm);
 			}
