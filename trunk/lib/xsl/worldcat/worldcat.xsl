@@ -4,8 +4,8 @@
 
  author: David Walker
  copyright: 2007 California State University
- version 1.4
- package: Xerxes  Worldcat
+ version $Id$
+ package: Worldcat
  link: http://xerxes.calstate.edu
  license: http://www.gnu.org/licenses/
  
@@ -111,20 +111,20 @@
 
 			<select id="field" name="field">
 				<option value="">keyword</option>
-				<option value="title">
-				<xsl:if test="request/field = 'title'">
+				<option value="ti">
+				<xsl:if test="request/field = 'ti'">
 					<xsl:attribute name="selected">seleted</xsl:attribute>
 				</xsl:if>
 				title
 				</option>
-				<option value="author">
-				<xsl:if test="request/field = 'author'">
+				<option value="au">
+				<xsl:if test="request/field = 'au'">
 					<xsl:attribute name="selected">selected</xsl:attribute>
 				</xsl:if>
 				author
 				</option>
-				<option value="subject">
-				<xsl:if test="request/field = 'subject'">
+				<option value="su">
+				<xsl:if test="request/field = 'su'">
 					<xsl:attribute name="selected">selected</xsl:attribute>
 				</xsl:if>
 				subject

@@ -511,8 +511,7 @@ class Xerxes_WorldCatSearch extends Xerxes_Framework_Search
 				"action" => "search",
 				"source" => $this->request->getProperty("source"),
 				"query" => Xerxes_Framework_Parser::escapeXML($strAuthorReverse),
-				"field" => "author",
-				"exact" => "true",
+				"field" => "au",
 				"spell" => "none"
 			);
 				
@@ -532,7 +531,7 @@ class Xerxes_WorldCatSearch extends Xerxes_Framework_Search
 				"action" => "search",
 				"source" => $this->request->getProperty("source"),
 				"query" => Xerxes_Framework_Parser::escapeXML($subject),
-				"field" => "subject",
+				"field" => "su",
 				"spell" => "none"
 			);
 			
