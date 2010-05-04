@@ -586,7 +586,7 @@ class Xerxes_WorldCatSearch_Query extends Xerxes_Framework_Search_Query
 		
 		foreach ( $this->getQueryTerms() as $term )
 		{
-			$query .= $this->keyValue($term->boolean, $term->field, $term->phrase );
+			$query .= $this->keyValue($term->boolean, $term->field, $term->relation, $term->phrase );
 		}
 		
 		$arrLimits = array();
@@ -669,13 +669,14 @@ class Xerxes_WorldCatSearch_Query extends Xerxes_Framework_Search_Query
 	 *
 	 * @param string $boolean		default boolean operator to use, can be blank
 	 * @param string $field			worldcat index
+	 * @param string $relation		relation
 	 * @param string $value			term(s)
 	 * @param bool $neg				(optional) whether the presence of '-' in $value should indicate a negative expression
 	 * 								in which case $boolean gets changed to 'NOT'
 	 * @return string				the resulting SRU expresion
 	 */
 	
-	private function keyValue($boolean, $field, $value, $neg = false)
+	private function keyValue($boolean, $field, $relation, $value, $neg = false)
 	{
 		if ($neg == true && strstr ( $value, "-" ))
 		{
@@ -685,7 +686,7 @@ class Xerxes_WorldCatSearch_Query extends Xerxes_Framework_Search_Query
 		
 		$together = "";
 		
-		if ( strstr($field, "exact"))
+		if ( $relation == "exact")
 		{
 			$value = str_replace ( "\"", "", $value );
 			$together = " srw.$field exact \" $value \"";
