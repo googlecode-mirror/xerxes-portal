@@ -4,8 +4,8 @@
 
  author: David Walker
  copyright: 2007 California State University
- version 1.1
- package: Xerxes Worldcat
+ version: $Id$
+ package: Worldcat
  link: http://xerxes.calstate.edu
  license: http://www.gnu.org/licenses/
  

@@ -536,7 +536,6 @@
 			<action name="results">
 				<pathParamMap>
 					<mapEntry pathIndex="2" property="source"/>
-					<mapEntry pathIndex="3" property="query"/>
 				</pathParamMap>
 				<command>SearchResults</command>
 				<view>xsl/worldcat/worldcat_results.xsl</view>
