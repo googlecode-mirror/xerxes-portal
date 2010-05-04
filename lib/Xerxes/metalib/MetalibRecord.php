@@ -294,7 +294,10 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 				$title_sub->value = "";
 			}
 			
-			$this->addDataField($note_field);
+			if ( $note_field->subfield("a")->length() > 0 )
+			{
+				$this->addDataField($note_field);
+			}
 		}
 		
 		// psycinfo and related databases include a 502 that is not a thesis note -- bonkers!
