@@ -82,7 +82,7 @@ class Xerxes_WorldCatSearch extends Xerxes_Framework_Search
 		
 		$search = $this->query->toQuery();
 		
-		echo $search;
+		// echo $search;
 		
 		// get results and convert them to xerxes_record
 		
