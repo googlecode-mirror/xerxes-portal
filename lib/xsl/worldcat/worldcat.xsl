@@ -38,7 +38,7 @@
 	<xsl:call-template name="breadcrumb_start" />
 	
 	<xsl:if test="//request/action != 'home'">
-		<a href="./?base=search"><xsl:value-of select="$text_worldcat_name" /></a> <xsl:copy-of select="$text_breadcrumb_seperator" />
+		<a href="./?base={//request/base}"><xsl:value-of select="$text_worldcat_name" /></a> <xsl:copy-of select="$text_breadcrumb_seperator" />
 	</xsl:if>
 	
 	
@@ -53,7 +53,7 @@
 
 	<form action="./" method="get">
 
-		<input type="hidden" name="base" value="search" />
+		<input type="hidden" name="base" value="{//request/base}" />
 		<input type="hidden" name="action" value="search" />
 		<input type="hidden" name="source" value="local" />
 
@@ -143,7 +143,7 @@
 		
 		<div id="worldcatAdvancedMore">
 			<xsl:if test="not(//request/session/role) or //request/session/role != 'guest'">
-				<a href="./?base=search&amp;action=advanced"><xsl:value-of select="$text_searchbox_options_more" /></a>
+				<a href="./?base={//request/base}&amp;action=advanced"><xsl:value-of select="$text_searchbox_options_more" /></a>
 			</xsl:if>
 		</div>		
 		
@@ -168,7 +168,7 @@
 							<xsl:with-param name="active"><xsl:value-of select="request/field1" /></xsl:with-param>
 							<xsl:with-param name="id">1</xsl:with-param>
 						</xsl:call-template> 
-						<xsl:text> for </xsl:text><input type="text" name="term1" value="{request/term1}" />
+						<xsl:text> for </xsl:text><input type="text" name="query1" value="{request/query1}" />
 					</li>
 				</xsl:if>
 				<xsl:if test="request/advancedfull or request/term2">
@@ -182,7 +182,7 @@
 							<xsl:with-param name="active"><xsl:value-of select="request/field2" /></xsl:with-param>
 							<xsl:with-param name="id">2</xsl:with-param>
 						</xsl:call-template> 
-						<xsl:text> for </xsl:text><input type="text" name="term2"  value="{request/term2}" />
+						<xsl:text> for </xsl:text><input type="text" name="query2"  value="{request/query2}" />
 					</li>
 				</xsl:if>
 				<xsl:if test="request/advancedfull or request/term3">
@@ -196,7 +196,7 @@
 							<xsl:with-param name="active"><xsl:value-of select="request/field3" /></xsl:with-param>
 							<xsl:with-param name="id">3</xsl:with-param>
 						</xsl:call-template> 
-						<xsl:text> for </xsl:text><input type="text" name="term3"  value="{request/term3}" />
+						<xsl:text> for </xsl:text><input type="text" name="query3"  value="{request/query3}" />
 					</li>
 				</xsl:if>
 				<xsl:if test="request/advancedfull or request/term4">
@@ -210,7 +210,7 @@
 							<xsl:with-param name="active"><xsl:value-of select="request/field4" /></xsl:with-param>
 							<xsl:with-param name="id">4</xsl:with-param>
 						</xsl:call-template> 
-						<xsl:text> for </xsl:text><input type="text" name="term4"  value="{request/term4}" />
+						<xsl:text> for </xsl:text><input type="text" name="query4"  value="{request/query4}" />
 					</li>
 				</xsl:if>
 			</ul>

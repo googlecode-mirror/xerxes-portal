@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xerxes version="1.7">
+<xerxes version="1.8">
 
 	<!-- <commands> define the basic behaviors of the system, mapping actions specified in the url or from the 
 			 command line to command classes that fetch or update data as well as files for displaying the results 
@@ -518,6 +518,48 @@
 				<command directory="availability">AvailabilityInjectFullText</command>
 				<command>MetasearchCheckSaved</command>
 				<view>xsl/metasearch_record.xsl</view>
+			</action>
+		</section>
+
+		<section name="worldcat" namespace="Xerxes" directory="search">
+			<request name="xerxes_search_object">Xerxes_WorldCatSearch</request>
+			<action name="home">
+				<view>xsl/worldcat/worldcat_home.xsl</view>
+			</action>
+			<action name="advanced">
+				<request name="advancedfull">true</request>
+				<view>xsl/worldcat/worldcat_home.xsl</view>
+			</action>	
+			<action name="search">
+				<command>SearchSearch</command>
+			</action>					
+			<action name="results">
+				<pathParamMap>
+					<mapEntry pathIndex="2" property="source"/>
+					<mapEntry pathIndex="3" property="query"/>
+				</pathParamMap>
+				<command>SearchResults</command>
+				<view>xsl/worldcat/worldcat_results.xsl</view>
+			</action>
+			<action name="lookup">
+				<command>SearchLookup</command>
+				<view>xsl/worldcat/worldcat_lookup.xsl</view>
+			</action>
+			<action name="record">
+				<pathParamMap>
+					<mapEntry pathIndex="2" property="id"/>
+				</pathParamMap>
+				<command>SearchRecord</command>
+				<view>xsl/worldcat/worldcat_record.xsl</view>
+			</action>
+			<action name="save-delete">
+				<command>SearchSaveDelete</command>
+				<view>xsl/metasearch_save-delete.xsl</view>
+				<view format="json">xsl/metasearch_save-delete_ajax.xsl</view>
+			</action>
+			<action name="ill">
+				<command>WorldCatILL</command>
+				<view />
 			</action>
 		</section>
 
