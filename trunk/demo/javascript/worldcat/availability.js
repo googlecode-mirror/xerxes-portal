@@ -33,7 +33,7 @@
 				oclc = arrElements[2];
 				view = arrElements[3];	
 				
-				url = ".?base=search&action=lookup&isbn=" + isbn + "&oclc=" + oclc + "&source=" + requester + "&display=" + view;
+				url = ".?base=worldcat&action=lookup&isbn=" + isbn + "&oclc=" + oclc + "&source=" + requester + "&display=" + view;
 
 				new Ajax.Updater(divs[i].id, url);
 			}

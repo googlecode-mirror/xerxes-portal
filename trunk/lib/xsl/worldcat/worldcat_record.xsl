@@ -285,7 +285,7 @@
 								<xsl:sort select="physicalLocation" />
 								<xsl:variable name="oclc_url" select="php:function('urlencode', string(electronicAddress/text))" />
 								<li>
-									<a href="./?base=search&amp;action=bounce&amp;url={$oclc_url}">
+									<a href="./?base={//request/base}&amp;action=bounce&amp;url={$oclc_url}">
 										<xsl:value-of select="physicalLocation" />
 									</a>
 								</li>
