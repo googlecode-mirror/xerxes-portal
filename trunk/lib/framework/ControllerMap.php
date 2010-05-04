@@ -394,14 +394,14 @@
 				
 				if ( $strRestricted == "true") $this->bolRestricted = true;
 				if ( $strLogin == "true") $this->bolLogin = true;
-				
-				// add any predefined values to the request object from ControllerMap
-				
-				foreach ( $this->getRequests() as $key => $value )
-				{
-					$xerxes_request->setProperty($key, $value);
-				}
 			}
+
+			// add any predefined values to the request object from ControllerMap
+				
+			foreach ( $this->getRequests() as $key => $value )
+			{
+				$xerxes_request->setProperty($key, $value);
+			}		
 		}
 		
 		/**
