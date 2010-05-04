@@ -22,6 +22,9 @@ abstract class Xerxes_Framework_Search
 	protected $query_object_type = "Xerxes_Framework_Search_Query";
 	protected $record_object_type = "Xerxes_Record";
 
+    protected $search_fields_regex = "^query[0-9]{0,1}$|^field[0-9]{0,1}$|^boolean[0-9]{0,1}$";
+	protected $limit_fields_regex = "";	
+	
 	public $results = array();
 	public $facets;
 	public $recommendations = array();
@@ -49,8 +52,20 @@ abstract class Xerxes_Framework_Search
 		// set an instance of the query object
 		
 		$query_object = $this->query_object_type;
-		$this->query = new $query_object(); 
-	
+		$this->query = new $query_object();
+		
+		// populate it with it with the 'search' related params out of the url, 
+		// these are things like query, field, boolean
+		
+		$terms = $this->extractSearchGroupings();
+		
+		// add them to our query object
+		
+		foreach ( $terms as $term )
+		{
+			$this->query->addTerm($term["id"], $term["boolean"], $term["field"], $term["relation"], $term["query"]);
+		}		
+		
 		// config stuff
 		
 		$this->link_resolver = $this->registry->getConfig("LINK_RESOLVER_ADDRESS", true);
@@ -70,17 +85,10 @@ abstract class Xerxes_Framework_Search
 	
 	public function search()
 	{
-		// get the 'search' related params out of the url, these are things like 
-		// query, field, boolean
-		
-		$terms = $this->extractSearchParams();
-		
-		// add them to our query object
-		
-		foreach ( $terms as $term )
-		{
-			$this->query->addTerm($term["id"], $term["boolean"], $term["field"], $term["relation"], $term["query"]);
-		}
+		$params = $this->extractSearchParams();
+		$params["base"] = $this->request->getProperty("base");
+		$params["action"] = "results";
+		$params["source"] = $this->request->getProperty("source");
 		
 		// check spelling
 		
@@ -88,10 +96,12 @@ abstract class Xerxes_Framework_Search
 		
 		foreach ( $spelling as $key => $correction )
 		{
-			$this->request->setProperty("spelling_$key", $correction);
+			$params["spelling_$key"] = $correction;
 		}
 		
-		// echo $this->query->toQuery(); exit;
+		$url = $this->request->url_for($params);
+		
+		$this->request->setRedirect($url);
 	}
 	
 	public function progress()
@@ -124,7 +134,7 @@ abstract class Xerxes_Framework_Search
 		
 		// done
 		
-		return $this->resultsXML();
+		$this->request->addDocument($this->resultsXML());
 	}
 
 	public function facet()
@@ -139,7 +149,7 @@ abstract class Xerxes_Framework_Search
 		$xml = $this->search_object->record($id);
 		$this->results = $this->convertToXerxesRecords($xml);
 		
-		return $this->resultsXML();
+		$this->request->addDocument($this->resultsXML());
 	}
 	
 	public function saveDelete()
@@ -207,7 +217,7 @@ abstract class Xerxes_Framework_Search
 			$objXml->documentElement->appendChild( $objInsertedId );
 		}
 		
-		return $objXml;		
+		$this->request->addDocument($objXml);		
 	}
 	
 	public function resultsXML()
@@ -412,8 +422,48 @@ abstract class Xerxes_Framework_Search
 			"action" => $this->request->getProperty("action"),
 		);		
 	}
+	
+	/**
+	 * Extract both query and limit params from the URL
+	 */
+	
+	protected function getAllSearchParams()
+	{
+		$limits = $this->extractLimitParams();
+		$search = $this->extractSearchParams();
+		
+		return array_merge($limits, $search);
+	}		
+	
+	/**
+	 * Get 'limit' params out of the URL, sub-class defines this
+	 */	
+	
+	protected function extractLimitParams()
+	{
+		if ( $this->limit_fields_regex != "" )
+		{
+			return $this->request->getProperties($this->limit_fields_regex, true);
+		}
+		else
+		{
+			return array();
+		}
+	}
 
 	protected function extractSearchParams()
+	{
+		if ( $this->search_fields_regex != "" )
+		{
+			return $this->request->getProperties($this->search_fields_regex, true);
+		}
+		else
+		{
+			return array();
+		}
+	}	
+	
+	protected function extractSearchGroupings()
 	{
 		$arrFinal = array();
 		
@@ -423,7 +473,7 @@ abstract class Xerxes_Framework_Search
 				
 			// if we see a 'query' in the params, check if there are corresponding
 			// entries for field and boolean; these will have a number after them
-			// if coming from the advanced form
+			// if coming from an advanced search form
 				
 			if ( strstr($key, "query"))
 			{
@@ -455,7 +505,7 @@ abstract class Xerxes_Framework_Search
 		
 		return $arrFinal;
 	}
-	
+
 	protected function convertToXerxesRecords(DOMDocument $xml)
 	{
 		$doc_type = $this->record_object_type . "_Document";
