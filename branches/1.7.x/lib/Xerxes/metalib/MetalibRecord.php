@@ -7,7 +7,7 @@
  * @copyright 2009 California State University
  * @link http://xerxes.calstate.edu
  * @license http://www.gnu.org/licenses/
- * @version $Id: MetalibRecord.php 1163 2010-05-04 16:02:13Z dwalker@calstate.edu $
+ * @version $Id: MetalibRecord.php 1165 2010-05-04 16:31:42Z dwalker@calstate.edu $
  * @todo ->__toString() madness below due to php 5.1 object-string casting problem
  * @package Xerxes
  */
@@ -25,7 +25,7 @@ class Xerxes_MetalibRecord_Document extends Xerxes_Marc_Document
  * @copyright 2009 California State University
  * @link http://xerxes.calstate.edu
  * @license http://www.gnu.org/licenses/
- * @version $Id: MetalibRecord.php 1163 2010-05-04 16:02:13Z dwalker@calstate.edu $
+ * @version $Id: MetalibRecord.php 1165 2010-05-04 16:31:42Z dwalker@calstate.edu $
  * @todo ->__toString() madness below due to php 5.1 object-string casting problem, remove 
  *       when redhat provides php 5.2 package, since that is keeping people from upgrading
  *  * @package Xerxes
@@ -294,7 +294,10 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 				$title_sub->value = "";
 			}
 			
-			$this->addDataField($note_field);
+			if ( $note_field->subfield("a")->length() > 0 )
+			{
+				$this->addDataField($note_field);
+			}
 		}
 		
 		// psycinfo and related databases include a 502 that is not a thesis note -- bonkers!
