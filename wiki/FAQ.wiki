@@ -33,3 +33,13 @@ The regular link resolver button stuff is the same, of course.  That's the beaut
 But, whereas Metalib uses SFX-specific technology for looking-up full-text availability, Xerxes uses the Google Scholar export instead, which all major links resolvers support.
 
 So, even though, as a matter of habit, we reference "SFX" in the documentation, there's nothing SFX-specific in Xerxes.
+
+== I get this error: Could not construct link to full-text==
+
+For this, you just need to make sure all of your Ebsco databases have a link-to-native-record entry in the IRD.  Like this one for Academic Search Premiere:
+
+  {{{http://search.ebscohost.com/login.aspx?direct=true&an=$001&db=a9h&scope=site}}}
+
+. . . just swap 'a9h' for the right database code.
+
+Xerxes really should handle this more gracefully -- it's a known issue -- but better all around if you add those link syntaxes.
