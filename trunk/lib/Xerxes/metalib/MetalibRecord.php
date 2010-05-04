@@ -263,15 +263,15 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 			$title_main = $title->subfield("a");
 			$title_sub = $title->subfield("b");
 			
+			$note_field = new Xerxes_Marc_DataField();
+			$note_field->tag = "500";
+			
 			if ( $title_main != null )
 			{
 				if (preg_match_all ( $strGaleRegExp, $title_main->value, $arrMatches ) != 0)
 				{
 					$title_main->value = preg_replace ( $strGaleRegExp, "", $title_main->value );
 				}
-
-				$note_field = new Xerxes_Marc_DataField();
-				$note_field->tag = "500";
 				
 				foreach ( $arrMatches[1] as $strMatch )
 				{				
