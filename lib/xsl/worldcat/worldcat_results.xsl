@@ -79,7 +79,7 @@
 	</xsl:if>
 	
 	<xsl:choose>
-		<xsl:when test="results/hits = '0'">
+		<xsl:when test="results/total = '0'">
 			
 			<div class="worldcatNoHits">
 			<p class="error">Sorry, your search produced no results</p>

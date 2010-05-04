@@ -18,7 +18,7 @@ class Xerxes_WorldCatSearch extends Xerxes_Framework_Search
 	public $id = "worldcat";
 	protected $query_object_type = "Xerxes_WorldCatSearch_Query";
 	protected $record_object_type = "Xerxes_WorldCatRecord";
-	protected $limit_regex = "^year$|^year-relation|^[a-z]{2}$|^[a-z]{2}_exact$";	
+	protected $limit_fields_regex = "^year$|^year_relation|^[a-z]{2}$|^[a-z]{2}_exact$";	
 	
 	// worldcat specific
 
@@ -48,6 +48,8 @@ class Xerxes_WorldCatSearch extends Xerxes_Framework_Search
 		// so we can make use of it in the interface 
 		
 		$this->addConfigToResponse();
+		
+		$this->addAdvancedSearchLink();
 
 		// max records
 		
@@ -80,7 +82,7 @@ class Xerxes_WorldCatSearch extends Xerxes_Framework_Search
 		
 		$search = $this->query->toQuery();
 		
-		// echo $search; exit;
+		echo $search;
 		
 		// get results and convert them to xerxes_record
 		
@@ -352,7 +354,7 @@ class Xerxes_WorldCatSearch extends Xerxes_Framework_Search
 		
 		$objXml = new DOMDocument();
 		
-		if ( $url != null )
+		if ( $url != null && count($arrIDs) > 0 )
 		{
 			$id = implode(",", $arrIDs);
 			
@@ -365,6 +367,10 @@ class Xerxes_WorldCatSearch extends Xerxes_Framework_Search
 				if ( $xml != "" )
 				{
 					$objXml->loadXML($xml);
+				}
+				else
+				{
+					return $objXml;
 				}
 			}
 			else
@@ -419,32 +425,56 @@ class Xerxes_WorldCatSearch extends Xerxes_Framework_Search
 			
 		$this->request->addDocument($objXml);
 	}
-			
+
+	protected function searchRedirectParams()
+	{
+		$params = parent::searchRedirectParams();
+		$params["source"] = $this->request->getProperty("source");
+		$params["sortKeys"] = $this->request->getProperty("sortKeys");
+		$params = array_merge($params, $this->getAllSearchParams($params));
+		return $params;
+	}
+	
 	protected function pagerLinkParams()
 	{
 		$params = parent::pagerLinkParams();
-		$params = $this->worldCatParams($params);
+		$params["source"] = $this->request->getProperty("source");
+		$params["sortKeys"] = $this->request->getProperty("sortKeys");
+		$params = array_merge($params, $this->getAllSearchParams($params));
 		return $params;
 	}
 
 	protected function sortLinkParams()
 	{
 		$params = parent::sortLinkParams();
-		$params = $this->worldCatParams($params);
-		return $params;
-	}
-
-	private function worldCatParams($params)
-	{
 		$params["source"] = $this->request->getProperty("source");
-		
-		foreach ( $this->getAllSearchParams() as $key => $value )
-		{
-			$params[$key] = $value;
-		}
-
+		$params = array_merge($params, $this->getAllSearchParams($params));
 		return $params;
 	}
+
+	protected function getAllSearchParams()
+	{
+		$params = parent::getAllSearchParams();
+		$params["advanced"] = $this->request->getProperty("advanced");
+		
+		return $params;
+	}
+	
+	private function addAdvancedSearchLink()
+	{
+		$params = parent::getAllSearchParams();
+		$params["base"] = $this->request->getProperty("base");
+		$params["action"] = $this->request->getProperty("home");
+		$params["advancedfull"] = "true";
+		
+		$url = $this->request->url_for($params);
+		
+		$advanced_xml = new DOMDocument();
+		$advanced_xml->loadXML("<advanced_search />");
+		$advanced_xml->documentElement->setAttribute("link", $url);
+		
+		$this->request->addDocument($advanced_xml);
+	}	
 	
 	protected function sortOptions()
 	{
@@ -542,6 +572,8 @@ class Xerxes_WorldCatSearch extends Xerxes_Framework_Search
 			$record_container->appendChild($objSubjectLink);
 		}			
 	}
+	
+	
 }
 
 class Xerxes_WorldCatSearch_Query extends Xerxes_Framework_Search_Query 
@@ -554,6 +586,77 @@ class Xerxes_WorldCatSearch_Query extends Xerxes_Framework_Search_Query
 		{
 			$query .= $this->keyValue($term->boolean, $term->field, $term->phrase );
 		}
+		
+		$arrLimits = array();
+		
+		foreach ( $this->getLimits() as $limit )
+		{
+			// publication year
+			
+			if ( $limit->field == "year" )
+			{
+				$year = $limit->value;
+				$year_relation = $limit->relation;
+
+				$arrYears = explode("-", $year);
+				
+				// there is a range
+				
+				if ( count($arrYears) > 1 )
+				{
+					if ( $year_relation == "=" )
+					{
+						$query .= " and srw.yr >= " . trim($arrYears[0]) . 
+							" and srw.yr <= " . trim($arrYears[1]);
+					}
+					
+					// this is probably erroneous, specifying 'before' or 'after' a range;
+					// did user really mean this? we'll catch it here just in case
+					
+					elseif ( $year_relation == ">" )
+					{
+						array_push($arrLimits, " AND srw.yr > " .trim($arrYears[1] . " "));
+					}
+					elseif ( $year_relation == "<" )
+					{
+						array_push($arrLimits, " AND srw.yr < " .trim($arrYears[0] . " "));
+					}					
+				}
+				else
+				{
+					// a single year
+					
+					array_push($arrLimits, " AND srw.yr $year_relation $year ");
+				}
+			}
+
+			// language
+					
+			elseif ( $limit->field == "la")
+			{
+				array_push($arrLimits, " AND srw.la=\"" . $limit->value . "\"");
+			}
+					
+			// material type
+					
+			elseif ( $limit->field == "mt")
+			{
+				$arrMats = explode(",", $limit->value);
+						
+				foreach ( $arrMats as $strMat )
+				{
+					$material_type = $this->keyValue("AND", "mt=", $strMat, true);
+					array_push($arrLimits, $material_type);
+				}
+			}
+		}
+
+		$limits = implode(" ", $arrLimits);
+				
+		if ( $limits != "" )
+		{
+			$query = "($query) $limits";
+		}		
 		
 		return $query;
 	}

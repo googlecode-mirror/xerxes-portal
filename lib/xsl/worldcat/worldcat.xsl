@@ -153,6 +153,8 @@
 
 <xsl:template name="worldcat_advanced_search">
 
+	<input type="hidden" name="advanced" value="true" />
+	
 	<div id="worldcatAdvancedSearch">
 
 		<fieldset id="searchTerms">
@@ -160,7 +162,7 @@
 			<legend>Search Terms</legend>
 			
 			<ul>
-				<xsl:if test="request/advancedfull or request/term1">
+				<xsl:if test="request/advancedfull or request/query1">
 					<li>
 						<xsl:text>Search: </xsl:text>
 						<xsl:call-template name="field_pulldown">
@@ -171,7 +173,7 @@
 						<xsl:text> for </xsl:text><input type="text" name="query1" value="{request/query1}" />
 					</li>
 				</xsl:if>
-				<xsl:if test="request/advancedfull or request/term2">
+				<xsl:if test="request/advancedfull or request/query2">
 					<li> 
 						<xsl:call-template name="boolean">
 							<xsl:with-param name="id">1</xsl:with-param>
@@ -185,7 +187,7 @@
 						<xsl:text> for </xsl:text><input type="text" name="query2"  value="{request/query2}" />
 					</li>
 				</xsl:if>
-				<xsl:if test="request/advancedfull or request/term3">
+				<xsl:if test="request/advancedfull or request/query3">
 					<li>
 						<xsl:call-template name="boolean">
 							<xsl:with-param name="id">2</xsl:with-param>
@@ -199,7 +201,7 @@
 						<xsl:text> for </xsl:text><input type="text" name="query3"  value="{request/query3}" />
 					</li>
 				</xsl:if>
-				<xsl:if test="request/advancedfull or request/term4">
+				<xsl:if test="request/advancedfull or request/query4">
 					<li>
 						<xsl:call-template name="boolean">
 							<xsl:with-param name="id">3</xsl:with-param>
@@ -241,21 +243,21 @@
 					<tr>
 						<td>Year:</td>
 						<td>
-						<select name="year-relation">
+						<select name="year_relation">
 							<option value="=">
-								<xsl:if test="request/year-relation = '='">
+								<xsl:if test="request/year_relation = '='">
 									<xsl:attribute name="selected">seleted</xsl:attribute>
 								</xsl:if>
 								<xsl:text>=</xsl:text>
 							</option>
 							<option value="&lt;">
-								<xsl:if test="request/year-relation = '&#60;'">
+								<xsl:if test="request/year_relation = '&#60;'">
 									<xsl:attribute name="selected">seleted</xsl:attribute>
 								</xsl:if>
 								<xsl:text>before</xsl:text>
 							</option>
 							<option value="&gt;">
-								<xsl:if test="request/year-relation = '&#62;'">
+								<xsl:if test="request/year_relation = '&#62;'">
 									<xsl:attribute name="selected">seleted</xsl:attribute>
 								</xsl:if>
 								<xsl:text>after</xsl:text>
