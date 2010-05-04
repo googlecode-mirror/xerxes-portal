@@ -21,8 +21,8 @@ abstract class Xerxes_Framework_Search
 	
 	protected $query_object_type = "Xerxes_Framework_Search_Query";
 	protected $record_object_type = "Xerxes_Record";
-
-    protected $search_fields_regex = "^query[0-9]{0,1}$|^field[0-9]{0,1}$|^boolean[0-9]{0,1}$";
+	
+	protected $search_fields_regex = "^query[0-9]{0,1}$|^field[0-9]{0,1}$|^boolean[0-9]{0,1}$";
 	protected $limit_fields_regex = "";	
 	
 	public $results = array();
@@ -57,14 +57,17 @@ abstract class Xerxes_Framework_Search
 		// populate it with it with the 'search' related params out of the url, 
 		// these are things like query, field, boolean
 		
-		$terms = $this->extractSearchGroupings();
-		
-		// add them to our query object
-		
-		foreach ( $terms as $term )
+		foreach ( $this->extractSearchGroupings() as $term )
 		{
 			$this->query->addTerm($term["id"], $term["boolean"], $term["field"], $term["relation"], $term["query"]);
-		}		
+		}
+
+		// also limits
+		
+		foreach ( $this->extractLimitGroupings() as $limit )
+		{
+			$this->query->addLimit($limit["field"], $limit["relation"], $limit["value"]);
+		}			
 		
 		// config stuff
 		
@@ -85,18 +88,23 @@ abstract class Xerxes_Framework_Search
 	
 	public function search()
 	{
-		$params = $this->extractSearchParams();
-		$params["base"] = $this->request->getProperty("base");
-		$params["action"] = "results";
-		$params["source"] = $this->request->getProperty("source");
+		$base = $this->searchRedirectParams();
+		$params = $this->getAllSearchParams();
+		
+		$params = array_merge($base, $params);
+		
+		// print_r($this->request); print_r($params); exit;
 		
 		// check spelling
 		
-		$spelling = $this->query->checkSpelling();
-		
-		foreach ( $spelling as $key => $correction )
+		if ( $this->request->getProperty("spell") != "none" )
 		{
-			$params["spelling_$key"] = $correction;
+			$spelling = $this->query->checkSpelling();
+			
+			foreach ( $spelling as $key => $correction )
+			{
+				$params["spelling_$key"] = $correction;
+			}
 		}
 		
 		$url = $this->request->url_for($params);
@@ -195,7 +203,6 @@ abstract class Xerxes_Framework_Search
 			$this->markSaved( $original_id, $inserted_id );
 		} 
 
-
 		## build a response
 	
 		$objXml = new DOMDocument( );
@@ -235,7 +242,12 @@ abstract class Xerxes_Framework_Search
 		// add in the original url for debugging
 		
 		$search_url = $results_xml->createElement( "search_url", Xerxes_Framework_Parser::escapeXml( $this->url ) );
-		$results_xml->documentElement->appendChild( $search_url );		
+		$results_xml->documentElement->appendChild( $search_url );
+
+		// add total
+		
+		$total = $results_xml->createElement("total", $this->total);
+		$results_xml->documentElement->appendChild( $total );
 		
 		if ( count($this->results) > 0 )
 		{
@@ -407,6 +419,14 @@ abstract class Xerxes_Framework_Search
 		return array();
 	}
 	
+	protected function searchRedirectParams()
+	{
+		return array (
+			"base" => $this->request->getProperty("base"),
+			"action" => "results"
+		);
+	}
+	
 	protected function pagerLinkParams()
 	{
 		return array(
@@ -461,7 +481,48 @@ abstract class Xerxes_Framework_Search
 		{
 			return array();
 		}
+	}
+
+	protected function extractLimitGroupings()
+	{
+		$arrFinal = array();
+		
+		if ( $this->limit_fields_regex != "" )
+		{
+			foreach ( $this->request->getProperties($this->limit_fields_regex, true) as $key => $value )
+			{
+				if ( $value == "" )
+				{
+					continue;
+				}
+				
+				$key = urldecode($key);
+				
+				if ( strstr($key, "_relation") )
+				{
+					continue;
+				}
+				
+				$arrTerm = array();
+				
+				$arrTerm["field"] = $key;
+				$arrTerm["relation"] = "=";
+				$arrTerm["value"] = $value;
+				
+				$relation = $this->request->getProperty($key . "_relation");
+				
+				if ( $relation != null )
+				{
+					$arrTerm["relation"] = $relation;
+				}
+				
+				array_push($arrFinal, $arrTerm);
+			}
+		}
+		
+		return $arrFinal;
 	}	
+	
 	
 	protected function extractSearchGroupings()
 	{
@@ -471,11 +532,11 @@ abstract class Xerxes_Framework_Search
 		{
 			$key = urldecode($key);
 				
-			// if we see a 'query' in the params, check if there are corresponding
+			// if we see 'query' as the start of a param, check if there are corresponding
 			// entries for field and boolean; these will have a number after them
 			// if coming from an advanced search form
 				
-			if ( strstr($key, "query"))
+			if ( preg_match("/^query/", $key) )
 			{
 				if ( $value == "" )
 				{
@@ -766,9 +827,9 @@ class Xerxes_Framework_Search_Query
 		array_push($this->query_list , $term);
 	}
 	
-	public function addLimit($boolean, $field, $relation, $phrase)
+	public function addLimit($field, $relation, $phrase)
 	{
-		$term = new Xerxes_Framework_Search_LimitTerm($boolean, $field, $relation, $phrase);
+		$term = new Xerxes_Framework_Search_LimitTerm($field, $relation, $phrase);
 		array_push($this->limit_list , $term);
 	}
 	
@@ -841,8 +902,18 @@ class Xerxes_Framework_Search_QueryTerm
 	}
 }
 
-class Xerxes_Framework_Search_LimitTerm extends Xerxes_Framework_Search_QueryTerm
+class Xerxes_Framework_Search_LimitTerm
 {
+	public $field;
+	public $relation;
+	public $value;
+	
+	public function __construct($field, $relation, $value)
+	{
+		$this->field = $field;
+		$this->relation = $relation;
+		$this->value = $value;		
+	}
 }
 
 ?>
