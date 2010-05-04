@@ -18,15 +18,13 @@ class Xerxes_WorldCatSearch extends Xerxes_Framework_Search
 	public $id = "worldcat";
 	protected $query_object_type = "Xerxes_WorldCatSearch_Query";
 	protected $record_object_type = "Xerxes_WorldCatRecord";
+	protected $limit_regex = "^year$|^year-relation|^[a-z]{2}$|^[a-z]{2}_exact$";	
 	
 	// worldcat specific
 
 	protected $groups_config = array();
 	protected $worldcat_config;
 	protected $relevance_type;
-	
-	protected $worldcat_query_regex = "^query[0-9]{0,1}$|^field[0-9]{0,1}$|^boolean[0-9]{0,1}$";
-	protected $worldcat_limit_regex = "^year$|^year-relation|^[a-z]{2}$|^[a-z]{2}_exact$";	
 	
 	public function __construct($objRequest, $objRegistry)
 	{
@@ -93,17 +91,20 @@ class Xerxes_WorldCatSearch extends Xerxes_Framework_Search
 		
 		// done
 		
-		return $this->resultsXML();
+		$this->request->addDocument($this->resultsXML());
 	}
 	
 	public function record()
 	{
 		$this->addConfigToResponse();
 		
-		$xml = parent::record();
+		$id = $this->request->getProperty("id");
+		$xml = $this->search_object->record($id);
+		$this->results = $this->convertToXerxesRecords($xml);
+
 		$this->getHoldingsInject();
 		
-		return $xml;
+		$this->request->addDocument($this->resultsXML());
 	}
 	
 	public function lookup()
@@ -125,7 +126,7 @@ class Xerxes_WorldCatSearch extends Xerxes_Framework_Search
 		
 		$xml = $this->getHoldings($source, $standard_numbers);
 		
-		return $xml;
+		$this->request->addDocument($xml);
 	}
 	
 	/**
@@ -206,9 +207,9 @@ class Xerxes_WorldCatSearch extends Xerxes_Framework_Search
 	 * Special handling here for some worldcat-specific stuff
 	 */
 
-	protected function extractSearchParams()
+	protected function extractSearchGroupings()
 	{
-		$arrFinal = parent::extractSearchParams();
+		$arrFinal = parent::extractSearchGroupings();
 		
 		# special cases for oclc number and isbn
 		
@@ -259,85 +260,6 @@ class Xerxes_WorldCatSearch extends Xerxes_Framework_Search
 		}
 				
 		return $arrFinal;
-	}
-
-	/**
-	 * Get just the 'limit' params (year, year-relation, and two letter worldcat fields) 
-	 * out of the URL
-	 */	
-	
-	protected function extractLimitParams()
-	{
-		$arrFinal = array();
-		
-		foreach ( $this->request->getAllProperties() as $key => $value )
-		{
-			$key = urldecode($key);
-			
-			// find year and two-letter fields relations relations
-			
-			if ( preg_match("/" . $this->worldcat_limit_regex . "/", $key) )
-			{
-				// slip empty fields
-				
-				if ( $value == "")
-				{
-					continue;
-				}
-				
-				if ( is_array($value) )
-				{
-					$concated = "";
-					
-					foreach ( $value as $data )
-					{
-						if ( $data != "" )
-						{
-							if ($concated == "")
-							{
-								$concated = $data;
-							}
-							else
-							{
-								$concated .= "," . $data;
-							}
-						}
-					}
-					
-					if ( $concated == "" )
-					{
-						continue;
-					}
-					
-					$value = $concated;
-				}
-				
-				$arrFinal[$key] = $value;
-			}
-		}
-		
-		return $arrFinal;
-	}
-	
-	/**
-	 * Extract both query and limit params from the URL
-	 */
-	
-	protected function getAllSearchParams()
-	{
-		$final = array();
-		
-		foreach ( $this->request->getAllProperties() as $key => $value )
-		{
-			$key = urldecode($key);
-						
-			if ( preg_match("/" . $this->worldcat_query_regex . "|" . $this->worldcat_limit_regex . "/", $key) )
-			{
-				$final[$key] = $value;
-			}
-		}
-		
-		return $final;
 	}
 
 	protected function getConfig($strSource)
@@ -394,7 +316,7 @@ class Xerxes_WorldCatSearch extends Xerxes_Framework_Search
 				$objOption->setAttribute("source", $strSource );
 				
 				$arrUrl = array(
-					"base" => "search",
+					"base" => $this->request->getProperty("base"),
 					"action" => "results",
 					"source" => $strSource,
 					"sortKeys" => $this->request->getProperty("sortKeys")
@@ -587,6 +509,7 @@ class Xerxes_WorldCatSearch extends Xerxes_Framework_Search
 			$arrLink = array(
 				"base" => $this->request->getProperty("base"),
 				"action" => "search",
+				"source" => $this->request->getProperty("source"),
 				"query" => Xerxes_Framework_Parser::escapeXML($strAuthorReverse),
 				"field" => "author",
 				"exact" => "true",
@@ -607,6 +530,7 @@ class Xerxes_WorldCatSearch extends Xerxes_Framework_Search
 			$arrLink = array(
 				"base" => $this->request->getProperty("base"),
 				"action" => "search",
+				"source" => $this->request->getProperty("source"),
 				"query" => Xerxes_Framework_Parser::escapeXML($subject),
 				"field" => "subject",
 				"spell" => "none"

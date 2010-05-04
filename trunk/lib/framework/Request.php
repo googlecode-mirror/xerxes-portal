@@ -431,7 +431,7 @@ class Xerxes_Framework_Request
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Retrieve all request paramaters as array
 	 *
@@ -442,6 +442,75 @@ class Xerxes_Framework_Request
 	{
 		return $this->arrParams;
 	}
+	
+	/**
+	 * Get a group of properties using regular expression
+	 * 
+	 * @param string $regex		regular expression for properties to get
+	 * @param bool $shrink		(optional) whether to collapse properties stored as array into simple element, default false
+	 * @param string $shrink_del (opptional) if $shrink is true, then separate multiple elements by this character, default comma
+	 * 
+	 * @return array
+	 * */
+
+	public function getProperties($regex, $shrink = false, $shrink_del = ",")
+	{
+		$arrFinal = array();
+		
+		if ( $regex == "")
+		{
+			throw new Exception("you must suply a regular expression for the properties to extract");
+		}
+
+		foreach ( $this->getAllProperties() as $key => $value )
+		{
+			$key = urldecode($key);
+			
+			// find limit params
+			
+			if ( preg_match("/" . $regex . "/", $key) )
+			{
+				// slip empty fields
+					
+				if ( $value == "")
+				{
+					continue;
+				}
+				
+				if ( is_array($value) && $shrink == true )
+				{
+					$concated = "";
+					
+					foreach ( $value as $data )
+					{
+						if ( $data != "" )
+						{
+							if ($concated == "")
+							{
+								$concated = $data;
+							}
+							else
+							{
+								$concated .= $shrink_del . $data;
+							}
+						}
+					}
+					
+					if ( $concated == "" )
+					{
+						continue;
+					}
+				
+					$value = $concated;
+				}
+				
+				$arrFinal[$key] = $value;
+			}
+		}
+		
+		return $arrFinal;
+	}	
+	
 	
 	/**
 	 * Get a value from the $_SERVER global array

@@ -22,6 +22,7 @@ class Xerxes_WorldCatGroup
 	public $exclude_material_types;
 	public $show_holdings = false;
 	public $query_limit;
+	public $frbr;
 
 	public function __construct($strSource, $xml)
 	{
