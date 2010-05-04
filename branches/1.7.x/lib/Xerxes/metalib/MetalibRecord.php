@@ -7,7 +7,7 @@
  * @copyright 2009 California State University
  * @link http://xerxes.calstate.edu
  * @license http://www.gnu.org/licenses/
- * @version $Id: MetalibRecord.php 1009 2009-11-30 21:34:21Z dwalker@calstate.edu $
+ * @version $Id: MetalibRecord.php 1163 2010-05-04 16:02:13Z dwalker@calstate.edu $
  * @todo ->__toString() madness below due to php 5.1 object-string casting problem
  * @package Xerxes
  */
@@ -25,7 +25,7 @@ class Xerxes_MetalibRecord_Document extends Xerxes_Marc_Document
  * @copyright 2009 California State University
  * @link http://xerxes.calstate.edu
  * @license http://www.gnu.org/licenses/
- * @version $Id: MetalibRecord.php 1009 2009-11-30 21:34:21Z dwalker@calstate.edu $
+ * @version $Id: MetalibRecord.php 1163 2010-05-04 16:02:13Z dwalker@calstate.edu $
  * @todo ->__toString() madness below due to php 5.1 object-string casting problem, remove 
  *       when redhat provides php 5.2 package, since that is keeping people from upgrading
  *  * @package Xerxes
@@ -263,15 +263,15 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 			$title_main = $title->subfield("a");
 			$title_sub = $title->subfield("b");
 			
+			$note_field = new Xerxes_Marc_DataField();
+			$note_field->tag = "500";
+			
 			if ( $title_main != null )
 			{
 				if (preg_match_all ( $strGaleRegExp, $title_main->value, $arrMatches ) != 0)
 				{
 					$title_main->value = preg_replace ( $strGaleRegExp, "", $title_main->value );
 				}
-
-				$note_field = new Xerxes_Marc_DataField();
-				$note_field->tag = "500";
 				
 				foreach ( $arrMatches[1] as $strMatch )
 				{				
