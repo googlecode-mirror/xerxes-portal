@@ -137,7 +137,7 @@
 		
 		</div>
 		
-		<xsl:if test="spelling != ''">
+		<xsl:if test="spelling_query != ''">
 			<p class="spellSuggest error">Did you mean: <a href="{spelling/@url}"><xsl:value-of select="spelling" /></a></p>
 		</xsl:if>
 		
