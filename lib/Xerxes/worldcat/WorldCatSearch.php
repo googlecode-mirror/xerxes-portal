@@ -35,8 +35,13 @@ class Xerxes_WorldCatSearch extends Xerxes_Framework_Search
 		$this->worldcat_config = Xerxes_WorldCatConfig::getInstance();
 		$this->worldcat_config->init();
 		
-		$this->relevance_type = $this->worldcat_config->getConfig("WORLDCAT_RELEVANCE_TYPE", false, "Score");
+		$this->relevance_type = $this->worldcat_config->getConfig("WORLDCAT_RELEVANCE_TYPE", false, "Score,,0");
+		$this->sort_default = $this->relevance_type;
 
+		// max records
+		
+		$this->max = $this->worldcat_config->getConfig("WORLDCAT_MAX_RECORDS", false, $this->max);			
+		
 		// basic
 
 		$this->search_object = $this->getWorldCatObject($this->request->getProperty("source"));	
@@ -48,18 +53,7 @@ class Xerxes_WorldCatSearch extends Xerxes_Framework_Search
 		// so we can make use of it in the interface 
 		
 		$this->addConfigToResponse();
-		
 		$this->addAdvancedSearchLink();
-
-		// max records
-		
-		$configMaxRecords = $this->worldcat_config->getConfig("WORLDCAT_MAX_RECORDS", false, 10);		
-		
-		// start, stop, source, sort properties
-		
-		$start = $this->request->getProperty("startRecord");
-		$max = $this->request->getProperty("maxRecords");
-		$desc = false;
 
 		// if no sort defined, its relevance!
 			
@@ -68,34 +62,11 @@ class Xerxes_WorldCatSearch extends Xerxes_Framework_Search
 			$this->sort = $this->relevance_type;
 		}
 		
-		// date, library count, and relevance should be sorted descending
+		parent::results();
 		
-		if ( $this->sort == "Date" || $this->sort == $this->relevance_type || $this->sort == "LibraryCount")
-		{
-			$desc = true;
-		}		
-		
-		// set some explicit defaults
-		
-		if ( $start == null || $start == 0 ) $start = 1;
-		if ( $max != null && $max <= $configMaxRecords ) $configMaxRecords = $max;
-		
-		$search = $this->query->toQuery();
-		
-		// print_r($this->query);
-		// echo $search;
-		// exit;
-		
-		// get results and convert them to xerxes_record
-		
-		$xml = $this->search_object->searchRetrieve($search, $start, $configMaxRecords, "marcxml", $this->sort, $desc);
-		$this->results = $this->convertToXerxesRecords($xml);
+		// @todo factor this out to search arch
 		
 		$this->getHoldingsInject();
-		
-		// done
-		
-		$this->request->addDocument($this->resultsXML());
 	}
 	
 	public function record()
@@ -477,7 +448,7 @@ class Xerxes_WorldCatSearch extends Xerxes_Framework_Search
 	{
 		return array(
 			$this->relevance_type => "relevance", 
-			"Date" => "date", 
+			"Date,,0" => "date", 
 			"Title" => "title",  
 			"Author" => "author"
 		);
