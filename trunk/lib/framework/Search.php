@@ -19,11 +19,13 @@ abstract class Xerxes_Framework_Search
 	
 	public $query; // query object
 	
+	protected $search_object_type = "Xerxes_Framework_Search_Engine";
 	protected $query_object_type = "Xerxes_Framework_Search_Query";
 	protected $record_object_type = "Xerxes_Record";
 	
 	protected $search_fields_regex = "^query[0-9]{0,1}$|^field[0-9]{0,1}$|^boolean[0-9]{0,1}$";
 	protected $limit_fields_regex = "";	
+	protected $include_original;
 	
 	public $results = array();
 	public $facets;
@@ -79,6 +81,11 @@ abstract class Xerxes_Framework_Search
 		// used in a couple of place
 
 		$this->sort = $this->request->getProperty("sortKeys");
+		
+		// search object 
+		
+		$search_object_type = $this->search_object_type;
+		$this->search_object = new $search_object_type();
 	}
 	
 	public function __destruct()
@@ -421,26 +428,30 @@ abstract class Xerxes_Framework_Search
 	
 	protected function searchRedirectParams()
 	{
-		return array (
-			"base" => $this->request->getProperty("base"),
-			"action" => "results"
-		);
+		$params = $this->getAllSearchParams();
+		$params["sortKeys"] = $this->request->getProperty("sortKeys");
+		$params["base"] = $this->request->getProperty("base");
+		$params["action"] = "results";
+		
+		return $params;
 	}
 	
 	protected function pagerLinkParams()
 	{
-		return array(
-			"base" => $this->request->getProperty("base"),
-			"action" => $this->request->getProperty("action"),
-		);
+		$params = $this->sortLinkParams();
+		$params["sortKeys"] = $this->request->getProperty("sortKeys");
+		
+		return $params;
+		
 	}
 	
 	protected function sortLinkParams()
 	{
-		return array(
-			"base" => $this->request->getProperty("base"),
-			"action" => $this->request->getProperty("action"),
-		);		
+		$params = $this->getAllSearchParams();
+		$params["base"] = $this->request->getProperty("base");
+		$params["action"] = $this->request->getProperty("action");
+		
+		return $params;
 	}
 	
 	/**
@@ -489,7 +500,7 @@ abstract class Xerxes_Framework_Search
 		
 		if ( $this->limit_fields_regex != "" )
 		{
-			foreach ( $this->request->getProperties($this->limit_fields_regex, true) as $key => $value )
+			foreach ( $this->extractLimitParams() as $key => $value )
 			{
 				if ( $value == "" )
 				{
@@ -890,6 +901,24 @@ class Xerxes_Framework_Search_Query
 	protected function toQuery()
 	{
 		
+	}
+}
+
+class Xerxes_Framework_Search_Engine
+{
+	public function getURL()
+	{
+		return null;
+	}
+	
+	public function getTotal()
+	{
+		return null;	
+	}
+
+	public function searchRetrieve()
+	{
+		throw new Exception("you need to create your own search object for the search framework");
 	}
 }
 

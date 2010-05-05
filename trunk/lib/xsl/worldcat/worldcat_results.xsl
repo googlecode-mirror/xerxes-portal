@@ -57,7 +57,7 @@
 		</div>
 	</div>
 	
-	<xsl:if test="count(//worldcat_groups/group) > 1">
+	<xsl:if test="count(//worldcat_groups/group) > 1 and $source != ''">
 		
 		<ul id="tabnav">
 	

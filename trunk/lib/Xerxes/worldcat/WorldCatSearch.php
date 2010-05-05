@@ -432,8 +432,6 @@ class Xerxes_WorldCatSearch extends Xerxes_Framework_Search
 	{
 		$params = parent::searchRedirectParams();
 		$params["source"] = $this->request->getProperty("source");
-		$params["sortKeys"] = $this->request->getProperty("sortKeys");
-		$params = array_merge($params, $this->getAllSearchParams($params));
 		return $params;
 	}
 	
@@ -441,8 +439,6 @@ class Xerxes_WorldCatSearch extends Xerxes_Framework_Search
 	{
 		$params = parent::pagerLinkParams();
 		$params["source"] = $this->request->getProperty("source");
-		$params["sortKeys"] = $this->request->getProperty("sortKeys");
-		$params = array_merge($params, $this->getAllSearchParams($params));
 		return $params;
 	}
 
@@ -450,7 +446,6 @@ class Xerxes_WorldCatSearch extends Xerxes_Framework_Search
 	{
 		$params = parent::sortLinkParams();
 		$params["source"] = $this->request->getProperty("source");
-		$params = array_merge($params, $this->getAllSearchParams($params));
 		return $params;
 	}
 
