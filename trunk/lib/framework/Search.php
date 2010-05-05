@@ -16,12 +16,16 @@ abstract class Xerxes_Framework_Search
 	public $id; // name of this search engine
 	public $total; // total number of hits
 	public $sort; // sort order
+	public $max = 10; // maximum records per page
 	
 	public $query; // query object
 	
 	protected $search_object_type = "Xerxes_Framework_Search_Engine";
 	protected $query_object_type = "Xerxes_Framework_Search_Query";
 	protected $record_object_type = "Xerxes_Record";
+	
+	protected $schema;
+	protected $sort_default;
 	
 	protected $search_fields_regex = "^query[0-9]{0,1}$|^field[0-9]{0,1}$|^boolean[0-9]{0,1}$";
 	protected $limit_fields_regex = "";	
@@ -30,8 +34,7 @@ abstract class Xerxes_Framework_Search
 	public $results = array();
 	public $facets;
 	public $recommendations = array();
-	
-	protected $max; // maximum records per page
+
 	protected $sid; // sid for open url identification
 	protected $link_resolver; // based address of link resolver	
 	
@@ -77,6 +80,7 @@ abstract class Xerxes_Framework_Search
 		$this->sid = $this->registry->getConfig("APPLICATION_SID", false, "calstate.edu:xerxes");
 		$this->max = $this->registry->getConfig("RECORDS_PER_PAGE", false, 10);
 		$this->include_original = $this->registry->getConfig("INCLUDE_ORIGINAL_XML", false, false);
+		$this->max = $this->registry->getConfig("MAX_RECORDS_PER_PAGE", false, $this->max);	
 		
 		// used in a couple of place
 
@@ -126,10 +130,6 @@ abstract class Xerxes_Framework_Search
 	
 	public function results()
 	{
-		// max records
-		
-		$configMaxRecords = $this->registry->getConfig("MAX_RECORDS_PER_PAGE", false, 10);		
-		
 		// start, stop, source, sort properties
 		
 		$start = $this->request->getProperty("startRecord");
@@ -138,13 +138,13 @@ abstract class Xerxes_Framework_Search
 		// set some explicit defaults
 		
 		if ( $start == null || $start == 0 ) $start = 1;
-		if ( $max != null && $max <= $configMaxRecords ) $configMaxRecords = $max;
+		if ( $max != null && $max <= $this->max ) $this->max = $max;
 		
 		$search = $this->query->toQuery();
 		
 		// get results and convert them to xerxes_record
 		
-		$xml = $this->search_object->searchRetrieve($search, $start, $configMaxRecords, $this->sort);
+		$xml = $this->search_object->searchRetrieve($search, $start, $this->max, $this->schema, $this->sort);
 		$this->results = $this->convertToXerxesRecords($xml);
 		
 		// done
@@ -363,9 +363,9 @@ abstract class Xerxes_Framework_Search
 			
 			if ( $current_sort == null )
 			{ 
-				$current_sort = $this->registry->getConfig("SORT_ORDER_PRIMARY", false, "Score");
+				$current_sort = $this->sort_default;
 			}
-					
+			
 			$sort_xml = $objPage->sortDisplay( $query_string, $current_sort, $sort_options);
 
 			$import = $results_xml->importNode( $sort_xml->documentElement, true );
