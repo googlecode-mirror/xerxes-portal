@@ -552,7 +552,7 @@
 				<view>xsl/worldcat/worldcat_record.xsl</view>
 			</action>
 			<action name="save-delete">
-				<command>SearchSaveDelete</command>
+				<command>SearchSave</command>
 				<view>xsl/metasearch_save-delete.xsl</view>
 				<view format="json">xsl/metasearch_save-delete_ajax.xsl</view>
 			</action>
