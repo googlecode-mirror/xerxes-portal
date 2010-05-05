@@ -138,7 +138,7 @@
 		<xsl:choose>
 			<xsl:when test="//search_and_link_type = 'POST'">
 				
-				<form method="post" action="{//post/form/@action}">
+				<form method="post" action="{//post/form/@action}" target="{$link_target}">
 					<xsl:for-each select="//post/form/input">
 						<input name="{@name}" value="{@value}" type="hidden" />
 					</xsl:for-each>
