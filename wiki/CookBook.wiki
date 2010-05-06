@@ -66,9 +66,9 @@ http://xerxes.example.com/demo?
 
 =Catalog links=
 
-To have Xerxes show a link to holdings for your catalog search results, you can simply enter the link syntax in the `Link to Holdings in Native Interface` field of the IRD in Metalib.  That syntax assumes that you will use a single field in the MARC record (usually one containing the bibliographic ID number of the record) to construct the link. 
+To have Xerxes show a link to holdings for your catalog search results, you can simply enter the link syntax in the `Link to Holdings in Native Interface` field of the IRD in Metalib.  
 
-Some systems, such as Innovative, however, don't expose a bibliographic ID number in their Z39.50 response, so no single linking syntax will work.
+However, that syntax assumes that you will use a single field from the MARC record (usually one containing the bibliographic ID number of the record) to construct the link.  Some systems, such as Innovative, however, don't expose a bibliographic ID number in their Z39.50 response, so no single linking syntax will work.
 
 In these cases, you have the option of constructing a more complex linking syntax (based on a variety of fields) using the `additional_record_links` template in Xerxes.  
 
