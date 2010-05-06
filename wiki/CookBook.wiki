@@ -64,7 +64,7 @@ http://xerxes.example.com/demo?
   &query=xml&database=CAL01039
 }}}
 
-=Catalog links=
+=Holdings links for catalog's with no bibliographic ID in records=
 
 To have Xerxes show a link to holdings for your catalog search results, you can simply enter the link syntax in the `Link to Holdings in Native Interface` field of the IRD in Metalib.  
 
