@@ -31,9 +31,9 @@ abstract class Xerxes_Framework_Search
 	protected $limit_fields_regex = "";	
 	protected $include_original;
 	
-	public $results = array();
-	public $facets;
-	public $recommendations = array();
+	public $results = array(); // search results
+	public $facets; // facets
+	public $recommendations = array(); // recommendations
 
 	protected $sid; // sid for open url identification
 	protected $link_resolver; // based address of link resolver	
@@ -53,6 +53,10 @@ abstract class Xerxes_Framework_Search
 		// database access object
 				
 		$this->data_map = new Xerxes_DataMap();
+		
+		// facet object
+		
+		$this->facets = new Xerxes_Framework_Search_Facets();
 		
 		// set an instance of the query object
 		
@@ -90,11 +94,6 @@ abstract class Xerxes_Framework_Search
 		
 		$search_object_type = $this->search_object_type;
 		$this->search_object = new $search_object_type();
-	}
-	
-	public function __destruct()
-	{
-		$this->data_map = null;
 	}
 	
 	public function search()
@@ -142,19 +141,21 @@ abstract class Xerxes_Framework_Search
 		
 		$search = $this->query->toQuery();
 		
-		// get results and convert them to xerxes_record
+		// get results
 		
 		$xml = $this->search_object->searchRetrieve($search, $start, $this->max, $this->schema, $this->sort);
+		
+		// convert them to xerxes_record
+		
 		$this->results = $this->convertToXerxesRecords($xml);
+		
+		// get any facets
+		
+		$this->extractFacets($xml);
 		
 		// done
 		
 		$this->request->addDocument($this->resultsXML());
-	}
-
-	public function facet()
-	{
-		
 	}
 	
 	public function record()
@@ -386,6 +387,12 @@ abstract class Xerxes_Framework_Search
 			$results_xml->documentElement->appendChild($import);			
 		}
 		
+		// facets
+		
+		$facets = $this->facets->toXML();
+		$import = $results_xml->importNode($facets->documentElement, true);
+		$results_xml->documentElement->appendChild($import);
+		
 		return $results_xml;
 	}
 	
@@ -394,7 +401,7 @@ abstract class Xerxes_Framework_Search
 		$arrParams = array(
 			"base" => $this->request->getProperty("base"),
 			"action" => "record",
-			"id" => $result->getControlNumber()
+			"id" => $result->getRecordNumber()
 		);
 		
 		return $this->request->url_for($arrParams);
@@ -405,7 +412,7 @@ abstract class Xerxes_Framework_Search
 		$arrParams = array(
 			"base" => $this->request->getProperty("base"),
 			"action" => "save-delete",
-			"id" => $result->getControlNumber()
+			"id" => $result->getRecordNumber()
 		);
 		
 		return $this->request->url_for($arrParams);
@@ -595,6 +602,11 @@ abstract class Xerxes_Framework_Search
 		$xerxes_doc->loadXML($xml);
 		
 		return $xerxes_doc->records();
+	}
+	
+	protected function extractFacets(DOMDocument $xml)
+	{
+		
 	}
 	
 	protected function recommendations()
@@ -904,24 +916,6 @@ class Xerxes_Framework_Search_Query
 	}
 }
 
-class Xerxes_Framework_Search_Engine
-{
-	public function getURL()
-	{
-		return null;
-	}
-	
-	public function getTotal()
-	{
-		return null;	
-	}
-
-	public function searchRetrieve()
-	{
-		throw new Exception("you need to create your own search object for the search framework");
-	}
-}
-
 class Xerxes_Framework_Search_QueryTerm
 {
 	public $id;
@@ -953,6 +947,84 @@ class Xerxes_Framework_Search_LimitTerm
 		$this->relation = $relation;
 		$this->value = $value;		
 	}
+}
+
+class Xerxes_Framework_Search_Engine
+{
+	public function getURL()
+	{
+		return null;
+	}
+	
+	public function getTotal()
+	{
+		return null;	
+	}
+
+	public function searchRetrieve()
+	{
+		throw new Exception("you need to create your own search object for the search framework");
+	}
+}
+
+class Xerxes_Framework_Search_Facets
+{
+	private $groups = array();
+	
+	public function addGroup($group)
+	{
+		array_push($this->groups, $group);
+	}
+	
+	public function getGroups()
+	{
+		return $this->groups;
+	}	
+	
+	public function toXML()
+	{
+		$xml = new DOMDocument();
+		$xml->loadXML("<facets />");
+		
+		foreach ( $this->getGroups() as $group )
+		{
+			$group_node = $xml->createElement("group");
+			$group_node->setAttribute("name", $group->name);
+			$xml->documentElement->appendChild($group_node);
+			
+			foreach ( $group->getFacets() as $facet )
+			{
+				$facet_node = $xml->createElement("facet", $facet->count);
+				$facet_node->setAttribute("name", $facet->name);
+				$group_node->appendChild($facet_node);				
+			}
+		}
+		
+		return $xml;
+	}
+}
+
+class Xerxes_Framework_Search_FacetGroup
+{
+	public $name;
+	private $facets = array();
+
+	public function addFacet($facet)
+	{
+		array_push($this->facets, $facet);
+	}
+	
+	public function getFacets()
+	{
+		return $this->facets;
+	}
+}
+
+class Xerxes_Framework_Search_Facet
+{
+	public $name;
+	public $count;
+	public $url;
 }
 
 ?>
