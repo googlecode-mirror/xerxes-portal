@@ -63,3 +63,60 @@ http://xerxes.example.com/demo?
   &context_url=http%3A%2F%2Flibrary.example.com%2F
   &query=xml&database=CAL01039
 }}}
+
+=Catalog links=
+
+To have Xerxes show a link to holdings for your catalog search results, you can simply enter the link syntax in the `Link to Holdings in Native Interface` field of the IRD in Metalib.  That syntax assumes that you will use a single field in the MARC record (usually one containing the bibliographic ID number of the record) to construct the link. 
+
+Some systems, such as Innovative, however, don't expose a bibliographic ID number in their Z39.50 response, so no single linking syntax will work.
+
+In these cases, you have the option of constructing a more complex linking syntax (based on a variety of fields) using the `additional_record_links` template in Xerxes.  
+
+Xerxes will call this template for _every_ record, so you need to first test for the Metalib ID of your catalog (in the example below it is `CAL13702`), and then create the link using data from the record.
+
+Here's an example for Innovative systems that works pretty well:
+
+{{{
+
+<xsl:template name="additional_record_links">
+	
+	<xsl:if test="metalib_id = 'CAL13702'">
+		
+		<xsl:variable name="catalog_link">
+			<xsl:text>http://opac.csuchico.edu/search/</xsl:text>
+			<xsl:choose>
+				<xsl:when test="standard_numbers/oclc">
+					<xsl:text>o</xsl:text>
+					<xsl:value-of select="standard_numbers/oclc" />
+				</xsl:when>
+				<xsl:when test="standard_numbers/isbn">
+					<xsl:text>i</xsl:text>
+					<xsl:value-of select="standard_numbers/isbn" />
+				</xsl:when>
+					<xsl:when test="standard_numbers/issn">
+					<xsl:text>i</xsl:text>
+					<xsl:value-of select="standard_numbers/issn" />
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:text>t</xsl:text>
+					<xsl:value-of select="php:function('urlencode', string(title_normalized))" />
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		
+		<div class="recordAction textLink">
+			<a href="{$catalog_link}">
+				<img src="images/book.gif" width="16" height="16" alt="" border="0" />
+				<xsl:text> </xsl:text>
+				Check availability in catalog
+			</a>
+		</div>
+	
+	</xsl:if>
+	
+</xsl:template>
+
+
+
+
+}}}
