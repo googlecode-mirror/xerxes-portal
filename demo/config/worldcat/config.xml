@@ -12,7 +12,7 @@
 		<!-- have availability link go directly to you ILL system (e.g., illiad) instead of your link resolver
 		     include the path to your ILL system's OpenURL service -->
 		
-		<config name="interlibrary_loan">http://www.library.fullerton.edu/illiad/myilliad.aspx</config>
+		<config name="interlibrary_loan"></config>
 		
 		<!-- only include results with these material types, 
 		     enter three letter material type designation, separate multiple entries by comma -->
