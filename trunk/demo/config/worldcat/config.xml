@@ -42,11 +42,6 @@
 				<exclude></exclude>
 				<exclude_material_types>per,new</exclude_material_types>
 				<frbr>false</frbr>
-				<lookup>
-					<display>full</display>
-					<address>http://xerxes.calstate.edu/shrew/fullerton/dlf.php</address>
-					<locations_excluded></locations_excluded>
-				</lookup>
 			</group>
 			<group id="regional" label="Other Cal State campuses">
 				<libraries>CBA,CCH,CDH,CFI,CFS,CLA,CLO,CNO,CS1,CSA,CSB,CSH,CTU,U$C,CSJ,CSO,CHU,CDS,CPO,CPS,CVM,MB@,CSF,MFL</libraries>
