@@ -453,19 +453,19 @@ class Xerxes_WorldCatSearch extends Xerxes_Framework_Search
 			"Author" => "author"
 		);
 	}
-
+	
 	protected function linkFullRecord($result)
 	{
-		$arrParams = array(
-			"base" => $this->request->getProperty("base"),
-			"action" => "record",
-			"id" => $result->getControlNumber(),
-			"source" => $this->request->getProperty("source")
+		$arrParams = array (
+			"base" => $this->request->getProperty ("base"), 
+			"action" => "record", 
+			"id" => $result->getControlNumber(), 
+			"source" => $this->request->getProperty("source") 
 		);
 		
-		return $this->request->url_for($arrParams);
+		return $this->request->url_for ( $arrParams );
 	}
-
+	
 	protected function linkOpenURL($result)
 	{
 		// take a locally defined ill option, otherwise link resolver 

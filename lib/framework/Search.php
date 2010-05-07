@@ -401,7 +401,7 @@ abstract class Xerxes_Framework_Search
 		$arrParams = array(
 			"base" => $this->request->getProperty("base"),
 			"action" => "record",
-			"id" => $result->getRecordNumber()
+			"id" => $result->getRecordID()
 		);
 		
 		return $this->request->url_for($arrParams);
@@ -412,7 +412,7 @@ abstract class Xerxes_Framework_Search
 		$arrParams = array(
 			"base" => $this->request->getProperty("base"),
 			"action" => "save-delete",
-			"id" => $result->getRecordNumber()
+			"id" => $result->getRecordID()
 		);
 		
 		return $this->request->url_for($arrParams);
@@ -951,14 +951,17 @@ class Xerxes_Framework_Search_LimitTerm
 
 class Xerxes_Framework_Search_Engine
 {
+	protected $url;
+	protected $total;
+	
 	public function getURL()
 	{
-		return null;
+		return $this->url;
 	}
 	
 	public function getTotal()
 	{
-		return null;	
+		return $this->total;	
 	}
 
 	public function searchRetrieve()
