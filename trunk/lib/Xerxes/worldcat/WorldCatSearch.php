@@ -71,15 +71,31 @@ class Xerxes_WorldCatSearch extends Xerxes_Framework_Search
 	
 	public function record()
 	{
+		// get the record
+		
+		parent::record();
+		
+		// config
+		
 		$this->addConfigToResponse();
 		
-		$id = $this->request->getProperty("id");
-		$xml = $this->search_object->record($id);
-		$this->results = $this->convertToXerxesRecords($xml);
-
+		// local inline holdings 
+		// @todo: factor this out to the framework
+		
 		$this->getHoldingsInject();
 		
-		$this->request->addDocument($this->resultsXML());
+		// show worldcat holdings ?
+		
+		$source  = $this->request->getProperty("source");
+		$id  = $this->request->getProperty("id");
+		
+		$config = $this->getConfig($source);
+		
+		if ( $config->show_holdings == true )
+		{
+			$worldcat_holdings = $this->search_object->holdings($id, $config->libraries_include, 1, 1000 );
+			$this->request->addDocument($worldcat_holdings);
+		}		
 	}
 	
 	public function lookup()
