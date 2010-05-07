@@ -21,6 +21,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 {
 	protected $source = "";	// source database id
 	protected $database_name; // source database name
+	protected $record_id; // canonical record id
 
 	protected $format = ""; // format
 	protected $format_array = array(); // possible formats
@@ -150,6 +151,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		// control and standard numbers
 		
 		$this->control_number =  $this->controlfield("001")->__toString();
+		$this->record_id = $this->control_number;
 		
 		$arrIssn = $this->fieldArray("022", "a" );
 		$arrIsbn = $this->fieldArray("020", "a" );
@@ -4480,7 +4482,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 	
 	public function getRecordID()
 	{
-		return $this->getControlNumber();
+		return $this->record_id;
 	}
 }
 
