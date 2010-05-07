@@ -168,6 +168,11 @@ abstract class Xerxes_Framework_Search
 		$this->request->addDocument($this->resultsXML());
 	}
 	
+	public function bounce()
+	{
+		
+	}
+	
 	public function saveDelete()
 	{
 		$username = $this->request->getSession("username");
