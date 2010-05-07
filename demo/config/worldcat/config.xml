@@ -47,6 +47,7 @@
 				<libraries>CBA,CCH,CDH,CFI,CFS,CLA,CLO,CNO,CS1,CSA,CSB,CSH,CTU,U$C,CSJ,CSO,CHU,CDS,CPO,CPS,CVM,MB@,CSF,MFL</libraries>
 				<exclude>local</exclude>
 				<exclude_material_types>per,new</exclude_material_types>
+				<show_holdings>true</show_holdings>
 				<lookup>
 					<ill_text>We'll get a copy for you in 3-5 days</ill_text>
 				</lookup>
