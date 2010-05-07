@@ -4477,6 +4477,11 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		
 		return $marc->getElementsByTagName( "record" )->item( 0 );
 	}
+	
+	public function getRecordID()
+	{
+		return $this->getControlNumber();
+	}
 }
 
 ?>
