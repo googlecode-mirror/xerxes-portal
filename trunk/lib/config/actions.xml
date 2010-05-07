@@ -484,10 +484,6 @@
 				<command>MetasearchCheckSaved</command>
 				<command directory="folder">FolderTags</command>
 				<command>MetasearchPaging</command>
-				<pathParamMap>
-					<mapEntry pathIndex="2" property="group"/>
-					<mapEntry pathIndex="3" property="resultSet"/>
-				</pathParamMap>
 				<view>xsl/metasearch_results.xsl</view>
 			</action>
 			<action name="facet">
