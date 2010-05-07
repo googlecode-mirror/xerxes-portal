@@ -98,6 +98,23 @@ class Xerxes_WorldCatSearch extends Xerxes_Framework_Search
 		}		
 	}
 	
+	public function bounce()
+	{
+		$url = $this->request->getProperty("url");
+		$html = Xerxes_Framework_Parser::request($url);
+			
+		$final = "";
+		$arrMatch = array();
+		$regex = "/<frame src=\"([^\"]*)\" name=\"mainFrame/";
+			
+		if ( preg_match($regex, $html, $arrMatch) )
+		{
+			$final = $arrMatch[1];
+		}
+		
+		$this->request->setRedirect($final);
+	}
+	
 	public function lookup()
 	{
 		$source = $this->request->getProperty("source");
