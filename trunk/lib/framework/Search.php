@@ -96,6 +96,10 @@ abstract class Xerxes_Framework_Search
 		$this->search_object = new $search_object_type();
 	}
 	
+	/**
+	 * Initiate the search, check spelling, and forward to results
+	 */
+	
 	public function search()
 	{
 		$base = $this->searchRedirectParams();
@@ -121,11 +125,19 @@ abstract class Xerxes_Framework_Search
 		
 		$this->request->setRedirect($url);
 	}
+
+	/**
+	 * In a metasearch, this checks the the progress of the search
+	 */	
 	
 	public function progress()
 	{
 		
 	}
+	
+	/**
+	 * Brief results, with paging navigation and other enhancements supplied
+	 */
 	
 	public function results()
 	{
@@ -158,6 +170,10 @@ abstract class Xerxes_Framework_Search
 		$this->request->addDocument($this->resultsXML());
 	}
 	
+	/**
+	 * The full record page
+	 */
+	
 	public function record()
 	{
 		$id = $this->request->getProperty("id");
@@ -168,10 +184,18 @@ abstract class Xerxes_Framework_Search
 		$this->request->addDocument($this->resultsXML());
 	}
 	
+	/**
+	 * Generic option to do some post-processing before linking to a site
+	 */
+	
 	public function bounce()
 	{
 		
 	}
+	
+	/**
+	 * Save or delete a record from this search engine
+	 */
 	
 	public function saveDelete()
 	{
@@ -239,6 +263,10 @@ abstract class Xerxes_Framework_Search
 		
 		$this->request->addDocument($objXml);		
 	}
+	
+	/**
+	 * Take search results and convert them to xml, with all the enhancements, including facets
+	 */
 	
 	public function resultsXML()
 	{
@@ -401,6 +429,13 @@ abstract class Xerxes_Framework_Search
 		return $results_xml;
 	}
 	
+	/**
+	 * URL for the full record display
+	 * 
+	 * @param $result Xerxes_Record object
+	 * @return string url
+	 */
+	
 	protected function linkFullRecord($result)
 	{
 		$arrParams = array(
@@ -412,6 +447,13 @@ abstract class Xerxes_Framework_Search
 		return $this->request->url_for($arrParams);
 	}
 
+	/**
+	 * URL for the full record display
+	 * 
+	 * @param Xerxes_Record $result
+	 * @return string url
+	 */
+	
 	protected function linkSaveRecord($result)
 	{
 		$arrParams = array(
@@ -421,12 +463,29 @@ abstract class Xerxes_Framework_Search
 		);
 		
 		return $this->request->url_for($arrParams);
-	}	
+	}
+
+	/**
+	 * OpenURL link
+	 * 
+	 * @param Xerxes_Record $result 
+	 * @return string url
+	 */	
 	
 	protected function linkOpenURL($result)
 	{
 		return $result->getOpenURL($this->link_resolver, $this->sid);
 	}
+
+	/**
+	 * Other links for the record beyond those supplied by the framework,
+	 * such as lateral subject or author links; calling code needs to insert 
+	 * directly into xml
+	 * 
+	 * @param Xerxes_Record $result 
+	 * @param DOMDocument $results_xml the xml document to add your links to
+	 * @param DOMNode $record_container the insertion point
+	 */	
 	
 	protected function linkOther($result, $results_xml, $record_container)
 	{
@@ -438,6 +497,11 @@ abstract class Xerxes_Framework_Search
 		return array();
 	}
 	
+	/**
+	 * Parameters to construct the url on the search redirect
+	 * @return array
+	 */
+	
 	protected function searchRedirectParams()
 	{
 		$params = $this->getAllSearchParams();
@@ -448,6 +512,11 @@ abstract class Xerxes_Framework_Search
 		return $params;
 	}
 	
+	/**
+	 * Parameters to construct the links for the paging element
+	 * @return array
+	 */
+	
 	protected function pagerLinkParams()
 	{
 		$params = $this->sortLinkParams();
@@ -456,6 +525,11 @@ abstract class Xerxes_Framework_Search
 		return $params;
 		
 	}
+	
+	/**
+	 * Parameters to construct the links for the sort
+	 * @return array
+	 */
 	
 	protected function sortLinkParams()
 	{
@@ -494,6 +568,10 @@ abstract class Xerxes_Framework_Search
 		}
 	}
 
+	/**
+	 * Get 'search' params out of the URL
+	 */		
+	
 	protected function extractSearchParams()
 	{
 		if ( $this->search_fields_regex != "" )
@@ -505,7 +583,13 @@ abstract class Xerxes_Framework_Search
 			return array();
 		}
 	}
-
+	
+	
+	/**
+	 * Get 'limit' params out of the URL, organized into groupings for the 
+	 * query object to parse
+	 */	
+	
 	protected function extractLimitGroupings()
 	{
 		$arrFinal = array();
@@ -546,6 +630,11 @@ abstract class Xerxes_Framework_Search
 		return $arrFinal;
 	}	
 	
+	
+	/**
+	 * Get 'search' params out of the URL, organized into groupings for the 
+	 * query object to parse
+	 */		
 	
 	protected function extractSearchGroupings()
 	{
@@ -599,6 +688,11 @@ abstract class Xerxes_Framework_Search
 		
 		return $arrFinal;
 	}
+	
+	/**
+	 * Convert MARC-XML response to Xerxes Record, record sub-class can also 
+	 * map
+	 */
 
 	protected function convertToXerxesRecords(DOMDocument $xml)
 	{
@@ -609,10 +703,18 @@ abstract class Xerxes_Framework_Search
 		return $xerxes_doc->records();
 	}
 	
+	/**
+	 * Extract facets from the xml response, if available
+	 */
+	
 	protected function extractFacets(DOMDocument $xml)
 	{
 		
 	}
+	
+	/**
+	 * Enhance record with bx recommendations
+	 */
 	
 	protected function recommendations()
 	{
@@ -641,6 +743,10 @@ abstract class Xerxes_Framework_Search
 			$this->recommendations = $doc->records();
 		}
 	}
+	
+	/**
+	 * Add a peer-reviewed indicator for refereed journals
+	 */
 	
 	protected function markRefereed()
 	{
@@ -675,6 +781,10 @@ abstract class Xerxes_Framework_Search
 			}
 		}
 	}
+	
+	/**
+	 * Add a full-text indicator for those records where SFX indicates it
+	 */
 	
 	protected function markFullText()
 	{
@@ -794,6 +904,10 @@ abstract class Xerxes_Framework_Search
 		
 		return $num;
 	}
+	
+	/**
+	 * Extract all the ISSNs from the records, convenience funciton
+	 */
 
 	protected function extractISSNs()
 	{
@@ -811,6 +925,10 @@ abstract class Xerxes_Framework_Search
 		
 		return $issns;
 	}
+
+	/**
+	 * Extract all the ISBNs from the records, convenience funciton
+	 */	
 	
 	protected function extractISBNs()
 	{
@@ -828,6 +946,10 @@ abstract class Xerxes_Framework_Search
 		
 		return $isbns;
 	}
+
+	/**
+	 * Extract all the OCLC numbers from the records, convenience funciton
+	 */	
 	
 	protected function extractOCLCNumbers()
 	{
@@ -843,6 +965,11 @@ abstract class Xerxes_Framework_Search
 		return $oclc;
 	}
 }
+
+/**
+ * Query class, providing a structure for search terms and functions for checking
+ * spelling ,etc.
+ */
 
 class Xerxes_Framework_Search_Query
 {
@@ -974,6 +1101,10 @@ class Xerxes_Framework_Search_Engine
 		throw new Exception("you need to create your own search object for the search framework");
 	}
 }
+
+/**
+ * Data structure for facets
+ */
 
 class Xerxes_Framework_Search_Facets
 {
