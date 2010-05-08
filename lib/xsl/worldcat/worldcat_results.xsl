@@ -108,7 +108,7 @@
 					</div>
 					<div class="yui-u">
 						<xsl:choose>
-							<xsl:when test="//sort_display">
+							<xsl:when test="//sort_display/option">
 								<div id="sortOptions">
 									<xsl:copy-of select="$text_results_sort_by" /><xsl:text>: </xsl:text>
 									<xsl:for-each select="//sort_display/option">

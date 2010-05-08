@@ -552,10 +552,6 @@
 				<view>xsl/metasearch_save-delete.xsl</view>
 				<view format="json">xsl/metasearch_save-delete_ajax.xsl</view>
 			</action>
-			<action name="ill">
-				<command>WorldCatILL</command>
-				<view />
-			</action>
 		</section>
 
 	</commands>
