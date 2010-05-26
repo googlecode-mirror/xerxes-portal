@@ -198,7 +198,8 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 			// wiley interscience: wiley does not limit full-text links only to your subscription (4/29/08)
 			// oxford: only include the links that are free, otherwise just a link to abstract (5/7/08)
 			// gale: only has full-text if 'text available' note in 500 field (9/7/07) BUT: Not true of Gale virtual reference library (GALE_GVRL). 10/14/08 jrochkind. 
-			// ieee xplore: does not distinguish between things in your subscription or not (2/13/09) 
+			// ieee xplore: does not distinguish between things in your subscription or not (2/13/09)
+			// harvard business: these links in business source premiere are not part of your subscription
 
 			if ( stristr ( $this->source, "METAPRESS_XML" ) || 
 				stristr ( $this->source, "EBSCO_RZH" ) || 
@@ -212,7 +213,8 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 				(stristr ( $this->source, "OXFORD_JOU" ) && ! strstr ( $strUrl, "content/full/" )) || 
 				(strstr ( $this->source, "GALE" ) && $this->source != "GALE_GVRL" && ! in_array ( "Text available", $notes )) || 
 				stristr ( $this->source, "IEEE_XPLORE" ) || 
-				$this->source == "ELSEVIER_SCOPUS" )
+				$this->source == "ELSEVIER_SCOPUS" ||
+				($this->source == "EBSCO_BUSINESS" && strstr ($strUrl, "harvardbusinessonline")) )
 			{
 				// take it out so the parent class doesn't treat it as full-text
 				
