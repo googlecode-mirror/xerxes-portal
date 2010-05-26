@@ -25,6 +25,8 @@
 		private $session = "";		// session id
 		private $finished = false;	// flag indicating metalib is done searching
 		
+		private $return_quick = false; // return quick
+		
 		/**
 		 * Constructor
 		 * @param string $strServer		the Metalib address url
@@ -548,7 +550,7 @@
 			} else if ( strpos( $strStatus,"FIND") !== false ) {
 			} else if ( strpos( $strStatus,"FORK") !== false ) {
 			} else if ( strpos( $strStatus,"FETCH") !== false ) {
-			} else if ( strpos( $strStatus,"DONE1") !== false ) {
+			} else if ( strpos( $strStatus,"DONE1") !== false && $this->return_quick == false ) {
 			} else if ( strpos( $strStatus,"DONE2") !== false ) {
 			} else if ( strpos( $strStatus,"DONE3") !== false ) {
 			} else {
@@ -800,6 +802,11 @@
 		public function getWarnings()
 		{
 			return $this->warning;
+		}
+		
+		public function setFinishQuick($bol)
+		{
+			$this->return_quick = $bol;
 		}
 	}
 
