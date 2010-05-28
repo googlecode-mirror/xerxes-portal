@@ -7,7 +7,7 @@
  * @copyright 2009 California State University
  * @link http://xerxes.calstate.edu
  * @license http://www.gnu.org/licenses/
- * @version $Id: MetalibRecord.php 1165 2010-05-04 16:31:42Z dwalker@calstate.edu $
+ * @version $Id: MetalibRecord.php 1199 2010-05-28 18:26:02Z dwalker@calstate.edu $
  * @todo ->__toString() madness below due to php 5.1 object-string casting problem
  * @package Xerxes
  */
@@ -25,7 +25,7 @@ class Xerxes_MetalibRecord_Document extends Xerxes_Marc_Document
  * @copyright 2009 California State University
  * @link http://xerxes.calstate.edu
  * @license http://www.gnu.org/licenses/
- * @version $Id: MetalibRecord.php 1165 2010-05-04 16:31:42Z dwalker@calstate.edu $
+ * @version $Id: MetalibRecord.php 1199 2010-05-28 18:26:02Z dwalker@calstate.edu $
  * @todo ->__toString() madness below due to php 5.1 object-string casting problem, remove 
  *       when redhat provides php 5.2 package, since that is keeping people from upgrading
  *  * @package Xerxes
@@ -198,7 +198,10 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 			// wiley interscience: wiley does not limit full-text links only to your subscription (4/29/08)
 			// oxford: only include the links that are free, otherwise just a link to abstract (5/7/08)
 			// gale: only has full-text if 'text available' note in 500 field (9/7/07) BUT: Not true of Gale virtual reference library (GALE_GVRL). 10/14/08 jrochkind. 
-			// ieee xplore: does not distinguish between things in your subscription or not (2/13/09) 
+			// ieee xplore: does not distinguish between things in your subscription or not (2/13/09)
+			// harvard business: these links in business source premiere are not part of your subscription (5/26/10)
+			// proquest (umi): these links are not full-text (thanks jerry @ uni) (5/26/10)
+			// proquest (gateway): there doesn't appear to be a general rule to this, so only doing it for fiaf (5/26/10)
 
 			if ( stristr ( $this->source, "METAPRESS_XML" ) || 
 				stristr ( $this->source, "EBSCO_RZH" ) || 
@@ -212,7 +215,11 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 				(stristr ( $this->source, "OXFORD_JOU" ) && ! strstr ( $strUrl, "content/full/" )) || 
 				(strstr ( $this->source, "GALE" ) && $this->source != "GALE_GVRL" && ! in_array ( "Text available", $notes )) || 
 				stristr ( $this->source, "IEEE_XPLORE" ) || 
-				$this->source == "ELSEVIER_SCOPUS" )
+				$this->source == "ELSEVIER_SCOPUS" ||
+				($this->source == "EBSCO_BUSINESS" && strstr ($strUrl, "harvardbusinessonline")) ||
+				( strstr($strUrl, "proquest.umi.com") && strstr($strUrl, "Fmt=2") ) || 
+				( strstr($strUrl, "gateway.proquest.com") && strstr($strUrl, "xri:fiaf:article") )
+				)
 			{
 				// take it out so the parent class doesn't treat it as full-text
 				
@@ -231,9 +238,9 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 				$str001 = $this->controlfield("001")->__toString();
 				$str016 = $this->datafield("016")->subfield("a")->__toString();
 				
-				// see if there are any non-numeric characters in the 001
+				// see if there are any non-alphanumeric[A-Za-z00-9_] characters in the 001
 				
-				$bolAlpha001 = preg_match("/\D/", $str001);
+				$bolAlpha001 = preg_match("/\W/", $str001);
 				
 				// if so, and there is a 016, use that instead, if not go ahead and use 
 				// the 001; if neither do nothing
@@ -303,7 +310,7 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 		// psycinfo and related databases include a 502 that is not a thesis note -- bonkers!
 		// need to make this a basic note, otherwise xerxes will assume this is a thesis
 		
-		if ( strstr($this->source, "EBSCO_PDH") || strstr($this->source, "EBSCO_PSYH"))
+		if ( strstr($this->source, "EBSCO_PDH") || strstr($this->source, "EBSCO_PSYH") || strstr($this->source, "EBSCO_LOH") )
 		{
 			foreach ( $this->datafield("502") as $thesis )
 			{
@@ -388,8 +395,16 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 		elseif ($this->source == "GOOGLE_B")
 		{
 			$this->format = "Book";
-		}	
-
+		}
+		elseif ( strstr($this->source, "EBSCO_LOH") )
+		{
+			$this->format = "Tests & Measures";
+		}
+			elseif ( strstr($this->source, "OXFORD_MUSIC_ONLINE") )
+		{
+			$this->format = "Article";
+		}
+		
 		// JSTOR book review correction: title is meaningless, but subjects
 		// contain the title of the books, so we'll swap them to the title here
 
