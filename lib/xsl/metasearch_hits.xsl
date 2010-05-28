@@ -90,9 +90,12 @@
 						<xsl:choose>
 							<xsl:when test="$is_mobile = 1 or request/session/ada">
 								<p><xsl:text>Your search is still in progress. </xsl:text></p>
-								<form action="{//request/server/request_uri}" method="get">
-									<input type="submit" value="Check the status of the search" />
+								<form action="./" method="get">
+									<input type="hidden" name="base" value="metasearch" />
+									<input type="hidden" name="action" value="hits" />
 									<input type="hidden" name="group" value="{//request/group}" />
+									
+									<input type="submit" value="Check the status of the search" />
 								</form>
 							</xsl:when>
 							<xsl:otherwise>						
