@@ -1795,6 +1795,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 				return "issue";
 				break;
 			
+			case "Tests & Measures":
 			case "Book Review" :
 			case "Film Review" :
 			case "Review" :
