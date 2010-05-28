@@ -310,7 +310,7 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 		// psycinfo and related databases include a 502 that is not a thesis note -- bonkers!
 		// need to make this a basic note, otherwise xerxes will assume this is a thesis
 		
-		if ( strstr($this->source, "EBSCO_PDH") || strstr($this->source, "EBSCO_PSYH"))
+		if ( strstr($this->source, "EBSCO_PDH") || strstr($this->source, "EBSCO_PSYH") || strstr($this->source, "EBSCO_LOH") )
 		{
 			foreach ( $this->datafield("502") as $thesis )
 			{
@@ -395,8 +395,16 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 		elseif ($this->source == "GOOGLE_B")
 		{
 			$this->format = "Book";
-		}	
-
+		}
+		elseif ( strstr($this->source, "EBSCO_LOH") )
+		{
+			$this->format = "Tests & Measures";
+		}
+			elseif ( strstr($this->source, "OXFORD_MUSIC_ONLINE") )
+		{
+			$this->format = "Article";
+		}
+		
 		// JSTOR book review correction: title is meaningless, but subjects
 		// contain the title of the books, so we'll swap them to the title here
 
