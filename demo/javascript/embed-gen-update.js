@@ -55,10 +55,11 @@
         }
         
         
-        // Don't use prototype update, because it will execute the
-        // js that we want as source!
-        $("js_widget_content").value = js_widget_content.replace("&lt", "<").replace("&gt", ">").replace("&amp", "&");
-        
+        // Note we are passing fully-escaped HTML to prototype 'update'. 
+        // This is what makes it display correctly, and keeps our <script>
+        // content from being executed by Prototype, instead of displaying
+        // source as we want it. 
+       $("js_widget_content").update(js_widget_content);
 
         
         $("view_source_link").href = complete_url + "&amp;format=text";
