@@ -199,6 +199,7 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 			// oxford: only include the links that are free, otherwise just a link to abstract (5/7/08)
 			// gale: only has full-text if 'text available' note in 500 field (9/7/07) BUT: Not true of Gale virtual reference library (GALE_GVRL). 10/14/08 jrochkind. 
 			// ieee xplore: does not distinguish between things in your subscription or not (2/13/09)
+			// elsevier links are not based on subscription (6/2/10)
 			// harvard business: these links in business source premiere are not part of your subscription (5/26/10)
 			// proquest (umi): these links are not full-text (thanks jerry @ uni) (5/26/10)
 			// proquest (gateway): there doesn't appear to be a general rule to this, so only doing it for fiaf (5/26/10)
@@ -216,6 +217,7 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 				(strstr ( $this->source, "GALE" ) && ! strstr( $this->source, "GALE_GVRL") && ! in_array ( "Text available", $notes )) || 
 				stristr ( $this->source, "IEEE_XPLORE" ) || 
 				stristr ($this->source, "ELSEVIER_SCOPUS") ||
+				stristr ($this->source, "ELSEVIER_SCIRUS") ||
 				( stristr ($this->source,"EBSCO_BUSINESS") && strstr ($strUrl, "harvardbusinessonline")) ||
 				( strstr($strUrl, "proquest.umi.com") && strstr($strUrl, "Fmt=2") ) || 
 				( strstr($strUrl, "gateway.proquest.com") && strstr($strUrl, "xri:fiaf:article") )
