@@ -171,6 +171,10 @@ class Xerxes_Framework_Request
 		$ua = strtolower($this->getServer('HTTP_USER_AGENT'));
 		$ac = strtolower($this->getServer('HTTP_ACCEPT'));
 		
+		// custom ipad check
+
+		if (strpos($ua, 'ipad')) return false;
+		
 		$isMobile = strpos($ac, 'application/vnd.wap.xhtml+xml') !== false
 			|| $op != ''
 			|| strpos($ua, 'sony') !== false 
