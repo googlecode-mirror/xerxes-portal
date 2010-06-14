@@ -17,27 +17,25 @@ abstract class Xerxes_Framework_Search
 	public $total; // total number of hits
 	public $sort; // sort order
 	public $max = 10; // maximum records per page
-	
-	public $query; // query object
-	
+		
 	protected $search_object_type = "Xerxes_Framework_Search_Engine";
 	protected $query_object_type = "Xerxes_Framework_Search_Query";
 	protected $record_object_type = "Xerxes_Record";
 	
 	protected $schema;
 	protected $sort_default;
+	protected $sid; // sid for open url identification
+	protected $link_resolver; // based address of link resolver	
 	
 	protected $search_fields_regex = "^query[0-9]{0,1}$|^field[0-9]{0,1}$|^boolean[0-9]{0,1}$";
-	protected $limit_fields_regex = "";	
+	protected $limit_fields_regex = "^facet.*";
 	protected $include_original;
-	
+
 	public $results = array(); // search results
 	public $facets; // facets
 	public $recommendations = array(); // recommendations
 
-	protected $sid; // sid for open url identification
-	protected $link_resolver; // based address of link resolver	
-	
+	public $query; // query object
 	protected $request; // xerxes request object
 	protected $registry; // xerxes config values
 	protected $search_object; // search object
@@ -107,8 +105,6 @@ abstract class Xerxes_Framework_Search
 		
 		$params = array_merge($base, $params);
 		
-		// print_r($this->request); print_r($params); exit;
-		
 		// check spelling
 		
 		if ( $this->request->getProperty("spell") != "none" )
@@ -151,11 +147,9 @@ abstract class Xerxes_Framework_Search
 		if ( $start == null || $start == 0 ) $start = 1;
 		if ( $max != null && $max <= $this->max ) $this->max = $max;
 		
-		$search = $this->query->toQuery();
-		
 		// get results
 		
-		$xml = $this->search_object->searchRetrieve($search, $start, $this->max, $this->schema, $this->sort);
+		$xml = $this->search_object->searchRetrieve($this->query, $start, $this->max, $this->schema, $this->sort);
 		
 		// convert them to xerxes_record
 		
@@ -183,6 +177,33 @@ abstract class Xerxes_Framework_Search
 		
 		$this->request->addDocument($this->resultsXML());
 	}
+
+	public function lookup()
+	{
+		$source = $this->request->getProperty("source");
+		$id = $this->request->getProperty("id");
+		$isbn = $this->request->getProperty("isbn");
+		$oclc = $this->request->getProperty("oclc");
+		
+		$standard_numbers = array();
+		
+		if ( $id != null )
+		{
+			array_push($standard_numbers, "ID:$id");
+		}
+		if ( $isbn != null )
+		{
+			array_push($standard_numbers, "ISBN:$isbn");
+		}
+		if ( $oclc != null )
+		{
+			array_push($standard_numbers, "OCLC:$oclc");
+		}		
+		
+		$xml = $this->getHoldings($source, $standard_numbers);
+		
+		$this->request->addDocument($xml);
+	}	
 	
 	/**
 	 * Generic option to do some post-processing before linking to a site
@@ -224,17 +245,15 @@ abstract class Xerxes_Framework_Search
 			
 			// convert it
 			
-			$record_object_type = $this->record_object_type;
-				
-			$record = new $record_object_type();
-			$record->loadXML($xml);
+			$this->results = $this->convertToXerxesRecords($xml);
+			$record = $this->results[0];
 				
 			// add to database
 	
 			$this->data_map->addRecord( $username, $this->id, $original_id, $record );
 			
 			$inserted_id = $record->id;
-				
+			
 			// mark saved for feedback on search results
 				
 			$this->markSaved( $original_id, $inserted_id );
@@ -261,8 +280,26 @@ abstract class Xerxes_Framework_Search
 			$objXml->documentElement->appendChild( $objInsertedId );
 		}
 		
-		$this->request->addDocument($objXml);		
+		$this->request->addDocument($objXml);	
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	/**
 	 * Take search results and convert them to xml, with all the enhancements, including facets
@@ -280,6 +317,15 @@ abstract class Xerxes_Framework_Search
 		$results_xml = new DOMDocument( );
 		$results_xml->loadXML( "<results />" );
 		
+		// spelling
+
+		$spelling_url = $this->linkSpelling();
+		
+		$spelling = $results_xml->createElement( "spelling", Xerxes_Framework_Parser::escapeXml( $this->request->getProperty("spelling_query")));
+		$spelling->setAttribute("url", $spelling_url);
+		
+		$results_xml->documentElement->appendChild( $spelling );
+		
 		// add in the original url for debugging
 		
 		$search_url = $results_xml->createElement( "search_url", Xerxes_Framework_Parser::escapeXml( $this->url ) );
@@ -289,6 +335,28 @@ abstract class Xerxes_Framework_Search
 		
 		$total = $results_xml->createElement("total", $this->total);
 		$results_xml->documentElement->appendChild( $total );
+		
+		// add facets that have been selected
+		
+		$facets_chosen = $this->request->getProperties("facet.*", true);
+		
+		if ( count($facets_chosen) > 0 )
+		{
+			$facet_applied = $results_xml->createElement("facets_applied");
+			$results_xml->documentElement->appendChild( $facet_applied );
+			
+			foreach ( $facets_chosen as $key => $facet )
+			{
+				$facet_level = $results_xml->createElement("facet_level", Xerxes_Framework_Parser::escapeXml($facet));
+				$facet_applied->appendChild($facet_level);
+				
+				$url = new Xerxes_Framework_Request_URL($this->currentParams());
+				$url->removeProperty($key, $facet);
+				$remove_url = $this->request->url_for($url);
+				
+				$facet_level->setAttribute("url", $remove_url);
+			}
+		}
 		
 		if ( count($this->results) > 0 )
 		{
@@ -420,13 +488,21 @@ abstract class Xerxes_Framework_Search
 			$results_xml->documentElement->appendChild($import);			
 		}
 		
-		// facets
+		## facets
 		
 		$facets = $this->facets->toXML();
 		$import = $results_xml->importNode($facets->documentElement, true);
 		$results_xml->documentElement->appendChild($import);
 		
 		return $results_xml;
+	}
+	
+	protected function linkSpelling()
+	{
+		$params = $this->currentParams();
+		$params["query"] = $this->request->getProperty("spelling_query");
+		
+		return $this->request->url_for($params);
 	}
 	
 	/**
@@ -463,6 +539,18 @@ abstract class Xerxes_Framework_Search
 		);
 		
 		return $this->request->url_for($arrParams);
+	}
+	
+	// @todo make other params derive from this one
+	
+	protected function currentParams()
+	{
+		$params = $this->getAllSearchParams();
+		$params["base"] = $this->request->getProperty("base");
+		$params["action"] = $this->request->getProperty("action");
+		$params["sortKeys"] = $this->request->getProperty("sortKeys");
+												
+		return $params;
 	}
 
 	/**
@@ -523,7 +611,6 @@ abstract class Xerxes_Framework_Search
 		$params["sortKeys"] = $this->request->getProperty("sortKeys");
 		
 		return $params;
-		
 	}
 	
 	/**
@@ -549,7 +636,7 @@ abstract class Xerxes_Framework_Search
 		$limits = $this->extractLimitParams();
 		$search = $this->extractSearchParams();
 		
-		return array_merge($limits, $search);
+		return array_merge($search, $limits);
 	}		
 	
 	/**
@@ -560,7 +647,7 @@ abstract class Xerxes_Framework_Search
 	{
 		if ( $this->limit_fields_regex != "" )
 		{
-			return $this->request->getProperties($this->limit_fields_regex, true);
+			return $this->request->getProperties($this->limit_fields_regex);
 		}
 		else
 		{
@@ -576,14 +663,13 @@ abstract class Xerxes_Framework_Search
 	{
 		if ( $this->search_fields_regex != "" )
 		{
-			return $this->request->getProperties($this->search_fields_regex, true);
+			return $this->request->getProperties($this->search_fields_regex);
 		}
 		else
 		{
 			return array();
 		}
 	}
-	
 	
 	/**
 	 * Get 'limit' params out of the URL, organized into groupings for the 
@@ -964,6 +1050,111 @@ abstract class Xerxes_Framework_Search
 		
 		return $oclc;
 	}
+
+	/**
+	 * Extract all the record ids from the records, convenience funciton
+	 */	
+	
+	protected function extractRecordIDs()
+	{
+		$id = array();
+		
+		foreach ( $this->results as $record )
+		{
+			array_push($id, $record->getRecordID() );
+		}
+		
+		$id = array_unique($id);
+		
+		return $id;
+	}	
+	
+	protected function getHoldings($strSource, $arrIDs, $bolCache = false)
+	{
+		$objWorldcatConfig = $this->getConfig($strSource);
+		$url = $objWorldcatConfig->lookup_address;
+				
+		$objXml = new DOMDocument();
+		
+		if ( $url != null && count($arrIDs) > 0 )
+		{
+			$id = implode(",", $arrIDs);
+			
+			if ( $bolCache == true)
+			{
+				$url .= "?action=cached&id=$id";
+				
+				$xml = Xerxes_Framework_Parser::request($url);
+				
+				if ( $xml != "" )
+				{
+					$objXml->loadXML($xml);
+				}
+				else
+				{
+					return $objXml;
+				}
+			}
+			else
+			{
+				$objXml->loadXML("<cached />");
+				
+				$objObject = $objXml->createElement("object");
+				$objObject->setAttribute("id", $id);
+				$objXml->documentElement->appendChild($objObject);			
+				
+				$url .= "?action=records&id=$id&sameRecord=true";
+				
+				$xml = Xerxes_Framework_Parser::request($url);
+				
+				if ( $xml != "" )
+				{
+					$objRecord = new DOMDocument();
+					$objRecord->loadXML($xml);
+					$objImport = $objXml->importNode($objRecord->documentElement, true);		
+					$objObject->appendChild($objImport);
+				}
+			}
+			
+			$objXml->documentElement->setAttribute("url", Xerxes_Framework_Parser::escapeXml($url));
+		}
+		
+		return $objXml;
+	}
+
+	protected function getHoldingsInject($bolCacheOnly = true)
+	{
+		$source = $this->request->getProperty("source");
+		if ( $source == null ) $source = "local";
+		
+		$isbns = $this->extractISBNs();
+		$oclcs = $this->extractOCLCNumbers();
+		$ids = $this->extractRecordIDs();
+		
+		$standard_numbers = array();
+		
+		foreach ( $ids as $id )
+		{
+			array_push($standard_numbers, "ID:$id");
+		}
+		
+		foreach ( $isbns as $isbn )
+		{
+			array_push($standard_numbers, "ISBN:$isbn");
+		}
+			
+		foreach ( $oclcs as $oclc )
+		{
+			array_push($standard_numbers, "OCLC:$oclc");
+		}
+		
+		// get any data we found in the cache for these records
+							
+		$objXml = $this->getHoldings($source, $standard_numbers, $bolCacheOnly);
+			
+		$this->request->addDocument($objXml);
+	}
+
 }
 
 /**
@@ -994,8 +1185,16 @@ class Xerxes_Framework_Search_Query
 	
 	public function addLimit($field, $relation, $phrase)
 	{
-		$term = new Xerxes_Framework_Search_LimitTerm($field, $relation, $phrase);
-		array_push($this->limit_list , $term);
+		if ( ! is_array($phrase) )
+		{
+			$phrase = array($phrase);
+		}
+		
+		foreach ( $phrase as $value )
+		{
+			$term = new Xerxes_Framework_Search_LimitTerm($field, $relation, $value);
+			array_push($this->limit_list , $term);
+		}
 	}
 	
 	public function checkSpelling()
@@ -1128,6 +1327,7 @@ class Xerxes_Framework_Search_Facets
 		foreach ( $this->getGroups() as $group )
 		{
 			$group_node = $xml->createElement("group");
+			$group_node->setAttribute("id", $group->id);
 			$group_node->setAttribute("name", $group->name);
 			$xml->documentElement->appendChild($group_node);
 			
@@ -1135,6 +1335,7 @@ class Xerxes_Framework_Search_Facets
 			{
 				$facet_node = $xml->createElement("facet", $facet->count);
 				$facet_node->setAttribute("name", $facet->name);
+				$facet_node->setAttribute("url", $facet->url);
 				$group_node->appendChild($facet_node);				
 			}
 		}
@@ -1145,6 +1346,7 @@ class Xerxes_Framework_Search_Facets
 
 class Xerxes_Framework_Search_FacetGroup
 {
+	public $id;
 	public $name;
 	private $facets = array();
 

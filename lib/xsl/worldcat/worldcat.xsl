@@ -989,10 +989,18 @@
 
 
 <xsl:template name="holdings_lookup">
+	<xsl:param name="record_id" />
 	<xsl:param name="isbn" />
 	<xsl:param name="oclc" />
 	<xsl:param name="type" select="'none'" />
 	<xsl:param name="nosave" />
+	
+	<xsl:variable name="id_prefix">
+		<xsl:choose>
+			<xsl:when test="$record_id != ''">ID:<xsl:value-of select="$record_id" /></xsl:when>
+			<xsl:otherwise>missing</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
 	
 	<xsl:variable name="isbn_prefix">
 		<xsl:choose>
@@ -1011,14 +1019,14 @@
 	<xsl:variable name="source" select="//request/source" />
 	
 	<xsl:choose>
-		<xsl:when test="//cached/object[contains(@id,$isbn_prefix) or contains(@id,$oclc_prefix)]">
+		<xsl:when test="//cached/object[contains(@id,$isbn_prefix) or contains(@id,$oclc_prefix) or contains(@id,$id_prefix)]">
 					
 			<!-- this record is cached already -->
 			
 			<xsl:variable name="totalCopies">
 				<xsl:choose>
-					<xsl:when test="//cached/object[contains(@id,$isbn_prefix) or contains(@id,$oclc_prefix)]//holdings:copiesSummary">
-						<xsl:value-of select="//cached/object[contains(@id,$isbn_prefix) or contains(@id,$oclc_prefix)]//holdings:copiesCount" />
+					<xsl:when test="//cached/object[contains(@id,$isbn_prefix) or contains(@id,$oclc_prefix) or contains(@id,$id_prefix)]//holdings:copiesSummary">
+						<xsl:value-of select="//cached/object[contains(@id,$isbn_prefix) or contains(@id,$oclc_prefix) or contains(@id,$id_prefix)]//holdings:copiesCount" />
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:text>0</xsl:text>
@@ -1028,8 +1036,8 @@
 			
 			<xsl:variable name="onlineCopies">
 				<xsl:choose>
-					<xsl:when test="//cached/object[contains(@id,$isbn_prefix) or contains(@id,$oclc_prefix)]//holdings:copiesSummary">
-						<xsl:value-of select="//cached/object[contains(@id,$isbn_prefix) or contains(@id,$oclc_prefix)]//holdings:copiesSummary/holdings:status[holdings:availableFor = '4']/holdings:availableCount" />
+					<xsl:when test="//cached/object[contains(@id,$isbn_prefix) or contains(@id,$oclc_prefix) or contains(@id,$id_prefix)]//holdings:copiesSummary">
+						<xsl:value-of select="//cached/object[contains(@id,$isbn_prefix) or contains(@id,$oclc_prefix) or contains(@id,$id_prefix)]//holdings:copiesSummary/holdings:status[holdings:availableFor = '4']/holdings:availableCount" />
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:text>0</xsl:text>
@@ -1041,8 +1049,8 @@
 
 			<xsl:variable name="printAvailable">
 				<xsl:choose>
-					<xsl:when test="//cached/object[contains(@id,$isbn_prefix) or contains(@id,$oclc_prefix)]//holdings:copiesSummary">
-						<xsl:value-of select="//cached/object[contains(@id,$isbn_prefix) or contains(@id,$oclc_prefix)]//holdings:copiesSummary/holdings:status[holdings:availableFor = '1']/holdings:availableCount" />
+					<xsl:when test="//cached/object[contains(@id,$isbn_prefix) or contains(@id,$oclc_prefix) or contains(@id,$id_prefix)]//holdings:copiesSummary">
+						<xsl:value-of select="//cached/object[contains(@id,$isbn_prefix) or contains(@id,$oclc_prefix) or contains(@id,$id_prefix)]//holdings:copiesSummary/holdings:status[holdings:availableFor = '1']/holdings:availableCount" />
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:text>0</xsl:text>
@@ -1053,12 +1061,14 @@
 			<xsl:choose>
 				<xsl:when test="$type = 'none'">
 					<xsl:call-template name="holdings_lookup_none">
+						<xsl:with-param name="id" select="$id_prefix" />
 						<xsl:with-param name="isbn" select="$isbn_prefix" />
 						<xsl:with-param name="oclc" select="$oclc_prefix" />
 					</xsl:call-template>			
 				</xsl:when>
 				<xsl:when test="$type = 'summary'">
 					<xsl:call-template name="holdings_lookup_summary">
+						<xsl:with-param name="id" select="$id_prefix" />
 						<xsl:with-param name="isbn" select="$isbn_prefix" />
 						<xsl:with-param name="oclc" select="$oclc_prefix" />
 						<xsl:with-param name="nosave" select="$nosave" />
@@ -1068,6 +1078,7 @@
 				</xsl:when>
 				<xsl:when test="$type = 'consortium'">
 					<xsl:call-template name="holdings_lookup_consortium">
+						<xsl:with-param name="id" select="$id_prefix" />
 						<xsl:with-param name="isbn" select="$isbn_prefix" />
 						<xsl:with-param name="oclc" select="$oclc_prefix" />
 						<xsl:with-param name="printAvailable" select="$printAvailable" />
@@ -1075,6 +1086,7 @@
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:call-template name="holdings_lookup_full">
+						<xsl:with-param name="id" select="$id_prefix" />
 						<xsl:with-param name="isbn" select="$isbn_prefix" />
 						<xsl:with-param name="oclc" select="$oclc_prefix" />
 						<xsl:with-param name="printCopies" select="$printCopies" />
@@ -1086,16 +1098,17 @@
 	
 		</xsl:when>
 
-		<xsl:when test="//worldcat_groups/group[@id = $source]/lookup/address">
+		<xsl:when test="//request/base = 'solr' or //worldcat_groups/group[@id = $source]/lookup/address">
 					
 			<!-- need to get it dynamically with ajax -->
 		
-			<div id="{$source}:{$isbn}:{$oclc}:{$type}" class="availabilityLoad"></div>
+			<div id="{$source}:{$record_id}:{$isbn}:{$oclc}:{$type}" class="availabilityLoad"></div>
 
 		</xsl:when>
 		<xsl:otherwise>
 			
 			<xsl:call-template name="holdings_lookup_none">
+				<xsl:with-param name="id" select="$record_id" />
 				<xsl:with-param name="isbn" select="$isbn" />
 				<xsl:with-param name="oclc" select="$oclc" />
 			</xsl:call-template>	
@@ -1111,12 +1124,13 @@
 -->
 
 <xsl:template name="holdings_lookup_consortium">
+	<xsl:param name="id" />
 	<xsl:param name="isbn" />
 	<xsl:param name="oclc" />
 	<xsl:param name="printAvailable" />
 		
 	<xsl:choose>
-		<xsl:when test="not(//cached/object[contains(@id,$isbn) or contains(@id,$oclc)])">
+		<xsl:when test="not(//cached/object[contains(@id,$isbn) or contains(@id,$oclc) or contains(@id,$id)])">
 			<p><strong style="color:#CC0000">Not found</strong></p>
 		</xsl:when>
 		<xsl:when test="$printAvailable > 0">
@@ -1128,6 +1142,7 @@
 			<xsl:call-template name="ill_option">
 				<xsl:with-param name="element">div</xsl:with-param>
 				<xsl:with-param name="class">resultsAvailability</xsl:with-param>
+				<xsl:with-param name="id"><xsl:value-of select="$id" /></xsl:with-param>
 				<xsl:with-param name="oclc"><xsl:value-of select="$oclc" /></xsl:with-param>
 				<xsl:with-param name="isbn"><xsl:value-of select="$isbn" /></xsl:with-param>
 			</xsl:call-template>
@@ -1143,12 +1158,14 @@
 -->
 
 <xsl:template name="holdings_lookup_none">
+	<xsl:param name="id" />
 	<xsl:param name="isbn" />
 	<xsl:param name="oclc" />
 	
 	<xsl:call-template name="ill_option">
 		<xsl:with-param name="element">div</xsl:with-param>
 		<xsl:with-param name="class">resultsAvailability</xsl:with-param>
+		<xsl:with-param name="id"><xsl:value-of select="$id" /></xsl:with-param>
 		<xsl:with-param name="oclc"><xsl:value-of select="$oclc" /></xsl:with-param>
 		<xsl:with-param name="isbn"><xsl:value-of select="$isbn" /></xsl:with-param>
 	</xsl:call-template>	
@@ -1161,6 +1178,7 @@
 -->
 
 <xsl:template name="holdings_lookup_summary">
+	<xsl:param name="id" />
 	<xsl:param name="isbn" />
 	<xsl:param name="oclc" />
 	<xsl:param name="nosave" />
@@ -1177,13 +1195,14 @@
 	</xsl:call-template>
 	
 	<xsl:choose>
-		<xsl:when test="not(//cached/object[contains(@id,$isbn) or contains(@id,$oclc)])">
+		<xsl:when test="not(//cached/object[contains(@id,$isbn) or contains(@id,$oclc) or contains(@id,$id)])">
 			<xsl:if test="//request/source = 'local'">
 				<li class="worldcatAvailabilityMissing"><img src="images/book-out.gif" alt="" />&#160; No Copies Available</li>
 			</xsl:if>
 			<xsl:call-template name="ill_option">
 				<xsl:with-param name="element">li</xsl:with-param>
 				<xsl:with-param name="class">resultsHoldings</xsl:with-param>
+				<xsl:with-param name="id"><xsl:value-of select="$id" /></xsl:with-param>
 				<xsl:with-param name="oclc"><xsl:value-of select="$oclc" /></xsl:with-param>
 				<xsl:with-param name="isbn"><xsl:value-of select="$isbn" /></xsl:with-param>
 			</xsl:call-template>
@@ -1209,6 +1228,7 @@
 -->
 
 <xsl:template name="holdings_lookup_full">
+	<xsl:param name="id" />
 	<xsl:param name="isbn" />
 	<xsl:param name="oclc" />	
 	<xsl:param name="printCopies" />
@@ -1230,7 +1250,7 @@
 	
 		<xsl:if test="$printAvailable > 0 and $consortium = 'true'">
 			<div class="worldcatConsortiumRequest">
-				<form action="{//cached/object[contains(@id,$isbn) or contains(@id,$oclc)]//holdings:resourceIdentifier/holdings:value}" method="get">
+				<form action="{//cached/object[contains(@id,$isbn) or contains(@id,$oclc) or contains(@id,$id)]//holdings:resourceIdentifier/holdings:value}" method="get">
 					<input type="submit" value="Request this item" />
 				</form>
 			</div>
@@ -1253,7 +1273,7 @@
 				<th>Call Number</th>
 				<th>Status</th>
 			</tr>
-			<xsl:for-each select="//cached/object[contains(@id,$isbn) or contains(@id,$oclc)]//holdings:holding/holdings:holdingsSimple/holdings:copyInformation[not(holdings:electronicLocator)]">
+			<xsl:for-each select="//cached/object[contains(@id,$isbn) or contains(@id,$oclc) or contains(@id,$id)]//holdings:holding/holdings:holdingsSimple/holdings:copyInformation[not(holdings:electronicLocator)]">
 				<tr>
 					<xsl:if test="location">
 						<td><xsl:value-of select="location" /></td>
@@ -1271,6 +1291,7 @@
 	<xsl:call-template name="holdings_full_text">
 		<xsl:with-param name="element">span</xsl:with-param>
 		<xsl:with-param name="class">resultsAvailability</xsl:with-param>
+		<xsl:with-param name="id"><xsl:value-of select="$id" /></xsl:with-param>
 		<xsl:with-param name="oclc"><xsl:value-of select="$oclc" /></xsl:with-param>
 		<xsl:with-param name="isbn"><xsl:value-of select="$isbn" /></xsl:with-param>
 	</xsl:call-template>
@@ -1292,10 +1313,11 @@
 <xsl:template name="holdings_full_text">
 	<xsl:param name="element" />
 	<xsl:param name="class" />
+	<xsl:param name="id" />
 	<xsl:param name="oclc" />
 	<xsl:param name="isbn" />
 				
-	<xsl:for-each select="//cached/object[contains(@id,$isbn) or contains(@id,$oclc)]//holdings:copyInformation/holdings:electronicLocator">
+	<xsl:for-each select="//cached/object[contains(@id,$isbn) or contains(@id,$oclc) or contains(@id,$id)]//holdings:copyInformation/holdings:electronicLocator">
 		<xsl:element name="{$element}">
 			<xsl:attribute name="class"><xsl:value-of select="$class" /></xsl:attribute>
 			<a href="{holdings:pointer}" class="recordAction" target="" >
@@ -1315,6 +1337,7 @@
 <xsl:template name="ill_option">
 	<xsl:param name="element" />
 	<xsl:param name="class" />
+	<xsl:param name="id" />
 	<xsl:param name="oclc" />
 	<xsl:param name="isbn" />
 	
@@ -1332,7 +1355,7 @@
 	<xsl:variable name="source"  select="//request/source|//request/requester"/>
 	
 	<xsl:variable name="available">
-		<xsl:for-each select="/*/cached/object[contains(@id,$isbn) or contains(@id,$oclc)]//holdings:copiesSummary">
+		<xsl:for-each select="/*/cached/object[contains(@id,$isbn) or contains(@id,$oclc) or contains(@id,$id)]//holdings:copiesSummary">
 			<xsl:if test="holdings:status[holdings:availableFor = '1']/holdings:availableCount &gt; 0 or 
 			holdings:status[holdings:availableFor = '4']/holdings:availableCount &gt; 0">
 				<xsl:text>yes</xsl:text>
@@ -1371,15 +1394,15 @@
 <xsl:template name="worldcat_save_record">
 	<xsl:param name="element" />
 	<xsl:param name="class" />
-	<xsl:param name="oclc" />
+	<xsl:param name="id" />
 	
-	<xsl:variable name="record_id">worldcat:<xsl:value-of select="$oclc" /></xsl:variable>
+	<xsl:variable name="record_id"><xsl:value-of select="$id" /></xsl:variable>
 		
 	<xsl:element name="{$element}">
 	
 		<xsl:attribute name="class">saveRecord <xsl:value-of select="$class" /> recordAction</xsl:attribute>
 
-		<img id="folder_worldcat{$oclc}" width="17" height="15" alt="" border="0" >
+		<img id="folder_worldcat{$id}" width="17" height="15" alt="" border="0" >
 		<xsl:attribute name="src">
 			<xsl:choose> 
 				<xsl:when test="//request/session/resultssaved[@key = $record_id]">images/folder_on.gif</xsl:when>
@@ -1389,49 +1412,62 @@
 		</img>
 
 		<xsl:text> </xsl:text>
-		<a id="link_worldcat:{$oclc}" href="{../url_save}">
-			<xsl:attribute name="class">
-				saveRecord <xsl:if test="//request/session/resultssaved[@key = $record_id]">saved</xsl:if>
-			</xsl:attribute>
-			<xsl:choose>
-				<xsl:when test="//request/session/resultssaved[@key = $record_id]">
-					<xsl:choose>
-						<xsl:when test="//session/role = 'named'">
-							<xsl:copy-of select="$text_results_record_saved" />
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:copy-of select="$text_results_record_saved_temp" />
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:when>
-				<xsl:otherwise><xsl:copy-of select="$text_results_record_save_it" /></xsl:otherwise>
-			</xsl:choose>
-		</a>
 		
-		<xsl:if test="//request/session/resultssaved[@key = $record_id] and //request/session/role != 'named'"> 
-			<span class="temporary_login_note">
-				(<xsl:text> </xsl:text>
-				<a href="{//navbar/element[@id = 'login']/url}">
-					<xsl:copy-of select="$text_results_record_saved_perm" />
-				</a>
-				<xsl:text> </xsl:text>)
-			</span>
-		</xsl:if>		
+		<xsl:choose>
 		
+			<xsl:when test="//request/session/username">
 
-		<!-- label/tag input for saved records, if record is saved and it's not a temporary session -->
-									
-		<xsl:if test="//request/session/resultssaved[@key = $record_id] and not(//request/session/role = 'guest' or //request/session/role = 'local')">
-			<div class="results_label resultsFullText" id="label_{$record_id}" > 
-				<xsl:call-template name="tag_input">
-					<xsl:with-param name="record" select="//saved_records/saved[@id = $record_id]" />
-					<xsl:with-param name="context" select="'the results page'" />
-				</xsl:call-template>	
-			</div>
-		</xsl:if>
-			
+				<a id="link_worldcat:{$id}" href="{../url_save}">
+					<xsl:attribute name="class">
+						saveRecord <xsl:if test="//request/session/resultssaved[@key = $record_id]">saved</xsl:if>
+					</xsl:attribute>
+					<xsl:choose>
+						<xsl:when test="//request/session/resultssaved[@key = $record_id]">
+							<xsl:choose>
+								<xsl:when test="//session/role = 'named'">
+									<xsl:copy-of select="$text_results_record_saved" />
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:copy-of select="$text_results_record_saved_temp" />
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:when>
+						<xsl:otherwise><xsl:copy-of select="$text_results_record_save_it" /></xsl:otherwise>
+					</xsl:choose>
+				</a>
+				
+				<xsl:if test="//request/session/resultssaved[@key = $record_id] and //request/session/role != 'named'"> 
+					<span class="temporary_login_note">
+						(<xsl:text> </xsl:text>
+						<a href="{//navbar/element[@id = 'login']/url}">
+							<xsl:copy-of select="$text_results_record_saved_perm" />
+						</a>
+						<xsl:text> </xsl:text>)
+					</span>
+				</xsl:if>		
+				
+		
+				<!-- label/tag input for saved records, if record is saved and it's not a temporary session -->
+											
+				<xsl:if test="//request/session/resultssaved[@key = $record_id] and not(//request/session/role = 'guest' or //request/session/role = 'local')">
+					<div class="results_label resultsFullText" id="label_{$record_id}" > 
+						<xsl:call-template name="tag_input">
+							<xsl:with-param name="record" select="//saved_records/saved[@id = $record_id]" />
+							<xsl:with-param name="context" select="'the results page'" />
+						</xsl:call-template>	
+					</div>
+				</xsl:if>
+			</xsl:when>
+			<xsl:otherwise>
+				<a>
+				<xsl:attribute name="href"><xsl:value-of select="//navbar/element[@id = 'login']/url" /></xsl:attribute>
+					Login to save records
+				</a>
+			</xsl:otherwise>
+		</xsl:choose>
+		
 	</xsl:element>
-			
+		
 </xsl:template>
 
 <xsl:template name="google_preview">
@@ -1469,8 +1505,8 @@
 	
 	<xsl:variable name="isbn" 		select="standard_numbers/isbn[string-length(text()) = 10]" />
 	<xsl:variable name="oclc" 		select="standard_numbers/oclc" />
+	<xsl:variable name="record_id" 	select="record_id" />
 	<xsl:variable name="year" 		select="year" />
-	<xsl:variable name="record_id">worldcat:<xsl:value-of select="$oclc" /></xsl:variable>
 	
 	<li class="result">
 	
@@ -1491,8 +1527,7 @@
 				<div class="resultsType">
 					<xsl:value-of select="format" />
 				</div>
-										
-				
+
 				<div class="resultsAbstract">
 				
 					<xsl:if test="abstract">
@@ -1530,6 +1565,7 @@
 				<div class="recordActions">
 				
 					<xsl:call-template name="holdings_lookup">
+						<xsl:with-param name="record_id"><xsl:value-of select="$record_id" /></xsl:with-param>
 						<xsl:with-param name="isbn"><xsl:value-of select="$isbn" /></xsl:with-param>
 						<xsl:with-param name="oclc"><xsl:value-of select="$oclc" /></xsl:with-param>
 						<xsl:with-param name="type"><xsl:value-of select="//worldcat_groups/group[@id = $source]/lookup/display" /></xsl:with-param>
@@ -1538,7 +1574,7 @@
 					<xsl:call-template name="worldcat_save_record">
 						<xsl:with-param name="element">div</xsl:with-param>
 						<xsl:with-param name="class">saveRecord</xsl:with-param>
-						<xsl:with-param name="oclc"><xsl:value-of select="$oclc" /></xsl:with-param>
+						<xsl:with-param name="id"><xsl:value-of select="$record_id" /></xsl:with-param>
 					</xsl:call-template>
 					
 				</div>
