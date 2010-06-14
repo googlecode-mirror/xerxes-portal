@@ -1619,7 +1619,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		$arrValues[":format"] = $objXerxesRecord->getFormat();
 		$arrValues[":refereed"] = $iRefereed;
 		
-		$strMarc = $objXerxesRecord->getMarcXMLString();
+		$strMarc = $objXerxesRecord->getOriginalXML(true);
 		
 		if ( $strMarc != "" )
 		{
