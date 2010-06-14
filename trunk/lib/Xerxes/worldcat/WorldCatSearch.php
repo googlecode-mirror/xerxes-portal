@@ -82,7 +82,7 @@ class Xerxes_WorldCatSearch extends Xerxes_Framework_Search
 		// local inline holdings 
 		// @todo: factor this out to the framework
 		
-		$this->getHoldingsInject();
+		$this->getHoldingsInject(false);
 		
 		// show worldcat holdings ?
 		
@@ -111,30 +111,17 @@ class Xerxes_WorldCatSearch extends Xerxes_Framework_Search
 		{
 			$final = $arrMatch[1];
 		}
-		
-		$this->request->setRedirect($final);
-	}
-	
-	public function lookup()
-	{
-		$source = $this->request->getProperty("source");
-		$isbn = $this->request->getProperty("isbn");
-		$oclc = $this->request->getProperty("oclc");
-		
-		$standard_numbers = array();
 
-		if ( $isbn != null )
+		if ( $final == "" )
 		{
-			array_push($standard_numbers, "ISBN:$isbn");
+			$this->request->setRedirect($url);
 		}
-		if ( $oclc != null )
+		else
 		{
-			array_push($standard_numbers, "OCLC:$oclc");
+			$this->request->setRedirect($final);
 		}		
 		
-		$xml = $this->getHoldings($source, $standard_numbers);
-		
-		$this->request->addDocument($xml);
+		$this->request->setRedirect($final);
 	}
 	
 	/**
@@ -270,7 +257,7 @@ class Xerxes_WorldCatSearch extends Xerxes_Framework_Search
 		return $arrFinal;
 	}
 
-	protected function getConfig($strSource)
+	public function getConfig($strSource)
 	{
 		if ( $strSource == "" )
 		{
@@ -351,85 +338,6 @@ class Xerxes_WorldCatSearch extends Xerxes_Framework_Search
 			
 			$this->request->addDocument( $objXml );
 		}
-	}
-	
-	protected function getHoldings($strSource, $arrIDs, $bolCache = false)
-	{
-		$objWorldcatConfig = $this->getConfig($strSource);
-		$url = $objWorldcatConfig->lookup_address;
-		
-		$objXml = new DOMDocument();
-		
-		if ( $url != null && count($arrIDs) > 0 )
-		{
-			$id = implode(",", $arrIDs);
-			
-			if ( $bolCache == true)
-			{
-				$url .= "?action=cached&id=$id";
-				
-				$xml = Xerxes_Framework_Parser::request($url);
-				
-				if ( $xml != "" )
-				{
-					$objXml->loadXML($xml);
-				}
-				else
-				{
-					return $objXml;
-				}
-			}
-			else
-			{
-				$objXml->loadXML("<cached />");
-				
-				$objObject = $objXml->createElement("object");
-				$objObject->setAttribute("id", $id);
-				$objXml->documentElement->appendChild($objObject);			
-				
-				$url .= "?action=records&id=$id&sameRecord=true";
-				
-				$xml = Xerxes_Framework_Parser::request($url);
-				
-				if ( $xml != "" )
-				{
-					$objRecord = new DOMDocument();
-					$objRecord->loadXML($xml);
-					$objImport = $objXml->importNode($objRecord->documentElement, true);		
-					$objObject->appendChild($objImport);
-				}
-			}
-			
-			$objXml->documentElement->setAttribute("url", Xerxes_Framework_Parser::escapeXml($url));
-		}
-		
-		return $objXml;
-	}
-
-	protected function getHoldingsInject()
-	{
-		$source = $this->request->getProperty("source");
-		
-		$isbns = $this->extractISBNs();
-		$oclcs = $this->extractOCLCNumbers();
-		
-		$standard_numbers = array();
-		
-		foreach ( $isbns as $isbn )
-		{
-			array_push($standard_numbers, "ISBN:$isbn");
-		}
-			
-		foreach ( $oclcs as $oclc )
-		{
-			array_push($standard_numbers, "OCLC:$oclc");
-		}
-		
-		// get any data we found in the cache for these records
-							
-		$objXml = $this->getHoldings($source, $standard_numbers, true);
-			
-		$this->request->addDocument($objXml);
 	}
 
 	protected function searchRedirectParams()
