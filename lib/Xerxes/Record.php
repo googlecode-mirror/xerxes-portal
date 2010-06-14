@@ -4474,11 +4474,16 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		return $this->subscription;
 	}
 	
-	public function getOriginalXML()
+	public function getOriginalXML($bolString = false)
 	{
-		$marc = $this->getMarcXML();
-		
-		return $marc->getElementsByTagName( "record" )->item( 0 );
+		if ( $bolString == true )
+		{
+			return $this->document->saveXML();
+		}
+		else
+		{
+			return $this->document;
+		}
 	}
 	
 	public function getRecordID()
