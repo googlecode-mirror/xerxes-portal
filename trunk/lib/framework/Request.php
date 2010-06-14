@@ -171,6 +171,12 @@ class Xerxes_Framework_Request
 		$ua = strtolower($this->getServer('HTTP_USER_AGENT'));
 		$ac = strtolower($this->getServer('HTTP_ACCEPT'));
 		
+		// custom ipad check
+
+		if (strpos($ua, 'ipad')) return false;
+		
+		// others
+		
 		$isMobile = strpos($ac, 'application/vnd.wap.xhtml+xml') !== false
 			|| $op != ''
 			|| strpos($ua, 'sony') !== false 
@@ -466,7 +472,7 @@ class Xerxes_Framework_Request
 		{
 			$key = urldecode($key);
 			
-			// find limit params
+			// find specific params
 			
 			if ( preg_match("/" . $regex . "/", $key) )
 			{
@@ -799,6 +805,11 @@ class Xerxes_Framework_Request
 	
 	public function url_for($properties, $full = false, $force_secure = false)
 	{
+		if ( $properties instanceof Xerxes_Framework_Request_URL )
+		{
+			$properties = $properties->toArray();
+		}
+		
 		if ( ! array_key_exists( "base", $properties ) )
 		{
 			throw new Exception( "no base/section supplied in url_for." );
@@ -815,7 +826,6 @@ class Xerxes_Framework_Request
 		
 		// should we generate full absolute urls with hostname? indicated by a
 		// request property, set automatically by snippet embed controllers. 
-		
 
 		if ( $this->getProperty( "gen_full_urls" ) == 'true' || $full )
 		{
@@ -866,17 +876,50 @@ class Xerxes_Framework_Request
 					unset( $properties[$property] );
 				}
 			}
-		  // Need to resort since we may have added indexes in a weird order. Silly PHP. 
+			
+		    // need to resort since we may have added indexes in a weird order. Silly PHP. 
+			
 			ksort($extra_path_arr); 	
 			$extra_path = implode( "/", $extra_path_arr );
 		}
 		
-		// everything else, which may be everything if it's ugly uris,
-
-		$query_string = http_build_query( $properties, '', '&amp;' );
 		$assembled_path = $base_path . $extra_path;
 		
-		if ( $query_string )
+		// everything else, which may be everything if it's ugly uris
+		
+		$query_string = null;
+		
+		foreach ( $properties as $key => $value )
+		{
+			if ( $value == "")
+			{
+				continue;
+			}
+			
+			if ( $query_string != null )
+			{
+				$query_string .= '&amp;';
+			}
+			
+			if ( is_array($value) )
+			{
+				for ( $x = 0; $x < count($value); $x++ )
+				{
+					if ( $x > 0 )
+					{
+						$query_string .= '&amp;';
+					}
+					
+					$query_string .= "$key=" . urlencode($value[$x]);
+				}
+			}
+			else
+			{
+				 $query_string .= "$key=" . urlencode($value);
+			}
+		}
+
+		if ( $query_string != null )
 		{
 			$assembled_path = $assembled_path . '?' . $query_string;
 		}
@@ -1025,7 +1068,67 @@ class Xerxes_Framework_Request
 			}
 		}
 	}
+}
 
+class Xerxes_Framework_Request_URL
+{
+	private $arrParams;
+	
+	public function __construct($params = "")
+	{
+		$this->arrParams = $params;
+	}
+	
+	public function setProperty($key, $value)
+	{
+		if ( array_key_exists( $key, $this->arrParams ) )
+		{
+			if ( ! is_array( $this->arrParams[$key] ) )
+			{
+				$this->arrParams[$key] = array ($this->arrParams[$key] );
+			}
+			
+			array_push( $this->arrParams[$key], $value );
+		} 
+		else
+		{
+			$this->arrParams[$key] = $value;
+		}
+	}
+	
+	public function removeProperty($key, $value)
+	{
+		if ( array_key_exists( $key, $this->arrParams ) )
+		{
+			$stored = $this->arrParams[$key];
+			
+			// if this is an array, we need to find the right one
+			
+			if ( is_array( $stored ) )
+			{
+				for ( $x = 0; $x < count($stored); $x++ )
+				{
+					if ( $stored[$x] == $value )
+					{
+						unset($this->arrParams[$key][$x]);
+					}
+				}
+				
+				// reset the keys
+				
+				$this->arrParams[$key] = array_values($this->arrParams[$key]);
+			}
+			else
+			{
+				unset($this->arrParams[$key]);
+			}
+		} 
+	}
+	
+	public function toArray()
+	{
+		return $this->arrParams;
+	}
 }
 
 ?>
