@@ -218,7 +218,8 @@ class Xerxes_Framework_Request
 			|| strpos($ua, 'up.link') !== false
 			|| strpos($ua, 'vodafone/') !== false
 			|| strpos($ua, 'wap1.') !== false
-			|| strpos($ua, 'wap2.') !== false;
+			|| strpos($ua, 'wap2.') !== false
+			|| strpos($ua, 'maemo browser') !== false;
 			
 		return $isMobile;		
 	}
