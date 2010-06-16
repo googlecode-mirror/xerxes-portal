@@ -13,7 +13,7 @@
 
 class Xerxes_DataMap extends Xerxes_Framework_DataMap
 {
-	public function __construct()
+	public function __construct($connection = null, $username = null, $password = null)
 	{
 		$objRegistry = Xerxes_Framework_Registry::getInstance();
 		$objRegistry->init();
@@ -28,12 +28,44 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		
 		$this->rdbms = $this->registry->getConfig("RDBMS", false, "mysql");
 		
+		// take conn and credentials from config, unless overriden in constructor
+		
+		if ( $connection == null) $connection = $objRegistry->getConfig( "DATABASE_CONNECTION", true );
+		if ( $username == null ) $username = $objRegistry->getConfig( "DATABASE_USERNAME", true );
+		if ( $password == null ) $password = $objRegistry->getConfig( "DATABASE_PASSWORD", true );
+		
 		$this->init( 
-			$objRegistry->getConfig( "DATABASE_CONNECTION", true ), 
-			$objRegistry->getConfig( "DATABASE_USERNAME", true ), 
-			$objRegistry->getConfig( "DATABASE_PASSWORD", true ) 
+			$connection, 
+			$username, 
+			$password 
 		);
 	}
+	
+	public function upgradeKB()
+	{
+		$dir = $this->registry->getConfig("PATH_PARENT_DIRECTORY");
+		$sql_file = "$dir/sql/" . $this->rdbms . "/create-kb.sql";
+
+		$sql =  file_get_contents($sql_file);
+		
+		$sql = str_replace("CREATE DATABASE IF NOT EXISTS xerxes;", "", $sql);
+		$sql = str_replace("USE xerxes;", "", $sql);
+
+		$pdo = $this->getDatabaseObject();
+		
+		$queries = explode(";", $sql);
+		
+		foreach ( $queries as $query )
+		{
+			$query = trim($query);
+			
+			if ( $query != "" )
+			{
+				$statement =  $pdo->query($query);
+			}
+		}
+	}
+	
 	
 	### KNOWLEDGEBASE ADD FUNCTIONS ###
 	
