@@ -164,6 +164,11 @@
 				<command>PopulateDatabases</command>
 				<view />
 			</action>
+			<action name="upgrade" cli="true">
+				<command>UpgradeDatabase</command>
+				<command>PopulateDatabases</command>
+				<view />
+			</action>
 			<!-- See http://code.google.com/p/xerxes-portal/wiki/EzProxyExport -->
 			<action name="ezproxy-export">
 				<command>DatabasesDatabase</command>

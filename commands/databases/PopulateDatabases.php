@@ -24,7 +24,10 @@
 		{
 			// in case this is being called from the web, plaintext
 			
-			header("Content-type: text/plain");
+			if ( $this->request->isCommandLine() == false )
+			{
+				header("Content-type: text/plain");
+			}
       
 			// set a higher than normal memory limit to account for 
 			// pulling down large knowledgebases
