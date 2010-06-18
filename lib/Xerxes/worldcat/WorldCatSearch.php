@@ -566,8 +566,6 @@ class Xerxes_WorldCatSearch_Query extends Xerxes_Framework_Search_Query
 			$query = "($query) $limits";
 		}
 
-		echo $query;
-		
 		return $query;
 	}
 	
