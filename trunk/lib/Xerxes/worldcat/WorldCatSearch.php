@@ -500,6 +500,11 @@ class Xerxes_WorldCatSearch_Query extends Xerxes_Framework_Search_Query
 		
 		foreach ( $this->getLimits() as $limit )
 		{
+			if ( $limit->value == "" )
+			{
+				continue;
+			}
+			
 			// publication year
 			
 			if ( $limit->field == "year" )
@@ -550,13 +555,7 @@ class Xerxes_WorldCatSearch_Query extends Xerxes_Framework_Search_Query
 					
 			elseif ( $limit->field == "mt")
 			{
-				$arrMats = explode(",", $limit->value);
-						
-				foreach ( $arrMats as $strMat )
-				{
-					$material_type = $this->keyValue("AND", "mt=", $strMat, true);
-					array_push($arrLimits, $material_type);
-				}
+				array_push($arrLimits, " AND srw.mt=\"" . $limit->value . "\"");
 			}
 		}
 
@@ -565,7 +564,9 @@ class Xerxes_WorldCatSearch_Query extends Xerxes_Framework_Search_Query
 		if ( $limits != "" )
 		{
 			$query = "($query) $limits";
-		}		
+		}
+
+		echo $query;
 		
 		return $query;
 	}
