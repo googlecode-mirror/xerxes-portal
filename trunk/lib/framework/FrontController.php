@@ -69,9 +69,27 @@ class Xerxes_Framework_FrontController
 		session_name( $session_name );
 		session_start();
 		
+		// url aliases
+		
+		$alias = $objRegistry->getConfig("BASE_ALIASES");
+		$aliases = array();
+		
+		if ( $alias != null )
+		{
+			foreach ( explode(";", $alias) as $part )
+			{
+				$parts = explode("=", $part);
+				
+				if ( count($parts) == 2 )
+				{
+					$aliases[$parts[0]] = $parts[1]; 
+				}
+			}
+		}
+		
 		// utility classes
 		
-		$objRequest = new Xerxes_Framework_Request( ); // processes the incoming request
+		$objRequest = new Xerxes_Framework_Request($aliases); // processes the incoming request
 		$objPage = new Xerxes_Framework_Page($objRequest, $objRegistry); // assists with basic paging/navigation elements for the view
 		$objError = new Xerxes_Framework_Error( ); // functions for special logging or handling of errors
 		
