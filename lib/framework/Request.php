@@ -22,13 +22,19 @@ class Xerxes_Framework_Request
 	private $xml = null; // main xml document for holding data from commands
 	private $strRedirect = ""; // redirect url
 	private $path_elements = null; // http path tranlsated into array of elements.
+	private $aliases = array();
 
 	/**
 	 * Process the incoming request paramaters, cookie values, url path if pretty-uri on
 	 */
 	
-	public function __construct()
+	public function __construct($aliases = null)
 	{
+		if ( $aliases != null )
+		{
+			$this->aliases = $aliases;
+		}
+		
 		if ( array_key_exists( "REQUEST_METHOD", $_SERVER ) )
 		{
 			// request has come in from GET or POST
@@ -41,7 +47,6 @@ class Xerxes_Framework_Request
 			{
 				// querystring can be delimited either with ampersand
 				// or semicolon
-				
 
 				$arrParams = preg_split( "/&|;/", $_SERVER['QUERY_STRING'] );
 				
@@ -49,7 +54,6 @@ class Xerxes_Framework_Request
 				{
 					// split out key and value on equal sign
 					
-
 					$iEqual = strpos( $strParam, "=" );
 					
 					if ( $iEqual !== false )
@@ -70,7 +74,11 @@ class Xerxes_Framework_Request
 			{
 				$this->setProperty( $key, $value );
 			}
+						
+			// aliases: when base is explicitly in the url
 			
+			$this->swapAliases();
+						
 			// if pretty-urls is turned on, extract params from uri. 
 
 			$objRegistry = Xerxes_Framework_Registry::getInstance();
@@ -220,7 +228,8 @@ class Xerxes_Framework_Request
 			|| strpos($ua, 'up.link') !== false
 			|| strpos($ua, 'vodafone/') !== false
 			|| strpos($ua, 'wap1.') !== false
-			|| strpos($ua, 'wap2.') !== false;
+			|| strpos($ua, 'wap2.') !== false
+			|| strpos($ua, 'maemo browser') !== false;
 			
 		return $isMobile;		
 	}
@@ -275,6 +284,10 @@ class Xerxes_Framework_Request
 		$this->mapPathToProperty( 0, "base" );
 		$this->mapPathToProperty( 1, "action" );
 		
+		// need to swap aliases before we fetch data
+		
+		$this->swapAliases();
+		
 		// if the action has any specific parmaters it defines beyond base and action
 		// they are extracted here
 
@@ -285,6 +298,30 @@ class Xerxes_Framework_Request
 		{
 			$this->mapPathToProperty( $index, $property );
 		}
+	}
+	
+	private function swapAliases()
+	{
+		foreach ( $this->aliases as $old => $alias )
+		{
+			if ( $this->getProperty("base") == $old )
+			{
+				$this->arrParams["base"] = $alias;
+			}
+		}		
+	}
+	
+	private function getAlias($new)
+	{
+		foreach ( $this->aliases as $old => $alias )
+		{
+			if ( $alias == $new )
+			{
+				return $old;
+			}
+		}
+		
+		return $new;
 	}
 	
 	/**
@@ -413,7 +450,6 @@ class Xerxes_Framework_Request
 		if ( array_key_exists( $key, $this->arrParams ) )
 		{
 			// if the value is requested as array, but is not array, make it one!
-			
 
 			if ( $bolArray == true && ! is_array( $this->arrParams[$key] ) )
 			{
@@ -852,7 +888,7 @@ class Xerxes_Framework_Request
 		{
 			// base in path
 
-			$extra_path_arr[0] = urlencode( $base );
+			$extra_path_arr[0] = urlencode( $this->getAlias($base)); //alias
 			unset( $properties["base"] );
 			
 			// action in path
