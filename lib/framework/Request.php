@@ -513,7 +513,17 @@ class Xerxes_Framework_Request
 			if ( preg_match("/" . $regex . "/", $key) )
 			{
 				// slip empty fields
+				
+				if ( is_array($value) )
+				{
+					$check = implode("", array_values($value));
 					
+					if ( $check == "" )
+					{
+						continue;
+					}
+				}				
+				
 				if ( $value == "")
 				{
 					continue;
