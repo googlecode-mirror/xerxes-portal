@@ -73,7 +73,7 @@ class Xerxes_Framework_Restrict
 	 * login id, and redirecting non-local users out to login page
 	 */
 	
-	public function checkIP()
+	public function checkIP($bolRedirect = true)
 	{
 		if ( $this->request->getSession( "username" ) == null )
 		{
@@ -87,9 +87,8 @@ class Xerxes_Framework_Restrict
 
 				$_SESSION["username"] = "local@" . session_id();
 				$_SESSION["role"] = "local";
-				$_SESSION["application"] = $this->strAppName;
 			}
-			else
+			elseif ( $bolRedirect == true )
 			{
 				// redirect to authentication page
 
