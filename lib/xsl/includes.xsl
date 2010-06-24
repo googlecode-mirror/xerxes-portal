@@ -49,7 +49,12 @@
 
 	<xsl:variable name="text_collection_default_new_name" select="//config/default_collection_name" />
 	<xsl:variable name="text_collection_default_new_section_name" select="//config/default_collection_section_name" />
-	<xsl:variable name="is_mobile" select="//request/session/is_mobile" />
+	<xsl:variable name="is_mobile">
+		<xsl:choose>
+			<xsl:when test="//request/session/is_mobile = '1'">1</xsl:when>
+			<xsl:otherwise>0</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
 	
 	<!-- these have defaults here and in config.xml for backwards-compatability on older configs -->
 	
