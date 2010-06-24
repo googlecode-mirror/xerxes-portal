@@ -35,25 +35,14 @@
 				<xsl:text>GEN</xsl:text>
 			</xsl:otherwise>
 		</xsl:choose>
-		<xsl:text>&#013;&#010;</xsl:text><xsl:text>T1  - </xsl:text><xsl:value-of select="title" />
-		<xsl:text>&#013;&#010;</xsl:text><xsl:text>T2  - </xsl:text><xsl:value-of select="sub_title" />
+		<xsl:text>&#013;&#010;</xsl:text><xsl:text>T1  - </xsl:text><xsl:value-of select="title_normalized" />
 		<xsl:text>&#013;&#010;</xsl:text><xsl:text>T3  - </xsl:text><xsl:value-of select="series_title" />
 		
 		<xsl:for-each select="authors/author">
-			<xsl:choose>
-				<xsl:when test="position() = 1">
-					<xsl:text>&#013;&#010;</xsl:text><xsl:text>A1  - </xsl:text>
-					<xsl:call-template name="author">
-						<xsl:with-param name="type">last</xsl:with-param>
-					</xsl:call-template>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:text>&#013;&#010;</xsl:text><xsl:text>A2  - </xsl:text>
-					<xsl:call-template name="author">
-						<xsl:with-param name="type">last</xsl:with-param>
-					</xsl:call-template>
-				</xsl:otherwise>
-			</xsl:choose>
+			<xsl:text>&#013;&#010;</xsl:text><xsl:text>A1  - </xsl:text>
+			<xsl:call-template name="author">
+				<xsl:with-param name="type">last</xsl:with-param>
+			</xsl:call-template>
 		</xsl:for-each>
 		
 		<xsl:text>&#013;&#010;</xsl:text><xsl:text>Y1  - </xsl:text><xsl:value-of select="year" /><xsl:text>///</xsl:text>
