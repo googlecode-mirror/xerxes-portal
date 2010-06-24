@@ -49,6 +49,16 @@ class Xerxes_WorldCatSearch extends Xerxes_Framework_Search
 		
 	public function results()
 	{
+		// need to authenticate for non-local library
+		
+		$source = $this->request->getProperty("source");
+		
+		if ( $source != "local" )
+		{
+			$objRestrict = new Xerxes_Framework_Restrict($this->request);
+			$objRestrict->checkIP();
+		}
+		
 		// add the (public aspects of the) worldcat config file to the response
 		// so we can make use of it in the interface 
 		
