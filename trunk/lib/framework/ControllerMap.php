@@ -448,7 +448,14 @@
 		
 		public function getDocumentElement()
 		{
-			return $this->strDocumentElement;
+			if ( $this->strDocumentElement == "" )
+			{
+				return "xerxes";
+			}
+			else
+			{
+				return $this->strDocumentElement;
+			}
 		}
 		
 		/**
