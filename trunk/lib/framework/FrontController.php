@@ -231,6 +231,11 @@ class Xerxes_Framework_FrontController
 						$objRestrict->checkIP();
 					}
 				}
+				else
+				{
+					// go ahead and register local users, but don't prompt for login
+					$objRestrict->checkIP(false);
+				}
 			}
 			
 			// if this action is set to only be run via the command line, in order to prevent
