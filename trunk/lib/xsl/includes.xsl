@@ -1052,9 +1052,9 @@
 			title="{$app_name} {$subject_name} search" />
 	</xsl:if>
 	
-	<!-- only include javascript when the user has not chosen the ada compliant version -->
+	<!-- exclude javascript for ada (because it messes with screen readers) and mobile devices (makes loading faster) -->
 
-	<xsl:if test="not(request/session/ada)">
+	<xsl:if test="not(request/session/ada) and $is_mobile = 0">
 	
 		<script src="{$base_include}/javascript/onload.js" language="javascript" type="text/javascript"></script>
 		<script src="{$base_include}/javascript/prototype.js" language="javascript" type="text/javascript"></script>
