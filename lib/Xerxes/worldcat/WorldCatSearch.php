@@ -111,6 +111,9 @@ class Xerxes_WorldCatSearch extends Xerxes_Framework_Search
 	public function bounce()
 	{
 		$url = $this->request->getProperty("url");
+		$this->request->setRedirect($url);
+		
+		/*
 		$html = Xerxes_Framework_Parser::request($url);
 			
 		$final = "";
@@ -132,6 +135,7 @@ class Xerxes_WorldCatSearch extends Xerxes_Framework_Search
 		}		
 		
 		$this->request->setRedirect($final);
+		*/
 	}
 	
 	/**
