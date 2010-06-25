@@ -404,9 +404,9 @@ class Xerxes_Framework_Request
 	 * @param bool $bolArray	[optional] set to true will ensure property is set as array
 	 */
 	
-	public function setProperty($key, $value, $bolArray = false)
+	public function setProperty($key, $value, $bolArray = false, $override = false)
 	{
-		if ( array_key_exists( $key, $this->arrParams ) )
+		if ( array_key_exists( $key, $this->arrParams ) && $override == false )
 		{
 			// if there is an existing element, then we always push in the
 			// the new value into an array, first converting the exising value
