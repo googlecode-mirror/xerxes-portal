@@ -689,9 +689,6 @@ abstract class Xerxes_Framework_Search
 					continue;
 				}
 				
-				$value = trim($value);
-				$key = trim($key);
-				
 				$key = urldecode($key);
 				
 				if ( strstr($key, "_relation") )
@@ -732,9 +729,6 @@ abstract class Xerxes_Framework_Search
 		foreach ( $this->request->getAllProperties() as $key => $value )
 		{
 			$key = urldecode($key);
-
-			$value = trim($value);
-			$key = trim($key);				
 			
 			// if we see 'query' as the start of a param, check if there are corresponding
 			// entries for field and boolean; these will have a number after them

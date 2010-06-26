@@ -406,6 +406,8 @@ class Xerxes_Framework_Request
 	
 	public function setProperty($key, $value, $bolArray = false, $override = false)
 	{
+		$value = trim($value);
+		
 		if ( array_key_exists( $key, $this->arrParams ) && $override == false )
 		{
 			// if there is an existing element, then we always push in the
