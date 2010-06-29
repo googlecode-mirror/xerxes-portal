@@ -2063,6 +2063,104 @@
 
 </xsl:template>
 
+<xsl:template name="generic_searchbox">
+
+	<form action="./" method="get">
+
+		<input type="hidden" name="base" value="{//request/base}" />
+		<input type="hidden" name="action" value="search" />
+		
+		<xsl:call-template name="generic_searchbox_hidden_fields_local" />
+
+		<xsl:if test="request/sortkeys">
+			<input type="hidden" name="sortKeys" value="{request/sortkeys}" />
+		</xsl:if>
+
+	<xsl:choose>
+		<xsl:when test="$is_mobile = '1'">
+			<xsl:call-template name="generic_searchbox_mobile" />
+		</xsl:when>
+		<xsl:otherwise>
+			<xsl:call-template name="generic_searchbox_full" />
+		</xsl:otherwise>
+	</xsl:choose>
+
+	</form>	
+	
+</xsl:template>
+
+
+<xsl:template name="generic_searchbox_mobile">
+
+	<xsl:variable name="search_query" select="//request/query" />
+	<xsl:call-template name="mobile_search_box">
+		<xsl:with-param name="query" select="$search_query" />
+	</xsl:call-template>
+		
+</xsl:template>
+
+<xsl:template name="generic_searchbox_full">
+
+	<xsl:choose>
+		<xsl:when test="request/advanced or request/advancedfull">
+			<xsl:call-template name="generic_advanced_search" />
+		</xsl:when>
+		<xsl:otherwise>
+			<xsl:call-template name="generic_simple_search" />			
+		</xsl:otherwise>
+	</xsl:choose>
+
+</xsl:template>
+
+<xsl:template name="generic_simple_search">
+
+	<xsl:variable name="query"	select="request/query" />
+	
+	<div class="raisedBox searchBox">
+
+		<div class="searchLabel">
+			<label for="field">Search</label><xsl:text> </xsl:text>
+		</div>
+		
+		<div class="searchInputs">
+
+			<select id="field" name="field">
+				
+				<xsl:for-each select="config/basic_search_fields/field">
+				
+					<option value="{@internal}">
+					<xsl:if test="//request/field = @internal">
+						<xsl:attribute name="selected">seleted</xsl:attribute>
+					</xsl:if>
+					<xsl:value-of select="@public" />
+					</option>
+					
+				</xsl:for-each>
+			</select>
+			
+			<xsl:text> </xsl:text><label for="query"><xsl:value-of select="$text_searchbox_for" /></label><xsl:text> </xsl:text>
+			
+			<input id="query" name="query" type="text" size="32" value="{$query}" /><xsl:text> </xsl:text>
+			
+			<input type="submit" name="Submit" value="GO" />
+		
+		</div>
+		
+		<xsl:if test="results/spelling != ''">
+			<p class="spellSuggest error">Did you mean: <a href="{results/spelling/@url}"><xsl:value-of select="results/spelling" /></a></p>
+		</xsl:if>	
+		
+		<xsl:call-template name="generic_advanced_search_option" />
+		
+	</div>
+
+</xsl:template>
+
+
+<xsl:template name="generic_advanced_search_option" />
+<xsl:template name="generic_advanced_search" />
+<xsl:template name="generic_searchbox_hidden_fields_local" />
+
 
 
 <!--
