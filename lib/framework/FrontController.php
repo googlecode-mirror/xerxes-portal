@@ -347,7 +347,7 @@ class Xerxes_Framework_FrontController
 					// if no command but a view was specified, then go ahead and show the view
 					// minus any data, since the view is doin' its own thang
 					
-					if ( $objControllerMap->getView() == "" )
+					if ( ! file_exists($objControllerMap->getView()) )
 					{
 						throw new Exception( "invalid command $strClass" );
 					}
