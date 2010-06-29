@@ -78,83 +78,46 @@
 	
 	</xsl:if>
 	
-	<xsl:choose>
-		<xsl:when test="results/total = '0'">
+	<xsl:call-template name="generic_sort_bar" />
 			
-			<div class="worldcatNoHits">
-			<p class="error">Sorry, your search produced no results</p>
-
-			<xsl:for-each select="worldcat_groups/group">
-				<xsl:variable name="id" select="@id" />
-				<xsl:if test="//request/source = $id">
-					<xsl:if test="following-sibling::group">
-						<xsl:variable name="next" select="following-sibling::group/@id" />
-						<p>Try your search in 
-						<a href="{//source_functions/source_option[@source=$next]/url}"><xsl:value-of select="following-sibling::group/@label" /></a>
-						</p>
-					</xsl:if>
-				</xsl:if>
-			</xsl:for-each>
+	<ul id="results">
+		
+		<xsl:for-each select="results/records/record/xerxes_record">
+			<xsl:call-template name="worldcat_result">
+				<xsl:with-param name="source" select="$source" />
+			</xsl:call-template>		
+		</xsl:for-each>
 			
-			</div>
-			
-		</xsl:when>
-		<xsl:otherwise>
-
-			<div id="sort">
-				<div class="yui-gd">
-					<div class="yui-u first">
-						<xsl:copy-of select="$text_metasearch_results_summary" />
-					</div>
-					<div class="yui-u">
-						<xsl:choose>
-							<xsl:when test="//sort_display/option">
-								<div id="sortOptions">
-									<xsl:copy-of select="$text_results_sort_by" /><xsl:text>: </xsl:text>
-									<xsl:for-each select="//sort_display/option">
-										<xsl:choose>
-											<xsl:when test="@active = 'true'">
-												<strong><xsl:value-of select="text()" /></strong>
-											</xsl:when>
-											<xsl:otherwise>
-												<xsl:variable name="link" select="@link" />
-												<a href="{$link}">
-													<xsl:value-of select="text()" />
-												</a>
-											</xsl:otherwise>
-										</xsl:choose>
-										<xsl:if test="following-sibling::option">
-											<xsl:text> | </xsl:text>
-										</xsl:if>
-									</xsl:for-each>
-								</div>
-							</xsl:when>
-							<xsl:otherwise>&#160;</xsl:otherwise>
-						</xsl:choose>
-					</div>
-				</div>
-			</div>
-			
-			<ul id="results">
-			
-			<xsl:for-each select="results/records/record/xerxes_record">
-				<xsl:call-template name="worldcat_result">
-					<xsl:with-param name="source" select="$source" />
-				</xsl:call-template>		
-			</xsl:for-each>
-			
-			</ul>
-			
-			<!-- Paging Navigation -->
-			<xsl:call-template name="paging_navigation" />
-
-		</xsl:otherwise>
-	</xsl:choose>
+	</ul>
+		
+	<!-- Paging Navigation -->
+	<xsl:call-template name="paging_navigation" />
 	
 	<!-- tag input -->
-	
 	<xsl:call-template name="hidden_tag_layers" />
 	
+</xsl:template>
+
+<xsl:template name="generic_no_hits">
+			
+	<div class="worldcatNoHits">
+	
+		<p class="error"><xsl:value-of select="$text_metasearch_hits_no_match" /></p>
+	
+		<xsl:for-each select="worldcat_groups/group">
+			<xsl:variable name="id" select="@id" />
+			<xsl:if test="//request/source = $id">
+				<xsl:if test="following-sibling::group">
+					<xsl:variable name="next" select="following-sibling::group/@id" />
+					<p>Try your search in 
+					<a href="{//source_functions/source_option[@source=$next]/url}"><xsl:value-of select="following-sibling::group/@label" /></a>
+					</p>
+				</xsl:if>
+			</xsl:if>
+		</xsl:for-each>
+	
+	</div>
+
 </xsl:template>
 
 </xsl:stylesheet>
