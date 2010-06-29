@@ -381,10 +381,10 @@ abstract class Xerxes_Framework_Search
 				$link_full = $results_xml->createElement("url", $record_link);
 				$record_container->appendChild( $link_full );
 				
-				// this one for backwards compatability
-
-				$link_full = $results_xml->createElement("url_full", $record_link);
-				$record_container->appendChild( $link_full );					
+					// this one for backwards compatability
+	
+					$link_full = $results_xml->createElement("url_full", $record_link);
+					$record_container->appendChild( $link_full );					
 				
 				// open-url link (which may be a redirect)
 
@@ -396,7 +396,12 @@ abstract class Xerxes_Framework_Search
 
 				$record_save = Xerxes_Framework_Parser::escapeXml($this->linkSaveRecord($result));
 				$link_save = $results_xml->createElement("url_save", $record_save);
-				$record_container->appendChild( $link_save );				
+				$record_container->appendChild( $link_save );
+
+					// this one for backwards compatability
+				
+					$link_save = $results_xml->createElement("url_save_delete", $record_save);
+					$record_container->appendChild( $link_save );		
 				
 		      	// openurl kev context object please
 		      	
