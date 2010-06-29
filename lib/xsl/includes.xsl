@@ -1550,7 +1550,7 @@
 
 <!-- 
 	TEMPLATE: BRIEF RESULTS
-	used in the metasearch and folder brief results pages
+	deprecated, used in the metasearch and folder brief results pages
 -->
 
 <xsl:template name="brief_results">
@@ -1558,9 +1558,25 @@
 	<ul id="results">
 	
 	<xsl:for-each select="//records/record/xerxes_record">
+		<xsl:call-template name="brief_result_article">
+			<xsl:with-param name="result_set" select="result_set" />
+			<xsl:with-param name="record_number" select="record_number" />		
+		</xsl:call-template>
+	</xsl:for-each>
 	
-		<xsl:variable name="result_set" 	select="result_set" />
-		<xsl:variable name="record_number" 	select="record_number" />
+	</ul>
+	
+</xsl:template>
+
+<!-- 
+	TEMPLATE: BRIEF RESULT ARTICLE
+	display of results geared toward articles (or really any non-book display)
+-->
+
+<xsl:template name="brief_result_article">
+	
+		<xsl:param name="result_set" />
+		<xsl:param name="record_number" />
 		
 		<!-- peer reviewed calculated differently in folder and metasearch -->
 		
@@ -1668,9 +1684,29 @@
 					<xsl:call-template name="additional_record_links" />
 					
 					<xsl:choose>
-						<xsl:when test="/metasearch">
 						
-							<!-- save facility in metasearch area -->
+						<!-- @todo: give saved record area it's own template -->
+						
+						<xsl:when test="/folder">
+						
+							<div class="folderAvailability deleteRecord">
+								<a class="recordAction deleteRecord" href="{../url_delete}">
+									<img src="{$base_url}/images/delete.gif" alt="" border="0" class="miniIcon deleteRecordLink"/>
+									<xsl:text> </xsl:text>
+									<xsl:copy-of select="$text_results_record_delete" />
+								 </a>
+							</div>
+							
+							<xsl:if test="$temporarySession != 'true'">
+								<xsl:call-template name="tag_input">
+									<xsl:with-param name="record" select=".."/>
+								</xsl:call-template>
+							</xsl:if>						
+						
+						</xsl:when>
+						<xsl:otherwise>
+						
+							<!-- save facility in search results area -->
 							
 							<div id="saveRecordOption_{$result_set}_{$record_number}" class="recordAction saveRecord">
 								<img id="folder_{$result_set}{$record_number}"	width="17" height="15" alt="" border="0" class="miniIcon saveRecordLink">
@@ -1723,34 +1759,12 @@
 								</div>
 							</xsl:if>
 
-						</xsl:when>
-						<xsl:when test="/folder">
-						
-							<!-- folder -->
-						
-							<div class="folderAvailability deleteRecord">
-								<a class="recordAction deleteRecord" href="{../url_delete}">
-									<img src="{$base_url}/images/delete.gif" alt="" border="0" class="miniIcon deleteRecordLink"/>
-									<xsl:text> </xsl:text>
-									<xsl:copy-of select="$text_results_record_delete" />
-								 </a>
-							</div>
-							
-							<xsl:if test="$temporarySession != 'true'">
-								<xsl:call-template name="tag_input">
-									<xsl:with-param name="record" select=".."/>
-								</xsl:call-template>
-							</xsl:if>						
-						
-						</xsl:when>
+						</xsl:otherwise>
+
 					</xsl:choose>					
 				</div>
 			</div>
 		</li>
-		
-	</xsl:for-each>
-	
-	</ul>
 
 </xsl:template>
 
@@ -1994,6 +2008,59 @@
 		<input class="searchbox_submit" type="submit" name="Submit" value="{$text_searchbox_go}" />
 	</div>
 	
+</xsl:template>
+
+
+<xsl:template name="generic_sort_bar">
+
+	<xsl:choose>
+		<xsl:when test="results/total = '0'">
+			<xsl:call-template name="generic_no_hits" />
+		</xsl:when>
+		<xsl:otherwise>
+
+			<div id="sort">
+				<div class="yui-gd">
+					<div class="yui-u first">
+						<xsl:copy-of select="$text_metasearch_results_summary" />
+					</div>
+					<div class="yui-u">
+						<xsl:choose>
+							<xsl:when test="//sort_display">
+								<div id="sortOptions">
+									<xsl:copy-of select="$text_results_sort_by" /><xsl:text>: </xsl:text>
+									<xsl:for-each select="//sort_display/option">
+										<xsl:choose>
+											<xsl:when test="@active = 'true'">
+												<strong><xsl:value-of select="text()" /></strong>
+											</xsl:when>
+											<xsl:otherwise>
+												<xsl:variable name="link" select="@link" />
+												<a href="{$link}">
+													<xsl:value-of select="text()" />
+												</a>
+											</xsl:otherwise>
+										</xsl:choose>
+										<xsl:if test="following-sibling::option">
+											<xsl:text> | </xsl:text>
+										</xsl:if>
+									</xsl:for-each>
+								</div>
+							</xsl:when>
+							<xsl:otherwise>&#160;</xsl:otherwise>
+						</xsl:choose>
+					</div>
+				</div>
+			</div>
+		</xsl:otherwise>
+	</xsl:choose>
+
+</xsl:template>
+
+<xsl:template name="generic_no_hits">
+
+	<p class="error"><xsl:value-of select="$text_metasearch_hits_no_match" /></p>
+
 </xsl:template>
 
 
