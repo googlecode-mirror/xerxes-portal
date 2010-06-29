@@ -642,6 +642,15 @@ class Xerxes_Framework_Request
 		}
 	}
 	
+	public function addData($name, $attribute, $value)
+	{
+		$xml = new DOMDocument();
+		$xml->loadXML("<$name />");
+		$xml->documentElement->setAttribute($attribute, $value);
+		
+		$this->addDocument($xml);
+	}
+	
 	/**
 	 * Add an XML DOMDocument to the master xml
 	 *
