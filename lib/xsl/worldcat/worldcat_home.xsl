@@ -44,7 +44,7 @@
 
 		<h1><xsl:value-of select="$text_worldcat_name" /></h1>
 		
-		<xsl:call-template name="worldcat_searchbox" />
+		<xsl:call-template name="generic_searchbox" />
 	
 </xsl:template>
 
