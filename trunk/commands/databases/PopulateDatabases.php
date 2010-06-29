@@ -309,7 +309,11 @@
 			$objSimple = new SimpleXMLElement($strXml);
 			$arrDBs = $objSimple->xpath("//database");
 			
-			if ( count($arrDBs) < 1 ) throw new Exception("Could not find any databases in the Metalib KB");
+			if ( count($arrDBs) < 1 )
+			{
+				throw new Exception("Could not find any databases in the Metalib KB. " . 
+					$this->objSearch->getWarnings(true) );
+			}
 			
 			foreach ( $arrDBs as $objDatabase )
 			{       

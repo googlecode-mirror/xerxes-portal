@@ -799,9 +799,23 @@
 		 * @return DOMDocument		if warnings present, otherwise null
 		 */
 		
-		public function getWarnings()
+		public function getWarnings($bolTextOnly = false)
 		{
-			return $this->warning;
+			if ( $bolTextOnly == false )
+			{
+				return $this->warning;
+			}
+			else
+			{
+				$final = "";
+				
+				foreach ( $this->warning->getElementsByTagName("error_text") as $error )
+				{
+					$final .= " " . $error->nodeValue;
+				}
+				
+				return trim($final);
+			}
 		}
 		
 		public function setFinishQuick($bol)
