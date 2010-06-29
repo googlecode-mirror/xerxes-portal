@@ -88,6 +88,11 @@ abstract class Xerxes_Framework_Search
 
 		$this->sort = $this->request->getProperty("sortKeys");
 		
+		if ( $this->sort == null )
+		{
+			$this->sort = $this->sort_default;
+		}
+		
 		// search object 
 		
 		$search_object_type = $this->search_object_type;
@@ -374,7 +379,12 @@ abstract class Xerxes_Framework_Search
 
 				$record_link = Xerxes_Framework_Parser::escapeXml($this->linkFullRecord($result));
 				$link_full = $results_xml->createElement("url", $record_link);
-				$record_container->appendChild( $link_full );				
+				$record_container->appendChild( $link_full );
+				
+				// this one for backwards compatability
+
+				$link_full = $results_xml->createElement("url_full", $record_link);
+				$record_container->appendChild( $link_full );					
 				
 				// open-url link (which may be a redirect)
 
@@ -1154,7 +1164,6 @@ abstract class Xerxes_Framework_Search
 			
 		$this->request->addDocument($objXml);
 	}
-
 }
 
 /**

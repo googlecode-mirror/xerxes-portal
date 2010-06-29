@@ -1855,7 +1855,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 	 * @return string					internal xerxes format designation
 	 */
 	
-	private function parseFormat($arrFormat)
+	protected function parseFormat($arrFormat)
 	{
 		$strReturn = "Unknown";
 		
@@ -2001,7 +2001,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		return $arrFinal;
 	}
 	
-	private function splitAuthor($strAuthor, $strType)
+	protected function splitAuthor($strAuthor, $strType)
 	{
 		$arrReturn = array ( );
 		$arrReturn["type"] = $strType;
@@ -2060,7 +2060,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		return $arrReturn;
 	}
 	
-	private function stripEndPunctuation($strInput, $strPunct)
+	protected function stripEndPunctuation($strInput, $strPunct)
 	{
 		$bolDone = false;
 		$arrPunct = str_split( $strPunct );
