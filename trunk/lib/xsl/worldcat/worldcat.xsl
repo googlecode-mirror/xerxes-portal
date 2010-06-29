@@ -46,109 +46,21 @@
 		<a href="{$last_search}">Search Results</a> <xsl:copy-of select="$text_breadcrumb_seperator" />	
 	</xsl:if>
 	
-	
 </xsl:template>
 
-<xsl:template name="worldcat_searchbox">
+<xsl:template name="generic_searchbox_hidden_fields_local">
 
-	<form action="./" method="get">
-
-		<input type="hidden" name="base" value="{//request/base}" />
-		<input type="hidden" name="action" value="search" />
-		<input type="hidden" name="source" value="local" />
-
-		<xsl:if test="request/sortkeys">
-			<input type="hidden" name="sortKeys" value="{request/sortkeys}" />
-		</xsl:if>
-
-	<xsl:choose>
-		<xsl:when test="$is_mobile = '1'">
-			<xsl:call-template name="worldcat_searchbox_mobile" />
-		</xsl:when>
-		<xsl:otherwise>
-			<xsl:call-template name="worldcat_searchbox_full" />
-		</xsl:otherwise>
-	</xsl:choose>
-
-	</form>	
-	
-</xsl:template>
-
-
-<xsl:template name="worldcat_searchbox_mobile">
-
-	<xsl:variable name="search_query" select="//request/query" />
-	<xsl:call-template name="mobile_search_box">
-		<xsl:with-param name="query" select="$search_query" />
-	</xsl:call-template>
-		
-</xsl:template>
-
-<xsl:template name="worldcat_searchbox_full">
-
-	<xsl:choose>
-		<xsl:when test="request/advanced or request/advancedfull">
-			<xsl:call-template name="worldcat_advanced_search" />
-		</xsl:when>
-		<xsl:otherwise>
-			<xsl:call-template name="worldcat_simple_search" />			
-		</xsl:otherwise>
-	</xsl:choose>
+	<input type="hidden" name="source" value="local" />
 
 </xsl:template>
 
-<xsl:template name="worldcat_simple_search">
+<xsl:template name="generic_advanced_search_option">
 
-	<xsl:variable name="query"	select="request/query" />
-	
-	<div class="raisedBox searchBox">
-
-		<div class="searchLabel">
-			<label for="field">Search</label><xsl:text> </xsl:text>
-		</div>
-		
-		<div class="searchInputs">
-
-			<select id="field" name="field">
-				<option value="">keyword</option>
-				<option value="ti">
-				<xsl:if test="request/field = 'ti'">
-					<xsl:attribute name="selected">seleted</xsl:attribute>
-				</xsl:if>
-				title
-				</option>
-				<option value="au">
-				<xsl:if test="request/field = 'au'">
-					<xsl:attribute name="selected">selected</xsl:attribute>
-				</xsl:if>
-				author
-				</option>
-				<option value="su">
-				<xsl:if test="request/field = 'su'">
-					<xsl:attribute name="selected">selected</xsl:attribute>
-				</xsl:if>
-				subject
-				</option>
-			</select>
-			<xsl:text> </xsl:text><label for="query">for</label><xsl:text> </xsl:text>
-			<input id="query" name="query" type="text" size="32" value="{$query}" /><xsl:text> </xsl:text>
-			
-			<input type="submit" name="Submit" value="GO" />
-		
-		</div>
-		
-		<xsl:if test="results/spelling != ''">
-			<p class="spellSuggest error">Did you mean: <a href="{results/spelling/@url}"><xsl:value-of select="results/spelling" /></a></p>
-		</xsl:if>
-		
 		<div id="worldcatAdvancedMore">
 			<xsl:if test="not(//request/session/role) or //request/session/role != 'guest'">
 				<a href="./?base={//request/base}&amp;action=advanced"><xsl:value-of select="$text_searchbox_options_more" /></a>
 			</xsl:if>
-		</div>		
-		
-	</div>
-
+		</div>	
 </xsl:template>
 
 <xsl:template name="worldcat_advanced_search">

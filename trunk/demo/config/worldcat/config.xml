@@ -36,6 +36,15 @@
 		
 		<config name="worldcat_relevance_type">relevance</config>
 
+		<basic_search_fields pass="true">
+			<field public="keyword" internal="" />
+			<field public="author" internal="au" />
+			<field public="title" internal="ti" />
+			<field public="subject" internal="su" />		
+		</basic_search_fields>
+
+		<!-- search groupings -->
+
 		<worldcat_groups>
 			<group id="local" label="Xerxes Library">
 				<libraries>CFI</libraries>
