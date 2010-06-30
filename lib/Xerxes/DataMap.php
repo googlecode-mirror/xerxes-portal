@@ -741,6 +741,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		$arrDatabases = array ( );
 		$arrResults = array ( );
 		$arrParams = array ( );
+		$where = false;
 		
 		$strSQL = "SELECT * from xerxes_databases
 			LEFT OUTER JOIN xerxes_database_notes ON xerxes_databases.metalib_id = xerxes_database_notes.database_id
@@ -755,6 +756,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 			// databases specified by an array of ids
 
 			$strSQL .= " WHERE ";
+			$where = true;
 			
 			for ( $x = 0 ; $x < count( $id ) ; $x ++ )
 			{
@@ -766,8 +768,6 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 				$strSQL .= "xerxes_databases.metalib_id = :id$x ";
 				$arrParams[":id$x"] = $id[$x];
 			}
-			
-			$strSQL .= " ORDER BY xerxes_databases.metalib_id";
 		} 
 		elseif ( $id != null && ! is_array( $id ) )
 		{
@@ -775,15 +775,15 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 
 			$strSQL .= " WHERE xerxes_databases.metalib_id = :id ";
 			$arrParams[":id"] = $id;
+			$where = true;
 		} 
 		elseif ( $query != null )
 		{
-			$strSQL .= "WHERE xerxes_databases.title_display LIKE :query1 OR " .
+			$strSQL .= "WHERE ( xerxes_databases.title_display LIKE :query1 OR " .
 				" xerxes_databases.title_full LIKE :query2 OR " .
 				" xerxes_databases.description LIKE :query3 OR " .
 				" xerxes_database_keywords.keyword LIKE :query4 OR " .
-				" xerxes_database_alternate_titles.alt_title LIKE :query5 " .
-				" ORDER BY UPPER(title_display) ";
+				" xerxes_database_alternate_titles.alt_title LIKE :query5 ) ";
 				
 			$searchParam = '%' . $query . '%';
 
@@ -792,35 +792,40 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 			$arrParams[":query3"] = $searchParam;
 			$arrParams[":query4"] = $searchParam;
 			$arrParams[":query5"] = $searchParam;
-		} 
-		else
+			
+			$where = true;
+		}
+		
+		// remove certain database types, if so configured
+			
+		$configDatabaseTypesExclude = $this->registry->getConfig("DATABASES_TYPE_EXCLUDE_AZ", false);
+			
+		if ( $configDatabaseTypesExclude != null )
 		{
-			// all databases, sorted alphabetically
+			$arrTypes = explode(",", $configDatabaseTypesExclude);
+			$arrTypeQuery = array();
 			
-			// remove certain database types, if so configured
-			
-			$configDatabaseTypesExclude = $this->registry->getConfig("DATABASES_TYPE_EXCLUDE_AZ", false);
-			
-			if ( $configDatabaseTypesExclude != null )
+			// specify that the type NOT be one of these
+		
+			for ( $q = 0; $q < count($arrTypes); $q++ )
 			{
-				$arrTypes = explode(",", $configDatabaseTypesExclude);
-				$arrTypeQuery = array();
+				array_push($arrTypeQuery, "xerxes_databases.type != :type$q");
+				$arrParams[":type$q"] = trim($arrTypes[$q]);
+			}
 				
-				// specify that the type NOT be one of these
-				
-				for ( $q = 0; $q < count($arrTypes); $q++ )
-				{
-					array_push($arrTypeQuery, "xerxes_databases.type != :type$q");
-					$arrParams[":type$q"] = trim($arrTypes[$q]);
-				}
-				
-				// AND 'em but then also catch the case where type is null
-				
-				$strSQL .= " WHERE (" . implode (" AND ", $arrTypeQuery) . ") OR xerxes_databases.type IS NULL ";
+			// AND 'em but then also catch the case where type is null
+			
+			$joiner = "WHERE";
+			
+			if ( $where == true )
+			{
+				$joiner = "AND";
 			}
 			
-			$strSQL .= " ORDER BY UPPER(title_display)";
+			$strSQL .= " $joiner ( (" . implode (" AND ", $arrTypeQuery) . ") OR xerxes_databases.type IS NULL )";
 		}
+			
+		$strSQL .= " ORDER BY UPPER(title_display)";
 		
 		// echo $strSQL; exit;
 		
@@ -872,6 +877,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		
 		return $arrDatabases;
 	}
+	
 	
 	/**
 	 * Get the list of types
