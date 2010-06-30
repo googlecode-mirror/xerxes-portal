@@ -3,7 +3,7 @@
 <!--
 
  author: David Walker
- copyright: 2007 California State University
+ copyright: 2010 California State University
  version: $Id$
  package: Worldcat
  link: http://xerxes.calstate.edu
