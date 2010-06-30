@@ -433,18 +433,7 @@ class Xerxes_WorldCatSearch extends Xerxes_Framework_Search
 			throw new Exception("must have a config entry for LINK_RESOLVER_ADDRESS or INTERLIBRARY_LOAN");
 		}
 
-		$strILL = $result->getOpenURL($configILL, $this->sid);
-		
-		// @todo: figure out wtf this is
-		
-		$location = $this->request->getProperty("location");
-		
-		if ( $location != null )
-		{
-			$strILL = str_replace("{location}", $location, $strILL);
-		}
-		
-		return $strILL;
+		return $result->getOpenURL($configILL, $this->sid);
 	}
 
 	protected function linkOther($result, $results_xml, $record_container)
