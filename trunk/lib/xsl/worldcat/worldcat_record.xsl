@@ -3,7 +3,7 @@
 <!--
 
  author: David Walker
- copyright: 2007 California State University
+ copyright: 2010 California State University
  version: $Id$
  package: Worldcat
  link: http://xerxes.calstate.edu
@@ -18,6 +18,7 @@
 	exclude-result-prefixes="php amazon">
 
 <xsl:import href="../includes.xsl" />
+<xsl:import href="../books.xsl" />
 <xsl:import href="worldcat.xsl" />
 
 <xsl:import href="../citation/styles.xsl" />
