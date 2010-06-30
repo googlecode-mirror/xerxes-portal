@@ -1125,9 +1125,14 @@ abstract class Xerxes_Framework_Search
 				if ( $xml != "" )
 				{
 					$objRecord = new DOMDocument();
+					$objRecord->recover = true;
 					$objRecord->loadXML($xml);
-					$objImport = $objXml->importNode($objRecord->documentElement, true);		
-					$objObject->appendChild($objImport);
+					
+					if ( $objRecord->documentElement instanceof DOMNode)
+					{
+						$objImport = $objXml->importNode($objRecord->documentElement, true);		
+						$objObject->appendChild($objImport);
+					}
 				}
 			}
 			
