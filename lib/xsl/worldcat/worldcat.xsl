@@ -30,6 +30,7 @@
 
 
 <xsl:template name="breadcrumb_worldcat">
+
 	<xsl:param name="condition" />
 	
 	<xsl:variable name="last_search" select="//request/session/worldcat_last_search" />
@@ -39,8 +40,7 @@
 	<xsl:if test="//request/action != 'home'">
 		<a href="./?base={//request/base}"><xsl:value-of select="$text_worldcat_name" /></a> <xsl:copy-of select="$text_breadcrumb_seperator" />
 	</xsl:if>
-	
-	
+		
 	<xsl:if test="$condition = '2' and $last_search != ''">
 		<a href="{$last_search}">Search Results</a> <xsl:copy-of select="$text_breadcrumb_seperator" />	
 	</xsl:if>
