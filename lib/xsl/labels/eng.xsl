@@ -55,6 +55,7 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	<xsl:variable name="text_collections_publish">Make collection:</xsl:variable>
 	<xsl:variable name="text_collections_remove_searchbox">I'm done adding databases!</xsl:variable>
 	
+	
 	<xsl:variable name="text_database_availability">Availability:</xsl:variable>
 	<xsl:variable name="text_database_available_registered">Only available to registered users.</xsl:variable>
 	<xsl:variable name="text_database_available_everyone">Available to everyone.</xsl:variable>
@@ -78,6 +79,7 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	<xsl:variable name="text_databases_az_databases">databases</xsl:variable>
 	<xsl:variable name="text_databases_az_hint_info">more information</xsl:variable>
 	<xsl:variable name="text_databases_az_hint_searchable">searchable by <xsl:value-of select="$app_name" /></xsl:variable>
+	<xsl:variable name="text_databases_az_letter_separator"> | </xsl:variable>
 	<xsl:variable name="text_databases_az_pagename">Databases A-Z</xsl:variable>
 	<xsl:variable name="text_databases_az_search">List databases matching: </xsl:variable>
 	
