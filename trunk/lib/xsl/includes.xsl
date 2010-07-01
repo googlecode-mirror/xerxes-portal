@@ -1582,6 +1582,9 @@
 		
 		<xsl:variable name="refereed">
 			<xsl:choose>
+				<xsl:when test="refereed = 1 and format != 'Book Review'">
+					<xsl:text>true</xsl:text>
+				</xsl:when>
 				<xsl:when test="../refereed = 1 and format != 'Book Review'">
 					<xsl:text>true</xsl:text>
 				</xsl:when>
