@@ -439,15 +439,15 @@ abstract class Xerxes_Framework_Search
 				foreach ( $this->recommendations as $record )
 				{
 					$record_xml = $results_xml->createElement("record");
-					$recommend_xml->documentElement->appendChild($record_xml);
+					$recommend_xml->appendChild($record_xml);
 					
 					$import = $results_xml->importNode($record->toXML()->documentElement, true);
-					$results_xmls->appendChild($objImport);
+					$record_xml->appendChild($import);
 					
 					$open_url = $record->getOpenURL($this->link_resolver, $this->sid);
 					
 					$open_url_xml = $results_xml->createElement("url_open", Xerxes_Framework_Parser::escapeXML($open_url));
-					$results_xml->appendChild($open_url_xml);
+					$record_xml->appendChild($open_url_xml);
 				}
 			}
 
