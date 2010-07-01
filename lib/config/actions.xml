@@ -525,6 +525,7 @@
 		<section name="worldcat" namespace="Xerxes" directory="search">
 			<request name="xerxes_search_object">Xerxes_WorldCatSearch</request>
 			<action name="home">
+				<command>SearchHome</command>
 				<view>xsl/worldcat/worldcat_home.xsl</view>
 			</action>
 			<action name="advanced">

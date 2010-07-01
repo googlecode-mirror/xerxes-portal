@@ -99,6 +99,11 @@ abstract class Xerxes_Framework_Search
 		$this->search_object = new $search_object_type();
 	}
 	
+	public function home()
+	{
+		
+	}
+	
 	/**
 	 * Initiate the search, check spelling, and forward to results
 	 */

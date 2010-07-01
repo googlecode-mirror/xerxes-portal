@@ -45,6 +45,8 @@ class Xerxes_WorldCatSearch extends Xerxes_Framework_Search
 		// basic
 
 		$this->search_object = $this->getWorldCatObject($this->request->getProperty("source"));	
+		
+		$this->addConfigToResponse();
 	}
 		
 	public function results()
@@ -62,7 +64,6 @@ class Xerxes_WorldCatSearch extends Xerxes_Framework_Search
 		// add the (public aspects of the) worldcat config file to the response
 		// so we can make use of it in the interface 
 		
-		$this->addConfigToResponse();
 		$this->addAdvancedSearchLink();
 
 		// if no sort defined, its relevance!
@@ -84,10 +85,6 @@ class Xerxes_WorldCatSearch extends Xerxes_Framework_Search
 		// get the record
 		
 		parent::record();
-		
-		// config
-		
-		$this->addConfigToResponse();
 		
 		// local inline holdings 
 		// @todo: factor this out to the framework
