@@ -164,6 +164,10 @@ abstract class Xerxes_Framework_Search
 		
 		$this->extractFacets($xml);
 		
+		// mark peer-reviewed journals
+		
+		$this->markRefereed();
+		
 		// done
 		
 		$this->request->addDocument($this->resultsXML());
@@ -178,7 +182,10 @@ abstract class Xerxes_Framework_Search
 		$id = $this->request->getProperty("id");
 		
 		$xml = $this->search_object->record($id);
+		
 		$this->results = $this->convertToXerxesRecords($xml);
+		
+		$this->markRefereed();
 		
 		$this->request->addDocument($this->resultsXML());
 	}
@@ -840,8 +847,13 @@ abstract class Xerxes_Framework_Search
 				
 			$doc = new Xerxes_BxRecord_Document();
 			$doc->loadXML($xml);
-				
-			$this->recommendations = $doc->records();
+			
+			$records = $doc->records();
+			
+			for ( $x = 1; $x < count($records); $x++ )
+			{
+				array_push($this->recommendations, $records[$x]);
+			} 
 		}
 	}
 	
