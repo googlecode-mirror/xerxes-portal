@@ -140,6 +140,12 @@ class Xerxes_WorldCat
 		return $objXml;
 	}
 	
+	public function hits($search)
+	{
+		$this->searchRetrieve($search, 0,0);
+		return $this->total;
+	}
+	
 	/**
 	 * Search and retieve records
 	 *
