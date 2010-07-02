@@ -133,12 +133,14 @@ abstract class Xerxes_Framework_Search
 	}
 
 	/**
-	 * In a metasearch, this checks the the progress of the search
+	 * Just get the hit counts on the search; in a metasearch, 
+	 * this checks the the progress of the search
 	 */	
 	
-	public function progress()
+	public function hits()
 	{
-		
+		$hits = $this->search_object->hits($this->query);
+		$this->request->addData("hits", "num", $hits);
 	}
 	
 	/**
