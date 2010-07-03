@@ -845,8 +845,6 @@ div.autocomplete ul li {
   padding: 0.5em 0.5em;
 }
 
-
-
 .umlaut_content .link_source {
   color: gray;
   margin-left: 1em;
@@ -868,6 +866,10 @@ div.autocomplete ul li {
 	border: none;
 }
 
+.tabs p.error {
+	margin: 3em;
+}
+
 #tabnav {
 	float: left;
 	width: 98%;
@@ -876,17 +878,20 @@ div.autocomplete ul li {
 	padding-left: 10px;
 	margin-right: 10px;
 }
+
 #tabnav ul {
 	margin: 0;
 	padding: 10px 10px 0;
 	list-style: none;
 }
+
 #tabnav li {
 	float: left;
 	background: url("../images/tabs/left.gif") no-repeat left top;
 	margin: 0;
 	padding: 0 0 0 9px;
 }
+
 #tabnav a {
 	display:block;
 	background: url("../images/tabs/right.gif") no-repeat right top;
@@ -896,12 +901,15 @@ div.autocomplete ul li {
 	font-weight: bold;
 	color: #555;
 }
+
 #tabnav a:hover {
 	color: #333;
 }
+
 #tabnav .here {
 	background-image: url("../images/tabs/left_on.gif");
 }
+
 #tabnav .here a {
 	background-image: url("../images/tabs/right_on.gif");
 	color: #333;
