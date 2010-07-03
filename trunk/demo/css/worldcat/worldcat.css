@@ -21,10 +21,6 @@ li.result {
 	margin-top: 5px;
 }
 
-#sort {
-	background-color: transparent;
-}
-
 .resultsInfo {
 	padding-left: 0px;
 	border-left: 0px;
@@ -181,47 +177,3 @@ option.basicOption {
 	cursor: pointer;
 	font-weight: bold;
 }
-
-
-/* tabs */
-
-ul#tabnav {
-	text-align: left;
-	margin: 1em 0 1em 0; 
-	font-weight: bold;
-	border-bottom: 1px solid #ccc;
-	list-style-type: none;
-	padding: 10px; /* THIRD number must change with respect to padding-top (X) below */
-}
-
-ul#tabnav li { 
-	display: inline;
-}
-
-ul#tabnav li.here { 
-	border-bottom: 1px solid #fff;
-	background-color: #fff; 
-}
-
-ul#tabnav li.here a {
-	background-color: #fff;
-	color: #000;
-	position: relative;
-	top: 1px;
-	padding-top: 10px; /* must change with respect to padding (X) above and below */
-}
-
-ul#tabnav li a {
-	padding: 10px; /* FIRST number must change with respect to padding-top (X) above */
-	border: 1px solid #ccc; 
-	background-color: #eee; 
-	color: #666; 
-	margin-right: 0px;
-	text-decoration: none;
-	border-bottom: none;
-}
-
-ul#tabnav a:hover {
-	background: #fff;
-}
-

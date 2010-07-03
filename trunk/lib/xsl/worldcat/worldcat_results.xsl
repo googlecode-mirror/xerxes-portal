@@ -58,29 +58,38 @@
 		</div>
 	</div>
 	
-	<xsl:if test="count(//worldcat_groups/group) > 1 and $source != ''">
-		
-		<ul id="tabnav">
-	
-		<xsl:for-each select="worldcat_groups/group">
-			<xsl:variable name="id" select="@id" />
-			<li>
-				<xsl:if test="//request/source = $id">
-					<xsl:attribute name="class">here</xsl:attribute>
-				</xsl:if>
-				<a href="{//source_functions/source_option[@source=$id]/url}">
-	
-					<span><xsl:value-of select="@label" /></span>
-				</a>
-			</li>
-		</xsl:for-each>
-		
-		</ul>
-	
-	</xsl:if>
-	
-	<xsl:call-template name="generic_sort_bar" />
+	<xsl:choose>
+		<xsl:when test="count(//worldcat_groups/group) > 1 and $source != ''">
 			
+			<div class="tabs">
+				<ul id="tabnav">
+			
+					<xsl:for-each select="worldcat_groups/group">
+						<xsl:variable name="id" select="@id" />
+						<li>
+							<xsl:if test="//request/source = $id">
+								<xsl:attribute name="class">here</xsl:attribute>
+							</xsl:if>
+							<a href="{//source_functions/source_option[@source=$id]/url}">
+				
+								<span><xsl:value-of select="@label" /></span>
+							</a>
+						</li>
+					</xsl:for-each>
+				
+				</ul>
+				
+				<div style="clear:both"></div>
+				
+				<xsl:call-template name="generic_sort_bar" />
+			</div>
+		
+		</xsl:when>
+		<xsl:otherwise>
+			<xsl:call-template name="generic_sort_bar" />	
+		</xsl:otherwise>
+	</xsl:choose>
+	
 	<ul id="results">
 		
 		<xsl:for-each select="results/records/record/xerxes_record">
