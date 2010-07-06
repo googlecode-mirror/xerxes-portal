@@ -9,7 +9,7 @@ Thinking about installing Xerxes?  Here are some of the benefits Xerxes provides
 
 ==More intuitive method for selecting categories and databases==
 
-Probably the most complex and confusing feature of Metalib is the "Metasearch" module.  It offers too many options, all crammed into a single screen.  New users easily overlook the crowded pull-down menus on the left, often just skipping right to the search box.
+Probably the most complex and confusing feature of Metalib is the "Metasearch" module.  It simply offers too many options, all crammed into a single screen.  New users easily overlook the crowded pull-down menus on the left, often just skipping right to the search box.
 
 Xerxes, on the other hand, alleviates this complexity by dividing the steps of selected categories and choosing databases into two different screens.  Instead of hiding the categories away in a pull-down menu, as Metalib does, Xerxes [http://library.calstate.edu/media/png/xerxes-why-databases-categories.png prominently displays the categories on the home page], so that users can more easily notice and select their area of study.  
 
@@ -17,19 +17,19 @@ Once users have chosen a category, they are, in most Xerxes implementations, pre
 
 ==A single workflow for selecting categories and databases==
 
-Recognizing the confusion of the Metasearch module, Ex Libris developed the "Quick Set" module to provide a simpler workflow for searching.  
+Recognizing the complexity of the Metasearch module, Ex Libris developed the "Quick Set" module to provide a simpler workflow for searching.  
 
 But the Quick Set module suffers from the opposite problems of the Metasearch module: The quick sets tend to be broad, high-level subject categories, which can, in turn, produce unfocused search results.  The module provides no options for choosing narrower subcategories or selecting specific databases.
 
 Having two different modules for selecting categories and databases (Quick Set and Metasearch), in turn, requires that the library set-up and maintain two different sets of subject lists and database assignments.
 
-Xerxes achieves the _goal_ of the Quick Set module by giving users a simple way to select a category and then search.  But it also achieves the _goal_ of the Metasearch module in giving users an option to select specific databases.  And it does that using one workflow instead of two different workflows in two different modules.  Less for users to learn.  Less for the library to maintain.
+By giving users a simple way to select a category and then search, Xerxes achieves the _goal_ of the Quick Set module.  But it also achieves the _goal_ of the Metasearch module in giving users the option to select specific databases.  And it does all of that using a single workflow instead of two different workflows in two different modules.  Less for users to learn.  Less for the library to maintain.
 
 ==Simpler deep-linking==
 
 Metalb URLs contain session-specific information that prevents them from being persistent links.  This makes it difficult for librarians or faculty to link into Metalib from their own web pages.  To compensate, Metalib even has a management module for "generating" deep-links, so the library might give their users instructions on how to link into the system.
 
-That’s crazy.  Xerxes creates simple, stable URLs.  You want to link to a subject category in Xerxes?  [http://library.calstate.edu/media/png/xerxes-why-databases-deep.png Just cut-and-paste the URL from your browser] into your web page.  Done.  No need to "generate" a link.  No need for instructions.
+Xerxes creates simple, stable URLs.  You want to link to a subject category in Xerxes?  [http://library.calstate.edu/media/png/xerxes-why-databases-deep.png Just cut-and-paste the URL from your browser] into your web page.  Done.
 
 ==Powerful embedding feature==
 
@@ -51,7 +51,7 @@ In Xerxes, the back button behaves as you would expect.   This is simple stuff. 
 
 ==Handles sessions better==
 
-In Metalib, if a user waits too long between actions -- perhaps because they are actually reading an article from one of their results-- Metalib will time-out the session, forcing the user to re-do their search.  This is incredibly frustrating, since it may take you upwards of a minute to get back to your place in the search results.
+In Metalib, if a user waits too long between actions -- perhaps because they are actually reading an article from one of their results -- Metalib will time-out the session, forcing the user to re-do their search.  This is incredibly frustrating, since it may take you upwards of a minute to get back to your place in the search results.
 
 Xerxes has longer session time-outs, for starters.  But, even if the session ends, the user can log back in, and Xerxes puts them right back in the search results where they were.   Again, this is a simple change in behavior that makes a big difference to users.
 
