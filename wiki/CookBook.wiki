@@ -53,7 +53,9 @@ Xerxes comes with a feature for [Embed dynamically embedding the search box], an
 
 `context_url` is the URL of the (external) page you are embedded this search box.  Together with the name given in `context`, Xerxes will use this to construct breadcrumbs back to this page.  For added security, you may also limit this to [Configuration#limit_context_url allowed domains] in config.xml.
 
-You can include as many `database` inputs as you like, up to the search limit set in Metalib.  Do *not* put brackets `[]` at the end of the name, a PHP workaround that Xerxes does not recognize.
+You can include as many `database` inputs as you like, up to the search limit set in Metalib.  
+
+Alternately, you can provide the ID of a category in an input called `subject`, and Xerxes will search all the databases in the first subcategory of that subject.  The category ID is the normalized form of the subject name, found at the end of the URL of the subject page.  In [http://xerxes.calstate.edu/demo/databases/subject/environmental-sciences this example] it's 'environmental-sciences'.
 
 Here is the resulting URL:
 
