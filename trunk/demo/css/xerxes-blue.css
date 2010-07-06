@@ -916,3 +916,20 @@ div.autocomplete ul li {
 	padding-bottom: 10px;
 }
 
+/* facet limit */
+
+.resultsFacetsApplied {
+	margin-top: 1em;
+}
+
+.resultsFacetsApplied li {
+	position: relative; 
+	padding: 10px; 
+	padding-left: 30px; 
+	margin: 2px;
+	background-image: url(../images/facet-bg.gif);
+	background-repeat:repeat-x;
+	background-color: #efefef; 
+	border: 1px solid #cbcbcb;
+}
+
