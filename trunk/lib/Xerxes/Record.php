@@ -1639,6 +1639,35 @@ class Xerxes_Record extends Xerxes_Marc_Record
 
 		$arrReferant["rft.genre"] = $this->convertGenreOpenURL( $this->format );
 		
+		switch($arrReferant["rft.genre"])
+		{
+			case "dissertation":
+				
+				$arrReferant["rft_val_fmt"] = "info:ofi/fmt:kev:mtx:dissertation";
+				break;				
+			
+			case "book":
+			case "bookitem":
+			case "conference":
+			case "proceeding":
+			case "report":
+			case "document":
+				
+				$arrReferant["rft_val_fmt"] = "info:ofi/fmt:kev:mtx:book";
+				break;
+
+			case "journal":
+			case "issue":
+			case "article":
+			case "proceeding":
+			case "conference":
+			case "preprint":
+			case "unknown":
+				$arrReferant["rft_val_fmt"] = "info:ofi/fmt:kev:mtx:journal";
+				break;					
+		}
+		
+		
 		if ( count( $this->isbns ) > 0 )
 		{
 			$arrReferant["rft.isbn"] = $this->isbns[0];
@@ -3944,6 +3973,9 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		// NOTE: if you make a change to this function, make a corresponding change 
 		// in the Xerxes_Framework_Parser class, since this one here is a duplicate function 
 		// allowing Xerxes_Record to be a stand-alone class
+		
+		
+		
 
 		$arrMatches = ""; // matches from regular expression
 		$arrSmallWords = ""; // words that shouldn't be capitalized if they aren't the first word.
@@ -3975,10 +4007,22 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		foreach ( $arrWords as $key => $word )
 		{
 			// if this word is the first, or it's not one of our small words, capitalise it 
-
+			
 			if ( $key == 0 || ! in_array( Xerxes_Framework_Parser::strtolower( $word ), $arrSmallWords ) )
 			{
-				$arrWords[$key] = ucwords( $word );
+				// make sure first character is not a quote or something
+				
+				if ( preg_match("/^[^a-zA-Z0-9]/", $word ) )
+				{
+					$first = substr($word,0,1);
+					$rest = substr($word,1);
+					
+					$arrWords[$key] = $first . ucwords( $rest );
+				}
+				else
+				{
+					$arrWords[$key] = ucwords( $word );
+				}
 			} 
 			elseif ( in_array( Xerxes_Framework_Parser::strtolower( $word ), $arrSmallWords ) )
 			{

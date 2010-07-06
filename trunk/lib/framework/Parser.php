@@ -255,87 +255,102 @@
 		 * @static 
 		 */ 
 
-		public static function toTitleCase( $strInput )
+		private function toTitleCase($strInput)
 		{
 			// NOTE: if you make a change to this function, make a corresponding change 
-			// in the Xerxes_Framework_Parser class, since this one here is a duplicate function 
-			// allowing Xerxes_Record to be a stand-alone class
+			// in the Xerxes_Record class
 			
 			
 			
-			
-			$arrMatches = "";			// matches from regular expression
-			$arrSmallWords = "";		// words that shouldn't be capitalized if they aren't the first word.
-			$arrWords = "";				// individual words in input
-			$strFinal = "";				// final string to return
-			$strLetter = "";			// first letter of subtitle, if any
-						
+	
+			$arrMatches = ""; // matches from regular expression
+			$arrSmallWords = ""; // words that shouldn't be capitalized if they aren't the first word.
+			$arrWords = ""; // individual words in input
+			$strFinal = ""; // final string to return
+			$strLetter = ""; // first letter of subtitle, if any
+	
 			// if there are no lowercase letters (and its sufficiently long a title to 
 			// not just be an aconym or something) then this is likely a title stupdily
 			// entered into a database in ALL CAPS, so drop it entirely to 
 			// lower-case first
-
-			$iMatch = preg_match("/[a-z]/", $strInput);
-
-			if ($iMatch == 0 && strlen($strInput) > 10)
+	
+			$iMatch = preg_match( "/[a-z]/", $strInput );
+			
+			if ( $iMatch == 0 && strlen( $strInput ) > 10 )
 			{
-				$strInput = Xerxes_Framework_Parser::strtolower($strInput);
+				$strInput = Xerxes_Framework_Parser::strtolower( $strInput );
 			}
 			
 			// array of small words
 			
-			$arrSmallWords = array( 'of','a','the','and','an','or','nor','but','is','if','then','else',
-				'when', 'at','from','by','on','off','for','in','out','over','to','into','with', 'as' );
-				
+			$arrSmallWords = array ('of', 'a', 'the', 'and', 'an', 'or', 'nor', 'but', 'is', 'if', 'then', 
+			'else', 'when', 'at', 'from', 'by', 'on', 'off', 'for', 'in', 'out', 'over', 'to', 'into', 'with', 'as' );
+			
 			// split the string into separate words
+	
+			$arrWords = explode( ' ', $strInput );
 			
-			$arrWords = explode(' ', $strInput);
-			
-			foreach ($arrWords as $key => $word)
-			{ 
-					// if this word is the first, or it's not one of our small words, capitalise it 
+			foreach ( $arrWords as $key => $word )
+			{
+				// if this word is the first, or it's not one of our small words, capitalise it 
+				
+				if ( $key == 0 || ! in_array( Xerxes_Framework_Parser::strtolower( $word ), $arrSmallWords ) )
+				{
+					// make sure first character is not a quote or something
 					
-					if ( $key == 0 || !in_array( Xerxes_Framework_Parser::strtolower($word), $arrSmallWords) )
+					if ( preg_match("/^[^a-zA-Z0-9]/", $word ) )
 					{
-						$arrWords[$key] = ucwords($word);
+						$first = substr($word,0,1);
+						$rest = substr($word,1);
+						
+						$arrWords[$key] = $first . ucwords( $rest );
 					}
-					elseif ( in_array( Xerxes_Framework_Parser::strtolower($word), $arrSmallWords) )
+					else
 					{
-						$arrWords[$key] = Xerxes_Framework_Parser::strtolower($word);
+						$arrWords[$key] = ucwords( $word );
 					}
-			} 
+				} 
+				elseif ( in_array( Xerxes_Framework_Parser::strtolower( $word ), $arrSmallWords ) )
+				{
+					$arrWords[$key] = Xerxes_Framework_Parser::strtolower( $word );
+				}
+			}
 			
 			// join the words back into a string
-			
-			$strFinal = implode(' ', $arrWords);
+	
+			$strFinal = implode( ' ', $arrWords );
 			
 			// catch subtitles
-			
-			$strFinal = self::capitalizeSubtitle($strFinal);
-
-			// catch words that start with double quotes
-			
-			if ( preg_match("/\"([a-z])/", $strFinal, $arrMatches) )
+	
+			if ( preg_match( "/: ([a-z])/", $strFinal, $arrMatches ) )
 			{
-				$strLetter = ucwords($arrMatches[1]);
-				$strFinal = preg_replace("/\"[a-z]/", "\"" . $strLetter, $strFinal );
+				$strLetter = ucwords( $arrMatches[1] );
+				$strFinal = preg_replace( "/: ([a-z])/", ": " . $strLetter, $strFinal );
+			}
+			
+			// catch words that start with double quotes
+	
+			if ( preg_match( "/\"([a-z])/", $strFinal, $arrMatches ) )
+			{
+				$strLetter = ucwords( $arrMatches[1] );
+				$strFinal = preg_replace( "/\"[a-z]/", "\"" . $strLetter, $strFinal );
 			}
 			
 			// catch words that start with a single quote
 			// need to be a little more cautious here and make sure there is a space before the quote when
 			// inside the title to ensure this isn't a quote for a contraction or for possisive; seperate
 			// case to handle when the quote is the first word
-			
-			if ( preg_match("/ '([a-z])/", $strFinal, $arrMatches) )
+	
+			if ( preg_match( "/ '([a-z])/", $strFinal, $arrMatches ) )
 			{
-				$strLetter = ucwords($arrMatches[1]);
-				$strFinal = preg_replace("/ '[a-z]/", " '" . $strLetter, $strFinal );
+				$strLetter = ucwords( $arrMatches[1] );
+				$strFinal = preg_replace( "/ '[a-z]/", " '" . $strLetter, $strFinal );
 			}
 			
-			if ( preg_match("/^'([a-z])/", $strFinal, $arrMatches) )
+			if ( preg_match( "/^'([a-z])/", $strFinal, $arrMatches ) )
 			{
-				$strLetter = ucwords($arrMatches[1]);
-				$strFinal = preg_replace("/^'[a-z]/", "'" . $strLetter, $strFinal );
+				$strLetter = ucwords( $arrMatches[1] );
+				$strFinal = preg_replace( "/^'[a-z]/", "'" . $strLetter, $strFinal );
 			}
 			
 			return $strFinal;
