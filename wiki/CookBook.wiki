@@ -1,5 +1,7 @@
 #summary Recipes for Xerxes customizations
 
+<wiki:toc max_depth="1" />
+
 =Dual Subject Pages=
 
 Sets up Xerxes so that the metasearch component is not as prominent.  When a user clicks on a category from the home page, the initial subject page that he or she sees is just a listing of databases, with a link to a separate page where they can search.
