@@ -33,6 +33,7 @@
 		private $strViewType = "";			// the folder the file lives in, important if it is 'xsl'
 		private $strViewFile = "";			// name of the file to use in view
 		private $arrViewInclude = array();	// a common file to be included among views (other than includes.xsl)
+		private $view_folder = "lib";
 		private $version;					// xerxes version number
 		
 		private function __construct() { }
@@ -78,6 +79,30 @@
 				{
 					throw new Exception("could not find configuration file");
 				}
+			
+				// module actions.xml file
+				
+				$objRegistry = Xerxes_Framework_Registry::getInstance();
+				
+				$modules = $objRegistry->getModules();
+				
+				if ( count($modules) > 0 )
+				{
+					foreach ( $modules as $module )
+					{
+						$action_file = Xerxes_Framework_FrontController::parentDirectory() . "/modules/$module/config/actions.xml";
+						
+						if ( file_exists($action_file) )
+						{
+							$module_actions = simplexml_load_file($action_file);
+							$this->addSections($this->xml, $module_actions );
+						}
+						else
+						{
+							throw new Exception("could not find module configuration file '$action_file'");
+						}
+					}
+				}
 
 				// local actions.xml overrides, if any
 				
@@ -96,33 +121,32 @@
 
 			// header("Content-type: text/xml"); echo $this->xml->asXML(); exit;	
 		}
-	
+		
 		/**
 		 * Adds sections from a secondary/module actions.xml file into the master one
 		 */
 		
-		private function addSections(SimpleXMLElement $parent, SimpleXMLElement $actions)
+		private function addSections( SimpleXMLElement $parent, SimpleXMLElement $actions )
 		{
-			$master = dom_import_simplexml ( $parent );
+			$master = dom_import_simplexml($parent);
 			
-			$ref = $master->getElementsByTagName ( "commands" )->item ( 0 );
+			$ref = $master->getElementsByTagName("commands")->item(0);
 			
-			if ($ref == null)
+			if ( $ref == null )
 			{
-				throw new Exception ( "could not find commands insertion node in actions.xml" );
+				throw  new Exception("could not find commands insertion node in actions.xml");
 			}
 			
 			// put everything at the end, so it takes presedence
 			
-	
-			foreach ( $actions->commands->children () as $section )
+			foreach ( $actions->commands->children() as $section )
 			{
-				$new = dom_import_simplexml ( $section );
-				$import = $master->ownerDocument->importNode ( $new, true );
-				$ref->appendChild ( $import );
+				$new = dom_import_simplexml($section);
+				$import = $master->ownerDocument->importNode($new, true);
+				$ref->appendChild($import);
 			}
 		}
-			
+
 		/**
 		 * Process the action in the incoming request and parse the xml file to determine
 		 * the necessary includes, command classes, and view to call. 
@@ -131,7 +155,7 @@
 		 *
 		 * @param string $strSection		'base' in the url or cli paramaters, corresponds to 'section' in xml
 		 * @param string $strActin			'action' in the url or cli paramaters, corresponds to 'action' in the xml
-		 * @param Xerxes_Framework_Request  the operative xerxes request object, used for getting properties from path in action specific ways.
+		 * @param Xerxes_Framework_Request @xerxes_request The operative xerxes request object, used for getting properties from path in action specific ways.
 		 */
 		
 		public function setAction( $strSection, $strAction, $xerxes_request  )
@@ -189,6 +213,7 @@
 			$strNamespace = "";			// namespace of the command class
 			$strRestricted = "";		// string to be converted to bool
 			$strLogin = "";				// string to be converted to bool
+			$strModule = "";			// whether this is a module
 			
 			// make sure a section is defined
 			
@@ -207,17 +232,19 @@
 			$arrNamespace = $this->xml->xpath("//commands/section[@name='$strSection']/@namespace");
 			$arrRestricted = $this->xml->xpath("//commands/section[@name='$strSection']/@restricted");
 			$arrLogin = $this->xml->xpath("//commands/section[@name='$strSection']/@login");
+			$arrModule = $this->xml->xpath("//commands/section[@name='$strSection']/@module");
 
 			if ( $arrDirectory != false ) $strDirectory = (string) array_pop($arrDirectory);
 			if ( $arrNamespace != false ) $strNamespace = (string) array_pop($arrNamespace);
 			if ( $arrRestricted != false ) $strRestricted = (string) array_pop($arrRestricted);
 			if ( $arrLogin != false ) $strLogin = (string) array_pop($arrLogin);
+			if ( $arrModule != false ) $strModule = (string) array_pop($arrModule);
 			if ( $arrDocumentElement != false ) $this->strDocumentElement = (string) array_pop($arrDocumentElement);
 			
 			foreach ( $sections as $section )
 			{
-				// an xslt file that is shared among the views in this section, 
-				// other than includes.xsl
+				// an xslt file that is shared among the views in this section, other
+				// than includes.xsl; important for modules
 				
 				foreach ( $section->common_xslt as $common_xslt )
 				{
@@ -235,13 +262,6 @@
 						array_push($this->arrIncludes, (string) $include );
 					}
 				}
-
-				// request data for this whole section
-						
-				foreach ( $section->request as $request )
-				{
-					$this->addRequest((string) $request["name"], (string) $request);
-				}			
 			}
 				
 			// if no action is supplied, then simply grab the first command
@@ -288,7 +308,7 @@
 					$strDefaultCommand .= Xerxes_Framework_Parser::strtoupper(substr($strActionPart,0,1) ) . substr($strActionPart,1);
 				}
 					
-				$arrCommand = array($strDirectory, $strNamespace, $strDefaultCommand );
+				$arrCommand = array($strDirectory, $strNamespace, $strDefaultCommand, $strModule);
 				$this->addCommand($arrCommand);
 					
 				// view is similar but remains lower-case, and flip any dashes to underscore
@@ -341,22 +361,30 @@
 				{
 					$strLocalCommandDirectory = $strCommandDirectory;
 					$strLocalCommandNamespace = $strCommandNamespace;
+					$strLocalModule = $strModule;
 							
 					if ( $command["directory"] != null )
 					{
 						$strLocalCommandDirectory = (string) $command["directory"];
+								
+						// this is not part of the module
+								
+						if ( $strLocalCommandDirectory != $strCommandDirectory )
+						{
+							$strLocalModule = null;
+						}
 					}
 							
 					if ( $command["namespace"] != null ) $strLocalCommandNamespace = (string) $command["namespace"];
 							
 					// add it to the list of commands
 							
-					$arrCommand = array($strLocalCommandDirectory, $strLocalCommandNamespace, (string) $command );
+					$arrCommand = array($strLocalCommandDirectory, $strLocalCommandNamespace, (string) $command, $strLocalModule);
 							
 					$this->addCommand($arrCommand);
 				}
 						
-				// request data for the action
+				// request data
 						
 				foreach ( $action->request as $request )
 				{
@@ -389,19 +417,39 @@
 						}
 					}
 				}
+					
+				// special view logic for modules
+										
+				if ( $strModule != "" )
+				{
+					// if the name of the module is in the path of the view, 
+					// then the module is specifying its own view file
+					
+					if ( strpos($this->strViewFile, "xsl/$strModule") === 0 )
+					{
+						$this->view_folder = "modules/$strDirectory/";
+					}
+					else
+					{
+						// the module has specified a view in the CORE lib/xsl,
+						// so blank any common xsl files!
+						
+						$this->arrViewInclude = array();
+					}
+				}
 				
 				// set the strings to boolean
 				
 				if ( $strRestricted == "true") $this->bolRestricted = true;
 				if ( $strLogin == "true") $this->bolLogin = true;
-			}
-
-			// add any predefined values to the request object from ControllerMap
 				
-			foreach ( $this->getRequests() as $key => $value )
-			{
-				$xerxes_request->setProperty($key, $value);
-			}		
+				// add any predefined values to the request object from ControllerMap
+				
+				foreach ( $this->getRequests() as $key => $value )
+				{
+					$xerxes_request->setProperty($key, $value);
+				}
+			}
 		}
 		
 		/**
@@ -448,14 +496,7 @@
 		
 		public function getDocumentElement()
 		{
-			if ( $this->strDocumentElement == "" )
-			{
-				return "xerxes";
-			}
-			else
-			{
-				return $this->strDocumentElement;
-			}
+			return $this->strDocumentElement;
 		}
 		
 		/**
@@ -547,6 +588,17 @@
 			return $this->strViewFile;
 		}
 
+		/**
+		 * Get the parent folder of views, either the main 'lib' or a module
+		 *
+		 * @return string
+		 */		
+		
+		public function getViewFolder()
+		{
+			return $this->view_folder;
+		}
+		
 		/**
 		 * Get a list of directories or files that should be included for the request
 		 *

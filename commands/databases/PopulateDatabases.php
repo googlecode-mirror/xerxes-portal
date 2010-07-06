@@ -24,10 +24,7 @@
 		{
 			// in case this is being called from the web, plaintext
 			
-			if ( $this->request->isCommandLine() == false )
-			{
-				header("Content-type: text/plain");
-			}
+			header("Content-type: text/plain");
       
 			// set a higher than normal memory limit to account for 
 			// pulling down large knowledgebases
@@ -309,11 +306,7 @@
 			$objSimple = new SimpleXMLElement($strXml);
 			$arrDBs = $objSimple->xpath("//database");
 			
-			if ( count($arrDBs) < 1 )
-			{
-				throw new Exception("Could not find any databases in the Metalib KB. " . 
-					$this->objSearch->getWarnings(true) );
-			}
+			if ( count($arrDBs) < 1 ) throw new Exception("Could not find any databases in the Metalib KB");
 			
 			foreach ( $arrDBs as $objDatabase )
 			{       

@@ -1052,9 +1052,9 @@
 			title="{$app_name} {$subject_name} search" />
 	</xsl:if>
 	
-	<!-- exclude javascript for ada (because it messes with screen readers) and mobile devices (makes loading faster) -->
+	<!-- only include javascript when the user has not chosen the ada compliant version -->
 
-	<xsl:if test="not(request/session/ada) and $is_mobile = 0">
+	<xsl:if test="not(request/session/ada)">
 	
 		<script src="{$base_include}/javascript/onload.js" language="javascript" type="text/javascript"></script>
 		<script src="{$base_include}/javascript/prototype.js" language="javascript" type="text/javascript"></script>
@@ -1550,7 +1550,7 @@
 
 <!-- 
 	TEMPLATE: BRIEF RESULTS
-	deprecated, used in the metasearch and folder brief results pages
+	used in the metasearch and folder brief results pages
 -->
 
 <xsl:template name="brief_results">
@@ -1558,33 +1558,14 @@
 	<ul id="results">
 	
 	<xsl:for-each select="//records/record/xerxes_record">
-		<xsl:call-template name="brief_result_article">
-			<xsl:with-param name="result_set" select="result_set" />
-			<xsl:with-param name="record_number" select="record_number" />		
-		</xsl:call-template>
-	</xsl:for-each>
 	
-	</ul>
-	
-</xsl:template>
-
-<!-- 
-	TEMPLATE: BRIEF RESULT ARTICLE
-	display of results geared toward articles (or really any non-book display)
--->
-
-<xsl:template name="brief_result_article">
-	
-		<xsl:param name="result_set" />
-		<xsl:param name="record_number" />
+		<xsl:variable name="result_set" 	select="result_set" />
+		<xsl:variable name="record_number" 	select="record_number" />
 		
 		<!-- peer reviewed calculated differently in folder and metasearch -->
 		
 		<xsl:variable name="refereed">
 			<xsl:choose>
-				<xsl:when test="refereed = 1 and format != 'Book Review'">
-					<xsl:text>true</xsl:text>
-				</xsl:when>
 				<xsl:when test="../refereed = 1 and format != 'Book Review'">
 					<xsl:text>true</xsl:text>
 				</xsl:when>
@@ -1687,29 +1668,9 @@
 					<xsl:call-template name="additional_record_links" />
 					
 					<xsl:choose>
+						<xsl:when test="/metasearch">
 						
-						<!-- @todo: give saved record area it's own template -->
-						
-						<xsl:when test="/folder">
-						
-							<div class="folderAvailability deleteRecord">
-								<a class="recordAction deleteRecord" href="{../url_delete}">
-									<img src="{$base_url}/images/delete.gif" alt="" border="0" class="miniIcon deleteRecordLink"/>
-									<xsl:text> </xsl:text>
-									<xsl:copy-of select="$text_results_record_delete" />
-								 </a>
-							</div>
-							
-							<xsl:if test="$temporarySession != 'true'">
-								<xsl:call-template name="tag_input">
-									<xsl:with-param name="record" select=".."/>
-								</xsl:call-template>
-							</xsl:if>						
-						
-						</xsl:when>
-						<xsl:otherwise>
-						
-							<!-- save facility in search results area -->
+							<!-- save facility in metasearch area -->
 							
 							<div id="saveRecordOption_{$result_set}_{$record_number}" class="recordAction saveRecord">
 								<img id="folder_{$result_set}{$record_number}"	width="17" height="15" alt="" border="0" class="miniIcon saveRecordLink">
@@ -1762,12 +1723,34 @@
 								</div>
 							</xsl:if>
 
-						</xsl:otherwise>
-
+						</xsl:when>
+						<xsl:when test="/folder">
+						
+							<!-- folder -->
+						
+							<div class="folderAvailability deleteRecord">
+								<a class="recordAction deleteRecord" href="{../url_delete}">
+									<img src="{$base_url}/images/delete.gif" alt="" border="0" class="miniIcon deleteRecordLink"/>
+									<xsl:text> </xsl:text>
+									<xsl:copy-of select="$text_results_record_delete" />
+								 </a>
+							</div>
+							
+							<xsl:if test="$temporarySession != 'true'">
+								<xsl:call-template name="tag_input">
+									<xsl:with-param name="record" select=".."/>
+								</xsl:call-template>
+							</xsl:if>						
+						
+						</xsl:when>
 					</xsl:choose>					
 				</div>
 			</div>
 		</li>
+		
+	</xsl:for-each>
+	
+	</ul>
 
 </xsl:template>
 
@@ -2012,157 +1995,6 @@
 	</div>
 	
 </xsl:template>
-
-
-<xsl:template name="generic_sort_bar">
-
-	<xsl:choose>
-		<xsl:when test="results/total = '0'">
-			<xsl:call-template name="generic_no_hits" />
-		</xsl:when>
-		<xsl:otherwise>
-
-			<div id="sort">
-				<div class="yui-gd">
-					<div class="yui-u first">
-						<xsl:copy-of select="$text_metasearch_results_summary" />
-					</div>
-					<div class="yui-u">
-						<xsl:choose>
-							<xsl:when test="//sort_display">
-								<div id="sortOptions">
-									<xsl:copy-of select="$text_results_sort_by" /><xsl:text>: </xsl:text>
-									<xsl:for-each select="//sort_display/option">
-										<xsl:choose>
-											<xsl:when test="@active = 'true'">
-												<strong><xsl:value-of select="text()" /></strong>
-											</xsl:when>
-											<xsl:otherwise>
-												<xsl:variable name="link" select="@link" />
-												<a href="{$link}">
-													<xsl:value-of select="text()" />
-												</a>
-											</xsl:otherwise>
-										</xsl:choose>
-										<xsl:if test="following-sibling::option">
-											<xsl:text> | </xsl:text>
-										</xsl:if>
-									</xsl:for-each>
-								</div>
-							</xsl:when>
-							<xsl:otherwise>&#160;</xsl:otherwise>
-						</xsl:choose>
-					</div>
-				</div>
-			</div>
-		</xsl:otherwise>
-	</xsl:choose>
-
-</xsl:template>
-
-<xsl:template name="generic_no_hits">
-
-	<p class="error"><xsl:value-of select="$text_metasearch_hits_no_match" /></p>
-
-</xsl:template>
-
-<xsl:template name="generic_searchbox">
-
-	<form action="./" method="get">
-
-		<input type="hidden" name="base" value="{//request/base}" />
-		<input type="hidden" name="action" value="search" />
-		
-		<xsl:call-template name="generic_searchbox_hidden_fields_local" />
-
-		<xsl:if test="request/sortkeys">
-			<input type="hidden" name="sortKeys" value="{request/sortkeys}" />
-		</xsl:if>
-
-	<xsl:choose>
-		<xsl:when test="$is_mobile = '1'">
-			<xsl:call-template name="generic_searchbox_mobile" />
-		</xsl:when>
-		<xsl:otherwise>
-			<xsl:call-template name="generic_searchbox_full" />
-		</xsl:otherwise>
-	</xsl:choose>
-
-	</form>	
-	
-</xsl:template>
-
-
-<xsl:template name="generic_searchbox_mobile">
-
-	<xsl:variable name="search_query" select="//request/query" />
-	<xsl:call-template name="mobile_search_box">
-		<xsl:with-param name="query" select="$search_query" />
-	</xsl:call-template>
-		
-</xsl:template>
-
-<xsl:template name="generic_searchbox_full">
-
-	<xsl:choose>
-		<xsl:when test="request/advanced or request/advancedfull">
-			<xsl:call-template name="generic_advanced_search" />
-		</xsl:when>
-		<xsl:otherwise>
-			<xsl:call-template name="generic_simple_search" />			
-		</xsl:otherwise>
-	</xsl:choose>
-
-</xsl:template>
-
-<xsl:template name="generic_simple_search">
-
-	<xsl:variable name="query"	select="request/query" />
-	
-	<div class="raisedBox searchBox">
-
-		<div class="searchLabel">
-			<label for="field">Search</label><xsl:text> </xsl:text>
-		</div>
-		
-		<div class="searchInputs">
-
-			<select id="field" name="field">
-				
-				<xsl:for-each select="config/basic_search_fields/field">
-				
-					<option value="{@internal}">
-					<xsl:if test="//request/field = @internal">
-						<xsl:attribute name="selected">seleted</xsl:attribute>
-					</xsl:if>
-					<xsl:value-of select="@public" />
-					</option>
-					
-				</xsl:for-each>
-			</select>
-			
-			<xsl:text> </xsl:text><label for="query"><xsl:value-of select="$text_searchbox_for" /></label><xsl:text> </xsl:text>
-			
-			<input id="query" name="query" type="text" size="32" value="{$query}" /><xsl:text> </xsl:text>
-			
-			<input type="submit" name="Submit" value="GO" />
-		
-		</div>
-		
-		<xsl:if test="results/spelling != ''">
-			<p class="spellSuggest error">Did you mean: <a href="{results/spelling/@url}"><xsl:value-of select="results/spelling" /></a></p>
-		</xsl:if>	
-		
-		<xsl:call-template name="generic_advanced_search_option" />
-		
-	</div>
-
-</xsl:template>
-
-
-<xsl:template name="generic_advanced_search_option" />
-<xsl:template name="generic_advanced_search" />
-<xsl:template name="generic_searchbox_hidden_fields_local" />
 
 
 

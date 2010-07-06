@@ -1855,7 +1855,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 	 * @return string					internal xerxes format designation
 	 */
 	
-	protected function parseFormat($arrFormat)
+	private function parseFormat($arrFormat)
 	{
 		$strReturn = "Unknown";
 		
@@ -2001,7 +2001,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		return $arrFinal;
 	}
 	
-	protected function splitAuthor($strAuthor, $strType)
+	private function splitAuthor($strAuthor, $strType)
 	{
 		$arrReturn = array ( );
 		$arrReturn["type"] = $strType;
@@ -2060,7 +2060,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		return $arrReturn;
 	}
 	
-	protected function stripEndPunctuation($strInput, $strPunct)
+	private function stripEndPunctuation($strInput, $strPunct)
 	{
 		$bolDone = false;
 		$arrPunct = str_split( $strPunct );
@@ -4474,16 +4474,11 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		return $this->subscription;
 	}
 	
-	public function getOriginalXML($bolString = false)
+	public function getOriginalXML()
 	{
-		if ( $bolString == true )
-		{
-			return $this->document->saveXML();
-		}
-		else
-		{
-			return $this->document;
-		}
+		$marc = $this->getMarcXML();
+		
+		return $marc->getElementsByTagName( "record" )->item( 0 );
 	}
 	
 	public function getRecordID()

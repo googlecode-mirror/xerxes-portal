@@ -140,12 +140,6 @@ class Xerxes_WorldCat
 		return $objXml;
 	}
 	
-	public function hits($search)
-	{
-		$this->searchRetrieve($search, 0,0);
-		return $this->total;
-	}
-	
 	/**
 	 * Search and retieve records
 	 *
@@ -160,19 +154,8 @@ class Xerxes_WorldCat
 	 * @return DOMDocument				SRU results response
 	 */
 	
-	public function searchRetrieve($search, $iStartRecord = 1, $iMaxiumumRecords = 10, $strSchema = "marcxml", $strSort = null, $bolDesc = false)
+	public function searchRetrieve($strQuery, $iStartRecord = 1, $iMaxiumumRecords = 10, $strSchema = "marcxml", $strSort = null, $bolDesc = false)
 	{
-		$strQuery = null;
-		
-		if ( $search instanceof Xerxes_Framework_Search_Query )
-		{
-			$strQuery = $search->toQuery();
-		}
-		else
-		{
-			$strQuery = $search;
-		}
-		
 		// append any limits set earlier
 		
 		$this->query = $strQuery . " " . $this->limits;

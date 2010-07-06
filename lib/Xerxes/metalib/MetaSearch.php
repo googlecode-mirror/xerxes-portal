@@ -8,7 +8,7 @@
 	 * @copyright 2009 California State University
 	 * @link http://xerxes.calstate.edu
 	 * @license http://www.gnu.org/licenses/
-	 * @version $Id$
+	 * @version $Id: MetaSearch.php 1009 2009-11-30 21:34:21Z dwalker@calstate.edu $
 	 * @package Xerxes
 	 */
 
@@ -24,8 +24,6 @@
 		private $password = "";		// this application's password	
 		private $session = "";		// session id
 		private $finished = false;	// flag indicating metalib is done searching
-		
-		private $return_quick = false; // return quick
 		
 		/**
 		 * Constructor
@@ -550,7 +548,7 @@
 			} else if ( strpos( $strStatus,"FIND") !== false ) {
 			} else if ( strpos( $strStatus,"FORK") !== false ) {
 			} else if ( strpos( $strStatus,"FETCH") !== false ) {
-			} else if ( strpos( $strStatus,"DONE1") !== false && $this->return_quick == false ) {
+			} else if ( strpos( $strStatus,"DONE1") !== false ) {
 			} else if ( strpos( $strStatus,"DONE2") !== false ) {
 			} else if ( strpos( $strStatus,"DONE3") !== false ) {
 			} else {
@@ -799,28 +797,9 @@
 		 * @return DOMDocument		if warnings present, otherwise null
 		 */
 		
-		public function getWarnings($bolTextOnly = false)
+		public function getWarnings()
 		{
-			if ( $bolTextOnly == false )
-			{
-				return $this->warning;
-			}
-			else
-			{
-				$final = "";
-				
-				foreach ( $this->warning->getElementsByTagName("error_text") as $error )
-				{
-					$final .= " " . $error->nodeValue;
-				}
-				
-				return trim($final);
-			}
-		}
-		
-		public function setFinishQuick($bol)
-		{
-			$this->return_quick = $bol;
+			return $this->warning;
 		}
 	}
 

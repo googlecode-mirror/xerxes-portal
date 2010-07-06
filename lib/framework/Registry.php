@@ -20,6 +20,7 @@ class Xerxes_Framework_Registry
 	private $arrConfig = null; // configuration settings
 	private $arrPass = array ( ); // values to pass on to the view
 	private static $instance; // singleton pattern
+	private $modules = array();	// list of modules
 
 	protected function __construct()
 	{
@@ -148,21 +149,12 @@ class Xerxes_Framework_Registry
 				}
 			}
 			
-			// any other xml block that needs to be passed to the interface
+			// register modules
 			
-			foreach ( $xml->configuration->children() as $child )
+			if ( $xml->configuration->modules != false )
 			{
-				$name = $child->getName();
-				
-				if ( $name != "config" )
-				{
-					if ( (string) $child["pass"] == "true" )
-					{
-						$this->arrPass[Xerxes_Framework_Parser::strtolower( $name )] = $child;
-					}
-				}
+				$this->modules = explode(",", (string) $xml->configuration->modules);
 			}
-		
 		}
 	}
 	
@@ -341,6 +333,11 @@ class Xerxes_Framework_Registry
 		}
 		
 		return $source;
+	}
+	
+	public function getModules()
+	{
+		return $this->modules;
 	}
 	
 	public function getXML()

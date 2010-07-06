@@ -7,7 +7,7 @@
  * @copyright 2009 California State University
  * @link http://xerxes.calstate.edu
  * @license http://www.gnu.org/licenses/
- * @version $Id$
+ * @version $Id: MetalibRecord.php 1199 2010-05-28 18:26:02Z dwalker@calstate.edu $
  * @todo ->__toString() madness below due to php 5.1 object-string casting problem
  * @package Xerxes
  */
@@ -25,7 +25,7 @@ class Xerxes_MetalibRecord_Document extends Xerxes_Marc_Document
  * @copyright 2009 California State University
  * @link http://xerxes.calstate.edu
  * @license http://www.gnu.org/licenses/
- * @version $Id$
+ * @version $Id: MetalibRecord.php 1199 2010-05-28 18:26:02Z dwalker@calstate.edu $
  * @todo ->__toString() madness below due to php 5.1 object-string casting problem, remove 
  *       when redhat provides php 5.2 package, since that is keeping people from upgrading
  *  * @package Xerxes
@@ -166,7 +166,7 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 		// No 856 is included at all, but a full text link can be
 		// constructed from the 001 record id.
 
-		if ( stristr($this->source,"GALE_ZBRC") )
+		if ($this->source == "GALE_ZBRC")
 		{
 			$url = "http://galenet.galegroup.com/servlet/BioRC?docNum=" . $this->control_number;
 			array_push ( $this->links, array ("Full-Text in HTML", $url, "html" ) );
@@ -199,7 +199,6 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 			// oxford: only include the links that are free, otherwise just a link to abstract (5/7/08)
 			// gale: only has full-text if 'text available' note in 500 field (9/7/07) BUT: Not true of Gale virtual reference library (GALE_GVRL). 10/14/08 jrochkind. 
 			// ieee xplore: does not distinguish between things in your subscription or not (2/13/09)
-			// elsevier links are not based on subscription (6/2/10)
 			// harvard business: these links in business source premiere are not part of your subscription (5/26/10)
 			// proquest (umi): these links are not full-text (thanks jerry @ uni) (5/26/10)
 			// proquest (gateway): there doesn't appear to be a general rule to this, so only doing it for fiaf (5/26/10)
@@ -214,11 +213,10 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 				stristr ( $this->source, "EVII" ) || 
 				stristr ( $this->source, "WILEY_IS" ) || 
 				(stristr ( $this->source, "OXFORD_JOU" ) && ! strstr ( $strUrl, "content/full/" )) || 
-				(strstr ( $this->source, "GALE" ) && ! strstr( $this->source, "GALE_GVRL") && ! in_array ( "Text available", $notes )) || 
+				(strstr ( $this->source, "GALE" ) && $this->source != "GALE_GVRL" && ! in_array ( "Text available", $notes )) || 
 				stristr ( $this->source, "IEEE_XPLORE" ) || 
-				stristr ($this->source, "ELSEVIER_SCOPUS") ||
-				stristr ($this->source, "ELSEVIER_SCIRUS") ||
-				( stristr ($this->source,"EBSCO_BUSINESS") && strstr ($strUrl, "harvardbusinessonline")) ||
+				$this->source == "ELSEVIER_SCOPUS" ||
+				($this->source == "EBSCO_BUSINESS" && strstr ($strUrl, "harvardbusinessonline")) ||
 				( strstr($strUrl, "proquest.umi.com") && strstr($strUrl, "Fmt=2") ) || 
 				( strstr($strUrl, "gateway.proquest.com") && strstr($strUrl, "xri:fiaf:article") )
 				)
@@ -394,7 +392,7 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 		{
 			$this->format = "Conference Proceeding";
 		}
-		elseif ( stristr($this->source,"GOOGLE_B") )
+		elseif ($this->source == "GOOGLE_B")
 		{
 			$this->format = "Book";
 		}

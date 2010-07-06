@@ -162,18 +162,14 @@
 					</xsl:call-template>
 					
 					<xsl:choose>
-						<xsl:when test="refereed = 1 and format != 'Book Review'">
-							<xsl:text> </xsl:text><img src="images/refereed_hat.gif" width="20" height="14" alt="" />
-							<xsl:text> </xsl:text><strong><xsl:copy-of select="$text_results_refereed" /></strong>
-						</xsl:when>
-						<xsl:when test="../refereed = 1 and format != 'Book Review'">
-							<xsl:text> </xsl:text><img src="images/refereed_hat.gif" width="20" height="14" alt="" />
-							<xsl:text> </xsl:text><strong><xsl:copy-of select="$text_results_refereed" /></strong>
-						</xsl:when>
-						<xsl:when test="//refereed/issn = standard_numbers/issn and format != 'Book Review'">
-							<xsl:text> </xsl:text><img src="images/refereed_hat.gif" width="20" height="14" alt="" />
-							<xsl:text> </xsl:text><strong><xsl:copy-of select="$text_results_refereed" /></strong>
-						</xsl:when>
+					<xsl:when test="../refereed = 1 and format != 'Book Review'">
+						<xsl:text> </xsl:text><img src="images/refereed_hat.gif" width="20" height="14" alt="" />
+						<xsl:text> </xsl:text><strong><xsl:copy-of select="$text_results_refereed" /></strong>
+					</xsl:when>
+					<xsl:when test="//refereed/issn = standard_numbers/issn and format != 'Book Review'">
+						<xsl:text> </xsl:text><img src="images/refereed_hat.gif" width="20" height="14" alt="" />
+						<xsl:text> </xsl:text><strong><xsl:copy-of select="$text_results_refereed" /></strong>
+					</xsl:when>
 					</xsl:choose>
 				</dd>
 				</div>

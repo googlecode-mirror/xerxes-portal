@@ -79,7 +79,7 @@
 				<xsl:if test="substring(translate(preceding-sibling::database[1]/title_display,$lower,$upper), 1, 1) !=  $letter">
 					<a><xsl:attribute name="href"><xsl:value-of select="/knowledge_base/request/server/request_uri" />#<xsl:value-of select="$letter" /></xsl:attribute> 
 					<xsl:value-of select="$letter" /></a>
-					<span class="letterSeperator"><xsl:copy-of select="$text_databases_az_letter_separator" /></span> 
+					<span class="letterSeperator"> | </span> 
 				</xsl:if>
 			
 			</xsl:for-each>
