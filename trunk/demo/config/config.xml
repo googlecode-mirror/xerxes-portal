@@ -187,13 +187,63 @@
 		
 		<config name="secure_login">false</config>
 		
-		
 		<!-- LDAP -->
 		
-		<!-- directory server and domain -->
+		<!-- required: directory server -->
 		
 		<config name="directory_server"></config>
-		<config name="domain"></config>
+
+		<!-- deprecated, use ldap_dn_format instead -->
+		<!-- <config name="domain"></config> -->
+
+		<!-- required: format of user DN we want to authenticate, %s will be replaced by username from the login form -->
+		<!-- another example, for Novell eDir: cn=%s,ou=department,o=organization -->
+		
+		<config name="ldap_dn_format">%s@domain</config>
+		
+		<!-- required: Perform initial bind & search for user DN? 
+		     If this is false, the rest of LDAP options will be ignored. -->
+		
+		<config name="ldap_do_init_bind">false</config>
+
+		<!-- required if ldap_do_init_bind=true but may be empty for anonymous bind -->
+		<!-- DN for the initial bind. If do_init_bind is true and both ldap_init_bind_dn and 
+		     ldap_init_bind_password are empty, perform an anonymous bind. -->
+			 
+		<config name="ldap_init_bind_dn">cn=dir_admin,o=organization</config>
+
+		<!-- required if ldap_do_init_bind=true but may be empty for anonymous bind -->
+		<!-- password for the initial bind -->
+		
+		<config name="ldap_init_bind_password">dir_admin_password</config>
+
+		<!-- optional: part of tree to search for user DN (used to restrict search to a particular context) -->
+		
+		<config name="ldap_search_base">o=organization</config>
+
+		<!-- required if do_init_bind=true -->
+		<!-- find only users matching this criteria (e.g. restrict only to users with a mail attribute or within a certain ou) -->
+		
+		<config name="ldap_search_filter">(cn=%s)</config>
+
+		<!-- required if ldap_do_init_bind=true -->
+		<!-- attribute containing the username -->
+		
+		<config name="ldap_search_uid">cn</config>
+
+		<!-- if the following options are not empty and the directory contains attributes with these names, 
+		     their values will be imported to Xerxes users table on first login-->
+		<!-- optional: attribute containing user's given name -->
+		
+		<config name="ldap_search_name">givenName</config>
+
+		<!-- optional: attribute containing user's surname -->
+		
+		<config name="ldap_search_surname">sn</config>
+
+		<!-- optional: attribute containing user's email address -->
+		
+		<config name="ldap_search_mail">mail</config>
 		
 		
 		<!-- INNOVATIVE PATRON API -->
@@ -217,7 +267,6 @@
 		
 		<config name="cas_login" />
 		<config name="cas_validate" />
-		
 		
 		
 		<!-- DEMO -->
