@@ -32,9 +32,10 @@
 				id = arrElements[1];
 				isbn = arrElements[2];
 				oclc = arrElements[3];
-				view = arrElements[4];	
+				view = arrElements[4];
+				base = arrElements[5];
 				
-				url = ".?base=worldcat&action=lookup&id=" + id + "&isbn=" + isbn + "&oclc=" + oclc + "&source=" + requester + "&display=" + view;
+				url = ".?base=" + base + "&action=lookup&id=" + id + "&isbn=" + isbn + "&oclc=" + oclc + "&source=" + requester + "&display=" + view;
 
 				new Ajax.Updater(divs[i].id, url);
 			}

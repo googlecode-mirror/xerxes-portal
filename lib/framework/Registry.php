@@ -147,22 +147,6 @@ class Xerxes_Framework_Registry
 					$this->usergroups[$id] = $group;
 				}
 			}
-			
-			// any other xml block that needs to be passed to the interface
-			
-			foreach ( $xml->configuration->children() as $child )
-			{
-				$name = $child->getName();
-				
-				if ( $name != "config" )
-				{
-					if ( (string) $child["pass"] == "true" )
-					{
-						$this->arrPass[Xerxes_Framework_Parser::strtolower( $name )] = $child;
-					}
-				}
-			}
-		
 		}
 	}
 	

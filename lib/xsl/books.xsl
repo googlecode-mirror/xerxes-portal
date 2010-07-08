@@ -131,11 +131,11 @@
 	
 		</xsl:when>
 
-		<xsl:when test="//request/base = 'solr' or //worldcat_groups/group[@id = $source]/lookup/address">
+		<xsl:when test="//config/lookup or //worldcat_groups/group[@id = $source]/lookup/address">
 					
 			<!-- need to get it dynamically with ajax -->
 		
-			<div id="{$source}:{$record_id}:{$isbn}:{$oclc}:{$type}" class="availabilityLoad"></div>
+			<div id="{$source}:{$record_id}:{$isbn}:{$oclc}:{$type}:{//request/base}" class="availabilityLoad"></div>
 
 		</xsl:when>
 		<xsl:otherwise>

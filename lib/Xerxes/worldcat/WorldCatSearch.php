@@ -23,32 +23,33 @@ class Xerxes_WorldCatSearch extends Xerxes_Framework_Search
 	// worldcat specific
 
 	protected $groups_config = array();
-	protected $worldcat_config;
 	protected $relevance_type;
 	
 	public function __construct($objRequest, $objRegistry)
 	{
 		parent::__construct($objRequest, $objRegistry);
-			
-		// worldcat specific
 		
-		$this->worldcat_config = Xerxes_WorldCatConfig::getInstance();
-		$this->worldcat_config->init();
-		
-		$this->relevance_type = $this->worldcat_config->getConfig("WORLDCAT_RELEVANCE_TYPE", false, "Score,,0");
-		$this->sort_default = $this->relevance_type;
-
 		// max records
 		
-		$this->max = $this->worldcat_config->getConfig("WORLDCAT_MAX_RECORDS", false, $this->max);			
+		$this->max = $this->config->getConfig("WORLDCAT_MAX_RECORDS", false, $this->max);			
 		
 		// basic
 
 		$this->search_object = $this->getWorldCatObject($this->request->getProperty("source"));	
 		
+		// extra config stuff
+		
 		$this->addConfigToResponse();
 	}
-		
+
+	protected function getConfig()
+	{
+		$config = Xerxes_WorldCatConfig::getInstance();
+		$config->init();
+
+		return $config;
+	}	
+	
 	public function results()
 	{
 		// need to authenticate for non-local library
@@ -96,7 +97,7 @@ class Xerxes_WorldCatSearch extends Xerxes_Framework_Search
 		$source  = $this->request->getProperty("source");
 		$id  = $this->request->getProperty("id");
 		
-		$config = $this->getConfig($source);
+		$config = $this->getWorldcatGroup($source);
 		
 		if ( $config->show_holdings == true )
 		{
@@ -144,7 +145,7 @@ class Xerxes_WorldCatSearch extends Xerxes_Framework_Search
 	
 	protected function getWorldCatObject($strSource = "")
 	{
-		$configKey = $this->worldcat_config->getConfig("WORLDCAT_API_KEY", true);
+		$configKey = $this->config->getConfig("WORLDCAT_API_KEY", true);
 		$role = $this->request->getSession("role");
 			
 		// worldcat search object
@@ -164,7 +165,7 @@ class Xerxes_WorldCatSearch extends Xerxes_Framework_Search
 		{
 			// search options configured
 				
-			$objWorldcatConfig = $this->getConfig($strSource);
+			$objWorldcatConfig = $this->getWorldcatGroup($strSource);
 			$configLibraryCodes = $objWorldcatConfig->libraries_include;
 			$configExclude = $objWorldcatConfig->libraries_exclude;
 			$configLimitDocTypes = $objWorldcatConfig->limit_material_types;
@@ -220,7 +221,7 @@ class Xerxes_WorldCatSearch extends Xerxes_Framework_Search
 		# special cases for oclc number and isbn
 		
 		// oclc number
-			
+		
 		$strOclc = $this->request->getProperty("rft.oclc");
 					
 		if ( $strOclc == "" )
@@ -268,7 +269,13 @@ class Xerxes_WorldCatSearch extends Xerxes_Framework_Search
 		return $arrFinal;
 	}
 
-	public function getConfig($strSource)
+	protected function getHoldingsURL($strSource)
+	{
+		$objWorldcatConfig = $this->getWorldcatGroup($strSource);
+		return $objWorldcatConfig->lookup_address;
+	}	
+
+	public function getWorldcatGroup($strSource)
 	{
 		if ( $strSource == "" )
 		{
@@ -277,7 +284,7 @@ class Xerxes_WorldCatSearch extends Xerxes_Framework_Search
 		
 		if ( ! array_key_exists($strSource, $this->groups_config) )
 		{
-			$this->groups_config[$strSource] = new Xerxes_WorldCatGroup($strSource, $this->worldcat_config->getXML());
+			$this->groups_config[$strSource] = new Xerxes_WorldCatGroup($strSource, $this->config->getXML());
 		}
 		
 		return $this->groups_config[$strSource];
@@ -292,7 +299,7 @@ class Xerxes_WorldCatSearch extends Xerxes_Framework_Search
 		{
 			// group set-up
 				
-			$xml = $this->worldcat_config->getXML()->configuration->worldcat_groups;
+			$xml = $this->config->getXML()->configuration->worldcat_groups;
 			
 			if ( $xml != false )
 			{
@@ -302,16 +309,14 @@ class Xerxes_WorldCatSearch extends Xerxes_Framework_Search
 			}
 		}
 		
-		$this->request->addDocument( $this->worldcat_config->publicXML() );
-		
-		if ( $this->worldcat_config->getXML()->configuration->worldcat_groups->group != false )
+		if ( $this->config->getXML()->configuration->worldcat_groups->group != false )
 		{
 			$arrSources = array();
 			
 			$objXml = new DOMDocument();
 			$objXml->loadXML("<source_functions />");
 			
-			foreach ( $this->worldcat_config->getXML()->configuration->worldcat_groups->group as $group )
+			foreach ( $this->config->getXML()->configuration->worldcat_groups->group as $group )
 			{
 				array_push($arrSources, (string) $group["id"]);
 			}
@@ -350,36 +355,15 @@ class Xerxes_WorldCatSearch extends Xerxes_Framework_Search
 			$this->request->addDocument( $objXml );
 		}
 	}
-
-	protected function searchRedirectParams()
-	{
-		$params = parent::searchRedirectParams();
-		$params["source"] = $this->request->getProperty("source");
-		return $params;
-	}
 	
-	protected function pagerLinkParams()
+	protected function currentParams()
 	{
-		$params = parent::pagerLinkParams();
+		$params = parent::currentParams();
 		$params["source"] = $this->request->getProperty("source");
-		return $params;
-	}
-
-	protected function sortLinkParams()
-	{
-		$params = parent::sortLinkParams();
-		$params["source"] = $this->request->getProperty("source");
-		return $params;
-	}
-
-	protected function getAllSearchParams()
-	{
-		$params = parent::getAllSearchParams();
-		$params["advanced"] = $this->request->getProperty("advanced");
 		
 		return $params;
 	}
-	
+
 	private function addAdvancedSearchLink()
 	{
 		$params = parent::getAllSearchParams();
@@ -394,22 +378,12 @@ class Xerxes_WorldCatSearch extends Xerxes_Framework_Search
 		$advanced_xml->documentElement->setAttribute("link", $url);
 		
 		$this->request->addDocument($advanced_xml);
-	}	
-	
-	protected function sortOptions()
-	{
-		return array(
-			$this->relevance_type => "relevance", 
-			"Date,,0" => "date", 
-			"Title" => "title",  
-			"Author" => "author"
-		);
 	}
 	
 	protected function linkFullRecord($result)
 	{
 		$arrParams = array (
-			"base" => $this->request->getProperty ("base"), 
+			"base" => $this->request->getProperty("base"), 
 			"action" => "record", 
 			"id" => $result->getControlNumber(), 
 			"source" => $this->request->getProperty("source") 
@@ -423,7 +397,7 @@ class Xerxes_WorldCatSearch extends Xerxes_Framework_Search
 		// take a locally defined ill option, otherwise link resolver 
 			
 		$configSFX = $this->registry->getConfig("LINK_RESOLVER_ADDRESS");
-		$configILL = $this->worldcat_config->getConfig("INTERLIBRARY_LOAN", false, $configSFX);
+		$configILL = $this->config->getConfig("INTERLIBRARY_LOAN", false, $configSFX);
 					
 		if ( $configILL == null )
 		{
@@ -481,8 +455,6 @@ class Xerxes_WorldCatSearch extends Xerxes_Framework_Search
 			$record_container->appendChild($objSubjectLink);
 		}			
 	}
-	
-	
 }
 
 class Xerxes_WorldCatSearch_Query extends Xerxes_Framework_Search_Query 
