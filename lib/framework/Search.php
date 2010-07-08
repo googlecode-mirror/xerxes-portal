@@ -1436,10 +1436,7 @@ class Xerxes_Framework_Search_Query
 		return $spell_return;
 	}
 	
-	protected function toQuery()
-	{
-		
-	}
+	abstract public function toQuery();
 }
 
 class Xerxes_Framework_Search_QueryTerm
