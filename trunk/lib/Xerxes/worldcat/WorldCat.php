@@ -151,16 +151,14 @@ class Xerxes_WorldCat
 	 *
 	 * @throws Exception for diagnostic errors
 	 * 
-	 * @param string $strQuery			the query in CQL format
+	 * @param mixed $strQuery			the query in CQL format
 	 * @param int $iStartRecord			[optional] start record to begin with, default 1
 	 * @param int $iMaxiumumRecords		[optional] maximum records to return, default 10
-	 * @param string $strSchema			[optional] xml schema to return records in, default 'marcxml'
 	 * @param string $strSort			[optional] index to sort records on
-	 * @param bool $bolDesc				[optional] whether to sort the records in desc order
 	 * @return DOMDocument				SRU results response
 	 */
 	
-	public function searchRetrieve($search, $iStartRecord = 1, $iMaxiumumRecords = 10, $strSchema = "marcxml", $strSort = null, $bolDesc = false)
+	public function searchRetrieve($search, $iStartRecord = 1, $iMaxiumumRecords = 10, $strSort = null)
 	{
 		$strQuery = null;
 		
@@ -185,7 +183,7 @@ class Xerxes_WorldCat
 		$this->url .= "&query=" . urlencode( $this->query );
 		$this->url .= "&startRecord=" . $iStartRecord;
 		$this->url .= "&maximumRecords=" . $iMaxiumumRecords;
-		$this->url .= "&recordSchema=" . $strSchema;
+		$this->url .= "&recordSchema=marcxml";
 		$this->url .= "&servicelevel=" . $this->service;
 		
 		// workset grouping
@@ -200,15 +198,9 @@ class Xerxes_WorldCat
 		if ( $strSort != "" )
 		{
 			$this->url .= "&sortKeys=" . $strSort;
-			
-			if ( $bolDesc == true )
-			{
-				$this->url .= ",,0";
-			}
 		}
 		
 		// get the response from the server
-		
 		
 		$objXml = new DOMDocument( );
 		$objXml->load( $this->url );

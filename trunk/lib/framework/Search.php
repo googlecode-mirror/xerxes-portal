@@ -22,8 +22,7 @@ abstract class Xerxes_Framework_Search
 	protected $query_object_type = "Xerxes_Framework_Search_Query";
 	protected $record_object_type = "Xerxes_Record";
 	
-	protected $schema;
-	protected $sort_default;
+	protected $sort_default = "relevance"; // default sort (this is the id)
 	protected $sid; // sid for open url identification
 	protected $link_resolver; // based address of link resolver	
 	
@@ -36,10 +35,12 @@ abstract class Xerxes_Framework_Search
 	public $recommendations = array(); // recommendations
 
 	public $query; // query object
-	protected $request; // xerxes request object
-	protected $registry; // xerxes config values
+	protected $config; // config object
 	protected $search_object; // search object
 	protected $data_map; // data map
+
+	protected $request; // xerxes request object
+	protected $registry; // xerxes config values	
 	
 	public function __construct($objRequest, $objRegistry)
 	{
@@ -97,7 +98,28 @@ abstract class Xerxes_Framework_Search
 		
 		$search_object_type = $this->search_object_type;
 		$this->search_object = new $search_object_type();
+		
+		// local config
+		
+		$this->config = $this->getConfig();
+		$this->request->addDocument($this->config->publicXML());
 	}
+	
+	/**
+	 * Subclass needs to define this to set the local config object
+	 */
+	
+	protected abstract function getConfig();
+	
+	
+	############
+	#  PUBLIC  #
+	############
+	
+	
+	/**
+	 * Any action that needs to take place on the home page search
+	 */
 	
 	public function home()
 	{
@@ -159,15 +181,20 @@ abstract class Xerxes_Framework_Search
 		if ( $start == null || $start == 0 ) $start = 1;
 		if ( $max != null && $max <= $this->max ) $this->max = $max;
 		
+		// we use public ids for some sort options, now switch it 
+		// for the real internal sort field
+		
+		$sort = $this->swapForInternalSort($this->sort);
+		
 		// get results
 		
-		$xml = $this->search_object->searchRetrieve($this->query, $start, $this->max, $this->schema, $this->sort);
+		$xml = $this->search_object->searchRetrieve($this->query, $start, $this->max, $sort);
 		
 		// convert them to xerxes_record
 		
 		$this->results = $this->convertToXerxesRecords($xml);
 		
-		// get any facets
+		// extract any facets
 		
 		$this->extractFacets($xml);
 		
@@ -196,6 +223,10 @@ abstract class Xerxes_Framework_Search
 		
 		$this->request->addDocument($this->resultsXML());
 	}
+	
+	/**
+	 * Holdings look-up, via AJAX
+	 */
 
 	public function lookup()
 	{
@@ -234,7 +265,7 @@ abstract class Xerxes_Framework_Search
 	}
 	
 	/**
-	 * Save or delete a record from this search engine
+	 * Save or delete a record from this search
 	 */
 	
 	public function saveDelete()
@@ -303,21 +334,9 @@ abstract class Xerxes_Framework_Search
 	}
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	#################
+	#  RESULTS XML  #
+	#################
 	
 	
 	/**
@@ -526,6 +545,16 @@ abstract class Xerxes_Framework_Search
 		return $results_xml;
 	}
 	
+	
+	##############
+	#   LINKS    #
+	##############
+	
+	
+	/**
+	 * Link for spelling correction
+	 */
+	
 	protected function linkSpelling()
 	{
 		$params = $this->currentParams();
@@ -569,19 +598,6 @@ abstract class Xerxes_Framework_Search
 		
 		return $this->request->url_for($arrParams);
 	}
-	
-	// @todo make other params derive from this one
-	
-	protected function currentParams()
-	{
-		$params = $this->getAllSearchParams();
-		$params["base"] = $this->request->getProperty("base");
-		$params["action"] = $this->request->getProperty("action");
-		$params["sortKeys"] = $this->request->getProperty("sortKeys");
-												
-		return $params;
-	}
-
 	/**
 	 * OpenURL link
 	 * 
@@ -609,10 +625,73 @@ abstract class Xerxes_Framework_Search
 		
 	}
 	
+
+	##################
+	#  SORT OPTIONS  #
+	##################	
+	
+	/**
+	 * The options for the sorting mechanism
+	 * @return array
+	 */
+	
 	protected function sortOptions()
 	{
-		return array();
+		$options = array();
+		
+		$config = $this->config->getConfig("sort_options");
+		
+		if ( $config != null )
+		{
+			foreach ( $config->option as $option )
+			{
+				$options[(string)$option["id"]] = (string) $option["public"];
+			}
+		}
+		
+		return $options;
 	}
+	
+	protected function swapForInternalSort($id)
+	{
+		$config = $this->config->getConfig("sort_options");
+		
+		if ( $config != null )
+		{
+			foreach ( $config->option as $option )
+			{
+				if ( (string) $option["id"] == $id )
+				{
+					return (string) $option["internal"];
+				}
+			}			
+		}
+		
+		// if we got this far no mapping, so return original
+		
+		return $id; 
+	}
+	
+	
+	######################
+	#  PARAMS FOR LINKS  #
+	######################
+	
+	
+	/**
+	 * The current search-related parameters 
+	 * @return array
+	 */
+	
+	protected function currentParams()
+	{
+		$params = $this->getAllSearchParams();
+		$params["base"] = $this->request->getProperty("base");
+		$params["action"] = $this->request->getProperty("action");
+		$params["sortKeys"] = $this->request->getProperty("sortKeys");
+												
+		return $params;
+	}	
 	
 	/**
 	 * Parameters to construct the url on the search redirect
@@ -621,9 +700,7 @@ abstract class Xerxes_Framework_Search
 	
 	protected function searchRedirectParams()
 	{
-		$params = $this->getAllSearchParams();
-		$params["sortKeys"] = $this->request->getProperty("sortKeys");
-		$params["base"] = $this->request->getProperty("base");
+		$params = $this->currentParams();
 		$params["action"] = "results";
 		
 		return $params;
@@ -636,9 +713,7 @@ abstract class Xerxes_Framework_Search
 	
 	protected function pagerLinkParams()
 	{
-		$params = $this->sortLinkParams();
-		$params["sortKeys"] = $this->request->getProperty("sortKeys");
-		
+		$params = $this->currentParams();
 		return $params;
 	}
 	
@@ -649,15 +724,19 @@ abstract class Xerxes_Framework_Search
 	
 	protected function sortLinkParams()
 	{
-		$params = $this->getAllSearchParams();
-		$params["base"] = $this->request->getProperty("base");
-		$params["action"] = $this->request->getProperty("action");
+		$params = $this->currentParams();
+		
+		// remove the current sort, since we'll add the new
+		// sort explicitly to the url
+		
+		unset($params["sortKeys"]);
 		
 		return $params;
 	}
 	
 	/**
 	 * Extract both query and limit params from the URL
+	 * @return array
 	 */
 	
 	protected function getAllSearchParams()
@@ -668,8 +747,15 @@ abstract class Xerxes_Framework_Search
 		return array_merge($search, $limits);
 	}		
 	
+	
+	########################
+	#  EXTRACT URL PARAMS  #
+	########################	
+	
+	
 	/**
 	 * Get 'limit' params out of the URL, sub-class defines this
+	 * @return array
 	 */	
 	
 	protected function extractLimitParams()
@@ -686,6 +772,7 @@ abstract class Xerxes_Framework_Search
 
 	/**
 	 * Get 'search' params out of the URL
+	 * @return array
 	 */		
 	
 	protected function extractSearchParams()
@@ -703,6 +790,7 @@ abstract class Xerxes_Framework_Search
 	/**
 	 * Get 'limit' params out of the URL, organized into groupings for the 
 	 * query object to parse
+	 * @return array
 	 */	
 	
 	protected function extractLimitGroupings()
@@ -745,10 +833,10 @@ abstract class Xerxes_Framework_Search
 		return $arrFinal;
 	}	
 	
-	
 	/**
 	 * Get 'search' params out of the URL, organized into groupings for the 
 	 * query object to parse
+	 * @return array
 	 */		
 	
 	protected function extractSearchGroupings()
@@ -803,10 +891,16 @@ abstract class Xerxes_Framework_Search
 		
 		return $arrFinal;
 	}
+
+
+	###############################
+	#  XERXES RECORD ENHANCEMENT  #
+	###############################		
+	
 	
 	/**
-	 * Convert MARC-XML response to Xerxes Record, record sub-class can also 
-	 * map
+	 * Convert MARC-XML response to Xerxes Record, 
+	 * record sub-class can also map
 	 */
 
 	protected function convertToXerxesRecords(DOMDocument $xml)
@@ -816,15 +910,6 @@ abstract class Xerxes_Framework_Search
 		$xerxes_doc->loadXML($xml);
 		
 		return $xerxes_doc->records();
-	}
-	
-	/**
-	 * Extract facets from the xml response, if available
-	 */
-	
-	protected function extractFacets(DOMDocument $xml)
-	{
-		
 	}
 	
 	/**
@@ -903,7 +988,7 @@ abstract class Xerxes_Framework_Search
 	}
 	
 	/**
-	 * Add a full-text indicator for those records where SFX indicates it
+	 * Add a full-text indicator for those records where link resolver indicates it
 	 */
 	
 	protected function markFullText()
@@ -984,8 +1069,14 @@ abstract class Xerxes_Framework_Search
 		}		
 	}
 
-	// Functions for saving saved record state from a result set in session
-	// This is used for knowing whether to add or delete on a 'toggle' command
+	
+	########################
+	#  SAVED RECORD STATE  #
+	########################	
+		
+	
+	// functions for saving saved record state from a result set in session
+	// this is used for knowing whether to add or delete on a 'toggle' command
 	// and also used for knowing whether to display a result line as saved or not. 
 	
 	protected function markSaved($original_id, $saved_id)
@@ -1024,6 +1115,21 @@ abstract class Xerxes_Framework_Search
 		
 		return $num;
 	}
+	
+
+	###############################
+	#  EXTRACT DATA FROM RESULTS  #
+	###############################		
+	
+	
+	/**
+	 * Extract facets from the xml response, if available
+	 */
+	
+	protected function extractFacets(DOMDocument $xml)
+	{
+		
+	}	
 	
 	/**
 	 * Extract all the ISSNs from the records, convenience funciton
@@ -1101,14 +1207,28 @@ abstract class Xerxes_Framework_Search
 		$id = array_unique($id);
 		
 		return $id;
-	}	
+	}
+
+	
+	###################
+	#  HOLDINGS DATA  #
+	###################
+	
+
+	// this is pretty hacky until the new dlf-ils group come up 
+	// with something that we can use
 	
 	protected function getHoldings($strSource, $arrIDs, $bolCache = false)
 	{
-		$objWorldcatConfig = $this->getConfig($strSource);
-		$url = $objWorldcatConfig->lookup_address;
-				
+		$url = $this->getHoldingsURL($strSource);
+		
 		$objXml = new DOMDocument();
+		
+		if ( $url == null )
+		{
+			$objXml->loadXML("<no_holdings />");
+			return $objXml;
+		}
 		
 		if ( $url != null && count($arrIDs) > 0 )
 		{
@@ -1160,7 +1280,12 @@ abstract class Xerxes_Framework_Search
 		
 		return $objXml;
 	}
-
+	
+	protected function getHoldingsURL($id)
+	{
+		return null;
+	}
+	
 	protected function getHoldingsInject($bolCacheOnly = true)
 	{
 		$source = $this->request->getProperty("source");

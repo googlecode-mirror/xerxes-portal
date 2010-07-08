@@ -34,14 +34,23 @@
 		     'relevance' = a combination of the above 
 		     -->
 		
+		<!-- @todo remove this and use sort options below -->
+		
 		<config name="worldcat_relevance_type">relevance</config>
 
-		<basic_search_fields pass="true">
-			<field public="keyword" internal="" />
-			<field public="author" internal="au" />
-			<field public="title" internal="ti" />
-			<field public="subject" internal="su" />		
-		</basic_search_fields>
+		<config name="sort_options" xml="true" pass="true">
+			<option id="relevance" public="relevance" internal="Score,,0" />
+			<option id="date" public="date" internal="Date,,0" />
+			<option id="author" public="author" internal="Author" />
+			<option id="title" public="title" internal="Title" />
+		</config>
+
+		<config name="basic_search_fields" xml="true" pass="true">
+			<field id="keyword" public="keyword" internal="" />
+			<field id="author" public="author" internal="au" />
+			<field id="title" public="title" internal="ti" />
+			<field id="subject" public="subject" internal="su" />		
+		</config>
 
 		<worldcat_groups>
 			<group id="local" label="Xerxes Library">

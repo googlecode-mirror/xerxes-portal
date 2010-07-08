@@ -2131,8 +2131,16 @@
 				
 				<xsl:for-each select="config/basic_search_fields/field">
 				
-					<option value="{@internal}">
-					<xsl:if test="//request/field = @internal">
+					<xsl:variable name="internal">
+						<xsl:choose>
+							<!-- @todo change this back to @id -->
+							<xsl:when test="@not-id"><xsl:value-of select="@id" /></xsl:when>
+							<xsl:otherwise><xsl:value-of select="@internal" /></xsl:otherwise>
+						</xsl:choose>
+					</xsl:variable>
+				
+					<option value="{$internal}">
+					<xsl:if test="//request/field = $internal">
 						<xsl:attribute name="selected">seleted</xsl:attribute>
 					</xsl:if>
 					<xsl:value-of select="@public" />
