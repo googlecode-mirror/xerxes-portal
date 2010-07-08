@@ -64,7 +64,7 @@ class Xerxes_WorldCat
 		return $records;
 	}
 	
-	public function records($ids, $strSchema = "marcxml")
+	public function records($ids)
 	{
 		$arrFinal = array();
 		
@@ -82,18 +82,17 @@ class Xerxes_WorldCat
 		
 		$strQuery = implode(" OR ", $arrFinal);
 		
-		return $this->searchRetrieve( $strQuery, 1, 50, $strSchema );
+		return $this->searchRetrieve( $strQuery, 1, 50 );
 	}
 	
 	/**
 	 * Return individual record by OCLC number
 	 *
 	 * @param string $id			OCLC number
-	 * @param string $strSchema		[optional] xml schema to return records in, default 'marcxml'
 	 * @return DOMDocument			MARC-XML or Dublin Core XML
 	 */
 	
-	public function record($id, $strSchema = "marcxml")
+	public function record($id)
 	{
 		if ( $id == "" )
 		{
@@ -102,7 +101,7 @@ class Xerxes_WorldCat
 		
 		$strQuery = "srw.no=\"$id\"";
 
-		return $this->searchRetrieve( $strQuery, 1, 1, $strSchema );
+		return $this->searchRetrieve( $strQuery, 1, 1 );
 	}
 	
 	/**
