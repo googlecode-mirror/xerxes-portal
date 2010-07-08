@@ -62,7 +62,7 @@
 		</div>	
 </xsl:template>
 
-<xsl:template name="worldcat_advanced_search">
+<xsl:template name="generic_advanced_search">
 
 	<input type="hidden" name="advanced" value="true" />
 	
@@ -137,6 +137,7 @@
 				<p>[ <a href="{//advanced_search/@link}">Show full options</a> ]</p>
 			
 			</xsl:if>
+
 
 			<div id="searchSubmit">
 				<input type="submit" value="Search" />
