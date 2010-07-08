@@ -16,31 +16,33 @@ abstract class Xerxes_Framework_Search
 	public $id; // name of this search engine
 	public $total; // total number of hits
 	public $sort; // sort order
-	public $max = 10; // maximum records per page
+	public $query_normalized = ""; // normalized form of the query string
+	public $query_hash = ""; // md5 rep of the normalized query
 		
 	protected $search_object_type = "Xerxes_Framework_Search_Engine";
 	protected $query_object_type = "Xerxes_Framework_Search_Query";
 	protected $record_object_type = "Xerxes_Record";
 	
+	protected $max = 10; // maximum records per page
 	protected $sort_default = "relevance"; // default sort (this is the id)
 	protected $sid; // sid for open url identification
-	protected $link_resolver; // based address of link resolver	
+	protected $link_resolver; // base address of link resolver	
 	
 	protected $search_fields_regex = "^query[0-9]{0,1}$|^field[0-9]{0,1}$|^boolean[0-9]{0,1}$";
 	protected $limit_fields_regex = "^facet.*";
 	protected $include_original;
 
-	public $results = array(); // search results
-	public $facets; // facets
-	public $recommendations = array(); // recommendations
+	protected $results = array(); // search results
+	protected $facets; // facets
+	protected $recommendations = array(); // recommendations
 
-	public $query; // query object
-	protected $config; // config object
+	protected $query; // query object
+	protected $config; // local config object
 	protected $search_object; // search object
-	protected $data_map; // data map
+	protected $data_map; // data map object
 
 	protected $request; // xerxes request object
-	protected $registry; // xerxes config values	
+	protected $registry; // xerxes global config object	
 	
 	public function __construct($objRequest, $objRegistry)
 	{
@@ -103,6 +105,10 @@ abstract class Xerxes_Framework_Search
 		
 		$search_object_type = $this->search_object_type;
 		$this->search_object = new $search_object_type();
+		
+		// calculate the normalized forms
+		
+		$this->calculateHash();
 	}
 	
 	/**
@@ -819,6 +825,37 @@ abstract class Xerxes_Framework_Search
 		}
 	}
 	
+	protected function calculateHash()
+	{
+		// get the search params and sort them alphabetically
+		
+		$params = $this->getAllSearchParams();
+		ksort($params);
+		
+		$this->query_normalized = "";
+		
+		// now put them back together in a normalized form
+		
+		foreach ( $params as $key => $value )
+		{
+			if ( is_array($value) )
+			{
+				foreach ($value as $part)
+				{
+					$this->query_normalized .= "&amp;$key=" . urlencode($part);
+				}
+			}
+			else
+			{
+				$this->query_normalized .= "&amp;$key=" . urlencode($value);
+			}
+		}
+		
+		// give me the hash!
+		
+		$this->query_hash = md5($this->query_normalized);
+	}
+	
 	/**
 	 * Get 'limit' params out of the URL, organized into groupings for the 
 	 * query object to parse
@@ -1357,7 +1394,7 @@ abstract class Xerxes_Framework_Search
  * spelling ,etc.
  */
 
-class Xerxes_Framework_Search_Query
+abstract class Xerxes_Framework_Search_Query
 {
 	protected $query_list = array();
 	protected $limit_list = array();
