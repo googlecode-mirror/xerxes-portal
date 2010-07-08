@@ -14,15 +14,6 @@
 		
 		<config name="interlibrary_loan"></config>
 		
-		<!-- only include results with these material types, 
-		     enter three letter material type designation, separate multiple entries by comma -->
-		
-		<config name="limit_material_types"></config>
-		
-		<!-- only include results with these material types, enter three letter material type designation -->
-		
-		<config name="exclude_material_types">per,new</config>
-		
 		<!-- records per page -->
 		
 		<config name="worldcat_max_records">10</config>
@@ -33,10 +24,6 @@
 		     'LibraryCount,,0' = number of libraries that hold the item
 		     'relevance' = a combination of the above 
 		     -->
-		
-		<!-- @todo remove this and use sort options below -->
-		
-		<config name="worldcat_relevance_type">relevance</config>
 
 		<config name="sort_options" xml="true" pass="true">
 			<option id="relevance" public="relevance" internal="Score,,0" />
@@ -46,7 +33,7 @@
 		</config>
 
 		<config name="basic_search_fields" xml="true" pass="true">
-			<field id="keyword" public="keyword" internal="" />
+			<field id="keyword" public="keyword" internal="kw" />
 			<field id="author" public="author" internal="au" />
 			<field id="title" public="title" internal="ti" />
 			<field id="subject" public="subject" internal="su" />		
@@ -56,7 +43,14 @@
 			<group id="local" label="Xerxes Library">
 				<libraries>CFI</libraries>
 				<exclude></exclude>
-				<exclude_material_types>per,new</exclude_material_types>
+				<!-- only include results with these material types, enter three letter material type designation, 
+				     separate multiple entries by comma -->
+		
+				<config name="limit_material_types"></config>
+		
+				<!-- only include results with these material types, enter three letter material type designation -->
+		
+				<config name="exclude_material_types">per,new</config>
 				<frbr>false</frbr>
 			</group>
 			<group id="regional" label="Other Cal State campuses">

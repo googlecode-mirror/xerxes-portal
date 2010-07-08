@@ -49,6 +49,11 @@ abstract class Xerxes_Framework_Search
 		$this->request = $objRequest;
 		$this->registry = $objRegistry;
 		
+		// local config
+		
+		$this->config = $this->getConfig();
+		$this->request->addDocument($this->config->publicXML());
+		
 		// database access object
 				
 		$this->data_map = new Xerxes_DataMap();
@@ -62,12 +67,12 @@ abstract class Xerxes_Framework_Search
 		$query_object = $this->query_object_type;
 		$this->query = new $query_object();
 		
-		// populate it with it with the 'search' related params out of the url, 
+		// populate it with the 'search' related params out of the url, 
 		// these are things like query, field, boolean
 		
 		foreach ( $this->extractSearchGroupings() as $term )
 		{
-			$this->query->addTerm($term["id"], $term["boolean"], $term["field"], $term["relation"], $term["query"]);
+			$this->query->addTerm($term["id"], $term["boolean"], $this->swapForInternalField($term["field"]), $term["relation"], $term["query"]);
 		}
 
 		// also limits
@@ -98,11 +103,6 @@ abstract class Xerxes_Framework_Search
 		
 		$search_object_type = $this->search_object_type;
 		$this->search_object = new $search_object_type();
-		
-		// local config
-		
-		$this->config = $this->getConfig();
-		$this->request->addDocument($this->config->publicXML());
 	}
 	
 	/**
@@ -626,9 +626,9 @@ abstract class Xerxes_Framework_Search
 	}
 	
 
-	##################
-	#  SORT OPTIONS  #
-	##################	
+	##########################
+	#  SORT & FIELD OPTIONS  #
+	##########################
 	
 	/**
 	 * The options for the sorting mechanism
@@ -652,6 +652,12 @@ abstract class Xerxes_Framework_Search
 		return $options;
 	}
 	
+	/**
+	 * Swap the sort id for the internal sort option
+	 * @param string $id 	public id
+	 * @return string 		the internal sort option
+	 */
+	
 	protected function swapForInternalSort($id)
 	{
 		$config = $this->config->getConfig("sort_options");
@@ -671,6 +677,32 @@ abstract class Xerxes_Framework_Search
 		
 		return $id; 
 	}
+
+	/**
+	 * Swap the field id for the internal field index
+	 * @param string $id 	public id
+	 * @return string 		the internal field
+	 */	
+	
+	protected function swapForInternalField($id)
+	{
+		$config = $this->config->getConfig("basic_search_fields");
+		
+		if ( $config != null )
+		{
+			foreach ( $config->field as $field )
+			{
+				if ( (string) $field["id"] == $id )
+				{
+					return (string) $field["internal"];
+				}
+			}			
+		}
+		
+		// if we got this far no mapping, so return original
+		
+		return $id; 
+	}	
 	
 	
 	######################
