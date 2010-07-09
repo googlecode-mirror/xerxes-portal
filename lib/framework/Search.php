@@ -869,7 +869,7 @@ abstract class Xerxes_Framework_Search
 	{
 		// get the search params and sort them alphabetically
 		
-		$params = $this->getAllSearchParams();
+		$params = $this->extractSearchParams();
 		ksort($params);
 		
 		$this->query_normalized = "";
