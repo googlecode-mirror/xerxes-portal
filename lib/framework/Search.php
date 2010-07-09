@@ -110,7 +110,7 @@ abstract class Xerxes_Framework_Search
 		
 		$this->calculateHash();
 		
-		$this->request->addData("query_id", "hash", $this->query_hash);
+		$this->request->addData("query_normalized", "url", $this->query_normalized);
 	}
 	
 	/**
@@ -1438,6 +1438,7 @@ abstract class Xerxes_Framework_Search_Query
 {
 	protected $query_list = array();
 	protected $limit_list = array();
+	protected $stop_words = "";
 	
 	public function getQueryTerms()
 	{
@@ -1512,6 +1513,39 @@ abstract class Xerxes_Framework_Search_Query
 		
 		return $spell_return;
 	}
+
+	protected function removeStopWords($strTerms)
+	{
+		if ( $this->stop_words != "" )
+		{
+			$strFinal = "";
+			
+			$arrTerms = explode ( " ", $strTerms );
+			
+			foreach ( $arrTerms as $strChunk )
+			{
+				if ($strChunk == "AND" || $strChunk == "OR" || $strChunk == "NOT")
+				{
+					$strFinal .= " " . $strChunk;
+				} 
+				else
+				{
+					$strNormal = strtolower ( $strChunk );
+					
+					if (! in_array ( $strNormal, $this->stop_words ))
+					{
+						$strFinal .= " " . $strChunk;
+					}
+				}
+			}
+			
+			return trim ( $strFinal );
+		}
+		else
+		{
+			return $strTerms;
+		}
+	}	
 	
 	abstract public function toQuery();
 }

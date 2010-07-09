@@ -459,6 +459,16 @@ class Xerxes_WorldCatSearch extends Xerxes_Framework_Search
 
 class Xerxes_WorldCatSearch_Query extends Xerxes_Framework_Search_Query 
 {
+	public function __construct()
+	{
+		$this->stop_words = array ("a", "an", "the" );
+		
+		/*
+			"a","an","and","are","as","at","be","but","by","for","from", "had","have","he","her","his",
+			"in","is","it","not","of","on","or","that","the","this","to","was","which","with","you"
+		*/
+	}
+	
 	public function toQuery()
 	{
 		$query = "";
@@ -556,6 +566,13 @@ class Xerxes_WorldCatSearch_Query extends Xerxes_Framework_Search_Query
 	
 	private function keyValue($boolean, $field, $relation, $value, $neg = false)
 	{
+		$value = $this->removeStopWords($value);
+		
+		if ( $value == "" )
+		{
+			return "";
+		}
+		
 		if ($neg == true && strstr ( $value, "-" ))
 		{
 			$boolean = "NOT";
@@ -600,39 +617,6 @@ class Xerxes_WorldCatSearch_Query extends Xerxes_Framework_Search_Query
 		}
 		
 		return $strSruQuery;
-	}
-	
-	private function removeStopWords($strTerms)
-	{
-		$arrStopWords = array ("a", "an", "the" );
-		
-		/*
-			"a","an","and","are","as","at","be","but","by","for","from", "had","have","he","her","his",
-			"in","is","it","not","of","on","or","that","the","this","to","was","which","with","you"
-		*/
-		
-		$strFinal = "";
-		
-		$arrTerms = explode ( " ", $strTerms );
-		
-		foreach ( $arrTerms as $strChunk )
-		{
-			if ($strChunk == "AND" || $strChunk == "OR" || $strChunk == "NOT")
-			{
-				$strFinal .= " " . $strChunk;
-			} 
-			else
-			{
-				$strNormal = strtolower ( $strChunk );
-				
-				if (! in_array ( $strNormal, $arrStopWords ))
-				{
-					$strFinal .= " " . $strChunk;
-				}
-			}
-		}
-		
-		return trim ( $strFinal );
 	}
 }
 
