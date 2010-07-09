@@ -109,6 +109,8 @@ abstract class Xerxes_Framework_Search
 		// calculate the normalized forms
 		
 		$this->calculateHash();
+		
+		$this->request->addData("query_id", "hash", $this->query_hash);
 	}
 	
 	/**
@@ -120,8 +122,17 @@ abstract class Xerxes_Framework_Search
 	
 	############
 	#  PUBLIC  #
-	############
+	############	
 	
+	
+	/**
+	 * Get the mds5 hash for the query as a kind of query identifier
+	 */
+	
+	public function getHash()
+	{
+		return $this->query_hash;
+	}	
 	
 	/**
 	 * Any action that needs to take place on the home page search
@@ -161,13 +172,22 @@ abstract class Xerxes_Framework_Search
 	}
 
 	/**
-	 * Just get the hit counts on the search; in a metasearch, 
-	 * this checks the the progress of the search
+	 * Just get the hit counts on the search
 	 */	
 	
 	public function hits()
 	{
-		$hits = $this->search_object->hits($this->query);
+		$id = $this->id . "-" . $this->getHash();
+		
+		$hits = $this->request->getSession($id);
+		
+		if ( $hits == null )
+		{
+			$hits = $this->search_object->hits($this->query);
+			$hits = number_format($hits);
+			$this->request->setSession($id, $hits);
+		}
+		
 		$this->request->addData("hits", "num", $hits);
 	}
 	
@@ -353,13 +373,33 @@ abstract class Xerxes_Framework_Search
 	{
 		$this->url = $this->search_object->getURL();
 		
+		// get total and set in session
+		
 		if ( $this->total == null )
 		{
 			$this->total = $this->search_object->getTotal();
 		}
+
+		$id = $this->id . "-" . $this->getHash();
+		$this->request->setSession($id, number_format($this->total));
+		
 		
 		$results_xml = new DOMDocument( );
 		$results_xml->loadXML( "<results />" );
+		
+		// other cached search hits?
+		
+		foreach ( $this->request->getAllSession() as $session_id => $session_value )
+		{
+			if ( strstr($session_id,$this->query_hash) )
+			{
+				$id = str_replace("-" . $this->query_hash, "", $session_id);
+				
+				$other = $results_xml->createElement( "other", $session_value);
+				$other->setAttribute("module", $id);		
+				$results_xml->documentElement->appendChild( $other );		
+			}
+		}
 		
 		// spelling
 
@@ -377,7 +417,7 @@ abstract class Xerxes_Framework_Search
 
 		// add total
 		
-		$total = $results_xml->createElement("total", $this->total);
+		$total = $results_xml->createElement("total", number_format($this->total));
 		$results_xml->documentElement->appendChild( $total );
 		
 		// add facets that have been selected
@@ -1512,7 +1552,7 @@ class Xerxes_Framework_Search_LimitTerm
 class Xerxes_Framework_Search_Engine
 {
 	protected $url;
-	protected $total;
+	protected $total = 0;
 	
 	public function getURL()
 	{

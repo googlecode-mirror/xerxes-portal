@@ -609,6 +609,11 @@ class Xerxes_Framework_Request
 		}
 	}
 	
+	public function getAllSession()
+	{
+		return $_SESSION;
+	}
+	
 	/**
 	 * Save a value in session state
 	 *

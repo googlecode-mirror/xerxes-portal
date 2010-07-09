@@ -18,8 +18,6 @@
 <xsl:output method="html" />
 
 <xsl:template match="/*">
-{
-"hits":<xsl:value-of select="hits/@num" />
-}
+<xsl:text>(</xsl:text><xsl:value-of select="hits/@num" /><xsl:text>)</xsl:text>
 </xsl:template>
 </xsl:stylesheet> 
