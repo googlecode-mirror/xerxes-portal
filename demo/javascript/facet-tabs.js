@@ -77,7 +77,7 @@
 		
 		for ( i = 0; i < links.length; i++)
 		{		
-			if ( /tabsHit/.test(links[i].className) )
+			if ( /tabsHitNumber/.test(links[i].className) )
 			{
 				arrElements = links[i].id.split(":");
 				base = arrElements[1];

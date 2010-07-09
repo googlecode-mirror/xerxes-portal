@@ -870,6 +870,11 @@ div.autocomplete ul li {
 	margin: 3em;
 }
 
+.tabsHit {
+	font-size: 85%;
+	padding-left: .5em;
+}
+
 #tabnav {
 	float: left;
 	width: 98%;
