@@ -48,6 +48,7 @@
 		<xsl:variable name="source" 	select="request/source" />
 		<xsl:variable name="isbn" 		select="standard_numbers/isbn[string-length(text()) = 10]" />
 		<xsl:variable name="oclc" 		select="standard_numbers/oclc" />
+		<xsl:variable name="record_id" 	select="record_id" />
 		<xsl:variable name="year" 		select="year" />
 		
 			<div id="worldcatRecordBookCover" style="display:none">
@@ -218,7 +219,7 @@
 				<xsl:call-template name="worldcat_save_record">
 					<xsl:with-param name="element">div</xsl:with-param>
 					<xsl:with-param name="class">resultsAvailability</xsl:with-param>
-					<xsl:with-param name="oclc"><xsl:value-of select="$oclc" /></xsl:with-param>
+					<xsl:with-param name="id"><xsl:value-of select="$record_id" /></xsl:with-param>
 				</xsl:call-template>
 				
 				<xsl:if test="//holdings">
