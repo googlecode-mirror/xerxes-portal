@@ -807,7 +807,13 @@ abstract class Xerxes_Framework_Search
 		{
 			foreach ( $config->field as $field )
 			{
-				if ( (string) $field["id"] == $id )
+				$field_id = (string) $field["id"];
+				
+				if ( $field_id == "")
+				{
+					continue;
+				}
+				elseif ( $field_id == $id )
 				{
 					return (string) $field["internal"];
 				}
