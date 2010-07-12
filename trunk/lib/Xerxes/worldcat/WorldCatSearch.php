@@ -462,11 +462,6 @@ class Xerxes_WorldCatSearch_Query extends Xerxes_Framework_Search_Query
 	public function __construct()
 	{
 		$this->stop_words = array ("a", "an", "the" );
-		
-		/*
-			"a","an","and","are","as","at","be","but","by","for","from", "had","have","he","her","his",
-			"in","is","it","not","of","on","or","that","the","this","to","was","which","with","you"
-		*/
 	}
 	
 	public function toQuery()

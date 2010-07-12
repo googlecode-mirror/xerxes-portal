@@ -103,8 +103,7 @@ abstract class Xerxes_Framework_Search
 		
 		// search object 
 		
-		$search_object_type = $this->search_object_type;
-		$this->search_object = new $search_object_type();
+		$this->search_object = $this->getSearchObject();
 		
 		// calculate the normalized forms
 		
@@ -118,6 +117,12 @@ abstract class Xerxes_Framework_Search
 	 */
 	
 	protected abstract function getConfig();
+	
+	protected function getSearchObject()
+	{
+		$search_object_type = $this->search_object_type;
+		return new $search_object_type();
+	}
 	
 	
 	############
@@ -1516,6 +1521,11 @@ abstract class Xerxes_Framework_Search_Query
 
 	protected function removeStopWords($strTerms)
 	{
+		/*
+			"a","an","and","are","as","at","be","but","by","for","from", "had","have","he","her","his",
+			"in","is","it","not","of","on","or","that","the","this","to","was","which","with","you"
+		*/
+		
 		if ( $this->stop_words != "" )
 		{
 			$strFinal = "";
