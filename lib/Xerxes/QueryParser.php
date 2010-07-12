@@ -163,10 +163,17 @@
 			$arrFinal = array();		// final array of words
 			$strQuote = "";				// quoted phrase
 			$arrSmall = array();
-						
-			// split words into an array
+			
+			// normalize it
 			
 			$strQuery = Xerxes_Framework_Parser::strtolower($strQuery);
+			
+			while ( strstr($strQuery, "  ") )
+			{
+				$strQuery = str_replace("  ", " ", $strQuery);
+			}
+
+			// split words into an array			
 			
 			$arrWords = explode(" ", $strQuery);
 			
