@@ -1582,13 +1582,13 @@
 		
 		<xsl:variable name="refereed">
 			<xsl:choose>
-				<xsl:when test="refereed = 1 and format != 'Book Review'">
+				<xsl:when test="refereed = 1 and not(contains(format,'Review'))">
 					<xsl:text>true</xsl:text>
 				</xsl:when>
-				<xsl:when test="../refereed = 1 and format != 'Book Review'">
+				<xsl:when test="../refereed = 1 and not(contains(format,'Review'))">
 					<xsl:text>true</xsl:text>
 				</xsl:when>
-				<xsl:when test="//refereed/issn = standard_numbers/issn and format != 'Book Review'">
+				<xsl:when test="//refereed/issn = standard_numbers/issn and not(contains(format,'Review'))">
 					<xsl:text>true</xsl:text>
 				</xsl:when>
 			</xsl:choose>
