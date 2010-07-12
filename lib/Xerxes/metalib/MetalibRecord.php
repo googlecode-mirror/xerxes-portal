@@ -585,9 +585,7 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 			// Put a special token in there. 
 			return self::$TemplateEmptyValue;
 		}
-		//URL escape it please
-		$value = urlencode ( $value );
-		
+	
 		return $value;
 	}
 	/* Fills out an array of Xerxes_Record to include links that are created
