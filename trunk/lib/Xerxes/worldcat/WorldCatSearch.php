@@ -18,12 +18,13 @@ class Xerxes_WorldCatSearch extends Xerxes_Framework_Search
 	public $id = "worldcat";
 	protected $query_object_type = "Xerxes_WorldCatSearch_Query";
 	protected $record_object_type = "Xerxes_WorldCatRecord";
-	protected $limit_fields_regex = '^year$|^year_relation|^[a-z]{2}$|^[a-z]{2}_exact|advanced';	
+	protected $limit_fields_regex = '^year$|^year_relation|^[a-z]{2}$|^[a-z]{2}_exact|advanced';
+
+	protected $should_get_holdings = true;	
 	
 	// worldcat specific
 
 	protected $groups_config = array();
-	protected $relevance_type;
 	
 	public function __construct($objRequest, $objRegistry)
 	{
@@ -62,23 +63,11 @@ class Xerxes_WorldCatSearch extends Xerxes_Framework_Search
 			$objRestrict->checkIP();
 		}
 		
-		// add the (public aspects of the) worldcat config file to the response
-		// so we can make use of it in the interface 
+		// @todo factor this out to the framework
 		
 		$this->addAdvancedSearchLink();
 
-		// if no sort defined, its relevance!
-			
-		if ( $this->sort == null )
-		{
-			$this->sort = $this->relevance_type;
-		}
-		
 		parent::results();
-		
-		// @todo factor this out to search arch
-		
-		$this->getHoldingsInject();
 	}
 	
 	public function record()
@@ -86,11 +75,6 @@ class Xerxes_WorldCatSearch extends Xerxes_Framework_Search
 		// get the record
 		
 		parent::record();
-		
-		// local inline holdings 
-		// @todo: factor this out to the framework
-		
-		$this->getHoldingsInject(false);
 		
 		// show worldcat holdings ?
 		
@@ -210,7 +194,6 @@ class Xerxes_WorldCatSearch extends Xerxes_Framework_Search
 	}
 	
 	/**
-	 * Get just the 'search' params (query, boolean, field) out of the URL
 	 * Special handling here for some worldcat-specific stuff
 	 */
 

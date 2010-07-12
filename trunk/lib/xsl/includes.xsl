@@ -1788,7 +1788,7 @@
 		
 		<!-- link resolver -->
 		
-		<xsl:when test="$link_resolver_allowed and //fulltext/issn = standard_numbers/issn">
+		<xsl:when test="$link_resolver_allowed and (subscription = 1 or //fulltext/issn = standard_numbers/issn)">
 				<a href="{../url_open}&amp;fulltext=1" target="{$link_target}" class="recordAction linkResolverLink">
 					<img src="{$base_include}/images/html.gif" alt="" width="16" height="16" border="0" class="miniIcon linkResolverLink"/>
 					<xsl:text> </xsl:text>
