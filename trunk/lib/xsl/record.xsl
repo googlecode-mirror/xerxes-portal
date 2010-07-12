@@ -322,7 +322,7 @@
 				
 				<!-- save option -->
 				
-				<xsl:if test="/metasearch">
+				<xsl:if test="not(/folder)">
 					<div class="saveRecord recordAction" id="saveRecordOption_{$result_set}_{$record_number}">
 						<img id="folder_{$result_set}{$record_number}"	width="17" height="15" alt="" border="0" class="miniIcon">
 							<xsl:attribute name="src">

@@ -30,6 +30,10 @@ li.result {
 	margin: 50px
 }
 
+.worldcatNoHits p.error {
+	margin-left: 0;
+}
+
 /* record */
 
 #worldcatRecordBookCover {

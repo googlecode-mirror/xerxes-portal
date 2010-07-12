@@ -35,8 +35,9 @@ class Xerxes_WorldCatSearch extends Xerxes_Framework_Search
 		$this->max = $this->config->getConfig("WORLDCAT_MAX_RECORDS", false, $this->max);			
 		
 		// basic
-
-		$this->search_object = $this->getWorldCatObject($this->request->getProperty("source"));	
+		
+		$source = $this->request->getProperty("source");
+		$this->search_object = $this->getWorldCatObject($source);
 		
 		// extra config stuff
 		
