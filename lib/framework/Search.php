@@ -23,6 +23,11 @@ abstract class Xerxes_Framework_Search
 	protected $query_object_type = "Xerxes_Framework_Search_Query";
 	protected $record_object_type = "Xerxes_Record";
 	
+	protected $should_mark_refereed = false;
+	protected $should_mark_fulltext = false;
+	protected $should_get_recommendations = false;
+	protected $should_get_holdings = false;
+	
 	protected $max = 10; // maximum records per page
 	protected $sort_default = "relevance"; // default sort (this is the id)
 	protected $sid; // sid for open url identification
@@ -66,8 +71,7 @@ abstract class Xerxes_Framework_Search
 		
 		// set an instance of the query object
 		
-		$query_object = $this->query_object_type;
-		$this->query = new $query_object();
+		$this->query = $this->getQueryObject();
 		
 		// populate it with the 'search' related params out of the url, 
 		// these are things like query, field, boolean
@@ -118,12 +122,7 @@ abstract class Xerxes_Framework_Search
 	
 	protected abstract function getConfig();
 	
-	protected function getSearchObject()
-	{
-		$search_object_type = $this->search_object_type;
-		return new $search_object_type();
-	}
-	
+
 	
 	############
 	#  PUBLIC  #
@@ -231,7 +230,24 @@ abstract class Xerxes_Framework_Search
 		
 		// mark peer-reviewed journals
 		
-		$this->markRefereed();
+		if ( $this->should_mark_refereed == true )
+		{
+			$this->markRefereed();
+		}
+		
+		// full-text pre-look-up
+
+		if ( $this->should_mark_fulltext == true )
+		{
+			$this->markFullText();
+		}
+		
+		// holdings
+		
+		if ( $this->should_get_holdings == true )
+		{
+			$this->getHoldingsInject();
+		}
 		
 		// done
 		
@@ -250,7 +266,35 @@ abstract class Xerxes_Framework_Search
 		
 		$this->results = $this->convertToXerxesRecords($xml);
 		
-		$this->markRefereed();
+		// mark peer-reviewed journals
+		
+		if ( $this->should_mark_refereed == true )
+		{
+			$this->markRefereed();
+		}
+		
+		// recommendations
+		
+		if ( $this->should_get_recommendations == true )
+		{
+			$this->addRecommendations();
+		}
+		
+		// full-text pre-look-up
+		
+		if ( $this->should_mark_fulltext == true )
+		{
+			$this->markFullText();
+		}
+		
+		// local holdings
+		
+		if ( $this->should_get_holdings == true )
+		{
+			$this->getHoldingsInject(false);
+		}
+		
+		// done
 		
 		$this->request->addDocument($this->resultsXML());
 	}
@@ -597,6 +641,24 @@ abstract class Xerxes_Framework_Search
 	}
 	
 	
+	#####################
+	#  OBJECT CREATION  #
+	#####################
+	
+	
+	protected function getSearchObject()
+	{
+		$search_object_type = $this->search_object_type;
+		return new $search_object_type();
+	}
+	
+	protected function getQueryObject()
+	{
+		$query_object = $this->query_object_type;
+		return new $query_object();		
+	}	
+	
+	
 	##############
 	#   LINKS    #
 	##############
@@ -649,6 +711,7 @@ abstract class Xerxes_Framework_Search
 		
 		return $this->request->url_for($arrParams);
 	}
+	
 	/**
 	 * OpenURL link
 	 * 
@@ -680,6 +743,7 @@ abstract class Xerxes_Framework_Search
 	##########################
 	#  SORT & FIELD OPTIONS  #
 	##########################
+	
 	
 	/**
 	 * The options for the sorting mechanism
@@ -1030,7 +1094,7 @@ abstract class Xerxes_Framework_Search
 	 * Enhance record with bx recommendations
 	 */
 	
-	protected function recommendations()
+	protected function addRecommendations()
 	{
 		// only the first one yo!
 		
@@ -1118,67 +1182,79 @@ abstract class Xerxes_Framework_Search
 			// reduce to just the unique ISSNs
 				
 			$arrResults = $this->data_map->getFullText($issns);
-				
+			
 			// we'll now go back over the results, looking to see 
 			// if also the years match, marking records as being in our list
-				
+			
 			for ( $x = 0; $x < count($this->results); $x++ )
 			{
 				$xerxes_record = $this->results[$x];
-				
-				$strRecordIssn = $xerxes_record->getIssn();
-				$strRecordYear = $xerxes_record->getYear();
-				
-				foreach ( $arrResults as $objFulltext )
-				{
-					// convert query issn back to dash
-
-					if ( $strRecordIssn == $objFulltext->issn )
-					{
-						// in case the database values are null, we'll assign the 
-						// initial years as unreachable
-							
-						$iStart = 9999;
-						$iEnd = 0;
-						
-						if ( $objFulltext->startdate != null )
-						{
-							$iStart = (int) $objFulltext->startdate;
-						}
-						if ( $objFulltext->enddate != null )
-						{
-							$iEnd = (int) $objFulltext->enddate;
-						}
-						if ( $objFulltext->embargo != null && (int) $objFulltext->embargo != 0 )
-						{
-							// convert embargo to years, we'll overcompensate here by rounding
-							// up, still showing 'check for availability' but no guarantee of full-text
-							
-							$iEmbargoDays = (int) $objFulltext->embargo;
-							$iEmbargoYears = (int) ceil($iEmbargoDays/365);
-							
-							// embargo of a year or more needs to go back to start of year, so increment
-							// date plus an extra year
-							
-							if ( $iEmbargoYears >= 1 )
-							{
-								$iEmbargoYears++;
-							}
-							
-							$iEnd = (int) date("Y");
-							$iEnd = $iEnd - $iEmbargoYears;
-						}
-							
-						// if it falls within our range, mark the record as having it
-						
-						if ( $strRecordYear >= $iStart && $strRecordYear <= $iEnd )
-						{
-							$xerxes_record->setSubsctiption(true);
-						}
-					}
-				}
-				
+				$this->determineFullText($xerxes_record, $arrResults);
 				$this->results[$x] = $xerxes_record;
+			}
+
+			// do the same for recommendations
+			
+			for ( $x = 0; $x < count($this->recommendations); $x++ )
+			{
+				$xerxes_record = $this->recommendations[$x];
+				$this->determineFullText($xerxes_record, $arrResults);
+				$this->recommendations[$x] = $xerxes_record;
+			}		
+		}		
+	}
+	
+	private function determineFullText(&$xerxes_record, $arrResults)
+	{
+		$strRecordIssn = $xerxes_record->getIssn();
+		$strRecordYear = $xerxes_record->getYear();
+
+		foreach ( $arrResults as $objFulltext )
+		{
+			// convert query issn back to dash
+
+			if ( $strRecordIssn == $objFulltext->issn )
+			{
+				// in case the database values are null, we'll assign the 
+				// initial years as unreachable
+					
+				$iStart = 9999;
+				$iEnd = 0;
+						
+				if ( $objFulltext->startdate != null )
+				{
+					$iStart = (int) $objFulltext->startdate;
+				}
+				if ( $objFulltext->enddate != null )
+				{
+					$iEnd = (int) $objFulltext->enddate;
+				}
+				if ( $objFulltext->embargo != null && (int) $objFulltext->embargo != 0 )
+				{
+					// convert embargo to years, we'll overcompensate here by rounding
+					// up, still showing 'check for availability' but no guarantee of full-text
+							
+					$iEmbargoDays = (int) $objFulltext->embargo;
+					$iEmbargoYears = (int) ceil($iEmbargoDays/365);
+							
+					// embargo of a year or more needs to go back to start of year, so increment
+					// date plus an extra year
+							
+					if ( $iEmbargoYears >= 1 )
+					{
+						$iEmbargoYears++;
+					}
+							
+					$iEnd = (int) date("Y");
+					$iEnd = $iEnd - $iEmbargoYears;
+				}
+							
+				// if it falls within our range, mark the record as having it
+				
+				if ( $strRecordYear >= $iStart && $strRecordYear <= $iEnd )
+				{
+					$xerxes_record->setSubscription(true);
+				}
 			}
 		}		
 	}
@@ -1253,7 +1329,9 @@ abstract class Xerxes_Framework_Search
 	{
 		$issns = array();
 		
-		foreach ( $this->results as $record )
+		$records = array_merge($this->results, $this->recommendations);
+		
+		foreach ( $records as $record )
 		{
 			foreach ( $record->getAllISSN() as $record_issn )
 			{
