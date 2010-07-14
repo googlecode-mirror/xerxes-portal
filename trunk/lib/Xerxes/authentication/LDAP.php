@@ -27,7 +27,7 @@
 			$strPassword		= $this->request->getProperty( "password" );
 			
 			$strController		= $this->registry->getConfig( "DIRECTORY_SERVER", true );
-			$strDomain			= $this->registry->getConfig( "DOMAIN", false );
+			$strDomain		= $this->registry->getConfig( "DOMAIN", false );
 			
 			// backwards compatability with now deprecated domain entry
 			
