@@ -32,12 +32,25 @@
 		 */
 		
 		protected function init($connection, $username, $password)
-		{
+		{		
+			// options to ensure utf-8
+			
+			if ( $this->rdbms == "mysql" )
+			{
+				$arrDriverOptions = array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'");
+			}
+			else
+			{
+				$arrDriverOptions = null;  // @todo: with MS SQL
+			}
+			
 			// data access object
+			
+			$this->objPDO = new PDO($connection,$username, $password, $arrDriverOptions);
+			
 			// will force PDO to throw exceptions on error
 			
-			$this->objPDO = new PDO($connection, $username, $password);
-			$this->objPDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+			$this->objPDO->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
 		}
 		
 		public function __destruct()
