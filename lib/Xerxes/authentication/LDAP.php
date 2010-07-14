@@ -3,8 +3,9 @@
 	/**
 	 * Authenticate users against an LDAP-enabled directory server
 	 * 
-	 * @author David Walker
-	 * @copyright 2008 California State University
+	 * @author David Walker, Ivan Masar
+	 * @copyright 2008 California State University, 2010 Ivan Masar
+	 * 
 	 * @link http://xerxes.calstate.edu
 	 * @license http://www.gnu.org/licenses/
 	 * @version $Id$
@@ -19,6 +20,9 @@
 		
 		public function onCallBack()
 		{
+			define("LDAP_OPT_ON",   1);
+			define("LDAP_OPT_OFF",  0);
+			
 			$strUsername		= $this->request->getProperty( "username" );
 			$strPassword		= $this->request->getProperty( "password" );
 			
@@ -47,14 +51,31 @@
 			$strSearchName		= strtolower($this->registry->getConfig( "LDAP_SEARCH_NAME", false ));
 			$strSearchSurname	= strtolower($this->registry->getConfig( "LDAP_SEARCH_SURNAME", false ));
 			$strSearchMail		= strtolower($this->registry->getConfig( "LDAP_SEARCH_MAIL", false ));
+			$strOptVersion		= $this->registry->getConfig( "LDAP_OPT_PROTOCOL_VERSION", false, 2 );
+			$strOptDeref		= $this->registry->getConfig( "LDAP_OPT_DEREF", false, LDAP_DEREF_NEVER );
+			$strOptReferrals	= $this->registry->getConfig( "LDAP_OPT_REFERRALS", false, LDAP_OPT_ON );
+			
+			if ( is_string($strOptVersion) )
+				$strOptVersion = intval($strOptVersion);
+			if ( is_string($strOptDeref) )
+				$strOptDeref = constant($strOptDeref);
+			if ( is_string($strOptReferrals) )
+				$strOptReferrals = constant($strOptReferrals);
 			
 			$bolAuth = false;
 			
-
+			
 			
 			// connect to ldap server
 			
 			$objConn = ldap_connect($strController);
+			
+			if ( is_int($strOptVersion) )
+				ldap_set_option($objConn, LDAP_OPT_PROTOCOL_VERSION, $strOptVersion);
+			if ( is_int($strOptDeref) )
+				ldap_set_option($objConn, LDAP_OPT_DEREF, $strOptDeref);
+			if ( is_int($strOptReferrals) )
+				ldap_set_option($objConn, LDAP_OPT_REFERRALS, $strOptReferrals);
 			
 			if ($objConn)
 			{
@@ -63,7 +84,7 @@
 					if ( $bolDoInitBind != true )
 					{
 						// try to bind directly using provided username / password
-
+						
 						// construct the user DN from username
 						$strBindDN = sprintf($strDNFormat, $strUsername);
 					}
@@ -71,13 +92,13 @@
 					{
 						// first, do the initial bind
 						// if $strInitBindDN and $strInitBindPwd are both empty, do anonymous bind
-
+						
 						$bolInitBind = ldap_bind($objConn, $strInitBindDN, $strInitBindPwd);
 						
 						if ( $bolInitBind )
 						{
 							// search for the user DN in the directory tree
-
+							
 							$arrFields = array($strSearchUid);
 							$strSearchFilter2 = sprintf($strSearchFilter, $strUsername);
 							$objResults = @ldap_search($objConn, $strSearchBase, $strSearchFilter2, $arrFields, 0, 3);
@@ -97,14 +118,14 @@
 							}
 						}
 					}
-
+					
 					// try to bind using user DN
 					if ($strBindDN != 'USER_NOT_FOUND')
 					{
 						$bolAuth = ldap_bind($objConn, $strBindDN, $strPassword);
-
+						
 						// search again (in case we didn't do the initial bind) to retrieve name, surname and email
-
+						
 						if (!empty($strSearchName) && !empty($strSearchName) and !empty($strSearchName)) 
 						{
 							$arrFields = array($strSearchUid, $strSearchSurname, $strSearchName);
@@ -126,7 +147,7 @@
 					}
 					ldap_close($objConn);
 				}
-
+				
 				if ( $bolAuth == true )
 				{
 					// register the user and stop the flow

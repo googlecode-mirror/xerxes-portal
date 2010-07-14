@@ -232,7 +232,7 @@
 		<config name="ldap_search_uid">cn</config>
 
 		<!-- if the following options are not empty and the directory contains attributes with these names, 
-		     their values will be imported to Xerxes users table on first login-->
+		     their values will be imported to Xerxes users table on first login -->
 		<!-- optional: attribute containing user's given name -->
 		
 		<config name="ldap_search_name">givenName</config>
@@ -244,6 +244,22 @@
 		<!-- optional: attribute containing user's email address -->
 		
 		<config name="ldap_search_mail">mail</config>
+		
+                <!-- LDAP options; see details in http://tools.ietf.org/html/draft-ietf-ldapext-ldap-c-api-05#section-11.2 -->
+                
+                <!-- optional: LDAP protocol version -->
+                
+                <config name="ldap_opt_protocol_version">2</config>
+
+                <!-- optional: Determines how aliases are handled during search 
+                (LDAP_DEREF_NEVER, LDAP_DEREF_SEARCHING, LDAP_DEREF_FINDING, LDAP_DEREF_ALWAYS) -->
+                
+                <config name="ldap_opt_deref">LDAP_DEREF_NEVER</config>
+
+                <!-- optional: Determines whether the LDAP library automatically follows referrals 
+                returned by LDAP servers or not (LDAP_OPT_ON, LDAP_OPT_OFF) -->
+                
+                <config name="ldap_opt_referrals">LDAP_OPT_OFF</config>
 		
 		
 		<!-- INNOVATIVE PATRON API -->
