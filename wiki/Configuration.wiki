@@ -360,7 +360,7 @@ Example:
 
 ==harvest_memory_limit==
 
-The amount of memory PHP can consume for the Metaib KB and SFX full-text 'harvesting' tasks.
+The amount of memory PHP can consume for the Metalib KB and SFX full-text 'harvesting' tasks.
 
   * default value: `500M`
   * available since: 1.5
