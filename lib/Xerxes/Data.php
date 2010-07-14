@@ -68,7 +68,8 @@ class Xerxes_Data_Category extends Xerxes_Framework_DataValue
 	 */
 	public static function normalize($strSubject)
 	{
-		$strNormalized = Xerxes_Framework_Parser::strtolower( $strSubject );
+		$strNormalized = iconv( 'UTF-8', 'ASCII//TRANSLIT', $strSubject );
+		$strNormalized = Xerxes_Framework_Parser::strtolower( $strNormalized );
 		
 		$strNormalized = str_replace( "&amp;", "", $strNormalized );
 		$strNormalized = str_replace( "'", "", $strNormalized );
