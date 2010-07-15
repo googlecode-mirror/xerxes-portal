@@ -251,6 +251,7 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	<xsl:variable name="text_results_refereed">Peer Reviewed</xsl:variable>
 	<xsl:variable name="text_results_sort_by">sort by</xsl:variable>
 	<xsl:variable name="text_results_year">Year</xsl:variable>
+	<xsl:variable name="text_results_next">Další</xsl:variable>
 	
 	<xsl:variable name="text_searchbox_ada_boolean">Boolean operator: </xsl:variable>
 	<xsl:variable name="text_searchbox_boolean_and">And</xsl:variable>

@@ -1440,6 +1440,7 @@
 							<xsl:choose>
 								<xsl:when test="@type = 'next'">
 									<xsl:attribute name="class">resultsPagerNext</xsl:attribute>
+									<xsl:copy-of select="$text_results_next" />
 								</xsl:when>
 								<xsl:otherwise>
 									<xsl:attribute name="class">resultsPagerLink</xsl:attribute>
