@@ -5,8 +5,8 @@
 # link: http://xerxes.calstate.edu
 # license: http://www.gnu.org/licenses/
 
-CREATE DATABASE IF NOT EXISTS xerxes_test DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
-USE xerxes_test;
+CREATE DATABASE IF NOT EXISTS xerxes DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
+USE xerxes;
 
 SET storage_engine = INNODB;
 
