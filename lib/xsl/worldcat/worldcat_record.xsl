@@ -211,6 +211,7 @@
 			<div id="recordFullText" class="raisedBox recordActions">
 
 				<xsl:call-template name="holdings_lookup">
+					<xsl:with-param name="record_id"><xsl:value-of select="$record_id" /></xsl:with-param>
 					<xsl:with-param name="isbn"><xsl:value-of select="$isbn" /></xsl:with-param>
 					<xsl:with-param name="oclc"><xsl:value-of select="$oclc" /></xsl:with-param>
 					<xsl:with-param name="type">full</xsl:with-param>
