@@ -160,6 +160,10 @@
 				<command>DatabasesProxy</command>
 				<view />
 			</action>
+			<action name="librarian-image">
+				<command>DatabasesLibrarianImage</command>
+				<view />		
+			</action>
 			<action name="populate" cli="true">
 				<command>PopulateDatabases</command>
 				<view />

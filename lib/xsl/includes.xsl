@@ -1034,102 +1034,6 @@
 
 </xsl:template>
 
-<!-- 	
-	TEMPLATE: HEADER
-	header content, such as Javascript functions that should appear on specific page.
--->
-
-<xsl:template name="header">
-
-	<!--opensearch autodiscovery -->
-	
-	<xsl:if test="category/subcategory">
-		<xsl:variable name="subject_name" select="//category[1]/@name" />
-		<xsl:variable name="subject_id" select="//category[1]/@normalized" />
-		<link rel="search"
-			type="application/opensearchdescription+xml" 
-			href="{$base_url}?base=databases&amp;action=subject-opensearch&amp;subject={$subject_id}"
-			title="{$app_name} {$subject_name} search" />
-	</xsl:if>
-	
-	<!-- exclude javascript for ada (because it messes with screen readers) and mobile devices (makes loading faster) -->
-
-	<xsl:if test="not(request/session/ada) and $is_mobile = 0">
-	
-		<script src="{$base_include}/javascript/onload.js" language="javascript" type="text/javascript"></script>
-		<script src="{$base_include}/javascript/prototype.js" language="javascript" type="text/javascript"></script>
-		<script src="{$base_include}/javascript/scriptaculous/scriptaculous.js" language="javascript" type="text/javascript"></script>
-		
-		<!-- fancy message display -->
-		
-		<script src="{$base_include}/javascript/message_display.js" language="javascript" type="text/javascript"></script>
-		
-		<!-- controls the adding and editing of tags -->
-		
-		<script src="{$base_include}/javascript/tags.js" language="javascript" type="text/javascript"></script>
-		
-		
-		<script src="{$base_include}/javascript/toggle_metasearch_advanced.js" language="javascript" type="text/javascript"></script>
-		
-		<!-- controls the saving and tracking of saved records -->
-		
-		<script type="text/javascript">
-			
-			// change numSessionSavedRecords to numSavedRecords if you prefer the folder icon to change
-			// if there are any records at all in saved records. Also fix initial display in navbar.
-			
-			numSavedRecords = parseInt('0<xsl:value-of select="navbar/element[@id='saved_records']/@numSessionSavedRecords" />', 10);
-			isTemporarySession = <xsl:choose><xsl:when test="$temporarySession = 'true'">true</xsl:when><xsl:otherwise>false</xsl:otherwise></xsl:choose>
-		</script>
-		
-		<script src="{$base_include}/javascript/save.js" language="javascript" type="text/javascript"></script>
-		
-		<script language="javascript" type="text/javascript">
-			var dateSearch = "<xsl:value-of select="results/search/date" />";
-			var xerxes_iSearchable = "<xsl:value-of select="$search_limit" />";
-		</script>
-		
-		<!-- add behaviors to edit collection dialog, currently just delete confirm -->
-		<script src="{$base_include}/javascript/collections.js" language="javascript" type ="text/javascript"></script>
-	
-		<!-- umlaut content on record detail page, when so configured -->
-		<xsl:if test="//config/umlaut_base and (( request/base='metasearch' and request/action = 'record' ) or (request/base='folder' and request/action = 'full'))">
-          <!-- only if this database does NOT have openurl link generation
-               suppressed. If it does, we can do nothing. This duplicates
-               code in records.xsl, sorry. -->
-      <xsl:variable name="db_metalib_id" select="//records/record[1]/xerxes_record/metalib_id" />
-      <xsl:variable name="link_resolver_allowed" select="not(//database_links/database[@metalib_id = $db_metalib_id]/sfx_suppress) or //database_links/database[@metalib_id = $db_metalib_id]/sfx_suppress != '1'" />
-			
-			<xsl:if test="$link_resolver_allowed">
-        <!-- have umlaut set up up functions for js magic -->
-        <script type="text/javascript" src="{//config/umlaut_base}/javascripts/embed/umlaut-embed-func.js"></script>
-        
-        <!-- Now call our script that will call umlaut magic with local
-             xerxes display logic. First need to set a couple of dynamically
-             generated parameters in js global vars, so xerxes js can get it.-->      			
-        <script language="javascript" type="text/javascript">
-          openurl_kev_co = '<xsl:value-of select="//records/record[1]/openurl_kev_co"/>'; 
-          umlaut_base = '<xsl:value-of select="//config/umlaut_base"/>';          
-          
-          if (typeof(jsDisplayConstants) == "undefined" ) {
-             jsDisplayConstants = new Array(); 
-          }
-          jsDisplayConstants['link_resolver_name'] = '<xsl:copy-of select="$text_link_resolver_name"/>';
-          jsDisplayConstants['link_resolver_load_message'] = '<xsl:copy-of select="$text_link_resolver_load_msg"/>';
-          jsDisplayConstants['link_resolver_direct_link_prefix'] = '<xsl:copy-of select="$text_link_resolver_direct_link_prefix"/>';
-        </script>
-        <script language="javascript" type="text/javascript" src="{$base_include}/javascript/umlaut_record_detail.js"/>
-      </xsl:if>
-		</xsl:if>
-		
-	</xsl:if>
-  	
-	<xsl:call-template name="module_header" />
-	
-	<xsl:copy-of select="$text_extra_html_head_content" />
-
-</xsl:template>
-
 <!--
 	TEMPLATE: FULL TEXT LINKS
 	Constructs proxied links for full-text links in the results, folder, and full record
@@ -1867,7 +1771,7 @@
 
 <!-- 
 	TEMPLATE: SAFARI TAG FIX
-	This hidden iframe essentially thwarts the Safari back/forward cache so that
+	This hidden iframe essentially thwarts the Safari backforward cache so that
 	tags don't get wacky
 -->
 
@@ -1901,7 +1805,14 @@
 					<xsl:choose>
 						<xsl:when test="type = 'Librarian'">
 							<xsl:attribute name="class">subjectLibrarian</xsl:attribute>
-							
+
+							<xsl:if test="library_contact">
+                            	<xsl:variable name="image_url" select="php:function('urlencode', string(library_contact))" />
+								<div class="librarianPicture">
+									<img src="./?base=databases&amp;action=librarian-image&amp;url={$image_url}" alt="{title_display}" />
+								</div>
+							</xsl:if>
+
 							<div class="librarianTitle">
 								<xsl:choose>
 									<xsl:when test="link_native_home != ''">
@@ -2172,6 +2083,102 @@
 <xsl:template name="generic_advanced_search" />
 <xsl:template name="generic_searchbox_hidden_fields_local" />
 
+
+<!-- 	
+	TEMPLATE: HEADER
+	header content, such as Javascript functions that should appear on specific page.
+-->
+
+<xsl:template name="header">
+
+	<!--opensearch autodiscovery -->
+	
+	<xsl:if test="category/subcategory">
+		<xsl:variable name="subject_name" select="//category[1]/@name" />
+		<xsl:variable name="subject_id" select="//category[1]/@normalized" />
+		<link rel="search"
+			type="application/opensearchdescription+xml" 
+			href="{$base_url}?base=databases&amp;action=subject-opensearch&amp;subject={$subject_id}"
+			title="{$app_name} {$subject_name} search" />
+	</xsl:if>
+	
+	<!-- exclude javascript for ada (because it messes with screen readers) and mobile devices (makes loading faster) -->
+
+	<xsl:if test="not(request/session/ada) and $is_mobile = 0">
+	
+		<script src="{$base_include}/javascript/onload.js" language="javascript" type="text/javascript"></script>
+		<script src="{$base_include}/javascript/prototype.js" language="javascript" type="text/javascript"></script>
+		<script src="{$base_include}/javascript/scriptaculous/scriptaculous.js" language="javascript" type="text/javascript"></script>
+		
+		<!-- fancy message display -->
+		
+		<script src="{$base_include}/javascript/message_display.js" language="javascript" type="text/javascript"></script>
+		
+		<!-- controls the adding and editing of tags -->
+		
+		<script src="{$base_include}/javascript/tags.js" language="javascript" type="text/javascript"></script>
+		
+		
+		<script src="{$base_include}/javascript/toggle_metasearch_advanced.js" language="javascript" type="text/javascript"></script>
+		
+		<!-- controls the saving and tracking of saved records -->
+		
+		<script type="text/javascript">
+			
+			// change numSessionSavedRecords to numSavedRecords if you prefer the folder icon to change
+			// if there are any records at all in saved records. Also fix initial display in navbar.
+			
+			numSavedRecords = parseInt('0<xsl:value-of select="navbar/element[@id='saved_records']/@numSessionSavedRecords" />', 10);
+			isTemporarySession = <xsl:choose><xsl:when test="$temporarySession = 'true'">true</xsl:when><xsl:otherwise>false</xsl:otherwise></xsl:choose>
+		</script>
+		
+		<script src="{$base_include}/javascript/save.js" language="javascript" type="text/javascript"></script>
+		
+		<script language="javascript" type="text/javascript">
+			var dateSearch = "<xsl:value-of select="results/search/date" />";
+			var xerxes_iSearchable = "<xsl:value-of select="$search_limit" />";
+		</script>
+		
+		<!-- add behaviors to edit collection dialog, currently just delete confirm -->
+		<script src="{$base_include}/javascript/collections.js" language="javascript" type ="text/javascript"></script>
+	
+		<!-- umlaut content on record detail page, when so configured -->
+		<xsl:if test="//config/umlaut_base and (( request/base='metasearch' and request/action = 'record' ) or (request/base='folder' and request/action = 'full'))">
+          <!-- only if this database does NOT have openurl link generation
+               suppressed. If it does, we can do nothing. This duplicates
+               code in records.xsl, sorry. -->
+      <xsl:variable name="db_metalib_id" select="//records/record[1]/xerxes_record/metalib_id" />
+      <xsl:variable name="link_resolver_allowed" select="not(//database_links/database[@metalib_id = $db_metalib_id]/sfx_suppress) or //database_links/database[@metalib_id = $db_metalib_id]/sfx_suppress != '1'" />
+			
+			<xsl:if test="$link_resolver_allowed">
+        <!-- have umlaut set up up functions for js magic -->
+        <script type="text/javascript" src="{//config/umlaut_base}/javascripts/embed/umlaut-embed-func.js"></script>
+        
+        <!-- Now call our script that will call umlaut magic with local
+             xerxes display logic. First need to set a couple of dynamically
+             generated parameters in js global vars, so xerxes js can get it.-->      			
+        <script language="javascript" type="text/javascript">
+          openurl_kev_co = '<xsl:value-of select="//records/record[1]/openurl_kev_co"/>'; 
+          umlaut_base = '<xsl:value-of select="//config/umlaut_base"/>';          
+          
+          if (typeof(jsDisplayConstants) == "undefined" ) {
+             jsDisplayConstants = new Array(); 
+          }
+          jsDisplayConstants['link_resolver_name'] = '<xsl:copy-of select="$text_link_resolver_name"/>';
+          jsDisplayConstants['link_resolver_load_message'] = '<xsl:copy-of select="$text_link_resolver_load_msg"/>';
+          jsDisplayConstants['link_resolver_direct_link_prefix'] = '<xsl:copy-of select="$text_link_resolver_direct_link_prefix"/>';
+        </script>
+        <script language="javascript" type="text/javascript" src="{$base_include}/javascript/umlaut_record_detail.js"/>
+      </xsl:if>
+		</xsl:if>
+		
+	</xsl:if>
+  	
+	<xsl:call-template name="module_header" />
+	
+	<xsl:copy-of select="$text_extra_html_head_content" />
+
+</xsl:template>
 
 
 <!--
