@@ -166,6 +166,15 @@ a:hover {
 	margin-left: 0;
 }
 
+.librarianPicture {
+	margin-bottom: 1em;
+}
+
+.librarianPicture img {
+	border: 1px solid #ccc;
+	padding: 2px;s
+}
+
 .librarianTitle {
 	font-weight: bold;
 	font-size: 110%;
