@@ -18,52 +18,62 @@ class Xerxes_Command_DatabasesLibrarianImage extends Xerxes_Command_Databases
 		$url = $this->request->getProperty("url");
 		$size = $this->registry->getConfig("LIBRARIAN_IMAGE_SIZE", false, 150);
 		
-		$image_string = file_get_contents($url);
-		
-		header("Content-type: image/jpg");
-		
-		if ( $image_string == "")
+		if ( ! function_exists("gd_info") )
 		{
-			createblank();
+			$this->request->setRedirect($url);
+			return 1;
 		}
 		else
 		{
-			// convert to a thumbnail
+			$image_string = file_get_contents($url);
 			
-			$original = imagecreatefromstring($image_string);
-				
-			if ( $original == false )
+			header("Content-type: image/jpg");
+			
+			if ( $image_string == "")
 			{
 				createblank();
-				exit;
 			}
+			else
+			{
+				// convert to a thumbnail
 				
-			$old_x = imagesx($original);
-			$old_y = imagesy($original);
+				$original = imagecreatefromstring($image_string);
+					
+				if ( $original == false )
+				{
+					createblank();
+					exit;
+				}
+					
+				$old_x = imagesx($original);
+				$old_y = imagesy($original);
+				
+				if ($old_x > $old_y) 
+				{
+					$thumb_w = $size;
+					$thumb_h = $old_y*($size/$old_x);
+				}
+				if ($old_x < $old_y) 
+				{
+					$thumb_w = $old_x*($size/$old_y);
+					$thumb_h = $size;
+				}
+				if ($old_x == $old_y) 
+				{
+					$thumb_w = $size;
+					$thumb_h = $size;
+				}
+					
+				$thumb = imagecreatetruecolor($thumb_w,$thumb_h);
+					
+				imagecopyresampled($thumb,$original,0,0,0,0,$thumb_w,$thumb_h,$old_x,$old_y);
+				imagejpeg($thumb, null, 100);
+	
+				imagedestroy($thumb); 
+				imagedestroy($original);
+			}
 			
-			if ($old_x > $old_y) 
-			{
-				$thumb_w=$size;
-				$thumb_h=$old_y*($size/$old_x);
-			}
-			if ($old_x < $old_y) 
-			{
-				$thumb_w=$old_x*($size/$old_y);
-				$thumb_h=$size;
-			}
-			if ($old_x == $old_y) 
-			{
-				$thumb_w=$size;
-				$thumb_h=$size;
-			}
-				
-			$thumb = imagecreatetruecolor($thumb_w,$thumb_h);
-				
-			imagecopyresampled($thumb,$original,0,0,0,0,$thumb_w,$thumb_h,$old_x,$old_y);
-			imagejpeg($thumb, null, 100);
-
-			imagedestroy($thumb); 
-			imagedestroy($original);
+			return 1;
 		}
 	}
 
