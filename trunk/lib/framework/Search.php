@@ -1756,6 +1756,43 @@ class Xerxes_Framework_Search_FacetGroup
 	{
 		return $this->facets;
 	}
+	
+	public function sortByName($order)
+	{
+		$names = array();
+		
+		// extract the names
+		
+		foreach ( $this->facets as $facet )
+		{
+			array_push($names, (string) $facet->name);
+		}
+		
+		// now sort them, keeping the key associations
+		
+		if ( $order == "desc")
+		{
+			arsort($names);
+		}
+		elseif ( $oder == "asc")
+		{
+			asort($names);
+		}
+		else
+		{
+			throw new Exception("sort order must be 'desc' or 'asc'");
+		}
+		
+		// now unset and re-add the facets based on those keys
+		
+		$facets = $this->facets;
+		$this->facets = array();
+		
+		foreach ( $names as $key => $value )
+		{
+			array_push($this->facets, $facets[$key]);			
+		}
+	}
 }
 
 class Xerxes_Framework_Search_Facet
