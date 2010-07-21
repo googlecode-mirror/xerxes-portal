@@ -17,6 +17,19 @@ class Xerxes_Command_DatabasesLibrarianImage extends Xerxes_Command_Databases
 	{
 		$url = $this->request->getProperty("url");
 		$size = $this->registry->getConfig("LIBRARIAN_IMAGE_SIZE", false, 150);
+		$domains = $this->registry->getConfig("LIBRARIAN_IMAGE_DOMAINS", false);
+		
+		// images can only come from these domains, for added security
+		
+		if ( $domains != null )
+		{
+			$bolPassed = Xerxes_Framework_Parser::withinDomain($url,$domains);
+			
+			if ( $bolPassed == false )
+			{
+				throw new Exception("librarian image not allowed from that domain");	
+			}
+		}
 		
 		if ( ! function_exists("gd_info") )
 		{

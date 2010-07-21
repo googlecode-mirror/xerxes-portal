@@ -390,6 +390,47 @@
 		}
 		
 		
+		/**
+		 * Determine whether the url is part of a group of domains
+		 * 
+		 * @param string $strURL	the url to test
+		 * @param string $strDomain	a comma-separated list of domains
+		 *
+		 * @return bool				true if in domain, false otherwise
+		 */
+		
+		public static function withinDomain($strURL, $strDomain)
+		{
+			$bolPassed = false;
+			
+			if ( strlen($strURL) > 4 )
+			{
+				// only do it if it's an absolute url, local are fine
+					
+				if ( substr($strURL, 0, 4) == "http" )
+				{
+					$arrAllowed = explode(",", $strDomain);
+					
+					// if any in our list match
+					
+					$bolPassed = false;
+					
+					foreach ( $arrAllowed as $strAllowed )
+					{
+						$strAllowed = trim(str_replace(".", "\\.", $strAllowed));
+						$strAllowed = trim(str_replace("*", "[^.]*", $strAllowed));
+						
+						if ( preg_match("/^http[s]{0,1}:\/\/$strAllowed.*/", $strURL) )
+						{
+							$bolPassed = true;
+						}
+					}
+				}
+			}
+			
+			return $bolPassed;
+		}
+		
 
 		/**
 		 * Simple function to strip off the previous part of a string
