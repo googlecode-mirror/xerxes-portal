@@ -44,51 +44,53 @@ class Xerxes_Command_DatabasesSubject extends Xerxes_Command_Databases
 		
 		$y = 1;
 		
-		if ( $objCategoryData != null )
+		if ( $objCategoryData == null )
 		{
-			$objXml->documentElement->setAttribute( "name", $objCategoryData->name );
-			$objXml->documentElement->setAttribute( "normalized", $objCategoryData->normalized );
+			throw new Exception("no subject found");	
+		}
+		
+		$objXml->documentElement->setAttribute( "name", $objCategoryData->name );
+		$objXml->documentElement->setAttribute( "normalized", $objCategoryData->normalized );
 			
-			// standard url for the category 
+		// standard url for the category 
 
-			$arrParams = array ("base" => "databases", "action" => "subject", "subject" => $objCategoryData->normalized );
-			$url = Xerxes_Framework_Parser::escapeXml( $this->request->url_for( $arrParams ) );
-			$objElement = $objXml->createElement( "url", $url );
-			$objXml->documentElement->appendChild( $objElement );
+		$arrParams = array ("base" => "databases", "action" => "subject", "subject" => $objCategoryData->normalized );
+		$url = Xerxes_Framework_Parser::escapeXml( $this->request->url_for( $arrParams ) );
+		$objElement = $objXml->createElement( "url", $url );
+		$objXml->documentElement->appendChild( $objElement );
+		
+		// the attributes of the subcategories
+		
+		$db_list_index = 1;
 			
-			// the attributes of the subcategories
+		foreach ( $objCategoryData->subcategories as $objSubData )
+		{
+			$objSubCategory = $objXml->createElement( "subcategory" );
+			$objSubCategory->setAttribute( "name", $objSubData->name );
+			$objSubCategory->setAttribute( "position", $y );
+			$objSubCategory->setAttribute( "id", $objSubData->id );
 			
-			$db_list_index = 1;
+			$y ++;
 			
-			foreach ( $objCategoryData->subcategories as $objSubData )
+			// the database information
+
+			foreach ( $objSubData->databases as $objDatabaseData )
 			{
-				$objSubCategory = $objXml->createElement( "subcategory" );
-				$objSubCategory->setAttribute( "name", $objSubData->name );
-				$objSubCategory->setAttribute( "position", $y );
-				$objSubCategory->setAttribute( "id", $objSubData->id );
+				$objDatabase = Xerxes_Helper::databaseToNodeset( $objDatabaseData, $this->request, $this->registry, $db_list_index );
+				$objDatabase = $objXml->importNode( $objDatabase, true );
+				$objSubCategory->appendChild( $objDatabase );
+			}
 				
-				$y ++;
-				
-				// the database information
-
-				foreach ( $objSubData->databases as $objDatabaseData )
-				{
-					$objDatabase = Xerxes_Helper::databaseToNodeset( $objDatabaseData, $this->request, $this->registry, $db_list_index );
-					$objDatabase = $objXml->importNode( $objDatabase, true );
-					$objSubCategory->appendChild( $objDatabase );
-				}
-				
-				// if marked for the sidebar, put it there
-				
-				if ( in_array($objSubData->name, $arrSidebar) )
-				{
-					$objImport = $objSidebar->importNode($objSubCategory, true);
-					$objSidebar->documentElement->appendChild($objImport);
-				}
-				else
-				{
-					$objXml->documentElement->appendChild( $objSubCategory );
-				}
+			// if marked for the sidebar, put it there
+			
+			if ( in_array($objSubData->name, $arrSidebar) )
+			{
+				$objImport = $objSidebar->importNode($objSubCategory, true);
+				$objSidebar->documentElement->appendChild($objImport);
+			}
+			else
+			{
+				$objXml->documentElement->appendChild( $objSubCategory );
 			}
 		}
 		
