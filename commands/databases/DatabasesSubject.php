@@ -39,6 +39,11 @@ class Xerxes_Command_DatabasesSubject extends Xerxes_Command_Databases
 			$strSubject = $this->registry->getConfig( "categories_quicksearch", false, "quick-search" );
 		}
 		
+		if ( $strSubject == "" )
+		{
+			throw new Exception("no subject supplied");
+		}
+		
 		$objData = new Xerxes_DataMap( );
 		$objCategoryData = $objData->getSubject( $strSubject, $strOld );
 		
@@ -46,7 +51,7 @@ class Xerxes_Command_DatabasesSubject extends Xerxes_Command_Databases
 		
 		if ( $objCategoryData == null )
 		{
-			throw new Exception("no subject found");	
+			throw new Exception("could not find category by that name");	
 		}
 		
 		$objXml->documentElement->setAttribute( "name", $objCategoryData->name );
