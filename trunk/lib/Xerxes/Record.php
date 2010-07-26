@@ -71,18 +71,20 @@ class Xerxes_Record extends Xerxes_Marc_Record
 	protected $abstract = ""; // abstract
 	protected $summary = ""; // summary
 	protected $language = ""; // primary language of the record
-	protected $notes = array ( ); // notes that are not the abstract, language, or table of contents
-	protected $subjects = array ( ); // subjects
+	protected $notes = array (); // notes that are not the abstract, language, or table of contents
+	protected $subjects = array (); // subjects
 	protected $toc = ""; // table of contents note
 	
 	protected $refereed = false; // whether the item is peer-reviewed
 	protected $subscription = false; // whether the item is available in library subscription
 	
-	protected $links = array ( ); // all supplied links in the record both full text and non
-	protected $embedded_text = array ( ); // full text embedded in document
+	protected $links = array (); // all supplied links in the record both full text and non
+	protected $embedded_text = array (); // full text embedded in document
 	
-	protected $alt_scripts = array ( ); // alternate character-scripts like cjk or hebrew, taken from 880s
+	protected $alt_scripts = array (); // alternate character-scripts like cjk or hebrew, taken from 880s
 	protected $alt_script_name = ""; // the name of the alternate character-script; we'll just assume one for now, I guess
+	
+	protected $items = array(); // item records attached
 	
 
 	### PUBLIC FUNCTIONS ###
@@ -1543,6 +1545,19 @@ class Xerxes_Record extends Xerxes_Marc_Record
 			$objXml->documentElement->appendChild($objLinks);
 		}
 		
+		// items
+		
+		if ( count($this->items) > 0 )
+		{
+			$objItems = $objXml->createElement("items");
+			$objXml->documentElement->appendChild($objItems);
+			
+			foreach ( $this->items as $item )
+			{
+				$import = $objXml->importNode($item->toXML()->documentElement, true);
+				$objItems->documentElement->appendChild($import);
+			}
+		}
 		
 		## basic elements
 		
@@ -4534,6 +4549,48 @@ class Xerxes_Record extends Xerxes_Marc_Record
 	{
 		return $this->record_id;
 	}
+	
+	public function setItem(Xerxes_Record_Item $item )
+	{
+		array_push($this->items, $item);
+	}
+	
+	public function getItems()
+	{
+		return $this->items;
+	}
 }
+
+class Xerxes_Record_Item
+{
+	public $bibliographicIdentifer; // string
+	public $itemIdentifier; // string
+	public $dateAvailable; // DateTime
+	public $status; // string
+	public $institution; // string
+	public $location; // string
+	public $call_number; // string
+	public $volume; // string
+	public $link; // string
+	public $circulating; // bool
+	public $holdQueueLength; // int
+	public $note; // string
+	public $onOrder; // string?
+	
+	public function toXML()
+	{
+		$xml = new DOMDocument();
+		$xml->loadXML("<item />");
+		
+		foreach ( $this as $key => $value )
+		{
+			$element = $xml->createElement($key, Xerxes_Framework_Parser::escapeXml($value));
+			$xml->documentElement->appendChild($element);
+		}
+		
+		return $xml;
+	}
+}
+
 
 ?>
