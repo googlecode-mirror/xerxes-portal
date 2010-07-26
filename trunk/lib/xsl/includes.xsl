@@ -1680,6 +1680,16 @@
 
 	<xsl:variable name="metalib_db_id" 	select="metalib_id" />
 	<xsl:variable name="link_resolver_allowed" select="not(//database_links/database[@metalib_id = $metalib_db_id]/sfx_suppress = '1')" />
+
+	<!-- holdings (to catalog)  -->
+	
+	<xsl:if test="links/link[@type='holdings'] and (//config/show_all_holdings_links = 'true' or //config/holdings_links/database[@metalib_id=$metalib_db_id])">
+			<xsl:call-template name="record_link">
+				<xsl:with-param name="type">holdings</xsl:with-param>
+				<xsl:with-param name="text" select="$text_link_holdings"/>
+				<xsl:with-param name="img_src" select="concat($base_url, '/images/book.gif')"/>
+			</xsl:call-template>
+	</xsl:if>
 	
 	<xsl:choose>
 	
@@ -1730,18 +1740,6 @@
 		</xsl:when>
 	</xsl:choose>
 	
-	<!-- holdings (to catalog)  -->
-	
-	<xsl:if test="links/link[@type='holdings'] and (//config/show_all_holdings_links = 'true' or //config/holdings_links/database[@metalib_id=$metalib_db_id])">
-			<xsl:call-template name="record_link">
-				<xsl:with-param name="type">holdings</xsl:with-param>
-				<xsl:with-param name="text" select="$text_link_holdings"/>
-				<xsl:with-param name="img_src" select="concat($base_url, '/images/book.gif')"/>
-			</xsl:call-template>
-	</xsl:if>
-
-
-
 </xsl:template>
 
 <!-- 
