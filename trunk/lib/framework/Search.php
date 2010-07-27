@@ -136,7 +136,16 @@ abstract class Xerxes_Framework_Search
 	public function getHash()
 	{
 		return $this->query_hash;
-	}	
+	}
+	
+	/**
+	 * ID for the hash
+	 */
+	
+	public function getHashID()
+	{
+		return $this->id;
+	}
 	
 	/**
 	 * Any action that needs to take place on the home page search
@@ -181,7 +190,7 @@ abstract class Xerxes_Framework_Search
 	
 	public function hits()
 	{
-		$id = $this->id . "-" . $this->getHash();
+		$id = $this->getHashID() . "-" . $this->getHash();
 		
 		$hits = $this->request->getSession($id);
 		
