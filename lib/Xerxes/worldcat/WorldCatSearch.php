@@ -50,6 +50,11 @@ class Xerxes_WorldCatSearch extends Xerxes_Framework_Search
 		$config->init();
 
 		return $config;
+	}
+	
+	public function getHashID()
+	{
+		return $this->id . "-" . $this->request->getProperty("source");
 	}	
 	
 	public function results()

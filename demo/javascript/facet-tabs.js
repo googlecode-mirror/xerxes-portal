@@ -81,8 +81,14 @@
 			{
 				arrElements = links[i].id.split(":");
 				base = arrElements[1];
+				source = arrElements[2];
 				
 				url = ".?base=" + base + "&action=hits&query=" + query + "&field=" + field;
+				
+				if ( source != '' )
+				{
+					url += "&source=" +  source;
+				}
 
 				new Ajax.Updater(links[i].id, url);
 			}
