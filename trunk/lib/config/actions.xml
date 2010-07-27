@@ -538,7 +538,11 @@
 			</action>	
 			<action name="search">
 				<command>SearchSearch</command>
-			</action>					
+			</action>
+			<action name="hits">
+				<command>SearchHits</command>
+				<view>xsl/hits_ajax.xsl</view>
+			</action>
 			<action name="results">
 				<pathParamMap>
 					<mapEntry pathIndex="2" property="source"/>
