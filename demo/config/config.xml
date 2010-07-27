@@ -143,6 +143,11 @@
 		 -->
 		
 		<config name="proxy_server"></config>
+
+		<!-- Google analytics -->
+		
+		<config name="google_analytics" pass="true"></config>
+
 		
 	<!-- EZPROXY EXPORT -->
 	
@@ -189,108 +194,109 @@
 		
 		<!-- LDAP -->
 		
-		<!-- required: directory server -->
+			<!-- required: directory server -->
+			
+			<config name="directory_server"></config>
+	
+			<!-- deprecated, use ldap_dn_format instead -->
+			<!-- <config name="domain"></config> -->
+	
+			<!-- required: format of user DN we want to authenticate, %s will be replaced by username from the login form -->
+			<!-- another example, for Novell eDir: cn=%s,ou=department,o=organization -->
+			
+			<config name="ldap_dn_format">%s@domain</config>
+			
+			<!-- required: Perform initial bind & search for user DN? 
+				 If this is false, the rest of LDAP options will be ignored. -->
+			
+			<config name="ldap_do_init_bind">false</config>
+	
+			<!-- required if ldap_do_init_bind=true but may be empty for anonymous bind -->
+			<!-- DN for the initial bind. If do_init_bind is true and both ldap_init_bind_dn and 
+				 ldap_init_bind_password are empty, perform an anonymous bind. -->
+				 
+			<config name="ldap_init_bind_dn">cn=dir_admin,o=organization</config>
+	
+			<!-- required if ldap_do_init_bind=true but may be empty for anonymous bind -->
+			<!-- password for the initial bind -->
+			
+			<config name="ldap_init_bind_password">dir_admin_password</config>
+	
+			<!-- optional: part of tree to search for user DN (used to restrict search to a particular context) -->
+			
+			<config name="ldap_search_base">o=organization</config>
+	
+			<!-- required if do_init_bind=true -->
+			<!-- find only users matching this criteria (e.g. restrict only to users with a mail attribute or 
+			     within a certain ou) -->
+			
+			<config name="ldap_search_filter">(cn=%s)</config>
+	
+			<!-- required if ldap_do_init_bind=true -->
+			<!-- attribute containing the username -->
+			
+			<config name="ldap_search_uid">cn</config>
+	
+			<!-- if the following options are not empty and the directory contains attributes with these names, 
+				 their values will be imported to Xerxes users table on first login -->
+			<!-- optional: attribute containing user's given name -->
+			
+			<config name="ldap_search_name">givenName</config>
+	
+			<!-- optional: attribute containing user's surname -->
+			
+			<config name="ldap_search_surname">sn</config>
+	
+			<!-- optional: attribute containing user's email address -->
+			
+			<config name="ldap_search_mail">mail</config>
 		
-		<config name="directory_server"></config>
-
-		<!-- deprecated, use ldap_dn_format instead -->
-		<!-- <config name="domain"></config> -->
-
-		<!-- required: format of user DN we want to authenticate, %s will be replaced by username from the login form -->
-		<!-- another example, for Novell eDir: cn=%s,ou=department,o=organization -->
-		
-		<config name="ldap_dn_format">%s@domain</config>
-		
-		<!-- required: Perform initial bind & search for user DN? 
-		     If this is false, the rest of LDAP options will be ignored. -->
-		
-		<config name="ldap_do_init_bind">false</config>
-
-		<!-- required if ldap_do_init_bind=true but may be empty for anonymous bind -->
-		<!-- DN for the initial bind. If do_init_bind is true and both ldap_init_bind_dn and 
-		     ldap_init_bind_password are empty, perform an anonymous bind. -->
-			 
-		<config name="ldap_init_bind_dn">cn=dir_admin,o=organization</config>
-
-		<!-- required if ldap_do_init_bind=true but may be empty for anonymous bind -->
-		<!-- password for the initial bind -->
-		
-		<config name="ldap_init_bind_password">dir_admin_password</config>
-
-		<!-- optional: part of tree to search for user DN (used to restrict search to a particular context) -->
-		
-		<config name="ldap_search_base">o=organization</config>
-
-		<!-- required if do_init_bind=true -->
-		<!-- find only users matching this criteria (e.g. restrict only to users with a mail attribute or within a certain ou) -->
-		
-		<config name="ldap_search_filter">(cn=%s)</config>
-
-		<!-- required if ldap_do_init_bind=true -->
-		<!-- attribute containing the username -->
-		
-		<config name="ldap_search_uid">cn</config>
-
-		<!-- if the following options are not empty and the directory contains attributes with these names, 
-		     their values will be imported to Xerxes users table on first login -->
-		<!-- optional: attribute containing user's given name -->
-		
-		<config name="ldap_search_name">givenName</config>
-
-		<!-- optional: attribute containing user's surname -->
-		
-		<config name="ldap_search_surname">sn</config>
-
-		<!-- optional: attribute containing user's email address -->
-		
-		<config name="ldap_search_mail">mail</config>
-		
-                <!-- LDAP options; see details in http://tools.ietf.org/html/draft-ietf-ldapext-ldap-c-api-05#section-11.2 -->
-                
-                <!-- optional: LDAP protocol version -->
-                
-                <config name="ldap_opt_protocol_version">2</config>
-
-                <!-- optional: Determines how aliases are handled during search 
-                (LDAP_DEREF_NEVER, LDAP_DEREF_SEARCHING, LDAP_DEREF_FINDING, LDAP_DEREF_ALWAYS) -->
-                
-                <config name="ldap_opt_deref">LDAP_DEREF_NEVER</config>
-
-                <!-- optional: Determines whether the LDAP library automatically follows referrals 
-                returned by LDAP servers or not (LDAP_OPT_ON, LDAP_OPT_OFF) -->
-                
-                <config name="ldap_opt_referrals">LDAP_OPT_OFF</config>
+			<!-- LDAP options; see details in http://tools.ietf.org/html/draft-ietf-ldapext-ldap-c-api-05#section-11.2 -->
+			
+			<!-- optional: LDAP protocol version -->
+			
+			<config name="ldap_opt_protocol_version">2</config>
+			
+			<!-- optional: Determines how aliases are handled during search 
+			(LDAP_DEREF_NEVER, LDAP_DEREF_SEARCHING, LDAP_DEREF_FINDING, LDAP_DEREF_ALWAYS) -->
+			
+			<config name="ldap_opt_deref">LDAP_DEREF_NEVER</config>
+			
+			<!-- optional: Determines whether the LDAP library automatically follows referrals 
+			returned by LDAP servers or not (LDAP_OPT_ON, LDAP_OPT_OFF) -->
+			
+			<config name="ldap_opt_referrals">LDAP_OPT_OFF</config>
 		
 		
 		<!-- INNOVATIVE PATRON API -->
 		
-		<!-- enter the server address, include 'http://', :port number, and trailing slash '/' at the end of the url -->
-		
-		<config name="innovative_patron_api" />
-		
-		<!-- patron types allowed to use this system remotely: seperate multilple entries by comma; 
-		leave blank if all users are allowed -->
-			 
-		<config name="innovative_patron_types" />
+			<!-- enter the server address, include 'http://', :port number, and trailing slash '/' at the end of the url -->
+			
+			<config name="innovative_patron_api" />
+			
+			<!-- patron types allowed to use this system remotely: seperate multilple entries by comma; 
+			leave blank if all users are allowed -->
+				 
+			<config name="innovative_patron_types" />
 		
 		
 		<!-- CAS -->
 		
-		<!--
-			cas_login = full url to the login service, typically with https://
-			cas_validate = the full url to the validate service, typically with https:// 
-		 -->
-		
-		<config name="cas_login" />
-		<config name="cas_validate" />
+			<!--
+				cas_login = full url to the login service, typically with https://
+				cas_validate = the full url to the validate service, typically with https:// 
+			 -->
+			
+			<config name="cas_login" />
+			<config name="cas_validate" />
 		
 		
 		<!-- DEMO -->
 		
-		<!-- list of users who can access the system without being in the local directory server 
-		     enter as username:password and seperate entries by comma -->
-		
-		<config name="demo_users"></config>
+			<!-- list of users who can access the system without being in the local directory server 
+				 enter as username:password and seperate entries by comma -->
+			
+			<config name="demo_users"></config>
 		
 	<!-- DISPLAY AND BEHAVIOR -->
 	
