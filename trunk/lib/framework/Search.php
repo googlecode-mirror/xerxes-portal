@@ -949,6 +949,10 @@ abstract class Xerxes_Framework_Search
 		}
 	}
 	
+	/**
+	 * An md5 hash of the main search parameters, bascially to identify the search
+	 */
+	
 	protected function calculateHash()
 	{
 		// get the search params and sort them alphabetically
@@ -1218,6 +1222,14 @@ abstract class Xerxes_Framework_Search
 			}		
 		}		
 	}
+	
+	/**
+	 * Given the results of a query into our SFX export, based on ISSN,
+	 * does the year of the article actually meet the criteria of full-text
+	 * 
+	 * @param object $xerxes_record		the search result
+	 * @param array $arrResults			the array from the sql query 
+	 */
 	
 	private function determineFullText(&$xerxes_record, $arrResults)
 	{
