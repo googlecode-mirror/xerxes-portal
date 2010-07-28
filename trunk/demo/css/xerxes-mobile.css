@@ -154,21 +154,8 @@ ul.databaseSectionList li, #databases_categories li, .result, #bd .recordFullTex
 
 /** books: this is hacked in here until we get the search arch finished **/
 
-ul#tabnav, ul#tabnav li, ul#tabnav li.here a, ul#tabnav li a, ul#tabnav a:hover, ul#tabnav span {
+.tabs {
 	display: none;
-	background: none;
-	border: none;
-	margin: 0;
-	padding: 0;
-	font-weight: normal;
-	color: #000;
-}
-
-ul#tabnav li {
-	display: list-item;
-	list-style: disc;
-	margin-left: 8px;
-	margin-bottom: 2px;
 }
 
 .worldcatBookCover, #worldcatRecordBookCover, #worldcatAdvancedMore {

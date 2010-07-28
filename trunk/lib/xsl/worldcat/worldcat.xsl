@@ -25,6 +25,7 @@
 	</xsl:if>
 	
 	<script src="{$base_include}/javascript/worldcat/availability.js" language="javascript" type="text/javascript"></script>
+	<script src="{$base_include}/javascript/facet-tabs.js" language="javascript" type="text/javascript"></script>
 		
 </xsl:template>
 
