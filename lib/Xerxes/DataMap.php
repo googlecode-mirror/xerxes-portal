@@ -828,11 +828,11 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 			$where = true;
 		}
 		
-		// remove certain database types, if so configured
+		// remove certain database types, if so configured, unless we're asking for specific id's
 			
 		$configDatabaseTypesExclude = $this->registry->getConfig("DATABASES_TYPE_EXCLUDE_AZ", false);
 			
-		if ( $configDatabaseTypesExclude != null )
+		if ( $configDatabaseTypesExclude != null && $id == null)
 		{
 			$arrTypes = explode(",", $configDatabaseTypesExclude);
 			$arrTypeQuery = array();
