@@ -156,7 +156,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		$this->record_id = $this->control_number;
 		
 		$arrIssn = $this->fieldArray("022", "a" );
-		$arrIsbn = $this->fieldArray("020", "a" );
+		$arrIsbn = $this->fieldArray("020", "az" );
 
 		$this->govdoc_number =  $this->datafield("086")->subfield("a")->__toString();		
 		$this->gpo_number =  $this->datafield("074")->subfield("a")->__toString();
