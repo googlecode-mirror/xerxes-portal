@@ -40,32 +40,34 @@
 				$objDatabase = new Xerxes_DataMap();
 				$objDatabaseData = $objDatabase->getDatabase($strMetalibID);
 				
-				if ( $objDatabaseData != null )
+				if ( $objDatabaseData == null )
 				{
-					// databases marked as subscription should be proxied
+					throw new Exception("Couldn't find database '$strMetalibID'");
+				}
+				
+				// databases marked as subscription should be proxied
 					
-					if ( $objDatabaseData->subscription == "1" )
+				if ( $objDatabaseData->subscription == "1" )
+				{
+					$bolProxy = true;
+				}
+				
+				// override the behavior if proxy flag specifically set
+				
+				if ( $objDatabaseData->proxy != null )
+				{
+					if ( $objDatabaseData->proxy == 1 )
 					{
 						$bolProxy = true;
 					}
-					
-					// override the behavior if proxy flag specifically set
-					
-					if ( $objDatabaseData->proxy != null )
+					elseif ( $objDatabaseData->proxy == 0 )
 					{
-						if ( $objDatabaseData->proxy == 1 )
-						{
-							$bolProxy = true;
-						}
-						elseif ( $objDatabaseData->proxy == 0 )
-						{
-							$bolProxy = false;
-						}
+						$bolProxy = false;
 					}
-					
-					$strConstructPattern = $objDatabaseData->link_native_record;        
 				}
 				
+				$strConstructPattern = $objDatabaseData->link_native_record;        
+
 				// if no url or construct paramaters were supplied, then this came
 				// from the databases page as a 'short' url (the preferred now)
 				// and so we'll just take the database's native link
@@ -73,7 +75,7 @@
 				if ( $arrParams == null && $strUrl == null )
 				{
             		$strUrl = $objDatabaseData->link_native_home;
-				}  
+				} 				
 			}
 			else
 			{
