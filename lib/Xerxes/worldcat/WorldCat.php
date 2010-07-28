@@ -141,7 +141,7 @@ class Xerxes_WorldCat
 	
 	public function hits($search)
 	{
-		$this->searchRetrieve($search, 0,0);
+		$this->searchRetrieve($search, 1,1);
 		return $this->total;
 	}
 	

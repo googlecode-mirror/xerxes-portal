@@ -43,7 +43,14 @@ class Xerxes_WorldCatSearch extends Xerxes_Framework_Search
 		
 		$this->addConfigToResponse();
 	}
-
+	
+	/*
+	public function __destruct()
+	{
+		print_r($this->search_object);
+	}
+	*/
+	
 	protected function getConfig()
 	{
 		$config = Xerxes_WorldCatConfig::getInstance();
