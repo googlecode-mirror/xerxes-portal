@@ -438,7 +438,7 @@ abstract class Xerxes_Framework_Search
 			$this->total = $this->search_object->getTotal();
 		}
 
-		$id = $this->id . "-" . $this->getHash();
+		$id = $this->getHashID() . "-" . $this->getHash();
 		$this->request->setSession($id, number_format($this->total));
 		
 		
