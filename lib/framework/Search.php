@@ -33,8 +33,8 @@ abstract class Xerxes_Framework_Search
 	protected $sid; // sid for open url identification
 	protected $link_resolver; // base address of link resolver	
 	
-	protected $search_fields_regex = "^query[0-9]{0,1}$|^field[0-9]{0,1}$|^boolean[0-9]{0,1}$";
-	protected $limit_fields_regex = "^facet.*";
+	protected $search_fields_regex = '^query[0-9]{0,1}$|^field[0-9]{0,1}$|^boolean[0-9]{0,1}$';
+	protected $limit_fields_regex = 'facet.*';
 	protected $include_original;
 
 	protected $results = array(); // search results
