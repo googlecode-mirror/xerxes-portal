@@ -563,8 +563,7 @@ class Xerxes_Framework_Request
 		}
 		
 		return $arrFinal;
-	}	
-	
+	}
 	
 	/**
 	 * Get a value from the $_SERVER global array
@@ -624,60 +623,6 @@ class Xerxes_Framework_Request
 	public function setSession($key, $value)
 	{
 		$_SESSION[$key] = $value;
-	}
-	
-	/**
-	 * Set the name of the document element for the stored xml; if this
-	 * is not set before adding a document via addDocument, the document
-	 * element will be set to 'xerxes'
-	 *
-	 * @param string $strName	document element name
-	 */
-	
-	public function setDocumentElement($strName)
-	{
-		if ( $strName == null )
-		{
-			error_log( "document element name was null" );
-		} 
-		else
-		{
-			$this->xml = new DOMDocument( );
-			$this->xml->loadXML( "<$strName />" );
-		}
-	}
-	
-	public function addData($name, $attribute, $value)
-	{
-		$xml = new DOMDocument();
-		$xml->loadXML("<$name />");
-		$xml->documentElement->setAttribute($attribute, $value);
-		
-		$this->addDocument($xml);
-	}
-	
-	/**
-	 * Add an XML DOMDocument to the master xml
-	 *
-	 * @param DOMDocument $objData
-	 */
-	
-	public function addDocument(DOMDocument $objData)
-	{
-		if ( ! $this->xml instanceof DOMDocument )
-		{
-			$this->xml = new DOMDocument( );
-			$this->xml->loadXML( "<xerxes />" );
-		}
-		
-		if ( $objData != null )
-		{
-			if ( $objData->documentElement != null )
-			{
-				$objImport = $this->xml->importNode( $objData->documentElement, true );
-				$this->xml->documentElement->appendChild( $objImport );
-			}
-		}
 	}
 	
 	/**
@@ -745,110 +690,7 @@ class Xerxes_Framework_Request
 		$queryHash[$key] = $value;
 		
 		return $base . http_build_query( $queryHash );
-	}
-	
-	/**
-	 * Set the URL for redirect
-	 *
-	 * @param string $url
-	 */
-	
-	public function setRedirect($url)
-	{
-		$this->strRedirect = $url;
-	}
-	
-	/**
-	 * Get the URL to redirect user
-	 *
-	 * @return unknown
-	 */
-	
-	public function getRedirect()
-	{
-		return $this->strRedirect;
-	}
-	
-	/**
-	 * Extract a value from the master xml
-	 *
-	 * @param string $xpath				[optional] xpath expression to the element(s)
-	 * @param array $arrNamespaces		[optional] key / value pair of url / namespace reference for the xpath
-	 * @param string $strReturnType		[optional] return query results as 'DOMNODELIST' or 'ARRAY', otherwise as 'sting'
-	 * @return mixed					if no paramaters set, returns entire xml as DOMDocument
-	 * 									otherwise returns a string, unless value supplied in return type
-	 */
-	
-	public function getData($xpath = null, $arrNamespaces = null, $strReturnType = null)
-	{
-		if ( $xpath == null && $arrNamespaces == null && $strReturnType == null )
-		{
-			return $this->xml;
-		}
-		
-		$strReturnType = Xerxes_Framework_Parser::strtoupper( $strReturnType );
-		
-		if ( $strReturnType != null && $strReturnType != "DOMNODELIST" && $strReturnType != "ARRAY" )
-		{
-			throw new Exception( "unsupported return type" );
-		}
-		
-		$objXPath = new DOMXPath( $this->xml );
-		
-		if ( $arrNamespaces != null )
-		{
-			foreach ( $arrNamespaces as $prefix => $identifier )
-			{
-				$objXPath->registerNamespace( $prefix, $identifier );
-			}
-		}
-		
-		$objNodes = $objXPath->query( $xpath );
-		
-		if ( $objNodes == null )
-		{
-			// no value found
-			
-
-			return null;
-		} 
-		elseif ( $strReturnType == "DOMNODELIST" )
-		{
-			// return nodelist
-			
-
-			return $objNodes;
-		} 
-		elseif ( $strReturnType == "ARRAY" )
-		{
-			// return nodelist as array, for convenience
-			
-
-			$arrReturn = array ( );
-			
-			foreach ( $objNodes as $objNode )
-			{
-				array_push( $arrReturn, $objNode->nodeValue );
-			}
-			
-			return $arrReturn;
-		} 
-		else
-		{
-			// just grab the value, if you know it is the 
-			// only one or first one in the query
-			
-
-			if ( $objNodes->item( 0 ) != null )
-			{
-				return $objNodes->item( 0 )->nodeValue;
-			} 
-			else
-			{
-				return null;
-			}
-		}
-	}
+	}	
 	
 	/**
 	 * Generate a url for a given action. Used by commands to generate action
@@ -999,6 +841,170 @@ class Xerxes_Framework_Request
 	{
 		return Xerxes_Framework_Restrict::isAuthenticatedUser( $this );
 	}
+	
+	
+	##############
+	#  RESPONSE  # 
+	##############
+	
+	
+	
+	/**
+	 * Set the name of the document element for the stored xml; if this
+	 * is not set before adding a document via addDocument, the document
+	 * element will be set to 'xerxes'
+	 *
+	 * @param string $strName	document element name
+	 */
+	
+	public function setDocumentElement($strName)
+	{
+		if ( $strName == null )
+		{
+			error_log( "document element name was null" );
+		} 
+		else
+		{
+			$this->xml = new DOMDocument( );
+			$this->xml->loadXML( "<$strName />" );
+		}
+	}
+	
+	public function addData($name, $attribute, $value)
+	{
+		$xml = new DOMDocument();
+		$xml->loadXML("<$name />");
+		$xml->documentElement->setAttribute($attribute, $value);
+		
+		$this->addDocument($xml);
+	}
+	
+	/**
+	 * Add an XML DOMDocument to the master xml
+	 *
+	 * @param DOMDocument $objData
+	 */
+	
+	public function addDocument(DOMDocument $objData)
+	{
+		if ( ! $this->xml instanceof DOMDocument )
+		{
+			$this->xml = new DOMDocument( );
+			$this->xml->loadXML( "<xerxes />" );
+		}
+		
+		if ( $objData != null )
+		{
+			if ( $objData->documentElement != null )
+			{
+				$objImport = $this->xml->importNode( $objData->documentElement, true );
+				$this->xml->documentElement->appendChild( $objImport );
+			}
+		}
+	}
+	
+	/**
+	 * Set the URL for redirect
+	 *
+	 * @param string $url
+	 */
+	
+	public function setRedirect($url)
+	{
+		$this->strRedirect = $url;
+	}
+	
+	/**
+	 * Get the URL to redirect user
+	 *
+	 * @return unknown
+	 */
+	
+	public function getRedirect()
+	{
+		return $this->strRedirect;
+	}
+	
+	/**
+	 * Extract a value from the master xml
+	 *
+	 * @param string $xpath				[optional] xpath expression to the element(s)
+	 * @param array $arrNamespaces		[optional] key / value pair of url / namespace reference for the xpath
+	 * @param string $strReturnType		[optional] return query results as 'DOMNODELIST' or 'ARRAY', otherwise as 'sting'
+	 * @return mixed					if no paramaters set, returns entire xml as DOMDocument
+	 * 									otherwise returns a string, unless value supplied in return type
+	 */
+	
+	public function getData($xpath = null, $arrNamespaces = null, $strReturnType = null)
+	{
+		if ( $xpath == null && $arrNamespaces == null && $strReturnType == null )
+		{
+			return $this->xml;
+		}
+		
+		$strReturnType = Xerxes_Framework_Parser::strtoupper( $strReturnType );
+		
+		if ( $strReturnType != null && $strReturnType != "DOMNODELIST" && $strReturnType != "ARRAY" )
+		{
+			throw new Exception( "unsupported return type" );
+		}
+		
+		$objXPath = new DOMXPath( $this->xml );
+		
+		if ( $arrNamespaces != null )
+		{
+			foreach ( $arrNamespaces as $prefix => $identifier )
+			{
+				$objXPath->registerNamespace( $prefix, $identifier );
+			}
+		}
+		
+		$objNodes = $objXPath->query( $xpath );
+		
+		if ( $objNodes == null )
+		{
+			// no value found
+			
+
+			return null;
+		} 
+		elseif ( $strReturnType == "DOMNODELIST" )
+		{
+			// return nodelist
+			
+
+			return $objNodes;
+		} 
+		elseif ( $strReturnType == "ARRAY" )
+		{
+			// return nodelist as array, for convenience
+			
+
+			$arrReturn = array ( );
+			
+			foreach ( $objNodes as $objNode )
+			{
+				array_push( $arrReturn, $objNode->nodeValue );
+			}
+			
+			return $arrReturn;
+		} 
+		else
+		{
+			// just grab the value, if you know it is the 
+			// only one or first one in the query
+			
+
+			if ( $objNodes->item( 0 ) != null )
+			{
+				return $objNodes->item( 0 )->nodeValue;
+			} 
+			else
+			{
+				return null;
+			}
+		}
+	}	
 	
 	/**
 	 * Retrieve master XML and all request paramaters
