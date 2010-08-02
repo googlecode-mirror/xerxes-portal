@@ -223,6 +223,7 @@
 	<xsl:call-template name="holdings_full_text">
 		<xsl:with-param name="element">li</xsl:with-param>
 		<xsl:with-param name="class">resultsHoldings</xsl:with-param>
+		<xsl:with-param name="id"><xsl:value-of select="$id" /></xsl:with-param>
 		<xsl:with-param name="oclc"><xsl:value-of select="$oclc" /></xsl:with-param>
 		<xsl:with-param name="isbn"><xsl:value-of select="$isbn" /></xsl:with-param>
 	</xsl:call-template>
@@ -279,7 +280,33 @@
 		</xsl:choose>
 	</xsl:variable>
 	
-	<xsl:if test="$printCopies != '0'">
+	<xsl:variable name="has_summary">
+		<xsl:choose>
+			<xsl:when test="//cached/object[contains(@id,$isbn) or contains(@id,$oclc) or contains(@id,$id)]//holdings/holding">
+				<xsl:text>1</xsl:text>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:text>0</xsl:text>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
+	
+	<xsl:if test="$has_summary = '1'">
+	
+		<p><strong>Print holdings</strong></p>
+	
+		<xsl:for-each select="//cached/object[contains(@id,$isbn) or contains(@id,$oclc) or contains(@id,$id)]//holdings/holding">
+			<ul class="holdingsSummaryStatement">
+				<xsl:for-each select="data">
+					<li><xsl:value-of select="@key" />: <xsl:value-of select="@value" /></li>
+				</xsl:for-each>
+			</ul>
+		</xsl:for-each>
+		
+	</xsl:if>
+	
+	
+	<xsl:if test="$printCopies != '0' and $has_summary = '0'">
 	
 		<xsl:if test="$printAvailable > 0 and $consortium = 'true'">
 			<div class="worldcatConsortiumRequest">
@@ -503,35 +530,6 @@
 		
 </xsl:template>
 
-<xsl:template name="google_preview">
-
-	<xsl:variable name="isbn" select="//results/records/record/xerxes_record/standard_numbers/isbn" />
-
-	<xsl:variable name="ids">
-		<xsl:for-each select="//results/records/record/xerxes_record/standard_numbers/isbn|standard_numbers/oclc">
-			<xsl:choose>
-				<xsl:when test="name() = 'isbn'">
-					<xsl:text>'ISBN:</xsl:text><xsl:value-of select="text()" /><xsl:text>'</xsl:text>
-				</xsl:when>
-				<xsl:when test="name() = 'oclc'">
-					<xsl:text>'OCLC:</xsl:text><xsl:value-of select="text()" /><xsl:text>'</xsl:text>
-				</xsl:when>
-			</xsl:choose>
-			<xsl:if test="following-sibling::isbn|following-sibling::oclc">
-				<xsl:text>,</xsl:text>
-			</xsl:if>
-		</xsl:for-each>
-	
-	</xsl:variable>
-	
-	<div class="google_preview">
-		<script type="text/javascript" src="http://books.google.com/books/previewlib.js"></script>
-		<script type="text/javascript">GBS_insertPreviewButtonPopup([<xsl:value-of select="$ids" />]);</script>
-		<noscript><a href="http://books.google.com/books?as_isbn={$isbn}">Check for more information at Google Book Search</a></noscript>
-	</div>
-
-</xsl:template>
-
 <xsl:template name="worldcat_result">
 	
 	<xsl:param name="source">local</xsl:param>
@@ -540,6 +538,17 @@
 	<xsl:variable name="oclc" 		select="standard_numbers/oclc" />
 	<xsl:variable name="record_id" 	select="record_id" />
 	<xsl:variable name="year" 		select="year" />
+	
+	<xsl:variable name="display">
+		<xsl:choose>
+			<xsl:when test="//worldcat_groups/group[@id = $source]/lookup/display">
+				<xsl:value-of select="//worldcat_groups/group[@id = $source]/lookup/display" />
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="//config/lookup_display" />
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
 	
 	<li class="result">
 	
@@ -601,7 +610,7 @@
 						<xsl:with-param name="record_id"><xsl:value-of select="$record_id" /></xsl:with-param>
 						<xsl:with-param name="isbn"><xsl:value-of select="$isbn" /></xsl:with-param>
 						<xsl:with-param name="oclc"><xsl:value-of select="$oclc" /></xsl:with-param>
-						<xsl:with-param name="type"><xsl:value-of select="//worldcat_groups/group[@id = $source]/lookup/display" /></xsl:with-param>
+						<xsl:with-param name="type"><xsl:value-of select="$display" /></xsl:with-param>
 					</xsl:call-template>
 	
 					<xsl:call-template name="worldcat_save_record">
@@ -616,6 +625,35 @@
 			</div>
 		</div>
 	</li>
+
+</xsl:template>
+
+<xsl:template name="google_preview">
+
+	<xsl:variable name="isbn" select="//results/records/record/xerxes_record/standard_numbers/isbn" />
+
+	<xsl:variable name="ids">
+		<xsl:for-each select="//results/records/record/xerxes_record/standard_numbers/isbn|standard_numbers/oclc">
+			<xsl:choose>
+				<xsl:when test="name() = 'isbn'">
+					<xsl:text>'ISBN:</xsl:text><xsl:value-of select="text()" /><xsl:text>'</xsl:text>
+				</xsl:when>
+				<xsl:when test="name() = 'oclc'">
+					<xsl:text>'OCLC:</xsl:text><xsl:value-of select="text()" /><xsl:text>'</xsl:text>
+				</xsl:when>
+			</xsl:choose>
+			<xsl:if test="following-sibling::isbn|following-sibling::oclc">
+				<xsl:text>,</xsl:text>
+			</xsl:if>
+		</xsl:for-each>
+	
+	</xsl:variable>
+	
+	<div class="google_preview">
+		<script type="text/javascript" src="http://books.google.com/books/previewlib.js"></script>
+		<script type="text/javascript">GBS_insertPreviewButtonPopup([<xsl:value-of select="$ids" />]);</script>
+		<noscript><a href="http://books.google.com/books?as_isbn={$isbn}">Check for more information at Google Book Search</a></noscript>
+	</div>
 
 </xsl:template>
 
