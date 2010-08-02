@@ -223,7 +223,7 @@
 					<xsl:with-param name="id"><xsl:value-of select="$record_id" /></xsl:with-param>
 				</xsl:call-template>
 				
-				<xsl:if test="//holdings">
+				<xsl:if test="//worldcat_holdings/holdings">
 									
 					<div class="worldcatHoldings">
 						
