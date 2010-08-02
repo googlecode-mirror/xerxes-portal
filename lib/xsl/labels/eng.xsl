@@ -361,6 +361,11 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 		<xsl:value-of select="@name" />
 	</xsl:template>
 	
+	<xsl:template name="text_results_sort_by">
+		<xsl:param name="option" />
+		<xsl:value-of select="$option" />
+	</xsl:template>
+	
 	<xsl:template name="text_results_sort_options">
 		<xsl:param name="option" />
 		<xsl:value-of select="$option" />
