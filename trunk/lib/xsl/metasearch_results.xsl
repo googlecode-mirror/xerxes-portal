@@ -104,12 +104,18 @@
 								<xsl:for-each select="sort_display/option">
 									<xsl:choose>
 										<xsl:when test="@active = 'true'">
-											<strong><xsl:value-of select="text()" /></strong>
+											<strong>
+											<xsl:call-template name="text_results_sort_by">
+												<xsl:with-param name="option" select="text()" />
+											</xsl:call-template>
+											</strong>
 										</xsl:when>
 										<xsl:otherwise>
 											<xsl:variable name="link" select="@link" />
 											<a href="{$link}">
-												<xsl:value-of select="text()" />
+												<xsl:call-template name="text_results_sort_by">
+													<xsl:with-param name="option" select="text()" />
+												</xsl:call-template>
 											</a>
 										</xsl:otherwise>
 									</xsl:choose>
