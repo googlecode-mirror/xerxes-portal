@@ -89,6 +89,16 @@ li.result {
 	background-color: #efefef;
 }
 
+ul.holdingsSummaryStatement {
+	margin-bottom: 1em;
+	padding-left: 1em;
+}
+
+#record ul.holdingsSummaryStatement li {
+	list-style-type: none;
+	padding-bottom: .5em;
+}
+
 #worldcatAdvancedMore {
 	margin-top: 20px;
 }
