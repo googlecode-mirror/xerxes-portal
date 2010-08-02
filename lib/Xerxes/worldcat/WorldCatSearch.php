@@ -99,7 +99,14 @@ class Xerxes_WorldCatSearch extends Xerxes_Framework_Search
 		if ( $config->show_holdings == true )
 		{
 			$worldcat_holdings = $this->search_object->holdings($id, $config->libraries_include, 1, 1000 );
-			$this->request->addDocument($worldcat_holdings);
+			
+			$xml = new DOMDocument();
+			$xml->loadXML("<worldcat_holdings />");
+			
+			$import = $xml->importNode($worldcat_holdings->documentElement, true);
+			$xml->documentElement->appendChild($import);
+			
+			$this->request->addDocument($xml);
 		}		
 	}
 	
