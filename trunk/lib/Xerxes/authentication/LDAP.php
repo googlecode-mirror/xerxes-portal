@@ -54,6 +54,7 @@
 			$strOptVersion		= $this->registry->getConfig( "LDAP_OPT_PROTOCOL_VERSION", false, 2 );
 			$strOptDeref		= $this->registry->getConfig( "LDAP_OPT_DEREF", false, LDAP_DEREF_NEVER );
 			$strOptReferrals	= $this->registry->getConfig( "LDAP_OPT_REFERRALS", false, LDAP_OPT_ON );
+			$bolOptTLS		= $this->registry->getConfig( "LDAP_OPT_TLS", false, false );
 			
 			if ( is_string($strOptVersion) )
 				$strOptVersion = intval($strOptVersion);
@@ -76,6 +77,9 @@
 				ldap_set_option($objConn, LDAP_OPT_DEREF, $strOptDeref);
 			if ( is_int($strOptReferrals) )
 				ldap_set_option($objConn, LDAP_OPT_REFERRALS, $strOptReferrals);
+			
+			if ( $strOptTLS )
+				ldap_start_tls($objConn);
 			
 			if ($objConn)
 			{

@@ -194,7 +194,8 @@
 		
 		<!-- LDAP -->
 		
-			<!-- required: directory server -->
+			<!-- required: directory server
+			Use IP, hostname or URI (ldap://hostname:port/ or ldaps://hostname:port/). -->
 			
 			<config name="directory_server"></config>
 	
@@ -266,6 +267,11 @@
 			returned by LDAP servers or not (LDAP_OPT_ON, LDAP_OPT_OFF) -->
 			
 			<config name="ldap_opt_referrals">LDAP_OPT_OFF</config>
+
+			<!-- optional: Use TLS with LDAP connection (StartTLS)?
+			This is not LDAPS (default port 636). This is LDAP+TLS (default port 389). LDAPS is now deprecated over LDAP+TLS. -->
+			
+			<config name="ldap_opt_tls">false</config>
 		
 		
 		<!-- INNOVATIVE PATRON API -->
