@@ -1556,6 +1556,16 @@
 				</div>
 				
 				<div class="resultsAbstract">
+				
+					<xsl:choose>
+						<xsl:when test="summary_type = 'toc'">
+							<xsl:value-of select="$text_record_summary_toc" /><xsl:text>: </xsl:text>
+						</xsl:when>
+						<xsl:when test="summary_type = 'subjects'">
+							<xsl:value-of select="$text_record_summary_subjects" /><xsl:text>: </xsl:text>
+						</xsl:when>					
+					</xsl:choose>
+				
 					<xsl:choose>
 						<xsl:when test="string-length(summary) &gt; 300">
 							<xsl:value-of select="substring(summary, 1, 300)" /> . . .
@@ -1564,6 +1574,7 @@
 							<xsl:value-of select="summary" />
 						</xsl:when>
 						
+						<!-- @todo remove this after we make sure this feature is truly gone -->
 						<!-- take from embedded text, if available -->
 						
 						<xsl:when test="embeddedText">
