@@ -371,4 +371,9 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 		<xsl:value-of select="$option" />
 	</xsl:template>
 	
+	<xsl:template name="text_databases_category_names">
+		<xsl:param name="option" />
+		<xsl:value-of select="$option" />
+	</xsl:template>
+	
 </xsl:stylesheet>

@@ -191,7 +191,7 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 		Pravděpodobně má některá z databází technické potíže. Můžete se později vrátit a opakovat vyhledávání.
 	</xsl:variable>
 	
-	<xsl:variable name="text_metasearch_results_limit">Limit</xsl:variable>
+	<xsl:variable name="text_metasearch_results_limit">Omezení</xsl:variable>
 	<xsl:variable name="text_metasearch_results_summary">
 		Výsledky <strong><xsl:value-of select="//summary/range" /></strong> 
 		z <strong><xsl:value-of select="//summary/total" /></strong>	
@@ -421,6 +421,23 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	<xsl:template name="text_results_sort_options">
 		<xsl:param name="option" />
 		<xsl:value-of select="$option" />
+	</xsl:template>
+	
+	<xsl:template name="text_databases_category_names">
+		<xsl:param name="option" />
+		<xsl:choose>
+			<!-- translated subcategory names -->
+			<xsl:when test="$option = 'General'">Obecné</xsl:when>
+			<xsl:when test="$option = 'ALL'">Všechny zdroje</xsl:when>
+			<xsl:when test="$option = 'Most Useful'">Základní zdroje</xsl:when>
+			<xsl:when test="$option = 'Also Useful'">Další užitečné zdroje</xsl:when>
+
+			<!-- put translated category names here -->
+
+			<xsl:otherwise>
+				<xsl:value-of select="$option" />
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 	
 </xsl:stylesheet>

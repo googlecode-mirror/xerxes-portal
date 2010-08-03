@@ -22,7 +22,9 @@
 </xsl:template>
 
 <xsl:template name="page_name">
-	<xsl:value-of select="//category/@name" />
+	<xsl:call-template name="text_databases_category_names">
+		<xsl:with-param name="option" select="//category/@name" />
+	</xsl:call-template>
 </xsl:template>
 
 <xsl:template name="breadcrumb">
