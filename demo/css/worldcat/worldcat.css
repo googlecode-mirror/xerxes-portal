@@ -50,6 +50,11 @@ li.result {
 	clear: none;
 }
 
+.summaryOnlineHolding {
+	margin: 1em;
+	margin-bottom: 1.2em;
+}
+
 #record .worldcatHoldings li {
 	margin-left: 30px;
 }
