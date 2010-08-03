@@ -623,7 +623,8 @@ class Xerxes_Record extends Xerxes_Marc_Record
 			
 			// or see if a short title exists
 			
-			elseif ( $this->short_title != "" && ($this->format == "Article" || $this->format == "Journal or Newspaper") )
+			elseif ( $this->short_title != "" && 
+				($this->format == "Article" || $this->format == "Journal" || $this->format == "Newspaper")  )
 			{
 				$this->journal_title = $this->short_title;
 			}
@@ -1839,7 +1840,8 @@ class Xerxes_Record extends Xerxes_Marc_Record
 	{
 		switch ( $strFormat )
 		{
-			case "Journal or Newspaper" :
+			case "Journal" :
+			case "Newspaper" :
 				
 				return "journal";
 				break;
@@ -1911,8 +1913,6 @@ class Xerxes_Record extends Xerxes_Marc_Record
 	
 	protected function parseFormat($arrFormat)
 	{
-		$strReturn = "Unknown";
-		
 		$chrLeader6 = "";
 		$chrLeader7 = "";
 		$chrLeader8 = "";
@@ -1934,35 +1934,45 @@ class Xerxes_Record extends Xerxes_Marc_Record
 			$chrLeader8 = substr( $this->leader()->__toString(), 8, 1 );
 		}
 		
-		// grab the 008 for handling
+		// grab the 008 & 006 for handling
 		
 		$obj008 = $this->controlfield("008");
 		
+		// newspaper
+		
+		if ( $obj008 instanceof Xerxes_Marc_ControlField )
+		{
+			if ( $chrLeader7 == 's' && $obj008->position("21") == 'n' )
+			{
+				 return "Newspaper";
+			}
+		}
+		
 		// format made explicit
 
-		if ( strstr( $strDataFields, 'dissertation' ) ) $strReturn = "Dissertation"; 
-		elseif (  $this->datafield("502")->__toString() != "" ) $strReturn = "Thesis"; 
-		elseif (  $this->controlfield("002")->__toString() == "DS" ) $strReturn = "Thesis";
-		elseif ( strstr( $strDataFields, 'proceeding' ) ) $strReturn = "Conference Proceeding"; 
-		elseif ( strstr( $strDataFields, 'conference' ) ) $strReturn = "Conference Paper"; 
-		elseif ( strstr( $strDataFields, 'hearing' ) ) $strReturn = "Hearing"; 
-		elseif ( strstr( $strDataFields, 'working' ) ) $strReturn = "Working Paper"; 
-		elseif ( strstr( $strDataFields, 'book review' ) || strstr( $strDataFields, 'review-book' ) ) $strReturn = "Book Review"; 
-		elseif ( strstr( $strDataFields, 'film review' ) || strstr( $strDataFields, 'film-book' ) ) $strReturn = "Film Review";
-		elseif ( strstr( "$strDataFields ", 'review ' ) ) $strReturn = "Review";
-		elseif ( strstr( $strDataFields, 'book art' ) || strstr( $strDataFields, 'book ch' ) || strstr( $strDataFields, 'chapter' ) ) $strReturn = "Book Chapter"; 
-		elseif ( strstr( $strDataFields, 'journal' ) ) $strReturn = "Article"; 
-		elseif ( strstr( $strDataFields, 'periodical' ) || strstr( $strDataFields, 'serial' ) ) $strReturn = "Article"; 
-		elseif ( strstr( $strDataFields, 'book' ) ) $strReturn = "Book";
-        elseif ( strstr( $strDataFields, 'pamphlet' ) ) $strReturn = "Pamphlet";  
-        elseif ( strstr( $strDataFields, 'essay' ) ) $strReturn = "Essay";
-		elseif ( strstr( $strDataFields, 'article' ) ) $strReturn = "Article";
+		if ( strstr( $strDataFields, 'dissertation' ) ) return  "Dissertation"; 
+		if (  $this->datafield("502")->__toString() != "" ) return  "Thesis"; 
+		if (  $this->controlfield("002")->__toString() == "DS" ) return  "Thesis";
+		if ( strstr( $strDataFields, 'proceeding' ) ) return  "Conference Proceeding"; 
+		if ( strstr( $strDataFields, 'conference' ) ) return  "Conference Paper"; 
+		if ( strstr( $strDataFields, 'hearing' ) ) return  "Hearing"; 
+		if ( strstr( $strDataFields, 'working' ) ) return  "Working Paper"; 
+		if ( strstr( $strDataFields, 'book review' ) || strstr( $strDataFields, 'review-book' ) ) return  "Book Review"; 
+		if ( strstr( $strDataFields, 'film review' ) || strstr( $strDataFields, 'film-book' ) ) return  "Film Review";
+		if ( strstr( "$strDataFields ", 'review ' ) ) return  "Review";
+		if ( strstr( $strDataFields, 'book art' ) || strstr( $strDataFields, 'book ch' ) || strstr( $strDataFields, 'chapter' ) ) return  "Book Chapter"; 
+		if ( strstr( $strDataFields, 'journal' ) ) return  "Article"; 
+		if ( strstr( $strDataFields, 'periodical' ) || strstr( $strDataFields, 'serial' ) ) return  "Article"; 
+		if ( strstr( $strDataFields, 'book' ) ) return  "Book";
+        if ( strstr( $strDataFields, 'pamphlet' ) ) return  "Pamphlet";  
+        if ( strstr( $strDataFields, 'essay' ) ) return  "Essay";
+		if ( strstr( $strDataFields, 'article' ) ) return  "Article";
 
 		// format from other sources
 
-		elseif ( $this->journal != "" ) $strReturn = "Article"; 
-		elseif ( $chrLeader6 == 'a' && $chrLeader7 == 'a' ) $strReturn = "Book Chapter"; 
-		elseif ( $chrLeader6 == 'a' && $chrLeader7 == 'm' )
+		if ( $this->journal != "" ) return  "Article"; 
+		if ( $chrLeader6 == 'a' && $chrLeader7 == 'a' ) return  "Book Chapter"; 
+		if ( $chrLeader6 == 'a' && $chrLeader7 == 'm' )
 		{
 			$strReturn = "Book"; 
 			
@@ -1978,25 +1988,29 @@ class Xerxes_Record extends Xerxes_Marc_Record
 					case "s": $strReturn = "eBook"; break;
 				}
 			}
+			
+			return $strReturn;
 		}
 		
-		elseif ( $chrLeader8 == 'a' ) $strReturn = "Archive"; 
-		elseif ( $chrLeader6 == 'e' || $chrLeader6 == 'f' ) $strReturn = "Map"; 
-		elseif ( $chrLeader6 == 'c' || $chrLeader6 == 'd' ) $strReturn = "Printed Music"; 
-		elseif ( $chrLeader6 == 'i' ) $strReturn = "Audio Book"; 
-		elseif ( $chrLeader6 == 'j' ) $strReturn = "Sound Recording"; 
-		elseif ( $chrLeader6 == 'k' ) $strReturn = "Photograph or Slide"; 
-		elseif ( $chrLeader6 == 'g' ) $strReturn = "Video"; 
-		elseif ( $chrLeader6 == 'm' && $chrLeader7 == 'i' ) $strReturn = "Website"; 
-		elseif ( $chrLeader6 == 'm' ) $strReturn = "Computer File"; 
-		elseif ( $chrLeader6 == 'a' && $chrLeader7 == 'b' ) $strReturn = "Article"; 
-		elseif ( $chrLeader6 == 'a' && $chrLeader7 == 's' ) $strReturn = "Journal or Newspaper"; 
-		elseif ( $chrLeader6 == 'a' && $chrLeader7 == 'i' ) $strReturn = "Website"; 
+		if ( $chrLeader8 == 'a' ) return "Archive"; 
+		if ( $chrLeader6 == 'e' || $chrLeader6 == 'f' ) return "Map"; 
+		if ( $chrLeader6 == 'c' || $chrLeader6 == 'd' ) return "Printed Music"; 
+		if ( $chrLeader6 == 'i' ) return "Audio Book"; 
+		if ( $chrLeader6 == 'j' ) return "Sound Recording"; 
+		if ( $chrLeader6 == 'k' ) return "Photograph or Slide"; 
+		if ( $chrLeader6 == 'g' ) return "Video"; 
+		if ( $chrLeader6 == 'm' && $chrLeader7 == 'i' ) return "Website"; 
+		if ( $chrLeader6 == 'm' ) return "Computer File"; 
+		if ( $chrLeader6 == 'a' && $chrLeader7 == 'b' ) return "Article"; 
+		if ( $chrLeader6 == 'a' && $chrLeader7 == 's' ) return "Journal"; 
+		if ( $chrLeader6 == 'a' && $chrLeader7 == 'i' ) return "Website"; 
 
-		elseif ( count( $this->isbns ) > 0 ) $strReturn = "Book"; 
-		elseif ( count( $this->issns ) > 0 ) $strReturn = "Article";
+		if ( count( $this->isbns ) > 0 ) return "Book"; 
+		if ( count( $this->issns ) > 0 ) return "Article";
 		
-		return $strReturn;
+		// if we got this far, just return unknown
+		
+		return "Unknown";
 	}
 	
 	/**
