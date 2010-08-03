@@ -536,8 +536,12 @@
 	
 	<xsl:variable name="isbn" 		select="standard_numbers/isbn[string-length(text()) = 10]" />
 	<xsl:variable name="oclc" 		select="standard_numbers/oclc" />
-	<xsl:variable name="record_id" 	select="record_id" />
 	<xsl:variable name="year" 		select="year" />
+	<xsl:variable name="record_id">
+		<xsl:if test="//request/base != worldcat">
+			<xsl:value-of select="record_id" />
+		</xsl:if>
+	</xsl:variable>
 	
 	<xsl:variable name="display">
 		<xsl:choose>
