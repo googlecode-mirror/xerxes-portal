@@ -70,6 +70,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 	protected $description = ""; // physical description
 	protected $abstract = ""; // abstract
 	protected $summary = ""; // summary
+	protected $summary_type = ""; // the type of summary
 	protected $language = ""; // primary language of the record
 	protected $notes = array (); // notes that are not the abstract, language, or table of contents
 	protected $subjects = array (); // subjects
@@ -113,7 +114,6 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		{
 			$this->xpath->registerNamespace ( "rft", "info:ofi/fmt:xml:xsd" );
 		}
-
 		else
 		{
 			$this->xpath->registerNamespace ( "rft", "info:ofi/fmt:xml:xsd:journal" );
@@ -582,14 +582,16 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		if ( $this->abstract != "" )
 		{
 			$this->summary = $this->abstract;
+			$this->summary_type = "abstract";
 		} 
 		elseif ( $this->toc != "" )
 		{
-			$this->summary = "Includes chapters on: " . $this->toc;
+			$this->summary = $this->toc;
+			$this->summary_type = "toc";
 		} 
 		elseif ( count( $this->subjects ) > 0 )
 		{
-			$this->summary = "Covers the topics: ";
+			$this->summary_type = "subjects";
 			
 			for ( $x = 0 ; $x < count( $this->subjects ) ; $x ++ )
 			{
@@ -1204,20 +1206,23 @@ class Xerxes_Record extends Xerxes_Marc_Record
 	
 	public function getContextObject()
 	{
+		$ns_context = "info:ofi/fmt:xml:xsd:ctx";
+
+		$ns_referrant = "";
+		
 		$arrReferant = $this->referantArray();
 		$arrReferantIds = $this->referentIdentifierArray();
 		
 		$objXml = new DOMDocument( );
 		$objXml->loadXML( "<context-objects />" );
 		
-		$objContextObject = $objXml->createElement( "context-object" );
+		$objContextObject = $objXml->createElementNS($ns_context, "context-object" );
 		$objContextObject->setAttribute( "version", "Z39.88-2004" );
 		$objContextObject->setAttribute( "timestamp", date( "c" ) );
 		
-		$objReferrent = $objXml->createElement( "referent" );
-		$objMetadataByVal = $objXml->createElement( "metadata-by-val" );
-		$objMetadata = $objXml->createElement( "metadata" );
-		$objAuthors = $objXml->createElement( "authors" );
+		$objReferrent = $objXml->createElementNS($ns_context, "referent" );
+		$objMetadataByVal = $objXml->createElementNS($ns_context, "metadata-by-val" );
+		$objMetadata = $objXml->createElementNS($ns_context,"metadata" );
 		
 		// set data container
 
@@ -1225,16 +1230,21 @@ class Xerxes_Record extends Xerxes_Marc_Record
 			$arrReferant["rft.genre"] == "bookitem" || 
 			$arrReferant["rft.genre"] == "report" )
 		{
-			$objItem = $objXml->createElement( "book" );
+			$ns_referrant = "info:ofi/fmt:xml:xsd:book";
+			$objItem = $objXml->createElementNS($ns_referrant, "book" );
 		} 
 		elseif ( $arrReferant["rft.genre"] == "dissertation" )
 		{
-			$objItem = $objXml->createElement( "dissertation" );
+			$ns_referrant = "info:ofi/fmt:xml:xsd:dissertation";
+			$objItem = $objXml->createElementNS($ns_referrant, "dissertation" );
 		} 
 		else
 		{
-			$objItem = $objXml->createElement( "journal" );
+			$ns_referrant = "info:ofi/fmt:xml:xsd:journal";
+			$objItem = $objXml->createElementNS($ns_referrant, "journal" );
 		}
+		
+		$objAuthors = $objXml->createElementNS($ns_referrant, "authors" );
 		
 		// add authors
 
@@ -1242,29 +1252,29 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		
 		foreach ( $this->authors as $arrAuthor )
 		{
-			$objAuthor = $objXml->createElement( "author" );
+			$objAuthor = $objXml->createElementNS($ns_referrant, "author" );
 			
 			if ( array_key_exists( "last", $arrAuthor ) )
 			{
-				$objAuthorLast = $objXml->createElement( "aulast", $this->escapeXml( $arrAuthor["last"] ) );
+				$objAuthorLast = $objXml->createElementNS($ns_referrant, "aulast", $this->escapeXml( $arrAuthor["last"] ) );
 				$objAuthor->appendChild( $objAuthorLast );
 			}
 			
 			if ( array_key_exists( "first", $arrAuthor ) )
 			{
-				$objAuthorFirst = $objXml->createElement( "aufirst", $this->escapeXml( $arrAuthor["first"] ) );
+				$objAuthorFirst = $objXml->createElementNS($ns_referrant, "aufirst", $this->escapeXml( $arrAuthor["first"] ) );
 				$objAuthor->appendChild( $objAuthorFirst );
 			}
 			
 			if ( array_key_exists( "init", $arrAuthor ) )
 			{
-				$objAuthorInit = $objXml->createElement( "auinit", $this->escapeXml( $arrAuthor["init"] ) );
+				$objAuthorInit = $objXml->createElementNS($ns_referrant, "auinit", $this->escapeXml( $arrAuthor["init"] ) );
 				$objAuthor->appendChild( $objAuthorInit );
 			}
 			
 			if ( array_key_exists( "name", $arrAuthor ) )
 			{
-				$objAuthorCorp = $objXml->createElement( "aucorp", $this->escapeXml( $arrAuthor["name"] ) );
+				$objAuthorCorp = $objXml->createElementNS($ns_referrant, "aucorp", $this->escapeXml( $arrAuthor["name"] ) );
 				$objAuthor->appendChild( $objAuthorCorp );
 			}
 			
@@ -1289,7 +1299,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		{
 			// rft_id goes in the <referent> element directly, as a <ctx:identifier>
 			
-			$objNode = $objXml->createElement ( "identifier", $this->escapeXml ( $id ) );
+			$objNode = $objXml->createElementNS($ns_context, "identifier", $this->escapeXml ( $id ) );
 			$objReferrent->appendChild ( $objNode );
 		}
 		
@@ -1303,14 +1313,14 @@ class Xerxes_Record extends Xerxes_Marc_Record
 				{
 					foreach ( $value as $element )
 					{
-						$objNode = $objXml->createElement( $key, $this->escapeXml( $element ) );
+						$objNode = $objXml->createElementNS($ns_referrant, $key, $this->escapeXml( $element ) );
 						$objItem->appendChild( $objNode );
 					}
 				}
 			} 
 			elseif ( $value != "" )
 			{
-				$objNode = $objXml->createElement( $key, $this->escapeXml( $value ) );
+				$objNode = $objXml->createElementNS($ns_referrant, $key, $this->escapeXml( $value ) );
 				$objItem->appendChild( $objNode );
 			}
 		}
