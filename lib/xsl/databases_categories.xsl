@@ -54,11 +54,7 @@
 					</input>
 					
 					<div id="categories_quicksearch">
-						<h1>
-							<xsl:call-template name="text_databases_category_names">
-								<xsl:with-param name="option" select="$quick_search_category" />
-							</xsl:call-template>
-						</h1>
+						<h1><xsl:value-of select="$quick_search_category" /></h1>
 						<p><xsl:copy-of select="$text_databases_category_quick_desc" /></p>
 						<div id="search">
 							<xsl:call-template name="search_box" />
@@ -118,11 +114,7 @@
 				@position &lt;= ( $numRows * $iteration_value )]">
 				
 				<xsl:variable name="normalized" select="normalized" />
-				<li><a href="{url}">
-					<xsl:call-template name="text_databases_category_names">
-						<xsl:with-param name="option" select="name" />
-					</xsl:call-template>
-				</a></li>
+				<li><a href="{url}"><xsl:value-of select="name" /></a></li>
 			</xsl:for-each>
 			</ul>
 		</div>
