@@ -538,7 +538,7 @@
 	<xsl:variable name="oclc" 		select="standard_numbers/oclc" />
 	<xsl:variable name="year" 		select="year" />
 	<xsl:variable name="record_id">
-		<xsl:if test="//request/base != worldcat">
+		<xsl:if test="//request/base != 'worldcat'">
 			<xsl:value-of select="record_id" />
 		</xsl:if>
 	</xsl:variable>
