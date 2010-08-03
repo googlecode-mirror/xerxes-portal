@@ -229,8 +229,8 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	<xsl:variable name="text_record_notes">Další poznámky</xsl:variable>
 	<xsl:variable name="text_record_publisher">Vydavatel</xsl:variable>
 	<xsl:variable name="text_record_summary">Shrnutí</xsl:variable>
-	<xsl:variable name="text_record_summary_subjects"></xsl:variable>
-	<xsl:variable name="text_record_summary_toc"></xsl:variable>
+	<xsl:variable name="text_record_summary_subjects">Pokrývá témata</xsl:variable>
+	<xsl:variable name="text_record_summary_toc">Obsahuje kapitoly o</xsl:variable>
 	<xsl:variable name="text_record_subjects">Pokrývá témata</xsl:variable>
 	<xsl:variable name="text_record_standard_nos">Standardní čísla</xsl:variable>
 	<xsl:variable name="text_records_tags">Štítky: </xsl:variable>
