@@ -146,12 +146,7 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
 			<xsl:for-each select="category/subcategory">
 				<a name="section_{@id}"/>
 				<fieldset class="subjectSubCategory">
-					<legend>
-						<xsl:call-template name="text_databases_category_names">
-							<xsl:with-param name="option" select="@name" />
-						</xsl:call-template>
-					</legend>
-
+					<legend><xsl:value-of select="@name" /></legend>
 					
           <div class="editCommands">
 					<ul>

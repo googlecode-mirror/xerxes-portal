@@ -373,11 +373,7 @@
 	
 	<xsl:call-template name="breadcrumb_start" />
 	
-	<a href="{results/search/context_url}">
-	<xsl:call-template name="text_databases_category_names">
-		<xsl:with-param name="option" select="results/search/context" />
-	</xsl:call-template>
-	</a> 
+	<a href="{results/search/context_url}"><xsl:value-of select="results/search/context" /></a> 
 	<xsl:copy-of select="$text_breadcrumb_seperator" />
 	
 	<xsl:choose>
@@ -426,11 +422,7 @@
 	</xsl:if>
 
 	<xsl:if test="$condition = 2">
-		<a href="{category/url}">
-			<xsl:call-template name="text_databases_category_names">
-				<xsl:with-param name="option" select="category/@name" />
-			</xsl:call-template>
-		</a> <xsl:copy-of select="$text_breadcrumb_seperator" />
+		<a href="{category/url}"><xsl:value-of select="category/@name"/></a> <xsl:copy-of select="$text_breadcrumb_seperator" />
 	</xsl:if>	
 
 </xsl:template>
@@ -721,11 +713,7 @@
 		or ($show_only_subcategory = '') or (@id = $show_only_subcategory)]">
 	
 		<fieldset class="subjectSubCategory">
-		<legend>
-			<xsl:call-template name="text_databases_category_names">
-				<xsl:with-param name="option" select="@name" />
-			</xsl:call-template>
-		</legend>
+		<legend><xsl:value-of select="@name" /></legend>
 			
 			<!-- if the current session can't search this resource, should we show a lock icon? 
 			We show lock icons for logged in with account users, on campus users, and guest users. 

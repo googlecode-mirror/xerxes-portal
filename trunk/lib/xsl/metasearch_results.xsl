@@ -66,11 +66,7 @@
 	
 	<div id="metasearch_results">
 	
-	<h1>
-		<xsl:call-template name="text_databases_category_names">
-			<xsl:with-param name="option" select="$context" />
-		</xsl:call-template>
-	</h1>
+	<h1><xsl:value-of select="$context" /></h1>
 	
 	<form action="./" method="get">
 	<input type="hidden" name="base" value="metasearch" />
