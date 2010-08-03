@@ -46,7 +46,11 @@
 
 	<div id="metasearch_hits">
 	
-		<h1><xsl:value-of select="$context" /></h1>
+		<h1>
+			<xsl:call-template name="text_databases_category_names">
+				<xsl:with-param name="option" select="$context" />
+			</xsl:call-template>
+		</h1>
 		
 		<!-- catch a serious search error -->
 		
