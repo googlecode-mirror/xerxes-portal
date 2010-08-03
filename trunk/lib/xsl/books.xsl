@@ -27,6 +27,7 @@
 	<xsl:param name="oclc" />
 	<xsl:param name="type" select="'none'" />
 	<xsl:param name="nosave" />
+	<xsl:param name="context">results</xsl:param>
 	
 	<xsl:variable name="id_prefix">
 		<xsl:choose>
@@ -124,6 +125,7 @@
 						<xsl:with-param name="oclc" select="$oclc_prefix" />
 						<xsl:with-param name="printCopies" select="$printCopies" />
 						<xsl:with-param name="printAvailable" select="$printAvailable" />
+						<xsl:with-param name="context" select="$context" />
 					</xsl:call-template>
 				</xsl:otherwise>
 			</xsl:choose>
@@ -256,6 +258,7 @@
 	
 </xsl:template>
 
+
 <!-- 	
 	TEMPLATE: HOLDINGS LOOKUP FULL
 	A full table-view of the (print) holdings information, with full-text below
@@ -267,6 +270,7 @@
 	<xsl:param name="oclc" />	
 	<xsl:param name="printCopies" />
 	<xsl:param name="printAvailable" />
+	<xsl:param name="context">results</xsl:param>
 	
 	<xsl:variable name="group" select="//request/source" />
 	<xsl:variable name="consortium">
@@ -291,31 +295,91 @@
 		</xsl:choose>
 	</xsl:variable>
 	
-	<xsl:if test="$has_summary = '1'">
-	
-		<p><strong>Print holdings</strong></p>
-	
-		<xsl:for-each select="//cached/object[contains(@id,$isbn) or contains(@id,$oclc) or contains(@id,$id)]//holdings/holding">
-			<ul class="holdingsSummaryStatement">
-				<xsl:for-each select="data">
-					<li><xsl:value-of select="@key" />: <xsl:value-of select="@value" /></li>
-				</xsl:for-each>
-			</ul>
-		</xsl:for-each>
+	<xsl:choose>
+		<xsl:when test="$has_summary = '1'">
 		
-	</xsl:if>
-	
-	
-	<xsl:if test="$printCopies != '0' and $has_summary = '0'">
-	
-		<xsl:if test="$printAvailable > 0 and $consortium = 'true'">
-			<div class="worldcatConsortiumRequest">
-				<form action="{//cached/object[contains(@id,$isbn) or contains(@id,$oclc) or contains(@id,$id)]//holdings:resourceIdentifier/holdings:value}" method="get">
-					<input type="submit" value="Request this item" />
-				</form>
+			<p><strong>Online</strong></p>
+			
+			<div class="summaryOnlineHolding">
+				<xsl:call-template name="holdings_full_text">
+					<xsl:with-param name="element">span</xsl:with-param>
+					<xsl:with-param name="class">resultsAvailability</xsl:with-param>
+					<xsl:with-param name="id"><xsl:value-of select="$id" /></xsl:with-param>
+					<xsl:with-param name="oclc"><xsl:value-of select="$oclc" /></xsl:with-param>
+					<xsl:with-param name="isbn"><xsl:value-of select="$isbn" /></xsl:with-param>
+				</xsl:call-template>
 			</div>
-		</xsl:if>
+		
+			<p><strong>Print holdings</strong></p>
+		
+			<xsl:for-each select="//cached/object[contains(@id,$isbn) or contains(@id,$oclc) or contains(@id,$id)]//holdings/holding">
+				<ul class="holdingsSummaryStatement">
+					<xsl:for-each select="data">
+						<li><xsl:value-of select="@key" />: <xsl:value-of select="@value" /></li>
+					</xsl:for-each>
+				</ul>
+			</xsl:for-each>
+
+			<xsl:if test="$context = 'record'">
+			
+				<p><strong>Bound volumes</strong></p>
+				
+				<xsl:call-template name="holdings_item_table">
+					<xsl:with-param name="id" select="$id" />
+					<xsl:with-param name="isbn" select="$isbn" />
+					<xsl:with-param name="oclc" select="$oclc" />
+					<xsl:with-param name="consortium" select="$consortium" />
+				</xsl:call-template>
+			
+			</xsl:if>
+			
+		</xsl:when>
+		<xsl:otherwise>
 	
+			<xsl:if test="$printCopies != '0'">
+			
+				<xsl:if test="$printAvailable > 0 and $consortium = 'true'">
+					<div class="worldcatConsortiumRequest">
+						<form action="{//cached/object[contains(@id,$isbn) or contains(@id,$oclc) or contains(@id,$id)]//holdings:resourceIdentifier/holdings:value}" method="get">
+							<input type="submit" value="Request this item" />
+						</form>
+					</div>
+				</xsl:if>
+				
+				<xsl:call-template name="holdings_item_table">
+					<xsl:with-param name="id" select="$id" />
+					<xsl:with-param name="isbn" select="$isbn" />
+					<xsl:with-param name="oclc" select="$oclc" />
+					<xsl:with-param name="consortium" select="$consortium" />
+				</xsl:call-template>
+			
+			</xsl:if>
+			
+			<xsl:call-template name="holdings_full_text">
+				<xsl:with-param name="element">span</xsl:with-param>
+				<xsl:with-param name="class">resultsAvailability</xsl:with-param>
+				<xsl:with-param name="id"><xsl:value-of select="$id" /></xsl:with-param>
+				<xsl:with-param name="oclc"><xsl:value-of select="$oclc" /></xsl:with-param>
+				<xsl:with-param name="isbn"><xsl:value-of select="$isbn" /></xsl:with-param>
+			</xsl:call-template>
+		
+			<xsl:call-template name="ill_option">
+				<xsl:with-param name="element">span</xsl:with-param>
+				<xsl:with-param name="class">resultsAvailability</xsl:with-param>
+				<xsl:with-param name="oclc"><xsl:value-of select="$oclc" /></xsl:with-param>
+				<xsl:with-param name="isbn"><xsl:value-of select="$isbn" /></xsl:with-param>
+			</xsl:call-template>
+		</xsl:otherwise>
+	</xsl:choose>
+
+</xsl:template>
+
+
+<xsl:template name="holdings_item_table">
+	<xsl:param name="id" />
+	<xsl:param name="isbn" />
+	<xsl:param name="oclc" />
+	<xsl:param name="consortium" />
 		<div>
 			<xsl:attribute name="class">
 				<xsl:text>worldcatAvailable</xsl:text>
@@ -345,23 +409,6 @@
 			</xsl:for-each>
 			</table>
 		</div>
-	
-	</xsl:if>
-	
-	<xsl:call-template name="holdings_full_text">
-		<xsl:with-param name="element">span</xsl:with-param>
-		<xsl:with-param name="class">resultsAvailability</xsl:with-param>
-		<xsl:with-param name="id"><xsl:value-of select="$id" /></xsl:with-param>
-		<xsl:with-param name="oclc"><xsl:value-of select="$oclc" /></xsl:with-param>
-		<xsl:with-param name="isbn"><xsl:value-of select="$isbn" /></xsl:with-param>
-	</xsl:call-template>
-
-	<xsl:call-template name="ill_option">
-		<xsl:with-param name="element">span</xsl:with-param>
-		<xsl:with-param name="class">resultsAvailability</xsl:with-param>
-		<xsl:with-param name="oclc"><xsl:value-of select="$oclc" /></xsl:with-param>
-		<xsl:with-param name="isbn"><xsl:value-of select="$isbn" /></xsl:with-param>
-	</xsl:call-template>
 
 </xsl:template>
 
@@ -382,7 +429,14 @@
 			<xsl:attribute name="class"><xsl:value-of select="$class" /></xsl:attribute>
 			<a href="{holdings:pointer}" class="recordAction" target="" >
 				<img src="{$base_include}/images/html.gif" alt="" width="16" height="16" border="0" /> 
-				<xsl:copy-of select="$text_records_fulltext_available" />
+				<xsl:choose>
+					<xsl:when test="holdings:note">
+						<xsl:value-of select="holdings:note" />
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:copy-of select="$text_records_fulltext_available" />
+					</xsl:otherwise>
+				</xsl:choose>
 			</a>
 		</xsl:element>
 	</xsl:for-each>
@@ -615,6 +669,7 @@
 						<xsl:with-param name="isbn"><xsl:value-of select="$isbn" /></xsl:with-param>
 						<xsl:with-param name="oclc"><xsl:value-of select="$oclc" /></xsl:with-param>
 						<xsl:with-param name="type"><xsl:value-of select="$display" /></xsl:with-param>
+						<xsl:with-param name="context">results</xsl:with-param>
 					</xsl:call-template>
 	
 					<xsl:call-template name="worldcat_save_record">
