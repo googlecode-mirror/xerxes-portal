@@ -1932,6 +1932,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 
 		if ( strstr( $strDataFields, 'dissertation' ) ) $strReturn = "Dissertation"; 
 		elseif (  $this->datafield("502")->__toString() != "" ) $strReturn = "Thesis"; 
+		elseif (  $this->controlfield("002")->__toString() == "DS" ) $strReturn = "Thesis";
 		elseif ( strstr( $strDataFields, 'proceeding' ) ) $strReturn = "Conference Proceeding"; 
 		elseif ( strstr( $strDataFields, 'conference' ) ) $strReturn = "Conference Paper"; 
 		elseif ( strstr( $strDataFields, 'hearing' ) ) $strReturn = "Hearing"; 
