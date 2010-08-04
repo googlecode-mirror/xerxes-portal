@@ -80,7 +80,7 @@ To have Xerxes show a link to holdings for your catalog search results, you can 
 
 However, that syntax assumes that you will use a single field from the MARC record (usually one containing the bibliographic ID number of the record) to construct the link.  Some systems, such as Innovative, however, don't expose a bibliographic ID number in their Z39.50 response, so no single linking syntax will work.
 
-In these cases, you have the option of constructing a more complex linking syntax (based on a variety of fields) using the `additional_record_links` template in Xerxes.  
+In these cases, you have the option of constructing a more complex linking syntax (based on a variety of fields) using the `additional_record_links` template in Xerxes.  Add this to your local demo/xsl/includes.xsl.
 
 Xerxes will call this template for _every_ record, so you need to first test for the Metalib ID of your catalog (in the example below it is `CAL13702`), and then create the link using data from the record.
 
@@ -130,7 +130,7 @@ Here's an example for Innovative systems that works pretty well:
 
 =Show user's full name in login=
 
-Add this to your local demo/xsl/includes.xsl
+Add this to your local demo/xsl/includes.xsl. (Note, not all authentication mechanism return the users full name for Xerxes to store and display.)
 
 {{{
 <xsl:variable name="text_header_logout">
@@ -148,5 +148,43 @@ Add this to your local demo/xsl/includes.xsl
                         <xsl:text>Guest</xsl:text>
                 </xsl:when>
         </xsl:choose>
+</xsl:variable>
+}}}
+
+=Include a different favicon=
+
+Add this to your local demo/xsl/includes.xsl.  This is useful if you are hosting multiple Xerxes instances on the same server, as in a consortium, and you want each campus instance to use its own favicon.
+
+{{{
+<xsl:variable name="text_extra_html_head_content">
+	<link rel="shortcut icon" href="http://www.example.com/favicon.ico" />
+	<link rel="icon" href="http://www.example.com/favicon.ico" type="image/x-icon" />
+</xsl:variable>
+}}}
+
+=List the names of the databases in Quick Search=
+
+Add this to your local demo/xsl/includes.xsl.
+
+{{{
+<xsl:variable name="text_databases_category_quick_desc">
+	<xsl:text>Search </xsl:text>
+	<xsl:call-template name="text_number_to_words">
+		<xsl:with-param name="number"><xsl:value-of select="count(/*/category/subcategory[1]/database)" /></xsl:with-param>
+	</xsl:call-template>
+	<xsl:text> of our most popular databases: </xsl:text>
+	<xsl:for-each select="/*/category/subcategory[1]/database">
+		<xsl:choose>
+			<xsl:when test="position() = 1"></xsl:when>
+			<xsl:when test="following-sibling::database">
+				<xsl:text>, </xsl:text>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:text> and </xsl:text>
+			</xsl:otherwise>
+		</xsl:choose>
+		<xsl:value-of select="title_display" />
+	</xsl:for-each>
+	<xsl:text>.</xsl:text>
 </xsl:variable>
 }}}
