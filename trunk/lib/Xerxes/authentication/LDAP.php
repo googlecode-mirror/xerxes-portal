@@ -78,7 +78,7 @@
 			if ( is_int($strOptReferrals) )
 				ldap_set_option($objConn, LDAP_OPT_REFERRALS, $strOptReferrals);
 			
-			if ( $strOptTLS )
+			if ( $bolOptTLS )
 				ldap_start_tls($objConn);
 			
 			if ($objConn)
