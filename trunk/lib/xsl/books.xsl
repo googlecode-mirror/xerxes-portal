@@ -27,7 +27,7 @@
 	<xsl:param name="oclc" />
 	<xsl:param name="type" select="'none'" />
 	<xsl:param name="nosave" />
-	<xsl:param name="context">results</xsl:param>
+	<xsl:param name="context">record</xsl:param>
 	
 	<xsl:variable name="id_prefix">
 		<xsl:choose>
@@ -270,7 +270,7 @@
 	<xsl:param name="oclc" />	
 	<xsl:param name="printCopies" />
 	<xsl:param name="printAvailable" />
-	<xsl:param name="context">results</xsl:param>
+	<xsl:param name="context">record</xsl:param>
 	
 	<xsl:variable name="group" select="//request/source" />
 	<xsl:variable name="consortium">
