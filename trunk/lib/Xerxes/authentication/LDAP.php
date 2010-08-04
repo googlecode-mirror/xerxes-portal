@@ -66,23 +66,24 @@
 			$bolAuth = false;
 			
 			
-			
 			// connect to ldap server
 			
 			$objConn = ldap_connect($strController);
 			
-			if ( is_int($strOptVersion) )
-				ldap_set_option($objConn, LDAP_OPT_PROTOCOL_VERSION, $strOptVersion);
-			if ( is_int($strOptDeref) )
-				ldap_set_option($objConn, LDAP_OPT_DEREF, $strOptDeref);
-			if ( is_int($strOptReferrals) )
-				ldap_set_option($objConn, LDAP_OPT_REFERRALS, $strOptReferrals);
-			
-			if ( $bolOptTLS )
-				ldap_start_tls($objConn);
-			
 			if ($objConn)
 			{
+				// set ldap options
+
+				if ( is_int($strOptVersion) )
+					ldap_set_option($objConn, LDAP_OPT_PROTOCOL_VERSION, $strOptVersion);
+				if ( is_int($strOptDeref) )
+					ldap_set_option($objConn, LDAP_OPT_DEREF, $strOptDeref);
+				if ( is_int($strOptReferrals) )
+					ldap_set_option($objConn, LDAP_OPT_REFERRALS, $strOptReferrals);
+				
+				if ( $bolOptTLS == true )
+					ldap_start_tls($objConn);
+				
 				if ( $strPassword != null )
 				{
 					if ( $bolDoInitBind != true )
