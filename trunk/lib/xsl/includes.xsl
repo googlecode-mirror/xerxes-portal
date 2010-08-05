@@ -27,12 +27,12 @@
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	
-	<!-- text labels are defined in a seperate place -->
-	<xsl:include href="labels/eng.xsl" />
-	
 	<!-- currently used to parse multilingual database descriptions -->
 	<xsl:import href="list-tokenizer.xsl" />
-	
+
+	<!-- text labels are defined in a seperate place -->
+	<xsl:include href="labels/eng.xsl" />
+
 <!-- 
 	GLOBAL VARIABLES
 	Configuration values used throughout the templates
