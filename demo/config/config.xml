@@ -50,6 +50,12 @@
 		
 		<config name="reverse_proxy"></config>
 		
+		<!-- Xerxes interface language. Currently used for:
+			* selecting from multilingual database descriptions (see db_description_multilingual)
+		-->
+		
+		<config name="xerxes_language" pass="true">eng</config>
+		
 		
 	<!-- METALIB CONFIGURATION -->
 		
@@ -361,6 +367,20 @@
 			strip: Strip out all HTML tags. May be used in combination with db_description_allow_tags below. -->
 			
 		<config name="db_description_html">escape</config>
+		
+		<!-- use multilingual database descriptions
+			
+			For this to work, database descriptions in your Metalib IRD must have multiple paragraphs
+			separated by three newlines, one per language, in order of languages specified by this option.
+			Three newlines (exported as ###### by Metalib X-Server, replaced back to newlines in Xerxes)
+			will be recognized by XSLT as language separator.
+			
+			Values:
+			comma-separated sequence of language codes, e.g. 'eng,spa,ger'; xerxes_language value must be among them
+			
+			If this option is left empty, Xerxes will display description as it is regardless of Xerxes language -->
+			
+		<config name="db_description_multilingual" pass="true"></config>
 		
 		<!-- tags NOT to strip in database descriptions.
 		

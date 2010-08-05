@@ -64,6 +64,7 @@ class Xerxes_Helper
 		// should use disable-output-escaping="yes" on value-of of description.
 
 		$escape_behavior = $objRegistry->getConfig ( "db_description_html", false, "escape" ); // 'escape' ; 'allow' ; or 'strip'
+		$multilingual = $objRegistry->getConfig ( "db_description_multilingual", false, "" ); // '' or comma-separated list of languages
 
 		$notes = array ();
 		
@@ -76,8 +77,12 @@ class Xerxes_Helper
 			{
 				// strip out "##" chars, not just singular "#" to allow # in markup
 				// or other places. 
-
-				$note_field = str_replace ( '##', '', $note_field );
+				
+				if ($multilingual != "")
+				{
+					$note_field = str_replace ( '######', '\n\n\n', $note_field );
+				}
+				$note_field = str_replace ( '##', ' ', $note_field );
 				
 				if ($escape_behavior == "strip")
 				{
