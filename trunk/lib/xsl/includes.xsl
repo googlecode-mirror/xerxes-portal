@@ -28,12 +28,14 @@
 	xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	
 	<!-- text labels are defined in a seperate place -->
-	
 	<xsl:include href="labels/eng.xsl" />
-
+	
+	<!-- currently used to parse multilingual database descriptions -->
+	<xsl:import href="list-tokenizer.xsl" />
+	
 <!-- 
 	GLOBAL VARIABLES
-	Configuration v	alues used throughout the templates
+	Configuration values used throughout the templates
 -->
 
 	<!-- version used to prevent css caching, and possibly other places to advertise version -->
@@ -92,6 +94,40 @@
 	</xsl:variable>
 
 	<xsl:variable name="databases_searchable"	select="//config/database_list_searchable" />
+	
+	<xsl:variable name="xerxes_language" select="//config/xerxes_language" />
+	<!--xsl:variable name="xerxes_language">
+		<xsl:choose>
+			<xsl:when test="//config/xerxes_language">
+				<xsl:value-of select="//config/xerxes_language" />
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:text>XXXeng</xsl:text>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable-->
+	
+	<xsl:variable name="db_description_multilingual">
+		<xsl:choose>
+			<xsl:when test="//config/db_description_multilingual">
+				<xsl:value-of select="//config/db_description_multilingual" />
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:text>false</xsl:text>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
+	
+	<!-- which description in order is our xerxes_language? -->
+	<xsl:variable name="xerxes_language_position">
+		<xsl:call-template name="find-item-in-list">
+			<xsl:with-param name="list">
+				<xsl:value-of select="$db_description_multilingual" />
+			</xsl:with-param>
+			<xsl:with-param name="delimiter">,</xsl:with-param>
+			<xsl:with-param name="find-item"><xsl:value-of select="$xerxes_language" /></xsl:with-param>
+		</xsl:call-template>
+	</xsl:variable>
 	
 	<xsl:variable name="categories_num_columns">
 		<xsl:choose>
