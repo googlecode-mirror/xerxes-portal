@@ -561,7 +561,16 @@ abstract class Xerxes_Framework_Search
 				if ( $this->include_original == true )
 				{
 					$original_xml = $result->getOriginalXML();
-					$import = $results_xml->importNode( $original_xml, true );
+					
+					$original_node = $original_xml;
+					
+					if ( $original_xml instanceof DOMDocument )
+					{
+						$original_node = $original_xml->documentElement;
+					}
+					
+					$import = $results_xml->importNode( $original_node, true );
+
 					$record_container->appendChild( $import );
 				}
 			}
