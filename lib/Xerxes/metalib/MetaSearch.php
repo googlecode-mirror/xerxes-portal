@@ -531,6 +531,57 @@
 			
 			return $this->xml; 
 		}
+		
+		public function authenticateUser($institute, $username, $password, $secure = true)
+		{
+			// switch to https 
+			
+			$server = "";
+			
+			if ( ! strstr($this->server,"https://") && $secure == true )
+			{
+				// strip off http
+				
+				$server = str_replace("http://","",$this->server);
+				
+				//  and port ?
+				
+				$server = explode(":", $server);
+				array_pop($server);
+				$server = implode("", $server);
+				
+				// make it secure
+				
+				$server = "https://$server";
+			}
+			else
+			{
+				$server = $this->server;
+			}
+			
+			$this->url = $server . "/X?op=bor_authentication_request" .
+				"&source_id=" . urlencode($username) .
+				"&verification=" . urlencode($password) .
+				"&institute=" . urlencode($institute) .
+				"&session_id=" . $this->session;
+						
+			// load into DOM
+			
+			$this->xml = $this->getResponse($this->url);
+			
+			// get the authenticate response
+			
+			foreach ( $this->xml->getElementsByTagName("auth") as $auth )
+			{
+				if ( $auth->nodeValue == "Y" )
+				{
+					return true;
+				}
+			}
+			
+			return false;		
+		}
+		
 
 		/**
 		* Checks if metalib is done searching
