@@ -4,7 +4,7 @@
 
  author: David Walker, Ivan Masár
  copyright: 2009 California State University, 2010 Ivan Masár
- version: $Id: eng.xsl 1030 2010-01-05 18:42:09Z dwalker@calstate.edu $
+ version: $Id$
  package: Xerxes
  link: http://xerxes.calstate.edu
  license: http://www.gnu.org/licenses/
