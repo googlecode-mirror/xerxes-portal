@@ -436,7 +436,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		
 		### language
 
-		// take an explicit lanugage note over 008 if available
+		// take an explicit language note over 008 if available
 
 		if ( $strLanguageNote != null )
 		{

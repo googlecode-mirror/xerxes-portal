@@ -79,7 +79,7 @@
 			}
 			else
 			{
-				// the request is to proxy this no matter what; this is largely depricated
+				// the request is to proxy this no matter what; this is largely deprecated
 				// in the system as of 1.3, but could be resurrected for some purpose?
 				
 				$bolProxy = true;

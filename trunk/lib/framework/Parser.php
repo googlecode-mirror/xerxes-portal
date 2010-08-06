@@ -18,7 +18,7 @@
 		 * 
 		 * @param mixed $xml			DOMDocument or string containing xml
 		 * @param string $strXsltPath	Relative file path to xslt document. Will look in both library location and 
-		 * 								local app location for documents, and combine them so local over-rides library 
+		 * 								local app location for documents, and combine them so local overrides library 
 		 * 								templates, if neccesary. 
 		 * @param array $arrParams		[optional] array of parameters to pass to stylesheet
 		 * @param bool $bolDoc			[optional] return result as DOMDocument (default false)
@@ -102,7 +102,7 @@
 			$generated_xsl = new DOMDocument();
 			$generated_xsl->load( $distro_xsl_dir . "xsl/dynamic_skeleton.xsl");
 			
-			// pre-pend imports to this, to put them at the top of the file. 
+			// prepend imports to this, to put them at the top of the file. 
 		
 			$importInsertionPoint = $generated_xsl->documentElement->firstChild;
 	
@@ -338,7 +338,7 @@
 			
 			// catch words that start with a single quote
 			// need to be a little more cautious here and make sure there is a space before the quote when
-			// inside the title to ensure this isn't a quote for a contraction or for possisive; seperate
+			// inside the title to ensure this isn't a quote for a contraction or for possesive; seperate
 			// case to handle when the quote is the first word
 	
 			if ( preg_match( "/ '([a-z])/", $strFinal, $arrMatches ) )
@@ -446,7 +446,7 @@
 		{		
 			$iStartPos = 0;		// start position of removing term
 			$iStopPos = 0;		// end position of removing term
-			$strRight = "";		// right remainder of the srtring to return
+			$strRight = "";		// right remainder of the string to return
 			
 			// if it really is there
 			if ( strpos($strExpression, $strRemove) !== false )
@@ -549,7 +549,7 @@
 
 		
 		/**
-		 * use multi-byte string upper case if availablee
+		 * use multi-byte string upper case if available
 		 * 
 		 * @param string $string the string to raise to upper case
 		 */

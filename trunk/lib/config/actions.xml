@@ -232,7 +232,7 @@
 				<command>AuthenticateLogout</command>
 				<view>xsl/authenticate_logout.xsl</view>
 			</action>
-			<!-- depricated as of 1.5.1 for login actin with authentication_source=guest -->
+			<!-- deprecated as of 1.5.1 for login action with authentication_source=guest -->
 			<action name="guest">
 				<command>AuthenticateGuest</command>
 				<view />
@@ -452,7 +452,7 @@
 		
 		<section name="availability" directory="availability" namespace="Xerxes" documentElement="xerxes">
 
-			<!-- fulltext and refereed are depricated since version 1.2 in favor of the 'inject'
+			<!-- fulltext and refereed are deprecated since version 1.2 in favor of the 'inject'
 				equivalent commands, which are included now as part of actions in metasearch
 				and folder sections -->
 			
