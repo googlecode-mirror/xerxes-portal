@@ -455,6 +455,10 @@ class Xerxes_Record extends Xerxes_Marc_Record
 			elseif ( ! stristr( $strLanguageNote, "Undetermined" ) )
 			{
 				$this->language = str_ireplace( "In ", "", $strLanguageNote );
+				$language = $langConverter->getNameFromCode( 'name', ucfirst( $this->language ) );
+				if ($language != null) {
+					$this->language = $language;
+				}
 			}
 		} 
 		else
