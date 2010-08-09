@@ -97,7 +97,8 @@ class Xerxes_Framework_Languages
 	
 	public function getNameFromCode( $type, $code )
 	{
-		$code = Xerxes_Framework_Parser::strtolower( $code );
+		if ($type != 'name')
+			$code = Xerxes_Framework_Parser::strtolower( $code );
 		
 		$elements = $this->xpath->query( "//iso_639_entry[@$type='$code']" ); 
 		
@@ -113,7 +114,7 @@ class Xerxes_Framework_Languages
 			}
 		}
 		else
-			return NULL;
+			return null;
 	}
 	
 	public function getXML()
@@ -123,7 +124,7 @@ class Xerxes_Framework_Languages
 	
 	private function getXerxesLocale( )
 	{
-		return setlocale ( LC_MESSAGES, NULL );
+		return setlocale ( LC_MESSAGES, null );
 	}
 	
 	private function setXerxesLocale( $locale )
