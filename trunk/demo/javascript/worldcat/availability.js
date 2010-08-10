@@ -9,6 +9,11 @@
  * @package Xerxes
  */
 
+	function _(s)
+	{
+		return s;
+	}
+ 
 	addEvent(window, 'load', fillAvailability);
 	addEvent(window, 'load', setNoImage);
 
@@ -23,7 +28,7 @@
 		{
 			if ( /availabilityLoad/.test(divs[i].className) )
 			{
-				$(divs[i]).update("<img src=\"images/loading.gif\" alt=\"loading\" /> Checking availability . . .");
+				$(divs[i]).update("<img src=\"images/loading.gif\" alt=\"loading\" /> "+_("Checking availability . . ."));
 			
 				var url = "";		// final url to send to server
 				
