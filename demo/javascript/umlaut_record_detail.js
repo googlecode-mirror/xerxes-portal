@@ -12,23 +12,18 @@
  * @package Xerxes
  */
  
- function _(s)
- {
-	return s;
- }
- 
  if (typeof(jsDisplayConstants) == "undefined" ) {
    jsDisplayConstants = new Array(); 
  }
  
  if (! ('link_resolver_name' in jsDisplayConstants)) {
-   jsDisplayConstants['link_resolver_name'] = _('Link Resolver');
+   jsDisplayConstants['link_resolver_name'] = 'Link Resolver';
  }
  if (!('link_resolver_load_message' in jsDisplayConstants)) {
-   jsDisplayConstants['link_resolver_load_message'] = _("Loading content from");
+   jsDisplayConstants['link_resolver_load_message'] = "Loading content from";
  }
  if (!('link_resolver_direct_link_prefix' in jsDisplayConstants)) {
-   jsDisplayConstants['link_resolver_direct_link_prefix'] = _("Full-Text Available: ");
+   jsDisplayConstants['link_resolver_direct_link_prefix'] = "Full-Text Available: ";
  }
  
  document.observe("dom:loaded",  function() {
@@ -37,7 +32,7 @@
      $$('.recordAction.linkResolverLink').each ( function(item) {
         
          item.hide();
-         item.insert({'after': spinner});
+         item.insert({'after': spinner});       
       });
  });
    

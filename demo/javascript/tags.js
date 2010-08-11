@@ -16,8 +16,6 @@
 	 * @package Xerxes
 	 */
 
-	function _(s) { return s; }
- 
 	addEvent(window, 'load', findTagElements);
 	addEvent(window, 'load', loadTagSuggestions);
 	addEvent(window, 'load', addAutoCompleters);
@@ -154,7 +152,7 @@
 			
 			onFailure: function(transport)
 			{
-				alert(_('Sorry, there was an error, your labels could not be updated.'));
+				alert('Sorry, there was an error, your labels could not be updated.');
 			} 
 		});
 		

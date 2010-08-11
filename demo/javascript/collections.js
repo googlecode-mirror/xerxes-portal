@@ -14,8 +14,6 @@
  */
   
   
-  function _(s) { return s; }
- 
   addEvent(window, 'load', addConfirmDialogs);
   addEvent(window, 'load', addDynamicSectionChoice);
   addEvent(window, 'load', loadCollectionStrings);
@@ -46,7 +44,7 @@
     for ( i = 0; i < deleteCollectionLinks.length; i++)
 		{
 				deleteCollectionLinks[i].onclick = function () {
-					return confirm(_("Are you sure you want to delete this collection?"));
+					return confirm("Are you sure you want to delete this collection?");
         }
     }
     
@@ -54,7 +52,7 @@
     for ( i = 0; i < deleteSectionLinks.length; i++)
 		{
 				deleteSectionLinks[i].onclick = function () {
-					return confirm(_("Are you sure you want to delete this section?"));
+					return confirm("Are you sure you want to delete this section?");
         }
     }
     
