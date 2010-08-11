@@ -18,8 +18,6 @@ set a global js variable isTemporarySession (boolean), used to determine whether
 ajax add a tagging input on save or not. 
 */
 
-function _(s) { return s; }
- 
 addEvent(window, 'load', loadSaveStrings );	
 addEvent(window, 'load', addAjaxToSaveLinks);
 addEvent(window, 'load', addDatabaseLimitChecks );
@@ -62,19 +60,19 @@ function loadSaveStrings() {
 	// if desired, to over-ride/customize
 	
 	if (typeof(window['save_action_label']) == "undefined") {
-		save_action_label = _('Save this record');
+		save_action_label = 'Save this record';
 	}     
 	
 	if (typeof(window['saved_permanent_label']) == "undefined") {
-		saved_permanent_label = _('Record saved');
+		saved_permanent_label = 'Record saved';
 	}
 	
 	if (typeof(window['saved_temporary_label']) == "undefined") {
-		saved_temporary_label = _('Temporarily saved');
+		saved_temporary_label = 'Temporarily saved';
 	}
 	
 	if (typeof(window['saved_temporary_login_label']) == "undefined") {
-		saved_temporary_login_label = _('login to save permanently');
+		saved_temporary_login_label = 'login to save permanently';
 	}
 }
 	
@@ -145,8 +143,8 @@ function saveRecord(groupID,resultSet,recordNumber)
 		// telling them they have saved a record if they really have! hooray
 		// for javascript closures.
 		
-		var workingText = _("Saving...");
-		if ( $(id).hasClassName("saved") ) workingText = _("Removing...");
+		var workingText = "Saving...";
+		if ( $(id).hasClassName("saved") ) workingText = "Removing...";
 		
 		$(id).update(workingText);
 		$(id).addClassName("disabled");
@@ -155,7 +153,7 @@ function saveRecord(groupID,resultSet,recordNumber)
 			
 			"onFailure": function(ajaxRequest) {
 			
-				alert(_('Sorry, an error occured, your record was not saved.'));
+				alert('Sorry, an error occured, your record was not saved.');
 			
 			},
 			
@@ -289,12 +287,12 @@ function saveRecord(groupID,resultSet,recordNumber)
 		
 		if ( iTotal == 0 && $(form1).select('input[type="hidden"][name="database"]') == "") 
 		{
-			alert(_("Please select databases to search"));
+			alert("Please select databases to search");
 			return false;
 		}
 		else if ( iTotal > xerxes_iSearchable )
 		{
-			alert(_("Sorry, you can only search up to ") + xerxes_iSearchable + _(" databases at one time"); // FIXME: needs sprintf()
+			alert("Sorry, you can only search up to " + xerxes_iSearchable + " databases at one time");
 			return false;
 		}
 		else
@@ -320,7 +318,7 @@ function saveRecord(groupID,resultSet,recordNumber)
 			var limit_reached = (numChecked(checkbox.form) > xerxes_iSearchable);
 		
 			if (limit_reached) {
-				alert(_("Sorry, you can only search up to ") + xerxes_iSearchable + _(" databases at one time"); // FIXME: needs sprintf()
+				alert("Sorry, you can only search up to " + xerxes_iSearchable + " databases at one time");
 				checkbox.checked = false;
 			return false;
 		}
@@ -339,7 +337,7 @@ function saveRecord(groupID,resultSet,recordNumber)
 	
 	function sureDelete()
 	{
-		if ( confirm(_("Are you sure you want to delete this record?")) )
+		if ( confirm("Are you sure you want to delete this record?") )
 		{
 			return true;
 		}

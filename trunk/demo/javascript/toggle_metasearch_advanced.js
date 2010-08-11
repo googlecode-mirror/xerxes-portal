@@ -11,8 +11,7 @@
 	 * @package Xerxes
 	 */
 	 
-	function _(s) { return s; }
- 
+	 
 	addEvent(window, 'load', addToggle); 
 	
 	function addToggle()
@@ -48,9 +47,9 @@
 
     
 		selected = myField.value;
-		myField.insert('<option value="ISSN">'+_('ISSN')+'</option>');
-		myField.insert('<option value="ISBN">'+_('ISBN')+'</option>');
-		myField.insert('<option value="WYR">'+_('year')+'</option>');
+		myField.insert('<option value="ISSN">ISSN</option>');
+		myField.insert('<option value="ISBN">ISBN</option>');
+		myField.insert('<option value="WYR">year</option>');
 		myField.value = selected;
 		
 
@@ -75,7 +74,7 @@
 		myForm.down(".field2").enable();
 		myForm.down(".searchBox_advanced_pair").show();
 		
-		myForm.down(".searchBox_toggle").update(_("Fewer Options"));
+		myForm.down(".searchBox_toggle").update("Fewer options");
 		
 
     
@@ -109,6 +108,6 @@
 		myForm.down(".query2").disable();
 		myForm.down(".field2").disable();		
 		
-		myForm.down(".searchBox_toggle").update(_("More Options"));
+		myForm.down(".searchBox_toggle").update("More options");
 	}
 

@@ -238,8 +238,9 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	<xsl:variable name="text_record_subjects">Covers the topics</xsl:variable>
 	<xsl:variable name="text_record_standard_nos">Standard Numbers</xsl:variable>
 	<xsl:variable name="text_records_tags">Labels: </xsl:variable>
+	<xsl:variable name="text_records_tags_update">Update</xsl:variable>
 	<xsl:variable name="text_records_tags_update_err">Sorry, there was an error, your labels could not be updated.</xsl:variable>
-
+	
 	<xsl:variable name="text_records_fulltext_pdf">Full-Text in PDF</xsl:variable>
 	<xsl:variable name="text_records_fulltext_html">Full-Text in HTML</xsl:variable>
 	<xsl:variable name="text_records_fulltext_available">Full-Text Available</xsl:variable>	
@@ -261,7 +262,7 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	<xsl:variable name="text_results_sort_by">sort by</xsl:variable>
 	<xsl:variable name="text_results_year">Year</xsl:variable>
 	<xsl:variable name="text_results_next">Next</xsl:variable>
-
+	
 	<xsl:variable name="text_search_err_select_databases">Please select databases to search</xsl:variable>
 	<xsl:variable name="text_search_err_databases_limit">Sorry, you can only search up to %s databases at one time</xsl:variable>
 	

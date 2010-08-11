@@ -44,7 +44,9 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	<xsl:variable name="text_collections_change_section_order">Změnit pořadí sekcí</xsl:variable>
 	<xsl:variable name="text_collections_created_by">Vytvořil<xsl:value-of select="/*/category/@owned_by_user" /></xsl:variable>
 	<xsl:variable name="text_collections_delete_collection">Smazat kolekci</xsl:variable>
+	<xsl:variable name="text_collections_delete_collection_confirm">Jste si jisti, že chcete smazat tuto kolekci?</xsl:variable>
 	<xsl:variable name="text_collections_delete_section">Smazat sekci</xsl:variable>
+	<xsl:variable name="text_collections_delete_section_confirm">Jste si jisti, že chcete smazat tuto sekci?</xsl:variable>
 	<xsl:variable name="text_collections_done_editing">Dokončil jsem úpravy!</xsl:variable>
 	<xsl:variable name="text_collections_edit">Přidat databáze a upravit</xsl:variable>
 	<xsl:variable name="text_collections_list_databases">Vypsat vybrané databáze: </xsl:variable>
@@ -174,6 +176,7 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	<xsl:variable name="text_link_original_record">Původní záznam</xsl:variable>
 	<xsl:variable name="text_link_resolver_available">Dostupný plný text</xsl:variable>
 	<xsl:variable name="text_link_resolver_check">Zkontrolovat dostupnost</xsl:variable>
+	<xsl:variable name="text_link_resolver_checking">Kontroluje se dostupnost . . .</xsl:variable>
 	<xsl:variable name="text_link_resolver_name">Překladač odkazů</xsl:variable>
 	<xsl:variable name="text_link_resolver_load_msg">Načítá se obsah z</xsl:variable>
 	<xsl:variable name="text_link_resolver_direct_link_prefix">Dostupný plný text: </xsl:variable>
@@ -234,7 +237,9 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	<xsl:variable name="text_record_subjects">Pokrývá témata</xsl:variable>
 	<xsl:variable name="text_record_standard_nos">Standardní čísla</xsl:variable>
 	<xsl:variable name="text_records_tags">Štítky: </xsl:variable>
-
+	<xsl:variable name="text_records_tags_update">Aktualizovat</xsl:variable>
+	<xsl:variable name="text_records_tags_update_err">Litujeme, nastala chyba. Vaše štítky nebylo možné aktualizovat.</xsl:variable>
+	
 	<xsl:variable name="text_records_fulltext_pdf">Plný text v PDF</xsl:variable>
 	<xsl:variable name="text_records_fulltext_html">Plný text v HTML</xsl:variable>
 	<xsl:variable name="text_records_fulltext_available">Dostupný plný text</xsl:variable>	
@@ -248,11 +253,16 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	<xsl:variable name="text_results_record_saved_temp">Dočasně uložen</xsl:variable>
 	<xsl:variable name="text_results_record_save_it">Uložit tento záznam</xsl:variable>
 	<xsl:variable name="text_results_record_saved_perm">trvalé uložení je možné po přihlášení</xsl:variable>
+	<xsl:variable name="text_results_record_save_err">Litujeme, nastala chyba. Váš záznam nebyl uložen.</xsl:variable>
 	<xsl:variable name="text_results_record_delete">Smazat tento záznam</xsl:variable>
+	<xsl:variable name="text_results_record_removing">Odstraňuje se...</xsl:variable>
 	<xsl:variable name="text_results_refereed">Recenzovaný</xsl:variable>
 	<xsl:variable name="text_results_sort_by">řadit dle</xsl:variable>
 	<xsl:variable name="text_results_year">Rok</xsl:variable>
 	<xsl:variable name="text_results_next">Další</xsl:variable>
+	
+	<xsl:variable name="text_search_err_select_databases">Prosím, vyberte databáze k prohledání</xsl:variable>
+	<xsl:variable name="text_search_err_databases_limit">Litujeme, najednou je možné prohledávat pouze %s databází</xsl:variable>
 	
 	<xsl:variable name="text_searchbox_ada_boolean">Booleovský operátor: </xsl:variable>
 	<xsl:variable name="text_searchbox_boolean_and">a</xsl:variable>
@@ -347,7 +357,7 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	-->
 	
 	<xsl:template name="text_results_language">
-		<xsl:if test="language and language != 'English' and format != 'Video'">
+		<xsl:if test="language and language != 'angličtina' and format != 'Video'">
 			<span>, </span><span class="resultsLanguage">jazyk: <xsl:value-of select="language" /></span>
 		</xsl:if>
 	</xsl:template>
@@ -414,6 +424,7 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 			<xsl:when test="$option = 'date'">data</xsl:when>
 			<xsl:when test="$option = 'title'">názvu</xsl:when>
 			<xsl:when test="$option = 'author'">autora</xsl:when>
+			<xsl:when test="$option = 'most recently added'">naposledy přidané</xsl:when>
 			<xsl:otherwise>
 				<xsl:value-of select="$option" />
 			</xsl:otherwise>
