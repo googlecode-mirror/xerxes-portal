@@ -14,8 +14,9 @@
 class Xerxes_Framework_Languages
 {
 	protected $xpath = "";		// language data we can query
+	protected $gettext = false; // whether gettext is installed
 	protected $languages_file_system = "/usr/share/xml/iso-codes/iso_639.xml";
-	protected $languages_file_xerxes = "../lib/data/iso_639.xml";
+	protected $languages_file_xerxes = "/lib/data/iso_639.xml"; // local version
 	protected $locale = "C";	// default locale
 	protected $domain = "iso_639";	// gettext domain
 	private static $instance;	// singleton pattern
@@ -48,9 +49,29 @@ class Xerxes_Framework_Languages
 	
 	public function init()
 	{
-		$file = "";
+		// first, see if Getttext functions are installed
+		
+		if ( function_exists( 'bindtextdomain' ) )
+		{
+			$this->gettext = true;
+			
+			// windows hack
+			
+			if ( ! defined("LC_MESSAGES") )
+			{
+				define("LC_MESSAGES", 6);
+			}
+		}
+			
+		$objRegistry = Xerxes_Framework_Registry::getInstance();
+				
+		// set full path to local copy
+		
+		$this->languages_file_xerxes = $objRegistry->getConfig("PATH_PARENT_DIRECTORY") . $this->languages_file_xerxes;
 		
 		// if the iso-codes is not installed, use our copy
+		
+		$file = "";
 		
 		if ( file_exists( $this->languages_file_system ) )
 		{
@@ -67,23 +88,25 @@ class Xerxes_Framework_Languages
 		
 		// load the languages file
 		
-		$xml = new DOMDocument ( );
-		$xml->load ( $file );
+		$xml = new DOMDocument();
+		$xml->load( $file );
 		
 		$this->xpath = new DOMXPath( $xml );
 		
 		unset($xml);
 		
-		
 		// which language shall we display?
 		
-		$objRegistry = Xerxes_Framework_Registry::getInstance();
 		$this->locale = $objRegistry->getConfig( 'XERXES_LOCALE', false, 'C' );
 		
-		bindtextdomain( $this->domain, '/usr/share/locale' );
-		if ( function_exists( 'bind_textdomain_codeset' ) )		// bind_textdomain_codeset is supported only in PHP 4.2.0+
+		// bindings
+		
+		if ( $this->gettext == true )
+		{
+			bindtextdomain( $this->domain, '/usr/share/locale' ); // this works on windows too?
 			bind_textdomain_codeset( $this->domain, 'UTF-8' );	// assume UTF-8, all the .po files in iso_639 use it
-		textdomain( $this->domain );
+			textdomain( $this->domain );
+		}
 	}
 	
 	/**
@@ -98,23 +121,38 @@ class Xerxes_Framework_Languages
 	public function getNameFromCode( $type, $code )
 	{
 		if ($type != 'name')
+		{
 			$code = Xerxes_Framework_Parser::strtolower( $code );
+		}
 		
 		$elements = $this->xpath->query( "//iso_639_entry[@$type='$code']" ); 
 		
-		if ( ! is_null( $elements ) ) {
-			foreach ($elements as $element) {
-				$originalLocale = $this->getXerxesLocale ( );
-				$this->setXerxesLocale ( $this->locale );
+		if ( ! is_null( $elements ) )
+		{
+			foreach ($elements as $element)
+			{
+				$name = $element->getAttribute( 'name' );
 				
-				$languageName = dgettext( $this->domain, $element->getAttribute( 'name' ) );
+				if ( $this->gettext == false )
+				{
+					return $name;
+				}
 				
-				$this->setXerxesLocale ( $originalLocale );
+				$originalLocale = $this->getXerxesLocale();
+				
+				$this->setXerxesLocale( $this->locale );
+				
+				$languageName = dgettext( $this->domain, $name );
+				
+				$this->setXerxesLocale( $originalLocale );
+				
 				return $languageName;
 			}
 		}
 		else
+		{
 			return null;
+		}
 	}
 	
 	public function getXML()
@@ -122,9 +160,9 @@ class Xerxes_Framework_Languages
 		return $this->xml;
 	}
 	
-	private function getXerxesLocale( )
+	private function getXerxesLocale()
 	{
-		return setlocale ( LC_MESSAGES, null );
+		return setlocale( LC_MESSAGES, null );
 	}
 	
 	private function setXerxesLocale( $locale )
