@@ -303,6 +303,8 @@
 						</a>
 					</xsl:if>
 					
+					<xsl:call-template name="additional_record_links" />
+					
 					<!-- label/tag input, we know record is saved because we are in folder section. -->
 					
 					<xsl:if test="/folder">
