@@ -98,24 +98,36 @@
 		}
 	
 		/**
-		 * Adds sections from a secondary/module actions.xml file into the master one
+		 * Adds sections from the local actions.xml file into the master one
 		 */
 		
-		private function addSections(SimpleXMLElement $parent, SimpleXMLElement $actions)
+		private function addSections(SimpleXMLElement $parent, SimpleXMLElement $local)
 		{
 			$master = dom_import_simplexml ( $parent );
 			
-			$ref = $master->getElementsByTagName ( "commands" )->item ( 0 );
+			// global commands
+			
+			$global = $local->global;
+			
+			if ( count($global) > 0 )
+			{
+				$new = dom_import_simplexml ( $global );
+				$import = $master->ownerDocument->importNode ( $new, true );
+				$master->ownerDocument->documentElement->appendChild ( $import );				
+			}
+
+			// sections
+			
+			// import then in the commands element
+			
+			$ref = $master->getElementsByTagName( "commands" )->item ( 0 );
 			
 			if ($ref == null)
 			{
 				throw new Exception ( "could not find commands insertion node in actions.xml" );
 			}
-			
-			// put everything at the end, so it takes presedence
-			
 	
-			foreach ( $actions->commands->children () as $section )
+			foreach ( $local->commands->children() as $section )
 			{
 				$new = dom_import_simplexml ( $section );
 				$import = $master->ownerDocument->importNode ( $new, true );
