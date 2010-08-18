@@ -141,7 +141,7 @@
 				</xsl:if>
 			</div>
 			<xsl:choose>
-				<xsl:when test="$db_description_multilingual != ''">
+				<xsl:when test="$db_description_multilingual != 'false'">
 					<div class="resultsDescription">
 						<xsl:call-template name="n-th-item-in-list">
 							<xsl:with-param name="list">
