@@ -29,7 +29,7 @@ abstract class Xerxes_Framework_Search
 	protected $should_get_holdings = false;
 	
 	protected $max = 10; // maximum records per page
-	protected $sort_default = "relevance"; // default sort (this is the id)
+	protected $sort_default; // default sort
 	protected $sid; // sid for open url identification
 	protected $link_resolver; // base address of link resolver	
 	
@@ -60,6 +60,10 @@ abstract class Xerxes_Framework_Search
 		
 		$this->config = $this->getConfig();
 		$this->request->addDocument($this->config->publicXML());
+		
+		// set default sort order
+		
+		$this->sort_default = $this->config->getConfig("SORT_ORDER_PRIMARY", false, "relevance");
 		
 		// database access object
 				
