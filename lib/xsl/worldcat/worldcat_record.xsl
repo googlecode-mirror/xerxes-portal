@@ -215,6 +215,7 @@
 					<xsl:with-param name="isbn"><xsl:value-of select="$isbn" /></xsl:with-param>
 					<xsl:with-param name="oclc"><xsl:value-of select="$oclc" /></xsl:with-param>
 					<xsl:with-param name="type">full</xsl:with-param>
+					<xsl:with-param name="context">record</xsl:with-param>
 				</xsl:call-template>
 
 				<xsl:call-template name="worldcat_save_record">
