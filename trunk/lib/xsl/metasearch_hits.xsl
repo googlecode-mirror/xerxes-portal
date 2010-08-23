@@ -85,10 +85,10 @@
 					</xsl:when>
 					<xsl:otherwise>
 					
-						<!-- let users of screen readers and phones manually refresh the page -->
+						<!-- let users of screen readers and opera mobile manually refresh the page -->
 						
 						<xsl:choose>
-							<xsl:when test="$is_mobile = 1 or request/session/ada">
+							<xsl:when test="($is_mobile = 1 and contains(//server/http_user_agent,'Opera')) or request/session/ada">
 								<p><xsl:text>Your search is still in progress. </xsl:text></p>
 								<form action="./" method="get">
 									<input type="hidden" name="base" value="metasearch" />
