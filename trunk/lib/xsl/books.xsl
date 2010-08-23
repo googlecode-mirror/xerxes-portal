@@ -27,7 +27,7 @@
 	<xsl:param name="oclc" />
 	<xsl:param name="type" select="'none'" />
 	<xsl:param name="nosave" />
-	<xsl:param name="context">record</xsl:param>
+	<xsl:param name="context">results</xsl:param>
 	
 	<xsl:variable name="id_prefix">
 		<xsl:choose>
@@ -284,9 +284,11 @@
 		</xsl:choose>
 	</xsl:variable>
 	
+	<xsl:variable name="holdings" select="//cached/object[contains(@id,$isbn) or contains(@id,$oclc) or contains(@id,$id)]" />
+	
 	<xsl:variable name="has_summary">
 		<xsl:choose>
-			<xsl:when test="//cached/object[contains(@id,$isbn) or contains(@id,$oclc) or contains(@id,$id)]//holdings/holding">
+			<xsl:when test="$holdings//holdings/holding">
 				<xsl:text>1</xsl:text>
 			</xsl:when>
 			<xsl:otherwise>
@@ -298,38 +300,49 @@
 	<xsl:choose>
 		<xsl:when test="$has_summary = '1'">
 		
-			<p><strong>Online</strong></p>
+			<xsl:if test="$holdings//holdings:electronicLocator">
+		
+				<p><strong>Online</strong></p>
+				
+				<div class="summaryOnlineHolding">
+					<xsl:call-template name="holdings_full_text">
+						<xsl:with-param name="element">span</xsl:with-param>
+						<xsl:with-param name="class">resultsAvailability</xsl:with-param>
+						<xsl:with-param name="id"><xsl:value-of select="$id" /></xsl:with-param>
+						<xsl:with-param name="oclc"><xsl:value-of select="$oclc" /></xsl:with-param>
+						<xsl:with-param name="isbn"><xsl:value-of select="$isbn" /></xsl:with-param>
+					</xsl:call-template>
+				</div>
+			</xsl:if>
 			
-			<div class="summaryOnlineHolding">
-				<xsl:call-template name="holdings_full_text">
-					<xsl:with-param name="element">span</xsl:with-param>
-					<xsl:with-param name="class">resultsAvailability</xsl:with-param>
-					<xsl:with-param name="id"><xsl:value-of select="$id" /></xsl:with-param>
-					<xsl:with-param name="oclc"><xsl:value-of select="$oclc" /></xsl:with-param>
-					<xsl:with-param name="isbn"><xsl:value-of select="$isbn" /></xsl:with-param>
-				</xsl:call-template>
-			</div>
+			<xsl:if test="$holdings//holdings/holding">
 		
-			<p><strong>Print holdings</strong></p>
-		
-			<xsl:for-each select="//cached/object[contains(@id,$isbn) or contains(@id,$oclc) or contains(@id,$id)]//holdings/holding">
-				<ul class="holdingsSummaryStatement">
-					<xsl:for-each select="data">
-						<li><xsl:value-of select="@key" />: <xsl:value-of select="@value" /></li>
-					</xsl:for-each>
-				</ul>
-			</xsl:for-each>
+				<p><strong>Print holdings</strong></p>
+			
+				<xsl:for-each select="$holdings//holdings/holding">
+					<ul class="holdingsSummaryStatement">
+						<xsl:for-each select="data">
+							<li><xsl:value-of select="@key" />: <xsl:value-of select="@value" /></li>
+						</xsl:for-each>
+					</ul>
+				</xsl:for-each>
+				
+			</xsl:if>
 
 			<xsl:if test="$context = 'record'">
 			
-				<p><strong>Bound volumes</strong></p>
-				
-				<xsl:call-template name="holdings_item_table">
-					<xsl:with-param name="id" select="$id" />
-					<xsl:with-param name="isbn" select="$isbn" />
-					<xsl:with-param name="oclc" select="$oclc" />
-					<xsl:with-param name="consortium" select="$consortium" />
-				</xsl:call-template>
+				<xsl:if test="$holdings//holdings:holding/holdings:holdingsSimple/holdings:copyInformation[not(holdings:electronicLocator)]">
+			
+					<p><strong>Bound volumes</strong></p>
+					
+					<xsl:call-template name="holdings_item_table">
+						<xsl:with-param name="id" select="$id" />
+						<xsl:with-param name="isbn" select="$isbn" />
+						<xsl:with-param name="oclc" select="$oclc" />
+						<xsl:with-param name="consortium" select="$consortium" />
+					</xsl:call-template>
+					
+				</xsl:if>
 			
 			</xsl:if>
 			
@@ -340,7 +353,7 @@
 			
 				<xsl:if test="$printAvailable > 0 and $consortium = 'true'">
 					<div class="worldcatConsortiumRequest">
-						<form action="{//cached/object[contains(@id,$isbn) or contains(@id,$oclc) or contains(@id,$id)]//holdings:resourceIdentifier/holdings:value}" method="get">
+						<form action="{$holdings//holdings:resourceIdentifier/holdings:value}" method="get">
 							<input type="submit" value="Request this item" />
 						</form>
 					</div>
@@ -645,17 +658,21 @@
 					
 					<xsl:if test="primary_author">
 						<div class="resultsBookSummary">
-							By: <xsl:value-of select="primary_author" /><br />
-							<xsl:if test="format = 'Book' and publisher">
-								<xsl:if test="place">
-									<xsl:value-of select="place" />
-									<xsl:text>: </xsl:text>									
+							<xsl:if test="format != 'Journal' and format != 'Newspaper'">
+								By: <xsl:value-of select="primary_author" /><br />
+							
+								<xsl:if test="publisher">
+									<xsl:if test="place">
+										<xsl:value-of select="place" />
+										<xsl:text>: </xsl:text>									
+									</xsl:if>
+									<xsl:value-of select="publisher" />
+									<xsl:if test="year">
+										<xsl:text>, </xsl:text>
+										<xsl:value-of select="year" />
+									</xsl:if>
 								</xsl:if>
-								<xsl:value-of select="publisher" />
-								<xsl:if test="year">
-									<xsl:text>, </xsl:text>
-									<xsl:value-of select="year" />
-								</xsl:if>								
+					
 							</xsl:if>								
 						</div>				
 					</xsl:if>
