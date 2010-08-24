@@ -1079,7 +1079,7 @@
 	<!-- metasearch refresh -->
 	<!-- automated refresh, unless this is opera mobile or screen reader -->
 	
-	<xsl:if test="$is_mobile = 1 and not(contains(//server/http_user_agent,'Opera')) and not(request/session/ada)">
+	<xsl:if test="($is_mobile = 0 and not(request/session/ada)) or ( $is_mobile = 1 and not(contains(//server/http_user_agent,'Opera')) )">
 		<xsl:if test="request/action = 'hits' and results/progress &lt; 10">
 			<meta http-equiv="refresh" content="6" />
 		</xsl:if>
