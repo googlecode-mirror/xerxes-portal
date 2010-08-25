@@ -75,6 +75,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 	protected $notes = array (); // notes that are not the abstract, language, or table of contents
 	protected $subjects = array (); // subjects
 	protected $toc = ""; // table of contents note
+	protected $series = array();
 	
 	protected $refereed = false; // whether the item is peer-reviewed
 	protected $subscription = false; // whether the item is available in library subscription
@@ -368,6 +369,14 @@ class Xerxes_Record extends Xerxes_Marc_Record
 			$subfields =  $subject->subfield("abcdefghijklmnopqrstuvwxyz")->__toString();
 			array_push($this->subjects, $subfields);
 		}
+
+		// series information
+
+		foreach ( $this->datafield('4XX|800|810|811|830') as $subject )
+		{
+			$subfields =  $subject->subfield()->__toString();
+			array_push($this->series, $subfields);
+		}		
 		
 		// journal
 		
