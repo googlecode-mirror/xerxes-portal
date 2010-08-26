@@ -632,6 +632,12 @@
 			<div class="resultsTitle">
 				<a href="{../url}" class="resultsTitle">
 					<xsl:value-of select="title_normalized" />
+					
+					<xsl:if test="authors/author[@type='conference' or @type='corporate' and not(@additional)]">
+					<xsl:text> / </xsl:text>
+					<xsl:value-of select="authors/author[@type='conference' or @type='corporate' and not(@additional)]" />
+					</xsl:if>
+					
 				</a>
 			</div>
 			
