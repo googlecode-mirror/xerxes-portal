@@ -46,6 +46,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 	protected $sub_title = ""; // subtitle	
 	protected $series_title = ""; // series title
 	protected $trans_title = false; // whether title is translated
+	protected $additional_titles = array(); // uniform and related titles
 	
 	protected $place = ""; // place of publication	
 	protected $publisher = ""; // publisher	
@@ -319,7 +320,15 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		elseif ( $this->title == "" && $objBTitle != null )
 		{
 			$this->title = $objBTitle->nodeValue;
-		}		
+		}
+
+		// additional titles for display
+		
+		foreach ( $this->datafield('730|740') as $additional_titles )
+		{
+			$subfields =  $additional_titles->subfield()->__toString();
+			array_push($this->additional_titles, $subfields);
+		}			
 		
 		
 		// edition, extent, description

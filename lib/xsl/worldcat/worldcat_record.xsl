@@ -63,56 +63,39 @@
 				
 				<dl>
 				
-				<!-- Authors -->
+				<!-- Primary Author -->
 				
-				<xsl:if test="authors/author[@type = 'personal']">
+				<xsl:if test="authors/author[@type = 'personal' and not(@additional)]">
 					<div>
 					<dt><xsl:copy-of select="$text_results_author" />:</dt>
 					<dd>
-						<xsl:for-each select="authors/author[@type = 'personal']">
-							<xsl:value-of select="aufirst" /><xsl:text> </xsl:text>
-							<xsl:value-of select="auinit" /><xsl:text> </xsl:text>
-							<xsl:value-of select="aulast" /><xsl:text> </xsl:text>
-							
-							<xsl:if test="following-sibling::author[@type = 'personal']">
-								<xsl:text> ; </xsl:text>
-							</xsl:if>
-						</xsl:for-each>
+						<xsl:value-of select="authors/author[@type = 'personal' and not(@additional)]/aufirst" />
+						<xsl:text> </xsl:text>
+						<xsl:value-of select="authors/author[@type = 'personal' and not(@additional)]/auinit" />
+						<xsl:text> </xsl:text>
+						<xsl:value-of select="authors/author[@type = 'personal' and not(@additional)]/aulast" />
 					</dd>
 					</div>
 				</xsl:if>
 		
 				<!-- Corp. Authors -->
 				
-				<xsl:if test="authors/author[@type = 'corporate']">
+				<xsl:if test="authors/author[@type = 'corporate' and not(@additional)]">
 					<div>
 					<dt><xsl:copy-of select="$text_record_author_corp" />:</dt>
 					<dd>
-						<xsl:for-each select="authors/author[@type = 'corporate']">
-							<xsl:value-of select="aucorp" /><xsl:text> </xsl:text>
-							
-							<xsl:if test="following-sibling::author[@type = 'corporate']">
-								<xsl:text> ; </xsl:text>
-							</xsl:if>
-						</xsl:for-each>
+						<xsl:value-of select="authors/author[@type = 'corporate' and not(@additional)]/aucorp" />
 					</dd>
 					</div>
 				</xsl:if>
 		
 				<!-- Conference -->
 				
-				<xsl:if test="authors/author[@type = 'conference']">
+				<xsl:if test="authors/author[@type = 'conference' and not(@additional)]">
 					<div>
 					<dt><xsl:copy-of select="$text_record_conf" />:</dt>
 					<dd>
-						<xsl:for-each select="authors/author[@type = 'conference']">
-							
-							<xsl:value-of select="aucorp" /><xsl:text> </xsl:text>
-							
-							<xsl:if test="following-sibling::author[@type = 'conference']">
-								<br />
-							</xsl:if>
-						</xsl:for-each>
+						<xsl:value-of select="authors/author[@type = 'conference' and not(@additional)]/aucorp" />
 					</dd>
 					</div>
 				</xsl:if>
@@ -126,6 +109,17 @@
 						<xsl:call-template name="text_results_format">
 							<xsl:with-param name="format" select="format" />
 						</xsl:call-template>
+					</dd>
+					</div>
+				</xsl:if>
+				
+				<!-- Edition -->
+
+				<xsl:if test="edition">
+					<div>
+					<dt>Edition:</dt>
+					<dd>
+						<xsl:value-of select="edition" />
 					</dd>
 					</div>
 				</xsl:if>
@@ -174,7 +168,7 @@
 							</xsl:choose>
 						</dd>
 					</xsl:when>
-					<xsl:when test="format = 'Book'">
+					<xsl:otherwise>
 						<xsl:if test="publisher">
 							<dt><xsl:copy-of select="$text_record_publisher" />:</dt>
 							<dd>
@@ -183,7 +177,7 @@
 								<xsl:value-of select="year" />
 							</dd>
 						</xsl:if>
-					</xsl:when>
+					</xsl:otherwise>
 				</xsl:choose>
 				</div>
 				
@@ -201,6 +195,8 @@
 
 				</dl>
 				
+				<xsl:call-template name="additional_full_record_data_main" />
+				
 				<xsl:call-template name="google_preview" />
 
 				<div style="clear:both"></div>
@@ -211,12 +207,16 @@
 			<div id="recordFullText" class="raisedBox recordActions">
 
 				<xsl:call-template name="holdings_lookup">
-					<xsl:with-param name="record_id"><xsl:value-of select="$record_id" /></xsl:with-param>
+					<xsl:with-param name="record_id">
+						<xsl:value-of select="$record_id" />
+					</xsl:with-param>
 					<xsl:with-param name="isbn"><xsl:value-of select="$isbn" /></xsl:with-param>
 					<xsl:with-param name="oclc"><xsl:value-of select="$oclc" /></xsl:with-param>
 					<xsl:with-param name="type">full</xsl:with-param>
 					<xsl:with-param name="context">record</xsl:with-param>
 				</xsl:call-template>
+				
+				<xsl:call-template name="additional_record_links" />
 
 				<xsl:call-template name="worldcat_save_record">
 					<xsl:with-param name="element">div</xsl:with-param>
@@ -323,7 +323,7 @@
 
 			<!-- subjects -->
 			
-			<xsl:if test="subjects">
+			<xsl:if test="../subject_link">
 				<div class="recordData">
 				<h2>Find other books and material on:</h2>
 				<ul>
@@ -341,7 +341,7 @@
 					<h2>
 					<xsl:choose>
 
-						<xsl:when test="format = 'Book'">
+						<xsl:when test="contains(format,'Book')">
 							<xsl:text>Chapters:</xsl:text>
 						</xsl:when>
 						<xsl:otherwise>
@@ -383,7 +383,7 @@
 			
 			<xsl:if test="standard_numbers">
 				<div class="recordData">
-				<h2>Standard Numbers:</h2>
+				<h2>Standard Numbers</h2>
 				<ul>
 				<xsl:for-each select="standard_numbers/issn">
 					<li>ISSN: <xsl:value-of select="text()" /></li>
@@ -404,11 +404,64 @@
 				</div>
 			</xsl:if>
 
+			<!-- additional authors -->
+
+			<xsl:if test="authors/author[@additional='true']">
+				<div class="recordData">
+				<h2>Additional Authors</h2>
+				<ul>
+					<xsl:for-each select="authors/author[@additional='true']">
+						<li>
+							<xsl:choose>
+								<xsl:when test="@type = 'personal'">
+									<xsl:value-of select="aufirst" />
+									<xsl:text> </xsl:text>
+									<xsl:value-of select="auinit" />
+									<xsl:text> </xsl:text>
+									<xsl:value-of select="aulast" />								
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="aucorp" />
+								</xsl:otherwise>
+							</xsl:choose>
+						</li>
+					</xsl:for-each>
+				</ul>
+				</div>
+
+			</xsl:if>
+
+			<!-- additional titles -->
+			
+			<xsl:if test="additional_titles">
+				<div class="recordData">
+				<h2>Additional Titles</h2>
+				<ul>
+					<xsl:for-each select="additional_titles/additional_title">
+						<li><xsl:value-of select="text()" /></li>
+					</xsl:for-each>
+				</ul>
+				</div>
+			</xsl:if>
+
+			<!-- series -->
+			
+			<xsl:if test="series">
+				<div class="recordData">
+				<h2>Series</h2>
+				<ul>
+					<xsl:for-each select="series/serie">
+						<li><xsl:value-of select="text()" /></li>
+					</xsl:for-each>
+				</ul>
+				</div>
+			</xsl:if>
+
 			<!-- notes -->
 			
 			<xsl:if test="notes">
 				<div class="recordData">
-				<h2>Additional Notes: </h2>
+				<h2>Additional Notes</h2>
 				<ul>
 					<xsl:for-each select="notes/note">
 						<li><xsl:value-of select="text()" /></li>
@@ -416,6 +469,8 @@
 				</ul>
 				</div>
 			</xsl:if>
+
+		<xsl:call-template name="additional_full_record_data_supplemental" />
 	
 	</xsl:for-each>
 					
