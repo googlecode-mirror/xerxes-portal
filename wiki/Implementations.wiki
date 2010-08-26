@@ -1,0 +1,39 @@
+#summary Live Implementations
+
+=Live Implementations=
+
+  * [http://edb.cc.affrc.go.jp/mxsg/ja/ AFFRIT] (Japan)
+  * [http://xerxes.calstate.edu/pomona/ Cal Poly Pomona]
+  * [http://databases.lib.calpoly.edu/ Cal Poly San Luis Obispo]
+  * [http://xerxes.calstate.edu/channel/ Cal State Channel Islands]
+  * [http://library.calstate.edu/chico/ Cal State Chico]
+  * [http://xerxes.calstate.edu/eastbay/ Cal State East Bay]
+  * [http://xerxes.calstate.edu/fresno/ Cal State Fresno]
+  * [http://xerxes.calstate.edu/fullerton/ Cal State Fullerton]
+  * [http://xerxes.calstate.edu/losangeles/ Cal State Los Angeles]
+  * [http://xerxes.calstate.edu/monterey/ Cal State Monterey Bay]
+  * [http://library.csun.edu/xerxes/ Cal State Northridge]
+  * [http://xerxes.calstate.edu/sacramento/ Cal State Sacramento]
+  * [http://xerxes.calstate.edu/sacramento/ Cal State San Bernardino]
+  * [http://biblio.csusm.edu/ Cal State San Marcos]
+  * [http://homer.gsu.edu/search/ Georgia State University]
+  * [http://gtsearch.library.gatech.edu/search/ Georgia Tech]
+  * [http://gtsearch.library.gatech.edu/search/ Humboldt State University]
+  * [http://jhsearch.library.jhu.edu/ Johns Hopkins University]
+  * [http://metasearch.kib.ki.se/ Karolinska Institutet] (Sweden)
+  * [http://xet.bibl.liu.se/liubsearch/ Linköping University] (Sweden)
+  * [http://arch.library.nyu.edu/ New York University]
+  * [http://xerxes.rhul.ac.uk/ Royal Holloway University of London]
+  * [http://library.rit.edu/databases/ Rochester Institute of Technology]
+  * [http://library.calstate.edu/sandiego/ San Diego State University]
+  * [http://library.calstate.edu/sanfrancisco/books San Francisco State University]
+  * [http://library.calstate.edu/sanjose/ San Jose State University]
+  * [http://library.calstate.edu/sonoma/ Sonoma State University]
+  * [http://www.library.uni.edu/gateway/xerxes/ui/ University of Northern Iowa]
+  * [http://xerxes.library.nd.edu/quicksearch/ University of Notre Dame]
+  * [http://onesearch.uoregon.edu/ University of Oregon]
+  * [http://aleph19.pacific.edu/_metasearch/ University of the Pacific]
+  * Western Australia Dept. of Health
+    *  [http://www.fh.health.wa.gov.au/xerxes/ Fremantle Hospital & Health Service]
+    *  [http://southmetropolitan.health.wa.gov.au/xerxes/ South Metropolitan Area Health Service]
+    *  [http://www.rph.health.wa.gov.au/xerxes/ Royal Perth Hospital]
