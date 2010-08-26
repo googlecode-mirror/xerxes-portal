@@ -880,15 +880,15 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		
 		if ( $strPrimaryAuthor != "" )
 		{
-			$arrAuthor = $this->splitAuthor( $strPrimaryAuthor, "personal" );
-			array_push( $this->authors, $arrAuthor );
+			$objXerxesAuthor = $this->splitAuthor( $strPrimaryAuthor, "personal" );
+			array_push( $this->authors, $objXerxesAuthor );
 		} 
 		elseif ( $arrAltAuthors != null )
 		{
 			// editor
 
-			$arrAuthor = $this->splitAuthor( $arrAltAuthors[0], "personal" );
-			array_push( $this->authors, $arrAuthor );
+			$objXerxesAuthor = $this->splitAuthor( $arrAltAuthors[0], "personal", true);
+			array_push( $this->authors, $objXerxesAuthor );
 			$this->editor = true;
 		}
 		
@@ -911,8 +911,8 @@ class Xerxes_Record extends Xerxes_Marc_Record
 			{
 				if ( $y >= $x )
 				{
-					$arrAuthor = $this->splitAuthor( $strAuthor, "personal" );
-					array_push( $this->authors, $arrAuthor );
+					$objXerxesAuthor = $this->splitAuthor( $strAuthor, "personal", true );
+					array_push( $this->authors, $objXerxesAuthor );
 				}
 				
 				$y ++;
@@ -923,8 +923,8 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		
 		if ( $strCorpName != "" )
 		{
-			$arrAuthor = $this->splitAuthor( $strCorpName, "corporate" );
-			array_push( $this->authors, $arrAuthor );
+			$objXerxesAuthor = $this->splitAuthor( $strCorpName, "corporate" );
+			array_push( $this->authors, $objXerxesAuthor );
 		}
 		
 		// additional corporate authors
@@ -933,8 +933,8 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		{
 			foreach ( $arrAddCorp as $strCorp )
 			{
-				$arrAuthor = $this->splitAuthor( $strCorp, "corporate" );
-				array_push( $this->authors, $arrAuthor );
+				$objXerxesAuthor = $this->splitAuthor( $strCorp, "corporate", true );
+				array_push( $this->authors, $objXerxesAuthor );
 			}
 		}
 		
@@ -942,8 +942,8 @@ class Xerxes_Record extends Xerxes_Marc_Record
 
 		if ( $strConfName != "" )
 		{
-			$arrAuthor = $this->splitAuthor( $strConfName, "conference" );
-			array_push( $this->authors, $arrAuthor );
+			$objXerxesAuthor = $this->splitAuthor( $strConfName, "conference" );
+			array_push( $this->authors, $objXerxesAuthor );
 		}
 		
 		// additional conference names
@@ -952,8 +952,8 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		{
 			foreach ( $arrAddConf as $strConf )
 			{
-				$arrAuthor = $this->splitAuthor( $strConf, "conference" );
-				array_push( $this->authors, $arrAuthor );
+				$objXerxesAuthor = $this->splitAuthor( $strConf, "conference", true );
+				array_push( $this->authors, $objXerxesAuthor );
 			}
 		}
 		
@@ -963,33 +963,33 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		{
 			foreach ( $objAuthors as $objAuthor )
 			{
-				$arrCtxAuthor = array();
+				$objXerxesAuthor = new Xerxes_Record_Author();
 				
 				foreach ( $objAuthor->childNodes as $objAuthAttr )
 				{					
 					switch ( $objAuthAttr->localName )
 					{
 						case "aulast":
-							$arrCtxAuthor["last"] = $objAuthAttr->nodeValue;
-							$arrCtxAuthor["type"] = "personal";
+							$objXerxesAuthor->last_name = $objAuthAttr->nodeValue;
+							$objXerxesAuthor->type = "personal";
 							break;
 
 						case "aufirst":
-							$arrCtxAuthor["first"] = $objAuthAttr->nodeValue;
+							$objXerxesAuthor->first_name = $objAuthAttr->nodeValue;
 							break;
 							
 						case "auinit":
-							$arrCtxAuthor["init"] = $objAuthAttr->nodeValue;
+							$objXerxesAuthor->init = $objAuthAttr->nodeValue;
 							break;
 							
 						case "aucorp":
-							$arrCtxAuthor["name"] = $objAuthAttr->nodeValue;
-							$arrCtxAuthor["type"] = "corporate";
+							$objXerxesAuthor->name = $objAuthAttr->nodeValue;
+							$objXerxesAuthor->type = "corporate";
 							break;							
 					}
 				}
 				
-				array_push($this->authors, $arrCtxAuthor);
+				array_push($this->authors, $objXerxesAuthor);
 			}
 		}
 		
@@ -1028,17 +1028,21 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		
 		for ( $x = 0; $x < count($author_original); $x++ )
 		{
-			if ( is_array($author_original[$x]) ) // skip those set to null (i.e., was a dupe)
+			$objXerxesAuthor = $author_original[$x];
+			
+			if ( $objXerxesAuthor instanceof Xerxes_Record_Author  ) // skip those set to null (i.e., was a dupe)
 			{
-				$this_author = implode(" ", $author_original[$x]);
+				$this_author = $objXerxesAuthor->allFields();
 				
 				for ( $a = 0; $a < count($author_other); $a++ )
 				{
 					if ( $a != $x ) // compare all other authors in the array
 					{
-						if ( is_array($author_other[$a]) ) // just in case
+						$objThatAuthor = $author_other[$a];
+						
+						if ( $objThatAuthor instanceof Xerxes_Record_Author ) // just in case
 						{
-							$that_author = implode(" ", $author_other[$a]);
+							$that_author = $objThatAuthor->allFields();
 							
 							if ( $this_author == $that_author)
 							{
@@ -1056,7 +1060,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		
 		foreach ( $author_original as $author )
 		{
-			if ( is_array($author) )
+			if ( $author instanceof Xerxes_Record_Author )
 			{
 				array_push($this->authors, $author);
 			}
@@ -1077,10 +1081,16 @@ class Xerxes_Record extends Xerxes_Marc_Record
 			if ( $strISSN != "" )
 			{
 				$strISSN = str_replace( "-", "", $strISSN);
+				
 				//extract the issn number leaving behind extra chars and comments
-				if(preg_match("/[0-9]{8,8}/", $strISSN, $match)){
-                                   $strISSN = $match[0];
-                                   }
+				
+				$match = array();
+				
+				if ( preg_match("/[0-9]{8,8}/", $strISSN, $match) )
+				{
+					$strISSN = $match[0];
+				}
+				
 				array_push($this->issns, $strISSN);
 			}
 		}
@@ -1119,7 +1129,14 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		{
 			foreach ( $this->authors[$x] as $key => $value )
 			{
-				$this->authors[$x][$key] = $this->stripEndPunctuation( $value, "./;,:" );
+				$objXerxesAuthor = $this->authors[$x];
+				
+				foreach ( $objXerxesAuthor as $key => $value )
+				{
+					$objXerxesAuthor->$key = $this->stripEndPunctuation( $value, "./;,:" );
+				}
+				
+				$this->authors[$x] = $objXerxesAuthor;
 			}
 		}
 		
@@ -1185,29 +1202,31 @@ class Xerxes_Record extends Xerxes_Marc_Record
 
 		if ( count( $this->authors ) > 0 )
 		{
-			if ( $this->authors[0]["type"] == "personal" )
+			$objXerxesAuthor = $this->authors[0];
+			
+			if ( $objXerxesAuthor->type == "personal" )
 			{
-				if ( array_key_exists( "last", $this->authors[0] ) )
+				if ( $objXerxesAuthor->last_name != "" )
 				{
-					$strKev .= $param_delimiter . "rft.aulast=" . urlencode( $this->authors[0]["last"] );
+					$strKev .= $param_delimiter . "rft.aulast=" . urlencode( $objXerxesAuthor->last_name );
 					
 					if ( $this->editor == true )
 					{
 						$strKev .= urlencode( ", ed." );
 					}
 				}
-				if ( array_key_exists( "first", $this->authors[0] ) )
+				if ( $objXerxesAuthor->first_name != "" )
 				{
-					$strKev .= $param_delimiter. "rft.aufirst=" . urlencode( $this->authors[0]["first"] );
+					$strKev .= $param_delimiter. "rft.aufirst=" . urlencode( $objXerxesAuthor->first_name );
 				}
-				if ( array_key_exists( "init", $this->authors[0] ) )
+				if ( $objXerxesAuthor->init != "" )
 				{
-					$strKev .= $param_delimiter . "rft.auinit=" . urlencode( $this->authors[0]["init"] );
+					$strKev .= $param_delimiter . "rft.auinit=" . urlencode( $objXerxesAuthor->init );
 				}
 			} 
 			else
 			{
-				$strKev .= $param_delimiter . "rft.aucorp=" . urlencode( $this->authors[0]["name"] );
+				$strKev .= $param_delimiter . "rft.aucorp=" . urlencode( $objXerxesAuthor->name );
 			}
 		}
 		
@@ -1266,31 +1285,31 @@ class Xerxes_Record extends Xerxes_Marc_Record
 
 		$x = 1;
 		
-		foreach ( $this->authors as $arrAuthor )
+		foreach ( $this->authors as $objXerxesAuthor )
 		{
 			$objAuthor = $objXml->createElementNS($ns_referrant, "author" );
 			
-			if ( array_key_exists( "last", $arrAuthor ) )
+			if ( $objXerxesAuthor->last_name != "" )
 			{
-				$objAuthorLast = $objXml->createElementNS($ns_referrant, "aulast", $this->escapeXml( $arrAuthor["last"] ) );
+				$objAuthorLast = $objXml->createElementNS($ns_referrant, "aulast", $this->escapeXml( $objXerxesAuthor->last_name ) );
 				$objAuthor->appendChild( $objAuthorLast );
 			}
 			
-			if ( array_key_exists( "first", $arrAuthor ) )
+			if ( $objXerxesAuthor->first_name != "" )
 			{
-				$objAuthorFirst = $objXml->createElementNS($ns_referrant, "aufirst", $this->escapeXml( $arrAuthor["first"] ) );
+				$objAuthorFirst = $objXml->createElementNS($ns_referrant, "aufirst", $this->escapeXml( $objXerxesAuthor->first_name ) );
 				$objAuthor->appendChild( $objAuthorFirst );
 			}
 			
-			if ( array_key_exists( "init", $arrAuthor ) )
+			if ( $objXerxesAuthor->init != "" )
 			{
-				$objAuthorInit = $objXml->createElementNS($ns_referrant, "auinit", $this->escapeXml( $arrAuthor["init"] ) );
+				$objAuthorInit = $objXml->createElementNS($ns_referrant, "auinit", $this->escapeXml( $objXerxesAuthor->init ) );
 				$objAuthor->appendChild( $objAuthorInit );
 			}
 			
-			if ( array_key_exists( "name", $arrAuthor ) )
+			if ( $objXerxesAuthor->name != "" )
 			{
-				$objAuthorCorp = $objXml->createElementNS($ns_referrant, "aucorp", $this->escapeXml( $arrAuthor["name"] ) );
+				$objAuthorCorp = $objXml->createElementNS($ns_referrant, "aucorp", $this->escapeXml( $objXerxesAuthor->name ) );
 				$objAuthor->appendChild( $objAuthorCorp );
 			}
 			
@@ -1409,32 +1428,37 @@ class Xerxes_Record extends Xerxes_Marc_Record
 			$objAuthors = $objXml->createElement("authors");
 			$x = 1;
 			
-			foreach ( $this->authors as $arrAuthor )
+			foreach ( $this->authors as $objXerxesAuthor )
 			{
 				$objAuthor =  $objXml->createElement("author");
-				$objAuthor->setAttribute("type", $arrAuthor["type"]);
+				$objAuthor->setAttribute("type", $objXerxesAuthor->type);
+				
+				if ( $objXerxesAuthor->additional == true )
+				{
+					$objAuthor->setAttribute("additional", "true");
+				}
 
-				if ( array_key_exists("last", $arrAuthor) )
+				if ( $objXerxesAuthor->last_name != "" )
 				{					
-					$objAuthorLast =  $objXml->createElement("aulast", $this->escapeXml($arrAuthor["last"]) );
+					$objAuthorLast =  $objXml->createElement("aulast", $this->escapeXml( $objXerxesAuthor->last_name ) );
 					$objAuthor->appendChild($objAuthorLast);
 				}
 				
-				if ( array_key_exists("first", $arrAuthor) )
+				if ( $objXerxesAuthor->first_name != "" )
 				{
-					$objAuthorFirst =  $objXml->createElement("aufirst", $this->escapeXml($arrAuthor["first"]) );
+					$objAuthorFirst =  $objXml->createElement("aufirst", $this->escapeXml( $objXerxesAuthor->first_name ) );
 					$objAuthor->appendChild($objAuthorFirst);
 				}
 				
-				if ( array_key_exists("init", $arrAuthor) )
+				if ( $objXerxesAuthor->init != "" )
 				{
-					$objAuthorInit =  $objXml->createElement("auinit", $this->escapeXml($arrAuthor["init"]) );
+					$objAuthorInit =  $objXml->createElement("auinit", $this->escapeXml( $objXerxesAuthor->init) );
 					$objAuthor->appendChild($objAuthorInit);
 				}
 
-				if ( array_key_exists("name", $arrAuthor) )
+				if ( $objXerxesAuthor->name != "" )
 				{
-					$objAuthorCorp =  $objXml->createElement("aucorp", $this->escapeXml($arrAuthor["name"]) );
+					$objAuthorCorp =  $objXml->createElement("aucorp", $this->escapeXml( $objXerxesAuthor->name) );
 					$objAuthor->appendChild($objAuthorCorp);
 				}
 				
@@ -2085,10 +2109,12 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		return $arrFinal;
 	}
 	
-	protected function splitAuthor($strAuthor, $strType)
+	protected function splitAuthor($strAuthor, $strType, $bolAdditional = false)
 	{
-		$arrReturn = array ( );
-		$arrReturn["type"] = $strType;
+		$objAuthor = new Xerxes_Record_Author();
+		
+		$objAuthor->type = $strType;
+		$objAuthor->additional = $bolAdditional;
 		
 		$iComma = strpos( $strAuthor, "," );
 		$iLastSpace = strripos( $strAuthor, " " );
@@ -2132,16 +2158,16 @@ class Xerxes_Record extends Xerxes_Marc_Record
 				$strFirst = str_replace( $arrMatch[0], "", $strFirst );
 			}
 			
-			$arrReturn["last"] = $strLast;
-			$arrReturn["first"] = $strFirst;
+			$objAuthor->last_name = $strLast;
+			$objAuthor->first_name = $strFirst;
 		
 		} 
 		else
 		{
-			$arrReturn["name"] = trim( $strAuthor );
+			$objAuthor->name = trim( $strAuthor );
 		}
 		
-		return $arrReturn;
+		return $objAuthor;
 	}
 	
 	protected function stripEndPunctuation($strInput, $strPunct)
@@ -2437,7 +2463,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 	 * paramaters listed below.
 	 *
 	 * @param bool $bolPrimary		[optional] return just the primary author, default false
-	 * @param bool $bolFormat		[optional] return the author names as strings (otherwise as name parts in array), default false
+	 * @param bool $bolFormat		[optional] return the author names as strings (otherwise as objects), default false
 	 * @param bool $bolReverse		[optional] return author names as strings, last name first
 	 * @return array
 	 */
@@ -2446,24 +2472,18 @@ class Xerxes_Record extends Xerxes_Marc_Record
 	{
 		$arrFinal = array ( );
 		
-		foreach ( $this->authors as $arrAuthor )
+		foreach ( $this->authors as $objXerxesAuthor )
 		{
+			// author as string
+			
 			if ( $bolFormat == true )
 			{
 				$strAuthor = ""; // author name formatted
-				$strLast = ""; // last name
-				$strFirst = ""; // first name
-				$strInit = ""; // middle initial
-				$strName = ""; // full name, not personal
 
-				if ( array_key_exists( "first", $arrAuthor ) )
-					$strFirst = $arrAuthor["first"];
-				if ( array_key_exists( "last", $arrAuthor ) )
-					$strLast = $arrAuthor["last"];
-				if ( array_key_exists( "init", $arrAuthor ) )
-					$strInit = $arrAuthor["init"];
-				if ( array_key_exists( "name", $arrAuthor ) )
-					$strName = $arrAuthor["name"];
+				$strFirst = $objXerxesAuthor->first_name;
+				$strLast = $objXerxesAuthor->last_name;
+				$strInit = $objXerxesAuthor->init;
+				$strName = $objXerxesAuthor->name;
 				
 				if ( $strName != "" )
 				{
@@ -2492,12 +2512,26 @@ class Xerxes_Record extends Xerxes_Marc_Record
 			} 
 			else
 			{
-				array_push( $arrFinal, $arrAuthor );
+				// author objects
+				
+				array_push( $arrFinal, $objXerxesAuthor );
 			}
+			
+			// we're only asking for the primary author
 			
 			if ( $bolPrimary == true )
 			{
-				break;
+				// sorry, only additional authors (7XX), so return empty
+				
+				if ( $objXerxesAuthor->additional == true )
+				{
+					return array();
+				}
+				else
+				{
+					// exit loop, we've got the author we need
+					break;
+				}
 			}
 		}
 		
@@ -2796,6 +2830,33 @@ class Xerxes_Record extends Xerxes_Marc_Record
 	public function getItems()
 	{
 		return $this->items;
+	}
+}
+
+class Xerxes_Record_Author
+{
+	public $first_name;
+	public $last_name;
+	public $init;
+	public $name;
+	public $type;
+	public $additional;
+	
+	public function allFields()
+	{
+		$values = "";
+		
+		foreach ( $this as $key => $value )
+		{
+			if ( $key == "additional" )
+			{
+				continue;
+			}
+			
+			$values .= $value . " ";
+		}
+		
+		return trim($values);
 	}
 }
 
