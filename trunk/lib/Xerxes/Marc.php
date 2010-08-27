@@ -150,6 +150,7 @@ class Xerxes_Marc_Record
 	protected $document;
 	protected $xpath;
 	protected $node;
+	protected $serialized_xml;
 	
 	/**
 	 * Create an object for a MARC-XML Record
@@ -191,8 +192,6 @@ class Xerxes_Marc_Record
 				array_push($this->_datafields, $datafield);
 			}
 			
-			$objImport = null;
-			
 			// if this was actually a DOMDocument in itself
 			
 			if ( $objNode instanceof DOMDocument )
@@ -202,18 +201,12 @@ class Xerxes_Marc_Record
 			}
 			else
 			{
-				// we'll 'convert' this node to a DOMDocument
+				// we'll convert this node to a DOMDocument
 				
 				$this->document = new DOMDocument();
-				$this->document->loadXML("<record xmlns=\"" . $this->namespace . "\" />");
+				$this->document->loadXML($objNode->ownerDocument->saveXML($objNode));
 				
 				$this->node = $this->document->documentElement;
-				
-				foreach ( $objNode->getElementsByTagName("*") as $objChild )
-				{
-					$objImport = $this->document->importNode($objChild, true);
-					$this->document->documentElement->appendChild($objImport);
-				}
 			}
 				
 			// now create an xpath object and the current node as properties
@@ -226,6 +219,10 @@ class Xerxes_Marc_Record
 			// sub-class implements this
 			
 			$this->map();
+			
+			// this for serialization
+			
+			$this->serialized_xml = $this->document->saveXML();
 		}
 	}
 	
