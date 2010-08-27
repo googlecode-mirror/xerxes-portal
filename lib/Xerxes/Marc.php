@@ -151,6 +151,17 @@ class Xerxes_Marc_Record
 	protected $xpath;
 	protected $node;
 	protected $serialized_xml;
+
+	public function __sleep()
+	{
+		return array("serialized_xml");
+	}
+	
+	public function __wakeup()
+	{
+		$this->loadXML($this->serialized_xml);
+		$this->map();
+	}	
 	
 	/**
 	 * Create an object for a MARC-XML Record
@@ -203,9 +214,19 @@ class Xerxes_Marc_Record
 			{
 				// we'll convert this node to a DOMDocument
 				
-				$this->document = new DOMDocument();
-				$this->document->loadXML($objNode->ownerDocument->saveXML($objNode));
+				// first import it into an intermediate doc, 
+				// so we can also import namespace definitions as well as nodes
 				
+				$intermediate  = new DOMDocument();
+				$intermediate ->loadXML("<wrapper />");
+				
+				$import = $intermediate->importNode($objNode, true);
+				$our_node = $intermediate->documentElement->appendChild($import);
+				
+				// now get just our xml, minus the wrapper
+				
+				$this->document = new DOMDocument();
+				$this->document->loadXML($intermediate->saveXML($our_node));
 				$this->node = $this->document->documentElement;
 			}
 				
