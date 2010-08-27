@@ -1639,7 +1639,8 @@ class Xerxes_Record extends Xerxes_Marc_Record
 				$key == "document" ||
 				$key == "xpath" || 
 				$key == "node" ||
-				$key == "format_array")
+				$key == "format_array" ||
+				$key == "serialized_xml")
 			{
 				continue;
 			}
