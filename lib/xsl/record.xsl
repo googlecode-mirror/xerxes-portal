@@ -243,13 +243,20 @@
 			<dd>
 				<xsl:variable name="metalib_id" select="metalib_id"/>
 				
-				<a>
-				<xsl:attribute name="href">
-					<xsl:value-of select="//database_links/database[@metalib_id = $metalib_id]/url"/>
-				</xsl:attribute>
-				
-				<xsl:value-of select="database_name" />
-				</a>
+				<xsl:choose>
+					<xsl:when test="//database_links/database[@metalib_id = $metalib_id]/url">				
+						<a>
+						<xsl:attribute name="href">
+							<xsl:value-of select="//database_links/database[@metalib_id = $metalib_id]/url"/>
+						</xsl:attribute>
+						
+						<xsl:value-of select="database_name" />
+						</a>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="database_name" />
+					</xsl:otherwise>
+				</xsl:choose>
 			</dd>
 			</div>
 			
