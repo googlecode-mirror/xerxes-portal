@@ -41,6 +41,8 @@
 
 <xsl:template name="main">
 
+	<xsl:call-template name="individual_record_pager" />
+
 	<div id="record">
 	
 	<xsl:for-each select="/*/results/records/record/xerxes_record">

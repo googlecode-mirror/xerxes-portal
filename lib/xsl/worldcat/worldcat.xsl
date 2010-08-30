@@ -17,6 +17,8 @@
 	exclude-result-prefixes="php">
 	
 	<xsl:variable name="text_worldcat_name">Find Books</xsl:variable>
+
+<xsl:template name="individual_record_pager" />
 	
 <xsl:template name="module_header">
 	
@@ -34,7 +36,7 @@
 
 	<xsl:param name="condition" />
 	
-	<xsl:variable name="last_search" select="//request/session/worldcat_last_search" />
+	<xsl:variable name="last_search" select="//link_results/@url" />
 	
 	<xsl:call-template name="breadcrumb_start" />
 	
