@@ -1376,9 +1376,20 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 
 					if ( array_key_exists( "marc", $arrResult ) )
 					{
-						$objXerxes_Record = new Xerxes_MetalibRecord( );
-						$objXerxes_Record->loadXML( $arrResult["marc"] );
-						$objRecord->xerxes_record = $objXerxes_Record;
+						if ( $arrResult["record_type"] == "xerxes_record")
+						{
+							// new-style saved record
+							
+							$objRecord->xerxes_record = unserialize($arrResult["marc"]);
+						}
+						else
+						{
+							// old style
+							
+							$objXerxes_Record = new Xerxes_MetalibRecord();
+							$objXerxes_Record->loadXML( $arrResult["marc"] );
+							$objRecord->xerxes_record = $objXerxes_Record;
+						}
 					}
 				}
 				
@@ -1617,10 +1628,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 	public function addRecord($username, $source, $id, Xerxes_Record $objXerxesRecord)
 	{
 		$arrValues = array ( );
-		$strTitle = "";
-		$strSubTitle = "";
 		$iRefereed = 0;
-		$iYear = 0;
 		
 		$iYear = ( int ) $objXerxesRecord->getYear();
 		$strTitle = $objXerxesRecord->getMainTitle();
@@ -1656,18 +1664,8 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		$arrValues[":format"] = $objXerxesRecord->getFormat();
 		$arrValues[":refereed"] = $iRefereed;
 		
-		$strMarc = $objXerxesRecord->getOriginalXML(true);
-		
-		if ( $strMarc != "" )
-		{
-			$arrValues[":marc"] = $strMarc;
-			$arrValues[":record_type"] = "marc"; 
-		}
-		else
-		{
-			$arrValues[":marc"] = serialize($objXerxesRecord);
-			$arrValues[":record_type"] = "xerxes_record"; 			
-		}
+		$arrValues[":marc"] = serialize($objXerxesRecord);
+		$arrValues[":record_type"] = "xerxes_record"; 			
 		
 		$status = $this->insert( $strSQL, $arrValues );
 		
