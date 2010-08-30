@@ -109,7 +109,6 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		// by just loading the saved xml back into the object
 		
 		$this->loadXML($this->serialized_xml);
-		$this->map();
 	}		
 	
 	/**
