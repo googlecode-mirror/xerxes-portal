@@ -89,8 +89,28 @@ class Xerxes_Record extends Xerxes_Marc_Record
 	
 	protected $items = array(); // item records attached
 	
-
+	protected $serialized_xml; // for serializing the object
+	
+	
 	### PUBLIC FUNCTIONS ###
+
+	
+	public function __sleep()
+	{
+		// save only the xml
+		
+		$this->serialized_xml = $this->document->saveXML();
+		return array("serialized_xml");
+	}
+	
+	public function __wakeup()
+	{
+		// and then we recreate the object (with any new changes we've made)
+		// by just loading the saved xml back into the object
+		
+		$this->loadXML($this->serialized_xml);
+		$this->map();
+	}		
 	
 	/**
 	 * Maps the marc data to the object's properties

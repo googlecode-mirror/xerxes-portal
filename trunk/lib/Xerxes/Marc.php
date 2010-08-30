@@ -150,18 +150,6 @@ class Xerxes_Marc_Record
 	protected $document;
 	protected $xpath;
 	protected $node;
-	protected $serialized_xml;
-
-	public function __sleep()
-	{
-		return array("serialized_xml");
-	}
-	
-	public function __wakeup()
-	{
-		$this->loadXML($this->serialized_xml);
-		$this->map();
-	}	
 	
 	/**
 	 * Create an object for a MARC-XML Record
@@ -240,10 +228,6 @@ class Xerxes_Marc_Record
 			// sub-class implements this
 			
 			$this->map();
-			
-			// this for serialization
-			
-			$this->serialized_xml = $this->document->saveXML();
 		}
 	}
 	
