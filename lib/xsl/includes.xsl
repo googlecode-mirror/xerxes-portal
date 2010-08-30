@@ -1521,7 +1521,10 @@
 	<xsl:for-each select="//records/record/xerxes_record">
 		<xsl:call-template name="brief_result_article">
 			<xsl:with-param name="result_set" select="result_set" />
-			<xsl:with-param name="record_number" select="record_number" />		
+			<xsl:with-param name="record_number" select="record_number" />	
+			<xsl:with-param name="record_id">
+				<xsl:value-of select="result_set" />:<xsl:value-of select="record_number" />
+			</xsl:with-param>	
 		</xsl:call-template>
 	</xsl:for-each>
 	
@@ -1538,6 +1541,7 @@
 	
 		<xsl:param name="result_set" />
 		<xsl:param name="record_number" />
+		<xsl:param name="record_id" />
 		
 		<!-- peer reviewed calculated differently in folder and metasearch -->
 		
@@ -1553,10 +1557,6 @@
 					<xsl:text>true</xsl:text>
 				</xsl:when>
 			</xsl:choose>
-		</xsl:variable>
-		
-		<xsl:variable name="record_id">
-			<xsl:value-of select="$result_set" />:<xsl:value-of select="$record_number" />
 		</xsl:variable>
 		
 		<li class="result">
