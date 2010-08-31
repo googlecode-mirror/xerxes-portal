@@ -582,12 +582,12 @@ class Xerxes_Framework_FrontController
 						}
 						
 						$file = $directory . "/" . $file;
-						$array_items[] = preg_replace ( "/\/\//si", "/", $file );
+						$array_items[] = preg_replace ( '/\/\//si', "/", $file );
 					} 
 					else
 					{
 						$file = $directory . "/" . $file;
-						$array_items[] = preg_replace ( "/\/\//si", "/", $file );
+						$array_items[] = preg_replace ( '/\/\//si', "/", $file );
 					}
 				}
 			}

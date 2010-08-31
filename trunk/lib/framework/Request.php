@@ -737,7 +737,7 @@ class Xerxes_Framework_Request
 			
 			if ($force_secure)
 			{
-				$base_path = ereg_replace ( "^http\:\/\/", "https://", $base_path );
+				$base_path = ereg_replace ( '^http\:\/\/', 'https://', $base_path );
 			}
 		}
 		

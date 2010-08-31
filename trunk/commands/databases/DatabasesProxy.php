@@ -120,7 +120,7 @@
 			// make sure the link doesn't include the proxy
 			// server prefix already
 			
-			if ( preg_match("/http:\/\/[0-9]{1,3}-.*/", $strUrl) != 0 )
+			if ( preg_match('/http:\/\/[0-9]{1,3}-.*/', $strUrl) != 0 )
 			{
 				// WAM proxy: this is kind of a rough estimate of a WAM-style
 				// proxy link, but I think sufficient for our purposes?
@@ -153,7 +153,7 @@
 				{
 					$arrMatch = array();
 					
-					if ( preg_match("/http[s]{0,1}:\/\/([^\/]*)\/{0,1}(.*)/", $strUrl, $arrMatch) != 0 )
+					if ( preg_match('/http[s]{0,1}:\/\/([^\/]*)\/{0,1}(.*)/', $strUrl, $arrMatch) != 0 )
 					{
 						$strPort = "0";
 						$arrPort = array();

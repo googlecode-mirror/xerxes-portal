@@ -25,7 +25,7 @@
 			
 			$strPhone = $this->request->getProperty("phone");
 			if ( $strPhone == null ) throw new Exception("Please enter a phone number");
-			$strPhone = preg_replace("/\D/", "", $strPhone);
+			$strPhone = preg_replace('/\D/', "", $strPhone);
 			
 			$headers = "";
 			$strEmail = $strPhone . "@" . $strProvider;

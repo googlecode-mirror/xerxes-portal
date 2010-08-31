@@ -198,7 +198,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 			
 			// got it!
 			
-			if ( preg_match("/.*\/.*/", $doi) )
+			if ( preg_match('/.*\/.*/', $doi) )
 			{
 				$this->doi = $doi;
 				break;
@@ -438,7 +438,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 			
 			$arrScriptCodes = array ("(3" => "Arabic", "(B" => "Latin", '$1' => "CJK", "(N" => "Cyrillic", "(S" => "Greek", "(2" => "Hebrew" );
 			
-			if ( preg_match( "/[0-9]{3}-[0-9]{2}\/([^\/]*)/", $strAltScript, $arrMatchCodes ) )
+			if ( preg_match( '/[0-9]{3}-[0-9]{2}\/([^\/]*)/', $strAltScript, $arrMatchCodes ) )
 			{
 				if ( array_key_exists( $arrMatchCodes[1], $arrScriptCodes ) )
 				{
@@ -722,7 +722,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 
 				$arrExtent = array ( );
 				
-				if ( preg_match( "/([0-9]{1})\/([0-9]{1})/", $strExtentHost, $arrExtent ) != 0 )
+				if ( preg_match( '/([0-9]{1})\/([0-9]{1})/', $strExtentHost, $arrExtent ) != 0 )
 				{
 					// if extent expressed as a fraction of a page, just take
 					// the start page as the end page
@@ -789,7 +789,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 
 			$arrDegree = array ( );
 			
-			if ( preg_match( "/\(([^\(]*)\)/", $strThesis, $arrDegree ) != 0 )
+			if ( preg_match( '/\(([^\(]*)\)/', $strThesis, $arrDegree ) != 0 )
 			{
 				$this->degree = $arrDegree[1];
 			}
@@ -2101,7 +2101,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		
 		// volume
 
-		if ( preg_match( "/ v[a-z]{0,5}[\.]{0,1}[ ]{0,3}([0-9]{1,})/", $strJournalInfo, $arrCapture ) != 0 )
+		if ( preg_match( '/ v[a-z]{0,5}[\.]{0,1}[ ]{0,3}([0-9]{1,})/', $strJournalInfo, $arrCapture ) != 0 )
 		{
 			$arrFinal["volume"] = $arrCapture[1];
 			$strJournalInfo = str_replace( $arrCapture[0], "", $strJournalInfo );
@@ -2109,12 +2109,12 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		
 		// issue
 
-		if ( preg_match( "/ i[a-z]{0,4}[\.]{0,1}[ ]{0,3}([0-9]{1,})/", $strJournalInfo, $arrCapture ) != 0 )
+		if ( preg_match( '/ i[a-z]{0,4}[\.]{0,1}[ ]{0,3}([0-9]{1,})/', $strJournalInfo, $arrCapture ) != 0 )
 		{
 			$arrFinal["issue"] = $arrCapture[1];
 			$strJournalInfo = str_replace( $arrCapture[0], "", $strJournalInfo );
 		} 
-		elseif ( preg_match( "/ n[a-z]{0,5}[\.]{0,1}[ ]{0,3}([0-9]{1,})/", $strJournalInfo, $arrCapture ) != 0 )
+		elseif ( preg_match( '/ n[a-z]{0,5}[\.]{0,1}[ ]{0,3}([0-9]{1,})/', $strJournalInfo, $arrCapture ) != 0 )
 		{
 			$arrFinal["issue"] = $arrCapture[1];
 			$strJournalInfo = str_replace( $arrCapture[0], "", $strJournalInfo );
@@ -2129,7 +2129,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 			
 			$strJournalInfo = str_replace( $arrCapture[0], "", $strJournalInfo );
 		} 
-		elseif ( preg_match( "/ p[a-z]{0,3}[\.]{0,1}[ ]{0,3}([0-9]{1,})/", $strJournalInfo, $arrCapture ) != 0 )
+		elseif ( preg_match( '/ p[a-z]{0,3}[\.]{0,1}[ ]{0,3}([0-9]{1,})/', $strJournalInfo, $arrCapture ) != 0 )
 		{
 			$arrFinal["spage"] = $arrCapture[1];
 			$strJournalInfo = str_replace( $arrCapture[0], "", $strJournalInfo );
@@ -2160,6 +2160,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 			$arrMatch = array ( );
 			$strLast = "";
 			$strFirst = "";
+			$strInit = "";
 			
 			if ( $iComma !== false )
 			{
@@ -2181,14 +2182,15 @@ class Xerxes_Record extends Xerxes_Marc_Record
 				$strFirst = trim( substr( $strAuthor, 0, $iLastSpace ) );
 			}
 			
-			if ( preg_match( "/ ([a-zA-Z]{1})\.$/", $strFirst, $arrMatch ) != 0 )
+			if ( preg_match( '/ ([a-zA-Z]{1})\.$/', $strFirst, $arrMatch ) != 0 )
 			{
-				$arrReturn["init"] = $arrMatch[1];
+				$strInit = $arrMatch[1];
 				$strFirst = str_replace( $arrMatch[0], "", $strFirst );
 			}
 			
 			$objAuthor->last_name = $strLast;
 			$objAuthor->first_name = $strFirst;
+			$objAuthor->init = $strInit;
 		
 		} 
 		else
@@ -2212,7 +2214,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		// check if the input ends in a character entity
 		// reference, in which case, leave it alone, yo!
 		
-		if ( preg_match("/\&\#[0-9a-zA-Z]{1,5}\;$/", $strInput) )
+		if ( preg_match('/\&\#[0-9a-zA-Z]{1,5}\;$/', $strInput) )
 		{
 			return $strInput;
 		}
