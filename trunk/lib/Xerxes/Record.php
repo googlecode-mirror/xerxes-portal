@@ -147,6 +147,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		$objATitle = $this->xpath->query( "//rft:atitle" )->item ( 0 );
 		$objBTitle = $this->xpath->query( "//rft:atitle" )->item ( 0 );
 		$objAuthors = $this->xpath->query( "//rft:author[rft:aulast != '' or rft:aucorp != '']" );
+		$objGenre = $this->xpath->query( "//rft:genre" )->item ( 0 );
 		$objDate = $this->xpath->query( "//rft:date" )->item ( 0 );
 		
 		// journal title, volume, issue, pages from context object
@@ -168,6 +169,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		if ($objEndPage != null) $this->end_page = $objEndPage->nodeValue;
 		if ($objISBN != null) array_push($this->isbns, $objISBN->nodeValue);
 		if ($objISSN != null) array_push($this->issns, $objISSN->nodeValue);
+		if ($objGenre != null) array_push($this->format_array, $objGenre->nodeValue);
 		
 		// control and standard numbers
 		
