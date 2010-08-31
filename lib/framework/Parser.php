@@ -420,7 +420,7 @@
 						$strAllowed = trim(str_replace(".", "\\.", $strAllowed));
 						$strAllowed = trim(str_replace("*", "[^.]*", $strAllowed));
 						
-						if ( preg_match("/^http[s]{0,1}:\/\/$strAllowed.*/", $strURL) )
+						if ( preg_match('/^http[s]{0,1}:\/\/' . $strAllowed .'.*/', $strURL) )
 						{
 							$bolPassed = true;
 						}
@@ -626,7 +626,7 @@
 				
 				$arrMatches = array();
 				
-				if ( preg_match("/http:\/\/([^\/]*)(\/.*)/", $url, $arrMatches) != false )
+				if ( preg_match('/http:\/\/([^\/]*)(\/.*)/', $url, $arrMatches) != false )
 				{
 					$host = $arrMatches[1];
 					$path = $arrMatches[2];

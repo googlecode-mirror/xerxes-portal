@@ -425,7 +425,7 @@
 			$strNormalized = "";
 			
 			$strNormalized = str_replace("&amp;","", $strSubject);
-			$strNormalized = preg_replace("/\W/","",$strNormalized);
+			$strNormalized = preg_replace('/\W/',"",$strNormalized);
 			
 			return $strNormalized;
 		}

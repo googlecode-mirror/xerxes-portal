@@ -242,7 +242,7 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 				
 				// see if there are any non-alphanumeric[A-Za-z00-9_] characters in the 001
 				
-				$bolAlpha001 = preg_match("/\W/", $str001);
+				$bolAlpha001 = preg_match('/\W/', $str001);
 				
 				// if so, and there is a 016, use that instead, if not go ahead and use 
 				// the 001; if neither do nothing
@@ -266,7 +266,7 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 		if (strstr ( $this->source, 'GALE_' ))
 		{
 			$arrMatches = array ();
-			$strGaleRegExp = "/\(([^)]*)\)/";
+			$strGaleRegExp = '/\(([^)]*)\)/';
 			
 			$title = $this->datafield("245");
 			$title_main = $title->subfield("a");
