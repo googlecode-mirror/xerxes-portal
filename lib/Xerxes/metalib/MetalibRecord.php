@@ -76,6 +76,30 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 			}
 		}
 		
+		// there are often multiple 773's, just combine them into one so we don't
+		// have to iterate over all of them in other code
+		
+		$obj773 = new Xerxes_Marc_DataField();
+		$obj773->tag = "773";
+		
+		foreach ( $this->datafield("773") as $linked_entry )
+		{
+			// add all of its subfields to the new one
+			
+			foreach ($linked_entry->subfield() as $linked_entry_subfield )
+			{
+				$obj773->addSubField($linked_entry_subfield);
+			}
+			
+			// now blank this one to take it out of the mix
+			$linked_entry->tag = "XXX";
+		}
+		
+		// add our new one to the document
+		
+		$this->addDataField($obj773);
+		
+		
 		## ebsco format
 		
 		if (strstr ( $this->source, "EBSCO" ))

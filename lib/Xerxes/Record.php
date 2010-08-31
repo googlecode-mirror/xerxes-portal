@@ -412,7 +412,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		//  in case they are out of order 
 		
 		$this->journal =  $this->datafield("773")->subfield("atgbcdefhijklmnopqrsuvwxyz1234567890")->__toString();
-		$strJournal =  $this->datafield("773")->subfield("agpt")->__toString();
+		$strJournal =  $this->datafield("773")->subfield("agpqt")->__toString();
 		$this->journal_title =  $this->datafield("773")->subfield("t")->__toString();
 		$this->short_title =  $this->datafield("773")->subfield("p")->__toString();
 		$strExtentHost =  $this->datafield("773")->subfield("h")->__toString();
