@@ -835,7 +835,12 @@ abstract class Xerxes_Framework_Search
 				{
 					continue;
 				}
-				elseif ( $field_id == $id )
+				
+				// if $id was blank, then we take the first
+				// one in the list, otherwise, we're looking 
+				// to match
+				
+				elseif ( $field_id == $id || $id == "")
 				{
 					return (string) $field["internal"];
 				}
