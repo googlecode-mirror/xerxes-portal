@@ -156,7 +156,7 @@
 		 * @return array				query normalized
 		 */
 		
-		public function normalizeArray ( $strQuery )
+		public function normalizeArray ( $strQuery, $toLower = true )
 		{
 			$bolQuote = false;			// flags the start and end of a quoted phrase
 			$arrWords = array();		// the query broken into a word array
@@ -166,7 +166,10 @@
 			
 			// normalize it
 			
-			$strQuery = Xerxes_Framework_Parser::strtolower($strQuery);
+			if ( $toLower == true )
+			{
+				$strQuery = Xerxes_Framework_Parser::strtolower($strQuery);
+			}
 			
 			while ( strstr($strQuery, "  ") )
 			{
