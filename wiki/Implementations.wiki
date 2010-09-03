@@ -19,7 +19,7 @@
   * [http://xerxes.palni.edu/dup DePauw University] 
   * [http://homer.gsu.edu/search/ Georgia State University]
   * [http://gtsearch.library.gatech.edu/search/ Georgia Tech]
-  * [http://gtsearch.library.gatech.edu/search/ Humboldt State University]
+  * [http://library.calstate.edu/humboldt Humboldt State University]
   * [http://jhsearch.library.jhu.edu/ Johns Hopkins University]
   * [http://metasearch.kib.ki.se/ Karolinska Institutet] (Sweden)
   * [http://xet.bibl.liu.se/liubsearch/ Linköping University] (Sweden)
