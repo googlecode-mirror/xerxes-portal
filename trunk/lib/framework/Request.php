@@ -28,10 +28,25 @@ class Xerxes_Framework_Request
 	 * Process the incoming request paramaters, cookie values, url path if pretty-uri on
 	 */
 	
-	public function __construct($aliases = null)
+	public function __construct($alias = null)
 	{
-		if ( $aliases != null )
+		if ( $alias != null )
 		{
+			$aliases = array();
+		
+			if ( $alias != null )
+			{
+				foreach ( explode(";", $alias) as $part )
+				{
+					$parts = explode("=", $part);
+					
+					if ( count($parts) == 2 )
+					{
+						$aliases[$parts[0]] = $parts[1]; 
+					}
+				}
+			}			
+			
 			$this->aliases = $aliases;
 		}
 		
