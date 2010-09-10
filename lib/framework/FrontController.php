@@ -58,6 +58,20 @@ class Xerxes_Framework_FrontController
 		
 		$objRegistry->setConfig("XERXES_VERSION", $objControllerMap->getVersion(), true);
 		
+		// dynamically set the web path, if config says so, 
+		// doesn't work on all webserver/php set-ups, so an 
+		// explicit web path from config is preferred
+		
+		if ( $objRegistry->getConfig( "base_web_path", false ) == '{dynamic}' )
+		{
+			if ( isset($_SERVER) )
+			{
+				$script_name = $_SERVER['SCRIPT_NAME'];
+				$script_name = str_replace("/index.php", "", $script_name);
+				$objRegistry->setConfig( "base_web_path", $script_name);
+			}
+		}
+		
 		// give our session a name to keep sessions distinct between multiple
 		// instances of xerxes on one server.  use base_path (preferably) or
 		// application_name config directives.
