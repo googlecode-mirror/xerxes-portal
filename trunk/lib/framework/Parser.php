@@ -590,12 +590,13 @@
 		 *
 		 * @param string $url			url you want to send the request to
 		 * @param string $data			[optional] data to POST to the above url
+		 * @param int $timeout			[optional] seconds to wait before timing out
 		 * @param string $content_type	[optional] content-type in the post, 'application/x-www-form-urlencoded' by default
 		 * @param bool $bolEncode		[optional] whether to encode the posted data, true by default
 		 * @return string				the response from the server
 		 */
 		
-		public static function request($url, $data = null, $content_type = null, $bolEncode = true)
+		public static function request($url, $data = null, $timeout = null, $content_type = null, $bolEncode = true)
 		{
 			$objRegistry = Xerxes_Framework_Registry::getInstance();
 			
@@ -606,7 +607,19 @@
 			
 			if ( $data == null && $proxy == null && $curl == null )
 			{
-				return file_get_contents($url);
+				$ctx = null;
+				
+				if ( $timeout != null )
+				{
+					$ctx = stream_context_create(array(
+					    'http' => array(
+					        'timeout' => $timeout
+					        )
+					    )
+					);
+				}
+			
+				return file_get_contents($url, 0, $ctx);
 			}
 			
 			// these for POST requests
@@ -663,6 +676,11 @@
 				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); // this returns the response to a variable		
 				curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true); // this tells curl to follow 'location:' headers
 				curl_setopt($ch, CURLOPT_MAXREDIRS, 10); // but don't follow more than 10 'location:' redirects
+				
+				if ( $timeout != null )
+				{
+					curl_setopt($ch, CURLOPT_TIMEOUT, $timeout); // wait and then timeout 
+				}
 				
 				// this is a post request
 				
