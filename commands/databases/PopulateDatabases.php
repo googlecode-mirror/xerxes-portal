@@ -223,8 +223,9 @@
 						}
 						else
 						{
-							throw new Exception("Could not find database assigned to category; " . 
-								"make sure config entry ip_address is part of the IP range associated with this Metalib instance");
+							throw new Exception("Could not find database (" . $objData->metalib_id . 
+								") assigned to category; make sure config entry ip_address is part " .
+								"of the IP range associated with this Metalib instance");
 						}
 					}
 					
