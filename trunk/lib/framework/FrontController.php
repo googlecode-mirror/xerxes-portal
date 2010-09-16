@@ -508,9 +508,14 @@ class Xerxes_Framework_FrontController
 					echo $output;
 				}
 				
-				//remove the flash message, intended for one display only. 
-				$objRequest->setSession( "flash_message", null );        
+				//remove the flash message, intended for one display only.
+				 
+				$objRequest->setSession( "flash_message", null );
 			}
+			
+			// register this url as being viewed
+			
+			$objRequest->setSession("last_page", $objRequest->getServer('REQUEST_URI'));
 		} 
 
 		// we'll catch all exceptions here, but the Xerxes_Error class can perform actions
