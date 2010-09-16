@@ -32,7 +32,7 @@
 		{		
 			if ( /facetListMore/.test(lists[i].className) )
 			{				
-				lists[i].hide();
+				$(lists[i]).hide();
 				
 				id = lists[i].id.replace("facet-list-", "");
 				$('facet-more-' + id).show();
