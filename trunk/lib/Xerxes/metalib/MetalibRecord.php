@@ -62,7 +62,7 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 			$leader->value = $strLeaderMetalib;
 		}
 		
-		// ebsco and some screen-scrapers have multiple authors in repeating 100 fields; 
+		// z3950/sutrs and some screen-scrapers have multiple authors in repeating 100 fields; 
 		// invalid marc, so switch all but first to 700
 		
 		$authors = $this->datafield("100");
@@ -213,7 +213,7 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 			//
 			// springer (metapress): does not distinguish between things in your subscription or not (9/16/08) 
 			// cinahl (bzh): not only is 856 bad, but link missing http://  bah! thanks greg at upacific! (9/10/08)
-			// wilson: if it has '$3' in the URL not full-text, since these are improperly parsed out (3/26/07) 
+			// wilson: 901|t shows an indication of full-text (9/16/10) 
 			// cabi: just point back to site (10/30/07)
 			// google scholar: just point back to site (3/26/07) 
 			// amazon: just point back to site (3/20/08)
@@ -230,7 +230,7 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 
 			if ( stristr ( $this->source, "METAPRESS_XML" ) || 
 				stristr ( $this->source, "EBSCO_RZH" ) || 
-				( stristr ( $this->source, "WILSON_" ) && strstr($strUrl, '$3') ) ||
+				( stristr ( $this->source, "WILSON_" ) && $this->datafield("901")->subfield("t")->__toString() == "" ) ||
 				stristr ( $this->source, "CABI" ) || 
 				stristr ( $this->source, "GOOGLE_SCH" ) || 
 				stristr ( $this->source, "AMAZON" ) || 
