@@ -17,7 +17,7 @@
 
   <xsl:import href="../includes.xsl" />  
   
-  <xsl:output method="html" />
+  <xsl:output method="html" encoding="utf-8" />
   
   <xsl:template match="/*">
     <xsl:variable name="disp_show_title" select="not(request/disp_show_title = 'false')" />
