@@ -17,7 +17,7 @@ abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
 	private $objCache = null; // cache object
 	
 	const DEFAULT_RECORDS_PER_PAGE = 10;
-	const MARC_FIELDS_BRIEF = "LDR, 0####, 1####, 2####, 3####, 4####, 5####, 6####, 7####, 8####, ERI##, SID, YR";
+	const MARC_FIELDS_BRIEF = "LDR, 0####, 1####, 2####, 3####, 4####, 5####, 6####, 7####, 8####, 901##, ERI##, SID, YR";
 	const MARC_FIELDS_FULL = "#####, OPURL";
 
 	/**
