@@ -710,6 +710,112 @@
 
 </xsl:template>
 
+<xsl:template name="sms">
+
+	<xsl:variable name="num_copies" select="count(//holdings:copyInformation[not(holdings:electronicLocator)])" />
+	
+	<xsl:if test="$num_copies &gt; 0">
+	
+		<div id="smsOption" style="display:none" class="resultsAvailability recordAction">
+
+			<img src="images/phone.png" alt="" />
+			<xsl:text> </xsl:text>
+			<a id="smsLink" href="#">Send via text message</a> 
+		
+		</div>
+		
+		<div id="sms">
+		
+			<h2>Send title and location to your mobile phone</h2>
+		
+			<form name="smsForm" action="./" method="get">
+			
+				<input type="hidden" name="base" value="folder" />
+				<input type="hidden" name="action" value="sms" />
+				<input type="hidden" name="title" value="{title_normalized}" />
+				
+				<div class="smsProperty">
+					<label for="phone">Your phone number: </label>
+				</div>
+				<div class="smsValue">
+					<input type="text" name="phone" id="phone" />
+				</div>
+				
+				<div class="smsProperty">
+					<label for="provider">Provider:</label>
+				</div>
+				<div class="smsValue">
+					<select name="provider">
+						<option value="">-- choose one --</option>
+						<option value="txt.att.net">AT&amp;T / Cingular</option>
+						<option value="MyMetroPcs.com">Metro PCS</option>
+						<option value="messaging.nextel.com">Nextel</option>
+						<option value="messaging.sprintpcs.com">Sprint</option>
+						<option value="tmomail.net">T-Mobile</option>
+						<option value="vtext.com">Verizon</option>
+						<option value="vmobl.com">Virgin</option>
+						
+						<!--
+						
+						<option value="message.alltel.com">Alltel</option>
+						<option value="ptel.net">Powertel</option>
+						<option value="tms.suncom.com">SunCom</option>
+						<option value="email.uscc.net">US Cellular</option>
+						
+						-->
+						
+					</select>
+				</div>
+
+				<xsl:if test="$num_copies &gt; 1">
+					<h3>Choose one of the copies</h3>
+				</xsl:if>
+								
+				<xsl:for-each select="//holdings:copyInformation[not(holdings:electronicLocator)]">
+					
+					<xsl:variable name="item">
+						<xsl:value-of select="holdings:sublocation" />
+						<xsl:text> </xsl:text>
+						<xsl:value-of select="holdings:shelfLocator	" />
+					</xsl:variable>
+					
+					<label>
+						<xsl:if test="$num_copies &gt; 1">
+							<xsl:attribute name="class">smsCopy</xsl:attribute>
+						</xsl:if>
+						
+						<input name="item" value="{$item}">
+							<xsl:attribute name="type">
+								<xsl:choose>
+									<xsl:when test="$num_copies &gt; 1">radio</xsl:when>
+									<xsl:otherwise>hidden</xsl:otherwise>
+								</xsl:choose>
+							</xsl:attribute>
+							<xsl:if test="position() = 1">
+								<xsl:attribute name="checked">checked</xsl:attribute>
+							</xsl:if>
+						</input>
+						<xsl:if test="$num_copies &gt; 1">
+							<xsl:text> </xsl:text>
+							<xsl:value-of select="$item" />
+							<br />
+						</xsl:if>
+					</label>
+					
+				</xsl:for-each>
+				
+				<br />
+				
+				<input type="submit" value="Send" />
+				
+				<p class="smsNote">Carrier charges may apply.</p>
+				
+			</form>
+		</div>
+	</xsl:if>
+
+</xsl:template>
+
 <xsl:template name="google_preview">
 
 	<xsl:variable name="isbn" select="//results/records/record/xerxes_record/standard_numbers/isbn" />

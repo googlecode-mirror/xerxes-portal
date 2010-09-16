@@ -219,6 +219,8 @@
 				</xsl:call-template>
 				
 				<xsl:call-template name="additional_record_links" />
+				
+				<xsl:call-template name="sms" />
 
 				<xsl:call-template name="worldcat_save_record">
 					<xsl:with-param name="element">div</xsl:with-param>
@@ -293,8 +295,6 @@
 				</xsl:if>
 
 			</div>
-			
-			<!-- <xsl:call-template name="sms" /> -->
 			
 			<!-- alternate letter script, like CJK -->
 
