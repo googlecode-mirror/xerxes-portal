@@ -30,11 +30,6 @@
 			$strItem = $this->request->getProperty("item");
 			
 			
-			if ( $strPhone == null )
-			{
-				throw new Exception("Please enter a phone number");
-			}
-
 			if ( $strProvider == "" )
 			{
 				throw new Exception("Please choose your cell phone provider");

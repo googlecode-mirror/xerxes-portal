@@ -17,7 +17,11 @@
 	{
 		$("smsLink").onclick = function() {
 			return showSMS()
-		}		
+		}	
+		
+		document.smsForm.onsubmit = function() {
+			return checkForm();
+		}
 		
 		$("smsOption").show();
 		$("sms").hide();
@@ -39,16 +43,23 @@
 	function checkForm()
 	{
 		var provider = document.smsForm.provider.value;
+		var phone = document.smsForm.phone.value;
+		
+		if ( phone == '' )
+		{
+			alert('Please enter a phone number');
+			return false;
+		}
+		
 		
 		if ( provider == '' )
 		{
 			alert('Please choose your cell phone provider');
 			return false;
 		}
-		else
-		{
-			return true;	
-		}
+		
+		return true;	
+		
 	}
 
 	function fillAvailability()
