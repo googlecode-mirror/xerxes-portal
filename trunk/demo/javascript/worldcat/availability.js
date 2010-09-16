@@ -11,6 +11,45 @@
 
 	addEvent(window, 'load', fillAvailability);
 	addEvent(window, 'load', setNoImage);
+	addEvent(window, 'load', hideSMS);
+	
+	function hideSMS()
+	{
+		$("smsLink").onclick = function() {
+			return showSMS()
+		}		
+		
+		$("smsOption").show();
+		$("sms").hide();
+		
+		return false;
+	}
+	
+	function showSMS()
+	{
+		$("sms").show();
+
+		$("smsLink").onclick = function() {
+			return prepareSMS()
+		}	
+
+		return false;
+	}
+
+	function checkForm()
+	{
+		var provider = document.smsForm.provider.value;
+		
+		if ( provider == '' )
+		{
+			alert('Please choose your cell phone provider');
+			return false;
+		}
+		else
+		{
+			return true;	
+		}
+	}
 
 	function fillAvailability()
 	{		

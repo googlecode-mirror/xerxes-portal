@@ -196,3 +196,45 @@ option.basicOption {
 	cursor: pointer;
 	font-weight: bold;
 }
+
+#sms {
+	margin: 2em;
+	margin-left: 0;
+	border: 1px solid #ccc; 
+	padding: 1.5em;
+	padding-top: .5em;
+	padding-bottom: .5em;
+	background-color: #efefef;
+}
+
+.smsProperty {
+	float: left;
+	height: 150%;
+	font-weight: bold;
+}
+
+.smsProperty {
+	clear: left;
+	float: left;
+	font-weight: bold;
+	width: 13em;
+	margin-bottom: 1em;
+	text-align: right;
+}
+
+.smsValue {
+	margin-left: 15em;
+	margin-bottom: 1em;
+}
+
+.smsCopy {
+	margin-left: 2em;
+	margin-top: 1em;
+	display: block;
+}
+
+.smsNote {
+	margin: 1em;
+	font-size: 90%;
+	font-style: italic;
+}
