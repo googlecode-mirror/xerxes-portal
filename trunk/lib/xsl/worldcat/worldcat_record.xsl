@@ -426,6 +426,11 @@
 									<xsl:value-of select="aucorp" />
 								</xsl:otherwise>
 							</xsl:choose>
+							
+							<xsl:if test="title">
+								<xsl:text>, </xsl:text>
+								<em><xsl:value-of select="title" /></em>
+							</xsl:if>
 						</li>
 					</xsl:for-each>
 				</ul>
