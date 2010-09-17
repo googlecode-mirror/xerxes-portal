@@ -402,8 +402,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 
 		foreach ( $this->datafield('4XX|800|810|811|830') as $subject )
 		{
-			$subfields =  $subject->subfield()->__toString();
-			array_push($this->series, $subfields);
+			array_push($this->series, $subject->__toString());
 		}		
 		
 		// journal
@@ -2081,6 +2080,335 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		return "Unknown";
 	}
 	
+	protected function formatFromDataFields($arrFormat)
+	{
+		// we'll combine all of the datafields that explicitly declare the
+		// format of the record into a single string
+
+		$strDataFields = "";
+		
+		foreach ( $arrFormat as $strFormat )
+		{
+			$strDataFields .= " " . Xerxes_Framework_Parser::strtolower( $strFormat );
+		}
+		
+		// format made explicit
+
+		if ( strstr( $strDataFields, 'dissertation' ) ) return  "Dissertation"; 
+		if (  $this->datafield("502")->__toString() != "" ) return  "Thesis"; 
+		if (  $this->controlfield("002")->__toString() == "DS" ) return  "Thesis";
+		if ( strstr( $strDataFields, 'proceeding' ) ) return  "Conference Proceeding"; 
+		if ( strstr( $strDataFields, 'conference' ) ) return  "Conference Paper"; 
+		if ( strstr( $strDataFields, 'hearing' ) ) return  "Hearing"; 
+		if ( strstr( $strDataFields, 'working' ) ) return  "Working Paper"; 
+		if ( strstr( $strDataFields, 'book review' ) || strstr( $strDataFields, 'review-book' ) ) return  "Book Review"; 
+		if ( strstr( $strDataFields, 'film review' ) || strstr( $strDataFields, 'film-book' ) ) return  "Film Review";
+		if ( strstr( "$strDataFields ", 'review ' ) ) return  "Review";
+		if ( strstr( $strDataFields, 'book art' ) || strstr( $strDataFields, 'book ch' ) || strstr( $strDataFields, 'chapter' ) ) return  "Book Chapter"; 
+		if ( strstr( $strDataFields, 'journal' ) ) return  "Article"; 
+		if ( strstr( $strDataFields, 'periodical' ) || strstr( $strDataFields, 'serial' ) ) return  "Article"; 
+		if ( strstr( $strDataFields, 'book' ) ) return  "Book";
+        if ( strstr( $strDataFields, 'pamphlet' ) ) return  "Pamphlet";  
+        if ( strstr( $strDataFields, 'essay' ) ) return  "Essay";
+		if ( strstr( $strDataFields, 'article' ) ) return  "Article";
+
+		// format from other sources
+
+		if ( $this->journal != "" ) return  "Article"; 
+		if ( count( $this->isbns ) > 0 ) return "Book"; 
+		if ( count( $this->issns ) > 0 ) return "Article";
+		
+		// if we got this far, just return unknown
+		
+		return "Unknown";
+	}
+	
+	protected function formatFromControlFields() 
+	{
+		$result = array ();
+
+		$format_007_list = $this->controlfields ( "007" );
+		$format_008 = $this->controlfield ( "008" );
+		
+		// check the 007 - this is a repeating field
+		
+		foreach ( $format_007_list as $format_007 ) 
+		{
+			$format_007_code = strtoupper ( $format_007->position ( 0 ) );
+			$format_007_additional_code = strtoupper ( $format_007->position ( 1 ) );
+			
+			switch ($format_007_code) 
+			{
+				case 'A' :
+					switch ($format_007_additional_code) {
+						case 'D' :
+							array_push( $result, "Atlas" );
+							break;
+						default :
+							array_push( $result, "Map" );
+							break;
+					}
+					break;
+				case 'C' :
+					switch ($format_007_additional_code) {
+						case 'A' :
+							array_push( $result, "TapeCartridge" );
+							break;
+						case 'B' :
+							array_push( $result, "ChipCartridge" );
+							break;
+						case 'C' :
+							array_push( $result, "DiscCartridge" );
+							break;
+						case 'F' :
+							array_push( $result, "TapeCassette" );
+							break;
+						case 'H' :
+							array_push( $result, "TapeReel" );
+							break;
+						case 'J' :
+							array_push( $result, "FloppyDisk" );
+							break;
+						case 'M' :
+						case 'O' :
+							array_push( $result, "CDROM" );
+							break;
+						case 'R' :
+							// Do not return - this will cause anything with an
+							// 856 field to be labeled as "Electronic"
+							break;
+						default :
+							array_push( $result, "Software" );
+							break;
+					}
+					break;
+				case 'D' :
+					array_push( $result, "Globe" );
+					break;
+				case 'F' :
+					array_push( $result, "Braille" );
+					break;
+				case 'G' :
+					switch ($format_007_additional_code) {
+						case 'C' :
+						case 'D' :
+							array_push( $result, "Filmstrip" );
+							break;
+						case 'T' :
+							array_push( $result, "Transparency" );
+							break;
+						default :
+							array_push( $result, "Slide" );
+							break;
+					}
+					break;
+				case 'H' :
+					array_push ( $result, "Microfilm" );
+					break;
+				case 'K' :
+					switch ($format_007_additional_code) {
+						case 'C' :
+							array_push( $result, "Collage" );
+							break;
+						case 'D' :
+							array_push( $result, "Drawing" );
+							break;
+						case 'E' :
+							array_push( $result, "Painting" );
+							break;
+						case 'F' :
+							array_push( $result, "Print" );
+							break;
+						case 'G' :
+							array_push( $result, "Photonegative" );
+							break;
+						case 'J' :
+							array_push( $result, "Print" );
+							break;
+						case 'L' :
+							array_push( $result, "Drawing" );
+							break;
+						case 'O' :
+							array_push( $result, "FlashCard" );
+							break;
+						case 'N' :
+							array_push( $result, "Chart" );
+							break;
+						default :
+							array_push( $result, "Photo" );
+							break;
+					}
+					break;
+				case 'M' :
+					switch ($format_007_additional_code) {
+						case 'F' :
+							array_push( $result, "VideoCassette" );
+							break;
+						case 'R' :
+							array_push( $result, "Filmstrip" );
+							break;
+						default :
+							array_push( $result, "MotionPicture" );
+							break;
+					}
+					break;
+				case 'O' :
+					array_push( $result, "Kit" );
+					break;
+				case 'Q' :
+					array_push( $result, "MusicalScore" );
+					break;
+				case 'R' :
+					array_push( $result, "SensorImage" );
+					break;
+				case 'S' :
+					switch ($format_007_additional_code) {
+						case 'D' :
+							array_push( $result, "SoundDisc" );
+							break;
+						case 'S' :
+							array_push( $result, "SoundCassette" );
+							break;
+						default :
+							array_push( $result, "SoundRecording" );
+							break;
+					}
+					break;
+				case 'V' :
+					switch ($format_007_additional_code) {
+						case 'C' :
+							array_push( $result, "VideoCartridge" );
+							break;
+						case 'D' :
+							array_push( $result, "VideoDisc" );
+							break;
+						case 'F' :
+							array_push( $result, "VideoCassette" );
+							break;
+						case 'R' :
+							array_push( $result, "VideoReel" );
+							break;
+						default :
+							array_push( $result, "Video" );
+							break;
+					}
+					break;
+			}
+		}
+		
+		// if we got it from the 007, good we're done
+
+		if (count ($result ) > 0) 
+		{
+			return $result;
+		}
+		
+		// check the leader at position 6
+
+		switch (strtoupper( $this->leader()->position ( 6 ) )) 
+		{
+			case 'C' :
+			case 'D' :
+				array_push( $result, "MusicalScore" );
+				break;
+			case 'E' :
+			case 'F' :
+				array_push( $result, "Map" );
+				break;
+			case 'G' :
+				
+				// projected medium, figure out which kind
+				
+				switch (strtoupper ( $format_008->position ( 33 ) )) 
+				{
+					case 'F' :
+						array_push( $result, "Filmstrip" );
+						break;
+					case 'M' :
+						array_push( $result, "MotionPicture" );
+						break;
+					case 'T' :
+						array_push( $result, "Transparency" );
+						break;
+					case 'S' :
+						array_push( $result, "Slide" );
+						break;
+					default :
+						array_push( $result, "Video" );
+						break;
+				}
+				break;
+			case 'I' :
+				array_push( $result, "SoundRecording" );
+				break;
+			case 'J' :
+				array_push( $result, "MusicRecording" );
+				break;
+			case 'K' :
+				array_push ( $result, "Photo" );
+				break;
+			case 'M' :
+				array_push( $result, "Electronic" );
+				break;
+			case 'O' :
+			case 'P' :
+				array_push( $result, "Kit" );
+				break;
+			case 'R' :
+				array_push( $result, "PhysicalObject" );
+				break;
+			case 'T' :
+				array_push( $result, "Manuscript" );
+				break;
+		}
+		
+		// if we got it from the leader/6, cool, done
+		
+
+		if (count( $result ) > 0) 
+		{
+			return $result;
+		}
+		
+		// check the Leader at position 7
+		
+
+		switch (strtoupper( $this->leader()->position( 7 ) )) 
+		{
+			// Monograph
+			case 'M' :
+				if (formatCode == 'C') {
+					array_push( $result, "eBook" );
+				} else {
+					array_push( $result, "Book" );
+				}
+				break;
+			// Serial
+			case 'S' :
+				// Look in 008 to determine what type of Continuing Resource
+				switch (strtoupper( $format_008->position( 21 ) )) {
+					case 'N' :
+						array_push( $result, "Newspaper" );
+						break;
+					case 'P' :
+						array_push( $result, "Journal" );
+						break;
+					default :
+						array_push( $result, "Serial" );
+						break;
+				}
+		}
+		
+		// we got it from  leader/7, cool, done
+
+		if (count( $result ) > 0) 
+		{
+			return $result;
+		}
+		
+		return $result;
+	}
+	
 	/**
 	 * Best-guess regular expression for extracting volume, issue, pagination,
 	 * broken out here for clarity 
@@ -2872,6 +3200,7 @@ class Xerxes_Record_Author
 	public $name;
 	public $type;
 	public $additional;
+	public $title;
 	
 	public function allFields()
 	{
@@ -2879,7 +3208,7 @@ class Xerxes_Record_Author
 		
 		foreach ( $this as $key => $value )
 		{
-			if ( $key == "additional" )
+			if ( $key == "additional" || $key == "title")
 			{
 				continue;
 			}

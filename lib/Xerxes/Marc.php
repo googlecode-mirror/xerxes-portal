@@ -256,17 +256,39 @@ class Xerxes_Marc_Record
 	
 	public function controlfield($tag)
 	{
-		$return = new Xerxes_Marc_ControlField();
+		foreach ( $this->_controlfields as $controlfield )
+		{
+			if ( $controlfield->tag == $tag )
+			{
+				return $controlfield;
+			}
+		}
+		
+		// didn't find it, so return empty one
+		
+		return new Xerxes_Marc_ControlField();
+	}
+
+	/**
+	 * Return a list of control fields, essentially for 007
+	 *
+	 * @param string $tag			the marc tag number
+	 * @return Xerxes_Marc_FieldList object
+	 */	
+	
+	public function controlfields($tag)
+	{
+		$list = new Xerxes_Marc_FieldList();
 		
 		foreach ( $this->_controlfields as $controlfield )
 		{
 			if ( $controlfield->tag == $tag )
 			{
-				$return = $controlfield;
+				$list->addField($controlfield);
 			}
 		}
-		
-		return $return;
+
+		return $list;
 	}
 
 	/**
