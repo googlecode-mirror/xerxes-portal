@@ -2459,14 +2459,27 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		return $arrFinal;
 	}
 	
-	protected function splitAuthor($datafield, $subfields, $strType, $bolAdditional = false)
+	protected function splitAuthor($author, $subfields, $strType, $bolAdditional = false)
 	{
 		$objAuthor = new Xerxes_Record_Author();
 		
 		$objAuthor->type = $strType;
 		$objAuthor->additional = $bolAdditional;
 		
-		$strAuthor = $datafield->subfield($subfields);
+		$strAuthor = "";
+		$strAuthorTitle = "";
+		
+		// author can be string or data field
+		
+		if ($author instanceof Xerxes_Marc_DataField )
+		{
+			$strAuthor = $author->subfield($subfields);
+			$strAuthorTitle = $author->subfield("t")->__toString();
+		}
+		else
+		{
+			$strAuthor = $author;
+		}
 		
 		$iComma = strpos( $strAuthor, "," );
 		$iLastSpace = strripos( $strAuthor, " " );
@@ -2523,7 +2536,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		
 		// title from author field, this is weird but part of marc
 		
-		$objAuthor->title = $datafield->subfield("t")->__toString();
+		$objAuthor->title = $strAuthorTitle;
 		
 		return $objAuthor;
 	}
