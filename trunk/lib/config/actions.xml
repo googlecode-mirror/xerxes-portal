@@ -561,6 +561,10 @@
 				<command>SearchRecord</command>
 				<view>xsl/worldcat/worldcat_record.xsl</view>
 			</action>
+			<action name="sms">
+				<command>SearchRecord</command>
+				<view>xsl/worldcat/worldcat_sms.xsl</view>
+			</action>
 			<action name="save-delete">
 				<command>SearchSave</command>
 				<view>xsl/metasearch_save-delete.xsl</view>

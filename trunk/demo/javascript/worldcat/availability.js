@@ -11,9 +11,9 @@
 
 	addEvent(window, 'load', fillAvailability);
 	addEvent(window, 'load', setNoImage);
-	addEvent(window, 'load', hideSMS);
+	addEvent(window, 'load', prepareSMS);
 	
-	function hideSMS()
+	function prepareSMS()
 	{
 		$("smsLink").onclick = function() {
 			return showSMS()
@@ -22,20 +22,13 @@
 		document.smsForm.onsubmit = function() {
 			return checkForm();
 		}
-		
-		$("smsOption").show();
-		$("sms").hide();
-		
+				
 		return false;
 	}
 	
 	function showSMS()
 	{
 		$("sms").show();
-
-		$("smsLink").onclick = function() {
-			return prepareSMS()
-		}	
 
 		return false;
 	}
