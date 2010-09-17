@@ -15,6 +15,8 @@
 	
 	function prepareSMS()
 	{
+		$("sms").hide();
+		
 		$("smsLink").onclick = function() {
 			return showSMS()
 		}	
@@ -29,6 +31,10 @@
 	function showSMS()
 	{
 		$("sms").show();
+
+		$("smsLink").onclick = function() {
+			return prepareSMS()
+		}	
 
 		return false;
 	}
