@@ -2162,46 +2162,10 @@
 	
 		<div class="tabs">
 			
-			<xsl:for-each select="config/tabs/top|config/tabs/sub[@parent = //request/base]">
+			<xsl:for-each select="config/tabs/top">
 					
-				<ul>
-					<xsl:attribute name="id">
-						<xsl:choose>
-							<xsl:when test="name() = 'top'">tabnav</xsl:when>
-							<xsl:when test="name() = 'sub'">tabsubnav</xsl:when>
-						</xsl:choose>
-					</xsl:attribute>
-					
-					<xsl:for-each select="tab">
-						<xsl:variable name="id" select="@id" />
-						<li>
-							<xsl:if test="//request/base = $id">
-								<xsl:attribute name="class">here</xsl:attribute>
-							</xsl:if>
-							
-							<a href="{$id}/results?{//query_normalized/@url}">
-								<xsl:value-of select="@public" /> 
-								
-								<span class="tabsHit">
-									<xsl:choose>
-										<xsl:when test="//request/base = $id">
-											(<xsl:value-of select="//results/total" />)
-										</xsl:when>
-										<xsl:otherwise>
-											<xsl:choose>
-												<xsl:when test="//results/other[@module=$id]">
-													(<xsl:value-of select="//results/other[@module=$id]" />)
-												</xsl:when>
-												<xsl:otherwise>
-													<span class="tabsHitNumber" id="tab:{$id}"></span>
-												</xsl:otherwise>
-											</xsl:choose>								
-										</xsl:otherwise>
-									</xsl:choose>
-								</span>
-							</a>
-						</li>
-					</xsl:for-each>
+				<ul id="tabnav">
+					<xsl:call-template name="tab_options" />
 				</ul>
 				<div style="clear:both"></div>
 			</xsl:for-each>
@@ -2211,6 +2175,64 @@
 	</xsl:if>
 </xsl:template>
 
+<xsl:template name="subtabs">
+
+	<xsl:if test="config/tabs">
+	
+		<div id="subtab" class="box">
+		
+			<h2>Expand your search</h2>
+			
+			<xsl:for-each select="config/tabs/sub[@parent = //request/base]">
+					
+				<ul>
+					<xsl:call-template name="tab_options" />
+				</ul>
+
+			</xsl:for-each>
+			
+		</div>
+	
+	</xsl:if>
+
+
+
+</xsl:template>
+
+<xsl:template name="tab_options">
+
+	<xsl:for-each select="tab">
+		<xsl:variable name="id" select="@id" />
+		<li>
+			<xsl:if test="//request/base = $id">
+				<xsl:attribute name="class">here</xsl:attribute>
+			</xsl:if>
+			
+			<a href="{$id}/results?{//query_normalized/@url}">
+				<xsl:value-of select="@public" /> 
+				
+				<span class="tabsHit">
+					<xsl:choose>
+						<xsl:when test="//request/base = $id">
+							(<xsl:value-of select="//results/total" />)
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:choose>
+								<xsl:when test="//results/other[@module=$id]">
+									(<xsl:value-of select="//results/other[@module=$id]" />)
+								</xsl:when>
+								<xsl:otherwise>
+									<span class="tabsHitNumber" id="tab:{$id}"></span>
+								</xsl:otherwise>
+							</xsl:choose>								
+						</xsl:otherwise>
+					</xsl:choose>
+				</span>
+			</a>
+		</li>
+	</xsl:for-each>
+	
+</xsl:template>
 
 <!-- 	
 	TEMPLATE: HEADER
@@ -2239,8 +2261,8 @@
 		<script src="{$base_include}/javascript/scriptaculous/scriptaculous.js" language="javascript" type="text/javascript"></script>
 		
 		<!-- fancy message display -->
-		
 		<script src="{$base_include}/javascript/message_display.js" language="javascript" type="text/javascript"></script>
+
 		
 		<!-- controls the adding and editing of tags -->
 		

@@ -87,7 +87,7 @@
 				{
 					$object = new Xerxes_Data_Refereed();
 					$object->issn = trim($arrTitle[0]);
-					$object->title = trim($arrTitle[1]);
+					// $object->title = trim($arrTitle[1]);
 					$object->timestamp = trim($arrTitle[2]);
 					
 					$x++;
