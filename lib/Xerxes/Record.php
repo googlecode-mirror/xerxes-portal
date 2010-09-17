@@ -248,41 +248,6 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		
 		$strThesis =  $this->datafield("502")->subfield("a")->__toString();
 		
-		// authors
-
-		$strPrimaryAuthor =  $this->datafield("100")->subfield("a")->__toString();
-
-		$strCorpName =  $this->datafield("110")->subfield("ab")->__toString();
-		
-		$strConfName =  $this->datafield("111")->subfield("anc")->__toString();
-		$this->author_from_title =  $this->datafield("245")->subfield("c" )->__toString();
-		
-		$arrAltAuthors = $this->fieldArray("700", "a" );
-		$arrAddCorp = $this->fieldArray("710", "ab" );
-		$arrAddConf = $this->fieldArray("711", "acn" );
-		
-		// conference and corporate names from title ?
-
-		$arrConferenceTitle = $this->fieldArray("811");
-		
-		if ( $arrAddConf == null && $arrConferenceTitle != null )
-		{
-			$arrAddConf = $arrConferenceTitle;
-		}
-		
-		$arrCorporateTitle = $this->fieldArray("810");
-		
-		if ( $arrAddCorp == null && $arrCorporateTitle != null )
-		{
-			$arrAddCorp = $arrCorporateTitle;
-		}
-		
-		if ( $strConfName != null || $arrAddConf != null )
-		{
-			array_push( $this->format_array, "conference paper" );
-		}
-			
-		
 		### title
 		
 		$this->title =  $this->datafield("245")->subfield("a")->__toString();
@@ -903,83 +868,105 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		
 		#### authors
 
+		// authors
+
+		$this->author_from_title =  $this->datafield("245")->subfield("c" )->__toString();
+		
+		$objConfName =  $this->datafield("111"); // "anc"
+		$objAddAuthor = $this->datafield("700"); // "a"
+		$objAddCorp = $this->datafield("710"); //, "ab"
+		$objAddConf = $this->datafield("711"); // "acn"
+		
+		// conference and corporate names from title ?
+
+		$objConferenceTitle = $this->datafield("811"); // all
+		
+		if ( $objAddConf->length() == 0 && $objConferenceTitle->length() > 0 )
+		{
+			$objAddConf = $objConferenceTitle;
+		}
+		
+		$objCorporateTitle = $this->datafield("810"); // all
+		
+		if ( $objAddCorp->length() == 0 && $objCorporateTitle->length() > 0 )
+		{
+			$objAddCorp = $objCorporateTitle;
+		}
+		
+		if ( $objConfName->length() > 0 || $objAddConf->length() > 0 )
+		{
+			array_push( $this->format_array, "conference paper" );
+		}		
+		
 		// personal primary author
 		
-		if ( $strPrimaryAuthor != "" )
+		if ( $this->datafield("100")->length() > 0 )
 		{
-			$objXerxesAuthor = $this->splitAuthor( $strPrimaryAuthor, "personal" );
+			$objXerxesAuthor = $this->splitAuthor( $this->datafield("100"), "a", "personal" );
 			array_push( $this->authors, $objXerxesAuthor );
 		} 
-		elseif ( $arrAltAuthors != null )
+		elseif ( $objAddAuthor->length() > 0 )
 		{
 			// editor
 
-			$objXerxesAuthor = $this->splitAuthor( $arrAltAuthors[0], "personal", true);
+			$objXerxesAuthor = $this->splitAuthor( $objAddAuthor->item(0), "a", "personal", true);
 			array_push( $this->authors, $objXerxesAuthor );
 			$this->editor = true;
 		}
 		
 		// additional personal authors
 
-		if ( $arrAltAuthors != null )
+		if ( $objAddAuthor->length() > 0  )
 		{
-			$x = 0;
-			$y = 0;
-			
 			// if there is an editor it has already been included in the array
 			// so we need to skip the first author in the list
 			
 			if ( $this->editor == true )
 			{
-				$x = 1;
+				$objAddAuthor->next();
 			}
 			
-			foreach ( $arrAltAuthors as $strAuthor )
+			foreach ( $objAddAuthor as $obj700 )
 			{
-				if ( $y >= $x )
-				{
-					$objXerxesAuthor = $this->splitAuthor( $strAuthor, "personal", true );
-					array_push( $this->authors, $objXerxesAuthor );
-				}
-				
-				$y ++;
+				$objXerxesAuthor = $this->splitAuthor( $obj700, "a", "personal", true );
+				array_push( $this->authors, $objXerxesAuthor );
 			}
 		}
 		
 		// corporate author
 		
-		if ( $strCorpName != "" )
+		if ( $this->datafield("110")->subfield("ab")->__toString() != "" )
 		{
-			$objXerxesAuthor = $this->splitAuthor( $strCorpName, "corporate" );
+			$objXerxesAuthor = $this->splitAuthor( $this->datafield("110"), "ab", "corporate" );
 			array_push( $this->authors, $objXerxesAuthor );
 		}
 		
 		// additional corporate authors
 
-		if ( $arrAddCorp != null )
+		if ( $objAddCorp->length() > 0 )
 		{
-			foreach ( $arrAddCorp as $strCorp )
+			foreach ( $objAddCorp as $objCorp )
 			{
-				$objXerxesAuthor = $this->splitAuthor( $strCorp, "corporate", true );
+				$objXerxesAuthor = $this->splitAuthor( $objCorp, "ab", "corporate", true );
 				array_push( $this->authors, $objXerxesAuthor );
 			}
 		}
 		
 		// conference name
 
-		if ( $strConfName != "" )
+		if ( $objConfName->length() > 0)
 		{
-			$objXerxesAuthor = $this->splitAuthor( $strConfName, "conference" );
+			$objXerxesAuthor = $this->splitAuthor( $objConfName, "anc", "conference" );
 			array_push( $this->authors, $objXerxesAuthor );
 		}
 		
 		// additional conference names
 
-		if ( $arrAddConf != null )
+		if ( $objAddConf->length() > 0 )
 		{
-			foreach ( $arrAddConf as $strConf )
+			foreach ( $objAddConf as $objConf )
 			{
-				$objXerxesAuthor = $this->splitAuthor( $strConf, "conference", true );
+				$objXerxesAuthor = $this->splitAuthor( $objConf, "acn", "conference", true );
 				array_push( $this->authors, $objXerxesAuthor );
 			}
 		}
@@ -1488,6 +1475,12 @@ class Xerxes_Record extends Xerxes_Marc_Record
 					$objAuthorCorp =  $objXml->createElement("aucorp", $this->escapeXml( $objXerxesAuthor->name) );
 					$objAuthor->appendChild($objAuthorCorp);
 				}
+
+				if ( $objXerxesAuthor->title != "" )
+				{
+					$objAuthorTitle = $objXml->createElement("title", $this->escapeXml( $objXerxesAuthor->title) );
+					$objAuthor->appendChild($objAuthorTitle);
+				}				
 				
 				$objAuthor->setAttribute("rank", $x);
 				
@@ -2466,12 +2459,14 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		return $arrFinal;
 	}
 	
-	protected function splitAuthor($strAuthor, $strType, $bolAdditional = false)
+	protected function splitAuthor($datafield, $subfields, $strType, $bolAdditional = false)
 	{
 		$objAuthor = new Xerxes_Record_Author();
 		
 		$objAuthor->type = $strType;
 		$objAuthor->additional = $bolAdditional;
+		
+		$strAuthor = $datafield->subfield($subfields);
 		
 		$iComma = strpos( $strAuthor, "," );
 		$iLastSpace = strripos( $strAuthor, " " );
@@ -2525,6 +2520,10 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		{
 			$objAuthor->name = trim( $strAuthor );
 		}
+		
+		// title from author field, this is weird but part of marc
+		
+		$objAuthor->title = $datafield->subfield("t")->__toString();
 		
 		return $objAuthor;
 	}
