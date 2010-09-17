@@ -15,17 +15,20 @@
 	
 	function prepareSMS()
 	{
-		$("sms").hide();
-		
-		$("smsLink").onclick = function() {
-			return showSMS()
-		}	
-		
-		document.smsForm.onsubmit = function() {
-			return checkForm();
+		if ( $('sms') )
+		{
+			$("sms").hide();
+			
+			$("smsLink").onclick = function() {
+				return showSMS()
+			}	
+			
+			document.smsForm.onsubmit = function() {
+				return checkForm();
+			}
+					
+			return false;
 		}
-				
-		return false;
 	}
 	
 	function showSMS()

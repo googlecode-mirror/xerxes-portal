@@ -70,27 +70,30 @@
 	
 	function showHitCounts()
 	{
-		var links = document.getElementsByTagName('span');
-		
-		var query = $('query').value;
-		var field = $('field').value;
-		
-		for ( i = 0; i < links.length; i++)
+		if ( $('query') )
 		{		
-			if ( /tabsHitNumber/.test(links[i].className) )
-			{
-				arrElements = links[i].id.split(":");
-				base = arrElements[1];
-				source = arrElements[2];
-				
-				url = ".?base=" + base + "&action=hits&query=" + query + "&field=" + field;
-				
-				if ( source != '' )
+			var links = document.getElementsByTagName('span');
+			
+			var query = $('query').value;
+			var field = $('field').value;
+			
+			for ( i = 0; i < links.length; i++)
+			{		
+				if ( /tabsHitNumber/.test(links[i].className) )
 				{
-					url += "&source=" +  source;
+					arrElements = links[i].id.split(":");
+					base = arrElements[1];
+					source = arrElements[2];
+					
+					url = ".?base=" + base + "&action=hits&query=" + query + "&field=" + field;
+					
+					if ( source != '' )
+					{
+						url += "&source=" +  source;
+					}
+	
+					new Ajax.Updater(links[i].id, url);
 				}
-
-				new Ajax.Updater(links[i].id, url);
 			}
 		}
 	}
