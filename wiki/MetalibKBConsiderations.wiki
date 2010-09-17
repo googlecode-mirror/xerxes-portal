@@ -50,7 +50,7 @@ For these resources, you'll need to go into the Metalib Management interface:
 
 Now, usually the `URL Mask` field is disabled, which means you can't select and copy it directly.  Bummer.  So, you'll need to look at the HTML source code to get this information.
 
-In your browser, go to `view` > `Source` (or in Firefox `Page source`), and then use `crtl+f` on your keyboard to bring-up the browser's search facility, and search for `REG_EXP_1`.
+In your browser, go to `view` > `Source` (or in Firefox `Page source`), and then use `crtl+f` on your keyboard to bring-up the browser's search facility, and search for `TERM1`.
 
 That should take you directly to an HTML tag that looks like this one from TOXNET:
 
