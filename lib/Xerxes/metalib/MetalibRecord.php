@@ -62,6 +62,29 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 			$leader->value = $strLeaderMetalib;
 		}
 		
+		// character entity references got munged
+		/*
+		
+		$author_subjects = $this->datafield("1XX|6XX");
+		
+		for ( $x = 0; $x < count($author_subjects); $x++ )
+		{
+			$this_datafield = $author_subjects[$x];
+			
+			$value = $datafield->subfield()->__toString();
+			
+			// un-terminated char entity ref
+			
+			if ( preg_match('/\&\#\d{3}$/', $value) )
+			{
+				if ( $x > 0 )
+				{
+					
+				}
+			}
+		}
+		*/
+		
 		// z3950/sutrs and some screen-scrapers have multiple authors in repeating 100 fields; 
 		// invalid marc, so switch all but first to 700
 		

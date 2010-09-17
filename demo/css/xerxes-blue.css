@@ -879,7 +879,7 @@ div.autocomplete ul li {
 	margin: 3em;
 }
 
-.tabsHit {
+#tabnav .tabsHit {
 	font-size: 85%;
 	padding-left: .5em;
 }
@@ -930,22 +930,20 @@ div.autocomplete ul li {
 	padding-bottom: 10px;
 }
 
-#tabsubnav .here a {
+#sidebar #subtab {
+	margin-left: 0;
+	border: 1px solid #ccc;
+	padding: .5em;
+}
+
+#subtab h2 {
+	margin-left: 0;
+	background-color: #efefef;
+	padding: .5em;
+}
+
+#subtab .tabsHit {
 	color: #000;
-	font-weight: bold;
-}
-
-#tabsubnav {
-	padding: 1em;
-	padding-left: 3em;
-	border-bottom: 1px solid #444; 
-	background-image: url("../images/tabs/sub-bg.gif");
-	background-repeat: repeat-x;
-	background-color: #f0f0f0;
-}
-
-#tabsubnav li {
-	display: inline;
 	padding-left: .5em;
 }
 
