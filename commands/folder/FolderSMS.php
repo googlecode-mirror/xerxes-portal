@@ -29,7 +29,6 @@
 			$strTitle = $this->request->getProperty("title");
 			$strItem = $this->request->getProperty("item");
 			
-			
 			if ( $strProvider == "" )
 			{
 				throw new Exception("Please choose your cell phone provider");
@@ -39,6 +38,11 @@
 			{
 				throw new Exception("Please enter a phone number");
 			}
+			
+			// save provider in session 
+			// @todo phone number too?
+			
+			$this->request->setSession("user_provider", $strProvider);
 
 			// only numbers, please
 			

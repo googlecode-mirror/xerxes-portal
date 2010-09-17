@@ -533,6 +533,12 @@ abstract class Xerxes_Framework_Search
 				$link_full = $results_xml->createElement("url_open", $record_openurl);
 				$record_container->appendChild( $link_full );
 
+				// sms link
+
+				$record_sms = Xerxes_Framework_Parser::escapeXml($this->linkSMS($result));
+				$link_sms = $results_xml->createElement("url_sms", $record_sms);
+				$record_container->appendChild( $link_sms );
+				
 				// save or delete link
 
 				$record_save = Xerxes_Framework_Parser::escapeXml($this->linkSaveRecord($result));
@@ -744,6 +750,24 @@ abstract class Xerxes_Framework_Search
 	protected function linkOpenURL($result)
 	{
 		return $result->getOpenURL($this->link_resolver, $this->sid);
+	}
+	
+	/**
+	 * URL for the sms feature
+	 * 
+	 * @param Xerxes_Record $result
+	 * @return string url
+	 */	
+	
+	protected function linkSMS($result)
+	{
+		$arrParams = array(
+			"base" => $this->request->getProperty("base"),
+			"action" => "sms",
+			"id" => $result->getRecordID()
+		);
+		
+		return $this->request->url_for($arrParams);	
 	}
 
 	/**
