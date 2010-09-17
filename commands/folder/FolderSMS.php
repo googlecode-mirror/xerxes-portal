@@ -61,7 +61,7 @@
 			$item_length = strlen($strItem);
 			$total_length = $title_length + $item_length;
 			
-			if ( $total_length > 160 )
+			if ( $total_length > 150 )
 			{
 				$strTitle = substr($strTitle,0,$total_length - $item_length - 6) . "...";
 			}
@@ -69,7 +69,7 @@
 			// message
 			
 			$strEmail = $strPhone . "@" . $strProvider;
-			$strSubject = "test";
+			$strSubject = "library";
 			$strBody = $strTitle . " / " . $strItem;
 			
 			// headers
@@ -91,12 +91,12 @@
 			
 			if ( mail( $strEmail, $strSubject, $strBody, $headers) )
 			{
-				$this->request->setSession( "flash_message", "Email successfully sent" );
+				$this->request->setSession( "flash_message", "Message successfully sent" );
 				$this->request->setRedirect($this->request->getSession('last_page'));
 			}
 			else
 			{
-				throw new Exception("Could not send email", 2);
+				throw new Exception("Could not send message", 2);
 			}
 		}
 	}
