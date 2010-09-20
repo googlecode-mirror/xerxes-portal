@@ -514,14 +514,11 @@ class Xerxes_Marc_DataField
 			// do it this way so fields are returned in the order in 
 			// which they were specified in the paramater
 			
-			foreach ( $codes as $letter )
+			foreach ( $this->_subfields as $subfield )
 			{
-				foreach ( $this->_subfields as $subfield )
+				if ( in_array($subfield->code, $codes ) )
 				{
-					if ( $subfield->code == $letter )
-					{
-						$list->addField($subfield);
-					}
+					$list->addField($subfield);
 				}
 			}
 		}
