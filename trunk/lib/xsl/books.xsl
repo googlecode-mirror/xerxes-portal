@@ -17,6 +17,10 @@
 	xmlns:holdings="http://www.loc.gov/standards/iso20775/"  
 	exclude-result-prefixes="php holdings">
 	
+	
+	<xsl:variable name="temp_text_bound_volumes">Bound volumes</xsl:variable>
+	
+	
 <!-- 	
 	TEMPLATE: HOLDINGS LOOKUP
 -->
@@ -333,7 +337,7 @@
 			
 				<xsl:if test="$holdings//holdings:holding/holdings:holdingsSimple/holdings:copyInformation[not(holdings:electronicLocator)]">
 			
-					<p><strong>Bound volumes</strong></p>
+					<p><strong><xsl:value-of select="$temp_text_bound_volumes" /></strong></p>
 					
 					<xsl:call-template name="holdings_item_table">
 						<xsl:with-param name="id" select="$id" />

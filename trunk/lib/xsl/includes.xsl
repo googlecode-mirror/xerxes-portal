@@ -2203,12 +2203,26 @@
 
 	<xsl:for-each select="tab">
 		<xsl:variable name="id" select="@id" />
+		<xsl:variable name="source">
+			<xsl:if test="@source">
+				<xsl:value-of select="@source" />
+			</xsl:if>
+		</xsl:variable>
+		<xsl:variable name="module">
+			<xsl:value-of select="$id">
+			<xsl:if test="@source">
+				<xsl:text>-</xsl:text>
+				<xsl:value-of select="@source" />
+			</xsl:if>			
+			</xsl:value-of>
+		</xsl:variable>
+		
 		<li>
 			<xsl:if test="//request/base = $id">
 				<xsl:attribute name="class">here</xsl:attribute>
 			</xsl:if>
 			
-			<a href="{$id}/results?{//query_normalized/@url}">
+			<a href="{$id}/results/{$source}?{//query_normalized/@url}">
 				<xsl:value-of select="@public" /> 
 				
 				<span class="tabsHit">
@@ -2218,11 +2232,11 @@
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:choose>
-								<xsl:when test="//results/other[@module=$id]">
-									(<xsl:value-of select="//results/other[@module=$id]" />)
+								<xsl:when test="//results/other[@module=$module]">
+									(<xsl:value-of select="//results/other[@module=$module]" />)
 								</xsl:when>
 								<xsl:otherwise>
-									<span class="tabsHitNumber" id="tab:{$id}"></span>
+									<span class="tabsHitNumber" id="tab:{$id}:{$source}"></span>
 								</xsl:otherwise>
 							</xsl:choose>								
 						</xsl:otherwise>
@@ -2261,8 +2275,9 @@
 		<script src="{$base_include}/javascript/scriptaculous/scriptaculous.js" language="javascript" type="text/javascript"></script>
 		
 		<!-- fancy message display -->
+		<!--
 		<script src="{$base_include}/javascript/message_display.js" language="javascript" type="text/javascript"></script>
-
+		-->
 		
 		<!-- controls the adding and editing of tags -->
 		
