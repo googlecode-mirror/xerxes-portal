@@ -408,13 +408,16 @@
 
 			<!-- additional authors -->
 
-			<xsl:if test="authors/author[@additional='true']">
+			<xsl:if test="authors/author[@additional='true' and @type != 'corporate']">
 				<div class="recordData">
 				<h2>Additional Authors</h2>
 				<ul>
 					<xsl:for-each select="authors/author[@additional='true']">
 						<li>
 							<xsl:choose>
+								<xsl:when test="display">
+									<xsl:value-of select="display" />							
+								</xsl:when>
 								<xsl:when test="@type = 'personal'">
 									<xsl:value-of select="aufirst" />
 									<xsl:text> </xsl:text>
@@ -426,11 +429,6 @@
 									<xsl:value-of select="aucorp" />
 								</xsl:otherwise>
 							</xsl:choose>
-							
-							<xsl:if test="title">
-								<xsl:text>, </xsl:text>
-								<em><xsl:value-of select="title" /></em>
-							</xsl:if>
 						</li>
 					</xsl:for-each>
 				</ul>

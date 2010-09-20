@@ -1476,10 +1476,10 @@ class Xerxes_Record extends Xerxes_Marc_Record
 					$objAuthor->appendChild($objAuthorCorp);
 				}
 
-				if ( $objXerxesAuthor->title != "" )
+				if ( $objXerxesAuthor->display != "" )
 				{
-					$objAuthorTitle = $objXml->createElement("title", $this->escapeXml( $objXerxesAuthor->title) );
-					$objAuthor->appendChild($objAuthorTitle);
+					$objAuthorDisplay = $objXml->createElement("display", $this->escapeXml( $objXerxesAuthor->display) );
+					$objAuthor->appendChild($objAuthorDisplay);
 				}				
 				
 				$objAuthor->setAttribute("rank", $x);
@@ -2090,19 +2090,19 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		if ( strstr( $strDataFields, 'dissertation' ) ) return  "Dissertation"; 
 		if (  $this->datafield("502")->__toString() != "" ) return  "Thesis"; 
 		if (  $this->controlfield("002")->__toString() == "DS" ) return  "Thesis";
-		if ( strstr( $strDataFields, 'proceeding' ) ) return  "Conference Proceeding"; 
-		if ( strstr( $strDataFields, 'conference' ) ) return  "Conference Paper"; 
+		if ( strstr( $strDataFields, 'proceeding' ) ) return  "ConferenceProceeding"; 
+		if ( strstr( $strDataFields, 'conference' ) ) return  "ConferencePaper"; 
 		if ( strstr( $strDataFields, 'hearing' ) ) return  "Hearing"; 
-		if ( strstr( $strDataFields, 'working' ) ) return  "Working Paper"; 
-		if ( strstr( $strDataFields, 'book review' ) || strstr( $strDataFields, 'review-book' ) ) return  "Book Review"; 
-		if ( strstr( $strDataFields, 'film review' ) || strstr( $strDataFields, 'film-book' ) ) return  "Film Review";
+		if ( strstr( $strDataFields, 'working' ) ) return  "WorkingPaper"; 
+		if ( strstr( $strDataFields, 'book review' ) || strstr( $strDataFields, 'review-book' ) ) return  "BookReview"; 
+		if ( strstr( $strDataFields, 'film review' ) || strstr( $strDataFields, 'film-book' ) ) return  "FilmReview";
 		if ( strstr( "$strDataFields ", 'review ' ) ) return  "Review";
-		if ( strstr( $strDataFields, 'book art' ) || strstr( $strDataFields, 'book ch' ) || strstr( $strDataFields, 'chapter' ) ) return  "Book Chapter"; 
+		if ( strstr( $strDataFields, 'book art' ) || strstr( $strDataFields, 'book ch' ) || strstr( $strDataFields, 'chapter' ) ) return  "BookChapter"; 
 		if ( strstr( $strDataFields, 'journal' ) ) return  "Article"; 
 		if ( strstr( $strDataFields, 'periodical' ) || strstr( $strDataFields, 'serial' ) ) return  "Article"; 
 		if ( strstr( $strDataFields, 'book' ) ) return  "Book";
         if ( strstr( $strDataFields, 'pamphlet' ) ) return  "Pamphlet";  
-        if ( strstr( $strDataFields, 'essay' ) ) return  "Essay";
+        // if ( strstr( $strDataFields, 'essay' ) ) return  "Essay";
 		if ( strstr( $strDataFields, 'article' ) ) return  "Article";
 
 		// format from other sources
@@ -2370,16 +2370,20 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		{
 			// Monograph
 			case 'M' :
-				if (formatCode == 'C') {
+				if (formatCode == 'C') 
+				{
 					array_push( $result, "eBook" );
-				} else {
+				} 
+				else 
+				{
 					array_push( $result, "Book" );
 				}
 				break;
 			// Serial
 			case 'S' :
 				// Look in 008 to determine what type of Continuing Resource
-				switch (strtoupper( $format_008->position( 21 ) )) {
+				switch (strtoupper( $format_008->position( 21 ) ))
+				{
 					case 'N' :
 						array_push( $result, "Newspaper" );
 						break;
@@ -2467,14 +2471,14 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		$objAuthor->additional = $bolAdditional;
 		
 		$strAuthor = "";
-		$strAuthorTitle = "";
+		$strAuthorDisplay = "";
 		
 		// author can be string or data field
 		
 		if ($author instanceof Xerxes_Marc_DataField )
 		{
 			$strAuthor = $author->subfield($subfields);
-			$strAuthorTitle = $author->subfield("t")->__toString();
+			$strAuthorDisplay = $author->__toString();
 		}
 		else
 		{
@@ -2534,9 +2538,9 @@ class Xerxes_Record extends Xerxes_Marc_Record
 			$objAuthor->name = trim( $strAuthor );
 		}
 		
-		// title from author field, this is weird but part of marc
+		// all marc subfields, for display
 		
-		$objAuthor->title = $strAuthorTitle;
+		$objAuthor->display = $strAuthorDisplay;
 		
 		return $objAuthor;
 	}
@@ -3212,7 +3216,7 @@ class Xerxes_Record_Author
 	public $name;
 	public $type;
 	public $additional;
-	public $title;
+	public $display;
 	
 	public function allFields()
 	{
