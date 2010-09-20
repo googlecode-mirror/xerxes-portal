@@ -31,6 +31,7 @@
   * [http://library.calstate.edu/sanjose/ San Jose State University]
   * [http://library.calstate.edu/sonoma/ Sonoma State University]
   * [http://xerxes.palni.edu/tsp Trine University]
+  * [http://ubodoc-scd.univ-brest.fr/ Université de Bretagne Occidentale] (France)
   * [http://www.library.uni.edu/gateway/xerxes/ui/ University of Northern Iowa]
   * [http://xerxes.library.nd.edu/quicksearch/ University of Notre Dame]
   * [http://onesearch.uoregon.edu/ University of Oregon]
