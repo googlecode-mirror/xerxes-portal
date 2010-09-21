@@ -2060,7 +2060,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		if ( $chrLeader6 == 'k' ) return "Photograph or Slide"; 
 		if ( $chrLeader6 == 'g' ) return "Video"; 
 		if ( $chrLeader6 == 'm' && $chrLeader7 == 'i' ) return "Website"; 
-		if ( $chrLeader6 == 'm' ) return "Computer File"; 
+		if ( $chrLeader6 == 'm' ) return "Electronic Resource"; 
 		if ( $chrLeader6 == 'a' && $chrLeader7 == 'b' ) return "Article"; 
 		if ( $chrLeader6 == 'a' && $chrLeader7 == 's' ) return "Journal"; 
 		if ( $chrLeader6 == 'a' && $chrLeader7 == 'i' ) return "Website"; 
