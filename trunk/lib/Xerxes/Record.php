@@ -3224,7 +3224,7 @@ class Xerxes_Record_Author
 		
 		foreach ( $this as $key => $value )
 		{
-			if ( $key == "additional" || $key == "title")
+			if ( $key == "additional" || $key == "display")
 			{
 				continue;
 			}
