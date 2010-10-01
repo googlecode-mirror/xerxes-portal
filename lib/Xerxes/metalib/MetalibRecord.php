@@ -142,7 +142,7 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 
 		if (stristr ( $this->source, "FACTIVA" ))
 		{
-			array_push ( $this->links, array ("Full-Text Available", array ("035_a" => $this->datafield ( "035" )->subfield ( "a" ) ), "online" ) );
+			array_push ( $this->links, array("Full-Text Available", array("035_a" => $this->datafield("035")->subfield("a")->__toString() ), "online" ) );
 		}
 		
 		// eric -- document is recent enough to likely contain full-text;
