@@ -51,6 +51,9 @@ class Xerxes_Framework_FrontController
 		$objRegistry = Xerxes_Framework_Registry::getInstance();
 		$objRegistry->init();
 		
+		$objLanguage = Xerxes_Framework_Languages::getInstance();
+		$objLanguage->init();
+		
 		$objControllerMap = Xerxes_Framework_ControllerMap::getInstance();
 		$objControllerMap->init();
 		
