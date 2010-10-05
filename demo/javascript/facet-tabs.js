@@ -81,20 +81,32 @@
 			{		
 				if ( /tabsHitNumber/.test(links[i].className) )
 				{
+					hitID = links[i].id;
 					arrElements = links[i].id.split(":");
 					base = arrElements[1];
 					source = arrElements[2];
-					
+										
 					url = ".?base=" + base + "&action=hits&query=" + query + "&field=" + field;
 					
 					if ( source != '' )
 					{
 						url += "&source=" +  source;
 					}
-	
-					new Ajax.Updater(links[i].id, url);
+					
+					updateHitCount(url, hitID)
 				}
 			}
 		}
+	}
+	
+	function updateHitCount(url, hitID)
+	{
+		// only update on success
+		
+		new Ajax.Request(url, {
+			"onSuccess": function (ajaxRequest) {
+				$(hitID).update(ajaxRequest.responseText);
+			}
+		});	
 	}
 	
