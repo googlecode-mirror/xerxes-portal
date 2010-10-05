@@ -84,6 +84,8 @@
 
 		public function search( $strQuery, $arrDatabases, $bolWait = false) 
 		{
+			$strQuery = trim($strQuery); // extra spaces will cause error
+			
 			$strWaitFlag = "N";			// wait flag
 			$strDatabaseList = "";		// string list of databases
 			
