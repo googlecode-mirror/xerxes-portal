@@ -1283,7 +1283,7 @@
 		<input type="hidden" name="new_subcategory_name" value="{$text_collection_default_new_section_name}"/>
 		
 		<p><label for="new_subject_name"><xsl:copy-of select="$text_header_my_collections_new" /></label></p>
-		<input type="text" id="new_subject_name" name="new_subject_name"/><xsl:text> </xsl:text><input type="submit" name="add" value="{$text_header_my_collections_add}" />
+		<input type="text" id="new_subject_name" name="new_subject_name"/><xsl:text> </xsl:text><input type="submit" class="col_add_submit" name="add" value="{$text_header_my_collections_add}" />
 		
 		</form>
 	</div>

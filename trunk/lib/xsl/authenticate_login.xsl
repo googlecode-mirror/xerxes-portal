@@ -51,7 +51,7 @@
 		
 		<div class="box">
 				
-			<form name="login" method="post" action="./?base=authenticate">		
+			<form name="login" method="post" action="./?base=authenticate">
 				<input name="action" type="hidden" value="login" />
 				<input name="return" type="hidden" value="{$return}" />
 				<input name="local" type="hidden" value="{$local}" />
@@ -68,7 +68,7 @@
 				<input name="password" type="password" id="password" />
 				</p>
 				
-				<input type="submit" class="submit" name="Submit" value="{$text_authentication_login_pagename}" />
+				<input type="submit" class="login_submit" name="Submit" value="{$text_authentication_login_pagename}" />
 							
 			</form>
 			
