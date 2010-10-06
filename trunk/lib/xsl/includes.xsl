@@ -2283,6 +2283,61 @@
 	
 </xsl:template>
 
+
+<!-- 	
+	TEMPLATE: citation
+	record cited in all available citation styles
+	for inclusion on record pages (where xerxes_record is available)
+-->
+<xsl:template name="citation">
+	<div id="citation1" class="box">
+    
+		<xsl:for-each select="//records/record/xerxes_record">
+		
+			<h2>
+				<xsl:copy-of select="$text_record_cite_this" /><xsl:text> </xsl:text>
+				<xsl:call-template name="text_results_format">
+					<xsl:with-param name="format" select="format" />
+				</xsl:call-template>
+				<xsl:text> :</xsl:text>
+			</h2>
+			
+			<div class="citation" id="citation_apa">
+			
+				<h3>APA</h3>
+				<p class="citationStyle">
+					<xsl:call-template name="apa" />
+				</p>
+				
+			</div>
+			
+			<div class="citation" id="citation_mla">
+				
+				<h3>MLA</h3>
+				<p class="citationStyle">
+					<xsl:call-template name="mla" />
+				</p>
+				
+			</div>
+			
+			<div class="citation" id="citation_turabian">
+				
+				<h3>Turabian</h3>
+				<p class="citationStyle">
+					<xsl:call-template name="turabian" />
+				</p>
+		
+			</div>
+		
+			<p id="citationNote">
+				<xsl:copy-of select="$text_record_citation_note" />
+			</p>
+			
+		</xsl:for-each>
+	</div>
+</xsl:template>
+
+
 <!-- 	
 	TEMPLATE: HEADER
 	header content, such as Javascript functions that should appear on specific page.
