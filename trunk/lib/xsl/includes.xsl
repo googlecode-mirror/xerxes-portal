@@ -96,16 +96,6 @@
 	<xsl:variable name="databases_searchable"	select="//config/database_list_searchable" />
 	
 	<xsl:variable name="xerxes_language" select="//config/xerxes_language" />
-	<!--xsl:variable name="xerxes_language">
-		<xsl:choose>
-			<xsl:when test="//config/xerxes_language">
-				<xsl:value-of select="//config/xerxes_language" />
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:text>XXXeng</xsl:text>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:variable-->
 	
 	<xsl:variable name="db_description_multilingual">
 		<xsl:choose>
