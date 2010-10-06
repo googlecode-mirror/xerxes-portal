@@ -123,6 +123,7 @@ class Xerxes_WorldCat
 		$this->url .= "?wskey=" . $this->key;
 		$this->url .= "&startLibrary=" . $iStart;
 		$this->url .= "&maximumLibraries=" . $iMax;
+		$this->url .= "&servicelevel=" . $this->service;
 
 		if ( $strLibraries != "" )
 		{
