@@ -48,7 +48,7 @@
 			<h1><xsl:call-template name="page_name" /></h1>
 			
 			<!-- Basic record information (Author, Year, Format, Database, ...) -->
-			<xsl:call-template name="record-list" />
+			<xsl:call-template name="record-summary" />
 						
 			<!-- A box with actions for current record (get full-text, link to holdings, save record) -->
 			<xsl:call-template name="record-actions" />
@@ -58,30 +58,8 @@
 			<div id="search_inside" class="umlaut_content" style="display:none;"></div>
 			<div id="limited_preview" class="umlaut_content" style="display:none"></div>
 
-			<!-- Abstract -->
-			<xsl:call-template name="record-abstract" />
-			
-			<!-- Recommendations -->
-			<xsl:call-template name="record-recommendations" />
-			
-			<!-- Table of contents -->
-			<xsl:call-template name="record-toc" />
-			
-			<!-- Language -->
-			<xsl:call-template name="record-language" />
-			
-			<!-- Subjects -->
-			<xsl:call-template name="record-subjects" />
-			
-			<!-- Standard Numbers -->
-			<xsl:call-template name="record-standard-numbers" />
-				
-			<!-- Actual text embedded only if we have no links to full text-->
-			<xsl:call-template name="record-embedded-text" />
-			
-			<!-- Notes -->
-			<xsl:call-template name="record-notes" />
-			
+			<!-- Detailed record information (Summary, Topics, Standard numbers, ...) -->
+			<xsl:call-template name="record-details" />
 		</xsl:for-each>
 			
 		<!-- tag input -->
@@ -92,7 +70,7 @@
 	
 </xsl:template>
 
-<xsl:template name="record-list">
+<xsl:template name="record-summary">
 	<dl>
 		<xsl:call-template name="record-authors" />	<!-- Authors -->
 		<xsl:call-template name="record-corp-authors" />	<!-- Corp. Authors -->
@@ -397,6 +375,17 @@
 	</xsl:if>
 </xsl:template>
 
+<xsl:template name="record-details">
+	<xsl:call-template name="record-abstract" />
+	<xsl:call-template name="record-recommendations" />
+	<xsl:call-template name="record-toc" />
+	<xsl:call-template name="record-language" />
+	<xsl:call-template name="record-subjects" />
+	<xsl:call-template name="record-standard_numbers" />
+	<xsl:call-template name="record-embedded_text" />
+	<xsl:call-template name="record-notes" />
+</xsl:template>
+
 <xsl:template name="record-abstract">
 	<xsl:if test="abstract">
 		<h2><xsl:copy-of select="$text_record_summary" /></h2>
@@ -486,7 +475,7 @@
 	</xsl:if>
 </xsl:template>
 
-<xsl:template name="record-standard-numbers">
+<xsl:template name="record-standard_numbers">
 	<xsl:if test="standard_numbers">
 		<h2><xsl:copy-of select="$text_record_standard_nos" />:</h2>
 		<ul>
@@ -510,7 +499,7 @@
 	</xsl:if>
 </xsl:template>
 
-<xsl:template name="record-embedded-text">
+<xsl:template name="record-embedded_text">
 	<xsl:if test="count(links/link[@type != 'none']) = 0 and embeddedText">
 		<h2>Text</h2>
 		<xsl:for-each select="embeddedText/paragraph">
