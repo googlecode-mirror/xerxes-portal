@@ -163,14 +163,7 @@
 	<xsl:param name="sidebar" />
 
 	<html lang="eng">
-	<head>
-	<title><xsl:value-of select="//config/application_name" />: <xsl:call-template name="title" /></title>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<xsl:call-template name="header_refresh" />	
-	<base href="{$base_include}/" />
-	<xsl:call-template name="css_include" />
-	<xsl:call-template name="header" />	
-	</head>
+	<xsl:call-template name="surround-head" />
 	<body>
 	<xsl:if test="request/action = 'subject' or request/action = 'categories'">
 		<xsl:attribute name="onLoad">if (document.forms.form1) if  (document.forms.form1.query)  document.forms.form1.query.focus()</xsl:attribute>
@@ -195,6 +188,41 @@
 				<xsl:attribute name="class"><xsl:value-of select="$surround_template" /></xsl:attribute>
 			</xsl:otherwise>
 		</xsl:choose>
+
+		<!-- The main content is split into subtemplates to make customiztion of parts easier -->
+		<xsl:call-template name="surround-hd" />
+
+		<xsl:call-template name="surround-bd" />
+
+		<xsl:call-template name="surround-ft">
+			<xsl:with-param name="sidebar"><xsl:value-of select="$sidebar" /></xsl:with-param>
+		</xsl:call-template>
+
+	</div>
+	
+	<xsl:call-template name="surround-google-analytics" />
+		
+	</body>
+	</html>
+	
+</xsl:template>
+
+<xsl:template name="surround-head">
+	<head>
+	<title><xsl:value-of select="//config/application_name" />: <xsl:call-template name="title" /></title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<xsl:call-template name="header_refresh" />	
+	<base href="{$base_include}/" />
+	<xsl:call-template name="css_include" />
+	<xsl:call-template name="header" />	
+	</head>
+</xsl:template>
+
+<!-- 
+	TEMPLATE: surround-bd
+	page header
+-->
+<xsl:template name="surround-hd">
 		<div id="hd">
 			<xsl:choose>
 				<xsl:when test="$is_mobile = '1'">
@@ -210,6 +238,15 @@
 				</div>
 			</div>
 		</div>
+</xsl:template>
+
+<!-- 
+	TEMPLATE: surround-bd
+	page body - main content
+-->
+<xsl:template name="surround-bd">
+	<xsl:param name="sidebar" />
+
 		<div id="bd">
 			<div id="yui-main">
 				<div class="yui-b">
@@ -226,6 +263,13 @@
 			</xsl:if>
 
 		</div>
+</xsl:template>
+
+<!-- 
+	TEMPLATE: surround-ft
+	page footer
+-->
+<xsl:template name="surround-ft">
 		<div id="ft">
 			<xsl:choose>
 				<xsl:when test="$is_mobile = '1'">
@@ -236,8 +280,13 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</div>
-	</div>
-	
+</xsl:template>
+
+<!-- 
+	TEMPLATE: surround-google-analytics
+	Google analytics script
+-->
+<xsl:template name="surround-google-analytics">
 	<xsl:if test="//config/google_analytics">
 
 		<xsl:variable name="google_analytics" select="//config/google_analytics" />
@@ -255,10 +304,6 @@
 		</script>
 		
 	</xsl:if>
-		
-	</body>
-	</html>
-	
 </xsl:template>
 
 <!-- 
