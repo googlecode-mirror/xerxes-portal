@@ -203,16 +203,20 @@
 </xsl:template>
 	
 <xsl:template name="sidebar">
-
-<xsl:variable name="group" 				select="request/group" />
-<xsl:variable name="this_result_set"	select="request/resultset" />
-
-
-	
 	<xsl:call-template name="account_sidebar" />
+	<xsl:call-template name="results_sidebar" />
+</xsl:template>
 	
-	<!-- merged set -->
-	
+<xsl:template name="results_sidebar">
+	<xsl:call-template name="results_sidebar-merged_set" />
+	<xsl:call-template name="results_sidebar-individual_databases" />
+	<xsl:call-template name="facets" />
+</xsl:template>
+
+<xsl:template name="results_sidebar-merged_set">
+	<xsl:variable name="group" 				select="request/group" />
+	<xsl:variable name="this_result_set"	select="request/resultset" />
+
 	<xsl:if test="//base_info[base = 'MERGESET']">
 	
 		<div class="box merge_set">
@@ -244,9 +248,12 @@
 		</div>
 	
 	</xsl:if>
+</xsl:template>
 	
-	<!-- individual databases -->
-	
+<xsl:template name="results_sidebar-individual_databases">
+	<xsl:variable name="group" 				select="request/group" />
+	<xsl:variable name="this_result_set"	select="request/resultset" />
+
 	<xsl:if test="count(//base_info) > 1 or count(//excluded_dbs/database) > 0">
 	
 		<div class="box database_sets">
@@ -340,11 +347,6 @@
 		</div>
 		
 	</xsl:if>
-	
-	<!-- facets -->
-	<xsl:call-template name="facets" />
-
-	
 </xsl:template>
 
 <!--
