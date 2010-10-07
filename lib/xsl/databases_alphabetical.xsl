@@ -124,8 +124,8 @@
 					&#160;
 					<a href="{url}">
 
-						<img alt="more information" title="{$text_databases_az_hint_info}" src="images/info.gif" class="iconInfo miniIcon">
-							<xsl:attribute name="src"><xsl:value-of select="/knowledge_base/config/base_url" />/images/info.gif</xsl:attribute>
+						<img alt="more information" title="{$text_databases_az_hint_info}" src="images/info.png" class="iconInfo miniIcon">
+							<xsl:attribute name="src"><xsl:value-of select="/knowledge_base/config/base_url" />/images/info.png</xsl:attribute>
 						</img>						
 						<xsl:text> </xsl:text>
             

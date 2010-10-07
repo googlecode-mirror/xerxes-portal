@@ -849,7 +849,7 @@
 					<xsl:text> </xsl:text>
 				</xsl:when>
 				<xsl:otherwise>
-					<img src="{$base_url}/images/link-out.gif" alt="{$text_databases_subject_hint_restricted}" title="{$text_databases_subject_hint_native_only}"/>
+					<img src="{$base_url}/images/link-out.png" alt="{$text_databases_subject_hint_restricted}" title="{$text_databases_subject_hint_native_only}"/>
 					<xsl:text> </xsl:text>
 				</xsl:otherwise>
 				</xsl:choose>
@@ -881,8 +881,8 @@
 				<span class="subjectDatabaseInfo">
 					<a  title="{$text_databases_subject_hint_more_info_about} {title_display}">
 					<xsl:attribute name="href"><xsl:value-of select="url" /></xsl:attribute>
-					<img src="images/info.gif" alt="{$text_databases_subject_hint_more_info_about} {title_display}">
-						<xsl:attribute name="src"><xsl:value-of select="//config/base_url" />/images/info.gif</xsl:attribute>
+					<img src="images/info.png" alt="{$text_databases_subject_hint_more_info_about} {title_display}">
+						<xsl:attribute name="src"><xsl:value-of select="//config/base_url" />/images/info.png</xsl:attribute>
 					</img>
 					</a>
 					<xsl:text> </xsl:text>
@@ -1025,14 +1025,14 @@
 	
 	<xsl:if test="request/label">
 		<h2>
-			<a href="./?base=folder"><img src="{$base_url}/images/delete.gif" alt="remove limit" /></a>
+			<a href="./?base=folder"><img src="{$base_url}/images/delete.png" alt="remove limit" /></a>
 			<xsl:copy-of select="$text_folder_limit_tag" /><xsl:text>: </xsl:text><xsl:value-of select="request/label" />
 		</h2>
 	</xsl:if>
 	
 	<xsl:if test="request/type">
 		<h2>
-			<a href="./?base=folder"><img src="{$base_url}/images/delete.gif" alt="remove limit" /></a>
+			<a href="./?base=folder"><img src="{$base_url}/images/delete.png" alt="remove limit" /></a>
 			<xsl:copy-of select="$text_folder_limit_format" /><xsl:text>: </xsl:text><xsl:value-of select="request/type" />
 		</h2>
 	</xsl:if>
@@ -1096,7 +1096,7 @@
 			contains(request/session/saved_return,'record')">
 
 		<div class="folderReturn">
-			<img src="{$base_include}/images/back.gif" alt="" />
+			<img src="{$base_include}/images/back.png" alt="" />
 			<span class="folderReturnText">
 				<a href="{$back}"><xsl:copy-of select="$text_folder_return" /></a>
 			</span>
@@ -1171,17 +1171,17 @@
 			
 				<xsl:choose>
 					<xsl:when test="@type = 'pdf'">
-						<img src="{$base_include}/images/pdf.gif" alt="" width="16" height="16" border="0" class="miniIcon fullTextLink pdf"/>
+						<img src="{$base_include}/images/pdf.png" alt="" width="16" height="16" border="0" class="miniIcon fullTextLink pdf"/>
 						<xsl:text> </xsl:text>
 						<xsl:copy-of select="$text_records_fulltext_pdf" />
 					</xsl:when>
 					<xsl:when test="@type = 'html'">
-						<img src="{$base_include}/images/html.gif" alt="" width="16" height="16" border="0" class="miniIcon fullTextLink html"/>
+						<img src="{$base_include}/images/html.png" alt="" width="16" height="16" border="0" class="miniIcon fullTextLink html"/>
 						<xsl:text> </xsl:text>
 						<xsl:copy-of select="$text_records_fulltext_html" />
 					</xsl:when>
 					<xsl:otherwise>
-						<img src="{$base_include}/images/html.gif" alt="" width="16" height="16" border="0" class="miniIcon fullTextLink unknown"/>
+						<img src="{$base_include}/images/html.png" alt="" width="16" height="16" border="0" class="miniIcon fullTextLink unknown"/>
 						<xsl:text> </xsl:text>
 						<xsl:copy-of select="$text_records_fulltext_available" />
 					</xsl:otherwise>
@@ -1261,8 +1261,8 @@
 				<img name="folder" width="17" height="15" border="0" id="folder" alt="">
 					<xsl:attribute name="src">
 					<xsl:choose>
-					<xsl:when test="//navbar/element[@id='saved_records']/@numSessionSavedRecords &gt; 0"><xsl:value-of select="$base_include" />/images/folder_on.gif</xsl:when>
-					<xsl:otherwise><xsl:value-of select="$base_include"/>/images/folder.gif</xsl:otherwise>
+					<xsl:when test="//navbar/element[@id='saved_records']/@numSessionSavedRecords &gt; 0"><xsl:value-of select="$base_include" />/images/folder_on.png</xsl:when>
+					<xsl:otherwise><xsl:value-of select="$base_include"/>/images/folder.png</xsl:otherwise>
 					</xsl:choose>
 					</xsl:attribute>
 				</img>
@@ -1275,7 +1275,7 @@
 			
 			<xsl:if test="//navbar/element[@id='saved_collections']">
 				<li id="my_databases" class="sidebarFolder">
-					<img src="{$base_include}/images/folder.gif" width="17" height="15" border="0" alt=""/><xsl:text> </xsl:text>
+					<img src="{$base_include}/images/folder.png" width="17" height="15" border="0" alt=""/><xsl:text> </xsl:text>
 					<a href="{//navbar/element[@id='saved_collections']/url}"><xsl:copy-of select="$text_header_collections"/></a>
 				</li>
 			</xsl:if>
@@ -1623,7 +1623,7 @@
 					<!-- peer reviewed -->
 					
 					<xsl:if test="$refereed = 'true'">
-						<xsl:text> </xsl:text><img src="images/refereed_hat.gif" width="20" height="14" alt="" />
+						<xsl:text> </xsl:text><img src="images/refereed_hat.png" width="20" height="14" alt="" />
 						<xsl:text> </xsl:text><xsl:copy-of select="$text_results_refereed" />
 					</xsl:if>
 				</div>
@@ -1701,7 +1701,7 @@
 						
 							<div class="folderAvailability deleteRecord">
 								<a class="recordAction deleteRecord" href="{../url_delete}">
-									<img src="{$base_url}/images/delete.gif" alt="" border="0" class="miniIcon deleteRecordLink"/>
+									<img src="{$base_url}/images/delete.png" alt="" border="0" class="miniIcon deleteRecordLink"/>
 									<xsl:text> </xsl:text>
 									<xsl:copy-of select="$text_results_record_delete" />
 								 </a>
@@ -1722,8 +1722,8 @@
 								<img id="folder_{$result_set}{$record_number}"	width="17" height="15" alt="" border="0" class="miniIcon saveRecordLink">
 								<xsl:attribute name="src">
 									<xsl:choose> 
-										<xsl:when test="//request/session/resultssaved[@key = $record_id]">images/folder_on.gif</xsl:when>
-										<xsl:otherwise>images/folder.gif</xsl:otherwise>
+										<xsl:when test="//request/session/resultssaved[@key = $record_id]">images/folder_on.png</xsl:when>
+										<xsl:otherwise>images/folder.png</xsl:otherwise>
 									</xsl:choose>
 								</xsl:attribute>
 								</img>
@@ -1789,7 +1789,7 @@
 			<xsl:call-template name="record_link">
 				<xsl:with-param name="type">holdings</xsl:with-param>
 				<xsl:with-param name="text" select="$text_link_holdings"/>
-				<xsl:with-param name="img_src" select="concat($base_url, '/images/book.gif')"/>
+				<xsl:with-param name="img_src" select="concat($base_url, '/images/book.png')"/>
 			</xsl:call-template>
 	</xsl:if>
 	
@@ -1807,7 +1807,7 @@
 		
 		<xsl:when test="$link_resolver_allowed and (subscription = 1 or //fulltext/issn = standard_numbers/issn)">
 				<a href="{../url_open}&amp;fulltext=1" target="{$link_target}" class="recordAction linkResolverLink">
-					<img src="{$base_include}/images/html.gif" alt="" width="16" height="16" border="0" class="miniIcon linkResolverLink"/>
+					<img src="{$base_include}/images/html.png" alt="" width="16" height="16" border="0" class="miniIcon linkResolverLink"/>
 					<xsl:text> </xsl:text>
 					<xsl:copy-of select="$text_link_resolver_available" />
 				</a>
@@ -1815,7 +1815,7 @@
 		
 		<xsl:when test="$link_resolver_allowed">
 				<a href="{../url_open}" target="{$link_target}" class="recordAction linkResoverLink">
-					<img src="{$base_url}/images/sfx.gif" alt="" class="miniIcon linkResolverLink "/>
+					<img src="{$base_url}/images/sfx.png" alt="" class="miniIcon linkResolverLink "/>
 					<xsl:text> </xsl:text>
 					<xsl:copy-of select="$text_link_resolver_check" />
 				</a>

@@ -195,7 +195,7 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
 							</xsl:variable>
 
 							<a href="./?base=collections&amp;action=remove_db&amp;username={//request/username}&amp;subject={//category[1]/@normalized}&amp;subcategory={../@id}&amp;id={metalib_id}&amp;return={php:function('urlencode', string(//server/request_uri))}#section_{../@id}"><img 
-								src="{$base_url}/images/delete.gif" title="{$remove_text}" alt="{$remove_text}"/></a>
+								src="{$base_url}/images/delete.png" title="{$remove_text}" alt="{$remove_text}"/></a>
 
 							<span class="subjectDatabaseTitle">
 								<a>
@@ -207,8 +207,8 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
 							<span class="subjectDatabaseInfo">
 								<a>
 								<xsl:attribute name="href"><xsl:value-of select="url" /></xsl:attribute>
-									<img alt="{$text_databases_az_hint_info}" src="images/info.gif" >
-										<xsl:attribute name="src"><xsl:value-of select="//config/base_url" />/images/info.gif</xsl:attribute>
+									<img alt="{$text_databases_az_hint_info}" src="images/info.png" >
+										<xsl:attribute name="src"><xsl:value-of select="//config/base_url" />/images/info.png</xsl:attribute>
 									</img>
 								</a>
 							</span>

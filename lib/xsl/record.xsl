@@ -149,15 +149,15 @@
 			
 			<xsl:choose>
 				<xsl:when test="refereed = 1 and not(contains(format,'Review'))">
-					<xsl:text> </xsl:text><img src="images/refereed_hat.gif" width="20" height="14" alt="" />
+					<xsl:text> </xsl:text><img src="images/refereed_hat.png" width="20" height="14" alt="" />
 					<xsl:text> </xsl:text><strong><xsl:copy-of select="$text_results_refereed" /></strong>
 				</xsl:when>
 				<xsl:when test="../refereed = 1 and not(contains(format,'Review'))">
-					<xsl:text> </xsl:text><img src="images/refereed_hat.gif" width="20" height="14" alt="" />
+					<xsl:text> </xsl:text><img src="images/refereed_hat.png" width="20" height="14" alt="" />
 					<xsl:text> </xsl:text><strong><xsl:copy-of select="$text_results_refereed" /></strong>
 				</xsl:when>
 				<xsl:when test="//refereed/issn = standard_numbers/issn and not(contains(format,'Review'))">
-					<xsl:text> </xsl:text><img src="images/refereed_hat.gif" width="20" height="14" alt="" />
+					<xsl:text> </xsl:text><img src="images/refereed_hat.png" width="20" height="14" alt="" />
 					<xsl:text> </xsl:text><strong><xsl:copy-of select="$text_results_refereed" /></strong>
 				</xsl:when>
 			</xsl:choose>
@@ -279,7 +279,7 @@
 			<xsl:call-template name="record_link">
 				<xsl:with-param name="type">holdings</xsl:with-param>
 				<xsl:with-param name="text" select="$text_link_holdings"/>
-				<xsl:with-param name="img_src" select="concat($base_url, '/images/book.gif')"/>
+				<xsl:with-param name="img_src" select="concat($base_url, '/images/book.png')"/>
 			</xsl:call-template>
 	</xsl:if>
 	
@@ -292,7 +292,7 @@
 		
 		<xsl:if test="$link_resolver_allowed">
 			<a href="{../url_open}" class="recordAction linkResolverLink"	target="{$link_target}" >
-				<img src="{$base_url}/images/sfx.gif" alt="" class="miniIcon"/>
+				<img src="{$base_url}/images/sfx.png" alt="" class="miniIcon"/>
 				<xsl:text> </xsl:text>
 				<xsl:copy-of select="$text_link_resolver_check" />
 			</a>
@@ -324,8 +324,8 @@
 			<img id="folder_{$result_set}{$record_number}"	width="17" height="15" alt="" border="0" class="miniIcon">
 				<xsl:attribute name="src">
 					<xsl:choose> 
-						<xsl:when test="//request/session/resultssaved[@key = $record_id]">images/folder_on.gif</xsl:when>
-						<xsl:otherwise>images/folder.gif</xsl:otherwise>
+						<xsl:when test="//request/session/resultssaved[@key = $record_id]">images/folder_on.png</xsl:when>
+						<xsl:otherwise>images/folder.png</xsl:otherwise>
 					</xsl:choose>
 				</xsl:attribute>
 			</img>

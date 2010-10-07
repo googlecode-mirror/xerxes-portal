@@ -81,11 +81,11 @@
 			
 			if ( $bolFullText == true )
 			{
-				$this->request->setRedirect($configBaseUrl . "/images/dynamic-full.gif" );
+				$this->request->setRedirect($configBaseUrl . "/images/dynamic-full.png" );
 			}
 			else
 			{
-				$this->request->setRedirect($configBaseUrl . "/images/dynamic-sfx.gif" );
+				$this->request->setRedirect($configBaseUrl . "/images/dynamic-sfx.png" );
 			}
 			
 			return 1;
