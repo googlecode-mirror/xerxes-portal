@@ -40,34 +40,32 @@
 				$objDatabase = new Xerxes_DataMap();
 				$objDatabaseData = $objDatabase->getDatabase($strMetalibID);
 				
-				if ( $objDatabaseData == null )
+				if ( $objDatabaseData != null )
 				{
-					throw new Exception("Couldn't find database '$strMetalibID'");
-				}
-				
-				// databases marked as subscription should be proxied
+					// databases marked as subscription should be proxied
 					
-				if ( $objDatabaseData->subscription == "1" )
-				{
-					$bolProxy = true;
-				}
-				
-				// override the behavior if proxy flag specifically set
-				
-				if ( $objDatabaseData->proxy != null )
-				{
-					if ( $objDatabaseData->proxy == 1 )
+					if ( $objDatabaseData->subscription == "1" )
 					{
 						$bolProxy = true;
 					}
-					elseif ( $objDatabaseData->proxy == 0 )
+					
+					// override the behavior if proxy flag specifically set
+					
+					if ( $objDatabaseData->proxy != null )
 					{
-						$bolProxy = false;
+						if ( $objDatabaseData->proxy == 1 )
+						{
+							$bolProxy = true;
+						}
+						elseif ( $objDatabaseData->proxy == 0 )
+						{
+							$bolProxy = false;
+						}
 					}
+					
+					$strConstructPattern = $objDatabaseData->link_native_record;        
 				}
 				
-				$strConstructPattern = $objDatabaseData->link_native_record;        
-
 				// if no url or construct paramaters were supplied, then this came
 				// from the databases page as a 'short' url (the preferred now)
 				// and so we'll just take the database's native link
@@ -75,11 +73,11 @@
 				if ( $arrParams == null && $strUrl == null )
 				{
             		$strUrl = $objDatabaseData->link_native_home;
-				} 				
+				}  
 			}
 			else
 			{
-				// the request is to proxy this no matter what; this is largely deprecated
+				// the request is to proxy this no matter what; this is largely depricated
 				// in the system as of 1.3, but could be resurrected for some purpose?
 				
 				$bolProxy = true;
@@ -120,7 +118,7 @@
 			// make sure the link doesn't include the proxy
 			// server prefix already
 			
-			if ( preg_match('/http:\/\/[0-9]{1,3}-.*/', $strUrl) != 0 )
+			if ( preg_match("/http:\/\/[0-9]{1,3}-.*/", $strUrl) != 0 )
 			{
 				// WAM proxy: this is kind of a rough estimate of a WAM-style
 				// proxy link, but I think sufficient for our purposes?
@@ -153,7 +151,7 @@
 				{
 					$arrMatch = array();
 					
-					if ( preg_match('/http[s]{0,1}:\/\/([^\/]*)\/{0,1}(.*)/', $strUrl, $arrMatch) != 0 )
+					if ( preg_match("/http[s]{0,1}:\/\/([^\/]*)\/{0,1}(.*)/", $strUrl, $arrMatch) != 0 )
 					{
 						$strPort = "0";
 						$arrPort = array();

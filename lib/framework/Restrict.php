@@ -13,24 +13,23 @@
 
 class Xerxes_Framework_Restrict
 {
-	private $ip_range = ""; // set of local ip ranges
-	private $request = "";
+	private $strIPRange = ""; // set of local ip ranges
+	private $strAppName = ""; // name of the application
+	private $strReturn = ""; // authentication url of the application
 
 	/**
 	 * Constructor
-	 * 
-	 * @param $objRequest request object
+	 *
+	 * @param string $configIP				comma-delimeted list of ip ranges
+	 * @param string $configAppName			unique application name. No longer used at all, not neccesary.  
+	 * @param base address $configBaseURL	base url of the application
+	 * @param string $configReturn			uri to the login page
 	 */
 	
-	public function __construct(Xerxes_Framework_Request $objRequest)
+	public function __construct($configIP, $configAppName, $configAuthPage)
 	{
-		$objRegistry = Xerxes_Framework_Registry::getInstance();
-		
-		$this->request = $objRequest;
-		
-		$configAuthPage = $this->request->url_for( array ("base" => "authenticate", "action" => "login" ) );
-		
-		$this->ip_range = $objRegistry->getConfig( "LOCAL_IP_RANGE", false, null );
+		$this->strIPRange = $configIP;
+		$this->strAppName = $configAppName;
 		
 		// if the return url has a querystring mark in it, then append
 		// return url to other params, otherwise it is sole param
@@ -47,15 +46,20 @@ class Xerxes_Framework_Restrict
 	
 	/**
 	 * Limit access to users with a named login, otherwise redirect to login page
+	 *
+	 * @param Xerxes_Framework_Request $objRequest	will check properties:
+	 * 	- username [session] = stored username in session
+	 * 	- application [session] = to ensure the application's name matched stored session value
+	 * 	- role [session] = to ensure the user's role is not local
 	 */
 	
-	public function checkLogin()
+	public function checkLogin(Xerxes_Framework_Request $objRequest)
 	{
-		if (! self::isAuthenticatedUser( $this->request ) )
+		if (! self::isAuthenticatedUser( $objRequest ) )
 		{
 			// redirect to authentication page
 
-			header( "Location: " . $this->strReturn . urlencode( $this->request->getServer( 'REQUEST_URI' ) ) );
+			header( "Location: " . $this->strReturn . urlencode( $objRequest->getServer( 'REQUEST_URI' ) ) );
 			exit();
 		}
 	}
@@ -71,15 +75,19 @@ class Xerxes_Framework_Restrict
 	/**
 	 * Limit access to users within the local ip range, assigning local users a temporary
 	 * login id, and redirecting non-local users out to login page
+	 *
+	 * @param Xerxes_Framework_Request $objRequest	will check properties:
+	 * 	- username [session] = stored username in session
+	 * 	- application [session] = to ensure the application's name matched stored session value
 	 */
 	
-	public function checkIP($bolRedirect = true)
+	public function checkIP(Xerxes_Framework_Request $objRequest)
 	{
-		if ( $this->request->getSession( "username" ) == null )
+		if ( $objRequest->getSession( "username" ) == null || $objRequest->getSession( "application" ) != $this->strAppName )
 		{
 			// check to see if user is coming from campus range						
 
-			$bolLocal = self::isIpAddrInRanges( $this->request->getServer('REMOTE_ADDR'), $this->ip_range );
+			$bolLocal = self::isIpAddrInRanges( $objRequest->getServer('REMOTE_ADDR'), $this->strIPRange );
 			
 			if ( $bolLocal == true )
 			{
@@ -87,12 +95,13 @@ class Xerxes_Framework_Restrict
 
 				$_SESSION["username"] = "local@" . session_id();
 				$_SESSION["role"] = "local";
+				$_SESSION["application"] = $this->strAppName;
 			}
-			elseif ( $bolRedirect == true )
+			else
 			{
 				// redirect to authentication page
 
-				header( "Location: " . $this->strReturn . urlencode( $this->request->getServer( 'REQUEST_URI' ) ) );
+				header( "Location: " . $this->strReturn . urlencode( $objRequest->getServer( 'REQUEST_URI' ) ) );
 				exit();
 			}
 		}

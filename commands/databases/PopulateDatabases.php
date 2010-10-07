@@ -24,10 +24,7 @@
 		{
 			// in case this is being called from the web, plaintext
 			
-			if ( $this->request->isCommandLine() == false )
-			{
-				header("Content-type: text/plain");
-			}
+			header("Content-type: text/plain");
       
 			// set a higher than normal memory limit to account for 
 			// pulling down large knowledgebases
@@ -223,9 +220,8 @@
 						}
 						else
 						{
-							throw new Exception("Could not find database (" . $objData->metalib_id . 
-								") assigned to category; make sure config entry ip_address is part " .
-								"of the IP range associated with this Metalib instance");
+							throw new Exception("Could not find database assigned to category; " . 
+								"make sure config entry ip_address is part of the IP range associated with this Metalib instance");
 						}
 					}
 					
@@ -310,11 +306,7 @@
 			$objSimple = new SimpleXMLElement($strXml);
 			$arrDBs = $objSimple->xpath("//database");
 			
-			if ( count($arrDBs) < 1 )
-			{
-				throw new Exception("Could not find any databases in the Metalib KB. " . 
-					$this->objSearch->getWarnings(true) );
-			}
+			if ( count($arrDBs) < 1 ) throw new Exception("Could not find any databases in the Metalib KB");
 			
 			foreach ( $arrDBs as $objDatabase )
 			{       
@@ -426,7 +418,7 @@
 			$strNormalized = "";
 			
 			$strNormalized = str_replace("&amp;","", $strSubject);
-			$strNormalized = preg_replace('/\W/',"",$strNormalized);
+			$strNormalized = preg_replace("/\W/","",$strNormalized);
 			
 			return $strNormalized;
 		}

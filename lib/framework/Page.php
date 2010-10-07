@@ -232,7 +232,7 @@ class Xerxes_Framework_Page
 			
 			if ( $iNext <= $iTotalHits )
 			{
-				$objPage = $objXml->createElement( "page", "" ); // element to hold the text_results_next label
+				$objPage = $objXml->createElement( "page", "Next" );
 				
 				$params = array ($strStartAttribute => $iNext );
 				

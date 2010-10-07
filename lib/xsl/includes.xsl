@@ -27,15 +27,13 @@
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	
-	<!-- currently used to parse multilingual database descriptions -->
-	<xsl:import href="list-tokenizer.xsl" />
-
 	<!-- text labels are defined in a seperate place -->
+	
 	<xsl:include href="labels/eng.xsl" />
 
 <!-- 
 	GLOBAL VARIABLES
-	Configuration values used throughout the templates
+	Configuration v	alues used throughout the templates
 -->
 
 	<!-- version used to prevent css caching, and possibly other places to advertise version -->
@@ -95,30 +93,6 @@
 
 	<xsl:variable name="databases_searchable"	select="//config/database_list_searchable" />
 	
-	<xsl:variable name="xerxes_language" select="//config/xerxes_language" />
-	
-	<xsl:variable name="db_description_multilingual">
-		<xsl:choose>
-			<xsl:when test="//config/db_description_multilingual">
-				<xsl:value-of select="//config/db_description_multilingual" />
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:text>false</xsl:text>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:variable>
-	
-	<!-- which description in order is our xerxes_language? -->
-	<xsl:variable name="xerxes_language_position">
-		<xsl:call-template name="find-item-in-list">
-			<xsl:with-param name="list">
-				<xsl:value-of select="$db_description_multilingual" />
-			</xsl:with-param>
-			<xsl:with-param name="delimiter">,</xsl:with-param>
-			<xsl:with-param name="find-item"><xsl:value-of select="$xerxes_language" /></xsl:with-param>
-		</xsl:call-template>
-	</xsl:variable>
-	
 	<xsl:variable name="categories_num_columns">
 		<xsl:choose>
 			<xsl:when test="//config/categories_num_columns">
@@ -163,7 +137,14 @@
 	<xsl:param name="sidebar" />
 
 	<html lang="eng">
-	<xsl:call-template name="surround-head" />
+	<head>
+	<title><xsl:value-of select="//config/application_name" />: <xsl:call-template name="title" /></title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<xsl:call-template name="header_refresh" />	
+	<base href="{$base_include}/" />
+	<xsl:call-template name="css_include" />
+	<xsl:call-template name="header" />	
+	</head>
 	<body>
 	<xsl:if test="request/action = 'subject' or request/action = 'categories'">
 		<xsl:attribute name="onLoad">if (document.forms.form1) if  (document.forms.form1.query)  document.forms.form1.query.focus()</xsl:attribute>
@@ -188,41 +169,6 @@
 				<xsl:attribute name="class"><xsl:value-of select="$surround_template" /></xsl:attribute>
 			</xsl:otherwise>
 		</xsl:choose>
-
-		<!-- The main content is split into subtemplates to make customiztion of parts easier -->
-		<xsl:call-template name="surround-hd" />
-
-		<xsl:call-template name="surround-bd" />
-
-		<xsl:call-template name="surround-ft">
-			<xsl:with-param name="sidebar"><xsl:value-of select="$sidebar" /></xsl:with-param>
-		</xsl:call-template>
-
-	</div>
-	
-	<xsl:call-template name="surround-google-analytics" />
-		
-	</body>
-	</html>
-	
-</xsl:template>
-
-<xsl:template name="surround-head">
-	<head>
-	<title><xsl:value-of select="//config/application_name" />: <xsl:call-template name="title" /></title>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<xsl:call-template name="header_refresh" />	
-	<base href="{$base_include}/" />
-	<xsl:call-template name="css_include" />
-	<xsl:call-template name="header" />	
-	</head>
-</xsl:template>
-
-<!-- 
-	TEMPLATE: surround-bd
-	page header
--->
-<xsl:template name="surround-hd">
 		<div id="hd">
 			<xsl:choose>
 				<xsl:when test="$is_mobile = '1'">
@@ -238,15 +184,6 @@
 				</div>
 			</div>
 		</div>
-</xsl:template>
-
-<!-- 
-	TEMPLATE: surround-bd
-	page body - main content
--->
-<xsl:template name="surround-bd">
-	<xsl:param name="sidebar" />
-
 		<div id="bd">
 			<div id="yui-main">
 				<div class="yui-b">
@@ -263,13 +200,6 @@
 			</xsl:if>
 
 		</div>
-</xsl:template>
-
-<!-- 
-	TEMPLATE: surround-ft
-	page footer
--->
-<xsl:template name="surround-ft">
 		<div id="ft">
 			<xsl:choose>
 				<xsl:when test="$is_mobile = '1'">
@@ -280,30 +210,11 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</div>
-</xsl:template>
-
-<!-- 
-	TEMPLATE: surround-google-analytics
-	Google analytics script
--->
-<xsl:template name="surround-google-analytics">
-	<xsl:if test="//config/google_analytics">
-
-		<xsl:variable name="google_analytics" select="//config/google_analytics" />
+	</div>
 		
-		<script type="text/javascript">
-			var gaJsHost = (("https:" == document.location.protocol) ?
-			"https://ssl." : "http://www.");
-			document.write(unescape("%3Cscript src='" + gaJsHost +
-			"google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-		</script>
-		<script type="text/javascript">
-			var pageTracker = _gat._getTracker("{$google_analytics}");
-			pageTracker._initData();
-			pageTracker._trackPageview();
-		</script>
-		
-	</xsl:if>
+	</body>
+	</html>
+	
 </xsl:template>
 
 <!-- 
@@ -368,8 +279,6 @@
 <xsl:template name="module_header" />
 <xsl:template name="additional_record_links" />
 <xsl:template name="additional_brief_record_data" />
-<xsl:template name="additional_full_record_data_main" />
-<xsl:template name="additional_full_record_data_supplemental" />
 
 <!--
 	TEMPLATE: SIDEBAR WRAPPER
@@ -849,7 +758,7 @@
 					<xsl:text> </xsl:text>
 				</xsl:when>
 				<xsl:otherwise>
-					<img src="{$base_url}/images/link-out.png" alt="{$text_databases_subject_hint_restricted}" title="{$text_databases_subject_hint_native_only}"/>
+					<img src="{$base_url}/images/link-out.gif" alt="{$text_databases_subject_hint_restricted}" title="{$text_databases_subject_hint_native_only}"/>
 					<xsl:text> </xsl:text>
 				</xsl:otherwise>
 				</xsl:choose>
@@ -881,8 +790,8 @@
 				<span class="subjectDatabaseInfo">
 					<a  title="{$text_databases_subject_hint_more_info_about} {title_display}">
 					<xsl:attribute name="href"><xsl:value-of select="url" /></xsl:attribute>
-					<img src="images/info.png" alt="{$text_databases_subject_hint_more_info_about} {title_display}">
-						<xsl:attribute name="src"><xsl:value-of select="//config/base_url" />/images/info.png</xsl:attribute>
+					<img src="images/info.gif" alt="{$text_databases_subject_hint_more_info_about} {title_display}">
+						<xsl:attribute name="src"><xsl:value-of select="//config/base_url" />/images/info.gif</xsl:attribute>
 					</img>
 					</a>
 					<xsl:text> </xsl:text>
@@ -1025,14 +934,14 @@
 	
 	<xsl:if test="request/label">
 		<h2>
-			<a href="./?base=folder"><img src="{$base_url}/images/delete.png" alt="remove limit" /></a>
+			<a href="./?base=folder"><img src="{$base_url}/images/delete.gif" alt="remove limit" /></a>
 			<xsl:copy-of select="$text_folder_limit_tag" /><xsl:text>: </xsl:text><xsl:value-of select="request/label" />
 		</h2>
 	</xsl:if>
 	
 	<xsl:if test="request/type">
 		<h2>
-			<a href="./?base=folder"><img src="{$base_url}/images/delete.png" alt="remove limit" /></a>
+			<a href="./?base=folder"><img src="{$base_url}/images/delete.gif" alt="remove limit" /></a>
 			<xsl:copy-of select="$text_folder_limit_format" /><xsl:text>: </xsl:text><xsl:value-of select="request/type" />
 		</h2>
 	</xsl:if>
@@ -1096,7 +1005,7 @@
 			contains(request/session/saved_return,'record')">
 
 		<div class="folderReturn">
-			<img src="{$base_include}/images/back.png" alt="" />
+			<img src="{$base_include}/images/back.gif" alt="" />
 			<span class="folderReturnText">
 				<a href="{$back}"><xsl:copy-of select="$text_folder_return" /></a>
 			</span>
@@ -1114,14 +1023,110 @@
 <xsl:template name="header_refresh">
 
 	<!-- metasearch refresh -->
-	<!-- automated refresh, unless this is opera mobile or screen reader -->
+	<!-- don't do this if this is a screen reader or a phone, since we'll let the user push a button to refresh -->
 	
-	<xsl:if test="($is_mobile = 0 and not(request/session/ada)) or ( $is_mobile = 1 and not(contains(//server/http_user_agent,'Opera')) )">
+	<xsl:if test="$is_mobile != 1 and not(request/session/ada)">
 		<xsl:if test="request/action = 'hits' and results/progress &lt; 10">
 			<meta http-equiv="refresh" content="6" />
 		</xsl:if>
 	</xsl:if>
 
+
+</xsl:template>
+
+<!-- 	
+	TEMPLATE: HEADER
+	header content, such as Javascript functions that should appear on specific page.
+-->
+
+<xsl:template name="header">
+
+	<!--opensearch autodiscovery -->
+	
+	<xsl:if test="category/subcategory">
+		<xsl:variable name="subject_name" select="//category[1]/@name" />
+		<xsl:variable name="subject_id" select="//category[1]/@normalized" />
+		<link rel="search"
+			type="application/opensearchdescription+xml" 
+			href="{$base_url}?base=databases&amp;action=subject-opensearch&amp;subject={$subject_id}"
+			title="{$app_name} {$subject_name} search" />
+	</xsl:if>
+	
+	<!-- only include javascript when the user has not chosen the ada compliant version -->
+
+	<xsl:if test="not(request/session/ada)">
+	
+		<script src="{$base_include}/javascript/onload.js" language="javascript" type="text/javascript"></script>
+		<script src="{$base_include}/javascript/prototype.js" language="javascript" type="text/javascript"></script>
+		<script src="{$base_include}/javascript/scriptaculous/scriptaculous.js" language="javascript" type="text/javascript"></script>
+		
+		<!-- fancy message display -->
+		
+		<script src="{$base_include}/javascript/message_display.js" language="javascript" type="text/javascript"></script>
+		
+		<!-- controls the adding and editing of tags -->
+		
+		<script src="{$base_include}/javascript/tags.js" language="javascript" type="text/javascript"></script>
+		
+		
+		<script src="{$base_include}/javascript/toggle_metasearch_advanced.js" language="javascript" type="text/javascript"></script>
+		
+		<!-- controls the saving and tracking of saved records -->
+		
+		<script type="text/javascript">
+			
+			// change numSessionSavedRecords to numSavedRecords if you prefer the folder icon to change
+			// if there are any records at all in saved records. Also fix initial display in navbar.
+			
+			numSavedRecords = parseInt('0<xsl:value-of select="navbar/element[@id='saved_records']/@numSessionSavedRecords" />', 10);
+			isTemporarySession = <xsl:choose><xsl:when test="$temporarySession = 'true'">true</xsl:when><xsl:otherwise>false</xsl:otherwise></xsl:choose>
+		</script>
+		
+		<script src="{$base_include}/javascript/save.js" language="javascript" type="text/javascript"></script>
+		
+		<script language="javascript" type="text/javascript">
+			var dateSearch = "<xsl:value-of select="results/search/date" />";
+			var xerxes_iSearchable = "<xsl:value-of select="$search_limit" />";
+		</script>
+		
+		<!-- add behaviors to edit collection dialog, currently just delete confirm -->
+		<script src="{$base_include}/javascript/collections.js" language="javascript" type ="text/javascript"></script>
+	
+		<!-- umlaut content on record detail page, when so configured -->
+		<xsl:if test="//config/umlaut_base and (( request/base='metasearch' and request/action = 'record' ) or (request/base='folder' and request/action = 'full'))">
+          <!-- only if this database does NOT have openurl link generation
+               suppressed. If it does, we can do nothing. This duplicates
+               code in records.xsl, sorry. -->
+      <xsl:variable name="db_metalib_id" select="//records/record[1]/xerxes_record/metalib_id" />
+      <xsl:variable name="link_resolver_allowed" select="not(//database_links/database[@metalib_id = $db_metalib_id]/sfx_suppress) or //database_links/database[@metalib_id = $db_metalib_id]/sfx_suppress != '1'" />
+			
+			<xsl:if test="$link_resolver_allowed">
+        <!-- have umlaut set up up functions for js magic -->
+        <script type="text/javascript" src="{//config/umlaut_base}/javascripts/embed/umlaut-embed-func.js"></script>
+        
+        <!-- Now call our script that will call umlaut magic with local
+             xerxes display logic. First need to set a couple of dynamically
+             generated parameters in js global vars, so xerxes js can get it.-->      			
+        <script language="javascript" type="text/javascript">
+          openurl_kev_co = '<xsl:value-of select="//records/record[1]/openurl_kev_co"/>'; 
+          umlaut_base = '<xsl:value-of select="//config/umlaut_base"/>';          
+          
+          if (typeof(jsDisplayConstants) == "undefined" ) {
+             jsDisplayConstants = new Array(); 
+          }
+          jsDisplayConstants['link_resolver_name'] = '<xsl:copy-of select="$text_link_resolver_name"/>';
+          jsDisplayConstants['link_resolver_load_message'] = '<xsl:copy-of select="$text_link_resolver_load_msg"/>';
+          jsDisplayConstants['link_resolver_direct_link_prefix'] = '<xsl:copy-of select="$text_link_resolver_direct_link_prefix"/>';
+        </script>
+        <script language="javascript" type="text/javascript" src="{$base_include}/javascript/umlaut_record_detail.js"/>
+      </xsl:if>
+		</xsl:if>
+		
+	</xsl:if>
+  	
+	<xsl:call-template name="module_header" />
+	
+	<xsl:copy-of select="$text_extra_html_head_content" />
 
 </xsl:template>
 
@@ -1171,17 +1176,17 @@
 			
 				<xsl:choose>
 					<xsl:when test="@type = 'pdf'">
-						<img src="{$base_include}/images/pdf.png" alt="" width="16" height="16" border="0" class="miniIcon fullTextLink pdf"/>
+						<img src="{$base_include}/images/pdf.gif" alt="" width="16" height="16" border="0" class="miniIcon fullTextLink pdf"/>
 						<xsl:text> </xsl:text>
 						<xsl:copy-of select="$text_records_fulltext_pdf" />
 					</xsl:when>
 					<xsl:when test="@type = 'html'">
-						<img src="{$base_include}/images/html.png" alt="" width="16" height="16" border="0" class="miniIcon fullTextLink html"/>
+						<img src="{$base_include}/images/html.gif" alt="" width="16" height="16" border="0" class="miniIcon fullTextLink html"/>
 						<xsl:text> </xsl:text>
 						<xsl:copy-of select="$text_records_fulltext_html" />
 					</xsl:when>
 					<xsl:otherwise>
-						<img src="{$base_include}/images/html.png" alt="" width="16" height="16" border="0" class="miniIcon fullTextLink unknown"/>
+						<img src="{$base_include}/images/html.gif" alt="" width="16" height="16" border="0" class="miniIcon fullTextLink unknown"/>
 						<xsl:text> </xsl:text>
 						<xsl:copy-of select="$text_records_fulltext_available" />
 					</xsl:otherwise>
@@ -1261,8 +1266,8 @@
 				<img name="folder" width="17" height="15" border="0" id="folder" alt="">
 					<xsl:attribute name="src">
 					<xsl:choose>
-					<xsl:when test="//navbar/element[@id='saved_records']/@numSessionSavedRecords &gt; 0"><xsl:value-of select="$base_include" />/images/folder_on.png</xsl:when>
-					<xsl:otherwise><xsl:value-of select="$base_include"/>/images/folder.png</xsl:otherwise>
+					<xsl:when test="//navbar/element[@id='saved_records']/@numSessionSavedRecords &gt; 0"><xsl:value-of select="$base_include" />/images/folder_on.gif</xsl:when>
+					<xsl:otherwise><xsl:value-of select="$base_include"/>/images/folder.gif</xsl:otherwise>
 					</xsl:choose>
 					</xsl:attribute>
 				</img>
@@ -1275,7 +1280,7 @@
 			
 			<xsl:if test="//navbar/element[@id='saved_collections']">
 				<li id="my_databases" class="sidebarFolder">
-					<img src="{$base_include}/images/folder.png" width="17" height="15" border="0" alt=""/><xsl:text> </xsl:text>
+					<img src="{$base_include}/images/folder.gif" width="17" height="15" border="0" alt=""/><xsl:text> </xsl:text>
 					<a href="{//navbar/element[@id='saved_collections']/url}"><xsl:copy-of select="$text_header_collections"/></a>
 				</li>
 			</xsl:if>
@@ -1318,7 +1323,7 @@
 		<input type="hidden" name="new_subcategory_name" value="{$text_collection_default_new_section_name}"/>
 		
 		<p><label for="new_subject_name"><xsl:copy-of select="$text_header_my_collections_new" /></label></p>
-		<input type="text" id="new_subject_name" name="new_subject_name"/><xsl:text> </xsl:text><input type="submit" class="col_add_submit" name="add" value="{$text_header_my_collections_add}" />
+		<input type="text" id="new_subject_name" name="new_subject_name"/><xsl:text> </xsl:text><input type="submit" name="add" value="{$text_header_my_collections_add}" />
 		
 		</form>
 	</div>
@@ -1435,7 +1440,6 @@
 							<xsl:choose>
 								<xsl:when test="@type = 'next'">
 									<xsl:attribute name="class">resultsPagerNext</xsl:attribute>
-									<xsl:copy-of select="$text_results_next" />
 								</xsl:when>
 								<xsl:otherwise>
 									<xsl:attribute name="class">resultsPagerLink</xsl:attribute>
@@ -1546,7 +1550,7 @@
 
 <!-- 
 	TEMPLATE: BRIEF RESULTS
-	deprecated, used in the metasearch and folder brief results pages
+	used in the metasearch and folder brief results pages
 -->
 
 <xsl:template name="brief_results">
@@ -1554,44 +1558,25 @@
 	<ul id="results">
 	
 	<xsl:for-each select="//records/record/xerxes_record">
-		<xsl:call-template name="brief_result_article">
-			<xsl:with-param name="result_set" select="result_set" />
-			<xsl:with-param name="record_number" select="record_number" />	
-			<xsl:with-param name="record_id">
-				<xsl:value-of select="result_set" />:<xsl:value-of select="record_number" />
-			</xsl:with-param>	
-		</xsl:call-template>
-	</xsl:for-each>
 	
-	</ul>
-	
-</xsl:template>
-
-<!-- 
-	TEMPLATE: BRIEF RESULT ARTICLE
-	display of results geared toward articles (or really any non-book display)
--->
-
-<xsl:template name="brief_result_article">
-	
-		<xsl:param name="result_set" />
-		<xsl:param name="record_number" />
-		<xsl:param name="record_id" />
+		<xsl:variable name="result_set" 	select="result_set" />
+		<xsl:variable name="record_number" 	select="record_number" />
 		
 		<!-- peer reviewed calculated differently in folder and metasearch -->
 		
 		<xsl:variable name="refereed">
 			<xsl:choose>
-				<xsl:when test="refereed = 1 and not(contains(format,'Review'))">
+				<xsl:when test="../refereed = 1 and format != 'Book Review'">
 					<xsl:text>true</xsl:text>
 				</xsl:when>
-				<xsl:when test="../refereed = 1 and not(contains(format,'Review'))">
-					<xsl:text>true</xsl:text>
-				</xsl:when>
-				<xsl:when test="//refereed/issn = standard_numbers/issn and not(contains(format,'Review'))">
+				<xsl:when test="//refereed/issn = standard_numbers/issn and format != 'Book Review'">
 					<xsl:text>true</xsl:text>
 				</xsl:when>
 			</xsl:choose>
+		</xsl:variable>
+		
+		<xsl:variable name="record_id">
+			<xsl:value-of select="$result_set" />:<xsl:value-of select="$record_number" />
 		</xsl:variable>
 		
 		<li class="result">
@@ -1623,22 +1608,12 @@
 					<!-- peer reviewed -->
 					
 					<xsl:if test="$refereed = 'true'">
-						<xsl:text> </xsl:text><img src="images/refereed_hat.png" width="20" height="14" alt="" />
+						<xsl:text> </xsl:text><img src="images/refereed_hat.gif" width="20" height="14" alt="" />
 						<xsl:text> </xsl:text><xsl:copy-of select="$text_results_refereed" />
 					</xsl:if>
 				</div>
 				
 				<div class="resultsAbstract">
-				
-					<xsl:choose>
-						<xsl:when test="summary_type = 'toc'">
-							<xsl:value-of select="$text_record_summary_toc" /><xsl:text>: </xsl:text>
-						</xsl:when>
-						<xsl:when test="summary_type = 'subjects'">
-							<xsl:value-of select="$text_record_summary_subjects" /><xsl:text>: </xsl:text>
-						</xsl:when>					
-					</xsl:choose>
-				
 					<xsl:choose>
 						<xsl:when test="string-length(summary) &gt; 300">
 							<xsl:value-of select="substring(summary, 1, 300)" /> . . .
@@ -1647,7 +1622,6 @@
 							<xsl:value-of select="summary" />
 						</xsl:when>
 						
-						<!-- @todo remove this after we make sure this feature is truly gone -->
 						<!-- take from embedded text, if available -->
 						
 						<xsl:when test="embeddedText">
@@ -1694,36 +1668,16 @@
 					<xsl:call-template name="additional_record_links" />
 					
 					<xsl:choose>
+						<xsl:when test="/metasearch">
 						
-						<!-- @todo: give saved record area it's own template -->
-						
-						<xsl:when test="/folder">
-						
-							<div class="folderAvailability deleteRecord">
-								<a class="recordAction deleteRecord" href="{../url_delete}">
-									<img src="{$base_url}/images/delete.png" alt="" border="0" class="miniIcon deleteRecordLink"/>
-									<xsl:text> </xsl:text>
-									<xsl:copy-of select="$text_results_record_delete" />
-								 </a>
-							</div>
-							
-							<xsl:if test="$temporarySession != 'true'">
-								<xsl:call-template name="tag_input">
-									<xsl:with-param name="record" select=".."/>
-								</xsl:call-template>
-							</xsl:if>						
-						
-						</xsl:when>
-						<xsl:otherwise>
-						
-							<!-- save facility in search results area -->
+							<!-- save facility in metasearch area -->
 							
 							<div id="saveRecordOption_{$result_set}_{$record_number}" class="recordAction saveRecord">
 								<img id="folder_{$result_set}{$record_number}"	width="17" height="15" alt="" border="0" class="miniIcon saveRecordLink">
 								<xsl:attribute name="src">
 									<xsl:choose> 
-										<xsl:when test="//request/session/resultssaved[@key = $record_id]">images/folder_on.png</xsl:when>
-										<xsl:otherwise>images/folder.png</xsl:otherwise>
+										<xsl:when test="//request/session/resultssaved[@key = $record_id]">images/folder_on.gif</xsl:when>
+										<xsl:otherwise>images/folder.gif</xsl:otherwise>
 									</xsl:choose>
 								</xsl:attribute>
 								</img>
@@ -1769,12 +1723,34 @@
 								</div>
 							</xsl:if>
 
-						</xsl:otherwise>
-
+						</xsl:when>
+						<xsl:when test="/folder">
+						
+							<!-- folder -->
+						
+							<div class="folderAvailability deleteRecord">
+								<a class="recordAction deleteRecord" href="{../url_delete}">
+									<img src="{$base_url}/images/delete.gif" alt="" border="0" class="miniIcon deleteRecordLink"/>
+									<xsl:text> </xsl:text>
+									<xsl:copy-of select="$text_results_record_delete" />
+								 </a>
+							</div>
+							
+							<xsl:if test="$temporarySession != 'true'">
+								<xsl:call-template name="tag_input">
+									<xsl:with-param name="record" select=".."/>
+								</xsl:call-template>
+							</xsl:if>						
+						
+						</xsl:when>
 					</xsl:choose>					
 				</div>
 			</div>
 		</li>
+		
+	</xsl:for-each>
+	
+	</ul>
 
 </xsl:template>
 
@@ -1782,16 +1758,6 @@
 
 	<xsl:variable name="metalib_db_id" 	select="metalib_id" />
 	<xsl:variable name="link_resolver_allowed" select="not(//database_links/database[@metalib_id = $metalib_db_id]/sfx_suppress = '1')" />
-
-	<!-- holdings (to catalog)  -->
-	
-	<xsl:if test="links/link[@type='holdings'] and (//config/show_all_holdings_links = 'true' or //config/holdings_links/database[@metalib_id=$metalib_db_id])">
-			<xsl:call-template name="record_link">
-				<xsl:with-param name="type">holdings</xsl:with-param>
-				<xsl:with-param name="text" select="$text_link_holdings"/>
-				<xsl:with-param name="img_src" select="concat($base_url, '/images/book.png')"/>
-			</xsl:call-template>
-	</xsl:if>
 	
 	<xsl:choose>
 	
@@ -1805,9 +1771,9 @@
 		
 		<!-- link resolver -->
 		
-		<xsl:when test="$link_resolver_allowed and (subscription = 1 or //fulltext/issn = standard_numbers/issn)">
+		<xsl:when test="$link_resolver_allowed and //fulltext/issn = standard_numbers/issn">
 				<a href="{../url_open}&amp;fulltext=1" target="{$link_target}" class="recordAction linkResolverLink">
-					<img src="{$base_include}/images/html.png" alt="" width="16" height="16" border="0" class="miniIcon linkResolverLink"/>
+					<img src="{$base_include}/images/html.gif" alt="" width="16" height="16" border="0" class="miniIcon linkResolverLink"/>
 					<xsl:text> </xsl:text>
 					<xsl:copy-of select="$text_link_resolver_available" />
 				</a>
@@ -1815,7 +1781,7 @@
 		
 		<xsl:when test="$link_resolver_allowed">
 				<a href="{../url_open}" target="{$link_target}" class="recordAction linkResoverLink">
-					<img src="{$base_url}/images/sfx.png" alt="" class="miniIcon linkResolverLink "/>
+					<img src="{$base_url}/images/sfx.gif" alt="" class="miniIcon linkResolverLink "/>
 					<xsl:text> </xsl:text>
 					<xsl:copy-of select="$text_link_resolver_check" />
 				</a>
@@ -1842,6 +1808,18 @@
 		</xsl:when>
 	</xsl:choose>
 	
+	<!-- holdings (to catalog)  -->
+	
+	<xsl:if test="links/link[@type='holdings'] and (//config/show_all_holdings_links = 'true' or //config/holdings_links/database[@metalib_id=$metalib_db_id])">
+			<xsl:call-template name="record_link">
+				<xsl:with-param name="type">holdings</xsl:with-param>
+				<xsl:with-param name="text" select="$text_link_holdings"/>
+				<xsl:with-param name="img_src" select="concat($base_url, '/images/book.gif')"/>
+			</xsl:call-template>
+	</xsl:if>
+
+
+
 </xsl:template>
 
 <!-- 
@@ -1871,7 +1849,7 @@
 
 <!-- 
 	TEMPLATE: SAFARI TAG FIX
-	This hidden iframe essentially thwarts the Safari backforward cache so that
+	This hidden iframe essentially thwarts the Safari back/forward cache so that
 	tags don't get wacky
 -->
 
@@ -1905,14 +1883,7 @@
 					<xsl:choose>
 						<xsl:when test="type = 'Librarian'">
 							<xsl:attribute name="class">subjectLibrarian</xsl:attribute>
-
-							<xsl:if test="library_contact">
-                            	<xsl:variable name="image_url" select="php:function('urlencode', string(library_contact))" />
-								<div class="librarianPicture">
-									<img src="./?base=databases&amp;action=librarian-image&amp;url={$image_url}" alt="{title_display}" />
-								</div>
-							</xsl:if>
-
+							
 							<div class="librarianTitle">
 								<xsl:choose>
 									<xsl:when test="link_native_home != ''">
@@ -2026,420 +1997,11 @@
 </xsl:template>
 
 
-<xsl:template name="generic_sort_bar">
-
-	<xsl:choose>
-		<xsl:when test="results/total = '0'">
-			<xsl:call-template name="generic_no_hits" />
-		</xsl:when>
-		<xsl:otherwise>
-
-			<div id="sort">
-				<div class="yui-gd">
-					<div class="yui-u first">
-						<xsl:copy-of select="$text_metasearch_results_summary" />
-					</div>
-					<div class="yui-u">
-						<xsl:choose>
-							<xsl:when test="//sort_display">
-								<div id="sortOptions">
-									<xsl:copy-of select="$text_results_sort_by" /><xsl:text>: </xsl:text>
-									<xsl:for-each select="//sort_display/option">
-										<xsl:choose>
-											<xsl:when test="@active = 'true'">
-												<strong><xsl:value-of select="text()" /></strong>
-											</xsl:when>
-											<xsl:otherwise>
-												<xsl:variable name="link" select="@link" />
-												<a href="{$link}">
-													<xsl:value-of select="text()" />
-												</a>
-											</xsl:otherwise>
-										</xsl:choose>
-										<xsl:if test="following-sibling::option">
-											<xsl:text> | </xsl:text>
-										</xsl:if>
-									</xsl:for-each>
-								</div>
-							</xsl:when>
-							<xsl:otherwise>&#160;</xsl:otherwise>
-						</xsl:choose>
-					</div>
-				</div>
-			</div>
-		</xsl:otherwise>
-	</xsl:choose>
-
-</xsl:template>
-
-<xsl:template name="generic_no_hits">
-
-	<p class="error"><xsl:value-of select="$text_metasearch_hits_no_match" /></p>
-
-</xsl:template>
-
-<xsl:template name="generic_searchbox">
-
-	<form action="./" method="get">
-
-		<input type="hidden" name="base" value="{//request/base}" />
-		<input type="hidden" name="action" value="search" />
-		
-		<xsl:call-template name="generic_searchbox_hidden_fields_local" />
-
-		<xsl:if test="request/sortkeys">
-			<input type="hidden" name="sortKeys" value="{request/sortkeys}" />
-		</xsl:if>
-
-	<xsl:choose>
-		<xsl:when test="$is_mobile = '1'">
-			<xsl:call-template name="generic_searchbox_mobile" />
-		</xsl:when>
-		<xsl:otherwise>
-			<xsl:call-template name="generic_searchbox_full" />
-		</xsl:otherwise>
-	</xsl:choose>
-
-	</form>	
-	
-</xsl:template>
-
-
-<xsl:template name="generic_searchbox_mobile">
-
-	<xsl:variable name="search_query" select="//request/query" />
-	<xsl:call-template name="mobile_search_box">
-		<xsl:with-param name="query" select="$search_query" />
-	</xsl:call-template>
-		
-</xsl:template>
-
-<xsl:template name="generic_searchbox_full">
-
-	<xsl:choose>
-		<xsl:when test="request/advanced or request/advancedfull">
-			<xsl:call-template name="generic_advanced_search" />
-		</xsl:when>
-		<xsl:otherwise>
-			<xsl:call-template name="generic_simple_search" />			
-		</xsl:otherwise>
-	</xsl:choose>
-
-</xsl:template>
-
-<xsl:template name="generic_simple_search">
-
-	<xsl:variable name="query"	select="request/query" />
-	
-	<div class="raisedBox searchBox">
-
-		<div class="searchLabel">
-			<label for="field">Search</label><xsl:text> </xsl:text>
-		</div>
-		
-		<div class="searchInputs">
-
-			<select id="field" name="field">
-				
-				<xsl:for-each select="config/basic_search_fields/field">
-				
-					<xsl:variable name="internal">
-						<xsl:choose>
-							<xsl:when test="@id"><xsl:value-of select="@id" /></xsl:when>
-							<xsl:otherwise><xsl:value-of select="@internal" /></xsl:otherwise>
-						</xsl:choose>
-					</xsl:variable>
-				
-					<option value="{$internal}">
-					<xsl:if test="//request/field = $internal">
-						<xsl:attribute name="selected">seleted</xsl:attribute>
-					</xsl:if>
-					<xsl:value-of select="@public" />
-					</option>
-					
-				</xsl:for-each>
-			</select>
-			
-			<xsl:text> </xsl:text><label for="query"><xsl:value-of select="$text_searchbox_for" /></label><xsl:text> </xsl:text>
-			
-			<input id="query" name="query" type="text" size="32" value="{$query}" /><xsl:text> </xsl:text>
-			
-			<input type="submit" name="Submit" value="GO" />
-		
-		</div>
-		
-		<xsl:if test="results/spelling != ''">
-			<p class="spellSuggest error">Did you mean: <a href="{results/spelling/@url}"><xsl:value-of select="results/spelling" /></a></p>
-		</xsl:if>	
-		
-		<xsl:call-template name="generic_advanced_search_option" />
-		
-	</div>
-
-</xsl:template>
-
-
-<!-- search box fields overriden in templates -->
-
-<xsl:template name="generic_advanced_search_option" />
-<xsl:template name="generic_advanced_search" />
-<xsl:template name="generic_searchbox_hidden_fields_local" />
-
-
-<!-- 	
-	TEMPLATE: TABS
-	displays a tab configuration in the search architecture
--->
-
-<xsl:template name="tabs">
-
-	<xsl:if test="config/tabs">
-	
-		<div class="tabs">
-			
-			<xsl:for-each select="config/tabs/top">
-					
-				<ul id="tabnav">
-					<xsl:call-template name="tab_options" />
-				</ul>
-				<div style="clear:both"></div>
-			</xsl:for-each>
-			
-		</div>
-	
-	</xsl:if>
-</xsl:template>
-
-<xsl:template name="subtabs">
-
-	<xsl:if test="config/tabs">
-	
-		<div id="subtab" class="box">
-		
-			<h2>Expand your search</h2>
-			
-			<xsl:for-each select="config/tabs/sub[@parent = //request/base]">
-					
-				<ul>
-					<xsl:call-template name="tab_options" />
-				</ul>
-
-			</xsl:for-each>
-			
-		</div>
-	
-	</xsl:if>
-
-
-
-</xsl:template>
-
-<xsl:template name="tab_options">
-
-	<xsl:for-each select="tab">
-		<xsl:variable name="id" select="@id" />
-		<xsl:variable name="source">
-			<xsl:if test="@source">
-				<xsl:value-of select="@source" />
-			</xsl:if>
-		</xsl:variable>
-		<xsl:variable name="module">
-			<xsl:value-of select="$id">
-			<xsl:if test="@source">
-				<xsl:text>-</xsl:text>
-				<xsl:value-of select="@source" />
-			</xsl:if>			
-			</xsl:value-of>
-		</xsl:variable>
-		
-		<li>
-			<xsl:if test="//request/base = $id">
-				<xsl:attribute name="class">here</xsl:attribute>
-			</xsl:if>
-			
-			<a href="{$id}/results/{$source}?{//query_normalized/@url}">
-				<xsl:value-of select="@public" /> 
-				
-				<span class="tabsHit">
-					<xsl:choose>
-						<xsl:when test="//request/base = $id">
-							(<xsl:value-of select="//results/total" />)
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:choose>
-								<xsl:when test="//results/other[@module=$module]">
-									(<xsl:value-of select="//results/other[@module=$module]" />)
-								</xsl:when>
-								<xsl:otherwise>
-									<span class="tabsHitNumber" id="tab:{$id}:{$source}"></span>
-								</xsl:otherwise>
-							</xsl:choose>								
-						</xsl:otherwise>
-					</xsl:choose>
-				</span>
-			</a>
-		</li>
-	</xsl:for-each>
-	
-</xsl:template>
-
-
-<!-- 	
-	TEMPLATE: citation
-	record cited in all available citation styles
-	for inclusion on record pages (where xerxes_record is available)
--->
-<xsl:template name="citation">
-	<div id="citation1" class="box">
-    
-		<xsl:for-each select="//records/record/xerxes_record">
-		
-			<h2>
-				<xsl:copy-of select="$text_record_cite_this" /><xsl:text> </xsl:text>
-				<xsl:call-template name="text_results_format">
-					<xsl:with-param name="format" select="format" />
-				</xsl:call-template>
-				<xsl:text> :</xsl:text>
-			</h2>
-			
-			<div class="citation" id="citation_apa">
-			
-				<h3>APA</h3>
-				<p class="citationStyle">
-					<xsl:call-template name="apa" />
-				</p>
-				
-			</div>
-			
-			<div class="citation" id="citation_mla">
-				
-				<h3>MLA</h3>
-				<p class="citationStyle">
-					<xsl:call-template name="mla" />
-				</p>
-				
-			</div>
-			
-			<div class="citation" id="citation_turabian">
-				
-				<h3>Turabian</h3>
-				<p class="citationStyle">
-					<xsl:call-template name="turabian" />
-				</p>
-		
-			</div>
-		
-			<p id="citationNote">
-				<xsl:copy-of select="$text_record_citation_note" />
-			</p>
-			
-		</xsl:for-each>
-	</div>
-</xsl:template>
-
-
-<!-- 	
-	TEMPLATE: HEADER
-	header content, such as Javascript functions that should appear on specific page.
--->
-
-<xsl:template name="header">
-
-	<!--opensearch autodiscovery -->
-	
-	<xsl:if test="category/subcategory">
-		<xsl:variable name="subject_name" select="//category[1]/@name" />
-		<xsl:variable name="subject_id" select="//category[1]/@normalized" />
-		<link rel="search"
-			type="application/opensearchdescription+xml" 
-			href="{$base_url}?base=databases&amp;action=subject-opensearch&amp;subject={$subject_id}"
-			title="{$app_name} {$subject_name} search" />
-	</xsl:if>
-	
-	<!-- exclude javascript for ada (because it messes with screen readers) and mobile devices (makes loading faster) -->
-
-	<xsl:if test="not(request/session/ada) and $is_mobile = 0">
-	
-		<script src="{$base_include}/javascript/onload.js" language="javascript" type="text/javascript"></script>
-		<script src="{$base_include}/javascript/prototype.js" language="javascript" type="text/javascript"></script>
-		<script src="{$base_include}/javascript/scriptaculous/scriptaculous.js" language="javascript" type="text/javascript"></script>
-		
-		<!-- fancy message display -->
-		<!--
-		<script src="{$base_include}/javascript/message_display.js" language="javascript" type="text/javascript"></script>
-		-->
-		
-		<!-- controls the adding and editing of tags -->
-		
-		<script src="{$base_include}/javascript/tags.js" language="javascript" type="text/javascript"></script>
-		
-		
-		<script src="{$base_include}/javascript/toggle_metasearch_advanced.js" language="javascript" type="text/javascript"></script>
-		
-		<!-- controls the saving and tracking of saved records -->
-		
-		<script type="text/javascript">
-			
-			// change numSessionSavedRecords to numSavedRecords if you prefer the folder icon to change
-			// if there are any records at all in saved records. Also fix initial display in navbar.
-			
-			numSavedRecords = parseInt('0<xsl:value-of select="navbar/element[@id='saved_records']/@numSessionSavedRecords" />', 10);
-			isTemporarySession = <xsl:choose><xsl:when test="$temporarySession = 'true'">true</xsl:when><xsl:otherwise>false</xsl:otherwise></xsl:choose>
-		</script>
-		
-		<script src="{$base_include}/javascript/save.js" language="javascript" type="text/javascript"></script>
-		
-		<script language="javascript" type="text/javascript">
-			var dateSearch = "<xsl:value-of select="results/search/date" />";
-			var xerxes_iSearchable = "<xsl:value-of select="$search_limit" />";
-		</script>
-		
-		<!-- add behaviors to edit collection dialog, currently just delete confirm -->
-		<script src="{$base_include}/javascript/collections.js" language="javascript" type ="text/javascript"></script>
-	
-		<!-- umlaut content on record detail page, when so configured -->
-		<xsl:if test="//config/umlaut_base and (( request/base='metasearch' and request/action = 'record' ) or (request/base='folder' and request/action = 'full'))">
-          <!-- only if this database does NOT have openurl link generation
-               suppressed. If it does, we can do nothing. This duplicates
-               code in records.xsl, sorry. -->
-      <xsl:variable name="db_metalib_id" select="//records/record[1]/xerxes_record/metalib_id" />
-      <xsl:variable name="link_resolver_allowed" select="not(//database_links/database[@metalib_id = $db_metalib_id]/sfx_suppress) or //database_links/database[@metalib_id = $db_metalib_id]/sfx_suppress != '1'" />
-			
-			<xsl:if test="$link_resolver_allowed">
-        <!-- have umlaut set up up functions for js magic -->
-        <script type="text/javascript" src="{//config/umlaut_base}/javascripts/embed/umlaut-embed-func.js"></script>
-        
-        <!-- Now call our script that will call umlaut magic with local
-             xerxes display logic. First need to set a couple of dynamically
-             generated parameters in js global vars, so xerxes js can get it.-->      			
-        <script language="javascript" type="text/javascript">
-          openurl_kev_co = '<xsl:value-of select="//records/record[1]/openurl_kev_co"/>'; 
-          umlaut_base = '<xsl:value-of select="//config/umlaut_base"/>';          
-          
-          if (typeof(jsDisplayConstants) == "undefined" ) {
-             jsDisplayConstants = new Array(); 
-          }
-          jsDisplayConstants['link_resolver_name'] = '<xsl:copy-of select="$text_link_resolver_name"/>';
-          jsDisplayConstants['link_resolver_load_message'] = '<xsl:copy-of select="$text_link_resolver_load_msg"/>';
-          jsDisplayConstants['link_resolver_direct_link_prefix'] = '<xsl:copy-of select="$text_link_resolver_direct_link_prefix"/>';
-        </script>
-        <script language="javascript" type="text/javascript" src="{$base_include}/javascript/umlaut_record_detail.js"/>
-      </xsl:if>
-		</xsl:if>
-		
-	</xsl:if>
-  	
-	<xsl:call-template name="module_header" />
-	
-	<xsl:copy-of select="$text_extra_html_head_content" />
-
-</xsl:template>
-
 
 <!--
 	#############################
 	#                           #
-	#   DEPRECATED TEMPLATES    #
+	#   DEPRICATED TEMPLATES    #
 	#                           #
 	#############################
 -->

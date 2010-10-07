@@ -64,7 +64,7 @@ class Xerxes_WorldCat
 		return $records;
 	}
 	
-	public function records($ids)
+	public function records($ids, $strSchema = "marcxml")
 	{
 		$arrFinal = array();
 		
@@ -82,17 +82,18 @@ class Xerxes_WorldCat
 		
 		$strQuery = implode(" OR ", $arrFinal);
 		
-		return $this->searchRetrieve( $strQuery, 1, 50 );
+		return $this->searchRetrieve( $strQuery, 1, 50, $strSchema );
 	}
 	
 	/**
 	 * Return individual record by OCLC number
 	 *
 	 * @param string $id			OCLC number
+	 * @param string $strSchema		[optional] xml schema to return records in, default 'marcxml'
 	 * @return DOMDocument			MARC-XML or Dublin Core XML
 	 */
 	
-	public function record($id)
+	public function record($id, $strSchema = "marcxml")
 	{
 		if ( $id == "" )
 		{
@@ -101,7 +102,7 @@ class Xerxes_WorldCat
 		
 		$strQuery = "srw.no=\"$id\"";
 
-		return $this->searchRetrieve( $strQuery, 1, 1 );
+		return $this->searchRetrieve( $strQuery, 1, 1, $strSchema );
 	}
 	
 	/**
@@ -123,7 +124,6 @@ class Xerxes_WorldCat
 		$this->url .= "?wskey=" . $this->key;
 		$this->url .= "&startLibrary=" . $iStart;
 		$this->url .= "&maximumLibraries=" . $iMax;
-		$this->url .= "&servicelevel=" . $this->service;
 
 		if ( $strLibraries != "" )
 		{
@@ -140,37 +140,22 @@ class Xerxes_WorldCat
 		return $objXml;
 	}
 	
-	public function hits($search)
-	{
-		$this->searchRetrieve($search, 1,1);
-		return $this->total;
-	}
-	
 	/**
 	 * Search and retieve records
 	 *
 	 * @throws Exception for diagnostic errors
 	 * 
-	 * @param mixed $strQuery			the query in CQL format
+	 * @param string $strQuery			the query in CQL format
 	 * @param int $iStartRecord			[optional] start record to begin with, default 1
 	 * @param int $iMaxiumumRecords		[optional] maximum records to return, default 10
+	 * @param string $strSchema			[optional] xml schema to return records in, default 'marcxml'
 	 * @param string $strSort			[optional] index to sort records on
+	 * @param bool $bolDesc				[optional] whether to sort the records in desc order
 	 * @return DOMDocument				SRU results response
 	 */
 	
-	public function searchRetrieve($search, $iStartRecord = 1, $iMaxiumumRecords = 10, $strSort = null)
+	public function searchRetrieve($strQuery, $iStartRecord = 1, $iMaxiumumRecords = 10, $strSchema = "marcxml", $strSort = null, $bolDesc = false)
 	{
-		$strQuery = null;
-		
-		if ( $search instanceof Xerxes_Framework_Search_Query )
-		{
-			$strQuery = $search->toQuery();
-		}
-		else
-		{
-			$strQuery = $search;
-		}
-		
 		// append any limits set earlier
 		
 		$this->query = $strQuery . " " . $this->limits;
@@ -183,7 +168,7 @@ class Xerxes_WorldCat
 		$this->url .= "&query=" . urlencode( $this->query );
 		$this->url .= "&startRecord=" . $iStartRecord;
 		$this->url .= "&maximumRecords=" . $iMaxiumumRecords;
-		$this->url .= "&recordSchema=marcxml";
+		$this->url .= "&recordSchema=" . $strSchema;
 		$this->url .= "&servicelevel=" . $this->service;
 		
 		// workset grouping
@@ -198,9 +183,15 @@ class Xerxes_WorldCat
 		if ( $strSort != "" )
 		{
 			$this->url .= "&sortKeys=" . $strSort;
+			
+			if ( $bolDesc == true )
+			{
+				$this->url .= ",,0";
+			}
 		}
 		
 		// get the response from the server
+		
 		
 		$objXml = new DOMDocument( );
 		$objXml->load( $this->url );

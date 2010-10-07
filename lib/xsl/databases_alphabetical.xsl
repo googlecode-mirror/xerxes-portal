@@ -79,7 +79,7 @@
 				<xsl:if test="substring(translate(preceding-sibling::database[1]/title_display,$lower,$upper), 1, 1) !=  $letter">
 					<a><xsl:attribute name="href"><xsl:value-of select="/knowledge_base/request/server/request_uri" />#<xsl:value-of select="$letter" /></xsl:attribute> 
 					<xsl:value-of select="$letter" /></a>
-					<span class="letterSeperator"><xsl:copy-of select="$text_databases_az_letter_separator" /></span> 
+					<span class="letterSeperator"> | </span> 
 				</xsl:if>
 			
 			</xsl:for-each>
@@ -124,8 +124,8 @@
 					&#160;
 					<a href="{url}">
 
-						<img alt="more information" title="{$text_databases_az_hint_info}" src="images/info.png" class="iconInfo miniIcon">
-							<xsl:attribute name="src"><xsl:value-of select="/knowledge_base/config/base_url" />/images/info.png</xsl:attribute>
+						<img alt="more information" title="{$text_databases_az_hint_info}" src="images/info.gif" class="iconInfo miniIcon">
+							<xsl:attribute name="src"><xsl:value-of select="/knowledge_base/config/base_url" />/images/info.gif</xsl:attribute>
 						</img>						
 						<xsl:text> </xsl:text>
             
@@ -140,26 +140,10 @@
 					</xsl:if>
 				</xsl:if>
 			</div>
-			<xsl:choose>
-				<xsl:when test="$db_description_multilingual != 'false'">
-					<div class="resultsDescription">
-						<xsl:call-template name="n-th-item-in-list">
-							<xsl:with-param name="list">
-								<xsl:value-of select="description" disable-output-escaping="yes" />
-							</xsl:with-param>
-							<xsl:with-param name="delimiter">\n\n\n</xsl:with-param>
-							<xsl:with-param name="index">
-								<xsl:value-of select="$xerxes_language_position" />
-							</xsl:with-param>
-						</xsl:call-template>
-					</div>
-				</xsl:when>
-				<xsl:otherwise>
-					<div class="resultsDescription">
-						<xsl:value-of select="description" disable-output-escaping="yes" />
-					</div>
-				</xsl:otherwise>
-			</xsl:choose>
+			
+			<div class="resultsDescription">
+				<xsl:value-of select="description" disable-output-escaping="yes"/>
+			</div>
 		</div>
 		
 	</xsl:for-each>

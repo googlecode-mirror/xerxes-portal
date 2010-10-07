@@ -19,8 +19,8 @@
 
 <xsl:template name="header_div" >
 
-	<div id="hd-banner">
-		<a href="{$base_url}" id="hd-banner-link">
+	<div style="background-color: #336699; padding: 20px; padding-bottom: 2px;">
+		<a href="{$base_url}" style="color: #fff; font-weight: bold; font-size: 150%; font-family: Arial, Helvetica, sans-serif; text-decoration:none">
 			<xsl:value-of select="//config/application_name" />
 		</a>
 	</div>

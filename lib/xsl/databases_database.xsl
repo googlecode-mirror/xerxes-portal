@@ -82,26 +82,9 @@
 			<a href="{add_to_collection_url}" class="iconCommand add"><xsl:copy-of select="$text_database_save_database" /></a>
 		</div>
 		
-		<xsl:choose>
-			<xsl:when test="$db_description_multilingual != 'false'">
-				<div class="resultsDescription">
-					<xsl:call-template name="n-th-item-in-list">
-						<xsl:with-param name="list">
-							<xsl:value-of select="description" disable-output-escaping="yes" />
-						</xsl:with-param>
-						<xsl:with-param name="delimiter">\n\n\n</xsl:with-param>
-						<xsl:with-param name="index">
-							<xsl:value-of select="$xerxes_language_position" />
-						</xsl:with-param>
-					</xsl:call-template>
-				</div>
-			</xsl:when>
-			<xsl:otherwise>
-				<div class="resultsDescription">
-					<xsl:value-of select="description" disable-output-escaping="yes" />
-				</div>
-			</xsl:otherwise>
-		</xsl:choose>
+		<div class="databasesDescription">
+			<xsl:value-of disable-output-escaping="yes" select="description" />
+		</div>
 		
 		<dl>
 			<div class="databaseLink">
@@ -163,6 +146,7 @@
 					<dd><xsl:value-of select="publisher" /></dd>
 				</div>
 			</xsl:if>
+			
 			<xsl:if test="search_hints and ($show_db_detail_search = 'true' and searchable = '1')">
 				<div class="databaseSearchHints">
 				<dt><xsl:copy-of select="$text_database_search_hints" /></dt>

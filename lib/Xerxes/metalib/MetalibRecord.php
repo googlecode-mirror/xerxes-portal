@@ -7,7 +7,7 @@
  * @copyright 2009 California State University
  * @link http://xerxes.calstate.edu
  * @license http://www.gnu.org/licenses/
- * @version $Id$
+ * @version $Id: MetalibRecord.php 1199 2010-05-28 18:26:02Z dwalker@calstate.edu $
  * @todo ->__toString() madness below due to php 5.1 object-string casting problem
  * @package Xerxes
  */
@@ -25,7 +25,7 @@ class Xerxes_MetalibRecord_Document extends Xerxes_Marc_Document
  * @copyright 2009 California State University
  * @link http://xerxes.calstate.edu
  * @license http://www.gnu.org/licenses/
- * @version $Id$
+ * @version $Id: MetalibRecord.php 1199 2010-05-28 18:26:02Z dwalker@calstate.edu $
  * @todo ->__toString() madness below due to php 5.1 object-string casting problem, remove 
  *       when redhat provides php 5.2 package, since that is keeping people from upgrading
  *  * @package Xerxes
@@ -62,30 +62,7 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 			$leader->value = $strLeaderMetalib;
 		}
 		
-		// character entity references got munged
-		/*
-		
-		$author_subjects = $this->datafield("1XX|6XX");
-		
-		for ( $x = 0; $x < count($author_subjects); $x++ )
-		{
-			$this_datafield = $author_subjects[$x];
-			
-			$value = $datafield->subfield()->__toString();
-			
-			// un-terminated char entity ref
-			
-			if ( preg_match('/\&\#\d{3}$/', $value) )
-			{
-				if ( $x > 0 )
-				{
-					
-				}
-			}
-		}
-		*/
-		
-		// z3950/sutrs and some screen-scrapers have multiple authors in repeating 100 fields; 
+		// ebsco and some screen-scrapers have multiple authors in repeating 100 fields; 
 		// invalid marc, so switch all but first to 700
 		
 		$authors = $this->datafield("100");
@@ -98,30 +75,6 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 				$author->tag = "700";
 			}
 		}
-		
-		// there are often multiple 773's, just combine them into one so we don't
-		// have to iterate over all of them in other code
-		
-		$obj773 = new Xerxes_Marc_DataField();
-		$obj773->tag = "773";
-		
-		foreach ( $this->datafield("773") as $linked_entry )
-		{
-			// add all of its subfields to the new one
-			
-			foreach ($linked_entry->subfield() as $linked_entry_subfield )
-			{
-				$obj773->addSubField($linked_entry_subfield);
-			}
-			
-			// now blank this one to take it out of the mix
-			$linked_entry->tag = "XXX";
-		}
-		
-		// add our new one to the document
-		
-		$this->addDataField($obj773);
-		
 		
 		## ebsco format
 		
@@ -213,7 +166,7 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 		// No 856 is included at all, but a full text link can be
 		// constructed from the 001 record id.
 
-		if ( stristr($this->source,"GALE_ZBRC") )
+		if ($this->source == "GALE_ZBRC")
 		{
 			$url = "http://galenet.galegroup.com/servlet/BioRC?docNum=" . $this->control_number;
 			array_push ( $this->links, array ("Full-Text in HTML", $url, "html" ) );
@@ -236,7 +189,7 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 			//
 			// springer (metapress): does not distinguish between things in your subscription or not (9/16/08) 
 			// cinahl (bzh): not only is 856 bad, but link missing http://  bah! thanks greg at upacific! (9/10/08)
-			// wilson: 901|t shows an indication of full-text (9/16/10) 
+			// wilson: if it has '$3' in the URL not full-text, since these are improperly parsed out (3/26/07) 
 			// cabi: just point back to site (10/30/07)
 			// google scholar: just point back to site (3/26/07) 
 			// amazon: just point back to site (3/20/08)
@@ -246,14 +199,13 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 			// oxford: only include the links that are free, otherwise just a link to abstract (5/7/08)
 			// gale: only has full-text if 'text available' note in 500 field (9/7/07) BUT: Not true of Gale virtual reference library (GALE_GVRL). 10/14/08 jrochkind. 
 			// ieee xplore: does not distinguish between things in your subscription or not (2/13/09)
-			// elsevier links are not based on subscription (6/2/10)
 			// harvard business: these links in business source premiere are not part of your subscription (5/26/10)
 			// proquest (umi): these links are not full-text (thanks jerry @ uni) (5/26/10)
 			// proquest (gateway): there doesn't appear to be a general rule to this, so only doing it for fiaf (5/26/10)
 
 			if ( stristr ( $this->source, "METAPRESS_XML" ) || 
 				stristr ( $this->source, "EBSCO_RZH" ) || 
-				( stristr ( $this->source, "WILSON_" ) && $this->datafield("901")->subfield("t")->__toString() == "" ) ||
+				( stristr ( $this->source, "WILSON_" ) && strstr($strUrl, '$3') ) ||
 				stristr ( $this->source, "CABI" ) || 
 				stristr ( $this->source, "GOOGLE_SCH" ) || 
 				stristr ( $this->source, "AMAZON" ) || 
@@ -261,11 +213,10 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 				stristr ( $this->source, "EVII" ) || 
 				stristr ( $this->source, "WILEY_IS" ) || 
 				(stristr ( $this->source, "OXFORD_JOU" ) && ! strstr ( $strUrl, "content/full/" )) || 
-				(strstr ( $this->source, "GALE" ) && ! strstr( $this->source, "GALE_GVRL") && ! in_array ( "Text available", $notes )) || 
+				(strstr ( $this->source, "GALE" ) && $this->source != "GALE_GVRL" && ! in_array ( "Text available", $notes )) || 
 				stristr ( $this->source, "IEEE_XPLORE" ) || 
-				stristr ($this->source, "ELSEVIER_SCOPUS") ||
-				stristr ($this->source, "ELSEVIER_SCIRUS") ||
-				( stristr ($this->source,"EBSCO_BUSINESS") && strstr ($strUrl, "harvardbusinessonline")) ||
+				$this->source == "ELSEVIER_SCOPUS" ||
+				($this->source == "EBSCO_BUSINESS" && strstr ($strUrl, "harvardbusinessonline")) ||
 				( strstr($strUrl, "proquest.umi.com") && strstr($strUrl, "Fmt=2") ) || 
 				( strstr($strUrl, "gateway.proquest.com") && strstr($strUrl, "xri:fiaf:article") )
 				)
@@ -289,7 +240,7 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 				
 				// see if there are any non-alphanumeric[A-Za-z00-9_] characters in the 001
 				
-				$bolAlpha001 = preg_match('/\W/', $str001);
+				$bolAlpha001 = preg_match("/\W/", $str001);
 				
 				// if so, and there is a 016, use that instead, if not go ahead and use 
 				// the 001; if neither do nothing
@@ -313,7 +264,7 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 		if (strstr ( $this->source, 'GALE_' ))
 		{
 			$arrMatches = array ();
-			$strGaleRegExp = '/\(([^)]*)\)/';
+			$strGaleRegExp = "/\(([^)]*)\)/";
 			
 			$title = $this->datafield("245");
 			$title_main = $title->subfield("a");
@@ -441,7 +392,7 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 		{
 			$this->format = "Conference Proceeding";
 		}
-		elseif ( stristr($this->source,"GOOGLE_B") )
+		elseif ($this->source == "GOOGLE_B")
 		{
 			$this->format = "Book";
 		}
@@ -452,22 +403,6 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 			elseif ( strstr($this->source, "OXFORD_MUSIC_ONLINE") )
 		{
 			$this->format = "Article";
-		}
-		elseif ( strstr($this->source, "ESPACENET") )
-		{
-			$this->format = "Patent";
-		}
-		elseif ( strstr($this->source, "WIPO_PCT") )
-		{
-			$this->format = "Patent";
-		}
-		elseif ( strstr($this->source, "USPA") )
-		{
-			$this->format = "Patent";
-		}
-		elseif ( strstr($this->source, "DEPATIS") )
-		{
-			$this->format = "Patent";
 		}
 		
 		// JSTOR book review correction: title is meaningless, but subjects
@@ -648,7 +583,9 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 			// Put a special token in there. 
 			return self::$TemplateEmptyValue;
 		}
-	
+		//URL escape it please
+		$value = urlencode ( $value );
+		
 		return $value;
 	}
 	/* Fills out an array of Xerxes_Record to include links that are created

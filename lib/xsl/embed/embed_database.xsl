@@ -55,7 +55,7 @@
           <span class="xerxes_db_info">
           <a>
             <xsl:attribute name="href"><xsl:value-of select="url" /></xsl:attribute>
-            <img alt="info" src="{$base_url}/images/info.png" style="border: 0px none" />             
+            <img alt="info" src="{$base_url}/images/info.gif" style="border: 0px none" />             
           </a>
           </span>  
         </xsl:if>

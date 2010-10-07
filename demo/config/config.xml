@@ -50,18 +50,6 @@
 		
 		<config name="reverse_proxy"></config>
 		
-		<!-- Xerxes interface language. Currently used for:
-			* selecting from multilingual database descriptions (see db_description_multilingual)
-		-->
-		
-		<config name="xerxes_language" pass="true">eng</config>
-		
-		<!-- Xerxes locale. Currently used to display localized language names,
-		     i.e. if you set this to 'de_DE.UTF-8', document language names will be displayed in German
-		     if left empty, default POSIX locale 'C' will be used -->
-		
-		<config name="xerxes_locale"></config>
-		
 		
 	<!-- METALIB CONFIGURATION -->
 		
@@ -155,11 +143,6 @@
 		 -->
 		
 		<config name="proxy_server"></config>
-
-		<!-- Google analytics -->
-		
-		<config name="google_analytics" pass="true"></config>
-
 		
 	<!-- EZPROXY EXPORT -->
 	
@@ -204,117 +187,45 @@
 		
 		<config name="secure_login">false</config>
 		
+		
 		<!-- LDAP -->
 		
-			<!-- required: directory server
-			Use IP, hostname or URI (ldap://hostname:port/ or ldaps://hostname:port/). -->
-			
-			<config name="directory_server"></config>
-	
-			<!-- deprecated, use ldap_dn_format instead -->
-			<!-- <config name="domain"></config> -->
-	
-			<!-- required: format of user DN we want to authenticate, %s will be replaced by username from the login form -->
-			<!-- another example, for Novell eDir: cn=%s,ou=department,o=organization -->
-			
-			<config name="ldap_dn_format">%s@domain</config>
-			
-			<!-- required: Perform initial bind & search for user DN? 
-				 If this is false, the rest of LDAP options will be ignored. -->
-			
-			<config name="ldap_do_init_bind">false</config>
-	
-			<!-- required if ldap_do_init_bind=true but may be empty for anonymous bind -->
-			<!-- DN for the initial bind. If do_init_bind is true and both ldap_init_bind_dn and 
-				 ldap_init_bind_password are empty, perform an anonymous bind. -->
-				 
-			<config name="ldap_init_bind_dn">cn=dir_admin,o=organization</config>
-	
-			<!-- required if ldap_do_init_bind=true but may be empty for anonymous bind -->
-			<!-- password for the initial bind -->
-			
-			<config name="ldap_init_bind_password">dir_admin_password</config>
-	
-			<!-- optional: part of tree to search for user DN (used to restrict search to a particular context) -->
-			
-			<config name="ldap_search_base">o=organization</config>
-	
-			<!-- required if do_init_bind=true -->
-			<!-- find only users matching this criteria (e.g. restrict only to users with a mail attribute or 
-			     within a certain ou) -->
-			
-			<config name="ldap_search_filter">(cn=%s)</config>
-	
-			<!-- required if ldap_do_init_bind=true -->
-			<!-- attribute containing the username -->
-			
-			<config name="ldap_search_uid">cn</config>
-	
-			<!-- if the following options are not empty and the directory contains attributes with these names, 
-				 their values will be imported to Xerxes users table on first login -->
-			<!-- optional: attribute containing user's given name -->
-			
-			<config name="ldap_search_name">givenName</config>
-	
-			<!-- optional: attribute containing user's surname -->
-			
-			<config name="ldap_search_surname">sn</config>
-	
-			<!-- optional: attribute containing user's email address -->
-			
-			<config name="ldap_search_mail">mail</config>
+		<!-- directory server and domain -->
 		
-			<!-- LDAP options; see details in http://tools.ietf.org/html/draft-ietf-ldapext-ldap-c-api-05#section-11.2 -->
-			
-			<!-- optional: LDAP protocol version -->
-			
-			<config name="ldap_opt_protocol_version">2</config>
-			
-			<!-- optional: Determines how aliases are handled during search 
-			(LDAP_DEREF_NEVER, LDAP_DEREF_SEARCHING, LDAP_DEREF_FINDING, LDAP_DEREF_ALWAYS) -->
-			
-			<config name="ldap_opt_deref">LDAP_DEREF_NEVER</config>
-			
-			<!-- optional: Determines whether the LDAP library automatically follows referrals 
-			returned by LDAP servers or not (LDAP_OPT_ON, LDAP_OPT_OFF) -->
-			
-			<config name="ldap_opt_referrals">LDAP_OPT_OFF</config>
-
-			<!-- optional: Use TLS with LDAP connection (StartTLS)?
-			This is not LDAPS (default port 636). This is LDAP+TLS (default port 389). LDAPS is now deprecated over LDAP+TLS. -->
-			
-			<config name="ldap_opt_tls">false</config>
+		<config name="directory_server"></config>
+		<config name="domain"></config>
 		
 		
 		<!-- INNOVATIVE PATRON API -->
 		
-			<!-- enter the server address, include 'http://', :port number, and trailing slash '/' at the end of the url -->
-			
-			<config name="innovative_patron_api" />
-			
-			<!-- patron types allowed to use this system remotely: seperate multilple entries by comma; 
-			leave blank if all users are allowed -->
-				 
-			<config name="innovative_patron_types" />
+		<!-- enter the server address, include 'http://', :port number, and trailing slash '/' at the end of the url -->
+		
+		<config name="innovative_patron_api" />
+		
+		<!-- patron types allowed to use this system remotely: seperate multilple entries by comma; 
+		leave blank if all users are allowed -->
+			 
+		<config name="innovative_patron_types" />
 		
 		
 		<!-- CAS -->
 		
-			<!--
-				cas_login = full url to the login service, typically with https://
-				cas_validate = the full url to the validate service, typically with https:// 
-			 -->
-			
-			<config name="cas_login" />
-			<config name="cas_validate" />
+		<!--
+			cas_login = full url to the login service, typically with https://
+			cas_validate = the full url to the validate service, typically with https:// 
+		 -->
+		
+		<config name="cas_login" />
+		<config name="cas_validate" />
+		
 		
 		
 		<!-- DEMO -->
 		
-			<!-- list of users who can access the system without being in the local directory server 
-				 enter as username:password and seperate entries by comma -->
-			
-			<config name="demo_users"></config>
+		<!-- list of users who can access the system without being in the local directory server 
+		     enter as username:password and seperate entries by comma -->
+		
+		<config name="demo_users"></config>
 		
 	<!-- DISPLAY AND BEHAVIOR -->
 	
@@ -373,20 +284,6 @@
 			strip: Strip out all HTML tags. May be used in combination with db_description_allow_tags below. -->
 			
 		<config name="db_description_html">escape</config>
-		
-		<!-- use multilingual database descriptions
-			
-			For this to work, database descriptions in your Metalib IRD must have multiple paragraphs
-			separated by three newlines, one per language, in order of languages specified by this option.
-			Three newlines (exported as ###### by Metalib X-Server, replaced back to newlines in Xerxes)
-			will be recognized by XSLT as language separator.
-			
-			Values:
-			comma-separated sequence of language codes, e.g. 'eng,spa,ger'; xerxes_language value must be among them
-			
-			If this option is left empty, Xerxes will display description as it is regardless of Xerxes language -->
-			
-		<config name="db_description_multilingual" pass="true"></config>
 		
 		<!-- tags NOT to strip in database descriptions.
 		

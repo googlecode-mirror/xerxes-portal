@@ -74,13 +74,8 @@
 				case "demo":
 					
 					$this->authentication = new Xerxes_DemoAuthentication($objRequest, $objRegistry);
-					break;
+					break;		
 
-				case "pds":
-					
-					$this->authentication = new Xerxes_PDS($objRequest, $objRegistry);
-					break;						
-					
 				case "shibboleth":
 					
 					$shib_file = "config/authentication/shibboleth.php";

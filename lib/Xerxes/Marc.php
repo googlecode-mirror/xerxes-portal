@@ -191,6 +191,8 @@ class Xerxes_Marc_Record
 				array_push($this->_datafields, $datafield);
 			}
 			
+			$objImport = null;
+			
 			// if this was actually a DOMDocument in itself
 			
 			if ( $objNode instanceof DOMDocument )
@@ -200,22 +202,18 @@ class Xerxes_Marc_Record
 			}
 			else
 			{
-				// we'll convert this node to a DOMDocument
-				
-				// first import it into an intermediate doc, 
-				// so we can also import namespace definitions as well as nodes
-				
-				$intermediate  = new DOMDocument();
-				$intermediate ->loadXML("<wrapper />");
-				
-				$import = $intermediate->importNode($objNode, true);
-				$our_node = $intermediate->documentElement->appendChild($import);
-				
-				// now get just our xml, minus the wrapper
+				// we'll 'convert' this node to a DOMDocument
 				
 				$this->document = new DOMDocument();
-				$this->document->loadXML($intermediate->saveXML($our_node));
+				$this->document->loadXML("<record xmlns=\"" . $this->namespace . "\" />");
+				
 				$this->node = $this->document->documentElement;
+				
+				foreach ( $objNode->getElementsByTagName("*") as $objChild )
+				{
+					$objImport = $this->document->importNode($objChild, true);
+					$this->document->documentElement->appendChild($objImport);
+				}
 			}
 				
 			// now create an xpath object and the current node as properties
@@ -256,39 +254,17 @@ class Xerxes_Marc_Record
 	
 	public function controlfield($tag)
 	{
-		foreach ( $this->_controlfields as $controlfield )
-		{
-			if ( $controlfield->tag == $tag )
-			{
-				return $controlfield;
-			}
-		}
-		
-		// didn't find it, so return empty one
-		
-		return new Xerxes_Marc_ControlField();
-	}
-
-	/**
-	 * Return a list of control fields, essentially for 007
-	 *
-	 * @param string $tag			the marc tag number
-	 * @return Xerxes_Marc_FieldList object
-	 */	
-	
-	public function controlfields($tag)
-	{
-		$list = new Xerxes_Marc_FieldList();
+		$return = new Xerxes_Marc_ControlField();
 		
 		foreach ( $this->_controlfields as $controlfield )
 		{
 			if ( $controlfield->tag == $tag )
 			{
-				$list->addField($controlfield);
+				$return = $controlfield;
 			}
 		}
-
-		return $list;
+		
+		return $return;
 	}
 
 	/**
@@ -514,11 +490,14 @@ class Xerxes_Marc_DataField
 			// do it this way so fields are returned in the order in 
 			// which they were specified in the paramater
 			
-			foreach ( $this->_subfields as $subfield )
+			foreach ( $codes as $letter )
 			{
-				if ( in_array($subfield->code, $codes ) )
+				foreach ( $this->_subfields as $subfield )
 				{
-					$list->addField($subfield);
+					if ( $subfield->code == $letter )
+					{
+						$list->addField($subfield);
+					}
 				}
 			}
 		}

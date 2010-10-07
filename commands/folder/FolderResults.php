@@ -122,35 +122,28 @@
 			{
 				$objRecords = $objXml->createElement("records");
 				$objXml->documentElement->appendChild($objRecords);
-				
-				// @todo move this to point of save for search arch
-				
-				/* 
-	         	enhance records with links generated from metalib templates,
-	         	and get a list of databases too. We need to get the Xerxes_Records 
-				out of our list of Xerxes_Data_Records first.
-				*/
-				
-				$xerxes_records = array ();
-				$database_links_dom = "";
-								
-				foreach ( $arrResults as $objDataRecord )
-				{
-					if ($objDataRecord->xerxes_record instanceof Xerxes_MetalibRecord )
-					{
-						array_push ( $xerxes_records, $objDataRecord->xerxes_record );
-					}
-				}
-				
-				if ( count($xerxes_records) > 0 )
-				{
-					Xerxes_MetalibRecord::completeUrlTemplates ( $xerxes_records, $this->request, $this->registry, $database_links_dom );
-					$database_links = $objXml->importNode ( $database_links_dom->documentElement, true );
-					$objXml->documentElement->appendChild ( $database_links );
-				}
 
-       			 /*  Add the records */
 				
+        /* Enhance records with links generated from metalib templates,
+           and get a list of databases too. We need to get the Xerxes_Records out of our list of Xerxes_Data_Records first. */
+        $xerxes_records = array();
+        foreach($arrResults as $objDataRecord) {   
+          if ( $objDataRecord->xerxes_record ) {
+            array_push($xerxes_records, $objDataRecord->xerxes_record);
+          }
+        }
+                
+        
+        Xerxes_MetalibRecord::completeUrlTemplates($xerxes_records, $this->request, $this->registry, $database_links_dom);         
+        
+        $database_links = $objXml->importNode($database_links_dom->documentElement, true);
+        
+                
+        $objXml->documentElement->appendChild($database_links);        
+
+        
+    
+        /*  Add the records */
 				foreach ( $arrResults as $objDataRecord )
 				{
 					// create a new record
@@ -224,14 +217,16 @@
 								
 							$objImportNode = $objXml->importNode($objBibRecord->documentElement, true);
 							$objRecord->appendChild($objImportNode);
-							
-							// and openurl kev context object from record
-							
-							$configSID = $this->registry->getConfig ( "APPLICATION_SID", false, "calstate.edu:xerxes" );
-							$kev = Xerxes_Framework_Parser::escapeXml ( $objXerxesRecord->getOpenURL ( null, $configSID ) );
-							$objOpenUrl = $objXml->createElement ( "openurl_kev_co", $kev );
-							$objRecord->appendChild ( $objOpenUrl );
-
+              
+              // and openurl kev context object from record
+              $configSID = $this->registry->getConfig("APPLICATION_SID", false, "calstate.edu:xerxes");
+              $kev = Xerxes_Framework_Parser::escapeXml($objXerxesRecord->getOpenURL(null, $configSID));
+              $objOpenUrl = $objXml->createElement("openurl_kev_co", $kev);
+              $objRecord->appendChild( $objOpenUrl );
+              
+						}
+						elseif ($key == "marc" && $value != null)
+						{
 							// import the marc record, but only if configured to do so; since both brief
 							// and full record display come in on the same command, we'll use the record count 
 							// here as an approximate for the brief versus full view -- hacky, hacky
@@ -241,9 +236,11 @@
 							if (  ( $strView != "brief" && $configMarcFull == true && $iNumRecords == 1 ) || 
 								  ( $strView != "brief" && $configMarcBrief == true && $iNumRecords != 1 ) )
 							{
-								$objOriginalXml = $objXerxesRecord->getOriginalXML();
+								$objMarcXml = new DOMDocument();
+								$objMarcXml->recover = true;
+								$objMarcXml->loadXML($value);
 									
-								$objImportNode = $objXml->importNode($objOriginalXml->documentElement, true);
+								$objImportNode = $objXml->importNode($objMarcXml->getElementsByTagName("record")->item(0), true);
 								$objRecord->appendChild($objImportNode);
 							}
 						}
@@ -271,6 +268,7 @@
 							}
 						}
 					}
+
 				}
 			}
 			

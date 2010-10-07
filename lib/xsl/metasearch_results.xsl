@@ -83,7 +83,7 @@
 		<xsl:when test="results/facet_name != ''">
 			<h3>
 				<a href="{//base_info[base = 'MERGESET']/url}">
-					<img src="{$base_url}/images/delete.png" alt="{$text_results_hint_remove_limit}" />
+					<img src="{$base_url}/images/delete.gif" alt="{$text_results_hint_remove_limit}" />
 				</a>
 				<xsl:copy-of select="$text_metasearch_results_limit" /><xsl:text>: </xsl:text><xsl:value-of select="results/facet_name" />
 			</h3>
@@ -104,18 +104,12 @@
 								<xsl:for-each select="sort_display/option">
 									<xsl:choose>
 										<xsl:when test="@active = 'true'">
-											<strong>
-											<xsl:call-template name="text_results_sort_by">
-												<xsl:with-param name="option" select="text()" />
-											</xsl:call-template>
-											</strong>
+											<strong><xsl:value-of select="text()" /></strong>
 										</xsl:when>
 										<xsl:otherwise>
 											<xsl:variable name="link" select="@link" />
 											<a href="{$link}">
-												<xsl:call-template name="text_results_sort_by">
-													<xsl:with-param name="option" select="text()" />
-												</xsl:call-template>
+												<xsl:value-of select="text()" />
 											</a>
 										</xsl:otherwise>
 									</xsl:choose>
@@ -203,20 +197,16 @@
 </xsl:template>
 	
 <xsl:template name="sidebar">
-	<xsl:call-template name="account_sidebar" />
-	<xsl:call-template name="results_sidebar" />
-</xsl:template>
+
+<xsl:variable name="group" 				select="request/group" />
+<xsl:variable name="this_result_set"	select="request/resultset" />
+
+
 	
-<xsl:template name="results_sidebar">
-	<xsl:call-template name="results_sidebar-merged_set" />
-	<xsl:call-template name="results_sidebar-individual_databases" />
-	<xsl:call-template name="facets" />
-</xsl:template>
-
-<xsl:template name="results_sidebar-merged_set">
-	<xsl:variable name="group" 				select="request/group" />
-	<xsl:variable name="this_result_set"	select="request/resultset" />
-
+	<xsl:call-template name="account_sidebar" />
+	
+	<!-- merged set -->
+	
 	<xsl:if test="//base_info[base = 'MERGESET']">
 	
 		<div class="box merge_set">
@@ -248,12 +238,9 @@
 		</div>
 	
 	</xsl:if>
-</xsl:template>
 	
-<xsl:template name="results_sidebar-individual_databases">
-	<xsl:variable name="group" 				select="request/group" />
-	<xsl:variable name="this_result_set"	select="request/resultset" />
-
+	<!-- individual databases -->
+	
 	<xsl:if test="count(//base_info) > 1 or count(//excluded_dbs/database) > 0">
 	
 		<div class="box database_sets">
@@ -347,6 +334,11 @@
 		</div>
 		
 	</xsl:if>
+	
+	<!-- facets -->
+	<xsl:call-template name="facets" />
+
+	
 </xsl:template>
 
 <!--

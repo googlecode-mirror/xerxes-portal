@@ -46,7 +46,6 @@ class Xerxes_Record extends Xerxes_Marc_Record
 	protected $sub_title = ""; // subtitle	
 	protected $series_title = ""; // series title
 	protected $trans_title = false; // whether title is translated
-	protected $additional_titles = array(); // uniform and related titles
 	
 	protected $place = ""; // place of publication	
 	protected $publisher = ""; // publisher	
@@ -71,45 +70,22 @@ class Xerxes_Record extends Xerxes_Marc_Record
 	protected $description = ""; // physical description
 	protected $abstract = ""; // abstract
 	protected $summary = ""; // summary
-	protected $summary_type = ""; // the type of summary
 	protected $language = ""; // primary language of the record
-	protected $notes = array (); // notes that are not the abstract, language, or table of contents
-	protected $subjects = array (); // subjects
+	protected $notes = array ( ); // notes that are not the abstract, language, or table of contents
+	protected $subjects = array ( ); // subjects
 	protected $toc = ""; // table of contents note
-	protected $series = array();
 	
 	protected $refereed = false; // whether the item is peer-reviewed
 	protected $subscription = false; // whether the item is available in library subscription
 	
-	protected $links = array (); // all supplied links in the record both full text and non
-	protected $embedded_text = array (); // full text embedded in document
+	protected $links = array ( ); // all supplied links in the record both full text and non
+	protected $embedded_text = array ( ); // full text embedded in document
 	
-	protected $alt_scripts = array (); // alternate character-scripts like cjk or hebrew, taken from 880s
+	protected $alt_scripts = array ( ); // alternate character-scripts like cjk or hebrew, taken from 880s
 	protected $alt_script_name = ""; // the name of the alternate character-script; we'll just assume one for now, I guess
 	
-	protected $items = array(); // item records attached
-	
-	protected $serialized_xml; // for serializing the object
-	
-	
-	### PUBLIC FUNCTIONS ###
 
-	
-	public function __sleep()
-	{
-		// save only the xml
-		
-		$this->serialized_xml = $this->document->saveXML();
-		return array("serialized_xml");
-	}
-	
-	public function __wakeup()
-	{
-		// and then we recreate the object (with any new changes we've made)
-		// by just loading the saved xml back into the object
-		
-		$this->loadXML($this->serialized_xml);
-	}		
+	### PUBLIC FUNCTIONS ###
 	
 	/**
 	 * Maps the marc data to the object's properties
@@ -135,6 +111,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		{
 			$this->xpath->registerNamespace ( "rft", "info:ofi/fmt:xml:xsd" );
 		}
+
 		else
 		{
 			$this->xpath->registerNamespace ( "rft", "info:ofi/fmt:xml:xsd:journal" );
@@ -177,7 +154,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		$this->record_id = $this->control_number;
 		
 		$arrIssn = $this->fieldArray("022", "a" );
-		$arrIsbn = $this->fieldArray("020", "az" );
+		$arrIsbn = $this->fieldArray("020", "a" );
 
 		$this->govdoc_number =  $this->datafield("086")->subfield("a")->__toString();		
 		$this->gpo_number =  $this->datafield("074")->subfield("a")->__toString();
@@ -198,7 +175,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 			
 			// got it!
 			
-			if ( preg_match('/.*\/.*/', $doi) )
+			if ( preg_match("/.*\/.*/", $doi) )
 			{
 				$this->doi = $doi;
 				break;
@@ -247,6 +224,41 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		// thesis degree, institution, date awarded
 		
 		$strThesis =  $this->datafield("502")->subfield("a")->__toString();
+		
+		// authors
+
+		$strPrimaryAuthor =  $this->datafield("100")->subfield("a")->__toString();
+
+		$strCorpName =  $this->datafield("110")->subfield("ab")->__toString();
+		
+		$strConfName =  $this->datafield("111")->subfield("anc")->__toString();
+		$this->author_from_title =  $this->datafield("245")->subfield("c" )->__toString();
+		
+		$arrAltAuthors = $this->fieldArray("700", "a" );
+		$arrAddCorp = $this->fieldArray("710", "ab" );
+		$arrAddConf = $this->fieldArray("711", "acn" );
+		
+		// conference and corporate names from title ?
+
+		$arrConferenceTitle = $this->fieldArray("811");
+		
+		if ( $arrAddConf == null && $arrConferenceTitle != null )
+		{
+			$arrAddConf = $arrConferenceTitle;
+		}
+		
+		$arrCorporateTitle = $this->fieldArray("810");
+		
+		if ( $arrAddCorp == null && $arrCorporateTitle != null )
+		{
+			$arrAddCorp = $arrCorporateTitle;
+		}
+		
+		if ( $strConfName != null || $arrAddConf != null )
+		{
+			array_push( $this->format_array, "conference paper" );
+		}
+			
 		
 		### title
 		
@@ -304,15 +316,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		elseif ( $this->title == "" && $objBTitle != null )
 		{
 			$this->title = $objBTitle->nodeValue;
-		}
-
-		// additional titles for display
-		
-		foreach ( $this->datafield('730|740') as $additional_titles )
-		{
-			$subfields =  $additional_titles->subfield()->__toString();
-			array_push($this->additional_titles, $subfields);
-		}			
+		}		
 		
 		
 		// edition, extent, description
@@ -362,13 +366,6 @@ class Xerxes_Record extends Xerxes_Marc_Record
 			$subfields =  $subject->subfield("abcdefghijklmnopqrstuvwxyz")->__toString();
 			array_push($this->subjects, $subfields);
 		}
-
-		// series information
-
-		foreach ( $this->datafield('4XX|800|810|811|830') as $subject )
-		{
-			array_push($this->series, $subject->__toString());
-		}		
 		
 		// journal
 		
@@ -376,7 +373,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		//  in case they are out of order 
 		
 		$this->journal =  $this->datafield("773")->subfield("atgbcdefhijklmnopqrsuvwxyz1234567890")->__toString();
-		$strJournal =  $this->datafield("773")->subfield("agpqt")->__toString();
+		$strJournal =  $this->datafield("773")->subfield("agpt")->__toString();
 		$this->journal_title =  $this->datafield("773")->subfield("t")->__toString();
 		$this->short_title =  $this->datafield("773")->subfield("p")->__toString();
 		$strExtentHost =  $this->datafield("773")->subfield("h")->__toString();
@@ -402,7 +399,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 			
 			$arrScriptCodes = array ("(3" => "Arabic", "(B" => "Latin", '$1' => "CJK", "(N" => "Cyrillic", "(S" => "Greek", "(2" => "Hebrew" );
 			
-			if ( preg_match( '/[0-9]{3}-[0-9]{2}\/([^\/]*)/', $strAltScript, $arrMatchCodes ) )
+			if ( preg_match( "/[0-9]{3}-[0-9]{2}\/([^\/]*)/", $strAltScript, $arrMatchCodes ) )
 			{
 				if ( array_key_exists( $arrMatchCodes[1], $arrScriptCodes ) )
 				{
@@ -436,10 +433,8 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		}
 		
 		### language
-		
-		$langConverter = Xerxes_Framework_Languages::getInstance();
-		
-		// take an explicit language note over 008 if available
+
+		// take an explicit lanugage note over 008 if available
 
 		if ( $strLanguageNote != null )
 		{
@@ -447,19 +442,15 @@ class Xerxes_Record extends Xerxes_Marc_Record
 			
 			if ( strlen( $strLanguageNote ) == 2 )
 			{
-				$this->language = $langConverter->getNameFromCode( 'iso_639_1_code', $strLanguageNote );
+				$this->language = $this->convertLanguageCode( $strLanguageNote, true );
 			} 
 			elseif ( strlen( $strLanguageNote ) == 3 )
 			{
-				$this->language = $langConverter->getNameFromCode( 'iso_639_2B_code', $strLanguageNote );
+				$this->language = $this->convertLanguageCode( $strLanguageNote );
 			} 
 			elseif ( ! stristr( $strLanguageNote, "Undetermined" ) )
 			{
 				$this->language = str_ireplace( "In ", "", $strLanguageNote );
-				$language = $langConverter->getNameFromCode( 'name', ucfirst( $this->language ) );
-				if ($language != null) {
-					$this->language = $language;
-				}
 			}
 		} 
 		else
@@ -474,7 +465,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 
 				if ( $strLangCode != "")
 				{
-					$this->language = $langConverter->getNameFromCode( 'iso_639_2B_code', $strLanguageNote );
+					$this->language = $this->convertLanguageCode($strLangCode);
 				}			
 			}
 		}
@@ -589,16 +580,14 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		if ( $this->abstract != "" )
 		{
 			$this->summary = $this->abstract;
-			$this->summary_type = "abstract";
 		} 
 		elseif ( $this->toc != "" )
 		{
-			$this->summary = $this->toc;
-			$this->summary_type = "toc";
+			$this->summary = "Includes chapters on: " . $this->toc;
 		} 
 		elseif ( count( $this->subjects ) > 0 )
 		{
-			$this->summary_type = "subjects";
+			$this->summary = "Covers the topics: ";
 			
 			for ( $x = 0 ; $x < count( $this->subjects ) ; $x ++ )
 			{
@@ -630,8 +619,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 			
 			// or see if a short title exists
 			
-			elseif ( $this->short_title != "" && 
-				($this->format == "Article" || $this->format == "Journal" || $this->format == "Newspaper")  )
+			elseif ( $this->short_title != "" && ($this->format == "Article" || $this->format == "Journal or Newspaper") )
 			{
 				$this->journal_title = $this->short_title;
 			}
@@ -686,7 +674,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 
 				$arrExtent = array ( );
 				
-				if ( preg_match( '/([0-9]{1})\/([0-9]{1})/', $strExtentHost, $arrExtent ) != 0 )
+				if ( preg_match( "/([0-9]{1})\/([0-9]{1})/", $strExtentHost, $arrExtent ) != 0 )
 				{
 					// if extent expressed as a fraction of a page, just take
 					// the start page as the end page
@@ -753,7 +741,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 
 			$arrDegree = array ( );
 			
-			if ( preg_match( '/\(([^\(]*)\)/', $strThesis, $arrDegree ) != 0 )
+			if ( preg_match( "/\(([^\(]*)\)/", $strThesis, $arrDegree ) != 0 )
 			{
 				$this->degree = $arrDegree[1];
 			}
@@ -868,106 +856,84 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		
 		#### authors
 
-		// authors
-
-		$this->author_from_title =  $this->datafield("245")->subfield("c" )->__toString();
-		
-		$objConfName =  $this->datafield("111"); // "anc"
-		$objAddAuthor = $this->datafield("700"); // "a"
-		$objAddCorp = $this->datafield("710"); //, "ab"
-		$objAddConf = $this->datafield("711"); // "acn"
-		
-		// conference and corporate names from title ?
-
-		$objConferenceTitle = $this->datafield("811"); // all
-		
-		if ( $objAddConf->length() == 0 && $objConferenceTitle->length() > 0 )
-		{
-			$objAddConf = $objConferenceTitle;
-		}
-		
-		$objCorporateTitle = $this->datafield("810"); // all
-		
-		if ( $objAddCorp->length() == 0 && $objCorporateTitle->length() > 0 )
-		{
-			$objAddCorp = $objCorporateTitle;
-		}
-		
-		if ( $objConfName->length() > 0 || $objAddConf->length() > 0 )
-		{
-			array_push( $this->format_array, "conference paper" );
-		}		
-		
 		// personal primary author
 		
-		if ( $this->datafield("100")->length() > 0 )
+		if ( $strPrimaryAuthor != "" )
 		{
-			$objXerxesAuthor = $this->splitAuthor( $this->datafield("100"), "a", "personal" );
-			array_push( $this->authors, $objXerxesAuthor );
+			$arrAuthor = $this->splitAuthor( $strPrimaryAuthor, "personal" );
+			array_push( $this->authors, $arrAuthor );
 		} 
-		elseif ( $objAddAuthor->length() > 0 )
+		elseif ( $arrAltAuthors != null )
 		{
 			// editor
 
-			$objXerxesAuthor = $this->splitAuthor( $objAddAuthor->item(0), "a", "personal", true);
-			array_push( $this->authors, $objXerxesAuthor );
+			$arrAuthor = $this->splitAuthor( $arrAltAuthors[0], "personal" );
+			array_push( $this->authors, $arrAuthor );
 			$this->editor = true;
 		}
 		
 		// additional personal authors
 
-		if ( $objAddAuthor->length() > 0  )
+		if ( $arrAltAuthors != null )
 		{
+			$x = 0;
+			$y = 0;
+			
 			// if there is an editor it has already been included in the array
 			// so we need to skip the first author in the list
 			
 			if ( $this->editor == true )
 			{
-				$objAddAuthor->next();
+				$x = 1;
 			}
 			
-			foreach ( $objAddAuthor as $obj700 )
+			foreach ( $arrAltAuthors as $strAuthor )
 			{
-				$objXerxesAuthor = $this->splitAuthor( $obj700, "a", "personal", true );
-				array_push( $this->authors, $objXerxesAuthor );
+				if ( $y >= $x )
+				{
+					$arrAuthor = $this->splitAuthor( $strAuthor, "personal" );
+					array_push( $this->authors, $arrAuthor );
+				}
+				
+				$y ++;
 			}
 		}
 		
 		// corporate author
 		
-		if ( $this->datafield("110")->subfield("ab")->__toString() != "" )
+		if ( $strCorpName != "" )
 		{
-			$objXerxesAuthor = $this->splitAuthor( $this->datafield("110"), "ab", "corporate" );
-			array_push( $this->authors, $objXerxesAuthor );
+			$arrAuthor = $this->splitAuthor( $strCorpName, "corporate" );
+			array_push( $this->authors, $arrAuthor );
 		}
 		
 		// additional corporate authors
 
-		if ( $objAddCorp->length() > 0 )
+		if ( $arrAddCorp != null )
 		{
-			foreach ( $objAddCorp as $objCorp )
+			foreach ( $arrAddCorp as $strCorp )
 			{
-				$objXerxesAuthor = $this->splitAuthor( $objCorp, "ab", "corporate", true );
-				array_push( $this->authors, $objXerxesAuthor );
+				$arrAuthor = $this->splitAuthor( $strCorp, "corporate" );
+				array_push( $this->authors, $arrAuthor );
 			}
 		}
 		
 		// conference name
 
-		if ( $objConfName->length() > 0)
+		if ( $strConfName != "" )
 		{
-			$objXerxesAuthor = $this->splitAuthor( $objConfName, "anc", "conference" );
-			array_push( $this->authors, $objXerxesAuthor );
+			$arrAuthor = $this->splitAuthor( $strConfName, "conference" );
+			array_push( $this->authors, $arrAuthor );
 		}
 		
 		// additional conference names
 
-		if ( $objAddConf->length() > 0 )
+		if ( $arrAddConf != null )
 		{
-			foreach ( $objAddConf as $objConf )
+			foreach ( $arrAddConf as $strConf )
 			{
-				$objXerxesAuthor = $this->splitAuthor( $objConf, "acn", "conference", true );
-				array_push( $this->authors, $objXerxesAuthor );
+				$arrAuthor = $this->splitAuthor( $strConf, "conference" );
+				array_push( $this->authors, $arrAuthor );
 			}
 		}
 		
@@ -977,33 +943,33 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		{
 			foreach ( $objAuthors as $objAuthor )
 			{
-				$objXerxesAuthor = new Xerxes_Record_Author();
+				$arrCtxAuthor = array();
 				
 				foreach ( $objAuthor->childNodes as $objAuthAttr )
 				{					
 					switch ( $objAuthAttr->localName )
 					{
 						case "aulast":
-							$objXerxesAuthor->last_name = $objAuthAttr->nodeValue;
-							$objXerxesAuthor->type = "personal";
+							$arrCtxAuthor["last"] = $objAuthAttr->nodeValue;
+							$arrCtxAuthor["type"] = "personal";
 							break;
 
 						case "aufirst":
-							$objXerxesAuthor->first_name = $objAuthAttr->nodeValue;
+							$arrCtxAuthor["first"] = $objAuthAttr->nodeValue;
 							break;
 							
 						case "auinit":
-							$objXerxesAuthor->init = $objAuthAttr->nodeValue;
+							$arrCtxAuthor["init"] = $objAuthAttr->nodeValue;
 							break;
 							
 						case "aucorp":
-							$objXerxesAuthor->name = $objAuthAttr->nodeValue;
-							$objXerxesAuthor->type = "corporate";
+							$arrCtxAuthor["name"] = $objAuthAttr->nodeValue;
+							$arrCtxAuthor["type"] = "corporate";
 							break;							
 					}
 				}
 				
-				array_push($this->authors, $objXerxesAuthor);
+				array_push($this->authors, $arrCtxAuthor);
 			}
 		}
 		
@@ -1042,21 +1008,17 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		
 		for ( $x = 0; $x < count($author_original); $x++ )
 		{
-			$objXerxesAuthor = $author_original[$x];
-			
-			if ( $objXerxesAuthor instanceof Xerxes_Record_Author  ) // skip those set to null (i.e., was a dupe)
+			if ( is_array($author_original[$x]) ) // skip those set to null (i.e., was a dupe)
 			{
-				$this_author = $objXerxesAuthor->allFields();
+				$this_author = implode(" ", $author_original[$x]);
 				
 				for ( $a = 0; $a < count($author_other); $a++ )
 				{
 					if ( $a != $x ) // compare all other authors in the array
 					{
-						$objThatAuthor = $author_other[$a];
-						
-						if ( $objThatAuthor instanceof Xerxes_Record_Author ) // just in case
+						if ( is_array($author_other[$a]) ) // just in case
 						{
-							$that_author = $objThatAuthor->allFields();
+							$that_author = implode(" ", $author_other[$a]);
 							
 							if ( $this_author == $that_author)
 							{
@@ -1074,7 +1036,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		
 		foreach ( $author_original as $author )
 		{
-			if ( $author instanceof Xerxes_Record_Author )
+			if ( is_array($author) )
 			{
 				array_push($this->authors, $author);
 			}
@@ -1095,16 +1057,10 @@ class Xerxes_Record extends Xerxes_Marc_Record
 			if ( $strISSN != "" )
 			{
 				$strISSN = str_replace( "-", "", $strISSN);
-				
 				//extract the issn number leaving behind extra chars and comments
-				
-				$match = array();
-				
-				if ( preg_match("/[0-9]{8,8}/", $strISSN, $match) )
-				{
-					$strISSN = $match[0];
-				}
-				
+				if(preg_match("/[0-9]{8,8}/", $strISSN, $match)){
+                                   $strISSN = $match[0];
+                                   }
 				array_push($this->issns, $strISSN);
 			}
 		}
@@ -1143,14 +1099,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		{
 			foreach ( $this->authors[$x] as $key => $value )
 			{
-				$objXerxesAuthor = $this->authors[$x];
-				
-				foreach ( $objXerxesAuthor as $key => $value )
-				{
-					$objXerxesAuthor->$key = $this->stripEndPunctuation( $value, "./;,:" );
-				}
-				
-				$this->authors[$x] = $objXerxesAuthor;
+				$this->authors[$x][$key] = $this->stripEndPunctuation( $value, "./;,:" );
 			}
 		}
 		
@@ -1216,31 +1165,29 @@ class Xerxes_Record extends Xerxes_Marc_Record
 
 		if ( count( $this->authors ) > 0 )
 		{
-			$objXerxesAuthor = $this->authors[0];
-			
-			if ( $objXerxesAuthor->type == "personal" )
+			if ( $this->authors[0]["type"] == "personal" )
 			{
-				if ( $objXerxesAuthor->last_name != "" )
+				if ( array_key_exists( "last", $this->authors[0] ) )
 				{
-					$strKev .= $param_delimiter . "rft.aulast=" . urlencode( $objXerxesAuthor->last_name );
+					$strKev .= $param_delimiter . "rft.aulast=" . urlencode( $this->authors[0]["last"] );
 					
 					if ( $this->editor == true )
 					{
 						$strKev .= urlencode( ", ed." );
 					}
 				}
-				if ( $objXerxesAuthor->first_name != "" )
+				if ( array_key_exists( "first", $this->authors[0] ) )
 				{
-					$strKev .= $param_delimiter. "rft.aufirst=" . urlencode( $objXerxesAuthor->first_name );
+					$strKev .= $param_delimiter. "rft.aufirst=" . urlencode( $this->authors[0]["first"] );
 				}
-				if ( $objXerxesAuthor->init != "" )
+				if ( array_key_exists( "init", $this->authors[0] ) )
 				{
-					$strKev .= $param_delimiter . "rft.auinit=" . urlencode( $objXerxesAuthor->init );
+					$strKev .= $param_delimiter . "rft.auinit=" . urlencode( $this->authors[0]["init"] );
 				}
 			} 
 			else
 			{
-				$strKev .= $param_delimiter . "rft.aucorp=" . urlencode( $objXerxesAuthor->name );
+				$strKev .= $param_delimiter . "rft.aucorp=" . urlencode( $this->authors[0]["name"] );
 			}
 		}
 		
@@ -1255,23 +1202,20 @@ class Xerxes_Record extends Xerxes_Marc_Record
 	
 	public function getContextObject()
 	{
-		$ns_context = "info:ofi/fmt:xml:xsd:ctx";
-
-		$ns_referrant = "";
-		
 		$arrReferant = $this->referantArray();
 		$arrReferantIds = $this->referentIdentifierArray();
 		
 		$objXml = new DOMDocument( );
 		$objXml->loadXML( "<context-objects />" );
 		
-		$objContextObject = $objXml->createElementNS($ns_context, "context-object" );
+		$objContextObject = $objXml->createElement( "context-object" );
 		$objContextObject->setAttribute( "version", "Z39.88-2004" );
 		$objContextObject->setAttribute( "timestamp", date( "c" ) );
 		
-		$objReferrent = $objXml->createElementNS($ns_context, "referent" );
-		$objMetadataByVal = $objXml->createElementNS($ns_context, "metadata-by-val" );
-		$objMetadata = $objXml->createElementNS($ns_context,"metadata" );
+		$objReferrent = $objXml->createElement( "referent" );
+		$objMetadataByVal = $objXml->createElement( "metadata-by-val" );
+		$objMetadata = $objXml->createElement( "metadata" );
+		$objAuthors = $objXml->createElement( "authors" );
 		
 		// set data container
 
@@ -1279,51 +1223,46 @@ class Xerxes_Record extends Xerxes_Marc_Record
 			$arrReferant["rft.genre"] == "bookitem" || 
 			$arrReferant["rft.genre"] == "report" )
 		{
-			$ns_referrant = "info:ofi/fmt:xml:xsd:book";
-			$objItem = $objXml->createElementNS($ns_referrant, "book" );
+			$objItem = $objXml->createElement( "book" );
 		} 
 		elseif ( $arrReferant["rft.genre"] == "dissertation" )
 		{
-			$ns_referrant = "info:ofi/fmt:xml:xsd:dissertation";
-			$objItem = $objXml->createElementNS($ns_referrant, "dissertation" );
+			$objItem = $objXml->createElement( "dissertation" );
 		} 
 		else
 		{
-			$ns_referrant = "info:ofi/fmt:xml:xsd:journal";
-			$objItem = $objXml->createElementNS($ns_referrant, "journal" );
+			$objItem = $objXml->createElement( "journal" );
 		}
-		
-		$objAuthors = $objXml->createElementNS($ns_referrant, "authors" );
 		
 		// add authors
 
 		$x = 1;
 		
-		foreach ( $this->authors as $objXerxesAuthor )
+		foreach ( $this->authors as $arrAuthor )
 		{
-			$objAuthor = $objXml->createElementNS($ns_referrant, "author" );
+			$objAuthor = $objXml->createElement( "author" );
 			
-			if ( $objXerxesAuthor->last_name != "" )
+			if ( array_key_exists( "last", $arrAuthor ) )
 			{
-				$objAuthorLast = $objXml->createElementNS($ns_referrant, "aulast", $this->escapeXml( $objXerxesAuthor->last_name ) );
+				$objAuthorLast = $objXml->createElement( "aulast", $this->escapeXml( $arrAuthor["last"] ) );
 				$objAuthor->appendChild( $objAuthorLast );
 			}
 			
-			if ( $objXerxesAuthor->first_name != "" )
+			if ( array_key_exists( "first", $arrAuthor ) )
 			{
-				$objAuthorFirst = $objXml->createElementNS($ns_referrant, "aufirst", $this->escapeXml( $objXerxesAuthor->first_name ) );
+				$objAuthorFirst = $objXml->createElement( "aufirst", $this->escapeXml( $arrAuthor["first"] ) );
 				$objAuthor->appendChild( $objAuthorFirst );
 			}
 			
-			if ( $objXerxesAuthor->init != "" )
+			if ( array_key_exists( "init", $arrAuthor ) )
 			{
-				$objAuthorInit = $objXml->createElementNS($ns_referrant, "auinit", $this->escapeXml( $objXerxesAuthor->init ) );
+				$objAuthorInit = $objXml->createElement( "auinit", $this->escapeXml( $arrAuthor["init"] ) );
 				$objAuthor->appendChild( $objAuthorInit );
 			}
 			
-			if ( $objXerxesAuthor->name != "" )
+			if ( array_key_exists( "name", $arrAuthor ) )
 			{
-				$objAuthorCorp = $objXml->createElementNS($ns_referrant, "aucorp", $this->escapeXml( $objXerxesAuthor->name ) );
+				$objAuthorCorp = $objXml->createElement( "aucorp", $this->escapeXml( $arrAuthor["name"] ) );
 				$objAuthor->appendChild( $objAuthorCorp );
 			}
 			
@@ -1348,7 +1287,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		{
 			// rft_id goes in the <referent> element directly, as a <ctx:identifier>
 			
-			$objNode = $objXml->createElementNS($ns_context, "identifier", $this->escapeXml ( $id ) );
+			$objNode = $objXml->createElement ( "identifier", $this->escapeXml ( $id ) );
 			$objReferrent->appendChild ( $objNode );
 		}
 		
@@ -1362,14 +1301,14 @@ class Xerxes_Record extends Xerxes_Marc_Record
 				{
 					foreach ( $value as $element )
 					{
-						$objNode = $objXml->createElementNS($ns_referrant, $key, $this->escapeXml( $element ) );
+						$objNode = $objXml->createElement( $key, $this->escapeXml( $element ) );
 						$objItem->appendChild( $objNode );
 					}
 				}
 			} 
 			elseif ( $value != "" )
 			{
-				$objNode = $objXml->createElementNS($ns_referrant, $key, $this->escapeXml( $value ) );
+				$objNode = $objXml->createElement( $key, $this->escapeXml( $value ) );
 				$objItem->appendChild( $objNode );
 			}
 		}
@@ -1442,45 +1381,34 @@ class Xerxes_Record extends Xerxes_Marc_Record
 			$objAuthors = $objXml->createElement("authors");
 			$x = 1;
 			
-			foreach ( $this->authors as $objXerxesAuthor )
+			foreach ( $this->authors as $arrAuthor )
 			{
 				$objAuthor =  $objXml->createElement("author");
-				$objAuthor->setAttribute("type", $objXerxesAuthor->type);
-				
-				if ( $objXerxesAuthor->additional == true )
-				{
-					$objAuthor->setAttribute("additional", "true");
-				}
+				$objAuthor->setAttribute("type", $arrAuthor["type"]);
 
-				if ( $objXerxesAuthor->last_name != "" )
+				if ( array_key_exists("last", $arrAuthor) )
 				{					
-					$objAuthorLast =  $objXml->createElement("aulast", $this->escapeXml( $objXerxesAuthor->last_name ) );
+					$objAuthorLast =  $objXml->createElement("aulast", $this->escapeXml($arrAuthor["last"]) );
 					$objAuthor->appendChild($objAuthorLast);
 				}
 				
-				if ( $objXerxesAuthor->first_name != "" )
+				if ( array_key_exists("first", $arrAuthor) )
 				{
-					$objAuthorFirst =  $objXml->createElement("aufirst", $this->escapeXml( $objXerxesAuthor->first_name ) );
+					$objAuthorFirst =  $objXml->createElement("aufirst", $this->escapeXml($arrAuthor["first"]) );
 					$objAuthor->appendChild($objAuthorFirst);
 				}
 				
-				if ( $objXerxesAuthor->init != "" )
+				if ( array_key_exists("init", $arrAuthor) )
 				{
-					$objAuthorInit =  $objXml->createElement("auinit", $this->escapeXml( $objXerxesAuthor->init) );
+					$objAuthorInit =  $objXml->createElement("auinit", $this->escapeXml($arrAuthor["init"]) );
 					$objAuthor->appendChild($objAuthorInit);
 				}
 
-				if ( $objXerxesAuthor->name != "" )
+				if ( array_key_exists("name", $arrAuthor) )
 				{
-					$objAuthorCorp =  $objXml->createElement("aucorp", $this->escapeXml( $objXerxesAuthor->name) );
+					$objAuthorCorp =  $objXml->createElement("aucorp", $this->escapeXml($arrAuthor["name"]) );
 					$objAuthor->appendChild($objAuthorCorp);
 				}
-
-				if ( $objXerxesAuthor->display != "" )
-				{
-					$objAuthorDisplay = $objXml->createElement("display", $this->escapeXml( $objXerxesAuthor->display) );
-					$objAuthor->appendChild($objAuthorDisplay);
-				}				
 				
 				$objAuthor->setAttribute("rank", $x);
 				
@@ -1615,19 +1543,6 @@ class Xerxes_Record extends Xerxes_Marc_Record
 			$objXml->documentElement->appendChild($objLinks);
 		}
 		
-		// items
-		
-		if ( count($this->items) > 0 )
-		{
-			$objItems = $objXml->createElement("items");
-			$objXml->documentElement->appendChild($objItems);
-			
-			foreach ( $this->items as $item )
-			{
-				$import = $objXml->importNode($item->toXML()->documentElement, true);
-				$objItems->documentElement->appendChild($import);
-			}
-		}
 		
 		## basic elements
 		
@@ -1650,8 +1565,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 				$key == "document" ||
 				$key == "xpath" || 
 				$key == "node" ||
-				$key == "format_array" ||
-				$key == "serialized_xml")
+				$key == "format_array")
 			{
 				continue;
 			}
@@ -1724,35 +1638,6 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		### simple values
 
 		$arrReferant["rft.genre"] = $this->convertGenreOpenURL( $this->format );
-		
-		switch($arrReferant["rft.genre"])
-		{
-			case "dissertation":
-				
-				$arrReferant["rft_val_fmt"] = "info:ofi/fmt:kev:mtx:dissertation";
-				break;				
-			
-			case "book":
-			case "bookitem":
-			case "conference":
-			case "proceeding":
-			case "report":
-			case "document":
-				
-				$arrReferant["rft_val_fmt"] = "info:ofi/fmt:kev:mtx:book";
-				break;
-
-			case "journal":
-			case "issue":
-			case "article":
-			case "proceeding":
-			case "conference":
-			case "preprint":
-			case "unknown":
-				$arrReferant["rft_val_fmt"] = "info:ofi/fmt:kev:mtx:journal";
-				break;					
-		}
-		
 		
 		if ( count( $this->isbns ) > 0 )
 		{
@@ -1900,8 +1785,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 	{
 		switch ( $strFormat )
 		{
-			case "Journal" :
-			case "Newspaper" :
+			case "Journal or Newspaper" :
 				
 				return "journal";
 				break;
@@ -1971,8 +1855,10 @@ class Xerxes_Record extends Xerxes_Marc_Record
 	 * @return string					internal xerxes format designation
 	 */
 	
-	protected function parseFormat($arrFormat)
+	private function parseFormat($arrFormat)
 	{
+		$strReturn = "Unknown";
+		
 		$chrLeader6 = "";
 		$chrLeader7 = "";
 		$chrLeader8 = "";
@@ -1994,45 +1880,34 @@ class Xerxes_Record extends Xerxes_Marc_Record
 			$chrLeader8 = substr( $this->leader()->__toString(), 8, 1 );
 		}
 		
-		// grab the 008 & 006 for handling
+		// grab the 008 for handling
 		
 		$obj008 = $this->controlfield("008");
 		
-		// newspaper
-		
-		if ( $obj008 instanceof Xerxes_Marc_ControlField )
-		{
-			if ( $chrLeader7 == 's' && $obj008->position("21") == 'n' )
-			{
-				 return "Newspaper";
-			}
-		}
-		
 		// format made explicit
 
-		if ( strstr( $strDataFields, 'dissertation' ) ) return  "Dissertation"; 
-		if (  $this->datafield("502")->__toString() != "" ) return  "Thesis"; 
-		if (  $this->controlfield("002")->__toString() == "DS" ) return  "Thesis";
-		if ( strstr( $strDataFields, 'proceeding' ) ) return  "Conference Proceeding"; 
-		if ( strstr( $strDataFields, 'conference' ) ) return  "Conference Paper"; 
-		if ( strstr( $strDataFields, 'hearing' ) ) return  "Hearing"; 
-		if ( strstr( $strDataFields, 'working' ) ) return  "Working Paper"; 
-		if ( strstr( $strDataFields, 'book review' ) || strstr( $strDataFields, 'review-book' ) ) return  "Book Review"; 
-		if ( strstr( $strDataFields, 'film review' ) || strstr( $strDataFields, 'film-book' ) ) return  "Film Review";
-		if ( strstr( "$strDataFields ", 'review ' ) ) return  "Review";
-		if ( strstr( $strDataFields, 'book art' ) || strstr( $strDataFields, 'book ch' ) || strstr( $strDataFields, 'chapter' ) ) return  "Book Chapter"; 
-		if ( strstr( $strDataFields, 'journal' ) ) return  "Article"; 
-		if ( strstr( $strDataFields, 'periodical' ) || strstr( $strDataFields, 'serial' ) ) return  "Article"; 
-		if ( strstr( $strDataFields, 'book' ) ) return  "Book";
-        if ( strstr( $strDataFields, 'pamphlet' ) ) return  "Pamphlet";  
-        if ( strstr( $strDataFields, 'essay' ) ) return  "Essay";
-		if ( strstr( $strDataFields, 'article' ) ) return  "Article";
+		if ( strstr( $strDataFields, 'dissertation' ) ) $strReturn = "Dissertation"; 
+		elseif (  $this->datafield("502")->__toString() != "" ) $strReturn = "Thesis"; 
+		elseif ( strstr( $strDataFields, 'proceeding' ) ) $strReturn = "Conference Proceeding"; 
+		elseif ( strstr( $strDataFields, 'conference' ) ) $strReturn = "Conference Paper"; 
+		elseif ( strstr( $strDataFields, 'hearing' ) ) $strReturn = "Hearing"; 
+		elseif ( strstr( $strDataFields, 'working' ) ) $strReturn = "Working Paper"; 
+		elseif ( strstr( $strDataFields, 'book review' ) || strstr( $strDataFields, 'review-book' ) ) $strReturn = "Book Review"; 
+		elseif ( strstr( $strDataFields, 'film review' ) || strstr( $strDataFields, 'film-book' ) ) $strReturn = "Film Review";
+		elseif ( strstr( "$strDataFields ", 'review ' ) ) $strReturn = "Review";
+		elseif ( strstr( $strDataFields, 'book art' ) || strstr( $strDataFields, 'book ch' ) || strstr( $strDataFields, 'chapter' ) ) $strReturn = "Book Chapter"; 
+		elseif ( strstr( $strDataFields, 'journal' ) ) $strReturn = "Article"; 
+		elseif ( strstr( $strDataFields, 'periodical' ) || strstr( $strDataFields, 'serial' ) ) $strReturn = "Article"; 
+		elseif ( strstr( $strDataFields, 'book' ) ) $strReturn = "Book";
+        elseif ( strstr( $strDataFields, 'pamphlet' ) ) $strReturn = "Pamphlet";  
+        elseif ( strstr( $strDataFields, 'essay' ) ) $strReturn = "Essay";
+		elseif ( strstr( $strDataFields, 'article' ) ) $strReturn = "Article";
 
 		// format from other sources
 
-		if ( $this->journal != "" ) return  "Article"; 
-		if ( $chrLeader6 == 'a' && $chrLeader7 == 'a' ) return  "Book Chapter"; 
-		if ( $chrLeader6 == 'a' && $chrLeader7 == 'm' )
+		elseif ( $this->journal != "" ) $strReturn = "Article"; 
+		elseif ( $chrLeader6 == 'a' && $chrLeader7 == 'a' ) $strReturn = "Book Chapter"; 
+		elseif ( $chrLeader6 == 'a' && $chrLeader7 == 'm' )
 		{
 			$strReturn = "Book"; 
 			
@@ -2048,362 +1923,25 @@ class Xerxes_Record extends Xerxes_Marc_Record
 					case "s": $strReturn = "eBook"; break;
 				}
 			}
-			
-			return $strReturn;
 		}
 		
-		if ( $chrLeader8 == 'a' ) return "Archive"; 
-		if ( $chrLeader6 == 'e' || $chrLeader6 == 'f' ) return "Map"; 
-		if ( $chrLeader6 == 'c' || $chrLeader6 == 'd' ) return "Printed Music"; 
-		if ( $chrLeader6 == 'i' ) return "Audio Book"; 
-		if ( $chrLeader6 == 'j' ) return "Sound Recording"; 
-		if ( $chrLeader6 == 'k' ) return "Photograph or Slide"; 
-		if ( $chrLeader6 == 'g' ) return "Video"; 
-		if ( $chrLeader6 == 'm' && $chrLeader7 == 'i' ) return "Website"; 
-		if ( $chrLeader6 == 'm' ) return "Electronic Resource"; 
-		if ( $chrLeader6 == 'a' && $chrLeader7 == 'b' ) return "Article"; 
-		if ( $chrLeader6 == 'a' && $chrLeader7 == 's' ) return "Journal"; 
-		if ( $chrLeader6 == 'a' && $chrLeader7 == 'i' ) return "Website"; 
+		elseif ( $chrLeader8 == 'a' ) $strReturn = "Archive"; 
+		elseif ( $chrLeader6 == 'e' || $chrLeader6 == 'f' ) $strReturn = "Map"; 
+		elseif ( $chrLeader6 == 'c' || $chrLeader6 == 'd' ) $strReturn = "Printed Music"; 
+		elseif ( $chrLeader6 == 'i' ) $strReturn = "Audio Book"; 
+		elseif ( $chrLeader6 == 'j' ) $strReturn = "Sound Recording"; 
+		elseif ( $chrLeader6 == 'k' ) $strReturn = "Photograph or Slide"; 
+		elseif ( $chrLeader6 == 'g' ) $strReturn = "Video"; 
+		elseif ( $chrLeader6 == 'm' && $chrLeader7 == 'i' ) $strReturn = "Website"; 
+		elseif ( $chrLeader6 == 'm' ) $strReturn = "Computer File"; 
+		elseif ( $chrLeader6 == 'a' && $chrLeader7 == 'b' ) $strReturn = "Article"; 
+		elseif ( $chrLeader6 == 'a' && $chrLeader7 == 's' ) $strReturn = "Journal or Newspaper"; 
+		elseif ( $chrLeader6 == 'a' && $chrLeader7 == 'i' ) $strReturn = "Website"; 
 
-		if ( count( $this->isbns ) > 0 ) return "Book"; 
-		if ( count( $this->issns ) > 0 ) return "Article";
+		elseif ( count( $this->isbns ) > 0 ) $strReturn = "Book"; 
+		elseif ( count( $this->issns ) > 0 ) $strReturn = "Article";
 		
-		// if we got this far, just return unknown
-		
-		return "Unknown";
-	}
-	
-	protected function formatFromDataFields($arrFormat)
-	{
-		// we'll combine all of the datafields that explicitly declare the
-		// format of the record into a single string
-
-		$strDataFields = "";
-		
-		foreach ( $arrFormat as $strFormat )
-		{
-			$strDataFields .= " " . Xerxes_Framework_Parser::strtolower( $strFormat );
-		}
-		
-		// format made explicit
-
-		if ( strstr( $strDataFields, 'dissertation' ) ) return  "Dissertation"; 
-		if (  $this->datafield("502")->__toString() != "" ) return  "Thesis"; 
-		if (  $this->controlfield("002")->__toString() == "DS" ) return  "Thesis";
-		if ( strstr( $strDataFields, 'proceeding' ) ) return  "ConferenceProceeding"; 
-		if ( strstr( $strDataFields, 'conference' ) ) return  "ConferencePaper"; 
-		if ( strstr( $strDataFields, 'hearing' ) ) return  "Hearing"; 
-		if ( strstr( $strDataFields, 'working' ) ) return  "WorkingPaper"; 
-		if ( strstr( $strDataFields, 'book review' ) || strstr( $strDataFields, 'review-book' ) ) return  "BookReview"; 
-		if ( strstr( $strDataFields, 'film review' ) || strstr( $strDataFields, 'film-book' ) ) return  "FilmReview";
-		if ( strstr( "$strDataFields ", 'review ' ) ) return  "Review";
-		if ( strstr( $strDataFields, 'book art' ) || strstr( $strDataFields, 'book ch' ) || strstr( $strDataFields, 'chapter' ) ) return  "BookChapter"; 
-		if ( strstr( $strDataFields, 'journal' ) ) return  "Article"; 
-		if ( strstr( $strDataFields, 'periodical' ) || strstr( $strDataFields, 'serial' ) ) return  "Article"; 
-		if ( strstr( $strDataFields, 'book' ) ) return  "Book";
-        if ( strstr( $strDataFields, 'pamphlet' ) ) return  "Pamphlet";  
-        // if ( strstr( $strDataFields, 'essay' ) ) return  "Essay";
-		if ( strstr( $strDataFields, 'article' ) ) return  "Article";
-
-		// format from other sources
-
-		if ( $this->journal != "" ) return  "Article"; 
-		if ( count( $this->isbns ) > 0 ) return "Book"; 
-		if ( count( $this->issns ) > 0 ) return "Article";
-		
-		// if we got this far, just return unknown
-		
-		return "Unknown";
-	}
-	
-	protected function formatFromControlFields() 
-	{
-		$result = array ();
-
-		$format_007_list = $this->controlfields ( "007" );
-		$format_008 = $this->controlfield ( "008" );
-		
-		// check the 007 - this is a repeating field
-		
-		foreach ( $format_007_list as $format_007 ) 
-		{
-			$format_007_code = strtoupper ( $format_007->position ( 0 ) );
-			$format_007_additional_code = strtoupper ( $format_007->position ( 1 ) );
-			
-			switch ($format_007_code) 
-			{
-				case 'A' :
-					switch ($format_007_additional_code) {
-						case 'D' :
-							array_push( $result, "Atlas" );
-							break;
-						default :
-							array_push( $result, "Map" );
-							break;
-					}
-					break;
-				case 'C' :
-					switch ($format_007_additional_code) {
-						case 'A' :
-							array_push( $result, "TapeCartridge" );
-							break;
-						case 'B' :
-							array_push( $result, "ChipCartridge" );
-							break;
-						case 'C' :
-							array_push( $result, "DiscCartridge" );
-							break;
-						case 'F' :
-							array_push( $result, "TapeCassette" );
-							break;
-						case 'H' :
-							array_push( $result, "TapeReel" );
-							break;
-						case 'J' :
-							array_push( $result, "FloppyDisk" );
-							break;
-						case 'M' :
-						case 'O' :
-							array_push( $result, "CDROM" );
-							break;
-						case 'R' :
-							// Do not return - this will cause anything with an
-							// 856 field to be labeled as "Electronic"
-							break;
-						default :
-							array_push( $result, "Software" );
-							break;
-					}
-					break;
-				case 'D' :
-					array_push( $result, "Globe" );
-					break;
-				case 'F' :
-					array_push( $result, "Braille" );
-					break;
-				case 'G' :
-					switch ($format_007_additional_code) {
-						case 'C' :
-						case 'D' :
-							array_push( $result, "Filmstrip" );
-							break;
-						case 'T' :
-							array_push( $result, "Transparency" );
-							break;
-						default :
-							array_push( $result, "Slide" );
-							break;
-					}
-					break;
-				case 'H' :
-					array_push ( $result, "Microfilm" );
-					break;
-				case 'K' :
-					switch ($format_007_additional_code) {
-						case 'C' :
-							array_push( $result, "Collage" );
-							break;
-						case 'D' :
-							array_push( $result, "Drawing" );
-							break;
-						case 'E' :
-							array_push( $result, "Painting" );
-							break;
-						case 'F' :
-							array_push( $result, "Print" );
-							break;
-						case 'G' :
-							array_push( $result, "Photonegative" );
-							break;
-						case 'J' :
-							array_push( $result, "Print" );
-							break;
-						case 'L' :
-							array_push( $result, "Drawing" );
-							break;
-						case 'O' :
-							array_push( $result, "FlashCard" );
-							break;
-						case 'N' :
-							array_push( $result, "Chart" );
-							break;
-						default :
-							array_push( $result, "Photo" );
-							break;
-					}
-					break;
-				case 'M' :
-					switch ($format_007_additional_code) {
-						case 'F' :
-							array_push( $result, "VideoCassette" );
-							break;
-						case 'R' :
-							array_push( $result, "Filmstrip" );
-							break;
-						default :
-							array_push( $result, "MotionPicture" );
-							break;
-					}
-					break;
-				case 'O' :
-					array_push( $result, "Kit" );
-					break;
-				case 'Q' :
-					array_push( $result, "MusicalScore" );
-					break;
-				case 'R' :
-					array_push( $result, "SensorImage" );
-					break;
-				case 'S' :
-					switch ($format_007_additional_code) {
-						case 'D' :
-							array_push( $result, "SoundDisc" );
-							break;
-						case 'S' :
-							array_push( $result, "SoundCassette" );
-							break;
-						default :
-							array_push( $result, "SoundRecording" );
-							break;
-					}
-					break;
-				case 'V' :
-					switch ($format_007_additional_code) {
-						case 'C' :
-							array_push( $result, "VideoCartridge" );
-							break;
-						case 'D' :
-							array_push( $result, "VideoDisc" );
-							break;
-						case 'F' :
-							array_push( $result, "VideoCassette" );
-							break;
-						case 'R' :
-							array_push( $result, "VideoReel" );
-							break;
-						default :
-							array_push( $result, "Video" );
-							break;
-					}
-					break;
-			}
-		}
-		
-		// if we got it from the 007, good we're done
-
-		if (count ($result ) > 0) 
-		{
-			return $result;
-		}
-		
-		// check the leader at position 6
-
-		switch (strtoupper( $this->leader()->position ( 6 ) )) 
-		{
-			case 'C' :
-			case 'D' :
-				array_push( $result, "MusicalScore" );
-				break;
-			case 'E' :
-			case 'F' :
-				array_push( $result, "Map" );
-				break;
-			case 'G' :
-				
-				// projected medium, figure out which kind
-				
-				switch (strtoupper ( $format_008->position ( 33 ) )) 
-				{
-					case 'F' :
-						array_push( $result, "Filmstrip" );
-						break;
-					case 'M' :
-						array_push( $result, "MotionPicture" );
-						break;
-					case 'T' :
-						array_push( $result, "Transparency" );
-						break;
-					case 'S' :
-						array_push( $result, "Slide" );
-						break;
-					default :
-						array_push( $result, "Video" );
-						break;
-				}
-				break;
-			case 'I' :
-				array_push( $result, "SoundRecording" );
-				break;
-			case 'J' :
-				array_push( $result, "MusicRecording" );
-				break;
-			case 'K' :
-				array_push ( $result, "Photo" );
-				break;
-			case 'M' :
-				array_push( $result, "Electronic" );
-				break;
-			case 'O' :
-			case 'P' :
-				array_push( $result, "Kit" );
-				break;
-			case 'R' :
-				array_push( $result, "PhysicalObject" );
-				break;
-			case 'T' :
-				array_push( $result, "Manuscript" );
-				break;
-		}
-		
-		// if we got it from the leader/6, cool, done
-		
-
-		if (count( $result ) > 0) 
-		{
-			return $result;
-		}
-		
-		// check the Leader at position 7
-		
-
-		switch (strtoupper( $this->leader()->position( 7 ) )) 
-		{
-			// Monograph
-			case 'M' :
-				if (formatCode == 'C') 
-				{
-					array_push( $result, "eBook" );
-				} 
-				else 
-				{
-					array_push( $result, "Book" );
-				}
-				break;
-			// Serial
-			case 'S' :
-				// Look in 008 to determine what type of Continuing Resource
-				switch (strtoupper( $format_008->position( 21 ) ))
-				{
-					case 'N' :
-						array_push( $result, "Newspaper" );
-						break;
-					case 'P' :
-						array_push( $result, "Journal" );
-						break;
-					default :
-						array_push( $result, "Serial" );
-						break;
-				}
-		}
-		
-		// we got it from  leader/7, cool, done
-
-		if (count( $result ) > 0) 
-		{
-			return $result;
-		}
-		
-		return $result;
+		return $strReturn;
 	}
 	
 	/**
@@ -2426,7 +1964,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		
 		// volume
 
-		if ( preg_match( '/ v[a-z]{0,5}[\.]{0,1}[ ]{0,3}([0-9]{1,})/', $strJournalInfo, $arrCapture ) != 0 )
+		if ( preg_match( "/ v[a-z]{0,5}[\.]{0,1}[ ]{0,3}([0-9]{1,})/", $strJournalInfo, $arrCapture ) != 0 )
 		{
 			$arrFinal["volume"] = $arrCapture[1];
 			$strJournalInfo = str_replace( $arrCapture[0], "", $strJournalInfo );
@@ -2434,12 +1972,12 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		
 		// issue
 
-		if ( preg_match( '/ i[a-z]{0,4}[\.]{0,1}[ ]{0,3}([0-9]{1,})/', $strJournalInfo, $arrCapture ) != 0 )
+		if ( preg_match( "/ i[a-z]{0,4}[\.]{0,1}[ ]{0,3}([0-9]{1,})/", $strJournalInfo, $arrCapture ) != 0 )
 		{
 			$arrFinal["issue"] = $arrCapture[1];
 			$strJournalInfo = str_replace( $arrCapture[0], "", $strJournalInfo );
 		} 
-		elseif ( preg_match( '/ n[a-z]{0,5}[\.]{0,1}[ ]{0,3}([0-9]{1,})/', $strJournalInfo, $arrCapture ) != 0 )
+		elseif ( preg_match( "/ n[a-z]{0,5}[\.]{0,1}[ ]{0,3}([0-9]{1,})/", $strJournalInfo, $arrCapture ) != 0 )
 		{
 			$arrFinal["issue"] = $arrCapture[1];
 			$strJournalInfo = str_replace( $arrCapture[0], "", $strJournalInfo );
@@ -2454,7 +1992,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 			
 			$strJournalInfo = str_replace( $arrCapture[0], "", $strJournalInfo );
 		} 
-		elseif ( preg_match( '/ p[a-z]{0,3}[\.]{0,1}[ ]{0,3}([0-9]{1,})/', $strJournalInfo, $arrCapture ) != 0 )
+		elseif ( preg_match( "/ p[a-z]{0,3}[\.]{0,1}[ ]{0,3}([0-9]{1,})/", $strJournalInfo, $arrCapture ) != 0 )
 		{
 			$arrFinal["spage"] = $arrCapture[1];
 			$strJournalInfo = str_replace( $arrCapture[0], "", $strJournalInfo );
@@ -2463,27 +2001,10 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		return $arrFinal;
 	}
 	
-	protected function splitAuthor($author, $subfields, $strType, $bolAdditional = false)
+	private function splitAuthor($strAuthor, $strType)
 	{
-		$objAuthor = new Xerxes_Record_Author();
-		
-		$objAuthor->type = $strType;
-		$objAuthor->additional = $bolAdditional;
-		
-		$strAuthor = "";
-		$strAuthorDisplay = "";
-		
-		// author can be string or data field
-		
-		if ($author instanceof Xerxes_Marc_DataField || $author instanceof Xerxes_Marc_DataFieldList)
-		{
-			$strAuthor = $author->subfield($subfields);
-			$strAuthorDisplay = $author->__toString();
-		}
-		else
-		{
-			$strAuthor = $author;
-		}
+		$arrReturn = array ( );
+		$arrReturn["type"] = $strType;
 		
 		$iComma = strpos( $strAuthor, "," );
 		$iLastSpace = strripos( $strAuthor, " " );
@@ -2500,7 +2021,6 @@ class Xerxes_Record extends Xerxes_Marc_Record
 			$arrMatch = array ( );
 			$strLast = "";
 			$strFirst = "";
-			$strInit = "";
 			
 			if ( $iComma !== false )
 			{
@@ -2522,30 +2042,25 @@ class Xerxes_Record extends Xerxes_Marc_Record
 				$strFirst = trim( substr( $strAuthor, 0, $iLastSpace ) );
 			}
 			
-			if ( preg_match( '/ ([a-zA-Z]{1})\.$/', $strFirst, $arrMatch ) != 0 )
+			if ( preg_match( "/ ([a-zA-Z]{1})\.$/", $strFirst, $arrMatch ) != 0 )
 			{
-				$strInit = $arrMatch[1];
+				$arrReturn["init"] = $arrMatch[1];
 				$strFirst = str_replace( $arrMatch[0], "", $strFirst );
 			}
 			
-			$objAuthor->last_name = $strLast;
-			$objAuthor->first_name = $strFirst;
-			$objAuthor->init = $strInit;
+			$arrReturn["last"] = $strLast;
+			$arrReturn["first"] = $strFirst;
 		
 		} 
 		else
 		{
-			$objAuthor->name = trim( $strAuthor );
+			$arrReturn["name"] = trim( $strAuthor );
 		}
 		
-		// all marc subfields, for display
-		
-		$objAuthor->display = $strAuthorDisplay;
-		
-		return $objAuthor;
+		return $arrReturn;
 	}
 	
-	protected function stripEndPunctuation($strInput, $strPunct)
+	private function stripEndPunctuation($strInput, $strPunct)
 	{
 		$bolDone = false;
 		$arrPunct = str_split( $strPunct );
@@ -2558,7 +2073,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		// check if the input ends in a character entity
 		// reference, in which case, leave it alone, yo!
 		
-		if ( preg_match('/\&\#[0-9a-zA-Z]{1,5}\;$/', $strInput) )
+		if ( preg_match("/\&\#[0-9a-zA-Z]{1,5}\;$/", $strInput) )
 		{
 			return $strInput;
 		}
@@ -2604,6 +2119,1808 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		}
 	}
 	
+	private function convertLanguageCode($strCode, $bolTwo = false)
+	{
+		if ( $bolTwo == true )
+		{
+			switch ( Xerxes_Framework_Parser::strtoupper( $strCode ) )
+			{
+				case "AA" :
+					return "Afar";
+					break;
+				case "AB" :
+					return "Abkhazian";
+					break;
+				case "AF" :
+					return "Afrikaans";
+					break;
+				case "AM" :
+					return "Amharic";
+					break;
+				case "AR" :
+					return "Arabic";
+					break;
+				case "AS" :
+					return "Assamese";
+					break;
+				case "AY" :
+					return "Aymara";
+					break;
+				case "AZ" :
+					return "Azerbaijani";
+					break;
+				case "BA" :
+					return "Bashkir";
+					break;
+				case "BE" :
+					return "Byelorussian";
+					break;
+				case "BG" :
+					return "Bulgarian";
+					break;
+				case "BH" :
+					return "Bihari";
+					break;
+				case "BI" :
+					return "Bislama";
+					break;
+				case "BN" :
+					return "Bengali";
+					break;
+				case "BO" :
+					return "Tibetan";
+					break;
+				case "BR" :
+					return "Breton";
+					break;
+				case "CA" :
+					return "Catalan";
+					break;
+				case "CO" :
+					return "Corsican";
+					break;
+				case "CS" :
+					return "Czech";
+					break;
+				case "CY" :
+					return "Welsh";
+					break;
+				case "DA" :
+					return "Danish";
+					break;
+				case "DE" :
+					return "German";
+					break;
+				case "DZ" :
+					return "Bhutani";
+					break;
+				case "EL" :
+					return "Greek";
+					break;
+				case "EN" :
+					return "English";
+					break;
+				case "EO" :
+					return "Esperanto";
+					break;
+				case "ES" :
+					return "Spanish";
+					break;
+				case "ET" :
+					return "Estonian";
+					break;
+				case "EU" :
+					return "Basque";
+					break;
+				case "FA" :
+					return "Persian";
+					break;
+				case "FI" :
+					return "Finnish";
+					break;
+				case "FJ" :
+					return "Fiji";
+					break;
+				case "FO" :
+					return "Faeroese";
+					break;
+				case "FR" :
+					return "French";
+					break;
+				case "FY" :
+					return "Frisian";
+					break;
+				case "GA" :
+					return "Irish";
+					break;
+				case "GD" :
+					return "Gaelic";
+					break;
+				case "GL" :
+					return "Galician";
+					break;
+				case "GN" :
+					return "Guarani";
+					break;
+				case "GU" :
+					return "Gujarati";
+					break;
+				case "HA" :
+					return "Hausa";
+					break;
+				case "HI" :
+					return "Hindi";
+					break;
+				case "HR" :
+					return "Croatian";
+					break;
+				case "HU" :
+					return "Hungarian";
+					break;
+				case "HY" :
+					return "Armenian";
+					break;
+				case "IA" :
+					return "Interlingua";
+					break;
+				case "IE" :
+					return "Interlingue";
+					break;
+				case "IK" :
+					return "Inupiak";
+					break;
+				case "IN" :
+					return "Indonesian";
+					break;
+				case "IS" :
+					return "Icelandic";
+					break;
+				case "IT" :
+					return "Italian";
+					break;
+				case "IW" :
+					return "Hebrew";
+					break;
+				case "JA" :
+					return "Japanese";
+					break;
+				case "JI" :
+					return "Yiddish";
+					break;
+				case "JW" :
+					return "Javanese";
+					break;
+				case "KA" :
+					return "Georgian";
+					break;
+				case "KK" :
+					return "Kazakh";
+					break;
+				case "KL" :
+					return "Greenlandic";
+					break;
+				case "KM" :
+					return "Cambodian";
+					break;
+				case "KN" :
+					return "Kannada";
+					break;
+				case "KO" :
+					return "Korean";
+					break;
+				case "KS" :
+					return "Kashmiri";
+					break;
+				case "KU" :
+					return "Kurdish";
+					break;
+				case "KY" :
+					return "Kirghiz";
+					break;
+				case "LA" :
+					return "Latin";
+					break;
+				case "LN" :
+					return "Lingala";
+					break;
+				case "LO" :
+					return "Laothian";
+					break;
+				case "LT" :
+					return "Lithuanian";
+					break;
+				case "LV" :
+					return "Latvian";
+					break;
+				case "MG" :
+					return "Malagasy";
+					break;
+				case "MI" :
+					return "Maori";
+					break;
+				case "MK" :
+					return "Macedonian";
+					break;
+				case "ML" :
+					return "Malayalam";
+					break;
+				case "MN" :
+					return "Mongolian";
+					break;
+				case "MO" :
+					return "Moldavian";
+					break;
+				case "MR" :
+					return "Marathi";
+					break;
+				case "MS" :
+					return "Malay";
+					break;
+				case "MT" :
+					return "Maltese";
+					break;
+				case "MY" :
+					return "Burmese";
+					break;
+				case "NA" :
+					return "Nauru";
+					break;
+				case "NE" :
+					return "Nepali";
+					break;
+				case "NL" :
+					return "Dutch";
+					break;
+				case "NO" :
+					return "Norwegian";
+					break;
+				case "OC" :
+					return "Occitan";
+					break;
+				case "OM" :
+					return "Oromo";
+					break;
+				case "OR" :
+					return "Oriya";
+					break;
+				case "PA" :
+					return "Punjabi";
+					break;
+				case "PL" :
+					return "Polish";
+					break;
+				case "PS" :
+					return "Pashto";
+					break;
+				case "PT" :
+					return "Portuguese";
+					break;
+				case "QU" :
+					return "Quechua";
+					break;
+				case "RM" :
+					return "Rhaeto-Romance";
+					break;
+				case "RN" :
+					return "Kirundi";
+					break;
+				case "RO" :
+					return "Romanian";
+					break;
+				case "RU" :
+					return "Russian";
+					break;
+				case "RW" :
+					return "Kinyarwanda";
+					break;
+				case "SA" :
+					return "Sanskrit";
+					break;
+				case "SD" :
+					return "Sindhi";
+					break;
+				case "SG" :
+					return "Sangro";
+					break;
+				case "SH" :
+					return "Serbo-Croatian";
+					break;
+				case "SI" :
+					return "Singhalese";
+					break;
+				case "SK" :
+					return "Slovak";
+					break;
+				case "SL" :
+					return "Slovenian";
+					break;
+				case "SM" :
+					return "Samoan";
+					break;
+				case "SN" :
+					return "Shona";
+					break;
+				case "SO" :
+					return "Somali";
+					break;
+				case "SQ" :
+					return "Albanian";
+					break;
+				case "SR" :
+					return "Serbian";
+					break;
+				case "SS" :
+					return "Siswati";
+					break;
+				case "ST" :
+					return "Sesotho";
+					break;
+				case "SU" :
+					return "Sudanese";
+					break;
+				case "SV" :
+					return "Swedish";
+					break;
+				case "SW" :
+					return "Swahili";
+					break;
+				case "TA" :
+					return "Tamil";
+					break;
+				case "TE" :
+					return "Tegulu";
+					break;
+				case "TG" :
+					return "Tajik";
+					break;
+				case "TH" :
+					return "Thai";
+					break;
+				case "TI" :
+					return "Tigrinya";
+					break;
+				case "TK" :
+					return "Turkmen";
+					break;
+				case "TL" :
+					return "Tagalog";
+					break;
+				case "TN" :
+					return "Setswana";
+					break;
+				case "TO" :
+					return "Tonga";
+					break;
+				case "TR" :
+					return "Turkish";
+					break;
+				case "TS" :
+					return "Tsonga";
+					break;
+				case "TT" :
+					return "Tatar";
+					break;
+				case "TW" :
+					return "Twi";
+					break;
+				case "UK" :
+					return "Ukrainian";
+					break;
+				case "UR" :
+					return "Urdu";
+					break;
+				case "UZ" :
+					return "Uzbek";
+					break;
+				case "VI" :
+					return "Vietnamese";
+					break;
+				case "VO" :
+					return "Volapuk";
+					break;
+				case "WO" :
+					return "Wolof";
+					break;
+				case "XH" :
+					return "Xhosa";
+					break;
+				case "YO" :
+					return "Yoruba";
+					break;
+				case "ZH" :
+					return "Chinese";
+					break;
+				case "ZU" :
+					return "Zulu";
+					break;
+				default :
+					return null;
+			}
+		} 
+		else
+		{
+			switch ( Xerxes_Framework_Parser::strtolower( $strCode ) )
+			{
+				case "aar" :
+					return "Afar";
+					break;
+				case "abk" :
+					return "Abkhaz";
+					break;
+				case "ace" :
+					return "Achinese";
+					break;
+				case "ach" :
+					return "Acoli";
+					break;
+				case "ada" :
+					return "Adangme";
+					break;
+				case "ady" :
+					return "Adygei";
+					break;
+				case "afa" :
+					return "Afroasiatic";
+					break;
+				case "afh" :
+					return "Afrihili";
+					break;
+				case "afr" :
+					return "Afrikaans";
+					break;
+				case "aka" :
+					return "Akan";
+					break;
+				case "akk" :
+					return "Akkadian";
+					break;
+				case "alb" :
+					return "Albanian";
+					break;
+				case "ale" :
+					return "Aleut";
+					break;
+				case "alg" :
+					return "Algonquian  ";
+					break;
+				case "amh" :
+					return "Amharic";
+					break;
+				case "ang" :
+					return "Old English";
+					break;
+				case "apa" :
+					return "Apache language";
+					break;
+				case "ara" :
+					return "Arabic";
+					break;
+				case "arc" :
+					return "Aramaic";
+					break;
+				case "arg" :
+					return "Aragonese Spanish";
+					break;
+				case "arm" :
+					return "Armenian";
+					break;
+				case "arn" :
+					return "Mapuche";
+					break;
+				case "arp" :
+					return "Arapaho";
+					break;
+				case "art" :
+					return "Artificial  ";
+					break;
+				case "arw" :
+					return "Arawak";
+					break;
+				case "asm" :
+					return "Assamese";
+					break;
+				case "ast" :
+					return "Bable";
+					break;
+				case "ath" :
+					return "Athapascan";
+					break;
+				case "aus" :
+					return "Australian language";
+					break;
+				case "ava" :
+					return "Avaric";
+					break;
+				case "ave" :
+					return "Avestan";
+					break;
+				case "awa" :
+					return "Awadhi";
+					break;
+				case "aym" :
+					return "Aymara";
+					break;
+				case "aze" :
+					return "Azerbaijani";
+					break;
+				case "bad" :
+					return "Banda";
+					break;
+				case "bai" :
+					return "Bamileke language";
+					break;
+				case "bak" :
+					return "Bashkir";
+					break;
+				case "bal" :
+					return "Baluchi";
+					break;
+				case "bam" :
+					return "Bambara";
+					break;
+				case "ban" :
+					return "Balinese";
+					break;
+				case "baq" :
+					return "Basque";
+					break;
+				case "bas" :
+					return "Basa";
+					break;
+				case "bat" :
+					return "Baltic";
+					break;
+				case "bej" :
+					return "Beja";
+					break;
+				case "bel" :
+					return "Belarusian";
+					break;
+				case "bem" :
+					return "Bemba";
+					break;
+				case "ben" :
+					return "Bengali";
+					break;
+				case "ber" :
+					return "Berber ";
+					break;
+				case "bho" :
+					return "Bhojpuri";
+					break;
+				case "bih" :
+					return "Bihari";
+					break;
+				case "bik" :
+					return "Bikol";
+					break;
+				case "bin" :
+					return "Edo";
+					break;
+				case "bis" :
+					return "Bislama";
+					break;
+				case "bla" :
+					return "Siksika";
+					break;
+				case "bnt" :
+					return "Bantu ";
+					break;
+				case "bos" :
+					return "Bosnian";
+					break;
+				case "bra" :
+					return "Braj";
+					break;
+				case "bre" :
+					return "Breton";
+					break;
+				case "btk" :
+					return "Batak";
+					break;
+				case "bua" :
+					return "Buriat";
+					break;
+				case "bug" :
+					return "Bugis";
+					break;
+				case "bul" :
+					return "Bulgarian";
+					break;
+				case "bur" :
+					return "Burmese";
+					break;
+				case "cad" :
+					return "Caddo";
+					break;
+				case "cai" :
+					return "Central American Indian";
+					break;
+				case "car" :
+					return "Carib";
+					break;
+				case "cat" :
+					return "Catalan";
+					break;
+				case "cau" :
+					return "Caucasian ";
+					break;
+				case "ceb" :
+					return "Cebuano";
+					break;
+				case "cel" :
+					return "Celtic";
+					break;
+				case "cha" :
+					return "Chamorro";
+					break;
+				case "chb" :
+					return "Chibcha";
+					break;
+				case "che" :
+					return "Chechen";
+					break;
+				case "chg" :
+					return "Chagatai";
+					break;
+				case "chi" :
+					return "Chinese";
+					break;
+				case "chk" :
+					return "Truk";
+					break;
+				case "chm" :
+					return "Mari";
+					break;
+				case "chn" :
+					return "Chinook jargon";
+					break;
+				case "cho" :
+					return "Choctaw";
+					break;
+				case "chp" :
+					return "Chipewyan";
+					break;
+				case "chr" :
+					return "Cherokee";
+					break;
+				case "chu" :
+					return "Church Slavic";
+					break;
+				case "chv" :
+					return "Chuvash";
+					break;
+				case "chy" :
+					return "Cheyenne";
+					break;
+				case "cmc" :
+					return "Chamic language";
+					break;
+				case "cop" :
+					return "Coptic";
+					break;
+				case "cor" :
+					return "Cornish";
+					break;
+				case "cos" :
+					return "Corsican";
+					break;
+				case "cpe" :
+					return "Creoles and Pidgins, English-based";
+					break;
+				case "cpf" :
+					return "Creoles and Pidgins, French-based";
+					break;
+				case "cpp" :
+					return "Creoles and Pidgins, Portuguese-based ";
+					break;
+				case "cre" :
+					return "Cree";
+					break;
+				case "crh" :
+					return "Crimean Tatar";
+					break;
+				case "crp" :
+					return "Creoles and Pidgins";
+					break;
+				case "cus" :
+					return "Cushitic";
+					break;
+				case "cze" :
+					return "Czech";
+					break;
+				case "dak" :
+					return "Dakota";
+					break;
+				case "dan" :
+					return "Danish";
+					break;
+				case "dar" :
+					return "Dargwa";
+					break;
+				case "day" :
+					return "Dayak";
+					break;
+				case "del" :
+					return "Delaware";
+					break;
+				case "den" :
+					return "Slave";
+					break;
+				case "dgr" :
+					return "Dogrib";
+					break;
+				case "din" :
+					return "Dinka";
+					break;
+				case "div" :
+					return "Divehi";
+					break;
+				case "doi" :
+					return "Dogri";
+					break;
+				case "dra" :
+					return "Dravidian ";
+					break;
+				case "dua" :
+					return "Duala";
+					break;
+				case "dum" :
+					return "Middle Dutch";
+					break;
+				case "dut" :
+					return "Dutch";
+					break;
+				case "dyu" :
+					return "Dyula";
+					break;
+				case "dzo" :
+					return "Dzongkha";
+					break;
+				case "efi" :
+					return "Efik";
+					break;
+				case "egy" :
+					return "Egyptian";
+					break;
+				case "eka" :
+					return "Ekajuk";
+					break;
+				case "elx" :
+					return "Elamite";
+					break;
+				case "eng" :
+					return "English";
+					break;
+				case "enm" :
+					return "Middle English";
+					break;
+				case "epo" :
+					return "Esperanto";
+					break;
+				case "est" :
+					return "Estonian";
+					break;
+				case "ewe" :
+					return "Ewe";
+					break;
+				case "ewo" :
+					return "Ewondo";
+					break;
+				case "fan" :
+					return "Fang";
+					break;
+				case "fao" :
+					return "Faroese";
+					break;
+				case "fat" :
+					return "Fanti";
+					break;
+				case "fij" :
+					return "Fijian";
+					break;
+				case "fin" :
+					return "Finnish";
+					break;
+				case "fiu" :
+					return "Finno-Ugrian";
+					break;
+				case "fon" :
+					return "Fon";
+					break;
+				case "fre" :
+					return "French";
+					break;
+				case "frm" :
+					return "French, Middle";
+					break;
+				case "fro" :
+					return "Old French";
+					break;
+				case "fry" :
+					return "Frisian";
+					break;
+				case "ful" :
+					return "Fula";
+					break;
+				case "fur" :
+					return "Friulian";
+					break;
+				case "gaa" :
+					return "Gã";
+					break;
+				case "gay" :
+					return "Gayo";
+					break;
+				case "gba" :
+					return "Gbaya";
+					break;
+				case "gem" :
+					return "Germanic";
+					break;
+				case "geo" :
+					return "Georgian";
+					break;
+				case "ger" :
+					return "German";
+					break;
+				case "gez" :
+					return "Ethiopic";
+					break;
+				case "gil" :
+					return "Gilbertese";
+					break;
+				case "gla" :
+					return "Scottish Gaelic";
+					break;
+				case "gle" :
+					return "Irish";
+					break;
+				case "glg" :
+					return "Galician";
+					break;
+				case "glv" :
+					return "Manx";
+					break;
+				case "gmh" :
+					return "Middle High German";
+					break;
+				case "goh" :
+					return "Old High German";
+					break;
+				case "gon" :
+					return "Gondi";
+					break;
+				case "gor" :
+					return "Gorontalo";
+					break;
+				case "got" :
+					return "Gothic";
+					break;
+				case "grb" :
+					return "Grebo";
+					break;
+				case "grc" :
+					return "Ancient Greek";
+					break;
+				case "gre" :
+					return "Modern Greek";
+					break;
+				case "grn" :
+					return "Guarani";
+					break;
+				case "guj" :
+					return "Gujarati";
+					break;
+				case "gwi" :
+					return "Gwich'in";
+					break;
+				case "hai" :
+					return "Haida";
+					break;
+				case "hat" :
+					return "Haitian French Creole";
+					break;
+				case "hau" :
+					return "Hausa";
+					break;
+				case "haw" :
+					return "Hawaiian";
+					break;
+				case "heb" :
+					return "Hebrew";
+					break;
+				case "her" :
+					return "Herero";
+					break;
+				case "hil" :
+					return "Hiligaynon";
+					break;
+				case "him" :
+					return "Himachali";
+					break;
+				case "hin" :
+					return "Hindi";
+					break;
+				case "hit" :
+					return "Hittite";
+					break;
+				case "hmn" :
+					return "Hmong";
+					break;
+				case "hmo" :
+					return "Hiri Motu";
+					break;
+				case "hun" :
+					return "Hungarian";
+					break;
+				case "hup" :
+					return "Hupa";
+					break;
+				case "iba" :
+					return "Iban";
+					break;
+				case "ibo" :
+					return "Igbo";
+					break;
+				case "ice" :
+					return "Icelandic";
+					break;
+				case "ido" :
+					return "Ido";
+					break;
+				case "iii" :
+					return "Sichuan Yi";
+					break;
+				case "ijo" :
+					return "Ijo";
+					break;
+				case "iku" :
+					return "Inuktitut";
+					break;
+				case "ile" :
+					return "Interlingue";
+					break;
+				case "ilo" :
+					return "Iloko";
+					break;
+				case "ina" :
+					return "Interlingua";
+					break;
+				case "inc" :
+					return "Indic";
+					break;
+				case "ind" :
+					return "Indonesian";
+					break;
+				case "ine" :
+					return "Indo-European";
+					break;
+				case "inh" :
+					return "Ingush";
+					break;
+				case "ipk" :
+					return "Inupiaq";
+					break;
+				case "ira" :
+					return "Iranian ";
+					break;
+				case "iro" :
+					return "Iroquoian ";
+					break;
+				case "ita" :
+					return "Italian";
+					break;
+				case "jav" :
+					return "Javanese";
+					break;
+				case "jpn" :
+					return "Japanese";
+					break;
+				case "jpr" :
+					return "Judeo-Persian";
+					break;
+				case "jrb" :
+					return "Judeo-Arabic";
+					break;
+				case "kaa" :
+					return "Kara-Kalpak";
+					break;
+				case "kab" :
+					return "Kabyle";
+					break;
+				case "kac" :
+					return "Kachin";
+					break;
+				case "kal" :
+					return "Kalâtdlisut";
+					break;
+				case "kam" :
+					return "Kamba";
+					break;
+				case "kan" :
+					return "Kannada";
+					break;
+				case "kar" :
+					return "Karen";
+					break;
+				case "kas" :
+					return "Kashmiri";
+					break;
+				case "kau" :
+					return "Kanuri";
+					break;
+				case "kaw" :
+					return "Kawi";
+					break;
+				case "kaz" :
+					return "Kazakh";
+					break;
+				case "kbd" :
+					return "Kabardian";
+					break;
+				case "kha" :
+					return "Khasi";
+					break;
+				case "khi" :
+					return "Khoisan";
+					break;
+				case "khm" :
+					return "Khmer";
+					break;
+				case "kho" :
+					return "Khotanese";
+					break;
+				case "kik" :
+					return "Kikuyu";
+					break;
+				case "kin" :
+					return "Kinyarwanda";
+					break;
+				case "kir" :
+					return "Kyrgyz";
+					break;
+				case "kmb" :
+					return "Kimbundu";
+					break;
+				case "kok" :
+					return "Konkani";
+					break;
+				case "kom" :
+					return "Komi";
+					break;
+				case "kon" :
+					return "Kongo";
+					break;
+				case "kor" :
+					return "Korean";
+					break;
+				case "kos" :
+					return "Kusaie";
+					break;
+				case "kpe" :
+					return "Kpelle";
+					break;
+				case "kro" :
+					return "Kru";
+					break;
+				case "kru" :
+					return "Kurukh";
+					break;
+				case "kua" :
+					return "Kuanyama";
+					break;
+				case "kum" :
+					return "Kumyk";
+					break;
+				case "kur" :
+					return "Kurdish";
+					break;
+				case "kut" :
+					return "Kutenai";
+					break;
+				case "lad" :
+					return "Ladino";
+					break;
+				case "lah" :
+					return "Lahnda";
+					break;
+				case "lam" :
+					return "Lamba";
+					break;
+				case "lao" :
+					return "Lao";
+					break;
+				case "lat" :
+					return "Latin";
+					break;
+				case "lav" :
+					return "Latvian";
+					break;
+				case "lez" :
+					return "Lezgian";
+					break;
+				case "lim" :
+					return "Limburgish";
+					break;
+				case "lin" :
+					return "Lingala";
+					break;
+				case "lit" :
+					return "Lithuanian";
+					break;
+				case "lol" :
+					return "Mongo-Nkundu";
+					break;
+				case "loz" :
+					return "Lozi";
+					break;
+				case "ltz" :
+					return "Letzeburgesch";
+					break;
+				case "lua" :
+					return "Luba-Lulua";
+					break;
+				case "lub" :
+					return "Luba-Katanga";
+					break;
+				case "lug" :
+					return "Ganda";
+					break;
+				case "lui" :
+					return "Luiseño";
+					break;
+				case "lun" :
+					return "Lunda";
+					break;
+				case "luo" :
+					return "Luo";
+					break;
+				case "lus" :
+					return "Lushai";
+					break;
+				case "mac" :
+					return "Macedonian";
+					break;
+				case "mad" :
+					return "Madurese";
+					break;
+				case "mag" :
+					return "Magahi";
+					break;
+				case "mah" :
+					return "Marshallese";
+					break;
+				case "mai" :
+					return "Maithili";
+					break;
+				case "mak" :
+					return "Makasar";
+					break;
+				case "mal" :
+					return "Malayalam";
+					break;
+				case "man" :
+					return "Mandingo";
+					break;
+				case "mao" :
+					return "Maori";
+					break;
+				case "map" :
+					return "Austronesian";
+					break;
+				case "mar" :
+					return "Marathi";
+					break;
+				case "mas" :
+					return "Masai";
+					break;
+				case "may" :
+					return "Malay";
+					break;
+				case "mdr" :
+					return "Mandar";
+					break;
+				case "men" :
+					return "Mende";
+					break;
+				case "mga" :
+					return "Irish, Middle ";
+					break;
+				case "mic" :
+					return "Micmac";
+					break;
+				case "min" :
+					return "Minangkabau";
+					break;
+				case "mis" :
+					return "Miscellaneous language";
+					break;
+				case "mkh" :
+					return "Mon-Khmer";
+					break;
+				case "mlg" :
+					return "Malagasy";
+					break;
+				case "mlt" :
+					return "Maltese";
+					break;
+				case "mnc" :
+					return "Manchu";
+					break;
+				case "mni" :
+					return "Manipuri";
+					break;
+				case "mno" :
+					return "Manobo language";
+					break;
+				case "moh" :
+					return "Mohawk";
+					break;
+				case "mol" :
+					return "Moldavian";
+					break;
+				case "mon" :
+					return "Mongolian";
+					break;
+				case "mos" :
+					return "Mooré";
+					break;
+				case "mul" :
+					return "Multiple languages";
+					break;
+				case "mun" :
+					return "Munda ";
+					break;
+				case "mus" :
+					return "Creek";
+					break;
+				case "mwr" :
+					return "Marwari";
+					break;
+				case "myn" :
+					return "Mayan language";
+					break;
+				case "nah" :
+					return "Nahuatl";
+					break;
+				case "nai" :
+					return "North American Indian";
+					break;
+				case "nap" :
+					return "Neapolitan Italian";
+					break;
+				case "nau" :
+					return "Nauru";
+					break;
+				case "nav" :
+					return "Navajo";
+					break;
+				case "nbl" :
+					return "Ndebele";
+					break;
+				case "nde" :
+					return "Ndebele";
+					break;
+				case "ndo" :
+					return "Ndonga";
+					break;
+				case "nds" :
+					return "Low German";
+					break;
+				case "nep" :
+					return "Nepali";
+					break;
+				case "new" :
+					return "Newari";
+					break;
+				case "nia" :
+					return "Nias";
+					break;
+				case "nic" :
+					return "Niger-Kordofanian";
+					break;
+				case "niu" :
+					return "Niuean";
+					break;
+				case "nno" :
+					return "Norwegian ";
+					break;
+				case "nob" :
+					return "Norwegian ";
+					break;
+				case "nog" :
+					return "Nogai";
+					break;
+				case "non" :
+					return "Old Norse";
+					break;
+				case "nor" :
+					return "Norwegian";
+					break;
+				case "nso" :
+					return "Northern Sotho";
+					break;
+				case "nub" :
+					return "Nubian language";
+					break;
+				case "nya" :
+					return "Nyanja";
+					break;
+				case "nym" :
+					return "Nyamwezi";
+					break;
+				case "nyn" :
+					return "Nyankole";
+					break;
+				case "nyo" :
+					return "Nyoro";
+					break;
+				case "nzi" :
+					return "Nzima";
+					break;
+				case "oci" :
+					return "Occitan ";
+					break;
+				case "oji" :
+					return "Ojibwa";
+					break;
+				case "ori" :
+					return "Oriya";
+					break;
+				case "orm" :
+					return "Oromo";
+					break;
+				case "osa" :
+					return "Osage";
+					break;
+				case "oss" :
+					return "Ossetic";
+					break;
+				case "ota" :
+					return "Turkish, Ottoman";
+					break;
+				case "oto" :
+					return "Otomian language";
+					break;
+				case "paa" :
+					return "Papuan ";
+					break;
+				case "pag" :
+					return "Pangasinan";
+					break;
+				case "pal" :
+					return "Pahlavi";
+					break;
+				case "pam" :
+					return "Pampanga";
+					break;
+				case "pan" :
+					return "Panjabi";
+					break;
+				case "pap" :
+					return "Papiamento";
+					break;
+				case "pau" :
+					return "Palauan";
+					break;
+				case "peo" :
+					return "Old Persian";
+					break;
+				case "per" :
+					return "Persian";
+					break;
+				case "phi" :
+					return "Philippine ";
+					break;
+				case "phn" :
+					return "Phoenician";
+					break;
+				case "pli" :
+					return "Pali";
+					break;
+				case "pol" :
+					return "Polish";
+					break;
+				case "pon" :
+					return "Ponape";
+					break;
+				case "por" :
+					return "Portuguese";
+					break;
+				case "pra" :
+					return "Prakrit language";
+					break;
+				case "pro" :
+					return "Provençal ";
+					break;
+				case "pus" :
+					return "Pushto";
+					break;
+				case "que" :
+					return "Quechua";
+					break;
+				case "raj" :
+					return "Rajasthani";
+					break;
+				case "rap" :
+					return "Rapanui";
+					break;
+				case "rar" :
+					return "Rarotongan";
+					break;
+				case "roa" :
+					return "Romance ";
+					break;
+				case "roh" :
+					return "Raeto-Romance";
+					break;
+				case "rom" :
+					return "Romani";
+					break;
+				case "rum" :
+					return "Romanian";
+					break;
+				case "run" :
+					return "Rundi";
+					break;
+				case "rus" :
+					return "Russian";
+					break;
+				case "sad" :
+					return "Sandawe";
+					break;
+				case "sag" :
+					return "Sango";
+					break;
+				case "sah" :
+					return "Yakut";
+					break;
+				case "sai" :
+					return "South American Indian";
+					break;
+				case "sal" :
+					return "Salishan language";
+					break;
+				case "sam" :
+					return "Samaritan Aramaic";
+					break;
+				case "san" :
+					return "Sanskrit";
+					break;
+				case "sas" :
+					return "Sasak";
+					break;
+				case "sat" :
+					return "Santali";
+					break;
+				case "scc" :
+					return "Serbian";
+					break;
+				case "sco" :
+					return "Scots";
+					break;
+				case "scr" :
+					return "Croatian";
+					break;
+				case "sel" :
+					return "Selkup";
+					break;
+				case "sem" :
+					return "Semitic";
+					break;
+				case "sga" :
+					return "Irish, Old";
+					break;
+				case "sgn" :
+					return "Sign language";
+					break;
+				case "shn" :
+					return "Shan";
+					break;
+				case "sid" :
+					return "Sidamo";
+					break;
+				case "sin" :
+					return "Sinhalese";
+					break;
+				case "sio" :
+					return "Siouan ";
+					break;
+				case "sit" :
+					return "Sino-Tibetan";
+					break;
+				case "sla" :
+					return "Slavic ";
+					break;
+				case "slo" :
+					return "Slovak";
+					break;
+				case "slv" :
+					return "Slovenian";
+					break;
+				case "sma" :
+					return "Southern Sami";
+					break;
+				case "sme" :
+					return "Northern Sami";
+					break;
+				case "smi" :
+					return "Sami";
+					break;
+				case "smj" :
+					return "Lule Sami";
+					break;
+				case "smn" :
+					return "Inari Sami";
+					break;
+				case "smo" :
+					return "Samoan";
+					break;
+				case "sms" :
+					return "Skolt Sami";
+					break;
+				case "sna" :
+					return "Shona";
+					break;
+				case "snd" :
+					return "Sindhi";
+					break;
+				case "snk" :
+					return "Soninke";
+					break;
+				case "sog" :
+					return "Sogdian";
+					break;
+				case "som" :
+					return "Somali";
+					break;
+				case "son" :
+					return "Songhai";
+					break;
+				case "sot" :
+					return "Sotho";
+					break;
+				case "spa" :
+					return "Spanish";
+					break;
+				case "srd" :
+					return "Sardinian";
+					break;
+				case "srr" :
+					return "Serer";
+					break;
+				case "ssa" :
+					return "Nilo-Saharan";
+					break;
+				case "ssw" :
+					return "Swazi";
+					break;
+				case "suk" :
+					return "Sukuma";
+					break;
+				case "sun" :
+					return "Sundanese";
+					break;
+				case "sus" :
+					return "Susu";
+					break;
+				case "sux" :
+					return "Sumerian";
+					break;
+				case "swa" :
+					return "Swahili";
+					break;
+				case "swe" :
+					return "Swedish";
+					break;
+				case "syr" :
+					return "Syriac";
+					break;
+				case "tah" :
+					return "Tahitian";
+					break;
+				case "tai" :
+					return "Tai";
+					break;
+				case "tam" :
+					return "Tamil";
+					break;
+				case "tat" :
+					return "Tatar";
+					break;
+				case "tel" :
+					return "Telugu";
+					break;
+				case "tem" :
+					return "Temne";
+					break;
+				case "ter" :
+					return "Terena";
+					break;
+				case "tet" :
+					return "Tetum";
+					break;
+				case "tgk" :
+					return "Tajik";
+					break;
+				case "tgl" :
+					return "Tagalog";
+					break;
+				case "tha" :
+					return "Thai";
+					break;
+				case "tib" :
+					return "Tibetan";
+					break;
+				case "tig" :
+					return "Tigré";
+					break;
+				case "tir" :
+					return "Tigrinya";
+					break;
+				case "tiv" :
+					return "Tiv";
+					break;
+				case "tkl" :
+					return "Tokelauan";
+					break;
+				case "tli" :
+					return "Tlingit";
+					break;
+				case "tmh" :
+					return "Tamashek";
+					break;
+				case "tog" :
+					return "Tonga ";
+					break;
+				case "ton" :
+					return "Tongan";
+					break;
+				case "tpi" :
+					return "Tok Pisin";
+					break;
+				case "tsi" :
+					return "Tsimshian";
+					break;
+				case "tsn" :
+					return "Tswana";
+					break;
+				case "tso" :
+					return "Tsonga";
+					break;
+				case "tuk" :
+					return "Turkmen";
+					break;
+				case "tum" :
+					return "Tumbuka";
+					break;
+				case "tup" :
+					return "Tupi language";
+					break;
+				case "tur" :
+					return "Turkish";
+					break;
+				case "tut" :
+					return "Altaic ";
+					break;
+				case "tvl" :
+					return "Tuvaluan";
+					break;
+				case "twi" :
+					return "Twi";
+					break;
+				case "tyv" :
+					return "Tuvinian";
+					break;
+				case "udm" :
+					return "Udmurt";
+					break;
+				case "uga" :
+					return "Ugaritic";
+					break;
+				case "uig" :
+					return "Uighur";
+					break;
+				case "ukr" :
+					return "Ukrainian";
+					break;
+				case "umb" :
+					return "Umbundu";
+					break;
+				case "und" :
+					return "Undetermined language";
+					break;
+				case "urd" :
+					return "Urdu";
+					break;
+				case "uzb" :
+					return "Uzbek";
+					break;
+				case "vai" :
+					return "Vai";
+					break;
+				case "ven" :
+					return "Venda";
+					break;
+				case "vie" :
+					return "Vietnamese";
+					break;
+				case "vol" :
+					return "Volapük";
+					break;
+				case "vot" :
+					return "Votic";
+					break;
+				case "wak" :
+					return "Wakashan language";
+					break;
+				case "wal" :
+					return "Walamo";
+					break;
+				case "war" :
+					return "Waray";
+					break;
+				case "was" :
+					return "Washo";
+					break;
+				case "wel" :
+					return "Welsh";
+					break;
+				case "wen" :
+					return "Sorbian language";
+					break;
+				case "wln" :
+					return "Walloon";
+					break;
+				case "wol" :
+					return "Wolof";
+					break;
+				case "xal" :
+					return "Kalmyk";
+					break;
+				case "xho" :
+					return "Xhosa";
+					break;
+				case "yao" :
+					return "Yao ";
+					break;
+				case "yap" :
+					return "Yapese";
+					break;
+				case "yid" :
+					return "Yiddish";
+					break;
+				case "yor" :
+					return "Yoruba";
+					break;
+				case "ypk" :
+					return "Yupik language";
+					break;
+				case "zap" :
+					return "Zapotec";
+					break;
+				case "zen" :
+					return "Zenaga";
+					break;
+				case "zha" :
+					return "Zhuang";
+					break;
+				case "znd" :
+					return "Zande";
+					break;
+				case "zul" :
+					return "Zulu";
+					break;
+				case "zun" :
+					return "Zuni";
+					break;
+				default :
+					return null;
+			}
+		}
+	}
+	
 	private function escapeXml($string)
 	{
 		// NOTE: if you make a change to this function, make a corresponding change 
@@ -2627,9 +3944,6 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		// NOTE: if you make a change to this function, make a corresponding change 
 		// in the Xerxes_Framework_Parser class, since this one here is a duplicate function 
 		// allowing Xerxes_Record to be a stand-alone class
-		
-		
-		
 
 		$arrMatches = ""; // matches from regular expression
 		$arrSmallWords = ""; // words that shouldn't be capitalized if they aren't the first word.
@@ -2661,22 +3975,10 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		foreach ( $arrWords as $key => $word )
 		{
 			// if this word is the first, or it's not one of our small words, capitalise it 
-			
+
 			if ( $key == 0 || ! in_array( Xerxes_Framework_Parser::strtolower( $word ), $arrSmallWords ) )
 			{
-				// make sure first character is not a quote or something
-				
-				if ( preg_match("/^[^a-zA-Z0-9]/", $word ) )
-				{
-					$first = substr($word,0,1);
-					$rest = substr($word,1);
-					
-					$arrWords[$key] = $first . ucwords( $rest );
-				}
-				else
-				{
-					$arrWords[$key] = ucwords( $word );
-				}
+				$arrWords[$key] = ucwords( $word );
 			} 
 			elseif ( in_array( Xerxes_Framework_Parser::strtolower( $word ), $arrSmallWords ) )
 			{
@@ -2838,7 +4140,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 	 * paramaters listed below.
 	 *
 	 * @param bool $bolPrimary		[optional] return just the primary author, default false
-	 * @param bool $bolFormat		[optional] return the author names as strings (otherwise as objects), default false
+	 * @param bool $bolFormat		[optional] return the author names as strings (otherwise as name parts in array), default false
 	 * @param bool $bolReverse		[optional] return author names as strings, last name first
 	 * @return array
 	 */
@@ -2847,18 +4149,24 @@ class Xerxes_Record extends Xerxes_Marc_Record
 	{
 		$arrFinal = array ( );
 		
-		foreach ( $this->authors as $objXerxesAuthor )
+		foreach ( $this->authors as $arrAuthor )
 		{
-			// author as string
-			
 			if ( $bolFormat == true )
 			{
 				$strAuthor = ""; // author name formatted
+				$strLast = ""; // last name
+				$strFirst = ""; // first name
+				$strInit = ""; // middle initial
+				$strName = ""; // full name, not personal
 
-				$strFirst = $objXerxesAuthor->first_name;
-				$strLast = $objXerxesAuthor->last_name;
-				$strInit = $objXerxesAuthor->init;
-				$strName = $objXerxesAuthor->name;
+				if ( array_key_exists( "first", $arrAuthor ) )
+					$strFirst = $arrAuthor["first"];
+				if ( array_key_exists( "last", $arrAuthor ) )
+					$strLast = $arrAuthor["last"];
+				if ( array_key_exists( "init", $arrAuthor ) )
+					$strInit = $arrAuthor["init"];
+				if ( array_key_exists( "name", $arrAuthor ) )
+					$strName = $arrAuthor["name"];
 				
 				if ( $strName != "" )
 				{
@@ -2887,26 +4195,12 @@ class Xerxes_Record extends Xerxes_Marc_Record
 			} 
 			else
 			{
-				// author objects
-				
-				array_push( $arrFinal, $objXerxesAuthor );
+				array_push( $arrFinal, $arrAuthor );
 			}
-			
-			// we're only asking for the primary author
 			
 			if ( $bolPrimary == true )
 			{
-				// sorry, only additional authors (7XX), so return empty
-				
-				if ( $objXerxesAuthor->additional == true )
-				{
-					return array();
-				}
-				else
-				{
-					// exit loop, we've got the author we need
-					break;
-				}
+				break;
 			}
 		}
 		
@@ -3180,92 +4474,17 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		return $this->subscription;
 	}
 	
-	public function getOriginalXML($bolString = false)
+	public function getOriginalXML()
 	{
-		if ( $bolString == true )
-		{
-			return $this->document->saveXML();
-		}
-		else
-		{
-			return $this->document;
-		}
+		$marc = $this->getMarcXML();
+		
+		return $marc->getElementsByTagName( "record" )->item( 0 );
 	}
 	
 	public function getRecordID()
 	{
 		return $this->record_id;
 	}
-	
-	public function setItem(Xerxes_Record_Item $item )
-	{
-		array_push($this->items, $item);
-	}
-	
-	public function getItems()
-	{
-		return $this->items;
-	}
 }
-
-class Xerxes_Record_Author
-{
-	public $first_name;
-	public $last_name;
-	public $init;
-	public $name;
-	public $type;
-	public $additional;
-	public $display;
-	
-	public function allFields()
-	{
-		$values = "";
-		
-		foreach ( $this as $key => $value )
-		{
-			if ( $key == "additional" || $key == "display")
-			{
-				continue;
-			}
-			
-			$values .= $value . " ";
-		}
-		
-		return trim($values);
-	}
-}
-
-class Xerxes_Record_Item
-{
-	public $bibliographicIdentifer; // string
-	public $itemIdentifier; // string
-	public $dateAvailable; // DateTime
-	public $status; // string
-	public $institution; // string
-	public $location; // string
-	public $call_number; // string
-	public $volume; // string
-	public $link; // string
-	public $circulating; // bool
-	public $holdQueueLength; // int
-	public $note; // string
-	public $onOrder; // string?
-	
-	public function toXML()
-	{
-		$xml = new DOMDocument();
-		$xml->loadXML("<item />");
-		
-		foreach ( $this as $key => $value )
-		{
-			$element = $xml->createElement($key, Xerxes_Framework_Parser::escapeXml($value));
-			$xml->documentElement->appendChild($element);
-		}
-		
-		return $xml;
-	}
-}
-
 
 ?>

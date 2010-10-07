@@ -18,43 +18,17 @@ class Xerxes_Framework_Request
 	private $method = ""; // request method: GET, POST, COMMAND
 	private $arrParams = array ( ); // request paramaters
 	private $arrSession = array ( ); // session array for command line, unused right now
-	private $arrCookieSetParams = array ( ); // cookies that will be set with response. 
-		// value is array of args to php set_cookie. 
+	private $arrCookieSetParams = array ( ); // cookies that will be set with response. value is array of args to php set_cookie. 
 	private $xml = null; // main xml document for holding data from commands
 	private $strRedirect = ""; // redirect url
 	private $path_elements = null; // http path tranlsated into array of elements.
-	private $aliases = array(); // url base aliases
-	private $debugging = array(); // debugging messages
-	private $registry; // registry object
 
 	/**
 	 * Process the incoming request paramaters, cookie values, url path if pretty-uri on
 	 */
 	
-	public function __construct($alias = null)
+	public function __construct()
 	{
-		$this->registry = Xerxes_Framework_Registry::getInstance();
-		
-		if ( $alias != null )
-		{
-			$aliases = array();
-		
-			if ( $alias != null )
-			{
-				foreach ( explode(";", $alias) as $part )
-				{
-					$parts = explode("=", $part);
-					
-					if ( count($parts) == 2 )
-					{
-						$aliases[$parts[0]] = $parts[1]; 
-					}
-				}
-			}			
-			
-			$this->aliases = $aliases;
-		}
-		
 		if ( array_key_exists( "REQUEST_METHOD", $_SERVER ) )
 		{
 			// request has come in from GET or POST
@@ -67,6 +41,7 @@ class Xerxes_Framework_Request
 			{
 				// querystring can be delimited either with ampersand
 				// or semicolon
+				
 
 				$arrParams = preg_split( "/&|;/", $_SERVER['QUERY_STRING'] );
 				
@@ -74,6 +49,7 @@ class Xerxes_Framework_Request
 				{
 					// split out key and value on equal sign
 					
+
 					$iEqual = strpos( $strParam, "=" );
 					
 					if ( $iEqual !== false )
@@ -94,14 +70,12 @@ class Xerxes_Framework_Request
 			{
 				$this->setProperty( $key, $value );
 			}
-						
-			// aliases: when base is explicitly in the url
 			
-			$this->swapAliases();
-						
 			// if pretty-urls is turned on, extract params from uri. 
+
+			$objRegistry = Xerxes_Framework_Registry::getInstance();
 			
-			if ( $this->registry->getConfig( "REWRITE", false ) )
+			if ( $objRegistry->getConfig( "REWRITE", false ) )
 			{
 				$this->extractParamsFromPath();
 			}
@@ -200,8 +174,6 @@ class Xerxes_Framework_Request
 		// custom ipad check
 
 		if (strpos($ua, 'ipad')) return false;
-		
-		// others
 		
 		$isMobile = strpos($ac, 'application/vnd.wap.xhtml+xml') !== false
 			|| $op != ''
@@ -302,10 +274,6 @@ class Xerxes_Framework_Request
 		$this->mapPathToProperty( 0, "base" );
 		$this->mapPathToProperty( 1, "action" );
 		
-		// need to swap aliases before we fetch data
-		
-		$this->swapAliases();
-		
 		// if the action has any specific parmaters it defines beyond base and action
 		// they are extracted here
 
@@ -316,30 +284,6 @@ class Xerxes_Framework_Request
 		{
 			$this->mapPathToProperty( $index, $property );
 		}
-	}
-	
-	private function swapAliases()
-	{
-		foreach ( $this->aliases as $old => $alias )
-		{
-			if ( $this->getProperty("base") == $old )
-			{
-				$this->arrParams["base"] = $alias;
-			}
-		}		
-	}
-	
-	private function getAlias($new)
-	{
-		foreach ( $this->aliases as $old => $alias )
-		{
-			if ( $alias == $new )
-			{
-				return $old;
-			}
-		}
-		
-		return $new;
 	}
 	
 	/**
@@ -356,11 +300,13 @@ class Xerxes_Framework_Request
 
 		if ( ! $this->path_elements )
 		{
+			$objRegistry = Xerxes_Framework_Registry::getInstance();
+			
 			$request_uri = $this->getServer( 'REQUEST_URI' );
 			
 			// get the path by stripping off base url + querystring
 
-			$configBase = $this->registry->getConfig( 'BASE_WEB_PATH', false, "" );
+			$configBase = $objRegistry->getConfig( 'BASE_WEB_PATH', false, "" );
 			
 			// remove base path, which might be simply '/'
 			if (substr ( $request_uri, 0, strlen ( $configBase ) + 1 ) == $configBase . "/")
@@ -420,11 +366,9 @@ class Xerxes_Framework_Request
 	 * @param bool $bolArray	[optional] set to true will ensure property is set as array
 	 */
 	
-	public function setProperty($key, $value, $bolArray = false, $override = false)
+	public function setProperty($key, $value, $bolArray = false)
 	{
-		$value = trim($value);
-		
-		if ( array_key_exists( $key, $this->arrParams ) && $override == false )
+		if ( array_key_exists( $key, $this->arrParams ) )
 		{
 			// if there is an existing element, then we always push in the
 			// the new value into an array, first converting the exising value
@@ -468,6 +412,7 @@ class Xerxes_Framework_Request
 		if ( array_key_exists( $key, $this->arrParams ) )
 		{
 			// if the value is requested as array, but is not array, make it one!
+			
 
 			if ( $bolArray == true && ! is_array( $this->arrParams[$key] ) )
 			{
@@ -491,7 +436,7 @@ class Xerxes_Framework_Request
 			return null;
 		}
 	}
-
+	
 	/**
 	 * Retrieve all request paramaters as array
 	 *
@@ -501,84 +446,6 @@ class Xerxes_Framework_Request
 	public function getAllProperties()
 	{
 		return $this->arrParams;
-	}
-	
-	/**
-	 * Get a group of properties using regular expression
-	 * 
-	 * @param string $regex		regular expression for properties to get
-	 * @param bool $shrink		(optional) whether to collapse properties stored as array into simple element, default false
-	 * @param string $shrink_del (opptional) if $shrink is true, then separate multiple elements by this character, default comma
-	 * 
-	 * @return array
-	 * */
-
-	public function getProperties($regex, $shrink = false, $shrink_del = ",")
-	{
-		$arrFinal = array();
-		
-		if ( $regex == "")
-		{
-			throw new Exception("you must suply a regular expression for the properties to extract");
-		}
-
-		foreach ( $this->getAllProperties() as $key => $value )
-		{
-			$key = urldecode($key);
-			
-			// find specific params
-			
-			if ( preg_match("/" . $regex . "/", $key) )
-			{
-				// slip empty fields
-				
-				if ( is_array($value) )
-				{
-					$check = implode("", array_values($value));
-					
-					if ( $check == "" )
-					{
-						continue;
-					}
-				}				
-				
-				if ( $value == "")
-				{
-					continue;
-				}
-				
-				if ( is_array($value) && $shrink == true )
-				{
-					$concated = "";
-					
-					foreach ( $value as $data )
-					{
-						if ( $data != "" )
-						{
-							if ($concated == "")
-							{
-								$concated = $data;
-							}
-							else
-							{
-								$concated .= $shrink_del . $data;
-							}
-						}
-					}
-					
-					if ( $concated == "" )
-					{
-						continue;
-					}
-				
-					$value = $concated;
-				}
-				
-				$arrFinal[$key] = $value;
-			}
-		}
-		
-		return $arrFinal;
 	}
 	
 	/**
@@ -624,11 +491,6 @@ class Xerxes_Framework_Request
 		}
 	}
 	
-	public function getAllSession()
-	{
-		return $_SESSION;
-	}
-	
 	/**
 	 * Save a value in session state
 	 *
@@ -639,6 +501,51 @@ class Xerxes_Framework_Request
 	public function setSession($key, $value)
 	{
 		$_SESSION[$key] = $value;
+	}
+	
+	/**
+	 * Set the name of the document element for the stored xml; if this
+	 * is not set before adding a document via addDocument, the document
+	 * element will be set to 'xerxes'
+	 *
+	 * @param string $strName	document element name
+	 */
+	
+	public function setDocumentElement($strName)
+	{
+		if ( $strName == null )
+		{
+			error_log( "document element name was null" );
+		} 
+		else
+		{
+			$this->xml = new DOMDocument( );
+			$this->xml->loadXML( "<$strName />" );
+		}
+	}
+	
+	/**
+	 * Add an XML DOMDocument to the master xml
+	 *
+	 * @param DOMDocument $objData
+	 */
+	
+	public function addDocument(DOMDocument $objData)
+	{
+		if ( ! $this->xml instanceof DOMDocument )
+		{
+			$this->xml = new DOMDocument( );
+			$this->xml->loadXML( "<xerxes />" );
+		}
+		
+		if ( $objData != null )
+		{
+			if ( $objData->documentElement != null )
+			{
+				$objImport = $this->xml->importNode( $objData->documentElement, true );
+				$this->xml->documentElement->appendChild( $objImport );
+			}
+		}
 	}
 	
 	/**
@@ -706,220 +613,6 @@ class Xerxes_Framework_Request
 		$queryHash[$key] = $value;
 		
 		return $base . http_build_query( $queryHash );
-	}	
-	
-	/**
-	 * Generate a url for a given action. Used by commands to generate action
-	 * urls, rather than calculating manually. This method returns different
-	 * urls depending on whether rewrite is on in config. Will use
-	 * configured base_web_path if available, which is best.	
-	 * 
-	 * @param array $properties	Keys are xerxes request properties, values are 
-	 * the values. For an action url, "base" and "action" are required as keys.
-	 * Properties will be put in path or query string of url, if pretty-urls are turned on
-	 * in config.xml, as per action configuration in actions.xml.
-	 * @param boolean $full Optional, force full absolute url with hostname. 
-	 *
-	 * @return string url 
-	 */
-	
-	public function url_for($properties, $full = false, $force_secure = false)
-	{
-		if ( $properties instanceof Xerxes_Framework_Request_URL )
-		{
-			$properties = $properties->toArray();
-		}
-		
-		if ( ! array_key_exists( "base", $properties ) )
-		{
-			throw new Exception( "no base/section supplied in url_for." );
-		}
-		
-		if ($force_secure)
-		{
-			$full = true;
-		}
-		
-		$base_path = $this->registry->getConfig( 'BASE_WEB_PATH', false, "" ) . "/";
-		
-		// should we generate full absolute urls with hostname? indicated by a
-		// request property, set automatically by snippet embed controllers. 
-
-		if ( $this->getProperty( "gen_full_urls" ) == 'true' || $full )
-		{
-			$base_path = $this->registry->getConfig( 'BASE_URL', true ) . "/";
-			
-			if ($force_secure)
-			{
-				$base_path = ereg_replace ( '^http\:\/\/', 'https://', $base_path );
-			}
-		}
-		
-		$extra_path = "";
-		$query_string = "";
-		
-		$base = $properties["base"];
-		$action = null;
-		
-		if ( array_key_exists( "action", $properties ) )
-		{
-			$action = $properties["action"];
-		}
-		
-		if ( $this->registry->getConfig( 'REWRITE', false ) )
-		{
-			// base in path
-
-			$extra_path_arr[0] = urlencode( $this->getAlias($base)); //alias
-			unset( $properties["base"] );
-			
-			// action in path
-
-			if ( array_key_exists( "action", $properties ) )
-			{
-				$extra_path_arr[1] = urlencode( $action );
-				unset( $properties["action"] );
-			}
-			
-			// action-specific stuff
-
-			foreach ( array_keys( $properties ) as $property )
-			{
-				$controller_map = Xerxes_Framework_ControllerMap::getInstance();
-				$index = $controller_map->path_map_obj()->indexForProperty( $base, $action, $property );
-				
-				if ( $index )
-				{
-					$extra_path_arr[$index] = urlencode( $properties[$property] );
-					unset( $properties[$property] );
-				}
-			}
-			
-		    // need to resort since we may have added indexes in a weird order. Silly PHP. 
-			
-			ksort($extra_path_arr); 	
-			$extra_path = implode( "/", $extra_path_arr );
-		}
-		
-		$assembled_path = $base_path . $extra_path;
-		
-		// everything else, which may be everything if it's ugly uris
-		
-		$query_string = null;
-		
-		foreach ( $properties as $key => $value )
-		{
-			if ( $value == "")
-			{
-				continue;
-			}
-			
-			if ( $query_string != null )
-			{
-				$query_string .= '&amp;';
-			}
-			
-			if ( is_array($value) )
-			{
-				for ( $x = 0; $x < count($value); $x++ )
-				{
-					if ( $x > 0 )
-					{
-						$query_string .= '&amp;';
-					}
-					
-					$query_string .= "$key=" . urlencode($value[$x]);
-				}
-			}
-			else
-			{
-				 $query_string .= "$key=" . urlencode($value);
-			}
-		}
-
-		if ( $query_string != null )
-		{
-			$assembled_path = $assembled_path . '?' . $query_string;
-		}
-		
-		return $assembled_path;
-	}
-	
-	/**
-	 * Check if the user has explicitly logged in
-	 *
-	 * @return bool		true if user is named and logged in, otherwise false
-	 */
-	
-	public function hasLoggedInUser()
-	{
-		return Xerxes_Framework_Restrict::isAuthenticatedUser( $this );
-	}
-	
-	public function addDebugging($message)
-	{
-		array_push($this->debugging, $message);
-	}
-	
-	
-	##############
-	#  RESPONSE  # 
-	##############
-	
-	
-	
-	/**
-	 * Set the name of the document element for the stored xml; if this
-	 * is not set before adding a document via addDocument, the document
-	 * element will be set to 'xerxes'
-	 *
-	 * @param string $strName	document element name
-	 */
-	
-	public function setDocumentElement($strName)
-	{
-		if ( $strName == null )
-		{
-			error_log( "document element name was null" );
-		} 
-		else
-		{
-			$this->xml = new DOMDocument( );
-			$this->xml->loadXML( "<$strName />" );
-		}
-	}
-	
-	public function addData($name, $attribute, $value)
-	{
-		$xml = new DOMDocument();
-		$xml->loadXML("<$name />");
-		$xml->documentElement->setAttribute($attribute, $value);
-		
-		$this->addDocument($xml);
-	}
-	
-	/**
-	 * Add an XML DOMDocument to the master xml
-	 *
-	 * @param DOMDocument $objData
-	 */
-	
-	public function addDocument(DOMDocument $objData)
-	{
-		if ( ! $this->xml instanceof DOMDocument )
-		{
-			$this->xml = new DOMDocument( );
-			$this->xml->loadXML( "<xerxes />" );
-		}
-		
-		if ( $objData != null )
-		{
-			if ( $objData->documentElement != null )
-			{
-				$objImport = $this->xml->importNode( $objData->documentElement, true );
-				$this->xml->documentElement->appendChild( $objImport );
-			}
-		}
 	}
 	
 	/**
@@ -1023,7 +716,120 @@ class Xerxes_Framework_Request
 				return null;
 			}
 		}
-	}	
+	}
+	
+	/**
+	 * Generate a url for a given action. Used by commands to generate action
+	 * urls, rather than calculating manually. This method returns different
+	 * urls depending on whether rewrite is on in config. Will use
+	 * configured base_web_path if available, which is best.	
+	 * 
+	 * @param array $properties	Keys are xerxes request properties, values are 
+	 * the values. For an action url, "base" and "action" are required as keys.
+	 * Properties will be put in path or query string of url, if pretty-urls are turned on
+	 * in config.xml, as per action configuration in actions.xml.
+	 * @param boolean $full Optional, force full absolute url with hostname. 
+	 *
+	 * @return string url 
+	 */
+	
+	public function url_for($properties, $full = false, $force_secure = false)
+	{
+		if ( ! array_key_exists( "base", $properties ) )
+		{
+			throw new Exception( "no base/section supplied in url_for." );
+		}
+		
+		if ($force_secure)
+		{
+			$full = true;
+		}
+		
+		$config = Xerxes_Framework_Registry::getInstance();
+		
+		$base_path = $config->getConfig( 'BASE_WEB_PATH', false, "" ) . "/";
+		
+		// should we generate full absolute urls with hostname? indicated by a
+		// request property, set automatically by snippet embed controllers. 
+		
+
+		if ( $this->getProperty( "gen_full_urls" ) == 'true' || $full )
+		{
+			$base_path = $config->getConfig( 'BASE_URL', true ) . "/";
+			
+			if ($force_secure)
+			{
+				$base_path = ereg_replace ( "^http\:\/\/", "https://", $base_path );
+			}
+		}
+		
+		$extra_path = "";
+		$query_string = "";
+		
+		$base = $properties["base"];
+		$action = null;
+		
+		if ( array_key_exists( "action", $properties ) )
+		{
+			$action = $properties["action"];
+		}
+		
+		if ( $config->getConfig( 'REWRITE', false ) )
+		{
+			// base in path
+
+			$extra_path_arr[0] = urlencode( $base );
+			unset( $properties["base"] );
+			
+			// action in path
+
+			if ( array_key_exists( "action", $properties ) )
+			{
+				$extra_path_arr[1] = urlencode( $action );
+				unset( $properties["action"] );
+			}
+			
+			// action-specific stuff
+
+			foreach ( array_keys( $properties ) as $property )
+			{
+				$controller_map = Xerxes_Framework_ControllerMap::getInstance();
+				$index = $controller_map->path_map_obj()->indexForProperty( $base, $action, $property );
+				
+				if ( $index )
+				{
+					$extra_path_arr[$index] = urlencode( $properties[$property] );
+					unset( $properties[$property] );
+				}
+			}
+		  // Need to resort since we may have added indexes in a weird order. Silly PHP. 
+			ksort($extra_path_arr); 	
+			$extra_path = implode( "/", $extra_path_arr );
+		}
+		
+		// everything else, which may be everything if it's ugly uris,
+
+		$query_string = http_build_query( $properties, '', '&amp;' );
+		$assembled_path = $base_path . $extra_path;
+		
+		if ( $query_string )
+		{
+			$assembled_path = $assembled_path . '?' . $query_string;
+		}
+		
+		return $assembled_path;
+	}
+	
+	/**
+	 * Check if the user has explicitly logged in
+	 *
+	 * @return bool		true if user is named and logged in, otherwise false
+	 */
+	
+	public function hasLoggedInUser()
+	{
+		return Xerxes_Framework_Restrict::isAuthenticatedUser( $this );
+	}
 	
 	/**
 	 * Retrieve master XML and all request paramaters
@@ -1155,67 +961,7 @@ class Xerxes_Framework_Request
 			}
 		}
 	}
-}
 
-class Xerxes_Framework_Request_URL
-{
-	private $arrParams;
-	
-	public function __construct($params = "")
-	{
-		$this->arrParams = $params;
-	}
-	
-	public function setProperty($key, $value)
-	{
-		if ( array_key_exists( $key, $this->arrParams ) )
-		{
-			if ( ! is_array( $this->arrParams[$key] ) )
-			{
-				$this->arrParams[$key] = array ($this->arrParams[$key] );
-			}
-			
-			array_push( $this->arrParams[$key], $value );
-		} 
-		else
-		{
-			$this->arrParams[$key] = $value;
-		}
-	}
-	
-	public function removeProperty($key, $value)
-	{
-		if ( array_key_exists( $key, $this->arrParams ) )
-		{
-			$stored = $this->arrParams[$key];
-			
-			// if this is an array, we need to find the right one
-			
-			if ( is_array( $stored ) )
-			{
-				for ( $x = 0; $x < count($stored); $x++ )
-				{
-					if ( $stored[$x] == $value )
-					{
-						unset($this->arrParams[$key][$x]);
-					}
-				}
-				
-				// reset the keys
-				
-				$this->arrParams[$key] = array_values($this->arrParams[$key]);
-			}
-			else
-			{
-				unset($this->arrParams[$key]);
-			}
-		} 
-	}
-	
-	public function toArray()
-	{
-		return $this->arrParams;
-	}
 }
 
 ?>

@@ -18,7 +18,7 @@
 		 * 
 		 * @param mixed $xml			DOMDocument or string containing xml
 		 * @param string $strXsltPath	Relative file path to xslt document. Will look in both library location and 
-		 * 								local app location for documents, and combine them so local overrides library 
+		 * 								local app location for documents, and combine them so local over-rides library 
 		 * 								templates, if neccesary. 
 		 * @param array $arrParams		[optional] array of parameters to pass to stylesheet
 		 * @param bool $bolDoc			[optional] return result as DOMDocument (default false)
@@ -93,16 +93,20 @@
 			$local_xsl_dir = $objRegistry->getConfig("APP_DIRECTORY", true);
 			$local_path =  $local_xsl_dir . "/" . $strXsltRelPath;
 			      
-			// the 'distro' application xsl lives here
+			// the 'main' application xsl lives here
 		
 			$distro_xsl_dir = $objRegistry->getConfig("PATH_PARENT_DIRECTORY", true) . '/lib/';
 			
-			$distro_path =  $distro_xsl_dir . $strXsltRelPath;
+			// XSL_PARENT_DIRECTORY is the path to the xsl file, whether main (as above)
+			// or a module, in which case it's somewhere else
+			
+			$this_xsl_dir = $objRegistry->getConfig("XSL_PARENT_DIRECTORY", false, $distro_xsl_dir);
+			$distro_path =  $this_xsl_dir . $strXsltRelPath;
 			
 			$generated_xsl = new DOMDocument();
 			$generated_xsl->load( $distro_xsl_dir . "xsl/dynamic_skeleton.xsl");
 			
-			// prepend imports to this, to put them at the top of the file. 
+			// pre-pend imports to this, to put them at the top of the file. 
 		
 			$importInsertionPoint = $generated_xsl->documentElement->firstChild;
 	
@@ -117,7 +121,7 @@
 			// if no distro, need to directly import distro includes.xsl, since we're not
 			// importing a file that will reference it; also need to do this for modules
 			
-			if ( $distro_exists == false || $distro_xsl_dir != $distro_xsl_dir )
+			if ( $distro_exists == false || $this_xsl_dir != $distro_xsl_dir )
 			{
 				array_push($arrImports, $distro_xsl_dir . "xsl/includes.xsl");
 			}			
@@ -133,7 +137,7 @@
 			{
 				foreach ( $arrInclude as $strInclude )
 				{
-					array_push($arrImports, $distro_xsl_dir . $strInclude);
+					array_push($arrImports, $this_xsl_dir . $strInclude);
 				}
 			}
 				
@@ -179,7 +183,7 @@
 					// path to local copy, and the distro copy as a check
 					
 					$local_candidate = $local_xsl_dir . '/' . dirname ( $strXsltRelPath ) . '/' . $extra['href'];
-					$distro_check = $distro_xsl_dir . '/' . dirname ( $strXsltRelPath ) . '/' . $extra['href'];
+					$distro_check = $this_xsl_dir . '/' . dirname ( $strXsltRelPath ) . '/' . $extra['href'];
 					
 					// make sure it exists, and they are both not pointing at the same file 
 					
@@ -255,102 +259,87 @@
 		 * @static 
 		 */ 
 
-		private function toTitleCase($strInput)
+		public static function toTitleCase( $strInput )
 		{
 			// NOTE: if you make a change to this function, make a corresponding change 
-			// in the Xerxes_Record class
+			// in the Xerxes_Framework_Parser class, since this one here is a duplicate function 
+			// allowing Xerxes_Record to be a stand-alone class
 			
 			
 			
-	
-			$arrMatches = ""; // matches from regular expression
-			$arrSmallWords = ""; // words that shouldn't be capitalized if they aren't the first word.
-			$arrWords = ""; // individual words in input
-			$strFinal = ""; // final string to return
-			$strLetter = ""; // first letter of subtitle, if any
-	
+			
+			$arrMatches = "";			// matches from regular expression
+			$arrSmallWords = "";		// words that shouldn't be capitalized if they aren't the first word.
+			$arrWords = "";				// individual words in input
+			$strFinal = "";				// final string to return
+			$strLetter = "";			// first letter of subtitle, if any
+						
 			// if there are no lowercase letters (and its sufficiently long a title to 
 			// not just be an aconym or something) then this is likely a title stupdily
 			// entered into a database in ALL CAPS, so drop it entirely to 
 			// lower-case first
-	
-			$iMatch = preg_match( "/[a-z]/", $strInput );
-			
-			if ( $iMatch == 0 && strlen( $strInput ) > 10 )
+
+			$iMatch = preg_match("/[a-z]/", $strInput);
+
+			if ($iMatch == 0 && strlen($strInput) > 10)
 			{
-				$strInput = Xerxes_Framework_Parser::strtolower( $strInput );
+				$strInput = Xerxes_Framework_Parser::strtolower($strInput);
 			}
 			
 			// array of small words
 			
-			$arrSmallWords = array ('of', 'a', 'the', 'and', 'an', 'or', 'nor', 'but', 'is', 'if', 'then', 
-			'else', 'when', 'at', 'from', 'by', 'on', 'off', 'for', 'in', 'out', 'over', 'to', 'into', 'with', 'as' );
-			
-			// split the string into separate words
-	
-			$arrWords = explode( ' ', $strInput );
-			
-			foreach ( $arrWords as $key => $word )
-			{
-				// if this word is the first, or it's not one of our small words, capitalise it 
+			$arrSmallWords = array( 'of','a','the','and','an','or','nor','but','is','if','then','else',
+				'when', 'at','from','by','on','off','for','in','out','over','to','into','with', 'as' );
 				
-				if ( $key == 0 || ! in_array( Xerxes_Framework_Parser::strtolower( $word ), $arrSmallWords ) )
-				{
-					// make sure first character is not a quote or something
+			// split the string into separate words
+			
+			$arrWords = explode(' ', $strInput);
+			
+			foreach ($arrWords as $key => $word)
+			{ 
+					// if this word is the first, or it's not one of our small words, capitalise it 
 					
-					if ( preg_match("/^[^a-zA-Z0-9]/", $word ) )
+					if ( $key == 0 || !in_array( Xerxes_Framework_Parser::strtolower($word), $arrSmallWords) )
 					{
-						$first = substr($word,0,1);
-						$rest = substr($word,1);
-						
-						$arrWords[$key] = $first . ucwords( $rest );
+						$arrWords[$key] = ucwords($word);
 					}
-					else
+					elseif ( in_array( Xerxes_Framework_Parser::strtolower($word), $arrSmallWords) )
 					{
-						$arrWords[$key] = ucwords( $word );
+						$arrWords[$key] = Xerxes_Framework_Parser::strtolower($word);
 					}
-				} 
-				elseif ( in_array( Xerxes_Framework_Parser::strtolower( $word ), $arrSmallWords ) )
-				{
-					$arrWords[$key] = Xerxes_Framework_Parser::strtolower( $word );
-				}
-			}
+			} 
 			
 			// join the words back into a string
-	
-			$strFinal = implode( ' ', $arrWords );
+			
+			$strFinal = implode(' ', $arrWords);
 			
 			// catch subtitles
-	
-			if ( preg_match( "/: ([a-z])/", $strFinal, $arrMatches ) )
-			{
-				$strLetter = ucwords( $arrMatches[1] );
-				$strFinal = preg_replace( "/: ([a-z])/", ": " . $strLetter, $strFinal );
-			}
 			
+			$strFinal = self::capitalizeSubtitle($strFinal);
+
 			// catch words that start with double quotes
-	
-			if ( preg_match( "/\"([a-z])/", $strFinal, $arrMatches ) )
+			
+			if ( preg_match("/\"([a-z])/", $strFinal, $arrMatches) )
 			{
-				$strLetter = ucwords( $arrMatches[1] );
-				$strFinal = preg_replace( "/\"[a-z]/", "\"" . $strLetter, $strFinal );
+				$strLetter = ucwords($arrMatches[1]);
+				$strFinal = preg_replace("/\"[a-z]/", "\"" . $strLetter, $strFinal );
 			}
 			
 			// catch words that start with a single quote
 			// need to be a little more cautious here and make sure there is a space before the quote when
-			// inside the title to ensure this isn't a quote for a contraction or for possesive; seperate
+			// inside the title to ensure this isn't a quote for a contraction or for possisive; seperate
 			// case to handle when the quote is the first word
-	
-			if ( preg_match( "/ '([a-z])/", $strFinal, $arrMatches ) )
+			
+			if ( preg_match("/ '([a-z])/", $strFinal, $arrMatches) )
 			{
-				$strLetter = ucwords( $arrMatches[1] );
-				$strFinal = preg_replace( "/ '[a-z]/", " '" . $strLetter, $strFinal );
+				$strLetter = ucwords($arrMatches[1]);
+				$strFinal = preg_replace("/ '[a-z]/", " '" . $strLetter, $strFinal );
 			}
 			
-			if ( preg_match( "/^'([a-z])/", $strFinal, $arrMatches ) )
+			if ( preg_match("/^'([a-z])/", $strFinal, $arrMatches) )
 			{
-				$strLetter = ucwords( $arrMatches[1] );
-				$strFinal = preg_replace( "/^'[a-z]/", "'" . $strLetter, $strFinal );
+				$strLetter = ucwords($arrMatches[1]);
+				$strFinal = preg_replace("/^'[a-z]/", "'" . $strLetter, $strFinal );
 			}
 			
 			return $strFinal;
@@ -390,47 +379,6 @@
 		}
 		
 		
-		/**
-		 * Determine whether the url is part of a group of domains
-		 * 
-		 * @param string $strURL	the url to test
-		 * @param string $strDomain	a comma-separated list of domains
-		 *
-		 * @return bool				true if in domain, false otherwise
-		 */
-		
-		public static function withinDomain($strURL, $strDomain)
-		{
-			$bolPassed = false;
-			
-			if ( strlen($strURL) > 4 )
-			{
-				// only do it if it's an absolute url, local are fine
-					
-				if ( substr($strURL, 0, 4) == "http" )
-				{
-					$arrAllowed = explode(",", $strDomain);
-					
-					// if any in our list match
-					
-					$bolPassed = false;
-					
-					foreach ( $arrAllowed as $strAllowed )
-					{
-						$strAllowed = trim(str_replace(".", "\\.", $strAllowed));
-						$strAllowed = trim(str_replace("*", "[^.]*", $strAllowed));
-						
-						if ( preg_match('/^http[s]{0,1}:\/\/' . $strAllowed .'.*/', $strURL) )
-						{
-							$bolPassed = true;
-						}
-					}
-				}
-			}
-			
-			return $bolPassed;
-		}
-		
 
 		/**
 		 * Simple function to strip off the previous part of a string
@@ -446,7 +394,7 @@
 		{		
 			$iStartPos = 0;		// start position of removing term
 			$iStopPos = 0;		// end position of removing term
-			$strRight = "";		// right remainder of the string to return
+			$strRight = "";		// right remainder of the srtring to return
 			
 			// if it really is there
 			if ( strpos($strExpression, $strRemove) !== false )
@@ -549,7 +497,7 @@
 
 		
 		/**
-		 * use multi-byte string upper case if available
+		 * use multi-byte string upper case if availablee
 		 * 
 		 * @param string $string the string to raise to upper case
 		 */
@@ -590,13 +538,12 @@
 		 *
 		 * @param string $url			url you want to send the request to
 		 * @param string $data			[optional] data to POST to the above url
-		 * @param int $timeout			[optional] seconds to wait before timing out
 		 * @param string $content_type	[optional] content-type in the post, 'application/x-www-form-urlencoded' by default
 		 * @param bool $bolEncode		[optional] whether to encode the posted data, true by default
 		 * @return string				the response from the server
 		 */
 		
-		public static function request($url, $data = null, $timeout = null, $content_type = null, $bolEncode = true)
+		public static function request($url, $data = null, $content_type = null, $bolEncode = true)
 		{
 			$objRegistry = Xerxes_Framework_Registry::getInstance();
 			
@@ -607,19 +554,7 @@
 			
 			if ( $data == null && $proxy == null && $curl == null )
 			{
-				$ctx = null;
-				
-				if ( $timeout != null )
-				{
-					$ctx = stream_context_create(array(
-					    'http' => array(
-					        'timeout' => $timeout
-					        )
-					    )
-					);
-				}
-			
-				return file_get_contents($url, 0, $ctx);
+				return file_get_contents($url);
 			}
 			
 			// these for POST requests
@@ -639,7 +574,7 @@
 				
 				$arrMatches = array();
 				
-				if ( preg_match('/http:\/\/([^\/]*)(\/.*)/', $url, $arrMatches) != false )
+				if ( preg_match("/http:\/\/([^\/]*)(\/.*)/", $url, $arrMatches) != false )
 				{
 					$host = $arrMatches[1];
 					$path = $arrMatches[2];
@@ -676,11 +611,6 @@
 				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); // this returns the response to a variable		
 				curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true); // this tells curl to follow 'location:' headers
 				curl_setopt($ch, CURLOPT_MAXREDIRS, 10); // but don't follow more than 10 'location:' redirects
-				
-				if ( $timeout != null )
-				{
-					curl_setopt($ch, CURLOPT_TIMEOUT, $timeout); // wait and then timeout 
-				}
 				
 				// this is a post request
 				

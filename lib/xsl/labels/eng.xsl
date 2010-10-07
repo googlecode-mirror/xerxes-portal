@@ -44,9 +44,7 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	<xsl:variable name="text_collections_change_section_order">Change section order</xsl:variable>
 	<xsl:variable name="text_collections_created_by">Created by <xsl:value-of select="/*/category/@owned_by_user" /></xsl:variable>
 	<xsl:variable name="text_collections_delete_collection">Delete collection</xsl:variable>
-	<xsl:variable name="text_collections_delete_collection_confirm">Are you sure you want to delete this collection?</xsl:variable>
 	<xsl:variable name="text_collections_delete_section">Delete section</xsl:variable>
-	<xsl:variable name="text_collections_delete_section_confirm">Are you sure you want to delete this section?</xsl:variable>
 	<xsl:variable name="text_collections_done_editing">I'm done editing!</xsl:variable>
 	<xsl:variable name="text_collections_edit">Add databases and Edit</xsl:variable>
 	<xsl:variable name="text_collections_list_databases">List databases matching: </xsl:variable>
@@ -56,7 +54,6 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	<xsl:variable name="text_collections_public_url">Public URL:</xsl:variable>
 	<xsl:variable name="text_collections_publish">Make collection:</xsl:variable>
 	<xsl:variable name="text_collections_remove_searchbox">I'm done adding databases!</xsl:variable>
-	
 	
 	<xsl:variable name="text_database_availability">Availability:</xsl:variable>
 	<xsl:variable name="text_database_available_registered">Only available to registered users.</xsl:variable>
@@ -81,7 +78,6 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	<xsl:variable name="text_databases_az_databases">databases</xsl:variable>
 	<xsl:variable name="text_databases_az_hint_info">more information</xsl:variable>
 	<xsl:variable name="text_databases_az_hint_searchable">searchable by <xsl:value-of select="$app_name" /></xsl:variable>
-	<xsl:variable name="text_databases_az_letter_separator"> | </xsl:variable>
 	<xsl:variable name="text_databases_az_pagename">Databases A-Z</xsl:variable>
 	<xsl:variable name="text_databases_az_search">List databases matching: </xsl:variable>
 	
@@ -176,7 +172,6 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	<xsl:variable name="text_link_original_record">Original record</xsl:variable>
 	<xsl:variable name="text_link_resolver_available">Full text available</xsl:variable>
 	<xsl:variable name="text_link_resolver_check">Check for availability</xsl:variable>
-	<xsl:variable name="text_link_resolver_checking">Checking availability . . .</xsl:variable>
 	<xsl:variable name="text_link_resolver_name">Link Resolver</xsl:variable>
 	<xsl:variable name="text_link_resolver_load_msg">Loading content from</xsl:variable>
 	<xsl:variable name="text_link_resolver_direct_link_prefix">Full-Text Available: </xsl:variable>
@@ -233,14 +228,10 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	<xsl:variable name="text_record_notes">Additional Notes</xsl:variable>
 	<xsl:variable name="text_record_publisher">Publisher</xsl:variable>
 	<xsl:variable name="text_record_summary">Summary</xsl:variable>
-	<xsl:variable name="text_record_summary_subjects">Covers the topics</xsl:variable>
-	<xsl:variable name="text_record_summary_toc">Includes chapters on</xsl:variable>
 	<xsl:variable name="text_record_subjects">Covers the topics</xsl:variable>
 	<xsl:variable name="text_record_standard_nos">Standard Numbers</xsl:variable>
 	<xsl:variable name="text_records_tags">Labels: </xsl:variable>
-	<xsl:variable name="text_records_tags_update">Update</xsl:variable>
-	<xsl:variable name="text_records_tags_update_err">Sorry, there was an error, your labels could not be updated.</xsl:variable>
-	
+
 	<xsl:variable name="text_records_fulltext_pdf">Full-Text in PDF</xsl:variable>
 	<xsl:variable name="text_records_fulltext_html">Full-Text in HTML</xsl:variable>
 	<xsl:variable name="text_records_fulltext_available">Full-Text Available</xsl:variable>	
@@ -254,17 +245,10 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	<xsl:variable name="text_results_record_saved_temp">Temporarily Saved</xsl:variable>
 	<xsl:variable name="text_results_record_save_it">Save this record</xsl:variable>
 	<xsl:variable name="text_results_record_saved_perm">login to save permanently</xsl:variable>
-	<xsl:variable name="text_results_record_save_err">Sorry, an error occured, your record was not saved.</xsl:variable>
 	<xsl:variable name="text_results_record_delete">Delete this record</xsl:variable>
-	<xsl:variable name="text_results_record_delete_confirm">Are you sure you want to delete this record?</xsl:variable>
-	<xsl:variable name="text_results_record_removing">Removing...</xsl:variable>
 	<xsl:variable name="text_results_refereed">Peer Reviewed</xsl:variable>
 	<xsl:variable name="text_results_sort_by">sort by</xsl:variable>
 	<xsl:variable name="text_results_year">Year</xsl:variable>
-	<xsl:variable name="text_results_next">Next</xsl:variable>
-	
-	<xsl:variable name="text_search_err_select_databases">Please select databases to search</xsl:variable>
-	<xsl:variable name="text_search_err_databases_limit">Sorry, you can only search up to %s databases at one time</xsl:variable>
 	
 	<xsl:variable name="text_searchbox_ada_boolean">Boolean operator: </xsl:variable>
 	<xsl:variable name="text_searchbox_boolean_and">And</xsl:variable>
@@ -372,11 +356,6 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	
 	<xsl:template name="text_facet_group">
 		<xsl:value-of select="@name" />
-	</xsl:template>
-	
-	<xsl:template name="text_results_sort_by">
-		<xsl:param name="option" />
-		<xsl:value-of select="$option" />
 	</xsl:template>
 	
 	<xsl:template name="text_results_sort_options">

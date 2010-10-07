@@ -20,6 +20,7 @@ class Xerxes_Framework_Registry
 	private $arrConfig = null; // configuration settings
 	private $arrPass = array ( ); // values to pass on to the view
 	private static $instance; // singleton pattern
+	private $modules = array();	// list of modules
 
 	protected function __construct()
 	{
@@ -146,6 +147,13 @@ class Xerxes_Framework_Registry
 					$id = ( string ) $group["id"];
 					$this->usergroups[$id] = $group;
 				}
+			}
+			
+			// register modules
+			
+			if ( $xml->configuration->modules != false )
+			{
+				$this->modules = explode(",", (string) $xml->configuration->modules);
 			}
 		}
 	}
@@ -325,6 +333,11 @@ class Xerxes_Framework_Registry
 		}
 		
 		return $source;
+	}
+	
+	public function getModules()
+	{
+		return $this->modules;
 	}
 	
 	public function getXML()

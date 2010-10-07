@@ -184,7 +184,7 @@ class Xerxes_MetalibRecordTest extends PHPUnit_Framework_TestCase
 		$this->Xerxes_MetalibRecord_Document->load($this->dir. "/data/metalib-psycinfo-not-thesis.xml");
 		$record = $this->Xerxes_MetalibRecord_Document->record(1);
 		
-		// has a 502, but is not a thesis
+		// has a 502, but not a thesus
 		
 		$this->assertEquals( $record->getFormat(), "Article");
 	}
