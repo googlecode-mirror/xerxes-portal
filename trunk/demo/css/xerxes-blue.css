@@ -248,7 +248,7 @@ a:hover {
 
 .raisedBox {
 	padding: 1.8em;
-	background-image: url(../images/bg.gif);
+	background-image: url(../images/bg.png);
 	background-repeat: repeat-x;
 	background-position: bottom;
 	border-top-width: 1px;
@@ -294,7 +294,7 @@ a:hover {
 }
 
 .iconCommand.delete {
-  background-image: url(../images/delete.gif);
+  background-image: url(../images/delete.png);
 }
 
 .iconCommand.add {
@@ -302,7 +302,7 @@ a:hover {
 }
 
 .iconCommand.reorder {
-  background-image: url(../images/reorder.gif);
+  background-image: url(../images/reorder.png);
 }
 
 .iconCommand.edit {
@@ -830,7 +830,7 @@ div.autocomplete ul li {
   padding: 0;
 }
 #recordFullText .umlaut_section.fulltext li {
-  background: transparent url(../images/html.gif) no-repeat scroll;
+  background: transparent url(../images/html.png) no-repeat scroll;
   padding: 0 0 3px 21px
 }
 #recordFullText .umlaut_section.excerpts li {
@@ -903,7 +903,7 @@ div.autocomplete ul li {
 	float: left;
 	width: 99%;
 	line-height: normal;
- 	background: #fff url("../images/tabs/bg.gif") repeat-x bottom;
+ 	background: #fff url("../images/tabs/bg.png") repeat-x bottom;
 	padding-left: 10px;
 	margin-right: 10px;
 }
@@ -916,14 +916,14 @@ div.autocomplete ul li {
 
 #tabnav li {
 	float: left;
-	background: url("../images/tabs/left.gif") no-repeat left top;
+	background: url("../images/tabs/left.png") no-repeat left top;
 	margin: 0;
 	padding: 0 0 0 9px;
 }
 
 #tabnav a {
 	display:block;
-	background: url("../images/tabs/right.gif") no-repeat right top;
+	background: url("../images/tabs/right.png") no-repeat right top;
 	padding: 5px 15px 4px 6px;
 	padding: 10px 18px 9px 7px;
 	text-decoration: none;
@@ -936,11 +936,11 @@ div.autocomplete ul li {
 }
 
 #tabnav .here {
-	background-image: url("../images/tabs/left_on.gif");
+	background-image: url("../images/tabs/left_on.png");
 }
 
 #tabnav .here a {
-	background-image: url("../images/tabs/right_on.gif");
+	background-image: url("../images/tabs/right_on.png");
 	color: #333;
 	padding-bottom: 10px;
 }
@@ -973,7 +973,7 @@ div.autocomplete ul li {
 	padding: 10px; 
 	padding-left: 30px; 
 	margin: 2px;
-	background-image: url(../images/facet-bg.gif);
+	background-image: url(../images/facet-bg.png);
 	background-repeat:repeat-x;
 	background-color: #efefef; 
 	border: 1px solid #cbcbcb;

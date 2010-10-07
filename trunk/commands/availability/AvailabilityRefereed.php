@@ -39,11 +39,11 @@
 			
 			if ( $bolRefereed == true )
 			{
-				$this->request->setRedirect($configBaseUrl . "/images/refereed.gif" );
+				$this->request->setRedirect($configBaseUrl . "/images/refereed.png" );
 			}
 			else
 			{
-				$this->request->setRedirect($configBaseUrl . "/images/empty.gif" );
+				$this->request->setRedirect($configBaseUrl . "/images/empty.png" );
 			}
 			
 			return 1;

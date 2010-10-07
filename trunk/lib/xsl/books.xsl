@@ -237,7 +237,7 @@
 	<xsl:choose>
 		<xsl:when test="not(//cached/object[contains(@id,$isbn) or contains(@id,$oclc) or contains(@id,$id)])">
 			<xsl:if test="//request/source = 'local'">
-				<li class="worldcatAvailabilityMissing"><img src="images/book-out.gif" alt="" />&#160; No Copies Available</li>
+				<li class="worldcatAvailabilityMissing"><img src="images/book-out.png" alt="" />&#160; No Copies Available</li>
 			</xsl:if>
 			<xsl:call-template name="ill_option">
 				<xsl:with-param name="element">li</xsl:with-param>
@@ -251,9 +251,9 @@
 			<xsl:variable name="copy_count" select="$onlineCopies + $printAvailable" />
 			<li>
 				<xsl:choose>
-					<xsl:when test="$copy_count = '0'"><img src="images/book-out.gif" alt="" />&#160; No copies available</xsl:when>
-					<xsl:when test="$copy_count = '1'"><img src="images/book.gif" alt="" />&#160; 1 copy available</xsl:when>
-					<xsl:otherwise><img src="images/book.gif" alt="" />&#160; <xsl:value-of select="$copy_count" /> copies available</xsl:otherwise>
+					<xsl:when test="$copy_count = '0'"><img src="images/book-out.png" alt="" />&#160; No copies available</xsl:when>
+					<xsl:when test="$copy_count = '1'"><img src="images/book.png" alt="" />&#160; 1 copy available</xsl:when>
+					<xsl:otherwise><img src="images/book.png" alt="" />&#160; <xsl:value-of select="$copy_count" /> copies available</xsl:otherwise>
 				</xsl:choose>
 			</li>
 		</xsl:otherwise>
@@ -445,7 +445,7 @@
 		<xsl:element name="{$element}">
 			<xsl:attribute name="class"><xsl:value-of select="$class" /></xsl:attribute>
 			<a href="{holdings:pointer}" class="recordAction" target="" >
-				<img src="{$base_include}/images/html.gif" alt="" width="16" height="16" border="0" /> 
+				<img src="{$base_include}/images/html.png" alt="" width="16" height="16" border="0" /> 
 				<xsl:choose>
 					<xsl:when test="holdings:note">
 						<xsl:value-of select="holdings:note" />
@@ -501,12 +501,12 @@
 			<a target="{$link_target}" href="{../url_open}" class="recordAction">
 				<xsl:choose>
 					<xsl:when test="//worldcat_groups/group[@id = $source]/lookup/ill_text">
-						<img src="images/ill.gif" alt="" border="0" class="miniIcon linkResolverLink "/>
+						<img src="images/ill.png" alt="" border="0" class="miniIcon linkResolverLink "/>
 						<xsl:text> </xsl:text>
 						<xsl:value-of select="//worldcat_groups/group[@id = $source]/lookup/ill_text" />
 					</xsl:when>
 					<xsl:otherwise>
-						<img src="images/sfx.gif" alt="" border="0" class="miniIcon linkResolverLink "/>
+						<img src="images/sfx.png" alt="" border="0" class="miniIcon linkResolverLink "/>
 						<xsl:text> </xsl:text>
 						<xsl:text> Check for availability </xsl:text>
 					</xsl:otherwise>
@@ -536,8 +536,8 @@
 		<img id="folder_worldcat{$id}" width="17" height="15" alt="" border="0" >
 		<xsl:attribute name="src">
 			<xsl:choose> 
-				<xsl:when test="//request/session/resultssaved[@key = $record_id]">images/folder_on.gif</xsl:when>
-				<xsl:otherwise>images/folder.gif</xsl:otherwise>
+				<xsl:when test="//request/session/resultssaved[@key = $record_id]">images/folder_on.png</xsl:when>
+				<xsl:otherwise>images/folder.png</xsl:otherwise>
 			</xsl:choose>
 		</xsl:attribute>
 		</img>
