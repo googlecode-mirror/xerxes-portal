@@ -18,11 +18,14 @@ class Xerxes_Framework_Request
 	private $method = ""; // request method: GET, POST, COMMAND
 	private $arrParams = array ( ); // request paramaters
 	private $arrSession = array ( ); // session array for command line, unused right now
-	private $arrCookieSetParams = array ( ); // cookies that will be set with response. value is array of args to php set_cookie. 
+	private $arrCookieSetParams = array ( ); // cookies that will be set with response. 
+		// value is array of args to php set_cookie. 
 	private $xml = null; // main xml document for holding data from commands
 	private $strRedirect = ""; // redirect url
 	private $path_elements = null; // http path tranlsated into array of elements.
-	private $aliases = array();
+	private $aliases = array(); // url base aliases
+	private $debugging = array(); // debugging messages
+	private $registry; // registry object
 
 	/**
 	 * Process the incoming request paramaters, cookie values, url path if pretty-uri on
@@ -30,6 +33,8 @@ class Xerxes_Framework_Request
 	
 	public function __construct($alias = null)
 	{
+		$this->registry = Xerxes_Framework_Registry::getInstance();
+		
 		if ( $alias != null )
 		{
 			$aliases = array();
@@ -95,10 +100,8 @@ class Xerxes_Framework_Request
 			$this->swapAliases();
 						
 			// if pretty-urls is turned on, extract params from uri. 
-
-			$objRegistry = Xerxes_Framework_Registry::getInstance();
 			
-			if ( $objRegistry->getConfig( "REWRITE", false ) )
+			if ( $this->registry->getConfig( "REWRITE", false ) )
 			{
 				$this->extractParamsFromPath();
 			}
@@ -353,13 +356,11 @@ class Xerxes_Framework_Request
 
 		if ( ! $this->path_elements )
 		{
-			$objRegistry = Xerxes_Framework_Registry::getInstance();
-			
 			$request_uri = $this->getServer( 'REQUEST_URI' );
 			
 			// get the path by stripping off base url + querystring
 
-			$configBase = $objRegistry->getConfig( 'BASE_WEB_PATH', false, "" );
+			$configBase = $this->registry->getConfig( 'BASE_WEB_PATH', false, "" );
 			
 			// remove base path, which might be simply '/'
 			if (substr ( $request_uri, 0, strlen ( $configBase ) + 1 ) == $configBase . "/")
@@ -739,16 +740,14 @@ class Xerxes_Framework_Request
 			$full = true;
 		}
 		
-		$config = Xerxes_Framework_Registry::getInstance();
-		
-		$base_path = $config->getConfig( 'BASE_WEB_PATH', false, "" ) . "/";
+		$base_path = $this->registry->getConfig( 'BASE_WEB_PATH', false, "" ) . "/";
 		
 		// should we generate full absolute urls with hostname? indicated by a
 		// request property, set automatically by snippet embed controllers. 
 
 		if ( $this->getProperty( "gen_full_urls" ) == 'true' || $full )
 		{
-			$base_path = $config->getConfig( 'BASE_URL', true ) . "/";
+			$base_path = $this->registry->getConfig( 'BASE_URL', true ) . "/";
 			
 			if ($force_secure)
 			{
@@ -767,7 +766,7 @@ class Xerxes_Framework_Request
 			$action = $properties["action"];
 		}
 		
-		if ( $config->getConfig( 'REWRITE', false ) )
+		if ( $this->registry->getConfig( 'REWRITE', false ) )
 		{
 			// base in path
 
@@ -855,6 +854,11 @@ class Xerxes_Framework_Request
 	public function hasLoggedInUser()
 	{
 		return Xerxes_Framework_Restrict::isAuthenticatedUser( $this );
+	}
+	
+	public function addDebugging($message)
+	{
+		array_push($this->debugging, $message);
 	}
 	
 	
