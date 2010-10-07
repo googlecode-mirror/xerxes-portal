@@ -1,0 +1,126 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<x_server_response metalib_version="4.3.1 (602)">
+<present_response>
+<record xmlns="http://www.loc.gov/MARC21/slim"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.loc.gov/MARC21/slim
+http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd">
+<datafield tag="035" ind1=" " ind2=" ">
+<subfield code="a">AAIMR47199</subfield>
+</datafield>
+<datafield tag="520" ind1=" " ind2=" ">
+<subfield code="a">I studied the effects of six levels of dispersed green tree retention harvesting (2%, 10%, 20%, 50%, and 75%, and unharvested control) on understory plant communities in the 8&lt;sup&gt;th&lt;/sup&gt; growing season post-harvest in the mixedwood boreal forest in northwestern Alberta. Sample plots were located in the partially harvested (retention) strips as well as in corridors used by the harvesting equipment. As the amount of retention decreased, the difference, as compared to unharvested control, increased. In lower retention levels the cover of understory vegetation, especially graminoids, was higher but species richness was unaffected. Lower retention lead to increased abundance of early successional, shade-intolerant species. The results suggest a possible threshold in response between the 10% and 20% retention. In terms of understory cover and composition machine corridors resembled clearcuts within partially harvested forests.</subfield>
+</datafield>
+<datafield tag="502" ind1=" " ind2=" ">
+<subfield code="a">University of Alberta (Canada)</subfield>
+<subfield code="a">M.Sc.</subfield>
+<subfield code="a">2008</subfield>
+<subfield code="l">2059</subfield>
+<subfield code="m">00130</subfield>
+</datafield>
+<controlfield tag="LDR">^^^^^cam^^2200157^^^4500</controlfield>
+<datafield tag="YR " ind1=" " ind2=" ">
+<subfield code="a">2008</subfield>
+</datafield>
+<datafield tag="020" ind1=" " ind2=" ">
+<subfield code="a">978-0-494-47199-9</subfield>
+</datafield>
+<datafield tag="100" ind1=" " ind2=" ">
+<subfield code="a">Craig, Ashley</subfield>
+</datafield>
+<datafield tag="245" ind1=" " ind2=" ">
+<subfield code="a">The effects of variable retention harvesting on understory vegetation in the mixedwood boreal forest in northwestern Alberta</subfield>
+</datafield>
+<datafield tag="650" ind1=" " ind2=" ">
+<subfield code="a">BIOLOGY, ECOLOGY</subfield>
+<subfield code="b">0329</subfield>
+</datafield>
+<datafield tag="650" ind1=" " ind2=" ">
+<subfield code="a">AGRICULTURE, FORESTRY AND WILDLIFE</subfield>
+<subfield code="b">0478</subfield>
+</datafield>
+<datafield tag="773" ind1=" " ind2=" ">
+<subfield code="g">47, no. 04 (2008): p. 2059</subfield>
+</datafield>
+<datafield tag="904" ind1=" " ind2=" ">
+<subfield code="c">MAI</subfield>
+<subfield code="h">University of Alberta (Canada)</subfield>
+<subfield code="i">0351</subfield>
+<subfield code="j">M.Sc.</subfield>
+<subfield code="k">2008</subfield>
+<subfield code="l">2059</subfield>
+<subfield code="m">00130</subfield>
+</datafield>
+<datafield tag="949" ind1=" " ind2=" ">
+<subfield code="a">47</subfield>
+<subfield code="b">04</subfield>
+<subfield code="e">2008</subfield>
+<subfield code="g">2008</subfield>
+<subfield code="x">n</subfield>
+<subfield code="c">2059</subfield>
+<subfield code="f">2059</subfield>
+</datafield>
+<datafield tag="SID" ind1=" " ind2=" ">
+<subfield code="a">Z39</subfield>
+<subfield code="b">L_OCLC_DABS</subfield>
+<subfield code="d">CAL00252</subfield>
+<subfield code="i">594781</subfield>
+<subfield code="j">000001</subfield>
+<subfield code="s">039913</subfield>
+<subfield code="t">Dissertation Abstracts (OCLC)</subfield>
+</datafield>
+<controlfield tag="RAN">089</controlfield>
+<datafield tag="773" ind1="a" ind2=" ">
+<subfield code="d">University of Alberta (Canada)</subfield>
+<subfield code="i">0351</subfield>
+</datafield>
+<datafield tag="773" ind1="g" ind2=" ">
+<subfield code="t">M.Sc.</subfield>
+</datafield>
+<controlfield tag="SET">039913</controlfield>
+<controlfield tag="SYS">011217253</controlfield>
+<openURL>
+<ctx:context-objects xmlns:ctx="info:ofi/fmt:xml:xsd:ctx" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="info:ofi/fmt:xml:xsd:ctx http://www.openurl.info/registry/docs/info:ofi/fmt:xml:xsd:ctx">
+<ctx:context-object timestamp="2002-06-14T12:13:00Z" version="Z39.88-2004" identifier="125">
+<ctx:referent>
+<ctx:metadata-by-val>
+<ctx:format>info:ofi/fmt:xml:xsd:book</ctx:format>
+<ctx:metadata>
+<rft:book xmlns:rft="info:ofi/fmt:xml:xsd:book" xsi:schemaLocation= "info:ofi/fmt:xml:xsd:book http://www.openurl.info/registry/docs/info:ofi/fmt:xml:xsd:book">
+<rft:authors>
+<rft:author>
+<rft:aulast>Craig</rft:aulast>
+<rft:aufirst> Ashley</rft:aufirst>
+<rft:auinit></rft:auinit>
+</rft:author>
+</rft:authors>
+<rft:title>The effects of variable retention harvesting on understory vegetation in the mixedwood boreal forest in northwestern Alberta</rft:title>
+<rft:btitle></rft:btitle>
+<rft:date>2008</rft:date>
+<rft:pub></rft:pub>
+<rft:place></rft:place>
+<rft:isbn>978-0-494-47199-9</rft:isbn>
+<rft:genre>University of Albert</rft:genre>
+<rft:edition></rft:edition>
+<ctx:identifier>info:doi/</ctx:identifier>
+<rft:sici></rft:sici>
+<rft:opid></rft:opid>
+</rft:book>
+</ctx:metadata>
+</ctx:metadata-by-val>
+<ctx:metadata-by-ref>
+<ctx:format></ctx:format>
+<ctx:location>http://metalib.calstate.edu:8331/X?OP=sfx-get-doc&amp;doc-number=011217253</ctx:location>
+</ctx:metadata-by-ref>
+</ctx:referent>
+<ctx:referrer>
+<ctx:identifier>info:sid/metalib.com:L_OCLC_DABS</ctx:identifier>
+</ctx:referrer>
+</ctx:context-object>
+</ctx:context-objects>
+</openURL>
+</record>
+<session_id new_session="N">LDNH3P9T4RFGPKKNBEJ316SAB35N6D27BJLYB2PRTU7XNTL6SM</session_id>
+</present_response>
+</x_server_response>
+ 
