@@ -394,6 +394,7 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 			<xsl:when test="$format = 'Website'">Webová stránka</xsl:when>
 			<xsl:when test="$format = 'Computer File'">Počítačový soubor</xsl:when>
 			<xsl:when test="$format = 'Journal or Newspaper'">Časopis nebo noviny</xsl:when>
+			<xsl:when test="$format = 'Patent'">Patent</xsl:when>
 
 			<xsl:when test="$format = 'Unknown'">Neznámý formát</xsl:when>
 			<xsl:otherwise>
