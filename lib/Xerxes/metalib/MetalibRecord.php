@@ -215,7 +215,7 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 
 		if ( stristr($this->source,"GALE_ZBRC") )
 		{
-			$url = "http://galenet.galegroup.com/servlet/BioRC?docNum=" . $this->control_number;
+			$url = "http://ic.galegroup.com/ic/bic1/ReferenceDetailsPage/ReferenceDetailsWindow?displayGroupName=K12-Reference&action=e&windowstate=normal&mode=view&documentId=GALE|" . $this->controlfield("001")->__toString();
 			array_push ( $this->links, array ("Full-Text in HTML", $url, "html" ) );
 		}
 		
