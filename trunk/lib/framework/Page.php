@@ -313,7 +313,7 @@ class Xerxes_Framework_Page
 	 * @return string				newly formatted document
 	 */
 	
-	public function transform($xml, $strXslt, $arrParams = null, $arrIncludes = null)
+	public function transform($xml, $strXslt, $arrParams = null, $arrIncludes = array())
 	{
 		$html =  Xerxes_Framework_Parser::transform( $xml, $strXslt, $arrParams, false, $arrIncludes );
 		
