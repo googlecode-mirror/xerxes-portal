@@ -31,15 +31,12 @@
 </xsl:template>
 
 <xsl:template name="record">
-	
 	<div id="record">
-		
 		<xsl:for-each select="/*/results/records/record/xerxes_record">
-			
 			<xsl:variable name="result_set" 	select="result_set" />
 			<xsl:variable name="record_number" 	select="record_number" />
-			<xsl:variable name="group" 			select="//request/group" />
-			<xsl:variable name="issn" 			select="standard_numbers/issn" />
+			<xsl:variable name="group" 		select="//request/group" />
+			<xsl:variable name="issn" 		select="standard_numbers/issn" />
 			<xsl:variable name="record_id">
 				<xsl:value-of select="$result_set" />:<xsl:value-of select="$record_number" />
 			</xsl:variable>
@@ -65,9 +62,7 @@
 		<!-- tag input -->
 		
 		<xsl:call-template name="hidden_tag_layers" />
-		
 	</div>
-	
 </xsl:template>
 
 <xsl:template name="record-summary">
@@ -265,8 +260,15 @@
 		</xsl:call-template>
 	</xsl:if>
 	
-	<!-- original_record and holdings links, if appropriate -->
+	<!-- lings to catalog -->
+	<xsl:call-template name="record-action-fulltext-catalog"/>
 	
+	<!-- other fulltext links -->
+	<xsl:call-template name="record-action-fulltext-option"/>
+</xsl:template>
+
+<xsl:template name="record-action-fulltext-catalog">
+	<!-- original_record and holdings links, if appropriate -->
 	<xsl:if test="links/link[@type='original_record'] and (//config/show_all_original_record_links = 'true' or //config/original_record_links/database[@metalib_id = $database_code])">
 			<xsl:call-template name="record_link">
 				<xsl:with-param name="type">original_record</xsl:with-param>
@@ -282,9 +284,13 @@
 				<xsl:with-param name="img_src" select="concat($base_url, '/images/book.png')"/>
 			</xsl:call-template>
 	</xsl:if>
-	
+</xsl:template>
+
+<xsl:template name="record-action-fulltext-option">
+	<xsl:variable name="result_set" 	select="result_set" />
+	<xsl:variable name="record_number" 	select="record_number" />
+
 	<div class="recordFullTextOption">
-		
 		<xsl:variable name="db_metalib_id" select="metalib_id" />
 		<xsl:variable name="link_resolver_allowed" select="not(//database_links/database[@metalib_id = $db_metalib_id]/sfx_suppress) or //database_links/database[@metalib_id = $db_metalib_id]/sfx_suppress != '1'" />
 		
@@ -319,6 +325,7 @@
 <xsl:template name="record-action-save">
 	<xsl:variable name="result_set" 	select="result_set" />
 	<xsl:variable name="record_number" 	select="record_number" />
+
 	<xsl:if test="not(/folder)">
 		<div class="saveRecord recordAction" id="saveRecordOption_{$result_set}_{$record_number}">
 			<img id="folder_{$result_set}{$record_number}"	width="17" height="15" alt="" border="0" class="miniIcon">
