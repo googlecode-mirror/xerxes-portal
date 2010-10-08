@@ -200,8 +200,6 @@
 
 	</div>
 	
-	<xsl:call-template name="surround-google-analytics" />
-		
 	</body>
 	</html>
 	
@@ -215,6 +213,7 @@
 	<base href="{$base_include}/" />
 	<xsl:call-template name="css_include" />
 	<xsl:call-template name="header" />	
+	<xsl:call-template name="surround-google-analytics" />
 	</head>
 </xsl:template>
 
@@ -288,21 +287,17 @@
 -->
 <xsl:template name="surround-google-analytics">
 	<xsl:if test="//config/google_analytics">
+		<script type="text/javascript">
+			var _gaq = _gaq || [];
+			_gaq.push(['_setAccount', '<xsl:value-of select="//config/google_analytics"/>']);
+			_gaq.push(['_trackPageview']);
 
-		<xsl:variable name="google_analytics" select="//config/google_analytics" />
-		
-		<script type="text/javascript">
-			var gaJsHost = (("https:" == document.location.protocol) ?
-			"https://ssl." : "http://www.");
-			document.write(unescape("%3Cscript src='" + gaJsHost +
-			"google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+			(function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+			})();
 		</script>
-		<script type="text/javascript">
-			var pageTracker = _gat._getTracker("{$google_analytics}");
-			pageTracker._initData();
-			pageTracker._trackPageview();
-		</script>
-		
 	</xsl:if>
 </xsl:template>
 
