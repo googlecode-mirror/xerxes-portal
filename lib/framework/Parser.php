@@ -27,7 +27,7 @@
 		 * @static 
 		 */ 
 					
-		public static function transform ( $xml, $strXsltPath, $arrParams = null, $bolDoc = false, $arrInclude = "" )
+		public static function transform ( $xml, $strXsltPath, $arrParams = null, $bolDoc = false, $arrInclude = array() )
 		{
 			if ( $strXsltPath == "") throw new Exception("no stylesheet supplied");
 			
@@ -39,9 +39,27 @@
 				$xml = $objXml;
 			}
 			
+			// language file
+			
+			$registry = Xerxes_Framework_Registry::getInstance();
+			
+			$language = $registry->getConfig("XERXES_LANGUAGE");
+			
+			// english file is included by default
+			
+			// if language is set to something other than english
+			// then include that file to override the english labels
+			
+			if ( $language != "eng" )
+			{
+				array_push($arrInclude, "xsl/labels/$language.xsl");
+			}
+			
+			
 			$objXsl = self::generateBaseXsl($strXsltPath, $arrInclude);
 			
 			// create XSLT Processor
+			
 			$objProcessor = new XsltProcessor();
 			$objProcessor->registerPhpFunctions();
 			
@@ -85,19 +103,40 @@
 		{
 			$arrImports = array(); // files to be imported
 			
-			$objRegistry = Xerxes_Framework_Registry::getInstance(); 
-		
-			// the relative path passed in should, starting from our working
-			// dir, give us the localized xsl if it exists.
+			$objRegistry = Xerxes_Framework_Registry::getInstance();
 			
-			$local_xsl_dir = $objRegistry->getConfig("APP_DIRECTORY", true);
-			$local_path =  $local_xsl_dir . "/" . $strXsltRelPath;
+			
+			### first, set up the paths to the distro and local directories
+		
+			// the 'local' xsl lives here
+			
+			$local_xsl_dir = $objRegistry->getConfig("APP_DIRECTORY", true) . "/";
+			$local_path =  $local_xsl_dir . $strXsltRelPath;
 			      
-			// the 'distro' application xsl lives here
+			// the 'distro' xsl lives here
 		
 			$distro_xsl_dir = $objRegistry->getConfig("PATH_PARENT_DIRECTORY", true) . '/lib/';
-			
 			$distro_path =  $distro_xsl_dir . $strXsltRelPath;
+			
+			
+
+			### check to make sure files exist
+			
+			$distro_exists = file_exists($distro_path);
+			$local_exists = file_exists($local_path);
+
+			// if we don't have either a local or a distro copy, that's a problem.
+			
+			if (! ( $local_exists || $distro_exists) )
+			{
+				// throw new Exception("No xsl stylesheet found: $local_path || $distro_path");
+				throw new Exception("No xsl stylesheet found: $strXsltRelPath");
+			}			
+			
+
+			
+			### now create the skeleton XSLT file that will hold references to both
+			### the distro and the local files
 			
 			$generated_xsl = new DOMDocument();
 			$generated_xsl->load( $distro_xsl_dir . "xsl/dynamic_skeleton.xsl");
@@ -105,63 +144,60 @@
 			// prepend imports to this, to put them at the top of the file. 
 		
 			$importInsertionPoint = $generated_xsl->documentElement->firstChild;
+			
+			
+			### add a reference to the distro file
 	
-			// add actual stylesheets to 'base' stylesheet. local are included,
-			// distro are imported. this will ensure local overrides distro.
-			
-			// import the distro
-			
-			$distro_exists = file_exists($distro_path);
-			$local_exists = file_exists($local_path);
-
-			// if no distro, need to directly import distro includes.xsl, since we're not
-			// importing a file that will reference it
-			
-			if ( $distro_exists == false )
-			{
-				array_push($arrImports, $distro_xsl_dir . "xsl/includes.xsl");
-			}			
-			
 			if ( $distro_exists == true )
 			{	
 				array_push($arrImports, $distro_path);
 			}
+			else
+			{
+				// if no distro, need to directly import (distro) includes.xsl, since we're not
+				// importing a file that will reference it
+				
+				array_push($arrImports, $distro_xsl_dir . "xsl/includes.xsl");
+			}				
 			
-			// additional xsl that should be included
+			
+			### add a refence for files programatically added (like language file)
 			
 			if ( $arrInclude != null )
 			{
 				foreach ( $arrInclude as $strInclude )
 				{
-					array_push($arrImports, $distro_xsl_dir . $strInclude);
+					// but only if a distro copy exists
+					
+					if ( file_exists($distro_xsl_dir . $strInclude) )
+					{
+						array_push($arrImports, $distro_xsl_dir . $strInclude);
+					}
+					
+					// see if there is a local version, and include it too
+					
+					if ( file_exists($local_xsl_dir . $strInclude) )
+					{
+						array_push($arrImports, $local_xsl_dir . $strInclude);
+					}
 				}
 			}
+			
 				
-			// include local
+			### add a refence to the local file
 			
 			if ( $local_exists )
 			{
 				self::addIncludeReference( $generated_xsl, $local_path);
 			}
 			
-			// if actions.xml specified a view and we don't have a local or 
-			// a distro copy, that's a problem.
-			
-			if (! ( $local_exists || $distro_exists) )
-			{
-				// throw new Exception("No xsl stylesheet found: $local_path || $distro_path");
-				throw new Exception("No xsl stylesheet found: $strXsltRelPath");
-			}
-			
-			// add any locally overridden subsidiary 'included' type files if
-			// neccesary, for instance includes.xsl, but we also look through
-			// distro file to see if there's anything else we need. 
 
-			// includes.xsl still needs manually xsl:include'd in the distro source,
-			// but local source shouldn't, we will import local includes.xsl
-			// dynamically here. We import instead of include in case the local
-			// stylesheet does erroneously 'include', to avoid a conflict. We
-			// import LAST to make sure it takes precedence over distro. 
+			### if the distro file  xsl:includes or xsl:imports other files
+			### check if there is a corresponding local file, and import it too
+			
+			// We import instead of include in case the local stylesheet does erroneously 
+			// 'include', to avoid a conflict. We import LAST to make sure it takes 
+			// precedence over distro. 
 			
 			if ( $distro_exists )
 			{
@@ -169,19 +205,21 @@
 			
 				$distroXml->registerXPathNamespace ( 'xsl', 'http://www.w3.org/1999/XSL/Transform' );
 				
-				// find anything include'd or importe'd in original base file,
-				// including but not limited to includes.xsl
+				// find anything include'd or import'ed in original base file
 				
-				$array_merged = array_merge ( $distroXml->xpath ( "//xsl:include" ), $distroXml->xpath ( "//xsl:import" ) );
+				$array_merged = array_merge ( $distroXml->xpath( "//xsl:include" ), $distroXml->xpath ( "//xsl:import" ) );
 				
 				foreach ( $array_merged as $extra )
 				{
-					// path to local copy, and the distro copy as a check
+					// path to local copy
 					
 					$local_candidate = $local_xsl_dir . '/' . dirname ( $strXsltRelPath ) . '/' . $extra['href'];
+					
+					// path to distro copy as a check
+					
 					$distro_check = $distro_xsl_dir . '/' . dirname ( $strXsltRelPath ) . '/' . $extra['href'];
 					
-					// make sure it exists, and they are both not pointing at the same file 
+					// make sure local copy exists, and they are both not pointing at the same file 
 					
 					if ( file_exists ( $local_candidate ) && realpath($distro_check) != realpath($local_candidate) )
 					{
@@ -190,14 +228,8 @@
 				}
 			}
 			
-			// ensure that the local includes is in the list
-
-			// ( sorry, this is a hack for the module stuff code which we may abandon in 1.7 
-			// with the new search architecture; keep it for now )
 			
-			array_push($arrImports, $local_xsl_dir . "/xsl/includes.xsl");
-            
-			$arrImports = array_unique($arrImports);
+			### now the actual mechanics of the import
 			
 			foreach ( $arrImports as $import )
 			{
