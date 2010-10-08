@@ -478,7 +478,7 @@ class Xerxes_Framework_FrontController
 				{
 					// XSLT CODE
 					
-					$output = $objPage->transform( $objXml, $objControllerMap->getView(), null, $objControllerMap->getCommonXSL() );
+					$output = $objPage->transform( $objXml, $objControllerMap->getView(), null );
 					
 					// EMBEDED JAVASCRIPT DISPLAY
 					//

@@ -32,7 +32,6 @@
 
 		private $strViewType = "";			// the folder the file lives in, important if it is 'xsl'
 		private $strViewFile = "";			// name of the file to use in view
-		private $arrViewInclude = array();	// a common file to be included among views (other than includes.xsl)
 		private $version;					// xerxes version number
 		
 		private function __construct() { }
@@ -228,14 +227,6 @@
 			
 			foreach ( $sections as $section )
 			{
-				// an xslt file that is shared among the views in this section, 
-				// other than includes.xsl
-				
-				foreach ( $section->common_xslt as $common_xslt )
-				{
-					array_push($this->arrViewInclude, (string) $common_xslt);
-				}
-				
 				// get additionally defined includes
 				
 				$section_includes = $section->include;
@@ -523,17 +514,6 @@
 		public function getViewType()
 		{
 			return $this->strViewType; 
-		}
-		
-		/*
-		 * Get the paths to a shared xslt file that this section requires
-		 * 
-		 * @return array
-		 */
-		
-		public function getCommonXSL()
-		{
-			return $this->arrViewInclude;
 		}
 		
 		/**
