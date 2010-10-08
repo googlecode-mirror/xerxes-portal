@@ -115,9 +115,9 @@
 			$local_exists = file_exists($local_path);
 
 			// if no distro, need to directly import distro includes.xsl, since we're not
-			// importing a file that will reference it; also need to do this for modules
+			// importing a file that will reference it
 			
-			if ( $distro_exists == false || $distro_xsl_dir != $distro_xsl_dir )
+			if ( $distro_exists == false )
 			{
 				array_push($arrImports, $distro_xsl_dir . "xsl/includes.xsl");
 			}			
