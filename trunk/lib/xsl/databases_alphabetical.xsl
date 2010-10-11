@@ -130,7 +130,7 @@
 						<xsl:text> </xsl:text>
             
 						<xsl:if test="searchable">
-						<img alt="searchable by {$app_name}" title="{$text_databases_az_hint_searchable}" 
+						<img alt="searchable by {$text_app_name}" title="{$text_databases_az_hint_searchable}" 
 							class="iconSearchable miniIcon" src="{$base_url}/images/famfamfam/magnifier.png"/>
 						</xsl:if>
 					</a>

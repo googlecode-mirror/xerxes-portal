@@ -43,7 +43,6 @@
 	<xsl:variable name="xerxes_version" select="//config/xerxes_version" />
 	
 	<xsl:variable name="base_url"		select="//base_url" />
-	<xsl:variable name="app_name"		select="//config/application_name" />
 	<xsl:variable name="rewrite" 		select="//config/rewrite" />
 	<xsl:variable name="search_limit"	select="//config/search_limit" />
 	<xsl:variable name="link_target"	select="//config/link_target" />
@@ -1971,7 +1970,7 @@
 
 	<div style="background-color: #336699; padding: 10px; padding-bottom: 2px;">
 		<a href="{$base_url}" style="color: #fff; font-weight: bold; text-decoration:none">
-			<xsl:value-of select="$app_name" />
+			<xsl:value-of select="$text_app_name" />
 		</a>
 	</div>
 
@@ -2348,7 +2347,7 @@
 		<link rel="search"
 			type="application/opensearchdescription+xml" 
 			href="{$base_url}?base=databases&amp;action=subject-opensearch&amp;subject={$subject_id}"
-			title="{$app_name} {$subject_name} search" />
+			title="{$text_app_name} {$subject_name} search" />
 	</xsl:if>
 	
 	<!-- exclude javascript for ada (because it messes with screen readers) and mobile devices (makes loading faster) -->

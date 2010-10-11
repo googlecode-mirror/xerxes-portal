@@ -25,6 +25,8 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	<xsl:variable name="text_ada_version">For best results, click this link for accessible version</xsl:variable>
 	<xsl:variable name="text_ada_table_for_display">for display only</xsl:variable>
 	
+	<xsl:variable name="text_app_name"	select="//config/application_name" />
+	
 	<xsl:variable name="text_authentication_login_explain"></xsl:variable>
 	<xsl:variable name="text_authentication_login_failed">Sorry, your username or password was incorrect.</xsl:variable>
 	<xsl:variable name="text_authentication_login_pagename">Login</xsl:variable>
@@ -80,7 +82,7 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	<xsl:variable name="text_databases_az_breadcrumb_matching">Databases matching</xsl:variable>
 	<xsl:variable name="text_databases_az_databases">databases</xsl:variable>
 	<xsl:variable name="text_databases_az_hint_info">more information</xsl:variable>
-	<xsl:variable name="text_databases_az_hint_searchable">searchable by <xsl:value-of select="$app_name" /></xsl:variable>
+	<xsl:variable name="text_databases_az_hint_searchable">searchable by <xsl:value-of select="$text_app_name" /></xsl:variable>
 	<xsl:variable name="text_databases_az_letter_separator"> | </xsl:variable>
 	<xsl:variable name="text_databases_az_pagename">Databases A-Z</xsl:variable>
 	<xsl:variable name="text_databases_az_search">List databases matching: </xsl:variable>
