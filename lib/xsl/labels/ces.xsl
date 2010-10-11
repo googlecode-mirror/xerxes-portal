@@ -79,7 +79,7 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	<xsl:variable name="text_databases_az_breadcrumb_matching">Vybrané databáze</xsl:variable>
 	<xsl:variable name="text_databases_az_databases">databází</xsl:variable>
 	<xsl:variable name="text_databases_az_hint_info">další informace</xsl:variable>
-	<xsl:variable name="text_databases_az_hint_searchable">prohledatelné pomocí <xsl:value-of select="$app_name" /></xsl:variable>
+	<xsl:variable name="text_databases_az_hint_searchable">prohledatelné pomocí <xsl:value-of select="$text_app_name" /></xsl:variable>
 	<xsl:variable name="text_databases_az_pagename">Databáze A-Z</xsl:variable>
 	<xsl:variable name="text_databases_az_search">Seznam vybraných databází: </xsl:variable>
 	

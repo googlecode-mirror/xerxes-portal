@@ -22,7 +22,7 @@
 	<xsl:variable name="subject_id" select="/*/category[1]/@normalized" />
 
 	<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
-	<ShortName><xsl:value-of select="$app_name"/>
+	<ShortName><xsl:value-of select="$text_app_name"/>
 	<xsl:text> </xsl:text><xsl:value-of select="$subject_name"/> databases</ShortName>
 	<Description>Search across selected <xsl:value-of select="$subject_name"/> databases.</Description>
 	<Url type="text/html">
