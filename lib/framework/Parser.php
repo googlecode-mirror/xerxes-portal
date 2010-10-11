@@ -39,25 +39,6 @@
 				$xml = $objXml;
 			}
 			
-			// language file
-			
-			$registry = Xerxes_Framework_Registry::getInstance();
-			
-			$language = $registry->getConfig("XERXES_LANGUAGE");
-			
-			// english file is included by default
-			
-			array_push($arrInclude, "xsl/labels/eng.xsl");
-			
-			// if language is set to something other than english
-			// then include that file to override the english labels
-			
-			if ( $language != "" )
-			{
-				array_push($arrInclude, "xsl/labels/$language.xsl");
-			}
-			
-			
 			$objXsl = self::generateBaseXsl($strXsltPath, $arrInclude);
 			
 			// create XSLT Processor
@@ -122,7 +103,7 @@
 			
 			
 
-			### check to make sure files exist
+			### check to make sure at least one of the files exists
 			
 			$distro_exists = file_exists($distro_path);
 			$local_exists = file_exists($local_path);
@@ -160,10 +141,29 @@
 				// importing a file that will reference it
 				
 				array_push($arrImports, $distro_xsl_dir . "xsl/includes.xsl");
-			}				
+			}
+
+			
+			### language file
+			
+			$registry = Xerxes_Framework_Registry::getInstance();
+			
+			$language = $registry->getConfig("XERXES_LANGUAGE");
+			
+			// english file is included by default
+			
+			array_push($arrInclude, "xsl/labels/eng.xsl");
+			
+			// if language is set to something other than english
+			// then include that file to override the english labels
+			
+			if ( $language != "" )
+			{
+				array_push($arrInclude, "xsl/labels/$language.xsl");
+			}			
 			
 			
-			### add a refence for files programatically added (like language file)
+			### add a refence for files programatically added (including the language file above)
 			
 			if ( $arrInclude != null )
 			{
@@ -215,11 +215,11 @@
 				{
 					// path to local copy
 					
-					$local_candidate = $local_xsl_dir . '/' . dirname ( $strXsltRelPath ) . '/' . $extra['href'];
+					$local_candidate = $local_xsl_dir . dirname ( $strXsltRelPath ) . '/' . $extra['href'];
 					
 					// path to distro copy as a check
 					
-					$distro_check = $distro_xsl_dir . '/' . dirname ( $strXsltRelPath ) . '/' . $extra['href'];
+					$distro_check = $distro_xsl_dir . dirname ( $strXsltRelPath ) . '/' . $extra['href'];
 					
 					// make sure local copy exists, and they are both not pointing at the same file 
 					
