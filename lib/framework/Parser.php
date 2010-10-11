@@ -47,10 +47,12 @@
 			
 			// english file is included by default
 			
+			array_push($arrInclude, "xsl/labels/eng.xsl");
+			
 			// if language is set to something other than english
 			// then include that file to override the english labels
 			
-			if ( $language != "eng" )
+			if ( $language != "" )
 			{
 				array_push($arrInclude, "xsl/labels/$language.xsl");
 			}
@@ -228,6 +230,14 @@
 				}
 			}
 			
+			### make sure we've got a reference to the local includes too
+			
+			array_push($arrImports, $local_xsl_dir . "xsl/includes.xsl");
+			
+			// now make sure no dupes
+			
+			$arrImports = array_unique($arrImports);
+			
 			
 			### now the actual mechanics of the import
 			
@@ -236,7 +246,6 @@
 				self::addImportReference ( $generated_xsl, $import, $importInsertionPoint );
 			}
 			
-				
 			// header("Content-type: text/xml"); echo $generated_xsl->saveXML(); exit;
 			
 			return $generated_xsl;
