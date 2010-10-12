@@ -191,11 +191,11 @@
 		<!-- The main content is split into subtemplates to make customiztion of parts easier -->
 		<xsl:call-template name="surround-hd" />
 
-		<xsl:call-template name="surround-bd" />
-
-		<xsl:call-template name="surround-ft">
+		<xsl:call-template name="surround-bd">
 			<xsl:with-param name="sidebar"><xsl:value-of select="$sidebar" /></xsl:with-param>
 		</xsl:call-template>
+
+		<xsl:call-template name="surround-ft" />
 
 	</div>
 	
