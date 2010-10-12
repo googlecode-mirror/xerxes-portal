@@ -2590,7 +2590,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		return $strInput;
 	}
 	
-	private function extractYear($strYear)
+	protected function extractYear($strYear)
 	{
 		$arrYear = array ( );
 		
@@ -2604,7 +2604,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		}
 	}
 	
-	private function escapeXml($string)
+	protected function escapeXml($string)
 	{
 		// NOTE: if you make a change to this function, make a corresponding change 
 		// in the Xerxes_Framework_Parser class, since this one here is a duplicate function 
@@ -2622,7 +2622,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		return $string;
 	}
 	
-	private function toTitleCase($strInput)
+	protected function toTitleCase($strInput)
 	{
 		// NOTE: if you make a change to this function, make a corresponding change 
 		// in the Xerxes_Framework_Parser class, since this one here is a duplicate function 
@@ -2724,7 +2724,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		return $strFinal;
 	}
 	
-	private function ordinal($value)
+	protected function ordinal($value)
 	{
 		if ( is_numeric( $value ) )
 		{
@@ -2757,7 +2757,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		}
 	}
 	
-	private function isFullText($arrLink)
+	protected function isFullText($arrLink)
 	{
 		if ( $arrLink[2] == "pdf" || $arrLink[2] == "html" || $arrLink[2] == "online" )
 		{
