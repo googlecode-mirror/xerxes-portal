@@ -1165,12 +1165,14 @@ abstract class Xerxes_Framework_Search
 						
 		if ( $configToken != null )
 		{
-			$configBX = $this->registry->getConfig("BX_SERVICE_URL", false, "http://recommender.service.exlibrisgroup.com/service");
-			$configSID = $this->registry->getConfig("APPLICATION_SID", false, "calstate.edu:xerxes");
+			$configBX		= $this->registry->getConfig("BX_SERVICE_URL", false, "http://recommender.service.exlibrisgroup.com/service");
+			$configSID		= $this->registry->getConfig("APPLICATION_SID", false, "calstate.edu:xerxes");
+			$configMaxRecords	= $this->registry->getConfig("BX_MAX_RECORDS", false, "10");
+			$configMinRelevance	= $this->registry->getConfig("BX_MIN_RELEVANCE", false, "0");
 				
 			$open_url = $record->getOpenURL(null, $configSID);
 				
-			$url = $configBX . "/recommender/openurl?token=" . $configToken . "&" . $open_url;
+			$url = $configBX . "/recommender/openurl?token=$configToken&$open_url&res_dat=source=global&threshold=$configMinRelevance&maxRecords=$configMaxRecords";
 				
 			$xml = Xerxes_Framework_Parser::request($url);
 
