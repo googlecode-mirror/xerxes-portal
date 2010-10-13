@@ -1867,4 +1867,97 @@ class Xerxes_Framework_Search_Facet
 	public $url;
 }
 
+class Xerxes_Framework_Search_Config extends Xerxes_Framework_Registry
+{
+	private $facets = array();
+	private $fields = array();
+	
+	public function init()
+	{
+		parent::init();
+		
+		// facets
+		
+		$facets = $this->xml->xpath("//config[@name='facet_fields']/facet");
+		
+		if ( $facets !== false )
+		{
+			foreach ( $facets as $facet )
+			{
+				$this->facets[(string) $facet["internal"]] = $facet;
+			}
+		}
+		
+		// fields
+		
+		$fields = $this->xml->xpath("//config[@name='basic_search_fields']/field");
+		
+		if ( $fields !== false )
+		{
+			foreach ( $fields as $field )
+			{
+				$this->fields[(string) $field["internal"]] = (string) $field["public"];
+			}
+		}
+	}
+	
+	public function getFacetPublicName($internal)
+	{
+		if ( array_key_exists($internal, $this->facets) )
+		{
+			$facet = $this->facets[$internal];
+			
+			return (string) $facet["public"]; 
+		}
+		else
+		{
+			return null;
+		}
+	}
+	
+	public function getFacetType($internal)
+	{
+		$facet = $this->getFacet($internal);
+		return (string) $facet["type"];
+	}
+
+	public function getFacet($internal)
+	{
+		if ( array_key_exists($internal, $this->facets) )
+		{
+			return $this->facets[$internal];
+		}
+		else
+		{
+			return null;
+		}
+	}	
+	
+	public function getFacets()
+	{
+		return $this->facets;
+	}
+	
+	public function getFields()
+	{
+		return $this->fields;
+	}
+	
+	public function getFieldAttribute($field,$attribute)
+	{
+		$values = $this->xml->xpath("//config[@name='basic_search_fields']/field[@internal='$field']/@$attribute");
+		
+		if ( count($values) > 0 )
+		{
+			return (string) $values[0];
+		}
+		else
+		{
+			return null;
+		}
+	}
+}
+
+
+
 ?>
