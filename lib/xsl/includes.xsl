@@ -2277,12 +2277,87 @@
 	
 </xsl:template>
 
+<xsl:template name="generic_sidebar">
+
+	<xsl:call-template name="subtabs" />
+	
+	<xsl:if test="//facets/group">
+	
+		<div class="box">
+		
+			<h2>Narrow your results</h2>
+			
+			<xsl:for-each select="//facets/group">
+	
+				<h3 style="margin-top: 1em"><xsl:value-of select="@name" /></h3>
+				
+				<!-- only show first 10, unless there is 12 or fewer, in which case show all 12 -->
+				
+				<ul>
+				<xsl:for-each select="facet[position() &lt;= 10 or count(../facet) &lt;= 12]">
+					<li>
+						<a href="{@url}"><xsl:value-of select="@name" /></a>&#160;(<xsl:value-of select="text()" />)
+					</li>
+				</xsl:for-each>
+				</ul>
+				
+				<xsl:if test="count(facet) &gt; 12">
+					
+					<p id="facet-more-{@id}"  style="padding: 1.3em; padding-top: .7em; display:none"> 
+						[ <a id="facet-more-link-{@id}" href="#" class="facetMoreOption"> 
+							<xsl:value-of select="count(facet[position() &gt; 10])" /> more
+						</a> ] 
+					</p>
+					
+					<ul id="facet-list-{@id}" class="facetListMore">
+						<xsl:for-each select="facet[position() &gt; 10]">
+							<li>
+								<a href="{@url}"><xsl:value-of select="@name" /></a>&#160;(<xsl:value-of select="text()" />) 
+							</li>
+						</xsl:for-each>
+					</ul>
+					
+					<p id="facet-less-{@id}"  style="padding: 1.3em; padding-top: .7em; display:none"> 
+						[ <a id="facet-less-link-{@id}" href="#" class="facetLessOption"> 
+							show less
+						</a> ] 
+					</p>
+
+				</xsl:if>
+	
+			</xsl:for-each>
+		</div>
+	
+	</xsl:if>
+
+</xsl:template>
+
+<xsl:template name="facets_applied">
+
+	<xsl:if test="results/facets_applied">
+		<div class="resultsFacetsApplied">
+			<ul>
+				<xsl:for-each select="results/facets_applied/facet_level">
+					<li>
+						<div class="remove" style="position: absolute; top: 10px; right: 10px;">
+							<a href="{@url}"><img src="images/facet-remove.gif" alt="remove limit" /></a>
+						</div> 
+						Limited to: <xsl:value-of select="text()" /> 
+					</li>
+				</xsl:for-each>
+			</ul>
+		</div>
+	</xsl:if>
+	
+</xsl:template>
+
 
 <!-- 	
 	TEMPLATE: citation
 	record cited in all available citation styles
 	for inclusion on record pages (where xerxes_record is available)
 -->
+
 <xsl:template name="citation">
 	<div id="citation1" class="box">
     
