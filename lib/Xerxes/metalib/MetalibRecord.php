@@ -255,6 +255,7 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 				stristr ( $this->source, "EBSCO_RZH" ) || 
 				( stristr ( $this->source, "WILSON_" ) && $this->datafield("901")->subfield("t")->__toString() == "" ) ||
 				stristr ( $this->source, "CABI" ) || 
+				stristr ( $this->source, "SCOPUS4" ) ||
 				stristr ( $this->source, "GOOGLE_SCH" ) || 
 				stristr ( $this->source, "AMAZON" ) || 
 				stristr ( $this->source, "ABCCLIO" ) || 
