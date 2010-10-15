@@ -2206,7 +2206,7 @@
 
 <xsl:template name="subtabs">
 
-	<xsl:if test="config/tabs">
+	<xsl:if test="config/tabs/sub[@parent = //request/base]">
 	
 		<div id="subtab" class="box">
 		
