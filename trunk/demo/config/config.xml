@@ -56,9 +56,15 @@
 		
 		<config name="xerxes_language" pass="true">eng</config>
 		
-		<!-- Xerxes locale. Currently used to display localized language names,
-		     i.e. if you set this to 'de_DE.UTF-8', document language names will be displayed in German
-		     if left empty, default POSIX locale 'C' will be used -->
+		<!-- Xerxes locale. Currently used to:
+			* display localized language names;
+				i.e. if you set this to 'de_DE.UTF-8', document language names will be displayed in German
+				if left empty, default POSIX locale 'C' will be used
+			* control transliteration of category names during the 'populate databases' action;
+				This controls how non-ASCII characters in Metalib category names are converted to ASCII
+				in their Xerxes normalized titles (e.g. in URL).
+				See details here: http://www.php.net/manual/en/function.iconv.php
+		-->
 		
 		<config name="xerxes_locale"></config>
 		

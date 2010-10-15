@@ -42,6 +42,7 @@
 			$this->configIPAddress = $this->registry->getConfig("IP_ADDRESS", true);
 			$this->configInstitute = $this->registry->getConfig("METALIB_INSTITUTE", true);
 			$this->configChunk = $this->registry->getConfig("CHUNK_KB_PULL", false, false);
+			$this->locale = $this->registry->getConfig("XERXES_LOCALE", false, "C");
 			
 			$configMetalibAddress = $this->registry->getConfig("METALIB_ADDRESS", true);
 			$configMetalibUsername = $this->registry->getConfig("METALIB_USERNAME", true);
@@ -108,12 +109,17 @@
 			
 			echo "   Fetching categories and assigning databases . . . ";
 				
+				$oldlocale = setlocale( LC_CTYPE, 0 );
+				setlocale( LC_CTYPE, $this->locale ); // this influences the iconv() call with 'ASCII//TRANSLIT' target
+				
 				$arrSubjects = $this->subjects($arrDatabases);
 				
 				foreach( $arrSubjects as $objCategory )
 				{
 					$objData->addCategory($objCategory);
 				}
+				
+				setlocale( LC_CTYPE, $oldlocale );
 			
 			echo "done\n";
 			
