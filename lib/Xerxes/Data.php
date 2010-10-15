@@ -68,7 +68,7 @@ class Xerxes_Data_Category extends Xerxes_Framework_DataValue
 	 */
 	public static function normalize($strSubject)
 	{
-		$strNormalized = iconv( 'UTF-8', 'ASCII//TRANSLIT', $strSubject );
+		$strNormalized = iconv( 'UTF-8', 'ASCII//TRANSLIT', $strSubject ); // this is influenced by the setlocale() call with category LC_CTYPE; see PopulateDatabases.php
 		$strNormalized = Xerxes_Framework_Parser::strtolower( $strNormalized );
 		
 		$strNormalized = str_replace( "&amp;", "", $strNormalized );
