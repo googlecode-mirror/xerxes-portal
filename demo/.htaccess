@@ -38,6 +38,9 @@ RewriteRule ^databases/([A-Z]{1}[a-zA-Z]{1,})$ index.php?base=databases&action=o
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule images/(.*).gif images/$1.png
 
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule images/(.*).png images/$1.gif
+
 
 ###############
 # pretty urls #
