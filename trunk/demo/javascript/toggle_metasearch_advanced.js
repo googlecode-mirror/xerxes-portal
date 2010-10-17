@@ -74,7 +74,7 @@
 		myForm.down(".field2").enable();
 		myForm.down(".searchBox_advanced_pair").show();
 		
-		myForm.down(".searchBox_toggle").update("Fewer options");
+		myForm.down(".searchBox_toggle").update(jsDisplayConstants['text_searchbox_options_fewer']);
 		
 
     
@@ -108,6 +108,6 @@
 		myForm.down(".query2").disable();
 		myForm.down(".field2").disable();		
 		
-		myForm.down(".searchBox_toggle").update("More options");
+		myForm.down(".searchBox_toggle").update(jsDisplayConstants['text_searchbox_options_more']);
 	}
 
