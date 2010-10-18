@@ -506,7 +506,7 @@
 						<xsl:value-of select="//worldcat_groups/group[@id = $source]/lookup/ill_text" />
 					</xsl:when>
 					<xsl:otherwise>
-						<img src="images/sfx.png" alt="" border="0" class="miniIcon linkResolverLink "/>
+						<img src="{$image_sfx}" alt="" border="0" class="miniIcon linkResolverLink "/>
 						<xsl:text> </xsl:text>
 						<xsl:text> Check for availability </xsl:text>
 					</xsl:otherwise>
