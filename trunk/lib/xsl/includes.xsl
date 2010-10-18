@@ -108,6 +108,7 @@
 	</xsl:variable>
 	
 	<!-- which description in order is our xerxes_language? -->
+	
 	<xsl:variable name="xerxes_language_position">
 		<xsl:call-template name="find-item-in-list">
 			<xsl:with-param name="list">
@@ -130,8 +131,12 @@
 	</xsl:variable>
 	
 	<xsl:variable name="base_include" select="$base_url" />
-		
+	
+	<!-- images -->
+	
 	<xsl:variable name="app_mini_icon_url"><xsl:value-of select="$base_url" />/images/famfamfam/page_find.png</xsl:variable>
+	<xsl:variable name="image_sfx"><xsl:value-of select="$base_url" />/images/sfx.gif</xsl:variable>
+	
 	
 	<xsl:variable name="global_advanced_mode" 
 		select="(//request/metasearch_input_mode = 'advanced') or 
@@ -1809,7 +1814,7 @@
 		
 		<xsl:when test="$link_resolver_allowed">
 				<a href="{../url_open}" target="{$link_target}" class="recordAction linkResoverLink">
-					<img src="{$base_url}/images/sfx.png" alt="" class="miniIcon linkResolverLink "/>
+					<img src="{$image_sfx}" alt="" class="miniIcon linkResolverLink "/>
 					<xsl:text> </xsl:text>
 					<xsl:copy-of select="$text_link_resolver_check" />
 				</a>

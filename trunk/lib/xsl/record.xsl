@@ -298,7 +298,7 @@
 		
 		<xsl:if test="$link_resolver_allowed">
 			<a href="{../url_open}" class="recordAction linkResolverLink"	target="{$link_target}" >
-				<img src="{$base_url}/images/sfx.png" alt="" class="miniIcon"/>
+				<img src="{$image_sfx}" alt="" class="miniIcon"/>
 				<xsl:text> </xsl:text>
 				<xsl:copy-of select="$text_link_resolver_check" />
 			</a>
