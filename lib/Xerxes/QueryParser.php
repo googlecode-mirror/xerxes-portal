@@ -266,7 +266,16 @@
 						array_push($arrFinal, $arrWords[$x]);
 					}
 				}
-			}		
+			}
+
+			// single quoted phrase
+			
+			if ( count($arrFinal) == 0 && $strQuote != "")
+			{
+				array_push($arrFinal, $strQuote);
+			}
+			
+			// small terms
 			
 			if ( count($arrSmall) > 0 )
 			{
