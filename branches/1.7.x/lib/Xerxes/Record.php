@@ -171,7 +171,8 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		{
 			// strip any doi: prefix
 			
-			$doi = str_replace( "doi:", "", $doi );
+			$doi = str_ireplace( "doi:", "", $doi );
+			$doi = str_ireplace( "doi", "", $doi );
 			
 			// got it!
 			
