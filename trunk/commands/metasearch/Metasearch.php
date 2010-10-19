@@ -167,13 +167,12 @@ abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
 				
 				if ( $strTotalHits == "888888888" )
 				{
-					$strTotalHits = 1;
-				}		
-				
-				// just making doubly sure in case there is text here
-				
-				if ( ! preg_match("/[a-zA-Z]{1}/", $strTotalHits) )
+					$base_info->no_of_documents = $strTotalHits;
+				}
+				elseif ( ! preg_match("/[a-zA-Z]{1}/", $strTotalHits) )
 				{
+					// just making doubly sure in case there is text here
+					
 					$base_info->no_of_documents = number_format( (int) $strTotalHits, 0, null, $strThousSep);
 				}
 				
