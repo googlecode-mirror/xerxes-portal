@@ -422,7 +422,10 @@ class Xerxes_Framework_Request
 	
 	public function setProperty($key, $value, $bolArray = false, $override = false)
 	{
-		$value = trim($value);
+		if ( ! is_array($value) )
+		{
+			$value = trim($value);
+		}
 		
 		if ( array_key_exists( $key, $this->arrParams ) && $override == false )
 		{
