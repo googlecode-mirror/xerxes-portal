@@ -245,8 +245,6 @@
 <xsl:template name="record-action-fulltext">
 	<div id="umlaut_fulltext" class="umlaut_content" style="display:none;"></div>
 	
-	<xsl:variable name="database_code" select="metalib_id"/>
-	
 	<xsl:if test="full_text_bool != ''">
 		<xsl:call-template name="full_text_links">
 			<xsl:with-param name="class">recordFullTextOption fullTextLink</xsl:with-param>
@@ -261,7 +259,11 @@
 </xsl:template>
 
 <xsl:template name="record-action-fulltext-catalog">
+
+	<xsl:variable name="database_code" select="metalib_id"/>
+	
 	<!-- original_record and holdings links, if appropriate -->
+	
 	<xsl:if test="links/link[@type='original_record'] and (//config/show_all_original_record_links = 'true' or //config/original_record_links/database[@metalib_id = $database_code])">
 			<xsl:call-template name="record_link">
 				<xsl:with-param name="type">original_record</xsl:with-param>
