@@ -33,13 +33,6 @@
 <xsl:template name="record">
 	<div id="record">
 		<xsl:for-each select="/*/results/records/record/xerxes_record">
-			<xsl:variable name="result_set" 	select="result_set" />
-			<xsl:variable name="record_number" 	select="record_number" />
-			<xsl:variable name="group" 		select="//request/group" />
-			<xsl:variable name="issn" 		select="standard_numbers/issn" />
-			<xsl:variable name="record_id">
-				<xsl:value-of select="$result_set" />:<xsl:value-of select="$record_number" />
-			</xsl:variable>
 			
 			<!-- Title -->
 			<h1><xsl:call-template name="page_name" /></h1>
@@ -325,6 +318,9 @@
 <xsl:template name="record-action-save">
 	<xsl:variable name="result_set" 	select="result_set" />
 	<xsl:variable name="record_number" 	select="record_number" />
+	<xsl:variable name="record_id">
+		<xsl:value-of select="$result_set" />:<xsl:value-of select="$record_number" />
+	</xsl:variable>
 
 	<xsl:if test="not(/folder)">
 		<div class="saveRecord recordAction" id="saveRecordOption_{$result_set}_{$record_number}">
