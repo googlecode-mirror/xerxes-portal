@@ -23,10 +23,10 @@ abstract class Xerxes_Framework_Search
 	protected $query_object_type = "Xerxes_Framework_Search_Query";
 	protected $record_object_type = "Xerxes_Record";
 	
-	protected $should_mark_refereed = false;
-	protected $should_mark_fulltext = false;
-	protected $should_get_recommendations = false;
-	protected $should_get_holdings = false;
+	protected $should_mark_refereed = false; // will add peer reviewed indicator to results
+	protected $should_mark_fulltext = false; // will add full-text indicator to results
+	protected $should_get_recommendations = false; // will add bx recommendations to full record
+	protected $should_get_holdings = false; // will add local catalog holdigns to records
 	
 	protected $max = 10; // maximum records per page
 	protected $sort_default; // default sort
@@ -35,7 +35,8 @@ abstract class Xerxes_Framework_Search
 	
 	protected $search_fields_regex = '^query[0-9]{0,1}$|^field[0-9]{0,1}$|^boolean[0-9]{0,1}$';
 	protected $limit_fields_regex = 'facet.*';
-	protected $include_original;
+	
+	protected $include_original; // add original xml to response
 
 	protected $results = array(); // search results
 	protected $facets; // facets
