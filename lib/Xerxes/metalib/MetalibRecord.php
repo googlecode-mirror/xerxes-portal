@@ -470,6 +470,26 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 		{
 			$this->format = "Patent";
 		}
+		elseif ( strstr($this->source, "DART") )
+		{
+			$this->format = "Thesis";
+		}
+		elseif ( strstr($this->source, "DDI") )
+		{
+			$this->format = "Thesis";
+		}
+		elseif ( strstr($this->source, "ETHOS") )
+		{
+			$this->format = "Thesis";
+		}
+		elseif ( strstr($this->source, "DIVA_EXTR") )
+		{
+			$this->format = "Thesis";
+		}
+		elseif ( strstr($this->source, "UNION_NDLTD") )
+		{
+			$this->format = "Thesis";
+		}
 		
 		// JSTOR book review correction: title is meaningless, but subjects
 		// contain the title of the books, so we'll swap them to the title here
