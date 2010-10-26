@@ -805,5 +805,58 @@
 			}
 		}
 	}
+
+	class Xerxes_Framework_Parser_XML extends DOMElement 
+	{
+		private $node;
+		
+		public function __construct(DOMElement $node)
+		{
+			$this->node = $node;
+		}
+		
+		protected function getElement($name)
+		{
+			$elements = $this->node->getElementsByTagName($name);
+			
+			if ( count($elements) > 0 )
+			{
+				$node = $elements->item(0);
+				return new Xerxes_Framework_Parser_XML($node);
+			}
+			else
+			{
+				return null;
+			}
+		}
+		
+		protected function getValue($name)
+		{
+			$element = $this->getElement($name);
+			
+			if ( $element != null )
+			{
+				return $element->nodeValue;
+			}
+			else
+			{
+				return null;
+			}
+		}
+		
+		protected function getValues($name)
+		{
+			$values = array();
+			
+			$elements = $this->node->getElementsByTagName($name);
+			
+			foreach ( $elements as $node )
+			{
+				array_push($values, $node->nodeValue);
+			}
+			
+			return $values;
+		}		
+	}
 	
 ?>

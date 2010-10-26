@@ -23,12 +23,16 @@
 
 <xsl:template match="/*">
 
-	<xsl:call-template name="holdings_lookup">
-		<xsl:with-param name="record_id"><xsl:value-of select="request/id" /></xsl:with-param>
-		<xsl:with-param name="isbn"><xsl:value-of select="request/isbn" /></xsl:with-param>
-		<xsl:with-param name="oclc"><xsl:value-of select="request/oclc" /></xsl:with-param>	
-		<xsl:with-param name="type"><xsl:value-of select="request/display" /></xsl:with-param>
-	</xsl:call-template>
+	<xsl:for-each select="//xerxes_record">
+
+		<xsl:call-template name="availability_lookup">
+			<xsl:with-param name="record_id"><xsl:value-of select="//request/id" /></xsl:with-param>
+			<xsl:with-param name="isbn"><xsl:value-of select="//request/isbn" /></xsl:with-param>
+			<xsl:with-param name="oclc"><xsl:value-of select="//request/oclc" /></xsl:with-param>	
+			<xsl:with-param name="type"><xsl:value-of select="//request/display" /></xsl:with-param>
+		</xsl:call-template>
+		
+	</xsl:for-each>
 		
 </xsl:template>
 

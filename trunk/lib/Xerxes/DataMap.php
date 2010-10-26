@@ -966,11 +966,17 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		$this->beginTransaction();
 		
 		$arrParams = array ( );
-		$arrParams[":grouping"] = $objCache->grouping;
+		$arrParams[":source"] = $objCache->source;
 		$arrParams[":id"] = $objCache->id;
 		$arrParams[":timestamp"] = $objCache->timestamp;
 		
-		$strSQL = "DELETE FROM xerxes_cache WHERE grouping = :grouping AND id = :id and timestamp < :timestamp";
+		$strSQL = "DELETE FROM xerxes_cache WHERE source = :source AND id = :id and timestamp < :timestamp";
+		
+		if ( $objCache->grouping != "")
+		{
+			$arrParams[":grouping"] = $objCache->grouping;
+			$strSQL .= " AND grouping = :grouping";
+		}
 		
 		$this->delete( $strSQL, $arrParams );
 		
@@ -979,6 +985,76 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		$this->doSimpleInsert( "xerxes_cache", $objCache );
 		
 		$this->commit();
+	}
+	
+	public function getCache($source, $id, $group = null, $expiry = null)
+	{
+		$arrParams = array();
+		$arrCache = array ();
+		
+		
+		if ( is_array($id) )
+		{
+			if ( count($id) == 0 )
+			{
+				return $arrCache;
+			}
+		}
+		elseif ( $id == "" )
+		{
+			return $arrCache;
+		}
+		
+		$arrParams[":source"] = $source;
+		
+		$strSQL = "SELECT * FROM xerxes_cache WHERE source = :source";
+		
+		if ( $group != null )
+		{
+			$strSQL .= " AND grouping = :grouping";
+			$arrParams[":grouping"] = $group;
+		}
+
+		if ( $expiry != null )
+		{
+			$strSQL .= " AND expiry <= :expiry";
+			$arrParams[":expiry"] = $expiry;
+		}		
+		
+		if ( is_array($id) )
+		{
+			$strSQL .= " AND (";
+			
+			for ( $x = 0 ; $x < count( $id ) ; $x ++ )
+			{
+				if ( $x > 0 )
+				{
+					$strSQL .= " OR";
+				}
+				
+				$strSQL .= " id = :id$x ";
+				$arrParams[":id$x"] = $id[$x];
+			}
+			
+			$strSQL .= ")";
+		}
+		else
+		{
+			$strSQL .= " AND id = :id";
+			$arrParams[":id"] = $id;
+		}
+		
+		$arrResults = $this->select( $strSQL, $arrParams );
+		
+		foreach ( $arrResults as $arrResult )
+		{
+			$objCache = new Xerxes_Data_Cache();
+			$objCache->load( $arrResult );
+			
+			array_push( $arrCache, $objCache );
+		}		
+		
+		return $arrCache;
 	}
 	
 	/**
@@ -991,8 +1067,8 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 	
 	public function getCacheGroup($group, $expiry = null)
 	{
-		$arrCache = array ( );
-		$arrParams = array ( );
+		$arrCache = array();
+		$arrParams = array();
 		$arrParams[":group"] = $group;
 		
 		$strSQL = "SELECT * FROM xerxes_cache WHERE grouping = :group ";

@@ -36,7 +36,7 @@ abstract class Xerxes_Framework_Search
 	protected $search_fields_regex = '^query[0-9]{0,1}$|^field[0-9]{0,1}$|^boolean[0-9]{0,1}$';
 	protected $limit_fields_regex = 'facet.*';
 	
-	protected $include_original; // add original xml to response
+	protected $include_original = false; // add original xml to response
 
 	protected $results = array(); // search results
 	protected $facets; // facets
@@ -98,8 +98,18 @@ abstract class Xerxes_Framework_Search
 		$this->link_resolver = $this->registry->getConfig("LINK_RESOLVER_ADDRESS", true);
 		$this->sid = $this->registry->getConfig("APPLICATION_SID", false, "calstate.edu:xerxes");
 		$this->max = $this->registry->getConfig("RECORDS_PER_PAGE", false, 10);
-		$this->include_original = $this->registry->getConfig("INCLUDE_ORIGINAL_XML", false, false);
-		$this->max = $this->registry->getConfig("MAX_RECORDS_PER_PAGE", false, $this->max);	
+		$this->max = $this->registry->getConfig("MAX_RECORDS_PER_PAGE", false, $this->max);
+
+		// include the original xml from the search engine?
+		
+		$include_original_main = $this->registry->getConfig("INCLUDE_ORIGINAL_XML", false, false);
+		$include_original_module = $this->config->getConfig("INCLUDE_ORIGINAL_XML", false, false);
+		
+		if ( $include_original_main == true || $include_original_module == true )
+		{
+			$this->include_original = true;
+		}
+		
 		
 		// used in a couple of place
 
@@ -305,7 +315,11 @@ abstract class Xerxes_Framework_Search
 		
 		if ( $this->should_get_holdings == true )
 		{
-			$this->getHoldingsInject(false);
+			$items = $this->getHoldings($this->extractRecordIDs());
+
+			$record = $this->results[0];
+			$record->addItems($items);
+			$this->results[0] = $record;
 		}
 		
 		// done
@@ -319,7 +333,6 @@ abstract class Xerxes_Framework_Search
 
 	public function lookup()
 	{
-		$source = $this->request->getProperty("source");
 		$id = $this->request->getProperty("id");
 		$isbn = $this->request->getProperty("isbn");
 		$oclc = $this->request->getProperty("oclc");
@@ -328,20 +341,26 @@ abstract class Xerxes_Framework_Search
 		
 		if ( $id != null )
 		{
-			array_push($standard_numbers, "ID:$id");
+			array_push($standard_numbers, $id);
 		}
-		if ( $isbn != null )
+		else
 		{
-			array_push($standard_numbers, "ISBN:$isbn");
+			if ( $isbn != null )
+			{
+				array_push($standard_numbers, "ISBN:$isbn");
+			}
+			if ( $oclc != null )
+			{
+				array_push($standard_numbers, "OCLC:$oclc");
+			}
 		}
-		if ( $oclc != null )
-		{
-			array_push($standard_numbers, "OCLC:$oclc");
-		}		
 		
-		$xml = $this->getHoldings($source, $standard_numbers);
+		$items = $this->getHoldings($standard_numbers);
 		
-		$this->request->addDocument($xml);
+		$xerxes_record = new Xerxes_Record();
+		$xerxes_record->addItems($items);
+		
+		$this->request->addDocument($xerxes_record->toXML());
 	}	
 	
 	/**
@@ -950,7 +969,24 @@ abstract class Xerxes_Framework_Search
 		$search = $this->extractSearchParams();
 		
 		return array_merge($search, $limits);
-	}		
+	}
+	
+	/**
+	 * The database source ID
+	 * @return string
+	 */
+	
+	protected function getSource()
+	{
+		$strSource = $this->request->getProperty("source");
+		
+		if ( $strSource == "" )
+		{
+			$strSource = $this->id;
+		}
+		
+		return $strSource;
+	}
 	
 	
 	########################
@@ -1393,6 +1429,13 @@ abstract class Xerxes_Framework_Search
 		
 	}
 	
+	/**
+	 * Convert date facets based on Lucene types into decade groupings
+	 * 
+	 * @param array $facet_array	array of facets
+	 * @param int $bottom_decade	default is 1900 
+	 * @return array				associative array of facets and display info
+	 */
 	
 	protected function luceneDateToDecade($facet_array, $bottom_decade = 1900)
 	{
@@ -1604,70 +1647,78 @@ abstract class Xerxes_Framework_Search
 	###################
 	
 
-	// this is pretty hacky until the new dlf-ils group come up 
-	// with something that we can use
-	
-	protected function getHoldings($strSource, $arrIDs, $bolCache = false)
+	protected function getHoldings($arrIDs)
 	{
+		$items = new Xerxes_Record_Items();
+		
+		$strSource = $this->getSource();
+		
 		$url = $this->getHoldingsURL($strSource);
 		
-		$objXml = new DOMDocument();
+		// no holdings source defined or somehow id's are blank
 		
-		if ( $url == null )
+		if ( $url == null || count($arrIDs) == 0 )
 		{
-			$objXml->loadXML("<no_holdings />");
-			return $objXml;
+			return $items;
 		}
 		
-		if ( $url != null && count($arrIDs) > 0 )
+		// get the data
+		
+		$id = implode(" ", $arrIDs);
+		$url .= "?action=status&id=$id";
+		$data = Xerxes_Framework_Parser::request($url);
+		
+		// echo $url; exit;
+		
+		// no data, what's up with that?
+		
+		if ( $data == "" )
 		{
-			$id = implode(",", $arrIDs);
-			
-			if ( $bolCache == true)
+			throw new Exception("could not connect to server for availability");
+		}
+		
+		// array of json objects
+		
+		$arrResults = json_decode($data);
+		
+		// parse the response
+		
+		if ( is_array($arrResults) )
+		{
+			if ( count($arrResults) > 0 )
 			{
-				$url .= "?action=cached&id=$id";
+				// now just slot them into our item object
 				
-				$xml = Xerxes_Framework_Parser::request($url);
-				
-				if ( $xml != "" )
+				foreach ( $arrResults as $holding )
 				{
-					$objXml->loadXML($xml);
-				}
-				else
-				{
-					return $objXml;
-				}
-			}
-			else
-			{
-				$objXml->loadXML("<cached />");
-				
-				$objObject = $objXml->createElement("object");
-				$objObject->setAttribute("id", $id);
-				$objXml->documentElement->appendChild($objObject);			
-				
-				$url .= "?action=records&id=$id&sameRecord=true";
-				
-				$xml = Xerxes_Framework_Parser::request($url);
-				
-				if ( $xml != "" )
-				{
-					$objRecord = new DOMDocument();
-					$objRecord->recover = true;
-					$objRecord->loadXML($xml);
+					$item = new Xerxes_Record_Item();
 					
-					if ( $objRecord->documentElement instanceof DOMNode)
+					foreach ( $holding as $property => $value )
 					{
-						$objImport = $objXml->importNode($objRecord->documentElement, true);		
-						$objObject->appendChild($objImport);
+						$item->$property = $value;
 					}
+					
+					$items->addItem($item);
 				}
 			}
-			
-			$objXml->documentElement->setAttribute("url", Xerxes_Framework_Parser::escapeXml($url));
 		}
 		
-		return $objXml;
+		// cache it for the future
+				
+		// expiry
+		
+		$expiry = $this->config->getConfig("HOLDINGS_CACHE_EXPIRY", false, 2 * 60);
+		$expiry = time() + ($expiry * 60); 
+		
+		$cache = new Xerxes_Data_Cache();
+		$cache->source = $this->getSource();
+		$cache->id = $id;
+		$cache->expiry = $expiry; // two hours
+		$cache->data = serialize($items);
+				
+		$this->data_map->setCache($cache);		
+		
+		return $items;
 	}
 	
 	protected function getHoldingsURL($id)
@@ -1675,37 +1726,45 @@ abstract class Xerxes_Framework_Search
 		return null;
 	}
 	
-	protected function getHoldingsInject($bolCacheOnly = true)
+	/**
+	 * Look for any holdings data in the cache and add it to results
+	 */
+	
+	protected function getHoldingsInject()
 	{
-		$source = $this->request->getProperty("source");
-		if ( $source == null ) $source = "local";
+		$strSource = $this->getSource();
 		
-		$isbns = $this->extractISBNs();
-		$oclcs = $this->extractOCLCNumbers();
+		// get the record ids for all search results
+
 		$ids = $this->extractRecordIDs();
 		
-		$standard_numbers = array();
+		// we do this all in one database query for speed
+				
+		$arrResults = $this->data_map->getCache($strSource,$ids);
 		
-		foreach ( $ids as $id )
+		foreach ( $arrResults as $cache )
 		{
-			array_push($standard_numbers, "ID:$id");
-		}
-		
-		foreach ( $isbns as $isbn )
-		{
-			array_push($standard_numbers, "ISBN:$isbn");
-		}
+			$item = unserialize($cache->data);
 			
-		foreach ( $oclcs as $oclc )
-		{
-			array_push($standard_numbers, "OCLC:$oclc");
-		}
-		
-		// get any data we found in the cache for these records
-							
-		$objXml = $this->getHoldings($source, $standard_numbers, $bolCacheOnly);
+			if ( ! $item instanceof Xerxes_Record_Items )
+			{
+				throw new Exception("cached item (" . $cache->id. ") is not an instance of Xerxes_Record_Items");
+			}
 			
-		$this->request->addDocument($objXml);
+			// now associate this item with its corresponding record
+		
+			for( $x = 0; $x < count($this->results); $x++ )
+			{
+				$xerxes_record = $this->results[$x];
+				
+				if ( $xerxes_record->getRecordID() == $cache->id )
+				{
+					$xerxes_record->addItems($item);
+				}
+					
+				$this->results[$x] = $xerxes_record;
+			}
+		}
 	}
 }
 

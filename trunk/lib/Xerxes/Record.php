@@ -88,6 +88,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 	protected $alt_script_name = ""; // the name of the alternate character-script; we'll just assume one for now, I guess
 	
 	protected $items = array(); // item records attached
+	protected $no_items = false; // wheter the item has no items
 	
 	protected $serialized_xml; // for serializing the object
 	
@@ -1626,7 +1627,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 			foreach ( $this->items as $item )
 			{
 				$import = $objXml->importNode($item->toXML()->documentElement, true);
-				$objItems->documentElement->appendChild($import);
+				$objItems->appendChild($import);
 			}
 		}
 		
@@ -1645,6 +1646,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 				$key == "toc" ||
 				$key == "links" || 
 				$key == "journal_title" ||
+				$key == "items" ||
 				
 				// these are utility variables, not to be output
 				
@@ -3198,7 +3200,25 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		return $this->record_id;
 	}
 	
-	public function setItem(Xerxes_Record_Item $item )
+	public function setNoItems($bool)
+	{
+		$this->no_items = $bool;
+	}
+	
+	public function addItems(Xerxes_Record_Items $items )
+	{
+		if ( $items->length() == 0 )
+		{
+			$this->setNoItems(true);
+		}
+		
+		foreach ( $items->getItems() as $item )
+		{
+			$this->addItem($item);
+		}
+	}
+	
+	public function addItem(Xerxes_Record_Item $item )
 	{
 		array_push($this->items, $item);
 	}
@@ -3237,15 +3257,36 @@ class Xerxes_Record_Author
 	}
 }
 
+class Xerxes_Record_Items
+{
+	private $items = array();
+	
+	public function addItem($item)
+	{
+		array_push($this->items, $item);
+	}
+	
+	public function getItems()
+	{
+		return $this->items;
+	}
+	
+	public function length()
+	{
+		return count($this->items);
+	}
+}
+
 class Xerxes_Record_Item
 {
 	public $bibliographicIdentifer; // string
 	public $itemIdentifier; // string
+	public $available; // int
 	public $dateAvailable; // DateTime
 	public $status; // string
 	public $institution; // string
 	public $location; // string
-	public $call_number; // string
+	public $callnumber; // string
 	public $volume; // string
 	public $link; // string
 	public $circulating; // bool
@@ -3260,6 +3301,11 @@ class Xerxes_Record_Item
 		
 		foreach ( $this as $key => $value )
 		{
+			if ( $value == "")
+			{
+				continue;
+			}
+			
 			$element = $xml->createElement($key, Xerxes_Framework_Parser::escapeXml($value));
 			$xml->documentElement->appendChild($element);
 		}
