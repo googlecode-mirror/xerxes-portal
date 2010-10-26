@@ -208,7 +208,7 @@
 			
 			<div id="recordFullText" class="raisedBox recordActions">
 
-				<xsl:call-template name="holdings_lookup">
+				<xsl:call-template name="availability_lookup">
 					<xsl:with-param name="record_id">
 						<xsl:value-of select="$record_id" />
 					</xsl:with-param>
