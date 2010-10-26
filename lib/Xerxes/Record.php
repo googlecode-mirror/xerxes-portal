@@ -2478,7 +2478,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		
 		if ($author instanceof Xerxes_Marc_DataField || $author instanceof Xerxes_Marc_DataFieldList)
 		{
-			$strAuthor = $author->subfield($subfields);
+			$strAuthor = $author->subfield($subfields)->__toString();
 			$strAuthorDisplay = $author->__toString();
 		}
 		else
