@@ -131,10 +131,9 @@
 	<ul class="worldcatAvailabilitySummary">
 	
 	<xsl:choose>
-		<xsl:when test="$totalCopies = '0'">
-			<xsl:if test="//request/source = 'local'">
-				<li class="worldcatAvailabilityMissing"><img src="images/book-out.png" alt="" />&#160; No Copies Available</li>
-			</xsl:if>
+		<xsl:when test="items/item and $printAvailable = '0'">
+		
+			<li class="worldcatAvailabilityMissing"><img src="images/book-out.png" alt="" />&#160; No Copies Available</li>
 
 			<xsl:call-template name="ill_option">
 				<xsl:with-param name="element">li</xsl:with-param>
@@ -142,18 +141,12 @@
 			</xsl:call-template>
 
 		</xsl:when>
-		<xsl:otherwise>
-
-			<xsl:choose>
-				<xsl:when test="$printAvailable = '1'">
-					<li><img src="images/book.png" alt="" />&#160; 1 copy available</li>
-				</xsl:when>
-				<xsl:when test="$printAvailable &gt; '1'">
-					<li><img src="images/book.png" alt="" />&#160; <xsl:value-of select="$printAvailable" /> copies available</li>
-				</xsl:when>
-			</xsl:choose>
-			
-		</xsl:otherwise>
+		<xsl:when test="$printAvailable = '1'">
+			<li><img src="images/book.png" alt="" />&#160; 1 copy available</li>
+		</xsl:when>
+		<xsl:when test="$printAvailable &gt; '1'">
+			<li><img src="images/book.png" alt="" />&#160; <xsl:value-of select="$printAvailable" /> copies available</li>
+		</xsl:when>			
 	</xsl:choose>
 	
 	</ul>
