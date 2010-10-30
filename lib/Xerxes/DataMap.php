@@ -958,7 +958,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 
 		if ( $objCache->expiry == null )
 		{
-			$objCache->expiry = 6 * 60 * 60;
+			$objCache->expiry = time() + (6 * 60 * 60);
 		}
 		
 		// delete any previously stored value under this group + id
