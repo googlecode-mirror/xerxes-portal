@@ -28,13 +28,14 @@ class Xerxes_Command_MetasearchResults extends Xerxes_Command_Metasearch
 		
 		// parameters from request
 
-		$strGroup = $this->request->getProperty( "group" );
+		$id = $this->request->getProperty( "group" );
+		$strGroup = $this->getGroupNumber();
 		$strResultSet = $this->request->getProperty( "resultSet" );
 		$iStartRecord = ( int ) $this->request->getProperty( "startRecord" );
 		
 		// access control
 		
-		$objSearchXml = $this->getCache( $strGroup, "search", "DOMDocument" );
+		$objSearchXml = $this->getCache( $id , "search", "DOMDocument" );
 		Xerxes_Helper::checkDbListSearchableByUser( $objSearchXml, $this->request, $this->registry );
 		
 		// marc fields to return from metalib; we specify these here in order to keep
@@ -70,7 +71,7 @@ class Xerxes_Command_MetasearchResults extends Xerxes_Command_Metasearch
 		
 		// extract total hits from this result set
 
-		$objXml = $this->getCache( $strGroup, "group", "SimpleXML" );
+		$objXml = $this->getCache( $id , "group", "SimpleXML" );
 		
 		foreach ( $objXml->xpath( "//base_info" ) as $base_info )
 		{
@@ -102,8 +103,8 @@ class Xerxes_Command_MetasearchResults extends Xerxes_Command_Metasearch
 		$objXml = new DOMDocument( );
 		
 		$objXml = $this->documentElement();
-		$objXml = $this->addSearchInfo( $objXml, $strGroup );
-		$objXml = $this->addStatus( $objXml, $strGroup, $strResultSet, $iTotalHits );
+		$objXml = $this->addSearchInfo( $objXml, $id );
+		$objXml = $this->addStatus( $objXml, $id, $strResultSet, $iTotalHits );
 		$objXml = $this->addProgress( $objXml, $this->request->getSession( "refresh-$strGroup" ) );
 		
 		// if this is a search-and-link resource add the original xml that contains the link
@@ -123,8 +124,8 @@ class Xerxes_Command_MetasearchResults extends Xerxes_Command_Metasearch
 			{
 				if ( $objSearchType->nodeValue == "POST")
 				{
-					$objSearchXml = $this->getCache( $strGroup, "search", "SimpleXML" );
-					$objGroupXml = $this->getCache( $strGroup, "group", "SimpleXML" );
+					$objSearchXml = $this->getCache( $id , "search", "SimpleXML" );
+					$objGroupXml = $this->getCache( $id , "group", "SimpleXML" );
 					
 					$databases_id = $objGroupXml->xpath("//base_info[set_number = '$strResultSet']/base_001");
 					
@@ -203,7 +204,7 @@ class Xerxes_Command_MetasearchResults extends Xerxes_Command_Metasearch
 			$objXml = $this->addRecords( $objXml, $arrResults, $configIncludeMarcRecord );
 		}
 		
-		$objXml = $this->addFacets( $objXml, $strGroup, $configFacets );
+		$objXml = $this->addFacets( $objXml, $id, $configFacets );
 		
 		$this->request->addDocument( $objXml );
 		
