@@ -30,7 +30,8 @@
 			
 			// parameters from request
 			
-			$strGroup =	$this->request->getProperty("group");
+			$id = $this->request->getProperty( "group" );
+			$strGroup = $this->getGroupNumber();
 			$strResultSet =	$this->request->getProperty("resultSet");	// to correct a bug in 4.1.0
 			$iStartRecord =	(int) $this->request->getProperty("startRecord");
 			$iFacet = $this->request->getProperty("facet");
@@ -72,7 +73,7 @@
 			// facet file (full version), then get only the range we've requested;
 			// should we change this to make it more efficient?
 
-			$objFacets = $this->getCache($strGroup, "facets", "SimpleXML");
+			$objFacets = $this->getCache($id, "facets", "SimpleXML");
 			
 			$strXpath = "//cluster_facet[position() = $iFacet]/node[position() = $iNode]";
 			
@@ -119,11 +120,11 @@
 			
 			$objXml->documentElement->appendChild($objXml->createElement("facet_name", Xerxes_Framework_Parser::escapeXML($strFacetName)));
 			
-			$objXml = $this->addSearchInfo($objXml, $strGroup);
-			$objXml = $this->addStatus($objXml, $strGroup, $strResultSet, $iTotalHits);
+			$objXml = $this->addSearchInfo($objXml, $id);
+			$objXml = $this->addStatus($objXml, $id, $strResultSet, $iTotalHits);
 			$objXml = $this->addProgress($objXml, $this->request->getSession("refresh-$strGroup"));	
 			$objXml = $this->addRecords($objXml, $arrResults, $configIncludeMarcRecord);
-			$objXml = $this->addFacets($objXml, $strGroup, $configFacets);
+			$objXml = $this->addFacets($objXml, $id, $configFacets);
 			
 			// add to master xml
 			

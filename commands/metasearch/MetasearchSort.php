@@ -20,7 +20,8 @@
 			// get paramters and configuration settings
 			
 			$strSortKeys = $this->request->getProperty("sortKeys");
-			$strGroup = $this->request->getProperty("group");
+			$id = $this->request->getProperty( "group" );
+			$strGroup = $this->getGroupNumber();
 			
 			// sort the merged result set
 			
@@ -29,8 +30,8 @@
 			
 			// update search status xml to indicate present sort value for merged result
 			
-			$objXml = $this->getCache($strGroup, "group", "SimpleXML");
-							
+			$objXml = $this->getCache($id, "group", "SimpleXML");
+			
 			foreach ( $objXml->xpath("//base_info") as $base_info )
 			{
 				if ( $base_info->base == "MERGESET" )
@@ -42,7 +43,11 @@
 			
 			// set back in the cache
 			
-			$this->setCache($strGroup, "group", $objXml);
+			$this->setCache($id, "group", $objXml);
+			
+			// explicitly save it
+			
+			$this->saveCache();
 					 
 		 	// redirect to results page
 		 	

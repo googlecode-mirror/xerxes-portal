@@ -27,8 +27,8 @@ class Xerxes_Data_RecordFormat extends Xerxes_Framework_DataValue
 class Xerxes_Data_Cache extends Xerxes_Framework_DataValue
 {
 	public $source;
-	public $grouping;
 	public $id;
+	public $alternate_ids = array();
 	public $data;
 	public $timestamp;
 	public $expiry;

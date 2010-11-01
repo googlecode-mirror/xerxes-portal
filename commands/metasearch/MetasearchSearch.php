@@ -375,6 +375,8 @@ class Xerxes_Command_MetasearchSearch extends Xerxes_Command_Metasearch
 			$objXml->documentElement->appendChild( $objImport );
 		}
 		
+		$strGroup = $this->getSearchDate() . "-" . $strGroup;
+		
 		// save this information in the cache
 
 		$this->setCache( $strGroup, "search", $objXml );

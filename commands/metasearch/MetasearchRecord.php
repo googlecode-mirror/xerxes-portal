@@ -17,7 +17,7 @@
 		{
 			// parameters from request
 			
-			$strGroup =	$this->request->getProperty("group");
+			$strGroup = $this->getGroupNumber();
 			$strResultSet =	$this->request->getProperty("resultSet");
 			$configIncludeMarcRecord = $this->registry->getConfig("XERXES_FULL_INCLUDE_MARC", false, false);
 			
@@ -30,8 +30,8 @@
 			$objXml = new DOMDocument();
 			$objXml = $this->documentElement();
 			
-			$objXml = $this->addSearchInfo($objXml, $strGroup);
-			$objXml = $this->addStatus($objXml, $strGroup, $strResultSet);
+			$objXml = $this->addSearchInfo($objXml, $id);
+			$objXml = $this->addStatus($objXml, $id, $strResultSet);
 			$objXml = $this->addRecords($objXml, array($objRecord), $configIncludeMarcRecord);
 			
 			$this->request->addDocument($objXml);

@@ -14,81 +14,64 @@
 
 	class Xerxes_Cache
 	{
-		private $arrMemory = array();		// temporarily stores the value for the duration of the request
-		private $objDataMap = null;			// data map object
-		private $intExpiry = 0;				// expiration date of the cached item
+		private $datamap = null;			// data map object
+		private $expiry = 0;				// expiration date of the cached item
+		private $cache = "";
+		private $id;
 		
-		public function __construct()
+		public function __construct($strGroup)
 		{
-			$this->objDataMap = new Xerxes_DataMap();
+			$this->datamap = new Xerxes_DataMap();
+			$this->id = $strGroup;
 			
-			// expiry will be 4:00 AM
-			
-			$time = time();
-			$today = date("Y-m-d", $time);
-			
-			$this->intExpiry = strtotime($today . " 04:00");
-			
-			// if it is after 4:00 AM, set expiry to 4:00 AM tomorrow!
-
-			$hour = (int) date("G", $time);
-			
-			if ( $hour > 4 )
+			if ( $this->cache == "")
 			{
-				$this->intExpiry += ( 24 * 60 * 60 );
+				$arrResults = $this->datamap->getCache("metalib", $strGroup);
+				
+				if ( count($arrResults) == 0 )
+				{
+					// looks like this is new, so make it
+					$this->cache = new Xerxes_Cache_Metalib();
+				}
+				else
+				{
+					$objCache = $arrResults[0];
+					$this->cache = unserialize($objCache->data);
+				}
 			}
+			
+			// set expiry to 4:00 AM in the morning
+			
+			$group = explode("-", $strGroup);
+			array_pop($group);
+			$search_date = implode("-",$group);
+			
+			$this->expiry = strtotime($search_date . " 04:00");
+			$this->expiry = $this->expiry + ( 24 * 60 * 60 );
 		}
 		
 		/**
 		 * Retrieve data from the cache
 		 *
-		 * @param string $strGroup			the group identifier
 		 * @param string $strType			the unique identifier
 		 * @param string $strResponseType	[optional] can be SimpleXML, otherwise will return as DOMDocument
 		 * @return mixed					DOMDocument (default) or SimpleXML
 		 */
 		
-		public function getCache($strGroup, $strType, $strResponseType = null)
+		public function getCache($strType, $strResponseType = null)
 		{
 			$objXml = new DOMDocument();
 			
-			// if document is already stored in the memory array, return it
+			// nada, baby
 			
-			if ( array_key_exists("$strGroup-$strType", $this->arrMemory) )
+			if ( $this->cache->$strType == null )
 			{
-				$objXml = $this->arrMemory["$strGroup-$strType"];
+				throw new Exception("could not find '$strType'' in the metalib search cache");
 			}
-			else
-			{
-				// first time pulling from the cache for this request,
-				// so populate all the cache types
-				
-				$arrResults = $this->objDataMap->getCacheGroup($strGroup, $this->intExpiry);
-				
-				foreach ( $arrResults as $objCache )
-				{
-					// convert the xml string to a dom document, and then load it into the array
-					
-					$objDocument = new DOMDocument();
-					
-					if ( $objCache->data != null )
-					{
-						$objDocument->loadXML($objCache->data);
-						$this->arrMemory[$objCache->grouping . "-" . $objCache->id] = $objDocument;
-					}
-				}
-				
-				// make sure we got it from the database, and then assign it yo!
-				
-				if ( array_key_exists("$strGroup-$strType", $this->arrMemory ))
-				{
-					$objXml = $this->arrMemory["$strGroup-$strType"];
-				}
-				else
-				{
-					throw new Exception("error getting value from the database cache");
-				}
-			}
+			
+			// convert it to XML
+			
+			$objXml->loadXML($this->cache->$strType);
 			
 			// switch it to simplexml if specified
 				
@@ -105,34 +88,20 @@
 		/**
 		 * Add data to the cache
 		 *
-		 * @param string $strGroup		group identifier
 		 * @param string $strType		unique identifier
 		 * @param mixed $xml			string, SimpleXML or DOMDocument XML document
 		 * @return int					status of the insert into cache
 		 */
 		
-		public function setCache($strGroup, $strType, $xml)
+		public function setCache($strType, $xml)
 		{
 			// ensure the data is xml
 			
-			$objXml = new DOMDocument();
-			$objXml = $this->convertToXML($xml);
+			$string = $this->convertToXMLString($xml);
 			
 			// save it in memory for the scope of the request
 			
-			$this->arrMemory["$strGroup-$strType"] = $objXml;
-			
-			// save it to the database
-			
-			$objCache = new Xerxes_Data_Cache();
-			
-			$objCache->source = "metalib";
-			$objCache->grouping = $strGroup;
-			$objCache->id = $strType;
-			$objCache->data = $objXml->saveXML();
-			$objCache->expiry = $this->intExpiry;
-			
-			return $this->objDataMap->setCache($objCache);
+			$this->cache->$strType = $string;
 		}
 		
 		/**
@@ -142,28 +111,54 @@
 		 * @return DOMDocument
 		 */
 		
-		private function convertToXML($xml)
+		private function convertToXMLString($xml)
 		{
-			$objXml = new DOMDocument();
+			$string = "";
 			
 			// sometimes the object is simplexml, or xml string, so convert it here to DOMDocument 
 			
 			if ( $xml instanceof SimpleXMLElement )
 			{
-				$objXml->loadXML($xml->asXML());
+				$string = $xml->asXML();
 			}
-			elseif ( is_string($xml))
+			elseif ( $xml instanceof DOMDocument )
 			{
-				$objXml->loadXML($xml);
+				$string = $xml->saveXML();
 			}
 			else
 			{
-				$objXml = $xml;
+				$string = $xml;
 			}
 			
-			return $objXml;
+			return $string;
 		}
 		
+		public function save()
+		{
+			// we're going out of scope, so save everything to the database
+			
+			$objCache = new Xerxes_Data_Cache();
+			
+			$objCache->source = "metalib";
+			$objCache->id = $this->id;
+			$objCache->data = serialize($this->cache);
+			$objCache->expiry = $this->expiry;
+			
+			return $this->datamap->setCache($objCache);	
+		}
+		
+		public function __destruct()
+		{
+			$this->save();
+		}
+	}
+	
+	class Xerxes_Cache_Metalib
+	{
+		public $search = "";
+		public $group = "";
+		public $facets = "";
+		public $facets_slim = "";
 	}
 
 

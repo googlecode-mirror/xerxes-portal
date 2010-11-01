@@ -14,25 +14,12 @@
 abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
 {
 	private $objSearch = null; // metalib search object
-	private $objCache = null; // cache object
+	protected $cache = null; // cache object
 	
 	const DEFAULT_RECORDS_PER_PAGE = 10;
 	const MARC_FIELDS_BRIEF = "LDR, 0####, 1####, 2####, 3####, 4####, 5####, 6####, 7####, 8####, 901##, ERI##, SID, YR";
 	const MARC_FIELDS_FULL = "#####, OPURL";
 
-	/**
-	 * Seperate here so we can set a cache object for all commands
-	 *
-	 * @param Xerxes_Framework_Request $objRequest
-	 * @param Xerxes_Framework_Registry $objRegistry
-	 */
-	
-	public function execute(Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry)
-	{
-		$this->objCache = new Xerxes_Cache( );
-    	parent::execute($objRequest, $objRegistry);
-	}
-	
 	/**
 	 * Get the metalib search object, here so we can ensure that we re-up the 
 	 * session if it goes dormant
@@ -293,7 +280,7 @@ abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
 
 		try
 		{
-			$objFacetXml = $this->getCache( $strGroup, "facets-slim", "DOMDocument" );
+			$objFacetXml = $this->getCache( $strGroup, "facets_slim", "DOMDocument" );
 			
 			if ( $objFacetXml->documentElement != null )
 			{
@@ -470,7 +457,12 @@ abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
 	
 	protected function setCache($strGroup, $strType, $xml)
 	{
-		return $this->objCache->setCache( $strGroup, $strType, $xml );
+		if ( $this->cache == null )
+		{
+			 $this->cache = new Xerxes_Cache($strGroup);
+		}
+		
+		return $this->cache->setCache( $strType, $xml );
 	}
 	
 	/**
@@ -484,7 +476,20 @@ abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
 	
 	protected function getCache($strGroup, $strType, $strResponseType = null)
 	{
-		return $this->objCache->getCache( $strGroup, $strType, $strResponseType );
+		if ( $this->cache == null )
+		{
+			 $this->cache = new Xerxes_Cache($strGroup);
+		}
+		
+		return $this->cache->getCache( $strType, $strResponseType );
+	}
+	
+	protected function saveCache()
+	{
+		if ( $this->cache != null )
+		{
+			$this->cache->save();
+		}
 	}
 	
 	/**
@@ -513,6 +518,30 @@ abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
 		// fetch record from metalib
 
 		return $objSearch->retrieve( $strResultSet, $iStartRecord, 1, null, "customize", $arrFields );
+	}
+	
+	protected function getSearchDate()
+	{
+		$time = time();
+		$hour = (int) date("G", $time);
+		$flush_hour = $this->registry->getConfig("METALIB_RESTART_HOUR", false, 4);
+			
+		if ( $hour < $flush_hour )
+		{
+			// use yesterday's date
+			// by setting a time at least one hour greater than the flush hour, 
+			// so for example 5 hours ago if flush hour is 4:00 AM
+			
+			$time = $time - ( ($flush_hour + 1) * (60 * 60) );
+		}
+		
+		return date("Y-m-d", $time);
+	}
+	
+	protected function getGroupNumber()
+	{
+		$group = $this->request->getProperty( "group" );
+		return array_pop(explode("-", $group));
 	}
   
   	

@@ -24,7 +24,8 @@ class Xerxes_Command_MetasearchHits extends Xerxes_Command_Metasearch
 		
 		// params from the request
 
-		$strGroup = $this->request->getProperty( "group" );
+		$id = $this->request->getProperty( "group" );
+		$strGroup = $this->getGroupNumber();
 		$strMergeRedirect = $this->request->getProperty( "mergeRedirect" );
 		
 		// configuration options
@@ -41,7 +42,7 @@ class Xerxes_Command_MetasearchHits extends Xerxes_Command_Metasearch
 		
 		// access control
 		
-		$objSearchXml = $this->getCache( $strGroup, "search", "DOMDocument" );
+		$objSearchXml = $this->getCache( $id, "search", "DOMDocument" );
 		Xerxes_Helper::checkDbListSearchableByUser( $objSearchXml, $this->request, $this->registry );
 		
 		// redirect link base
@@ -49,7 +50,7 @@ class Xerxes_Command_MetasearchHits extends Xerxes_Command_Metasearch
 		$arrParams = array(
 			"base" => "metasearch",
 			"action" => "results",
-			"group" => $strGroup
+			"group" => $id
 		);
 		
 		// determine if redirect after merge
@@ -69,7 +70,7 @@ class Xerxes_Command_MetasearchHits extends Xerxes_Command_Metasearch
 		// get status of the search and cache result
 
 		$objStatus = $objSearch->searchStatus( $strGroup );
-		$this->setCache( $strGroup, "group", $objStatus );
+		$this->setCache( $id, "group", $objStatus );
 		
 		// cap the number of refreshes
 
@@ -171,7 +172,7 @@ class Xerxes_Command_MetasearchHits extends Xerxes_Command_Metasearch
 					// operation and cache
 					
 					$objStatus = $objSearch->searchStatus( $strGroup );
-					$this->setCache( $strGroup, "group", $objStatus );
+					$this->setCache( $id, "group", $objStatus );
 					
 					$objXPath = new DOMXPath( $objMerge );
 					
@@ -197,13 +198,13 @@ class Xerxes_Command_MetasearchHits extends Xerxes_Command_Metasearch
 					if ( $iMergeCount > $configRecordsPerPage && $configFacets == true )
 					{
 						$objFacetXml = $objSearch->facets( $strMergeSet, "all", $configApplication );
-						$this->setCache( $strGroup, "facets", $objFacetXml );
+						$this->setCache( $id, "facets", $objFacetXml );
 						
 						// cache a slimmed down version of the facets as well
 						// to ease the load on the interface
 
 						$strFacetSlim = Xerxes_Framework_Parser::transform( $objFacetXml, "xsl/utility/facets-slim.xsl" );
-						$this->setCache( $strGroup, "facets-slim", $strFacetSlim );
+						$this->setCache( $id, "facets_slim", $strFacetSlim );
 					}
 				}
 				
@@ -267,8 +268,8 @@ class Xerxes_Command_MetasearchHits extends Xerxes_Command_Metasearch
 		$objXml = new DOMDocument( );
 		
 		$objXml = $this->documentElement();
-		$objXml = $this->addSearchInfo( $objXml, $strGroup );
-		$objXml = $this->addStatus( $objXml, $strGroup );
+		$objXml = $this->addSearchInfo( $objXml, $id );
+		$objXml = $this->addStatus( $objXml, $id );
 		$objXml = $this->addProgress( $objXml, $this->request->getSession( "refresh-$strGroup" ) );
 		
 		$this->request->addDocument( $objXml );
