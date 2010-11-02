@@ -25,6 +25,10 @@ class Xerxes_WorldCatRecord extends Xerxes_Record
 		parent::map();
 
 		$this->oclc_number = $this->control_number;
+		
+		// blank all links
+		
+		$this->links = array();
 	}
 	
 	public function getOpenURL($strResolver, $strReferer = null, $param_delimiter = "&")

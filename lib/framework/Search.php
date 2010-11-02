@@ -315,7 +315,7 @@ abstract class Xerxes_Framework_Search
 		
 		if ( $this->should_get_holdings == true )
 		{
-			$items = $this->getHoldings($this->extractRecordIDs());
+			$items = $this->getHoldings($this->extractLookupIDs());
 
 			$record = $this->results[0];
 			$record->addItems($items);
@@ -333,11 +333,9 @@ abstract class Xerxes_Framework_Search
 
 	public function lookup()
 	{
-		$id = $this->request->getProperty("id");
-		$isbn = $this->request->getProperty("isbn");
-		$oclc = $this->request->getProperty("oclc");
-		
 		$standard_numbers = array();
+		
+		$id = $this->request->getProperty("id");
 		
 		if ( $id != null )
 		{
@@ -345,13 +343,16 @@ abstract class Xerxes_Framework_Search
 		}
 		else
 		{
-			if ( $isbn != null )
-			{
-				array_push($standard_numbers, "ISBN:$isbn");
-			}
+			$isbn = $this->request->getProperty("isbn");
+			$oclc = $this->request->getProperty("oclc");			
+			
 			if ( $oclc != null )
 			{
 				array_push($standard_numbers, "OCLC:$oclc");
+			}
+			if ( $isbn != null )
+			{
+				array_push($standard_numbers, "ISBN:$isbn");
 			}
 		}
 		
@@ -1641,6 +1642,11 @@ abstract class Xerxes_Framework_Search
 		return $id;
 	}
 
+	protected function extractLookupIDs()
+	{
+		return $this->extractRecordIDs();
+	}	
+	
 	
 	###################
 	#  HOLDINGS DATA  #
@@ -1651,21 +1657,60 @@ abstract class Xerxes_Framework_Search
 	{
 		$items = new Xerxes_Record_Items();
 		
-		$strSource = $this->getSource();
+		$cache_id = ""; // id used in cache
+		$bib_id = ""; // bibliographic id number
+		$oclc = ""; // oclc number
 		
+		// figure out what is what
+		
+		foreach ( $arrIDs as $id )
+		{
+			if ( stristr($id,"ISBN:") )
+			{
+				continue;
+			}
+			
+			if ( stristr($id,"OCLC:") )
+			{
+				$oclc = $id;
+			}
+			else
+			{
+				$bib_id = $id;
+			}
+		}
+
+		// no bib id supplied, so use oclc number as id
+		
+		if ( $bib_id == "")
+		{
+			if ( $oclc == "" )
+			{
+				throw new Exception("no bibliographic id or oclc number suppled in availability lookup");
+			}
+			
+			$cache_id = str_replace("OCLC:", "",$oclc);
+		}
+		else
+		{
+			$cache_id = $bib_id;
+		}
+		
+		// get url to availability server
+		
+		$strSource = $this->getSource();
 		$url = $this->getHoldingsURL($strSource);
 		
 		// no holdings source defined or somehow id's are blank
 		
 		if ( $url == null || count($arrIDs) == 0 )
 		{
-			return $items;
+			return $items; // empty items
 		}
 		
 		// get the data
 		
-		$id = implode(" ", $arrIDs);
-		$url .= "?action=status&id=$id";
+		$url .= "?action=status&id=" . urlencode(implode(" ", $arrIDs));
 		$data = Xerxes_Framework_Parser::request($url);
 		
 		// echo $url; exit;
@@ -1674,10 +1719,12 @@ abstract class Xerxes_Framework_Search
 		
 		if ( $data == "" )
 		{
-			throw new Exception("could not connect to server for availability");
+			throw new Exception("could not connect to availability server");
 		}
 		
-		// array of json objects
+		// echo $data; exit;
+		
+		// response is (currently) an array of json objects
 		
 		$arrResults = json_decode($data);
 		
@@ -1704,18 +1751,18 @@ abstract class Xerxes_Framework_Search
 		}
 		
 		// cache it for the future
-				
-		// expiry
 		
-		$expiry = $this->config->getConfig("HOLDINGS_CACHE_EXPIRY", false, 2 * 60);
-		$expiry = time() + ($expiry * 60); 
+		// expiry set for two hours
+		
+		$expiry = $this->config->getConfig("HOLDINGS_CACHE_EXPIRY", false, 2 * 60 * 60);
+		$expiry += time(); 
 		
 		$cache = new Xerxes_Data_Cache();
 		$cache->source = $this->getSource();
-		$cache->id = $id;
-		$cache->expiry = $expiry; // two hours
+		$cache->id = $cache_id;
+		$cache->expiry = $expiry;
 		$cache->data = serialize($items);
-				
+		
 		$this->data_map->setCache($cache);		
 		
 		return $items;
