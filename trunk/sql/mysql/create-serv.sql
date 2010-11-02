@@ -11,6 +11,7 @@ USE xerxes;
 SET storage_engine = INNODB;
 
 DROP TABLE IF EXISTS xerxes_user_usergroups;
+DROP TABLE IF EXISTS xerxes_cache_alternate_id;
 DROP TABLE IF EXISTS xerxes_cache;
 DROP TABLE IF EXISTS xerxes_tags;
 DROP TABLE IF EXISTS xerxes_sfx;
@@ -95,14 +96,21 @@ CREATE TABLE xerxes_tags (
 
 CREATE TABLE xerxes_cache (
 	source		VARCHAR(20),
-	grouping	VARCHAR(20),
-	id 		VARCHAR(20),
+	id 		VARCHAR(80),
 	data		MEDIUMTEXT,
 	timestamp	INTEGER,
-	expiry		INTEGER
+	expiry		INTEGER,
+
+	PRIMARY KEY (source,id)
 );
 
-CREATE INDEX xerxes_cache_grouping_idx ON xerxes_cache(grouping);
+CREATE TABLE xerxes_cache_alternate_id (
+	alt_id 		VARCHAR(80),
+	source		VARCHAR(20),
+	cache_id	VARCHAR(80),
+	
+	FOREIGN KEY (source,cache_id) REFERENCES xerxes_cache(source,id) ON DELETE CASCADE
+);
 
 CREATE TABLE xerxes_user_categories(
 	id 		MEDIUMINT NOT NULL AUTO_INCREMENT,
