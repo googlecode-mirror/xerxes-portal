@@ -10,7 +10,7 @@
 # block access to config files #
 ################################
 
-<FilesMatch "^config\.|^actions\.">
+<FilesMatch "\.xml">
     Order allow,deny
     Deny from all
 </FilesMatch>
