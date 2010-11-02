@@ -948,6 +948,18 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 	
 	public function setCache(Xerxes_Data_Cache $objCache)
 	{
+		// ensure data
+		
+		if ( $objCache->id == "" )
+		{
+			throw new Exception("cached object must contain id");
+		}
+
+		if ( $objCache->source == "" )
+		{
+			throw new Exception("cached object must contain source identifier");
+		}
+		
 		// set timestamp if not specified
 
 		if ( $objCache->timestamp == null )
@@ -976,7 +988,6 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		// now insert the new value
 
 		$this->doSimpleInsert( "xerxes_cache", $objCache );
-		
 		$this->commit();
 	}
 	
