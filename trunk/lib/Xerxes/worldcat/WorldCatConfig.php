@@ -13,7 +13,7 @@
 
 class Xerxes_WorldCatConfig extends Xerxes_Framework_Registry
 {
-	protected $config_file = "config/worldcat.xml";
+	protected $config_file = "config/worldcat";
 	private static $instance; // singleton pattern
 	
 	public static function getInstance()
