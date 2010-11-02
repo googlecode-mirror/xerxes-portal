@@ -66,7 +66,7 @@
 			
 			if ( $this->cache->$strType == null )
 			{
-				throw new Exception("could not find '$strType'' in the metalib search cache");
+				throw new Exception("sorry, your search appears to have expired");
 			}
 			
 			// convert it to XML

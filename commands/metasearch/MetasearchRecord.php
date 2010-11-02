@@ -17,7 +17,7 @@
 		{
 			// parameters from request
 			
-			$strGroup = $this->getGroupNumber();
+			$id = $this->request->getProperty( "group" );
 			$strResultSet =	$this->request->getProperty("resultSet");
 			$configIncludeMarcRecord = $this->registry->getConfig("XERXES_FULL_INCLUDE_MARC", false, false);
 			
