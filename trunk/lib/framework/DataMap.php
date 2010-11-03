@@ -37,7 +37,18 @@
 			
 			if ( $this->rdbms == "mysql" )
 			{
-				$arrDriverOptions = array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'");
+				// php 5.3.0 and 5.3.1 have a bug where this is not defined
+				
+				if ( ! defined("PDO::MYSQL_ATTR_INIT_COMMAND") )
+				{
+					$init_command = 1002;
+				}
+				else
+				{
+					$init_command = PDO::MYSQL_ATTR_INIT_COMMAND;
+				}
+				
+				$arrDriverOptions = array($init_command => "SET NAMES 'utf8'");
 			}
 			else
 			{
