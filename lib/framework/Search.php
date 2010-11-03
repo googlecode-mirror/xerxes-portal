@@ -1425,7 +1425,7 @@ abstract class Xerxes_Framework_Search
 	 * Extract facets from the xml response, if available
 	 */
 	
-	protected function extractFacets(DOMDocument $xml)
+	protected function extractFacets($xml)
 	{
 		
 	}
