@@ -17,7 +17,7 @@
 		/**
 		 * Return all properties from the object as an array; excludes
 		 * properties that are themselves arrays, those should be handled
-		 * seperately
+		 * separately
 		 *
 		 * @param string $prefix		[optional] a value to prepend to the array keys
 		 * @return array

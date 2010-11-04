@@ -108,7 +108,7 @@ abstract class Xerxes_Command_Metasearch extends Xerxes_Framework_Command
 	
 	/**
 	 * Fetch the status information from cache and add it to the response, also 
-	 * seperates out some key pieces of information for convenience in the XSLT
+	 * separates out some key pieces of information for convenience in the XSLT
 	 *
 	 * @param DOMDocument $objXml		base xml document
 	 * @param string $strGroup			group number

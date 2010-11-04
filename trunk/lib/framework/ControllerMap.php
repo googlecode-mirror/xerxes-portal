@@ -198,7 +198,7 @@
 			
 			$strDirectory = "";			// directory of the command class
 			$strNamespace = "";			// namespace of the command class
-			$strRestricted = "";		// string to be converted to bool
+			$strRestricted = "";			// string to be converted to bool
 			$strLogin = "";				// string to be converted to bool
 			
 			// make sure a section is defined
@@ -375,7 +375,7 @@
 					
 				if ( $type != null ) $this->strViewType = $type;
 	          
-				// if there is a format={format-name} in the request and a seperate
+				// if there is a format={format-name} in the request and a separate
 				// <view fomat="{format-name}"> that matches it, we'll take that as the
 				// view
 						

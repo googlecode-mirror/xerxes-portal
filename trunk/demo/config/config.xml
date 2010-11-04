@@ -29,7 +29,7 @@
 		
 		<!-- inlcude here the range of local ip addresses that should not be challenged for a login.
 		 	enter as either 144.37.*.*, with * as wildcard, or as 144.37.0.0-144.37.255.255,
-		 	seperate mutliple entries by comma -->
+		 	separate multiple entries by comma -->
 			 
 		<config name="local_ip_range"></config>
 		
@@ -82,7 +82,7 @@
 		<config name="metalib_password"></config>
 		<config name="metalib_institute"></config>
 		
-		<!-- IP adress associated with this implementation. 
+		<!-- IP address associated with this implementation. 
 			If your metalib instance is associated with a specific IP range, as you might have with a consortium, 
 			then enter a single IP address within that range here, so that Metalib knows which knowledgebase to 
 			associate with this implementation of Xerxes. -->
@@ -97,7 +97,7 @@
 			<display_name> : What to call this group of users       
 			<local_ip_range>: IP range(s) associated with this group.  Users coming from this ip range will be able 
 			to search this group's resources without first having to login. Enter as either 144.37.*.*, with * as 
-			wildcard, or as 144.37.0.0-144.37.255.255, seperate mutliple entries by comma
+			wildcard, or as 144.37.0.0-144.37.255.255, separate mutliple entries by comma
 			<ezp_exp_group> For use with EZProxy export function, ezproxy config group to output for this Metalib 
 			secondary affiliation. See: http://code.google.com/p/xerxes-portal/wiki/EzProxyExport? -->
 		
@@ -189,7 +189,7 @@
 	
 		<!-- the source against which you will authenticate users; valid values include:
 		
-			* 'ldap' for a simple bind to an ldap-enabled directory server, including Active Directory
+			* 'ldap' for a simple bind (or bind and search) to an ldap-enabled directory server, including Active Directory
 			* 'innovative' for authentication against the Innovative patron api
 			* 'cas' for authentication against a central authentication source server
 			* 'demo' for a simple demo set-up when you don't want to configure a directory
@@ -298,7 +298,7 @@
 			
 			<config name="innovative_patron_api" />
 			
-			<!-- patron types allowed to use this system remotely: seperate multilple entries by comma; 
+			<!-- patron types allowed to use this system remotely: separate multilple entries by comma; 
 			leave blank if all users are allowed -->
 				 
 			<config name="innovative_patron_types" />
@@ -318,7 +318,7 @@
 		<!-- DEMO -->
 		
 			<!-- list of users who can access the system without being in the local directory server 
-				 enter as username:password and seperate entries by comma -->
+				 enter as username:password and separate entries by comma -->
 			
 			<config name="demo_users"></config>
 		
@@ -362,7 +362,7 @@
 		<config name="categories_num_columns" pass="true">3</config>
 		
 		<!-- only include the following subcategories in the subject page, 
-			seperate multiple enties by comma, will look for the presence 
+			separate multiple enties by comma, will look for the presence 
 			of the words, not an exact match -->
 		
 		<config name="subcategories_include"></config>
@@ -379,7 +379,7 @@
 		<!-- strip out HTML tags in database description. Possible values:
 		
 			escape: Escape all HTML so it shows up as source.
-			allow: Allow all HTML through as code. NOT reccommended. Suggest you use strip with some 
+			allow: Allow all HTML through as code. NOT recommended. Suggest you use strip with some 
 			       tags in db_description_allow_tags instead. 
 			strip: Strip out all HTML tags. May be used in combination with db_description_allow_tags below. -->
 			
@@ -401,7 +401,7 @@
 		
 		<!-- tags NOT to strip in database descriptions.
 		
-			Only used with db_description_html=strip. Tags listed here (comma seperated) will NOT be stripped, but
+			Only used with db_description_html=strip. Tags listed here (comma separated) will NOT be stripped, but
 			will be allowed - they are a whitelist. All other tags will be stripped. -->
 		
 		<config name="db_description_allow_tags">b,i,strong,em,a</config>
@@ -417,8 +417,8 @@
 		
 		<!-- open window for full text and sfx links.
 		
-			You can change this value to any valid HTML anchor  target attribute value to affect the 
-			behavior of sfx and full-text links in the  search results and saved record pages.
+			You can change this value to any valid HTML anchor target attribute value to affect the 
+			behavior of sfx and full-text links in the search results and saved record pages.
 			'_self' causes the browser to open the links in the same window
 			'_blank' causes the browser to open the links in a new window. -->
 		
