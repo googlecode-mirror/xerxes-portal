@@ -379,7 +379,7 @@
 			
 			// catch words that start with a single quote
 			// need to be a little more cautious here and make sure there is a space before the quote when
-			// inside the title to ensure this isn't a quote for a contraction or for possesive; seperate
+			// inside the title to ensure this isn't a quote for a contraction or for possesive; separate
 			// case to handle when the quote is the first word
 	
 			if ( preg_match( "/ '([a-z])/", $strFinal, $arrMatches ) )

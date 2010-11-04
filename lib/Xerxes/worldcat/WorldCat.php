@@ -108,7 +108,7 @@ class Xerxes_WorldCat
 	 * Return holdings for a particular record
 	 *
 	 * @param string $id			OCLC number
-	 * @param string $strLibraries	list of libraries, seperated by comma, which serve as a filter for checking holdings
+	 * @param string $strLibraries	list of libraries, separated by comma, which serve as a filter for checking holdings
 	 * @param int $iStart			[optional] offset from which the number of holding libraries begins
 	 * @param int $iMax				[optional] total number of libraries with holdings to return
 	 * @return DOMDocument			holdings in ISO 20775 Holdings schema format
@@ -264,7 +264,7 @@ class Xerxes_WorldCat
 	/**
 	 * Limit results to those libraries specifid
 	 *
-	 * @param string $strCodes		Comma seperated list of OCLC codes for the libraries
+	 * @param string $strCodes		Comma separated list of OCLC codes for the libraries
 	 */
 	
 	public function limitToLibraries($strCodes)
@@ -307,7 +307,7 @@ class Xerxes_WorldCat
 	/**
 	 * Exclude results held by those libraries specifid
 	 *
-	 * @param string $strCodes		Comma seperated list of OCLC codes for the libraries
+	 * @param string $strCodes		Comma separated list of OCLC codes for the libraries
 	 */
 	
 	public function excludeLibraries($strCodes)

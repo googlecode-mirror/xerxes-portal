@@ -29,7 +29,7 @@
   <xsl:call-template name="breadcrumb_databases" />
   <a href="{/*/databases/database/url}">
     <xsl:value-of select="/*/databases/database/title_display" />
-  </a> <xsl:copy-of select="$text_breadcrumb_seperator" />
+  </a> <xsl:copy-of select="$text_breadcrumb_separator" />
   <xsl:call-template name="page_name"/>
 </xsl:template>
 

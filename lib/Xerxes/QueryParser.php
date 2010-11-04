@@ -86,7 +86,7 @@
 			else
 			{
 				// if there was only one search field/term and there was an OR or NOT
-				// in the search phrase itself, split the query into two seperate 
+				// in the search phrase itself, split the query into two separate 
 				// fielded searches, since this will improve the chance of the search 
 				// working correctly
 				

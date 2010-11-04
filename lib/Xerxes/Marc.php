@@ -527,7 +527,7 @@ class Xerxes_Marc_DataField
 	}
 	
 	/**
-	 * Get all subfields and return them with a space seperator
+	 * Get all subfields and return them with a space separator
 	 *
 	 * @return unknown
 	 */

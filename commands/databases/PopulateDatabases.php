@@ -439,12 +439,12 @@
 		
 	   	/* We need to register a straight function for the XSL to call with php:function. Sorry. */
    
-		public static function splitToNodeset($strList, $seperator = ",")
+		public static function splitToNodeset($strList, $separator = ",")
 		{
 	   		$dom = new domdocument;
 	   		$dom->loadXML("<list />");
 	   		$docEl = $dom->documentElement;
-	   		$arr = explode($seperator, $strList);
+	   		$arr = explode($separator, $strList);
 	   		
 	   		$found = false;
 	   		foreach ($arr as $item)

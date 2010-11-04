@@ -123,8 +123,8 @@ class Xerxes_Framework_Restrict
 	/**
 	 * Is the ip address within the supplied ip range(s)
 	 * For syntax/formatting of an ip range string, see config.xml.
-	 * Basically, it's comma seperated ranges, where each range can use
-	 * wildcard (*) or hyphen to seperate endpoints. 
+	 * Basically, it's comma separated ranges, where each range can use
+	 * wildcard (*) or hyphen to separate endpoints. 
 	 *
 	 * @param string $strAddress	ip address
 	 * @param string $strRanges		ip ranges

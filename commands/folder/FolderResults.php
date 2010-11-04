@@ -28,7 +28,7 @@
 			$strView = $this->request->getProperty("view");
 
 			// id numbers can come in the form of multiple 'record' params or a single
-			// 'records' param, with the ids comma seperated
+			// 'records' param, with the ids comma separated
 			
 			$arrID = $this->request->getProperty("record", true);
 			$strIDs = $this->request->getProperty("records");
@@ -126,8 +126,8 @@
 				// @todo move this to point of save for search arch
 				
 				/* 
-	         	enhance records with links generated from metalib templates,
-	         	and get a list of databases too. We need to get the Xerxes_Records 
+				enhance records with links generated from metalib templates,
+				and get a list of databases too. We need to get the Xerxes_Records 
 				out of our list of Xerxes_Data_Records first.
 				*/
 				

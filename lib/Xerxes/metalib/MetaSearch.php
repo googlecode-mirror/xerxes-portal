@@ -628,8 +628,8 @@
 		
 		private function getResponse( $url )
 		{
-			// metalib takes little care to ensure propoer encoding of its xml, so we will set 
-			// recover to true here in order to allow libxml to recover from erros and continue 
+			// metalib takes little care to ensure propper encoding of its xml, so we will set 
+			// recover to true here in order to allow libxml to recover from errors and continue 
 			// processing the document
 			
 			$objXml = new DOMDocument();

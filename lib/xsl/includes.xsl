@@ -30,7 +30,7 @@
 	<!-- currently used to parse multilingual database descriptions -->
 	<xsl:import href="list-tokenizer.xsl" />
 
-	<!-- text labels are defined in a seperate place -->
+	<!-- text labels are defined in a separate place -->
 	<xsl:include href="labels/eng.xsl" />
 
 <!-- 
@@ -222,7 +222,7 @@
 </xsl:template>
 
 <!-- 
-	TEMPLATE: surround-bd
+	TEMPLATE: surround-hd
 	page header
 -->
 <xsl:template name="surround-hd">
@@ -317,7 +317,7 @@
 	<xsl:choose>
 		<xsl:when test="$is_mobile = '1'">
 		
-			<!-- mobile devices get their own stylesheet (to neutralize the main one, plus  it's own
+			<!-- mobile devices get their own stylesheet (to neutralize the main one, plus it's own
 			 definitions), and a local override stylesheet -->
 			 
 			<link href="{$base_include}/css/xerxes-mobile.css?xerxes_version={$xerxes_version}" rel="stylesheet" type="text/css" />
@@ -355,7 +355,7 @@
 
 <!-- 	
 	TEMPLATES THAT SHOULD BE OVERRIDEN IN PAGES OR LOCAL INCLUDES.XSL
-	Defined here in case they are not, so as not to stop the proceeedings
+	Defined here in case they are not, so as not to stop the proceedings
 -->
 
 <xsl:template name="header_div" />
@@ -392,20 +392,20 @@
 	The start of the breadcrumb trail, which can include links to the library or campus
 	website.  Also here we break out the Xerxes 'home' link in case some section of the
 	application (my saved records, for example) that might not want to be conceptually
-	seperate
+	separate
 -->
 
 <xsl:template name="breadcrumb_start">
 
 	<xsl:if test="not(request/base = 'databases' and request/action ='categories')">
-		<a href="{$base_url}"><xsl:value-of select="$text_databases_category_pagename" /></a> <xsl:copy-of select="$text_breadcrumb_seperator" />
+		<a href="{$base_url}"><xsl:value-of select="$text_databases_category_pagename" /></a> <xsl:copy-of select="$text_breadcrumb_separator" />
 	</xsl:if>
 
 </xsl:template>
 
 <!-- 
 	TEMPLATE: TITLE
-	the title that appears in the browser window.  this is assumed to be the 
+	the title that appears in the browser window.  This is assumed to be the 
 	page name, unless the page overrides it
 -->
 
@@ -424,13 +424,13 @@
 	
 	<xsl:choose>
 		<xsl:when test="$condition = 2">
-			<a href="{//category/url}"><xsl:value-of select="//category/@name" /></a> <xsl:copy-of select="$text_breadcrumb_seperator" />
+			<a href="{//category/url}"><xsl:value-of select="//category/@name" /></a> <xsl:copy-of select="$text_breadcrumb_separator" />
 		</xsl:when>
 		<xsl:when test="$condition = 3">
-			<a href="{//embed_info/direct_url}"><xsl:value-of select="//database/title_display" /></a> <xsl:copy-of select="$text_breadcrumb_seperator" />
+			<a href="{//embed_info/direct_url}"><xsl:value-of select="//database/title_display" /></a> <xsl:copy-of select="$text_breadcrumb_separator" />
 		</xsl:when>
 		<xsl:when test="$condition = 4">
-			<a href="{//navbar/element[@id='database_list']}"><xsl:value-of select="$text_databases_az_pagename" /></a> <xsl:copy-of select="$text_breadcrumb_seperator" />
+			<a href="{//navbar/element[@id='database_list']}"><xsl:value-of select="$text_databases_az_pagename" /></a> <xsl:copy-of select="$text_breadcrumb_separator" />
 		</xsl:when>
 	</xsl:choose>
 
@@ -446,14 +446,14 @@
 	<xsl:call-template name="breadcrumb_start" />
 	
 	<a href="{results/search/context_url}"><xsl:value-of select="results/search/context" /></a> 
-	<xsl:copy-of select="$text_breadcrumb_seperator" />
+	<xsl:copy-of select="$text_breadcrumb_separator" />
 	
 	<xsl:choose>
 		<xsl:when test="$condition = 2">
-			<a href="{//resultset_link}"><xsl:copy-of select="$text_results_breadcrumb" /></a> <xsl:copy-of select="$text_breadcrumb_seperator" />
+			<a href="{//resultset_link}"><xsl:copy-of select="$text_results_breadcrumb" /></a> <xsl:copy-of select="$text_breadcrumb_separator" />
 		</xsl:when>
 		<xsl:when test="$condition = 3">
-			<a href="{//request/return}"><xsl:copy-of select="$text_results_breadcrumb" /></a> <xsl:copy-of select="$text_breadcrumb_seperator" />
+			<a href="{//request/return}"><xsl:copy-of select="$text_results_breadcrumb" /></a> <xsl:copy-of select="$text_breadcrumb_separator" />
 		</xsl:when>
 
 	</xsl:choose>
@@ -472,7 +472,7 @@
 	<xsl:choose>
 		<xsl:when test="$condition != 1">
 			<a href="{//navbar/element[@id='saved_records']}"><xsl:copy-of select="$text_header_savedrecords" /></a>
-			<xsl:copy-of select="$text_breadcrumb_seperator" />
+			<xsl:copy-of select="$text_breadcrumb_separator" />
 		</xsl:when>
 	</xsl:choose>
 
@@ -490,11 +490,11 @@
 	
 	<xsl:if test="not(category/@is_default_collection = 'yes')">
 		<a href="{navbar/element[@id='saved_collections']/url}"><xsl:copy-of select="$text_header_collections"/></a> 
-		<xsl:copy-of select="$text_breadcrumb_seperator" />	
+		<xsl:copy-of select="$text_breadcrumb_separator" />	
 	</xsl:if>
 
 	<xsl:if test="$condition = 2">
-		<a href="{category/url}"><xsl:value-of select="category/@name"/></a> <xsl:copy-of select="$text_breadcrumb_seperator" />
+		<a href="{category/url}"><xsl:value-of select="category/@name"/></a> <xsl:copy-of select="$text_breadcrumb_separator" />
 	</xsl:if>	
 
 </xsl:template>
@@ -533,7 +533,7 @@
 	<!-- "base" url used for switching search modes. Defaults to just our current url, but for embed purposes 
 	may be provided differently. -->
 
-	<!-- split contents into seperate template to make partial AJAX loading easier -->
+	<!-- split contents into separate template to make partial AJAX loading easier -->
 	
 	<div class="raisedBox searchBox">
 	
@@ -827,7 +827,7 @@
 				<xsl:when test="searchable = 1">
 					<xsl:choose>
 						<xsl:when test="$should_lock_nonsearchable	and searchable_by_user != '1'" >
-							<!-- if we have a logged in user (or a registered guest), but they can't search this, show them a lock. -->			
+							<!-- if we have a logged in user (or a registered guest), but they can't search this, show them a lock. -->
 							<img src="{$base_url}/images/lock.png" alt="{$text_databases_subject_hint_restricted}" title="{$text_databases_subject_hint_restricted}" />
 						</xsl:when>
 						<xsl:otherwise>
@@ -904,7 +904,7 @@
 <!-- 
 	TEMPLATE: DATABASES SEARCH BOX
 	Search box that appears sometimes on databases_alphabetical.xsl. May
-	appear other places eventually.
+	appear in other places eventually.
 -->
 
 <xsl:template name="databases_search_box">
@@ -1326,7 +1326,7 @@
 <!-- 
 	TEMPLATE: SNIPPET SIDEBAR
 	Link to generate the snippet. Only shown for user-generated
-  subjects if subject is public. 
+	subjects if subject is public. 
 -->
 
 <xsl:template name="snippet_sidebar">
@@ -1356,7 +1356,7 @@
 
 <!--
 	TEMPLATE: SESSION AUTH INFO
-	Displays a user's authorization crednetials from login and IP.  Useful especially if you are using Metalib 
+	Displays a user's authorization credentials from login and IP.  Useful especially if you are using Metalib 
 	usergroup/secondary affiliation access. jrochkind likes to display it on the front page in a sidebar.
 -->
 
@@ -1412,7 +1412,7 @@
 
 
 <!-- 
-	TEMPLATE PAGING NAVIGATION	
+	TEMPLATE PAGING NAVIGATION
 	Provides the visual display for moving through a set of results
 -->
 
@@ -1514,7 +1514,7 @@
 
 <!-- 
 	TEMPLATE: FACET DISPLAY
-	A utility template for the 'facets' tempalte above
+	A utility template for the 'facets' template above
 -->
 
 <xsl:template name="facet_display">
@@ -2010,7 +2010,7 @@
 
 <!-- 
 	TEMPLATE: MOBILE SEARCH BOX
-	Just the search box and go itself, sued for mobile
+	Just the search box and go itself, suited for mobile
 -->
 
 <xsl:template name="mobile_search_box">
@@ -2419,7 +2419,7 @@
 
 <xsl:template name="header">
 
-	<!--opensearch autodiscovery -->
+	<!-- opensearch autodiscovery -->
 	
 	<xsl:if test="category/subcategory">
 		<xsl:variable name="subject_name" select="//category[1]/@name" />
@@ -2450,7 +2450,7 @@
 		
 		<script src="{$base_include}/javascript/tags.js" language="javascript" type="text/javascript"></script>
 		
-		<!-- showing 'more otions' and 'fewer options' on search box -->
+		<!-- showing 'more options' and 'fewer options' on search box -->
 		
 		<script src="{$base_include}/javascript/toggle_metasearch_advanced.js" language="javascript" type="text/javascript"></script>
 		

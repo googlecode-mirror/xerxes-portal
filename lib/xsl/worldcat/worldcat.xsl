@@ -41,11 +41,11 @@
 	<xsl:call-template name="breadcrumb_start" />
 	
 	<xsl:if test="//request/action != 'home'">
-		<a href="./?base={//request/base}"><xsl:value-of select="$text_worldcat_name" /></a> <xsl:copy-of select="$text_breadcrumb_seperator" />
+		<a href="./?base={//request/base}"><xsl:value-of select="$text_worldcat_name" /></a> <xsl:copy-of select="$text_breadcrumb_separator" />
 	</xsl:if>
 		
 	<xsl:if test="$condition = '2' and $last_search != ''">
-		<a href="{$last_search}">Search Results</a> <xsl:copy-of select="$text_breadcrumb_seperator" />	
+		<a href="{$last_search}">Search Results</a> <xsl:copy-of select="$text_breadcrumb_separator" />	
 	</xsl:if>
 	
 </xsl:template>

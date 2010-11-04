@@ -72,7 +72,7 @@
 		
 		<institute><xsl:value-of select="marc:datafield[@tag='AF1']/marc:subfield[@code='a']" /></institute>
 		
-		<!-- Sorry, have to go to php to conveniently seperate out the comma-delimited string of assigned groups. 
+		<!-- Sorry, have to go to php to conveniently separate out the comma-delimited string of assigned groups. 
 		splitToNodeset function defined in PopulateDatabases.php. "GUEST" in the group list isn't a restriction,
 		but instead an indication that the resource is publically/guest searchable. That's how metalib does it. 
 		We translate to something more sane.-->

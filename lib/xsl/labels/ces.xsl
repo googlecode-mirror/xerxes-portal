@@ -34,7 +34,7 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	<xsl:variable name="text_authentication_logout_confirm">Jste si jisti, že chcete ukončit tuto relaci?</xsl:variable>
 	<xsl:variable name="text_authentication_logout_pagename">Odhlásit se</xsl:variable>
 	
-	<xsl:variable name="text_breadcrumb_seperator"> &gt; </xsl:variable>
+	<xsl:variable name="text_breadcrumb_separator"> &gt; </xsl:variable>
 	
 	<xsl:variable name="text_collections_add_database">Přidat databáze</xsl:variable>
 	<xsl:variable name="text_collections_add_section">Přidat novou sekci:</xsl:variable>
