@@ -3200,6 +3200,11 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		return $this->record_id;
 	}
 	
+	public function setRecordID($id)
+	{
+		return $this->record_id = $id;
+	}	
+	
 	public function setNoItems($bool)
 	{
 		$this->no_items = $bool;
@@ -3305,6 +3310,8 @@ class Xerxes_Record_Item
 			{
 				continue;
 			}
+			
+			$key = preg_replace('/\W|\s/', '', $key);
 			
 			$element = $xml->createElement($key, Xerxes_Framework_Parser::escapeXml($value));
 			$xml->documentElement->appendChild($element);
