@@ -62,28 +62,96 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 			$leader->value = $strLeaderMetalib;
 		}
 		
-		// character entity references got munged
-		/*
+		$demunge = array("1XX", "6XX");
 		
-		$author_subjects = $this->datafield("1XX|6XX");
+		// character entity references de-munging code -- thanks a lot metalib!
 		
-		for ( $x = 0; $x < count($author_subjects); $x++ )
+		foreach ( $demunge as $field )
 		{
-			$this_datafield = $author_subjects[$x];
+			$got_one = true;
 			
-			$value = $datafield->subfield()->__toString();
-			
-			// un-terminated char entity ref
-			
-			if ( preg_match('/\&\#\d{3}$/', $value) )
+			do // this until all references are re-combined
 			{
-				if ( $x > 0 )
+				$authors = $this->datafield($field);
+				$got_one = false; // whether we found any in the list
+				
+				for ( $x = 0; $x < $authors->length(); $x++ )
 				{
+					$this_datafield = $authors->item($x);
+					$this_value = $this_datafield->subfield()->__toString();
 					
+					// we found an un-terminated char entity ref
+					
+					$matches = array();
+					
+					if ( preg_match('/\&\#\d{3}$/', $this_value, $matches) )
+					{
+						$got_one = true;
+						$new_value = "";
+						
+						// grab the value out of the next field
+						
+						$x++;
+						
+						// hopefully we aren't at the end?
+						
+						if ( $x < $authors->length() )
+						{
+							// nope, so grab the next field's value
+							
+							$next_datafield = $authors->item($x);
+							$next_value = $next_datafield->subfield()->__toString();
+							
+							// add back in the terminating semi-colon
+							$new_value = "$this_value;$next_value";
+							
+							// blank it so we don't re-process it
+							$next_datafield->tag = "XXX";
+						}
+						else
+						{
+							// yup, just add a terminating char to the value
+							
+							$new_value = $this_value . ";";
+						}
+							
+						// now create a new datafield composed of both old and new values
+							
+						$fixed_datafield = new Xerxes_Marc_DataField();
+						$fixed_datafield->tag = $this_datafield->tag;
+							
+						// we'll just assume this is |a
+							
+						$fixed_subfield = new Xerxes_Marc_Subfield();
+						$fixed_subfield->code = "a";
+						$fixed_subfield->value = $new_value;
+						$fixed_datafield->addSubField($fixed_subfield);
+							
+						// add it to the main record
+							
+						$this->addDataField($fixed_datafield);
+							
+						// now blank the old ones
+							
+						$this_datafield->tag = "XXX";
+					}
+					else
+					{
+						// we need to shift this to the end to keep field order in tact 
+						// (critical for authors) so the above code works right
+						
+						$new_field = clone($this_datafield);
+						$this->addDataField($new_field);
+						$this_datafield->tag = "XXX";
+					}
 				}
+				
+				// if we found one, cycle back again to see if our now-combined
+				// field(s) *also* have un-terminated references since there may have
+				// been more than one broken char reference for a single author, e.g.
 			}
+			while ( $got_one == true);
 		}
-		*/
 		
 		// z3950/sutrs and some screen-scrapers have multiple authors in repeating 100 fields; 
 		// invalid marc, so switch all but first to 700
