@@ -565,7 +565,8 @@
 			
 			$string = str_replace("&amp;#", "&#", $string);
 			$string = str_replace("&amp;amp;", "&amp;", $string);
-
+			
+			$string = preg_replace('/&#[a-zA-Z0-9]{2,5}(?!;)/', "$0;", $string);
 			
 			return $string;
 		}
