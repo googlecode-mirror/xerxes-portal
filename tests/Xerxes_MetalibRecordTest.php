@@ -1,5 +1,6 @@
 <?php
 require_once '../lib/framework/Parser.php';
+require_once '../lib/framework/Languages.php';
 require_once '../lib/framework/Registry.php';
 require_once '../lib/Xerxes/Marc.php';
 require_once '../lib/Xerxes/Record.php';
@@ -73,9 +74,7 @@ class Xerxes_MetalibRecordTest extends PHPUnit_Framework_TestCase
 		$record = $this->Xerxes_MetalibRecord_Document->record(1);
 		
 		$this->assertEquals( $record->getDOI(), "10.1017/S0144686X08007940");
-		
-		echo $record->getOpenURL();
-		
+
 		// test author 100 -> 700 mapping
 		
 		$this->assertEquals( count($record->getAuthors()), 3);

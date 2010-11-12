@@ -1,6 +1,7 @@
 <?php
 
 require_once '../lib/framework/Parser.php';
+require_once '../lib/framework/Languages.php';
 require_once '../lib/Xerxes/Marc.php';
 require_once '../lib/Xerxes/Record.php';
 
