@@ -1,7 +1,6 @@
 <?php
 
 require_once 'tests/Xerxes_MetalibRecordTest.php';
-
 require_once 'tests/Xerxes_Record_DocumentTest.php';
 
 /**
@@ -20,7 +19,11 @@ class testsSuite extends PHPUnit_Framework_TestSuite
 		$this->addTestSuite ( 'Xerxes_MetalibRecordTest' );
 		
 		$this->addTestSuite ( 'Xerxes_Record_DocumentTest' );
-	
+		
+		// load language file
+		
+		$objLanguage = Xerxes_Framework_Languages::getInstance();
+		$objLanguage->init();	
 	}
 	
 	/**
