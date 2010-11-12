@@ -493,10 +493,11 @@ class Xerxes_Marc_DataField
 	 *
 	 * @param string $code		[optional] single subfield code, or multiple subfield codes listed together,
 	 * 							empty value returns all subfields
+	 * @param bool 				[optional] return fields in the order specified in $code
 	 * @return Xerxes_Marc_SubFieldList
 	 */
 	
-	public function subfield($code = "")
+	public function subfield($code = "", $specified_order = false)
 	{
 		$codes = str_split($code);
 		
@@ -511,14 +512,34 @@ class Xerxes_Marc_DataField
 		}
 		else
 		{
-			// do it this way so fields are returned in the order in 
-			// which they were specified in the paramater
-			
-			foreach ( $this->_subfields as $subfield )
+			if ( $specified_order == true)
 			{
-				if ( in_array($subfield->code, $codes ) )
+				// do it this way so fields are returned in the order in 
+				// which they were specified in the paramater
+
+				foreach ( $codes as $subfield_code )
 				{
-					$list->addField($subfield);
+					foreach ( $this->_subfields as $subfield )
+					{
+						if ( $subfield->code == $subfield_code )
+						{
+							$list->addField($subfield);
+						}
+					}
+				}				
+				
+			}
+			else
+			{
+				// $code is just defining fields to include, not order of codes,
+				// so take them in the order in which they appear
+				
+				foreach ( $this->_subfields as $subfield )
+				{
+					if ( in_array($subfield->code, $codes ) )
+					{
+						$list->addField($subfield);
+					}
 				}
 			}
 		}
@@ -642,7 +663,7 @@ abstract class Xerxes_Marc_FieldList implements Iterator
 
 class Xerxes_Marc_DataFieldList extends Xerxes_Marc_FieldList 
 {
-	public function subfield($code) // convenience method
+	public function subfield($code, $specified_order = false) // convenience method
 	{
 		if ( count($this->list) == 0 )
 		{
@@ -656,7 +677,7 @@ class Xerxes_Marc_DataFieldList extends Xerxes_Marc_FieldList
 				// return the first (and only the first) subfield of the 
 				// first (and only the first) datafield  
 				
-				$subfield = $this->list[0]->subfield($code)->item(0);
+				$subfield = $this->list[0]->subfield($code,$specified_order)->item(0);
 				
 				if ( $subfield == null )
 				{
@@ -672,7 +693,7 @@ class Xerxes_Marc_DataFieldList extends Xerxes_Marc_FieldList
 				// multiple subfields specified, so return them all, but 
 				// again only from the first occurance of the datafield
 				
-				return $this->list[0]->subfield($code);
+				return $this->list[0]->subfield($code,$specified_order);
 			}
 		}
 	}

@@ -377,7 +377,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		// specify the order of the subfields in 773 for journal as $a $t $g and then everything else
 		//  in case they are out of order 
 		
-		$this->journal =  $this->datafield("773")->subfield("atgbcdefhijklmnopqrsuvwxyz1234567890")->__toString();
+		$this->journal =  $this->datafield("773")->subfield("atgbcdefhijklmnopqrsuvwxyz1234567890", true)->__toString();
 		$strJournal =  $this->datafield("773")->subfield("agpqt")->__toString();
 		$this->journal_title =  $this->datafield("773")->subfield("t")->__toString();
 		$this->short_title =  $this->datafield("773")->subfield("p")->__toString();
