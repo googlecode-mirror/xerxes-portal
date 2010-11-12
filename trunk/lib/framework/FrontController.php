@@ -45,14 +45,18 @@ class Xerxes_Framework_FrontController
 		
 		self::registerClasses( "$path_to_parent/lib/framework", "Xerxes_Framework");
 		
-		// initialize the configuration setting (Registry) and 
-		// command-view mapping (ControllerMap) objects
-
+		// initialize the configuration setting (Registry), 
+		// command-view mapping (ControllerMap), and
+		// language translation (Languages) objects 
+		
 		$objRegistry = Xerxes_Framework_Registry::getInstance();
 		$objRegistry->init();
 		
 		$objControllerMap = Xerxes_Framework_ControllerMap::getInstance();
 		$objControllerMap->init();
+			
+		$objLanguage = Xerxes_Framework_Languages::getInstance();
+		$objLanguage->init();		
 		
 		// set the version number, for interface or other places
 		
@@ -190,12 +194,6 @@ class Xerxes_Framework_FrontController
 			$objRegistry->setConfig( "PATH_PARENT_DIRECTORY", $path_to_parent );
 			$objRegistry->setConfig( "APP_DIRECTORY", $working_dir );
 			$objRegistry->setConfig( "BASE_URL", $web . $base_path , true );
-			
-			// language class
-			
-			$objLanguage = Xerxes_Framework_Languages::getInstance();
-			$objLanguage->init();
-			
 
 			####################
 			#   INSTRUCTIONS   #
