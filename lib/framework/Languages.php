@@ -16,7 +16,7 @@ class Xerxes_Framework_Languages
 	protected $xpath = "";		// language data we can query
 	protected $gettext = false; // whether gettext is installed
 	protected $languages_file_system = "/usr/share/xml/iso-codes/iso_639.xml";
-	protected $languages_file_xerxes = "/lib/data/iso_639.xml"; // local version
+	protected $languages_file_xerxes = "../data/iso_639.xml"; // local version
 	protected $locale = "C";	// default locale
 	protected $domain = "iso_639";	// gettext domain
 	private static $instance;	// singleton pattern
@@ -67,7 +67,7 @@ class Xerxes_Framework_Languages
 				
 		// set full path to local copy
 		
-		$this->languages_file_xerxes = $objRegistry->getConfig("PATH_PARENT_DIRECTORY") . $this->languages_file_xerxes;
+		$this->languages_file_xerxes = realpath(dirname(__FILE__) . DIRECTORY_SEPARATOR . $this->languages_file_xerxes);
 		
 		// if the iso-codes is not installed, use our copy
 		
