@@ -253,46 +253,6 @@ class Xerxes_Framework_Request
 	}
 
 	/**
-	 * Simple function to detect if the user is a crawler
-	 * http://www.russellbeattie.com/blog/mobile-browser-detection-in-php
-	 */
-	
-	public function isBot()
-	{
-		$isBot = false;
-		
-		$ua = strtolower($this->getServer('HTTP_USER_AGENT'));
-		$ip = $this->getServer('REMOTE_ADDR');
-		
-		$isBot =  $ip == '66.249.65.39' 
-			|| strpos($ua, 'googlebot') !== false 
-			|| strpos($ua, 'mediapartners') !== false 
-			|| strpos($ua, 'yahooysmcm') !== false 
-			|| strpos($ua, 'baiduspider') !== false
-			|| strpos($ua, 'msnbot') !== false
-			|| strpos($ua, 'slurp') !== false
-			|| strpos($ua, 'ask') !== false
-			|| strpos($ua, 'teoma') !== false
-			|| strpos($ua, 'spider') !== false 
-			|| strpos($ua, 'heritrix') !== false 
-			|| strpos($ua, 'attentio') !== false 
-			|| strpos($ua, 'twiceler') !== false 
-			|| strpos($ua, 'irlbot') !== false 
-			|| strpos($ua, 'fast crawler') !== false                        
-			|| strpos($ua, 'fastmobilecrawl') !== false 
-			|| strpos($ua, 'jumpbot') !== false
-			|| strpos($ua, 'googlebot-mobile') !== false
-			|| strpos($ua, 'yahooseeker') !== false
-			|| strpos($ua, 'motionbot') !== false
-			|| strpos($ua, 'mediobot') !== false
-			|| strpos($ua, 'chtml generic') !== false
-			|| strpos($ua, 'nokia6230i/. fast crawler') !== false;
-			
-		return $isBot;
-	}
-	
-	
-	/**
 	 * Extract params from pretty-urls when turned on in config. Requires base url to be set in config.
 	 * will get from $_SERVER['REQUEST_URI'], first stripping base url.
 	 */
@@ -363,6 +323,7 @@ class Xerxes_Framework_Request
 			$configBase = $this->registry->getConfig( 'BASE_WEB_PATH', false, "" );
 			
 			// remove base path, which might be simply '/'
+			
 			if (substr ( $request_uri, 0, strlen ( $configBase ) + 1 ) == $configBase . "/")
 			{
 				// $request_uri = str_replace( $configBase . "/", "", $request_uri );
@@ -732,6 +693,8 @@ class Xerxes_Framework_Request
 		{
 			$properties = $properties->toArray();
 		}
+		
+		// check for base
 		
 		if ( ! array_key_exists( "base", $properties ) )
 		{
