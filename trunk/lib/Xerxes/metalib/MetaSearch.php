@@ -375,7 +375,7 @@
 			}
 			else 
 			{
-				throw new Exception("you must specify either an ip address or an institute, portal, and language");
+				throw new Exception("you must specify institute, portal, and language");
 			}
 
 			$this->url .= "&session_id=" . $this->session;
