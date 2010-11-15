@@ -43,7 +43,7 @@
 			
 			$this->configInstitute = $this->registry->getConfig("METALIB_INSTITUTE", true);			
 			$this->configPortal = $this->registry->getConfig("METALIB_PORTAL", false, $this->configInstitute);
-			$this->configLanguages = $this->registry->getConfig("LANGUAGES", true);
+			$this->configLanguages = $this->registry->getConfig("LANGUAGES", false);
 			
 			$this->configChunk = $this->registry->getConfig("CHUNK_KB_PULL", false, false);
 			
@@ -112,7 +112,14 @@
 			
 			echo "   Fetching categories and assigning databases . . . ";
 				
-				foreach ( $this->configLanguages->language as $language )
+				$languages = array(array("code" => "eng", "locale" => "C"));
+			
+				if ( $this->configLanguages != null )
+				{
+					$languages = $this->configLanguages->language;
+				}
+			
+				foreach ( $languages as $language )
 				{
 					$locale = (string) $language["locale"];
 					$lang = (string) $language["code"];
