@@ -61,6 +61,7 @@
 			<div id="snippetControl">
 		
 				<form method="GET" id="generator" action="{$base_url}">
+					<input type="hidden" name="lang" value="{//request/lang}" />
 					<input type="hidden" name="base" value="{request/base}" />
 					<input type="hidden" name="action" value="{request/action}" />
 					<input type="hidden" name="subject" value="{request/subject}" />

@@ -25,54 +25,22 @@ DROP TABLE xerxes_types;
 
 CREATE TABLE xerxes_databases(
 	metalib_id     		VARCHAR(10),
-	title_full     		VARCHAR(255),
 	title_display		VARCHAR(100),
-	institute		VARCHAR(10),
-	filter			VARCHAR(50),
-	searchable		INT,
-	guest_access  		INT,
-	subscription		INT,
-	proxy 			INT,
-	active			VARCHAR(10),
-	new_resource_expiry	datetime,
-	updated			datetime,
-	number_sessions		INT,
-	sfx_suppress		INT,
-	creator			VARCHAR(600),
-	publisher		VARCHAR(300),
-	publisher_description	VARCHAR(3000),
-	description		VARCHAR(3000),
-	coverage		VARCHAR(1500),
-	time_span		VARCHAR(200),
-	copyright		VARCHAR(1000),
-	note_cataloger		VARCHAR(2500),
-	note_fulltext		VARCHAR(500),
-	search_hints		VARCHAR(3000),
-	type			VARCHAR(50),
-	icon			VARCHAR(50),
-	library_address		VARCHAR(200),
-	library_city		VARCHAR(100),
-	library_state		VARCHAR(30),
-	library_zipcode		VARCHAR(20),
-	library_country		VARCHAR(50),
-	library_telephone	VARCHAR(50),
-	library_fax		VARCHAR(50),
-	library_email		VARCHAR(50),
-	library_contact		VARCHAR(200),
-	library_note		VARCHAR(200),
-	library_hours		VARCHAR(150),
-	library_access		VARCHAR(500),
-	link_native_home	VARCHAR(500),
-	link_native_record		VARCHAR(500),
-	link_native_home_alternative	VARCHAR(500),
-	link_native_record_alternative	VARCHAR(500),
-	link_native_holdings		VARCHAR(500),
-	link_guide			VARCHAR(500),
-	link_publisher			VARCHAR(500),
-	link_search_post		VARCHAR(500),
-
+	type                    VARCHAR(50),
+	data			TEXT,
 	PRIMARY KEY (metalib_id)
 );
+
+CREATE TABLE xerxes_databases_search (
+	database_id     	VARCHAR(10),
+	field			VARCHAR(50),
+	term			VARCHAR(50),
+
+	FOREIGN KEY (database_id) REFERENCES xerxes_databases(metalib_id) ON DELETE CASCADE
+);
+
+CREATE INDEX xerxes_databases_search_field_idx ON xerxes_databases_search(field);
+CREATE INDEX xerxes_databases_search_term_idx ON xerxes_databases_search(term);
 
 CREATE TABLE xerxes_database_alternate_titles (
 	id			INT IDENTITY,

@@ -259,8 +259,32 @@ class Xerxes_Framework_Request
 	
 	public function extractParamsFromPath()
 	{
-		$this->mapPathToProperty( 0, "base" );
-		$this->mapPathToProperty( 1, "action" );
+		$x = 0; // this can change whether language is present or not
+		
+		// extract language from path, if present
+		
+		$languages = $this->registry->getConfig("languages");
+		$path = $this->pathElements();
+		
+		if ( $languages != "" && count($path) > 0 )
+		{
+			foreach ( $languages as $language )
+			{
+				// first path element includes language, so map it
+				// and then push all other path elements up one
+				
+				if ( $path[0] == $language["code"] )
+				{
+					$this->mapPathToProperty( 0, "lang" );
+					$x = 1;
+				}
+			}
+		}
+		
+		// base and action
+		
+		$this->mapPathToProperty( 0 + $x, "base" );
+		$this->mapPathToProperty( 1 + $x, "action" );
 		
 		// need to swap aliases before we fetch data
 		
@@ -274,7 +298,7 @@ class Xerxes_Framework_Request
 		
 		foreach ( $map as $index => $property )
 		{
-			$this->mapPathToProperty( $index, $property );
+			$this->mapPathToProperty( $index + $x, $property );
 		}
 	}
 	
@@ -724,6 +748,8 @@ class Xerxes_Framework_Request
 		$extra_path = "";
 		$query_string = "";
 		
+		// base and action
+		
 		$base = $properties["base"];
 		$action = null;
 		
@@ -732,18 +758,36 @@ class Xerxes_Framework_Request
 			$action = $properties["action"];
 		}
 		
+		// add in the the language element automatically
+		
+		if ( $this->getProperty("lang") != "" )
+		{
+			$properties["lang"] = $this->getProperty("lang");
+		}
+		
 		if ( $this->registry->getConfig( 'REWRITE', false ) )
 		{
+			$x = 0;
+			
+			// language goes first, if present
+			
+			if ( array_key_exists("lang", $properties) )
+			{
+				$extra_path_arr[0] = urlencode( $properties["lang"]);
+				unset( $properties["lang"] );
+				$x = 1;
+			}
+			
 			// base in path
 
-			$extra_path_arr[0] = urlencode( $this->getAlias($base)); //alias
+			$extra_path_arr[0 + $x] = urlencode( $this->getAlias($base)); //alias
 			unset( $properties["base"] );
 			
 			// action in path
 
 			if ( array_key_exists( "action", $properties ) )
 			{
-				$extra_path_arr[1] = urlencode( $action );
+				$extra_path_arr[1 + $x] = urlencode( $action );
 				unset( $properties["action"] );
 			}
 			
@@ -756,7 +800,7 @@ class Xerxes_Framework_Request
 				
 				if ( $index )
 				{
-					$extra_path_arr[$index] = urlencode( $properties[$property] );
+					$extra_path_arr[$index + $x] = urlencode( $properties[$property] );
 					unset( $properties[$property] );
 				}
 			}

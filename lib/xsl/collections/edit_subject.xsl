@@ -78,14 +78,14 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
 	
 		<xsl:if test="$show_advanced_options">
 			<li class="editCommand">
-			<a class="iconCommand rename" href="./?base=collections&amp;action=rename_form&amp;subject={//category/@normalized}&amp;username={//category/@owned_by_user}">
+			<a class="iconCommand rename" href="./?{$language_param}&amp;base=collections&amp;action=rename_form&amp;subject={//category/@normalized}&amp;username={//category/@owned_by_user}">
 				<xsl:copy-of select="$text_collections_change_name" /></a>
 			</li>
 		</xsl:if>
 		
 		<xsl:if test="$show_advanced_options">
 			<li class="editCommand">
-				<a class="iconCommand delete" href="./?base=collections&amp;action=delete_category&amp;subject={//category/@normalized}&amp;username={//category/@owned_by_user}">
+				<a class="iconCommand delete" href="./?{$language_param}&amp;base=collections&amp;action=delete_category&amp;subject={//category/@normalized}&amp;username={//category/@owned_by_user}">
 					<xsl:copy-of select="$text_collections_delete_collection" />
 				</a>
 			</li>
@@ -96,12 +96,12 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
 			<xsl:copy-of select="$text_collections_publish" /><xsl:text> </xsl:text> 
 			<xsl:choose>
 				<xsl:when test="//category/@published = '1'">
-					<a href="{$base_url}/?base=collections&amp;action=edit&amp;username={//category/@owned_by_user}&amp;subject={//category/@normalized}&amp;published=false&amp;return={php:function('urlencode', string(//server/request_uri))}">
+					<a href="{$base_url}/?{$language_param}&amp;base=collections&amp;action=edit&amp;username={//category/@owned_by_user}&amp;subject={//category/@normalized}&amp;published=false&amp;return={php:function('urlencode', string(//server/request_uri))}">
 					<xsl:copy-of select="$text_collections_private" /></a> | <strong><xsl:copy-of select="$text_collections_public" /></strong>
 				</xsl:when>
 				<xsl:otherwise>
 					<strong><xsl:copy-of select="$text_collections_private" /></strong> | 
-					<a href="{$base_url}/?base=collections&amp;action=edit&amp;username={//category/@owned_by_user}&amp;subject={//category/@normalized}&amp;published=true&amp;return={php:function('urlencode', string(//server/request_uri))}">
+					<a href="{$base_url}/?{$language_param}&amp;base=collections&amp;action=edit&amp;username={//category/@owned_by_user}&amp;subject={//category/@normalized}&amp;published=true&amp;return={php:function('urlencode', string(//server/request_uri))}">
 						<xsl:copy-of select="$text_collections_public" />
 					</a>
 					
@@ -112,7 +112,7 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
 
 		<xsl:if test="count(/*/category[1]/subcategory) &gt; 1">
 			<li class="editCommand">
-				<a class="iconCommand reorder" href="./?base=collections&amp;action=reorder_subcats_form&amp;subject={//category/@normalized}&amp;username={//category/@owned_by_user}">
+				<a class="iconCommand reorder" href="./?{$language_param}&amp;base=collections&amp;action=reorder_subcats_form&amp;subject={//category/@normalized}&amp;username={//category/@owned_by_user}">
 					<xsl:copy-of select="$text_collections_change_section_order" /></a>
 			</li>
 		</xsl:if>
@@ -120,6 +120,7 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
 		<xsl:if test="$show_advanced_options">
 			<li id="addNewSection" class="editCommand">
 				<form action="{$base_url}" METHOD="GET">
+					<input type="hidden" name="lang" value="{//request/lang}" />
 					<input type="hidden" name="base" value="collections"/>
 					<input type="hidden" name="action" value="save_complete"/>
 					<input type="hidden" name="username" value="{//request/username}" />
@@ -153,7 +154,7 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
 					
 						<xsl:if test="$show_advanced_options">
 							<li class="editCommand">
-								<a class="iconCommand rename" href="./?base=collections&amp;action=rename_form&amp;subject={../@normalized}&amp;subcategory={@id}&amp;username={../@owned_by_user}">
+								<a class="iconCommand rename" href="./?{$language_param}&amp;base=collections&amp;action=rename_form&amp;subject={../@normalized}&amp;subcategory={@id}&amp;username={../@owned_by_user}">
 									<xsl:copy-of select="$text_collections_change_section_name" /></a>
 							</li>
 						</xsl:if>
@@ -162,20 +163,20 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
 						
 						<xsl:if test="$show_advanced_options and (count(/*/category/subcategory) &gt; 1)">
 							<li class="editCommand">
-								<a class="iconCommand delete" href="./?base=collections&amp;action=delete_subcategory&amp;subject={//category/@normalized}&amp;subcategory={@id}&amp;username={//category/@owned_by_user}">
+								<a class="iconCommand delete" href="./?{$language_param}&amp;base=collections&amp;action=delete_subcategory&amp;subject={//category/@normalized}&amp;subcategory={@id}&amp;username={//category/@owned_by_user}">
 									<xsl:copy-of select="$text_collections_delete_section" /></a>
 							</li>
 						</xsl:if>
 
 						<xsl:if test="count(database) &gt; 1">
 							<li class="editCommand">
-								<a class="iconCommand reorder" href="./?base=collections&amp;action=reorder_databases_form&amp;subject={//category/@normalized}&amp;subcategory={@id}&amp;username={//category/@owned_by_user}">
+								<a class="iconCommand reorder" href="./?{$language_param}&amp;base=collections&amp;action=reorder_databases_form&amp;subject={//category/@normalized}&amp;subcategory={@id}&amp;username={//category/@owned_by_user}">
 								<xsl:copy-of select="$text_collections_change_database_order" /></a>			
 							</li>		 
 						</xsl:if>
 
 						<li class="editCommand">
-							<a class="iconCommand add" href="./?base=collections&amp;action=edit_form&amp;username={../@owned_by_user}&amp;subject={../@normalized}&amp;add_to_subcategory={@id}#section_{@id}">
+							<a class="iconCommand add" href="./?{$language_param}&amp;base=collections&amp;action=edit_form&amp;username={../@owned_by_user}&amp;subject={../@normalized}&amp;add_to_subcategory={@id}#section_{@id}">
 								<xsl:copy-of select="$text_collections_add_database" /></a>
 						</li>
 						
@@ -194,7 +195,7 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
 								<xsl:call-template name="text_collections_remove_database" />
 							</xsl:variable>
 
-							<a href="./?base=collections&amp;action=remove_db&amp;username={//request/username}&amp;subject={//category[1]/@normalized}&amp;subcategory={../@id}&amp;id={metalib_id}&amp;return={php:function('urlencode', string(//server/request_uri))}#section_{../@id}"><img 
+							<a href="./?{$language_param}&amp;base=collections&amp;action=remove_db&amp;username={//request/username}&amp;subject={//category[1]/@normalized}&amp;subcategory={../@id}&amp;id={metalib_id}&amp;return={php:function('urlencode', string(//server/request_uri))}#section_{../@id}"><img 
 								src="{$base_url}/images/delete.png" title="{$remove_text}" alt="{$remove_text}"/></a>
 
 							<span class="subjectDatabaseTitle">
@@ -231,6 +232,7 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
 	<div id="addDatabases">
 	
 		<form method="GET" action="{base_url}#section_{//request/add_to_subcategory}">
+		<input type="hidden" name="lang" value="{//request/lang}" />
 		<input type="hidden" name="base" value="collections" />
 		<input type="hidden" name="action" value="edit_form" />
 		<input type="hidden" name="username" value="{/*/category[1]/@owned_by_user}" />
@@ -238,7 +240,7 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
 		<input type="hidden" name="add_to_subcategory" value="{//request/add_to_subcategory}" />
 		
 			<p>
-				[ <a  href="./?base=collections&amp;action=edit_form&amp;username={/*/category[1]/@owned_by_user}&amp;subject={/*/category[1]/@normalized}&amp;id={metalib_id}#section_{/*/request/add_to_subcategory}">
+				[ <a  href="./?{$language_param}&amp;base=collections&amp;action=edit_form&amp;username={/*/category[1]/@owned_by_user}&amp;subject={/*/category[1]/@normalized}&amp;id={metalib_id}#section_{/*/request/add_to_subcategory}">
           <xsl:copy-of select="$text_collections_remove_searchbox" />
 				</a> ]
 			</p>	
@@ -266,7 +268,7 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
 						<xsl:call-template name="text_collections_add_database_section" />
 					</xsl:variable>
 					<li>
-						<a href="./?base=collections&amp;action=save_complete&amp;username={/*/category[1]/@owned_by_user}&amp;subject={/*/category[1]/@normalized}&amp;subcategory={/*/request/add_to_subcategory}&amp;id={metalib_id}&amp;return={php:function('urlencode', string(//server/request_uri))}#section_{/*/request/add_to_subcategory}">
+						<a href="./?{$language_param}&amp;base=collections&amp;action=save_complete&amp;username={/*/category[1]/@owned_by_user}&amp;subject={/*/category[1]/@normalized}&amp;subcategory={/*/request/add_to_subcategory}&amp;id={metalib_id}&amp;return={php:function('urlencode', string(//server/request_uri))}#section_{/*/request/add_to_subcategory}">
 							<img src="{$base_url}/images/famfamfam/add.png" class="miniIcon" title="{$add_text}" alt="{$add_text}" />
 						</a>
 					

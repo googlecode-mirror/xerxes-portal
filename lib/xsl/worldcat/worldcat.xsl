@@ -41,7 +41,7 @@
 	<xsl:call-template name="breadcrumb_start" />
 	
 	<xsl:if test="//request/action != 'home'">
-		<a href="./?base={//request/base}"><xsl:value-of select="$text_worldcat_name" /></a> <xsl:copy-of select="$text_breadcrumb_separator" />
+		<a href="./?{$language_param}&amp;base={//request/base}"><xsl:value-of select="$text_worldcat_name" /></a> <xsl:copy-of select="$text_breadcrumb_separator" />
 	</xsl:if>
 		
 	<xsl:if test="$condition = '2' and $last_search != ''">
@@ -60,7 +60,7 @@
 
 		<div id="worldcatAdvancedMore">
 			<xsl:if test="not(//request/session/role) or //request/session/role != 'guest'">
-				<a href="./?base={//request/base}&amp;action=advanced"><xsl:value-of select="$text_searchbox_options_more" /></a>
+				<a href="./?{$language_param}&amp;base={//request/base}&amp;action=advanced"><xsl:value-of select="$text_searchbox_options_more" /></a>
 			</xsl:if>
 		</div>	
 </xsl:template>

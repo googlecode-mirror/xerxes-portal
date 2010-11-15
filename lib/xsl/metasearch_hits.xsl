@@ -58,6 +58,7 @@
 			<xsl:otherwise>
 				
 				<form action="./" method="get">
+				<input type="hidden" name="lang" value="{//request/lang}" />
 				<input type="hidden" name="base" value="metasearch" />
 				<input type="hidden" name="action" value="search" />
 				<input type="hidden" name="context" value="{$context}" />
@@ -91,6 +92,7 @@
 							<xsl:when test="($is_mobile = 1 and contains(//server/http_user_agent,'Opera')) or request/session/ada">
 								<p><xsl:text>Your search is still in progress. </xsl:text></p>
 								<form action="./" method="get">
+									<input type="hidden" name="lang" value="{//request/lang}" />
 									<input type="hidden" name="base" value="metasearch" />
 									<input type="hidden" name="action" value="hits" />
 									<input type="hidden" name="group" value="{//request/group}" />

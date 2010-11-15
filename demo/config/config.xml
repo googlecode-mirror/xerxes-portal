@@ -50,44 +50,43 @@
 		
 		<config name="reverse_proxy"></config>
 		
-		<!-- Xerxes interface language. Currently used for:
-			* selecting from multilingual database descriptions (see db_description_multilingual)
-		-->
+	<!-- LANGUAGES -->
 		
-		<config name="xerxes_language" pass="true">eng</config>
+		<config name="languages" xml="true" pass="true">
 		
-		<!-- Xerxes locale. Currently used to:
-			* display localized language names;
+			<!-- 
+			
+			  @code = language code
+			  @locale = used for:
+				
+				* displays localized language names;
 				i.e. if you set this to 'de_DE.UTF-8', document language names will be displayed in German
 				if left empty, default POSIX locale 'C' will be used
-			* control transliteration of category names during the 'populate databases' action;
+				
+				* controls transliteration of category names during the 'populate databases' action;
 				This controls how non-ASCII characters in Metalib category names are converted to ASCII
 				in their Xerxes normalized titles (e.g. in URL).
 				See details here: http://www.php.net/manual/en/function.iconv.php
-		-->
+			-->
 		
-		<config name="xerxes_locale"></config>
+			<language code="eng" locale="" display="English" />
+			<language code="cze" locale="cs_CS.utf8" display="Czech" />
+		</config>
 		
 		
 	<!-- METALIB CONFIGURATION -->
 		
-		<!-- location, username, password, institute, for Metalib X-Server:
+		<!-- location, username, password, institute, & portal for Metalib X-Server:
 		
 			* do *NOT* include the /X in the metalib address.
 			* username and password must correspond to a valid /M interface user.
-			* institute is usually the same as username. -->
+			* institute and portal are usually the same as username. -->
 			
 		<config name="metalib_address"></config>
 		<config name="metalib_username"></config>
 		<config name="metalib_password"></config>
 		<config name="metalib_institute"></config>
-		
-		<!-- IP address associated with this implementation. 
-			If your metalib instance is associated with a specific IP range, as you might have with a consortium, 
-			then enter a single IP address within that range here, so that Metalib knows which knowledgebase to 
-			associate with this implementation of Xerxes. -->
-		
-		<config name="ip_address"></config>
+		<config name="metalib_portal"></config>
 		
 		<!-- Metalib user groups (aka 'secondary affiliations'). -->
 		
@@ -129,8 +128,6 @@
 		
 		<!--  If you want to do the SFX 'populate' action from another link resolver, perhaps because 
 			your main one is not SFX, configure this 
-			
-			@todo change this config name to something more clear
 			-->
 		
 		<config name="alternate_fulltext_harvest_address"></config>
@@ -340,11 +337,14 @@
 		<config name="bx_token"></config>		
 		
 		<!-- ask bX for at most bx_max_records results per item -->
+		
 		<config name="bx_max_records">10</config>	
 		
 		<!-- return only recommendations above this relevance treshold (0-100) -->
-		<config name="bx_min_relevance">0</config>	
-			<!-- the overall width of the page design, see wiki for details! -->
+		
+		<config name="bx_min_relevance">0</config>
+		
+		<!-- the overall width of the page design, see wiki for details! -->
 		
 		<config name="document" pass="true">doc3</config>
 		
@@ -393,7 +393,7 @@
 			will be recognized by XSLT as language separator.
 			
 			Values:
-			comma-separated sequence of language codes, e.g. 'eng,spa,ger'; xerxes_language value must be among them
+			comma-separated sequence of language codes, e.g. 'eng,spa,ger' from xerxes_languages config
 			
 			If this option is left empty, Xerxes will display description as it is regardless of Xerxes language -->
 			

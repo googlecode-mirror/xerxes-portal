@@ -365,12 +365,22 @@
 		 * @return DOMDocument				Metalib category xml document	
 		 */
 		
-		public function categories( $strIpAddress ) 
+		public function categories( $institute = null, $portal = null, $language = null ) 
 		{
-			$this->url = $this->server . "/X?op=retrieve_categories_request" .
-				"&requester_ip=" . $strIpAddress .
-				"&session_id=" . $this->session;
-	
+			$this->url = $this->server . "/X?op=retrieve_categories_request";
+			
+			if ( $institute != null && $portal != null && $language != null )
+			{
+				$this->url .= "&institute=$institute&portal=$portal&language=$language";
+			}
+			else 
+			{
+				throw new Exception("you must specify either an ip address or an institute, portal, and language");
+			}
+
+			$this->url .= "&session_id=" . $this->session;
+			
+			
 			// get retrieve_resource_categories_response from Metalib
 
 			$this->xml = $this->getResponse($this->url);

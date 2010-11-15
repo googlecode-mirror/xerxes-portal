@@ -58,6 +58,7 @@ class Xerxes_Data_Category extends Xerxes_Framework_DataValue
 	public $name;
 	public $normalized;
 	public $old;
+	public $lang;
 	public $subcategories = array ( );
 	
 	/**
@@ -106,59 +107,50 @@ class Xerxes_Data_Type extends Xerxes_Framework_DataValue
 
 class Xerxes_Data_Database extends Xerxes_Framework_DataValue
 {
-	public $metalib_id;
-	public $title_full;
-	public $title_display;
-	public $institute;
-	public $filter;
-	public $creator;
-	public $publisher;
-	public $publisher_description;
-	public $description;
-	public $coverage;
-	public $time_span;
-	public $copyright;
-	public $note_cataloger;
-	public $note_fulltext;
-	public $type;
-	public $link_native_home;
-	public $link_native_record;
-	public $link_native_home_alternative;
-	public $link_native_record_alternative;
-	public $link_native_holdings;
-	public $link_guide;
-	public $link_publisher;
-	public $link_search_post;
-	public $library_address;
-	public $library_city;
-	public $library_state;
-	public $library_zipcode;
-	public $library_country;
-	public $library_telephone;
-	public $library_fax;
-	public $library_email;
-	public $library_contact;
-	public $library_note;
-	public $library_hours;
-	public $library_access;
-	public $active;
-	public $proxy;
-	public $searchable;
-	public $guest_access;
-	public $subscription;
-	public $sfx_suppress;
-	public $new_resource_expiry;
-	public $updated;
-	public $number_sessions;
-	public $search_hints;
-	public $icon;
+	public $xml;
 	
-	public $keywords = array ( );
-	public $notes = array ( );
-	public $languages = array ( );
-	public $alternate_publishers = array ( );
-	public $alternate_titles = array ( );
-	public $group_restrictions = array ( );
+	public $metalib_id;
+	public $title_display;
+	public $type;
+	public $data;
+	
+	public function load($arrResult)
+	{
+		parent::load($arrResult);
+		
+		if ( $this->data != "" )
+		{
+			$this->xml = simplexml_load_string($this->data);
+		}
+	}
+	
+	public function __get($name)
+	{
+		if ( $this->xml instanceof SimpleXMLElement )
+		{
+			return (string) $this->xml->$name;
+		}
+		else
+		{
+			return null;
+		}
+	}
+	
+	public function get($field)
+	{
+		$values = array();
+		
+		if ( $this->xml instanceof SimpleXMLElement )
+		{
+			foreach ($this->xml->$field as $value)
+			{
+				array_push($values, $value);
+			}
+		}
+		
+		return $values;
+	}
+
 }
 
 class Xerxes_Data_Record extends Xerxes_Framework_DataValue

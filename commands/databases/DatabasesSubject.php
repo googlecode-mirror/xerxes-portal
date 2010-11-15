@@ -15,6 +15,8 @@ class Xerxes_Command_DatabasesSubject extends Xerxes_Command_Databases
 {
 	public function doExecute()
 	{
+		$lang = $this->request->getProperty("lang");
+		
 		// main list of subcategories and databases
 		
 		$objXml = new DOMDocument( );
@@ -28,7 +30,7 @@ class Xerxes_Command_DatabasesSubject extends Xerxes_Command_Databases
 		$strOld = $this->request->getProperty( "category" );
 		$strSubject = $this->request->getProperty( "subject" );
 		
-		$configSidebar = $this->registry->getConfig("SUBCATEGORIES_SIDEBAR", false);
+		$configSidebar = $this->registry->getConfig("SUBCATEGORIES_SIDEBAR", false, null, $lang);
 		$arrSidebar = explode(",", $configSidebar);
 		
 		// look up home page default subject from config if no subject was specified, and we were 
@@ -36,11 +38,11 @@ class Xerxes_Command_DatabasesSubject extends Xerxes_Command_Databases
 		
 		if ( $strSubject == "" && $this->request->getProperty( "use_categories_quicksearch" ) == "true" )
 		{
-			$strSubject = $this->registry->getConfig( "categories_quicksearch", false, "quick-search" );
+			$strSubject = $this->registry->getConfig( "categories_quicksearch", false, "quick-search", $lang );
 		}
 		
 		$objData = new Xerxes_DataMap( );
-		$objCategoryData = $objData->getSubject( $strSubject, $strOld );
+		$objCategoryData = $objData->getSubject($strSubject, $strOld, "metalib", null, $lang);
 		
 		$y = 1;
 		

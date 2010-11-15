@@ -69,6 +69,7 @@
 	<h1><xsl:value-of select="$context" /></h1>
 	
 	<form action="./" method="get">
+	<input type="hidden" name="lang" value="{//request/lang}" />
 	<input type="hidden" name="base" value="metasearch" />
 	<input type="hidden" name="action" value="search" />
 	<input type="hidden" name="context" value="{$context}" />
@@ -171,7 +172,7 @@
 				<div class="resultsSearchLink">
 					<a target="{$link_target}">
 						<xsl:attribute name="href">
-							<xsl:text>./?base=databases&amp;action=proxy</xsl:text>
+							<xsl:text>./?{$language_param}&amp;base=databases&amp;action=proxy</xsl:text>
 							<xsl:text>&amp;database=</xsl:text>
 							<xsl:value-of select="$database_metalib_id" />
 							<xsl:text>&amp;url=</xsl:text>

@@ -42,6 +42,7 @@
 	<div id="export">
 		
 		<form action="{$base_url}/" name="export_form" method="get">
+		<input type="hidden" name="lang" value="{//request/lang}" />
 		<input type="hidden" name="base" value="folder" />
 		<input type="hidden" name="action" value="export" />
 		<input type="hidden" name="username" value="{$username}" />

@@ -57,6 +57,7 @@
 			<xsl:choose>
 				<xsl:when test="searchable_by_user = '1' or //request/authorization_info/affiliated = 'false'">
 					<form name="form1" method="get" action="{$base_url}/" class="metasearchForm">
+						<input type="hidden" name="lang" value="{//request/lang}" />
 						<input type="hidden" name="base" value="metasearch" />
 						<input type="hidden" name="action" value="search" />
 						<input type="hidden" name="context">

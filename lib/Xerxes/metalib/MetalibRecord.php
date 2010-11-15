@@ -815,7 +815,6 @@ class Xerxes_MetalibRecord extends Xerxes_Record
   */
 	protected function getLinkTemplates($xml)
 	{
-		
 		$link_templates = array ();
 		$dbXPath = new DOMXPath ( $xml );
 		$objDbXml = $dbXPath->evaluate ( '//database_links/database' );
@@ -828,7 +827,13 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 			
 			for($j = 0; $j < $dbXml->childNodes->length; $j ++)
 			{
-				$node = $dbXml->childNodes->item ( $j );
+				$node = $dbXml->childNodes->item( $j );
+				
+				if ( $node instanceof DOMComment )
+				{
+					continue;
+				}
+				
 				if ($node->tagName == 'link_native_record')
 				{
 					$link_templates [$metalib_id] ["original_record"] = $node->textContent;

@@ -57,6 +57,12 @@
 		</xsl:choose>
 	</xsl:variable>
 	
+	<xsl:variable name="language_param">
+		<xsl:if test="//request/lang">
+			<xsl:text>lang=</xsl:text><xsl:value-of select="//request/lang" />
+		</xsl:if>
+	</xsl:variable>
+	
 	<!-- these have defaults here and in config.xml for backwards-compatability on older configs -->
 	
 	<xsl:variable name="document">
@@ -94,7 +100,7 @@
 
 	<xsl:variable name="databases_searchable"	select="//config/database_list_searchable" />
 	
-	<xsl:variable name="xerxes_language" select="//config/xerxes_language" />
+	<xsl:variable name="xerxes_language" select="//request/lang" />
 	
 	<xsl:variable name="db_description_multilingual">
 		<xsl:choose>
@@ -176,7 +182,7 @@
 	<div class="ada">
 		<xsl:if test="not(request/session/ada)">
 			<xsl:variable name="return_url" select="php:function('urlencode', string(request/server/request_uri))" />
-			<a href="{$base_url}/?base=databases&amp;action=accessible&amp;return={$return_url}">
+			<a href="{$base_url}/?{$language_param}&amp;base=databases&amp;action=accessible&amp;return={$return_url}">
 				<xsl:copy-of select="$text_ada_version" /> 
 			</a>
 		</xsl:if>
@@ -398,7 +404,8 @@
 <xsl:template name="breadcrumb_start">
 
 	<xsl:if test="not(request/base = 'databases' and request/action ='categories')">
-		<a href="{$base_url}"><xsl:value-of select="$text_databases_category_pagename" /></a> <xsl:copy-of select="$text_breadcrumb_separator" />
+		<a href="{$base_url}?{$language_param}"><xsl:value-of select="$text_databases_category_pagename" /></a> 
+		<xsl:text> </xsl:text><xsl:copy-of select="$text_breadcrumb_separator" />
 	</xsl:if>
 
 </xsl:template>
@@ -744,6 +751,7 @@
 			different view, which the javascript captures and uses to updates the totals above. -->
 			
 			<input type="hidden" name="base" value="folder" />
+			<input type="hidden" name="lang" value="{//request/lang}" />
 			<input type="hidden" name="action" value="tags_edit" />
 			<input type="hidden" name="record" value="{$id}" />
 			<input type="hidden" name="context" value="{$context}" />
@@ -911,6 +919,7 @@
 		
 	<form method="GET" action="./">
 		<div id="databasesSearch" class="raisedBox">
+			<input type="hidden" name="lang" value="{//request/lang}" />
 			<input type="hidden" name="base" value="databases" />
 			<input type="hidden" name="action" value="find" />
 			
@@ -1024,14 +1033,14 @@
 	
 	<xsl:if test="request/label">
 		<h2>
-			<a href="./?base=folder"><img src="{$base_url}/images/delete.png" alt="remove limit" /></a>
+			<a href="./?{$language_param}&amp;base=folder"><img src="{$base_url}/images/delete.png" alt="remove limit" /></a>
 			<xsl:copy-of select="$text_folder_limit_tag" /><xsl:text>: </xsl:text><xsl:value-of select="request/label" />
 		</h2>
 	</xsl:if>
 	
 	<xsl:if test="request/type">
 		<h2>
-			<a href="./?base=folder"><img src="{$base_url}/images/delete.png" alt="remove limit" /></a>
+			<a href="./?{$language_param}&amp;base=folder"><img src="{$base_url}/images/delete.png" alt="remove limit" /></a>
 			<xsl:copy-of select="$text_folder_limit_format" /><xsl:text>: </xsl:text><xsl:value-of select="request/type" />
 		</h2>
 	</xsl:if>
@@ -1148,7 +1157,7 @@
 			<a>
 				<xsl:attribute name="href">
 					<xsl:value-of select="$base_url" /><xsl:text>/</xsl:text>
-					<xsl:text>./?base=databases&amp;action=proxy</xsl:text>
+					<xsl:text>./?{$language_param}&amp;base=databases&amp;action=proxy</xsl:text>
 					<xsl:text>&amp;database=</xsl:text><xsl:value-of select="$database_code" />
 					<xsl:choose>
 						<xsl:when test="$url != ''">
@@ -1214,7 +1223,7 @@
 		<a class="{$class}">
 			<xsl:attribute name="href">
 				<xsl:value-of select="$base_url" /><xsl:text>/</xsl:text>
-				<xsl:text>./?base=databases&amp;action=proxy</xsl:text>
+				<xsl:text>./?{$language_param}&amp;base=databases&amp;action=proxy</xsl:text>
 				<xsl:text>&amp;database=</xsl:text><xsl:value-of select="metalib_id" />
 				<xsl:text>&amp;url=</xsl:text><xsl:value-of select="$encoded_direct_url" />
 			</xsl:attribute>
@@ -1310,6 +1319,7 @@
 		</ul>
 		
 		<form method="GET" action="./">
+		<input type="hidden" name="lang" value="{//request/lang}" />
 		<input type="hidden" name="base" value="collections"/>
 		<input type="hidden" name="action" value="new"/>
 		<input type="hidden" name="username" value="{//request/username}"/>
@@ -1337,16 +1347,16 @@
 			<ul>
 			<xsl:if test="request/base = 'databases' and (request/action = 'subject' or request/action ='metasearch')">
 				<xsl:variable name="subject" select="//category/@normalized" />
-				<li> <a href="./?base=embed&amp;action=gen_subject&amp;subject={$subject}"><xsl:copy-of select="$text_header_snippet_generate_subject" /></a> </li>
+				<li> <a href="./?{$language_param}&amp;base=embed&amp;action=gen_subject&amp;subject={$subject}"><xsl:copy-of select="$text_header_snippet_generate_subject" /></a> </li>
 			</xsl:if>
 			
 			<xsl:if test="request/base = 'databases' and request/action = 'database'">
 				<xsl:variable name="id" select="//database[1]/metalib_id" />
-				<li> <a href="./?base=embed&amp;action=gen_database&amp;id={$id}"><xsl:copy-of select="$text_header_snippet_generate_database" /></a> </li>
+				<li> <a href="./?{$language_param}&amp;base=embed&amp;action=gen_database&amp;id={$id}"><xsl:copy-of select="$text_header_snippet_generate_database" /></a> </li>
 			</xsl:if>
 			
 			<xsl:if test="request/base = 'collections' and (request/action = 'subject' or request/action = 'edit_form')">
-				<li> <a href="./?base=collections&amp;action=gen_embed&amp;username={//category[1]/@owned_by_user}&amp;subject={//category[1]/@normalized}"><xsl:copy-of select="$text_header_snippet_generate_collection" /></a> </li>
+				<li> <a href="./?{$language_param}&amp;base=collections&amp;action=gen_embed&amp;username={//category[1]/@owned_by_user}&amp;subject={//category[1]/@normalized}"><xsl:copy-of select="$text_header_snippet_generate_collection" /></a> </li>
 			</xsl:if>
 			
 			</ul>
@@ -1908,7 +1918,7 @@
 							<xsl:if test="library_contact">
                             	<xsl:variable name="image_url" select="php:function('urlencode', string(library_contact))" />
 								<div class="librarianPicture">
-									<img src="./?base=databases&amp;action=librarian-image&amp;url={$image_url}" alt="{title_display}" />
+									<img src="./?{$language_param}&amp;base=databases&amp;action=librarian-image&amp;url={$image_url}" alt="{title_display}" />
 								</div>
 							</xsl:if>
 
@@ -2081,6 +2091,7 @@
 
 	<form action="./" method="get">
 
+		<input type="hidden" name="lang" value="{//request/lang}" />
 		<input type="hidden" name="base" value="{//request/base}" />
 		<input type="hidden" name="action" value="search" />
 		
@@ -2426,7 +2437,7 @@
 		<xsl:variable name="subject_id" select="//category[1]/@normalized" />
 		<link rel="search"
 			type="application/opensearchdescription+xml" 
-			href="{$base_url}?base=databases&amp;action=subject-opensearch&amp;subject={$subject_id}"
+			href="{$base_url}?{$language_param}&amp;base=databases&amp;action=subject-opensearch&amp;subject={$subject_id}"
 			title="{$text_app_name} {$subject_name} search" />
 	</xsl:if>
 	

@@ -78,10 +78,16 @@ class Xerxes_Framework_Registry
 
 			$xml = simplexml_load_file( $file );
 			$this->xml = $xml;
-				
+			
 			foreach ( $xml->configuration->config as $config )
 			{
 				$name = Xerxes_Framework_Parser::strtoupper( $config["name"] );
+				$lang = (string) $config["lang"];
+				
+				if ( $lang != "" )
+				{
+					$name .= "_$lang";
+				}
 				
 				if ( $config["xml"] == "true" ) 
 				{
@@ -156,12 +162,18 @@ class Xerxes_Framework_Registry
 	 * @param string $name			name of the configuration setting
 	 * @param bool $bolRequired		[optional] whether function should throw exception if no value found
 	 * @param mixed $default		[optional] a default value for the constant if none found
+	 * @param string $lang			[optional] must include language attribute 
 	 * @return mixed  Can return a String or a SimpleXMLElement, depending on whether it was XML config value. 
 	 */
 	
-	public function getConfig($name, $bolRequired = false, $default = null)
+	public function getConfig($name, $bolRequired = false, $default = null, $lang = "")
 	{
 		$name = Xerxes_Framework_Parser::strtoupper( $name );
+		
+		if ( $lang != "" )
+		{
+			$name .= "_$lang";
+		}
 		
 		if ( $this->arrConfig == null )
 		{

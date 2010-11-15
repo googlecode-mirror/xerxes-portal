@@ -45,6 +45,7 @@
 		<xsl:choose>
 			<xsl:when test="$quick_search_category != ''">
 				<form action="./" method="get" name="form1">
+					<input type="hidden" name="lang" value="{//request/lang}" />
 					<input type="hidden" name="base" value="metasearch" />
 					<input type="hidden" name="action" value="search" />
 					<input type="hidden" name="context" value="{$quick_search_category}" />

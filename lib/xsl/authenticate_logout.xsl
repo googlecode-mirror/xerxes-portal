@@ -32,7 +32,9 @@
 
 	<xsl:variable name="return"		select="request/return" />
 	
-	<form name="form1" method="post" action="./?base=authenticate">
+	<form name="form1" method="post" action="./">
+	<input name="lang" type="hidden" value="{//request/lang}" />
+	<input name="base" type="hidden" value="authenticate" />
 	<input name="action" type="hidden" value="logout" />
 	<input name="return" type="hidden" value="{$return}" />
 	<input name="postback" type="hidden" value="true" />

@@ -53,6 +53,7 @@
 			<h3>Choose a section</h3>
 			
 			<form method="GET" action="{$base_url}">
+			<input type="hidden" name="lang" value="{//request/lang}" />
 			<input type="hidden" name="base" value="collections"/>
 			<input type="hidden" name="action" value="save_complete"/>
 			<input type="hidden" name="id" value="{$id}" />
