@@ -70,7 +70,7 @@
 			-->
 		
 			<language code="eng" locale="" display="English" />
-			<language code="cze" locale="cs_CS.utf8" display="Czech" />
+			<!-- <language code="cze" locale="cs_CS.utf8" display="Czech" /> -->
 		</config>
 		
 		
