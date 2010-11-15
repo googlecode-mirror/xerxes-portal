@@ -54,6 +54,7 @@
 		<h1><xsl:call-template name="page_name" /></h1>
 		
 		<form name="form1" method="get" action="{$base_url}/" class="metasearchForm">
+		<input type="hidden" name="lang" value="{//request/lang}" />
 		<input type="hidden" name="base" value="metasearch" />
 		<input type="hidden" name="action" value="search" />
 		<input type="hidden" name="context" value="{$category_name}" />

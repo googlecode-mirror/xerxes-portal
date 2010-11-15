@@ -15,10 +15,12 @@
 
 	class Xerxes_Command_PopulateDatabases extends Xerxes_Command_Databases
 	{
-		private $configIPAddress = "";			// config entry
 		private $configInstitute = "";			// config entry
+		private $configPortal = "";				// config entry
+		private $configLanguages = "";			// config entry
 		private $configChunk = false;			// config entry
 		private $objSearch = null;				// metasearch object
+		private $category_count = 1;			// to keep track of category id's
 		
 		public function doExecute()
 		{
@@ -39,10 +41,11 @@
 			
 			// get configuration settings
 			
-			$this->configIPAddress = $this->registry->getConfig("IP_ADDRESS", true);
-			$this->configInstitute = $this->registry->getConfig("METALIB_INSTITUTE", true);
+			$this->configInstitute = $this->registry->getConfig("METALIB_INSTITUTE", true);			
+			$this->configPortal = $this->registry->getConfig("METALIB_PORTAL", false, $this->configInstitute);
+			$this->configLanguages = $this->registry->getConfig("LANGUAGES", true);
+			
 			$this->configChunk = $this->registry->getConfig("CHUNK_KB_PULL", false, false);
-			$this->locale = $this->registry->getConfig("XERXES_LOCALE", false, "C");
 			
 			$configMetalibAddress = $this->registry->getConfig("METALIB_ADDRESS", true);
 			$configMetalibUsername = $this->registry->getConfig("METALIB_USERNAME", true);
@@ -109,17 +112,24 @@
 			
 			echo "   Fetching categories and assigning databases . . . ";
 				
-				$oldlocale = setlocale( LC_CTYPE, 0 );
-				setlocale( LC_CTYPE, $this->locale ); // this influences the iconv() call with 'ASCII//TRANSLIT' target
-				
-				$arrSubjects = $this->subjects($arrDatabases);
-				
-				foreach( $arrSubjects as $objCategory )
+				foreach ( $this->configLanguages->language as $language )
 				{
-					$objData->addCategory($objCategory);
+					$locale = (string) $language["locale"];
+					$lang = (string) $language["code"];
+					
+					$oldlocale = setlocale( LC_CTYPE, 0 );
+					setlocale( LC_CTYPE, $locale ); // this influences the iconv() call with 'ASCII//TRANSLIT' target					
+					
+					$arrSubjects = $this->subjects($arrDatabases, $lang);
+					
+					foreach( $arrSubjects as $objCategory )
+					{
+						$objData->addCategory($objCategory);
+					}
+					
+					setlocale( LC_CTYPE, $oldlocale );
 				}
 				
-				setlocale( LC_CTYPE, $oldlocale );
 			
 			echo "done\n";
 			
@@ -144,22 +154,27 @@
 		 *
 		 */
 		
-		private function subjects($arrDatabases)
+		private function subjects($arrDatabases, $lang)
 		{
 			$arrSubjects = array();
+			
+			// not actually specified
+			
+			$lang_metalib = strtoupper($lang);
 			
 			// fetch the categories from metalib
 			
 			$objXml = new DOMDocument();
-			$objXml = $this->objSearch->categories($this->configIPAddress);
+			
+			$objXml = $this->objSearch->categories(
+				$this->configInstitute, 
+				$this->configPortal, 
+				$lang_metalib
+			);
 			
 			$objXPath = new DOMXPath($objXml);
 			$objCategories = $objXPath->query("//category_info");
 
-			// we'll use $x to uniquely identify the categories since metalib has no id for them
-			
-			$x = 1;
-			
 			if ( $objCategories->length < 1 ) throw new Exception("Could not find any categories in the Metalib KB");
 			
 			// GET EACH CATEGORY
@@ -173,10 +188,13 @@
 				$objName = $objCategory->getElementsByTagName("category_name")->item(0);
 				$strName = ""; if ( $objName != null ) $strName = $objName->nodeValue;
 				
-				$objDataCategory->id = $x;
+				// we'll use incrementer to uniquely identify the categories since metalib has no id for them
+				
+				$objDataCategory->id = $this->category_count;
 				$objDataCategory->name = $strName;
 				$objDataCategory->normalized = $this->normalize($strName);
 				$objDataCategory->old = $this->normalizeOld($strName);
+				$objDataCategory->lang = $lang;
 				
 				// GET EACH SUBCATEGORY
 								
@@ -239,7 +257,7 @@
 					array_push($objDataCategory->subcategories, $objDataSubCategory);
 				}
 
-				$x++;
+				$this->category_count++;
 				
 				// add category to master array
 				array_push($arrSubjects, $objDataCategory);
@@ -327,87 +345,10 @@
 				// populate data object with properties
 
 				$objData = new Xerxes_Data_Database();
-				
-				// single value fields
-				
 				$objData->metalib_id = (string) $objDatabase->metalib_id;
-				$objData->title_full = (string) $objDatabase->title_full;
 				$objData->title_display = (string) $objDatabase->title_display;
-				$objData->institute = (string) $objDatabase->institute;
-				$objData->filter = (string) $objDatabase->filter;
-				$objData->creator = (string) $objDatabase->creator;
-				$objData->publisher = (string) $objDatabase->publisher;
-				$objData->publisher_description = (string) $objDatabase->publisher_description;
-				$objData->description = (string) $objDatabase->description;
-				$objData->coverage = (string) $objDatabase->coverage;
-				$objData->time_span = (string) $objDatabase->time_span;
-				$objData->copyright = (string) $objDatabase->copyright;
-				$objData->note_cataloger = (string) $objDatabase->note_cataloger;
-				$objData->note_fulltext = (string) $objDatabase->note_fulltext;
 				$objData->type = (string) $objDatabase->type;
-				$objData->link_native_home = (string) $objDatabase->link_native_home;
-				$objData->link_native_record = (string) $objDatabase->link_native_record;
-				$objData->link_native_home_alternative = (string) $objDatabase->link_native_home_alternative;
-				$objData->link_native_record_alternative = (string) $objDatabase->link_native_record_alternative;
-				$objData->link_native_holdings = (string) $objDatabase->link_native_holdings;
-				$objData->link_guide = (string) $objDatabase->link_guide;
-				$objData->link_publisher = (string) $objDatabase->link_publisher;
-				$objData->link_search_post = (string) $objDatabase->link_search_post;
-				$objData->library_address = (string) $objDatabase->library_address;
-				$objData->library_city = (string) $objDatabase->library_city;
-				$objData->library_state = (string) $objDatabase->library_state;
-				$objData->library_zipcode = (string) $objDatabase->library_zipcode;
-				$objData->library_country = (string) $objDatabase->library_country;
-				$objData->library_telephone = (string) $objDatabase->library_telephone;
-				$objData->library_fax = (string) $objDatabase->library_fax;
-				$objData->library_email = (string) $objDatabase->library_email;
-				$objData->library_contact = (string) $objDatabase->library_contact;
-				$objData->library_note = (string) $objDatabase->library_note;
-				$objData->library_hours = (string) $objDatabase->library_hours;
-				$objData->library_access = (string) $objDatabase->library_access;
-				$objData->active = (string) $objDatabase->active;
-				$objData->proxy = (string) $objDatabase->proxy;
-				$objData->searchable = (string) $objDatabase->searchable;
-				$objData->guest_access = (string) $objDatabase->guest_access;
-				$objData->subscription = (string) $objDatabase->subscription;
-				$objData->sfx_suppress = (string) $objDatabase->sfx_suppress;
-				$objData->new_resource_expiry = (string) $objDatabase->new_resource_expiry;
-				$objData->updated = (string) $objDatabase->updated;
-				$objData->number_sessions = (int) $objDatabase->number_sessions;
-				$objData->search_hints = (string) $objDatabase->search_hints;
-				$objData->icon = (string) $objDatabase->icon;
-				
-				// multi-value fields
-				
-				foreach ($objDatabase->group_restrictions->group as $group_restriction) 
-				{
-					array_push($objData->group_restrictions, (string) $group_restriction); 
-				}
-				foreach ( $objDatabase->keyword as $keyword )
-				{
-					array_push($objData->keywords, substr((string) $keyword, 0, 249));
-				}
-				foreach ( $objDatabase->note as $note )
-				{
-					array_push($objData->notes, (string) $note);
-				}
-				foreach ( $objDatabase->language as $language )
-				{
-					array_push($objData->languages, (string) $language);
-				}
-				foreach ( $objDatabase->title_alternate as $alt_title )
-				{
-					array_push($objData->alternate_titles, (string) $alt_title);
-				}
-				foreach ( $objDatabase->publisher_alternative as $alt_publisher )
-				{
-					$alt_publisher = trim($alt_publisher);
-					
-					if ($alt_publisher != "")
-					{
-						array_push($objData->alternate_publishers, (string) $alt_publisher);
-					}
-				}
+				$objData->data = $objDatabase->asXML();
 				
 				$arrDatabases[$objData->metalib_id] = $objData;
 			}

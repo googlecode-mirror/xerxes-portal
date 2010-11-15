@@ -46,6 +46,7 @@
 		<xsl:call-template name="folder_header_limit" />
 
 		<form action="{$base_url}/" name="export_form"  method="get">
+		<input type="hidden" name="lang" value="{//request/lang}" />
 		<input type="hidden" name="base" value="folder" />
 		<input type="hidden" name="action" value="export" />
 		<input type="hidden" name="format" value="text-file" />

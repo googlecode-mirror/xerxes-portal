@@ -90,11 +90,12 @@
 			</xsl:choose>
 		</guest_access>
 		
-		<group_restrictions>
-			<xsl:for-each select="$groups[translate(@value,$lc,$uc) != 'GUEST']">
-				<group><xsl:value-of select="@value" /></group>
-			</xsl:for-each>
-		</group_restrictions>
+		
+		<xsl:for-each select="$groups[translate(@value,$lc,$uc) != 'GUEST']">
+			<group_restriction>
+				<xsl:value-of select="@value" />
+			</group_restriction>
+		</xsl:for-each>
 		
 		<filter><xsl:value-of select="marc:datafield[@tag='FTL']/marc:subfield[@code='a']" /></filter>
 		
@@ -245,10 +246,10 @@
 		<verde>
 			<xsl:choose>
 				<xsl:when test="marc:datafield[@tag='VRD' and @ind1=1]/marc:subfield[@code='a'] = 'N'">
-					<proxy>no</proxy>
+					<xsl:text>no</xsl:text>
 				</xsl:when>
 				<xsl:when test="marc:datafield[@tag='VRD' and @ind1=1]/marc:subfield[@code='a'] = 'Y'">
-					<proxy>yes</proxy>
+					<xsl:text>yes</xsl:text>
 				</xsl:when>
 			</xsl:choose>
 		</verde>

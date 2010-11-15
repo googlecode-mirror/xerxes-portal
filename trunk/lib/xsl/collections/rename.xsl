@@ -53,6 +53,7 @@ Edit subject page for user-created subjects.
 	</xsl:variable>
 	
 	<form name="form1" method="get" action="{$base_url}/">
+	<input type="hidden" name="lang" value="{//request/lang}" />
 	<input type="hidden" name="base" value="collections" />
 	<input type="hidden" name="action" value="edit" />
 	<input type="hidden" name="subject" value="{//category/@normalized}" />

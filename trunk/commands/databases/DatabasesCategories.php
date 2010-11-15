@@ -26,7 +26,10 @@
 			$objXml = new DOMDOcument();
 			
 			$objData = new Xerxes_DataMap();
-			$arrResults = $objData->getCategories();
+			
+			$lang = $this->request->getProperty("lang");
+			
+			$arrResults = $objData->getCategories($lang);
 			
 			$x = 1;
 			

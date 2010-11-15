@@ -35,27 +35,16 @@ class Xerxes_Helper
 	
 	public static function databaseToNodeset(Xerxes_Data_Database $objDatabaseData, Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry, &$index = null)
 	{
-		$objDom = new DOMDocument( );
-		$objDom->loadXML( "<database/>" );
+		$xml = $objDatabaseData->xml;
 		
-		$objDatabase = $objDom->documentElement;
-		
-		// single value fields
-		
-		foreach ( $objDatabaseData->properties() as $key => $value )
+		foreach ( $xml->searchable as $searchable )
 		{
-			if ( $value != null && $key != "description" && $key != "search_hints")
-			{
-				$objElement = $objDom->createElement( $key, Xerxes_Framework_Parser::escapeXml( $value ) );
-				$objDatabase->appendChild( $objElement );
-				
-				// sometimes we're asked to track and record index.
+			// sometimes we're asked to track and record index.
 
-				if ( ! is_null( $index ) && $key == "searchable" && $value == "1" )
-				{
-					$objElement->setAttribute( "count", $index );
-					$index ++;
-				}
+			if ( (string) $searchable == "1" )
+			{
+				$searchable["count"] = $index;
+				$index++;
 			}
 		}
 			
@@ -66,15 +55,14 @@ class Xerxes_Helper
 		$escape_behavior = $objRegistry->getConfig ( "db_description_html", false, "escape" ); // 'escape' ; 'allow' ; or 'strip'
 		$multilingual = $objRegistry->getConfig ( "db_description_multilingual", false, "" ); // '' or comma-separated list of languages
 
-		$notes = array ();
+		$notes = array ("description", "search_hints");
 		
-		$notes ["description"] = $objDatabaseData->description;
-		$notes ["search_hints"] = $objDatabaseData->search_hints;
-		
-		foreach ( $notes as $name => $note_field )
+		foreach ( $notes as $note_field_name )
 		{
-			if ($note_field != null)
+			foreach ($xml->$note_field_name as $note_field_xml )
 			{
+				$note_field = (string) $note_field_xml;
+				
 				// strip out "##" chars, not just singular "#" to allow # in markup
 				// or other places. 
 				
@@ -82,6 +70,7 @@ class Xerxes_Helper
 				{
 					$note_field = str_replace ( '######', '\n\n\n', $note_field );
 				}
+				
 				$note_field = str_replace ( '##', ' ', $note_field );
 				
 				if ($escape_behavior == "strip")
@@ -103,41 +92,17 @@ class Xerxes_Helper
 					$note_field = htmlspecialchars ( $note_field );
 				}
 				
-				$objElement = $objDom->createElement ( $name, Xerxes_Framework_Parser::escapeXml ( $note_field ) );
-				$objDatabase->appendChild ( $objElement );
+				$xml->$note_field_name =  Xerxes_Framework_Parser::escapeXml ( $note_field );
 			}
 		}
+		
+		$objDom = new DOMDocument();
+		$objDom->loadXML($xml->asXML());
+		$objDatabase = $objDom->documentElement;
+		
+		$objDatabase->setAttribute ( "metalib_id", $objDatabaseData->metalib_id );
     
-		// multi-value fields
-
-		$arrMulti = array("keywords", "languages", "notes", "alternate_titles", "alternate_publishers", "group_restrictions" );
-		
-		foreach ( $arrMulti as $multi )
-		{
-			foreach ( $objDatabaseData->$multi as $value )
-			{
-				// remove the trailing 's'
-				
-
-				$single = substr( $multi, 0, strlen( $multi ) - 1 );
-				
-				if ( $value != null )
-				{
-					$objElement = $objDom->createElement( $single, Xerxes_Framework_Parser::escapeXml( $value ) );
-					
-					//group restriction needs another attribute
-					if ( $multi == "group_restrictions" )
-					{
-						$objElement->setAttribute( "display_name", $objRegistry->getGroupDisplayName( $value ) );
-					}
-					
-					$objDatabase->appendChild( $objElement );
-				}
-			}
-		}
-		
 		// is the particular user allowed to search this?
-		
 
 		$objElement = $objDom->createElement( "searchable_by_user", self::dbSearchableForUser( $objDatabaseData, $objRequest, $objRegistry ) );
 		$objDatabase->appendChild( $objElement );
@@ -152,14 +117,12 @@ class Xerxes_Helper
 		// an empty user. User should be required to log in before continuing
 		// with action. 
 		
-
 		$url = $objRequest->url_for( array ("base" => "collections", "action" => "save_choose_collection", "id" => $objDatabaseData->metalib_id, "username" => $objRequest->getSession( "username" ), "return" => $objRequest->getServer( 'REQUEST_URI' ) ) );
 		
 		$objElement = $objDom->createElement( "add_to_collection_url", $url );
 		$objDatabase->appendChild( $objElement );
 		
 		//add an element for url to xerxes-mediated direct link to db. 
-		
 
 		$objElement = $objDom->createElement( "xerxes_native_link_url", $objRequest->url_for( array("base" => "databases", "action" => "proxy", "database" => htmlentities( $objDatabaseData->metalib_id ) ) ) );
 		$objDatabase->appendChild( $objElement );
@@ -167,54 +130,9 @@ class Xerxes_Helper
 		return $objDatabase;
 	}
 		
-	/* Sadly, we serialize a xerxes database record to a slightly different format
-     for use with <database_links> element. This probably ought to have been
-     consistent with the format in databaseToNodeset, but oh well, it's not. */
-	
 	public static function databaseToLinksNodeset($objDatabase, $objRequest, $objRegistry)
 	{
-		$objXml = new DOMDocument ( );
-		$objXml->loadXML ( "<database/>" );
-		
-		$objNodeDatabase = $objXml->documentElement;
-		
-		$objNodeDatabase->setAttribute ( "metalib_id", $objDatabase->metalib_id );
-		
-		//add an element for url to xerxes detail page for this db
-		
-		$objElement = $objXml->createElement ( "url", $objRequest->url_for( array ("base" => "databases", "action" => "database", "id" => htmlentities( $objDatabase->metalib_id ) ) ) );
-		$objNodeDatabase->appendChild ( $objElement );
-		
-		// attach all the links, database name, and restriction info
-
-		foreach ( $objDatabase->properties () as $key => $value )
-		{
-			if ($value != "")
-			{
-				if (strstr( $key, "link_" ) || $key == "title_display" || $key == "searchable" || $key == "guest_access" || $key == "sfx_suppress")
-				{
-					$objElement = $objXml->createElement ( $key, Xerxes_Framework_Parser::escapeXml( $value ) );
-					$objNodeDatabase->appendChild ( $objElement );
-				}
-			}
-		}
-		
-		if (count ( $objDatabase->group_restrictions ) > 0)
-		{
-			$objRestictions = $objXml->createElement( "group_restrictions" );
-			$objNodeDatabase->appendChild( $objRestictions );
-			
-			foreach ( $objDatabase->group_restrictions as $restriction )
-			{
-				if ($restriction != "")
-				{
-					$objElement = $objXml->createElement( "group_restriction", Xerxes_Framework_Parser::escapeXml( $restriction ) );
-					$objRestictions->appendChild( $objElement );
-				}
-			}
-		}
-		
-		return $objXml->documentElement;
+		return self::databaseToNodeset($objDatabase, $objRequest, $objRegistry);
 	}
 		
 	/* Ensures that specified user is logged in, or throws exception */
@@ -278,7 +196,8 @@ class Xerxes_Helper
 			$e = new Xerxes_Exception_DatabasesDenied( );
 			$e->setDeniedDatabases( $deniedList );
 			throw $e;
-		} else
+		} 
+		else
 		{
 			return true;
 		}
@@ -297,12 +216,12 @@ class Xerxes_Helper
 	{
 		$allowed = "";
 		
-		if ( ! $db->searchable )
+		if ( $db->searchable != 1)
 		{
 			//nobody can search it!
 			$allowed = false;
 		} 
-		elseif ( $db->guest_access )
+		elseif ( $db->guest_access != "")
 		{
 			//anyone can search it!
 			$allowed = true;
@@ -318,10 +237,10 @@ class Xerxes_Helper
 			if ( ! $allowed )
 			{
 				// not by virtue of a login, but now check for ip address
-				
 
 				$ranges = array ( );
-				foreach ( $db->group_restrictions as $group )
+				
+				foreach ( $db->get("group_restrictions") as $group )
 				{
 					$ranges[] = $objRegistry->getGroupLocalIpRanges( $group );
 				}

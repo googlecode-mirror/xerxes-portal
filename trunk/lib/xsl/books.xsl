@@ -556,6 +556,7 @@
 
 	<form name="smsForm" action="./" method="get">
 	
+		<input type="hidden" name="lang" value="{//request/lang}" />
 		<input type="hidden" name="base" value="folder" />
 		<input type="hidden" name="action" value="sms" />
 		<input type="hidden" name="title" value="{title_normalized}" />

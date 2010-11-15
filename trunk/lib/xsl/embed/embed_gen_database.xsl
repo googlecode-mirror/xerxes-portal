@@ -63,6 +63,7 @@
 			<div id="snippetControl">
 				
 				<form method="GET" id="generator">
+					<input type="hidden" name="lang" value="{//request/lang}" />
 					<input type="hidden" name="base" id="base" value="embed" />
 					<input type="hidden" name="action" id="action" value="gen_database" />
 					<input type="hidden" name="id">

@@ -13,6 +13,8 @@
 
 class Xerxes_DataMap extends Xerxes_Framework_DataMap
 {
+	protected $primary_language;
+	
 	public function __construct($connection = null, $username = null, $password = null)
 	{
 		$objRegistry = Xerxes_Framework_Registry::getInstance();
@@ -21,6 +23,15 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		// make it a member variable so other functions can get it easier
 		
 		$this->registry = $objRegistry;
+		
+		// set primary language
+		
+		$lang = $this->registry->getConfig("languages");
+		
+		if ( $lang != "")
+		{
+			$this->primary_language = (string) $lang->language["code"];
+		}
 		
 		// pdo can't tell us which rdbms we're using exactly, especially for 
 		// ms sql server, since we'll be using odbc driver, so we make this
@@ -44,24 +55,31 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 	public function upgradeKB()
 	{
 		$dir = $this->registry->getConfig("PATH_PARENT_DIRECTORY");
-		$sql_file = "$dir/sql/" . $this->rdbms . "/create-kb.sql";
-
-		$sql =  file_get_contents($sql_file);
+		$sql_file_base = "$dir/sql/" . $this->rdbms . "/";
 		
-		$sql = str_replace("CREATE DATABASE IF NOT EXISTS xerxes;", "", $sql);
-		$sql = str_replace("USE xerxes;", "", $sql);
-
-		$pdo = $this->getDatabaseObject();
+		$files = array("migrate/migrate-1.7-to-1.8.sql","create-kb.sql");
 		
-		$queries = explode(";", $sql);
-		
-		foreach ( $queries as $query )
+		foreach ( $files as $file )
 		{
-			$query = trim($query);
+			$sql_file = $sql_file_base . $file;
 			
-			if ( $query != "" )
+			$sql =  file_get_contents($sql_file);
+			
+			$sql = str_replace("CREATE DATABASE IF NOT EXISTS xerxes;", "", $sql);
+			$sql = str_replace("USE xerxes;", "", $sql);
+	
+			$pdo = $this->getDatabaseObject();
+			
+			$queries = explode(";", $sql);
+			
+			foreach ( $queries as $query )
 			{
-				$statement =  $pdo->query($query);
+				$query = trim($query);
+				
+				if ( $query != "" )
+				{
+					$pdo->query($query);
+				}
 			}
 		}
 	}
@@ -77,19 +95,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 	
 	public function clearKB()
 	{
-		// delete join tables in the event mysql is set-up with myisam
-		// storage engine -- this should be fixed in xerxes 1.2 since 
-		// sql scripts for mysql will specifically set to innodb
-
-		$this->delete( "DELETE FROM xerxes_database_alternate_publishers" );
-		$this->delete( "DELETE FROM xerxes_database_alternate_titles" );
-		$this->delete( "DELETE FROM xerxes_database_keywords" );
-		$this->delete( "DELETE FROM xerxes_database_group_restrictions" );
-		$this->delete( "DELETE FROM xerxes_database_languages" );
-		$this->delete( "DELETE FROM xerxes_database_notes" );
-		$this->delete( "DELETE FROM xerxes_subcategory_databases" );
-		
-		// delete parent tables
+		// delete main kb tables, others will cascade
 
 		$this->delete( "DELETE FROM xerxes_databases" );
 		$this->delete( "DELETE FROM xerxes_subcategories" );
@@ -119,71 +125,98 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 	
 	public function addDatabase(Xerxes_Data_Database $objDatabase)
 	{
-		// clean-up metalib types
-		// basic single-value fields
+		// load our data into xml object
+		
+		$xml = simplexml_load_string($objDatabase->data);
+		
+		// these fields have boolen values in metalib
+		
+		$boolean_fields = array("proxy","searchable","guest_access",
+			"subscription","sfx_suppress","new_resource_expiry");
 
-		$objDatabase->proxy = $this->convertMetalibBool( $objDatabase->proxy );
-		$objDatabase->searchable = $this->convertMetalibBool( $objDatabase->searchable );
-		$objDatabase->guest_access = $this->convertMetalibBool( $objDatabase->guest_access );
-		$objDatabase->subscription = $this->convertMetalibBool( $objDatabase->subscription );
-		$objDatabase->sfx_suppress = $this->convertMetalibBool( $objDatabase->sfx_suppress );
-		$objDatabase->new_resource_expiry = $this->convertMetalibDate( $objDatabase->new_resource_expiry );
-		$objDatabase->updated = $this->convertMetalibDate( $objDatabase->updated );
+		// normalize boolean values
+		
+		foreach ( $xml->children() as $child )
+		{
+			$name = (string) $child->getName();
+			$value = (string) $child;
+			
+			if ( in_array( $name, $boolean_fields) )
+			{
+				$xml->$name = $this->convertMetalibBool($value);
+			}
+		}
+		
+		// remove empty nodes
+		
+		$dom = new DOMDocument();
+		$dom->loadXML($xml->asXML());
+		
+		$xmlPath = new DOMXPath($dom);
+		$xmlNullNodes = $xmlPath->query('//*[not(node())]');
+		
+		foreach($xmlNullNodes as $node)
+		{
+			$node->parentNode->removeChild($node);
+		}
+		
+		$objDatabase->data = $dom->saveXML();
+		
+		// add the main database entries
 		
 		$this->doSimpleInsert( "xerxes_databases", $objDatabase );
 		
-		// keywords
-
-		foreach ( $objDatabase->keywords as $keyword )
-		{
-			$strSQL = "INSERT INTO xerxes_database_keywords ( database_id, keyword ) " . "VALUES ( :metalib_id, :keyword )";
-			
-			$this->insert( $strSQL, array (":metalib_id" => $objDatabase->metalib_id, ":keyword" => $keyword ) );
-		}
+		// now also extract searchable fields so we can populate the search table
 		
-		// usergroups/"secondary affiliations". Used as access restrictions.
-
-		foreach ( $objDatabase->group_restrictions as $usergroup )
-		{
-			$strSQL = "INSERT INTO xerxes_database_group_restrictions ( database_id, usergroup ) " . "VALUES ( :metalib_id, :usergroup )";
-			
-			$this->insert( $strSQL, array (":metalib_id" => $objDatabase->metalib_id, ":usergroup" => $usergroup ) );
-		}
+		// get fields from config
 		
-		// notes
-
-		foreach ( $objDatabase->notes as $note )
-		{
-			$strSQL = "INSERT INTO xerxes_database_notes ( database_id, note ) " . "VALUES ( :metalib_id, :note )";
-			
-			$this->insert( $strSQL, array (":metalib_id" => $objDatabase->metalib_id, ":note" => $note ) );
-		}
+		$configSearchFields = $this->registry->getConfig("DATABASE_SEARCHABLE_FIELDS", false, 
+			"title_display,title_full,description,keyword,alt_title");
+		$arrSearchFields = explode(",", $configSearchFields);
 		
-		// languages
-
-		foreach ( $objDatabase->languages as $language )
+		foreach ( $arrSearchFields as $search_field )
 		{
-			$strSQL = "INSERT INTO xerxes_database_languages ( database_id, language ) " . "VALUES ( :metalib_id, :language )";
+			$search_field = trim($search_field);
 			
-			$this->insert( $strSQL, array (":metalib_id" => $objDatabase->metalib_id, ":language" => $language ) );
-		}
-		
-		// alternate publishers
-
-		foreach ( $objDatabase->alternate_publishers as $alternate_publisher )
-		{
-			$strSQL = "INSERT INTO xerxes_database_alternate_publishers ( database_id, alt_publisher ) " . "VALUES ( :metalib_id, :alt_publisher )";
-			
-			$this->insert( $strSQL, array (":metalib_id" => $objDatabase->metalib_id, ":alt_publisher" => $alternate_publisher ) );
-		}
-		
-		// alternate titles
-
-		foreach ( $objDatabase->alternate_titles as $alternate_title )
-		{
-			$strSQL = "INSERT INTO xerxes_database_alternate_titles ( database_id, alt_title ) " . "VALUES ( :metalib_id, :alt_title )";
-			
-			$this->insert( $strSQL, array (":metalib_id" => $objDatabase->metalib_id, ":alt_title" => $alternate_title ) );
+			foreach ( $xml->$search_field as $field )
+			{
+				$searchable_terms = array();
+				
+				foreach ( explode(" ", (string) $field) as $term )
+				{
+					// only numbers and letters please
+					
+					$term = preg_replace('/[^a-zA-Z0-9]/', '', $term);
+					$term = strtolower($term);
+					
+					// anything over 50 chars is likley a URL or something
+					
+					if ( strlen($term) > 50 )
+					{
+						continue;
+					}
+					
+					array_push($searchable_terms, $term);
+				}
+				
+				// remove duplicate terms
+				
+				$searchable_terms = array_unique($searchable_terms);
+				
+				// insert em
+				
+				$strSQL = "INSERT INTO xerxes_databases_search ( database_id, field, term ) " . 
+					"VALUES ( :metalib_id, :field, :term )";
+				
+				foreach ( $searchable_terms as $unique_term )
+				{
+					$this->insert( $strSQL, array (
+						":metalib_id" => $objDatabase->metalib_id, 
+						":field" => $search_field, 
+						":term" => $unique_term ) 
+					);
+				}			
+			}
 		}
 	}
 	
@@ -382,32 +415,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		// Now create our new one with desired sequence. 
 		$this->addDatabaseToUserCreatedSubcategory( $objDb->metalib_id, $objSubcat, $sequence );
 		
-		$this->commit();
-		
-	//commit transaction
-	}
-	
-	/**
-	 * Convert metalib dates to something MySQL can understand
-	 *
-	 * @param string $strValue		metalib date
-	 * @return string				newly formatted date
-	 */
-	
-	private function convertMetalibDate($strValue)
-	{
-		$strDate = null;
-		$arrDate = array ( );
-		
-		if ( preg_match( "/([0-9]{4})([0-9]{2})([0-9]{2})/", $strValue, $arrDate ) != 0 )
-		{
-			if ( checkdate( $arrDate[2], $arrDate[3], $arrDate[1] ) )
-			{
-				$strDate = $arrDate[1] . "-" . $arrDate[2] . "-" . $arrDate[3];
-			}
-		}
-		
-		return $strDate;
+		$this->commit(); //commit transaction
 	}
 	
 	/**
@@ -442,13 +450,18 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 	 * @return array		array of Xerxes_Data_Category objects
 	 */
 	
-	public function getCategories()
+	public function getCategories($lang = "")
 	{
+		if ( $lang == "" )
+		{
+			$lang = $this->primary_language;
+		}
+				
 		$arrCategories = array ( );
 		
-		$strSQL = "SELECT * from xerxes_categories ORDER BY UPPER(name) ASC";
+		$strSQL = "SELECT * from xerxes_categories WHERE lang = :lang ORDER BY UPPER(name) ASC";
 		
-		$arrResults = $this->select( $strSQL );
+		$arrResults = $this->select( $strSQL, array(":lang" => $lang) );
 		
 		foreach ( $arrResults as $arrResult )
 		{
@@ -507,7 +520,8 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 				"subcategories_table" => "xerxes_subcategories", 
 				"database_join_table" => "xerxes_subcategory_databases", 
 				"subcategories_pk" => "metalib_id", 
-				"extra_select" => "", "extra_where" => "" 
+				"extra_select" => "", 
+				"extra_where" => " AND lang = :lang " 
 			);
 		} 
 		elseif ( $mode == self::userCreatedMode )
@@ -539,10 +553,15 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 	 * @return Xerxes_Data_Category		a Xerxes_Data_Category object, filled out with subcategories and databases. 
 	 */
 	
-	public function getSubject($normalized, $old = null, $mode = self::metalibMode, $username = null)
+	public function getSubject($normalized, $old = null, $mode = self::metalibMode, $username = null, $lang = "")
 	{
 		if ( $mode == self::userCreatedMode && $username == null )
 			throw new Exception( "a username argument must be supplied in userCreatedMode" );
+			
+		if ( $lang == "" )
+		{
+			$lang = $this->primary_language;
+		}
 			
 		//This can be used to fetch personal or metalib-fetched data. We get
 		// from different tables depending. 
@@ -571,17 +590,15 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 			$schema_map[subcategories_table].sequence as subcat_seq, 
 			$schema_map[subcategories_table].name as subcategory, 
 			$schema_map[database_join_table].sequence as sequence,
-			xerxes_databases.*,
-			xerxes_database_group_restrictions.usergroup
+			xerxes_databases.*
 			$schema_map[extra_select]
 			FROM $schema_map[categories_table]
 			LEFT OUTER JOIN $schema_map[subcategories_table] ON $schema_map[categories_table].id = $schema_map[subcategories_table].category_id
 			LEFT OUTER JOIN $schema_map[database_join_table] ON $schema_map[database_join_table].subcategory_id = $schema_map[subcategories_table].$schema_map[subcategories_pk]
 			LEFT OUTER JOIN xerxes_databases ON $schema_map[database_join_table].database_id = xerxes_databases.metalib_id
-			LEFT OUTER JOIN xerxes_database_group_restrictions ON xerxes_databases.metalib_id = xerxes_database_group_restrictions.database_id
 			WHERE $schema_map[categories_table].$column = :value
 			AND 
-			($schema_map[subcategories_table].name NOT LIKE 'All%' OR
+			($schema_map[subcategories_table].name NOT LIKE UPPER('All%') OR
 			$schema_map[subcategories_table].name is NULL)
 			$schema_map[extra_where]
 			ORDER BY subcat_seq, sequence";
@@ -591,6 +608,10 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		if ( $username )
 		{
 			$args[":username"] = $username;
+		}
+		else
+		{
+			$args[":lang"] = $lang;
 		}
 		
 		$arrResults = $this->select( $strSQL, $args );
@@ -615,7 +636,6 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 			}
 			
 			$objSubcategory = new Xerxes_Data_Subcategory( );
-			//$objSubcategory->metalib_id = $arrResults[0]["subcat_id"];
 			$objSubcategory->id = $arrResults[0]["subcat_id"];
 			$objSubcategory->name = $arrResults[0]["subcategory"];
 			$objSubcategory->sequence = $arrResults[0]["subcat_seq"];
@@ -770,23 +790,29 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 	
 	public function getDatabases($id = null, $query = null)
 	{
+		$configDatabaseTypesExclude = $this->registry->getConfig("DATABASES_TYPE_EXCLUDE_AZ", false);
+		$configAlwaysTruncate = $this->registry->getConfig("DATABASES_SEARCH_ALWAYS_TRUNCATE", false, false);		
+		
 		$arrDatabases = array ( );
 		$arrResults = array ( );
 		$arrParams = array ( );
 		$where = false;
 		
-		$strSQL = "SELECT * from xerxes_databases
-			LEFT OUTER JOIN xerxes_database_notes ON xerxes_databases.metalib_id = xerxes_database_notes.database_id
-			LEFT OUTER JOIN xerxes_database_group_restrictions ON xerxes_databases.metalib_id = xerxes_database_group_restrictions.database_id
-			LEFT OUTER JOIN xerxes_database_keywords ON xerxes_databases.metalib_id = xerxes_database_keywords.database_id
-			LEFT OUTER JOIN xerxes_database_languages ON xerxes_databases.metalib_id = xerxes_database_languages.database_id 
-			LEFT OUTER JOIN xerxes_database_alternate_titles ON xerxes_databases.metalib_id = xerxes_database_alternate_titles.database_id
-			LEFT OUTER JOIN xerxes_database_alternate_publishers ON xerxes_databases.metalib_id = xerxes_database_alternate_publishers.database_id ";
-		
-		if ( $id != null && is_array( $id ) )
-		{
-			// databases specified by an array of ids
+		$strSQL = "SELECT * from xerxes_databases";
 
+		// single database
+		
+		if ( $id != null && ! is_array( $id ) )
+		{
+			$strSQL .= " WHERE xerxes_databases.metalib_id = :id ";
+			$arrParams[":id"] = $id;
+			$where = true;
+		} 		
+		
+		// databases specified by an array of ids
+		
+		elseif ( $id != null && is_array( $id ) )
+		{
 			$strSQL .= " WHERE ";
 			$where = true;
 			
@@ -801,37 +827,97 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 				$arrParams[":id$x"] = $id[$x];
 			}
 		} 
-		elseif ( $id != null && ! is_array( $id ) )
-		{
-			// single database query
-
-			$strSQL .= " WHERE xerxes_databases.metalib_id = :id ";
-			$arrParams[":id"] = $id;
-			$where = true;
-		} 
+		
+		// user-supplied query
+		
 		elseif ( $query != null )
 		{
-			$strSQL .= "WHERE ( xerxes_databases.title_display LIKE :query1 OR " .
-				" xerxes_databases.title_full LIKE :query2 OR " .
-				" xerxes_databases.description LIKE :query3 OR " .
-				" xerxes_database_keywords.keyword LIKE :query4 OR " .
-				" xerxes_database_alternate_titles.alt_title LIKE :query5 ) ";
-				
-			$searchParam = '%' . $query . '%';
-
-			$arrParams[":query1"] = $searchParam;
-			$arrParams[":query2"] = $searchParam;
-			$arrParams[":query3"] = $searchParam;
-			$arrParams[":query4"] = $searchParam;
-			$arrParams[":query5"] = $searchParam;
-			
 			$where = true;
+			
+			// we'll deal with quotes later, for now strip 'em
+			// and gives us each term in an array
+			
+			$query_simple = str_replace('"', "", $query);
+			$arrTerms = explode(" ", $query_simple);
+			
+			$arrTables = array(); // we'll use this to keep track of temporary tables
+			
+			// grab databases that meet our query
+			
+			$strSQL .= " WHERE metalib_id IN  (
+				SELECT database_id FROM ";
+			
+			// by looking for each term in the xerxes_databases_search table 
+			// making each result a temp table
+			
+			for ( $x = 0; $x < count($arrTerms); $x++ )
+			{
+				$term = strtolower($arrTerms[$x]);
+				
+				// do this to reduce the results of the inner table to just one column
+				
+				$alias = "database_id";
+				
+				if ( $x > 0 )
+				{
+					$alias = "db";
+				}
+				
+				// wildcard
+				
+				$operator = "="; // default operator is equal
+				
+				// user supplied a wildcard
+				
+				if ( strstr($term,"*") )
+				{
+					$term = str_replace("*","%", $term);
+					$operator = "LIKE";
+				}
+				
+				// site is configured for truncation
+				
+				elseif ($configAlwaysTruncate == true )
+				{
+					$term .= "%";
+					$operator = "LIKE";					
+				}
+				
+				$arrParams[":term$x"] = $term;
+				
+				$strSQL .= " (SELECT distinct database_id AS $alias FROM xerxes_databases_search WHERE term $operator :term$x) AS table$x ";
+				
+				// if there is another one, we need to add a comma between them
+				
+				if ( $x + 1 < count($arrTerms))
+				{
+					$strSQL .= ", ";
+				}
+				
+				// this essentially AND's the query by requiring results from all tables
+				
+				if ( $x > 0 )
+				{
+					for ( $y = 0; $y < $x; $y++)
+					{
+						array_push($arrTables, "table$y.database_id = table" . ($y + 1 ). ".db");
+					}
+				}
+			}
+			
+			// add the AND'd tables to the SQL
+			
+			if ( count($arrTables) > 0 )
+			{
+				$strSQL .= " WHERE " . implode(" AND ", $arrTables);
+			}
+			
+			$strSQL .= ")";
 		}
 		
-		// remove certain database types, if so configured, unless we're asking for specific id's
-			
-		$configDatabaseTypesExclude = $this->registry->getConfig("DATABASES_TYPE_EXCLUDE_AZ", false);
-			
+		// remove certain databases based on type(s), if so configured
+		// unless we're asking for specific id's, yo	
+	
 		if ( $configDatabaseTypesExclude != null && $id == null)
 		{
 			$arrTypes = explode(",", $configDatabaseTypesExclude);
@@ -863,48 +949,16 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		
 		$arrResults = $this->select( $strSQL, $arrParams );
 		
-		// read sql and transform to internal data objs.
+		// transform to internal data objects
 		
 		if ( $arrResults != null )
 		{
-			$objDatabase = new Xerxes_Data_Database( );
-			
 			foreach ( $arrResults as $arrResult )
 			{
-				// if the previous row has a different id, then we've come 
-				// to a new database, otherwise these are values from the outter join
-
-				if ( $arrResult["metalib_id"] != $objDatabase->metalib_id )
-				{
-					if ( $objDatabase->metalib_id != null )
-					{
-						array_push( $arrDatabases, $objDatabase );
-					}
-					
-					$objDatabase = new Xerxes_Data_Database( );
-					$objDatabase->load( $arrResult );
-				}
-				
-				// if the current row's outter join value is not already stored,
-				// then we've come to a unique value, so add it
-
-				$arrColumns = array ("keyword" => "keywords", "usergroup" => "group_restrictions", "language" => "languages", "note" => "notes", "alt_title" => "alternate_titles", "alt_publisher" => "alternate_publishers" );
-				
-				foreach ( $arrColumns as $column => $identifier )
-				{
-					if ( array_key_exists( $column, $arrResult ) && ! is_null( $arrResult[$column] ) )
-					{
-						if ( ! in_array( $arrResult[$column], $objDatabase->$identifier ) )
-						{
-							array_push( $objDatabase->$identifier, $arrResult[$column] );
-						}
-					}
-				}
+				$objDatabase = new Xerxes_Data_Database();
+				$objDatabase->load( $arrResult );
+				array_push($arrDatabases, $objDatabase);
 			}
-			
-			// get the last one
-			
-			array_push( $arrDatabases, $objDatabase );
 		}
 		
 		return $arrDatabases;

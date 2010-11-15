@@ -60,6 +60,7 @@ collection_default_new_section_name = '<xsl:value-of select="$text_collection_de
     <h2><xsl:call-template name="page_name"/>: <xsl:value-of select="title_display" /></h2>
     
     <form method="GET" id="save_database" action="{$base_url}">
+		<input type="hidden" name="lang" value="{//request/lang}" />
       <input type="hidden" name="base" value="collections"/>
       <input type="hidden" id="action_input" name="action" value="save_choose_subheading"/>
       <input type="hidden" name="id" value="{$id}" />
