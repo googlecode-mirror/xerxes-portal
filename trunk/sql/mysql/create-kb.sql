@@ -17,6 +17,7 @@ DROP TABLE IF EXISTS xerxes_databases;
 DROP TABLE IF EXISTS xerxes_categories;
 DROP TABLE IF EXISTS xerxes_types;
 
+
 CREATE TABLE xerxes_databases(
 	metalib_id     		VARCHAR(10),
 	title_display		VARCHAR(100),
