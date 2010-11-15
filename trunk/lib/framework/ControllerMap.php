@@ -284,7 +284,7 @@
 					 
 				$strDefaultCommand = Xerxes_Framework_Parser::strtoupper(substr($strDirectory,0,1) ) . substr($strDirectory,1);
 					
-				$arrActionParts = split("-|_", $strAction);
+				$arrActionParts = preg_split("/-|_/", $strAction);
 					
 				foreach ( $arrActionParts as $strActionPart )
 				{
