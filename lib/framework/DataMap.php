@@ -108,8 +108,10 @@
 		 * @return array				array of results as supplied by PDO
 		 */
 		
-		public function select($strSQL, $arrValues = null)
+		public function select($strSQL, $arrValues = null, $arrClean = null)
 		{
+			$this->sqlServerFix($strSQL, $arrValues, $arrClean);
+			
 			$this->echoSQL($strSQL);
 			
 			$this->strSQL = $strSQL;
@@ -137,8 +139,10 @@
 		 * @return mixed				status of the request, as set by PDO
 		 */
 		
-		public function update($strSQL, $arrValues = null)
+		public function update($strSQL, $arrValues = null, $arrClean = null)
 		{
+			$this->sqlServerFix($strSQL, $arrValues, $arrClean);
+			
 			$this->echoSQL($strSQL);
 			
 			$this->strSQL = $strSQL;
@@ -163,11 +167,14 @@
 		 * @param array $arrValues		paramaterized values
 		 * @param boolean $boolReturnPk  return the inserted pk value?
 		 * @return mixed				if $boolReturnPk is false, status of the request (true or false), 
-		 * as set by PDO. if $boolReturnPk is true, either the last inserted pk, or 'false' for a failed insert. 
+		 * 								as set by PDO. if $boolReturnPk is true, either the last inserted pk, 
+		 * 								or 'false' for a failed insert. 
 		 */
 		
-		public function insert($strSQL, $arrValues = null, $boolReturnPk = false)
+		public function insert($strSQL, $arrValues = null, $boolReturnPk = false, $arrClean = null)
 		{
+			$this->sqlServerFix($strSQL, $arrValues, $arrClean);
+			
 			$status = $this->update($strSQL, $arrValues);      
 			
 			if ($status && $boolReturnPk)
@@ -219,6 +226,31 @@
 		private function echoSQL($strSQL)
 		{
 			// echo "<p>" . $strSQL . "</p>";
+		}
+		
+		private function sqlServerFix(&$strSQL, &$params, $clean = null)
+		{
+			// a bug in the sql server native client makes this necessary, barf!
+			
+			if ( $this->rdbms == "mssql")
+			{
+				// these values need cleaning, likely because they are in a sub-query
+				
+				if( is_array($clean) )
+				{
+					$dirtystuff = array("\"", "\\", "/", "*", "'", "=", "#", ";", "<", ">", "+");
+					
+					foreach ( $params as $key => $value )
+					{
+						if ( in_array($key, $clean) )
+						{
+							$value = str_replace($dirtystuff, "", $value); 
+							$strSQL = str_replace($key, "'$value'", $strSQL);
+							unset($params[$key]);
+						}
+					}
+				}
+			}
 		}
 	}
 
