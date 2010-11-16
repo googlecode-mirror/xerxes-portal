@@ -14,6 +14,7 @@
 class Xerxes_DataMap extends Xerxes_Framework_DataMap
 {
 	protected $primary_language = "eng";
+	protected $searchable_fields;
 	
 	public function __construct($connection = null, $username = null, $password = null)
 	{
@@ -32,6 +33,11 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		{
 			$this->primary_language = (string) $lang->language["code"];
 		}
+		
+		// searchable fields
+		
+		$this->searchable_fields = explode(",", $this->registry->getConfig("DATABASE_SEARCHABLE_FIELDS", false, 
+			"title_display,title_full,description,keyword,alt_title"));
 		
 		// pdo can't tell us which rdbms we're using exactly, especially for 
 		// ms sql server, since we'll be using odbc driver, so we make this
@@ -170,11 +176,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		
 		// get fields from config
 		
-		$configSearchFields = $this->registry->getConfig("DATABASE_SEARCHABLE_FIELDS", false, 
-			"title_display,title_full,description,keyword,alt_title");
-		$arrSearchFields = explode(",", $configSearchFields);
-		
-		foreach ( $arrSearchFields as $search_field )
+		foreach ( $this->searchable_fields as $search_field )
 		{
 			$search_field = trim($search_field);
 			
@@ -834,13 +836,12 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		{
 			$where = true;
 			
-			// we'll deal with quotes later, for now strip 'em
+			$arrTables = array(); // we'll use this to keep track of temporary tables
+			
+			// we'll deal with quotes later, for now 
 			// and gives us each term in an array
 			
-			$query_simple = str_replace('"', "", $query);
-			$arrTerms = explode(" ", $query_simple);
-			
-			$arrTables = array(); // we'll use this to keep track of temporary tables
+			$arrTerms = explode(" ", $query);
 			
 			// grab databases that meet our query
 			
@@ -852,7 +853,11 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 			
 			for ( $x = 0; $x < count($arrTerms); $x++ )
 			{
-				$term = strtolower($arrTerms[$x]);
+				$term = $arrTerms[$x];
+				
+				// to match how they are inserted
+				
+				$term = preg_replace('/[^a-zA-Z0-9\*]/', '', $term);
 				
 				// do this to reduce the results of the inner table to just one column
 				
@@ -900,7 +905,14 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 				{
 					for ( $y = 0; $y < $x; $y++)
 					{
-						array_push($arrTables, "table$y.database_id = table" . ($y + 1 ). ".db");
+						$column = "db";
+						
+						if ( $y == 0 )
+						{
+							$column = "database_id";
+						}
+						
+						array_push($arrTables, "table$y.$column = table" . ($y + 1 ). ".db");
 					}
 				}
 			}
@@ -918,7 +930,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		// remove certain databases based on type(s), if so configured
 		// unless we're asking for specific id's, yo	
 	
-		if ( $configDatabaseTypesExclude != null && $id == null)
+		if ( $configDatabaseTypesExclude != null )
 		{
 			$arrTypes = explode(",", $configDatabaseTypesExclude);
 			$arrTypeQuery = array();
@@ -945,7 +957,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 			
 		$strSQL .= " ORDER BY UPPER(title_display)";
 		
-		// echo $strSQL; exit;
+		// echo $strSQL; print_r($arrParams); // exit;
 		
 		$arrResults = $this->select( $strSQL, $arrParams );
 		
@@ -960,6 +972,56 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 				array_push($arrDatabases, $objDatabase);
 			}
 		}
+		
+		// limit to quoted phrases
+		
+		if ( strstr($query, '"') )
+		{
+			// unload the array, we'll only refill the ones that match the query
+			
+			$arrCandidates = $arrDatabases;
+			$arrDatabases = array();
+			
+			$found = false;
+			
+			$phrases = explode('"', $query);
+			
+			foreach ( $arrCandidates as $objDatabase )
+			{
+				foreach ( $phrases as $phrase )
+				{
+					$phrase = trim($phrase);
+					
+					if ( $phrase == "" )
+					{
+						continue;
+					}
+					
+					$text = " ";
+						
+					foreach ( $this->searchable_fields as $searchable_field )
+					{
+						$text .= $objDatabase->$searchable_field . " ";
+					}
+					
+					if ( ! stristr($text,$phrase) )
+					{
+						$found = false;
+						break;
+					}
+					else
+					{
+						$found = true;
+					}
+				}
+				
+				if ( $found == true )
+				{
+					array_push($arrDatabases, $objDatabase);
+				}
+			}
+		}
+		
 		
 		return $arrDatabases;
 	}
