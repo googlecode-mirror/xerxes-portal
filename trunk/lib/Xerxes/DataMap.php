@@ -13,7 +13,7 @@
 
 class Xerxes_DataMap extends Xerxes_Framework_DataMap
 {
-	protected $primary_language;
+	protected $primary_language = "eng";
 	
 	public function __construct($connection = null, $username = null, $password = null)
 	{
