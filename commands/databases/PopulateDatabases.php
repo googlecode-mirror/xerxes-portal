@@ -377,12 +377,7 @@
 		
 		private function normalizeOld($strSubject)
 		{
-			$strNormalized = "";
-			
-			$strNormalized = str_replace("&amp;","", $strSubject);
-			$strNormalized = preg_replace('/\W/',"",$strNormalized);
-			
-			return $strNormalized;
+			return Xerxes_Data_Category::normalize($strSubject);
 		}
 		
 	   	/* We need to register a straight function for the XSL to call with php:function. Sorry. */
