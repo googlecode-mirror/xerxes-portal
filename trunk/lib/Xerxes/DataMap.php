@@ -799,6 +799,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		$arrResults = array ( );
 		$arrParams = array ( );
 		$where = false;
+		$sql_server_clean = null;
 		
 		$strSQL = "SELECT * from xerxes_databases";
 
@@ -835,6 +836,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		elseif ( $query != null )
 		{
 			$where = true;
+			$sql_server_clean = array();
 			
 			$arrTables = array(); // we'll use this to keep track of temporary tables
 			
@@ -889,6 +891,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 				}
 				
 				$arrParams[":term$x"] = $term;
+				array_push($sql_server_clean, ":term$x");
 				
 				$strSQL .= " (SELECT distinct database_id AS $alias FROM xerxes_databases_search WHERE term $operator :term$x) AS table$x ";
 				
@@ -959,7 +962,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		
 		// echo $strSQL; print_r($arrParams); // exit;
 		
-		$arrResults = $this->select( $strSQL, $arrParams );
+		$arrResults = $this->select( $strSQL, $arrParams, $sql_server_clean );
 		
 		// transform to internal data objects
 		
@@ -1454,6 +1457,8 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 
 		// ms sql server specific code
 		
+		$sql_server_clean = null;
+		
 		if ( $this->rdbms == "mssql")
 		{
 			// mimicking the MySQL LIMIT clause
@@ -1471,26 +1476,11 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 					as tmp $strMSPage ) as xerxes_records 
 				LEFT OUTER JOIN xerxes_tags on xerxes_records.id = xerxes_tags.record_id";
 				
-			// a bug in the pdo odbc driver ??? makes this necessary
-			
-			// clean the input
-			
-			$dirtystuff = array("\"", "\\", "/", "*", "'", "=", "-", "#", ";", "<", ">", "+", "%");
-			
-			$strUsername = str_replace($dirtystuff, "", $strUsername); 
-			$strLabel = str_replace($dirtystuff, "", $strLabel);
-			$strFormat = str_replace($dirtystuff, "", $strFormat);
-			
-			// replace the paramater with the value
-				
-			$strSQL = str_replace(":username", "'$strUsername'", $strSQL); unset($arrParams[":username"]);
-			$strSQL = str_replace(":tag", "'$strLabel'", $strSQL); unset($arrParams[":tag"]);
-			$strSQL = str_replace(":format", "'$strFormat'", $strSQL); unset($arrParams[":format"]);
-			
+			$sql_server_clean = array(":username",":tag",":format");
+			                        
 			for ( $x = 0 ; $x < count( $arrID ) ; $x ++ )
 			{
-				$strID = str_replace($dirtystuff, "", $arrID[$x]); 
-				$strSQL = str_replace(":id$x", "'$strID'", $strSQL); unset($arrParams[":id$x"]);
+			        array_push($sql_server_clean, ":id$x");
 			}
 		}
 
@@ -1500,7 +1490,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		$arrResults = array ( ); // results as array
 		$arrRecords = array ( ); // records as array
 		
-		$arrResults = $this->select( $strSQL, $arrParams );
+		$arrResults = $this->select( $strSQL, $arrParams, $sql_server_clean );
 		
 		if ( $arrResults != null )
 		{
