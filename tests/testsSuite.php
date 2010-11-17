@@ -23,7 +23,6 @@ class testsSuite extends PHPUnit_Framework_TestSuite
 		// load language file
 		
 		$objLanguage = Xerxes_Framework_Languages::getInstance();
-		$objLanguage->init();	
 	}
 	
 	/**
