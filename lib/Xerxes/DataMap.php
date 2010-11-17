@@ -19,7 +19,6 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 	public function __construct($connection = null, $username = null, $password = null)
 	{
 		$objRegistry = Xerxes_Framework_Registry::getInstance();
-		$objRegistry->init();
 		
 		// make it a member variable so other functions can get it easier
 		
