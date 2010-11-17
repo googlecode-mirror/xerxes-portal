@@ -18,7 +18,6 @@ set a global js variable isTemporarySession (boolean), used to determine whether
 ajax add a tagging input on save or not. 
 */
 
-addEvent(window, 'load', loadSaveStrings );	
 addEvent(window, 'load', addAjaxToSaveLinks);
 addEvent(window, 'load', addDatabaseLimitChecks );
 addEvent(window, 'load', addClearCheck );
@@ -54,28 +53,6 @@ function addDatabaseLimitChecks() {
 }
   
   
-function loadSaveStrings() {
-	
-	// string variables. Can be set in global js vars in calling context
-	// if desired, to over-ride/customize
-	
-	if (typeof(window['save_action_label']) == "undefined") {
-		save_action_label = 'Save this record';
-	}     
-	
-	if (typeof(window['saved_permanent_label']) == "undefined") {
-		saved_permanent_label = 'Record saved';
-	}
-	
-	if (typeof(window['saved_temporary_label']) == "undefined") {
-		saved_temporary_label = 'Temporarily saved';
-	}
-	
-	if (typeof(window['saved_temporary_login_label']) == "undefined") {
-		saved_temporary_login_label = 'login to save permanently';
-	}
-}
-	
 /**
  * Add onClick event to save records
  */
@@ -173,7 +150,7 @@ function saveRecord(groupID,resultSet,recordNumber)
 						node.remove();
 					});
 					$('folder_' + resultSet + recordNumber).src = "images/folder.png";
-					$(id).update( save_action_label );
+					$(id).update( jsDisplayConstants['text_results_record_save_it'] );
 					$(id).removeClassName("saved");
 					
 					// remove label input
@@ -192,16 +169,16 @@ function saveRecord(groupID,resultSet,recordNumber)
 					
 					if ($('login'))
 					{
-						var temporary_login_note = ' <span class="temporary_login_note"> ( <a  href="' + $('login').href +'">' + saved_temporary_login_label + ' </a> ) </span>';
+						var temporary_login_note = ' <span class="temporary_login_note"> ( <a  href="' + $('login').href +'">' + jsDisplayConstants['text_results_record_saved_perm'] + ' </a> ) </span>';
 					
 						// Put the login link back please 
 						
-						$(id).update( saved_temporary_label ); 
+						$(id).update( jsDisplayConstants['text_results_record_saved_temp'] ); 
 						$(id).insert({after: temporary_login_note  });
 					}
 					else
 					{
-						$(id).update( saved_permanent_label );
+						$(id).update( jsDisplayConstants['text_results_record_saved'] );
 					}
 					
 					$(id).addClassName("saved");

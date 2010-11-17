@@ -2554,7 +2554,15 @@
 		jsDisplayConstants['link_resolver_direct_link_prefix'] = '<xsl:copy-of select="$text_link_resolver_direct_link_prefix"/>';
 		jsDisplayConstants['text_searchbox_options_fewer'] = '<xsl:copy-of select="$text_searchbox_options_fewer"/>';
 		jsDisplayConstants['text_searchbox_options_more'] = '<xsl:copy-of select="$text_searchbox_options_more"/>';
-	
+		jsDisplayConstants['text_searchbox_field_year'] = '<xsl:copy-of select="$text_searchbox_field_year" />';
+		jsDisplayConstants['text_searchbox_field_issn'] = '<xsl:copy-of select="$text_searchbox_field_issn" />';
+		jsDisplayConstants['text_searchbox_field_isbn'] = '<xsl:copy-of select="$text_searchbox_field_isbn" />';
+		
+		jsDisplayConstants['text_results_record_save_it'] = '<xsl:copy-of select="$text_results_record_save_it" />';
+		jsDisplayConstants['text_results_record_saved'] = '<xsl:copy-of select="$text_results_record_saved" />';
+		jsDisplayConstants['text_results_record_saved_temp'] = '<xsl:copy-of select="$text_results_record_saved_temp" />';
+		jsDisplayConstants['text_results_record_saved_perm'] = '<xsl:copy-of select="$text_results_record_saved_perm" />';
+		
 	</script>
 
 </xsl:template>
