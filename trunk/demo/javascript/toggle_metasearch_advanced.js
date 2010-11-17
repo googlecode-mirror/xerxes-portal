@@ -47,9 +47,9 @@
 
     
 		selected = myField.value;
-		myField.insert('<option value="ISSN">ISSN</option>');
-		myField.insert('<option value="ISBN">ISBN</option>');
-		myField.insert('<option value="WYR">year</option>');
+		myField.insert('<option value="ISSN">' + jsDisplayConstants['text_searchbox_field_issn'] + '</option>');
+		myField.insert('<option value="ISBN">' + jsDisplayConstants['text_searchbox_field_isbn'] + '</option>');
+		myField.insert('<option value="WYR">' +  jsDisplayConstants['text_searchbox_field_year'] + '</option>');
 		myField.value = selected;
 		
 
