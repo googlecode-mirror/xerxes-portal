@@ -45,18 +45,8 @@ class Xerxes_Framework_FrontController
 		
 		self::registerClasses( "$path_to_parent/lib/framework", "Xerxes_Framework");
 		
-		// initialize the configuration setting (Registry), 
-		// command-view mapping (ControllerMap), and
-		// language translation (Languages) objects 
-		
-		$objRegistry = Xerxes_Framework_Registry::getInstance();
-		$objRegistry->init();
-		
-		$objControllerMap = Xerxes_Framework_ControllerMap::getInstance();
-		$objControllerMap->init();
-			
-		$objLanguage = Xerxes_Framework_Languages::getInstance();
-		$objLanguage->init();		
+		$objRegistry = Xerxes_Framework_Registry::getInstance(); //configuration setting
+		$objControllerMap = Xerxes_Framework_ControllerMap::getInstance(); // command-view mapping
 		
 		// set the version number, for interface or other places
 		
@@ -87,16 +77,25 @@ class Xerxes_Framework_FrontController
 		session_name( $session_name );
 		session_start();
 		
-		// url aliases
-		
-		$alias = $objRegistry->getConfig("BASE_ALIASES");
-		
 		// utility classes
 		
-		$objRequest = new Xerxes_Framework_Request($alias); // processes the incoming request
+		$objRequest = Xerxes_Framework_Request::getInstance(); // processes the incoming request
 		$objPage = new Xerxes_Framework_Page($objRequest, $objRegistry); // assists with basic paging/navigation elements for the view
 		$objError = new Xerxes_Framework_Error( ); // functions for special logging or handling of errors
 		
+		//language
+		
+		$lang = $objRequest->getProperty("lang");
+		
+		if ( $lang == "" )
+		{
+			$lang = "eng";
+		}
+		
+		$objRegistry->setConfig("XERXES_LANGUAGE", $lang); // set as registry for other framework classes
+		$objLanguage = Xerxes_Framework_Languages::getInstance(); // language translation
+		
+
 		// we'll put the remaining code in a try-catch block in order to show friendly error page
 		// for any uncaught exceptions
 		
@@ -119,13 +118,6 @@ class Xerxes_Framework_FrontController
 			// make sure application_name is passthrough, and has a value.
 
 			$objRegistry->setConfig( "application_name", $objRegistry->getConfig( "APPLICATION_NAME", false, "Xerxes" ), true );
-			
-			// language
-			
-			if ( $objRequest->getProperty("lang") != "" )
-			{
-				$objRegistry->setConfig("XERXES_LANGUAGE", $objRequest->getProperty("lang"));
-			}
 			
 			####################
 			#     SET PATHS    #

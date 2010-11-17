@@ -15,25 +15,47 @@
 
 class Xerxes_Framework_Request
 {
-	private $method = ""; // request method: GET, POST, COMMAND
-	private $arrParams = array ( ); // request paramaters
-	private $arrSession = array ( ); // session array for command line, unused right now
-	private $arrCookieSetParams = array ( ); // cookies that will be set with response. 
-		// value is array of args to php set_cookie. 
-	private $xml = null; // main xml document for holding data from commands
-	private $strRedirect = ""; // redirect url
-	private $path_elements = null; // http path tranlsated into array of elements.
-	private $aliases = array(); // url base aliases
-	private $debugging = array(); // debugging messages
-	private $registry; // registry object
+	private static $instance; 					// singleton
+	private static $method = ""; 				// request method: GET, POST, COMMAND
+	private static $arrParams = array();		// request paramaters
+	private static $arrSession = array(); 		// session array for command line, unused right now
+	private static $arrCookieSetParams = array(); // cookies that will be set with response. 
+	private static $xml = null; 				// main xml document for holding data from commands
+	private static $strRedirect = ""; 			// redirect url
+	private static $path_elements = null; 		// http path tranlsated into array of elements.
+	private static $aliases = array(); 			// url base aliases
+	private static $debugging = array(); 		// debugging messages
+	private static $registry; 					// registry object
+	
+	private function __construct()
+	{
+	}
 
+	/**
+	 * Get an instance of the class; Singleton to ensure correct data
+	 *
+	 * @return Xerxes_Framework_Request
+	 */
+	
+	public static function getInstance()
+	{
+		if ( empty( self::$instance ) )
+		{
+			self::$instance = new Xerxes_Framework_Request( );
+			self::init();
+		}
+		
+		return self::$instance;
+	}	
+	
 	/**
 	 * Process the incoming request paramaters, cookie values, url path if pretty-uri on
 	 */
 	
-	public function __construct($alias = null)
+	private function init()
 	{
-		$this->registry = Xerxes_Framework_Registry::getInstance();
+		self::$registry = Xerxes_Framework_Registry::getInstance();
+		$alias = self::$registry->getConfig("BASE_ALIASES");
 		
 		if ( $alias != null )
 		{
@@ -52,14 +74,14 @@ class Xerxes_Framework_Request
 				}
 			}			
 			
-			$this->aliases = $aliases;
+			self::$aliases = $aliases;
 		}
 		
 		if ( array_key_exists( "REQUEST_METHOD", $_SERVER ) )
 		{
 			// request has come in from GET or POST
 
-			$this->method = $_SERVER['REQUEST_METHOD'];
+			self::$method = $_SERVER['REQUEST_METHOD'];
 			
 			// now extract remaining params in query string. 
 
@@ -81,57 +103,57 @@ class Xerxes_Framework_Request
 						$strKey = substr( $strParam, 0, $iEqual );
 						$strValue = substr( $strParam, $iEqual + 1 );
 						
-						$this->setProperty( $strKey, urldecode( $strValue ) );
+						self::setProperty( $strKey, urldecode( $strValue ) );
 					}
 				}
 			}
 			
 			foreach ( $_POST as $key => $value )
 			{
-				$this->setProperty( $key, $value );
+				self::setProperty( $key, $value );
 			}
 			foreach ( $_COOKIE as $key => $value )
 			{
-				$this->setProperty( $key, $value );
+				self::setProperty( $key, $value );
 			}
 						
 			// aliases: when base is explicitly in the url
 			
-			$this->swapAliases();
+			self::swapAliases();
 						
 			// if pretty-urls is turned on, extract params from uri. 
 			
-			if ( $this->registry->getConfig( "REWRITE", false ) )
+			if ( self::$registry->getConfig( "REWRITE", false ) )
 			{
-				$this->extractParamsFromPath();
+				self::extractParamsFromPath();
 			}
 
 			// set mobile
 			
-			if ( $this->getSession('is_mobile') == null )
+			if ( self::getSession('is_mobile') == null )
 			{
-				$this->setSession('is_mobile', (string) $this->isMobileDevice());
+				self::setSession('is_mobile', (string) self::isMobileDevice());
 			}
 
 			// troubleshooting mobile
 			
-			if ( $this->getProperty("is_mobile") != "" )
+			if ( self::getProperty("is_mobile") != "" )
 			{
-				$this->setSession('is_mobile', $this->getProperty("is_mobile"));
+				self::setSession('is_mobile', self::getProperty("is_mobile"));
 			}
 		} 
 		else
 		{
 			// request has come in from the command line
 
-			$this->method = "COMMAND";
+			self::$method = "COMMAND";
 			
 			foreach ( $_SERVER['argv'] as $arg )
 			{
 				if ( strpos( $arg, "=" ) )
 				{
 					list ( $key, $val ) = explode( "=", $arg );
-					$this->setProperty( $key, $val );
+					self::setProperty( $key, $val );
 				}
 			}
 		}
@@ -174,7 +196,7 @@ class Xerxes_Framework_Request
 	
 	public function isCommandLine()
 	{
-		if ( $this->method == "COMMAND" )
+		if ( self::$method == "COMMAND" )
 		{
 			return true;
 		} 
@@ -206,8 +228,8 @@ class Xerxes_Framework_Request
 		
 		// extract language from path, if present
 		
-		$languages = $this->registry->getConfig("languages");
-		$path = $this->pathElements();
+		$languages = self::$registry->getConfig("languages");
+		$path = self::pathElements();
 		
 		if ( $languages != "" && count($path) > 0 )
 		{
@@ -218,7 +240,7 @@ class Xerxes_Framework_Request
 				
 				if ( $path[0] == $language["code"] )
 				{
-					$this->mapPathToProperty( 0, "lang" );
+					self::mapPathToProperty( 0, "lang" );
 					$x = 1;
 				}
 			}
@@ -226,39 +248,39 @@ class Xerxes_Framework_Request
 		
 		// base and action
 		
-		$this->mapPathToProperty( 0 + $x, "base" );
-		$this->mapPathToProperty( 1 + $x, "action" );
+		self::mapPathToProperty( 0 + $x, "base" );
+		self::mapPathToProperty( 1 + $x, "action" );
 		
 		// need to swap aliases before we fetch data
 		
-		$this->swapAliases();
+		self::swapAliases();
 		
 		// if the action has any specific parmaters it defines beyond base and action
 		// they are extracted here
 
 		$objMap = Xerxes_Framework_ControllerMap::getInstance()->path_map_obj();
-		$map = $objMap->indexToPropertyMap( $this->getProperty( "base" ), $this->getProperty( "action" ) );
+		$map = $objMap->indexToPropertyMap( self::getProperty( "base" ), self::getProperty( "action" ) );
 		
 		foreach ( $map as $index => $property )
 		{
-			$this->mapPathToProperty( $index + $x, $property );
+			self::mapPathToProperty( $index + $x, $property );
 		}
 	}
 	
 	private function swapAliases()
 	{
-		foreach ( $this->aliases as $old => $alias )
+		foreach ( self::$aliases as $old => $alias )
 		{
-			if ( $this->getProperty("base") == $old )
+			if ( self::getProperty("base") == $old )
 			{
-				$this->arrParams["base"] = $alias;
+				self::$arrParams["base"] = $alias;
 			}
 		}		
 	}
 	
 	private function getAlias($new)
 	{
-		foreach ( $this->aliases as $old => $alias )
+		foreach ( self::$aliases as $old => $alias )
 		{
 			if ( $alias == $new )
 			{
@@ -281,13 +303,13 @@ class Xerxes_Framework_Request
 	{
 		// lazy load
 
-		if ( ! $this->path_elements )
+		if ( ! self::$path_elements )
 		{
-			$request_uri = $this->getServer( 'REQUEST_URI' );
+			$request_uri = self::getServer( 'REQUEST_URI' );
 			
 			// get the path by stripping off base url + querystring
 
-			$configBase = $this->registry->getConfig( 'BASE_WEB_PATH', false, "" );
+			$configBase = self::$registry->getConfig( 'BASE_WEB_PATH', false, "" );
 			
 			// remove base path, which might be simply '/'
 			
@@ -317,10 +339,10 @@ class Xerxes_Framework_Request
 				unset( $path_elements[0] );
 			}
 			
-			$this->path_elements = $path_elements;
+			self::$path_elements = $path_elements;
 		}
 		
-		return $this->path_elements;
+		return self::$path_elements;
 	}
 	
 	/**
@@ -332,11 +354,11 @@ class Xerxes_Framework_Request
 	
 	public function mapPathToProperty($path_index, $property_name)
 	{
-		$path_elements = $this->pathElements();
+		$path_elements = self::pathElements();
 		
 		if ( array_key_exists( $path_index, $path_elements ) )
 		{
-			$this->setProperty( ( string ) $property_name, ( string ) $path_elements[$path_index] );
+			self::setProperty( ( string ) $property_name, ( string ) $path_elements[$path_index] );
 		}
 	}
 	
@@ -355,18 +377,18 @@ class Xerxes_Framework_Request
 			$value = trim($value);
 		}
 		
-		if ( array_key_exists( $key, $this->arrParams ) && $override == false )
+		if ( array_key_exists( $key, self::$arrParams ) && $override == false )
 		{
 			// if there is an existing element, then we always push in the
 			// the new value into an array, first converting the exising value
 			// to an array if it is not already one 
 
-			if ( ! is_array( $this->arrParams[$key] ) )
+			if ( ! is_array( self::$arrParams[$key] ) )
 			{
-				$this->arrParams[$key] = array ($this->arrParams[$key] );
+				self::$arrParams[$key] = array (self::$arrParams[$key] );
 			}
 			
-			array_push( $this->arrParams[$key], $value );
+			array_push( self::$arrParams[$key], $value );
 		} 
 		elseif ( $bolArray == true )
 		{
@@ -378,11 +400,11 @@ class Xerxes_Framework_Request
 				$value = array ($value );
 			}
 			
-			$this->arrParams[$key] = $value;
+			self::$arrParams[$key] = $value;
 		} 
 		else
 		{
-			$this->arrParams[$key] = $value;
+			self::$arrParams[$key] = $value;
 		}
 	}
 	
@@ -396,25 +418,25 @@ class Xerxes_Framework_Request
 	
 	public function getProperty($key, $bolArray = false)
 	{
-		if ( array_key_exists( $key, $this->arrParams ) )
+		if ( array_key_exists( $key, self::$arrParams ) )
 		{
 			// if the value is requested as array, but is not array, make it one!
 
-			if ( $bolArray == true && ! is_array( $this->arrParams[$key] ) )
+			if ( $bolArray == true && ! is_array( self::$arrParams[$key] ) )
 			{
-				return array ($this->arrParams[$key] );
+				return array (self::$arrParams[$key] );
 			} 
 
 			// the opposite: if the the value is not requested as array but is,
 			// take just the first value in the array
 
-			elseif ( $bolArray == false && is_array( $this->arrParams[$key] ) )
+			elseif ( $bolArray == false && is_array( self::$arrParams[$key] ) )
 			{
-				return $this->arrParams[$key][0];
+				return self::$arrParams[$key][0];
 			} 
 			else
 			{
-				return $this->arrParams[$key];
+				return self::$arrParams[$key];
 			}
 		} 
 		else
@@ -431,7 +453,7 @@ class Xerxes_Framework_Request
 	
 	public function getAllProperties()
 	{
-		return $this->arrParams;
+		return self::$arrParams;
 	}
 	
 	/**
@@ -453,7 +475,7 @@ class Xerxes_Framework_Request
 			throw new Exception("you must suply a regular expression for the properties to extract");
 		}
 
-		foreach ( $this->getAllProperties() as $key => $value )
+		foreach ( self::getAllProperties() as $key => $value )
 		{
 			$key = urldecode($key);
 			
@@ -582,6 +604,7 @@ class Xerxes_Framework_Request
 	public function setCookie($name)
 	{
 		$cookieParams = func_get_args();
+		
 		if ( ! $cookieParams[3] )
 		{
 			// No path? PHP default is current path, which won't work well in pretty url style.
@@ -601,14 +624,14 @@ class Xerxes_Framework_Request
 			}
 		}
 		
-		$this->arrCookieSetParams[$name] = $cookieParams;
+		self::$arrCookieSetParams[$name] = $cookieParams;
 	}
 	
 	// called by frontcontroller, nobody else should need it.
 	
 	public function cookieSetParams()
 	{
-		return $this->arrCookieSetParams;
+		return self::$arrCookieSetParams;
 	}
 		
 	/**
@@ -673,14 +696,14 @@ class Xerxes_Framework_Request
 			$full = true;
 		}
 		
-		$base_path = $this->registry->getConfig( 'BASE_WEB_PATH', false, "" ) . "/";
+		$base_path = self::$registry->getConfig( 'BASE_WEB_PATH', false, "" ) . "/";
 		
 		// should we generate full absolute urls with hostname? indicated by a
 		// request property, set automatically by snippet embed controllers. 
 
-		if ( $this->getProperty( "gen_full_urls" ) == 'true' || $full )
+		if ( self::getProperty( "gen_full_urls" ) == 'true' || $full )
 		{
-			$base_path = $this->registry->getConfig( 'BASE_URL', true ) . "/";
+			$base_path = self::$registry->getConfig( 'BASE_URL', true ) . "/";
 			
 			if ($force_secure)
 			{
@@ -703,12 +726,12 @@ class Xerxes_Framework_Request
 		
 		// add in the the language element automatically
 		
-		if ( $this->getProperty("lang") != "" )
+		if ( self::getProperty("lang") != "" )
 		{
-			$properties["lang"] = $this->getProperty("lang");
+			$properties["lang"] = self::getProperty("lang");
 		}
 		
-		if ( $this->registry->getConfig( 'REWRITE', false ) )
+		if ( self::$registry->getConfig( 'REWRITE', false ) )
 		{
 			$x = 0;
 			
@@ -723,7 +746,7 @@ class Xerxes_Framework_Request
 			
 			// base in path
 
-			$extra_path_arr[0 + $x] = urlencode( $this->getAlias($base)); //alias
+			$extra_path_arr[0 + $x] = urlencode( self::getAlias($base)); //alias
 			unset( $properties["base"] );
 			
 			// action in path
@@ -811,7 +834,7 @@ class Xerxes_Framework_Request
 	
 	public function addDebugging($message)
 	{
-		array_push($this->debugging, $message);
+		array_push(self::$debugging, $message);
 	}
 	
 	
@@ -837,8 +860,8 @@ class Xerxes_Framework_Request
 		} 
 		else
 		{
-			$this->xml = new DOMDocument( );
-			$this->xml->loadXML( "<$strName />" );
+			self::$xml = new DOMDocument( );
+			self::$xml->loadXML( "<$strName />" );
 		}
 	}
 	
@@ -848,7 +871,7 @@ class Xerxes_Framework_Request
 		$xml->loadXML("<$name />");
 		$xml->documentElement->setAttribute($attribute, $value);
 		
-		$this->addDocument($xml);
+		self::addDocument($xml);
 	}
 	
 	/**
@@ -859,18 +882,18 @@ class Xerxes_Framework_Request
 	
 	public function addDocument(DOMDocument $objData)
 	{
-		if ( ! $this->xml instanceof DOMDocument )
+		if ( ! self::$xml instanceof DOMDocument )
 		{
-			$this->xml = new DOMDocument( );
-			$this->xml->loadXML( "<xerxes />" );
+			self::$xml = new DOMDocument( );
+			self::$xml->loadXML( "<xerxes />" );
 		}
 		
 		if ( $objData != null )
 		{
 			if ( $objData->documentElement != null )
 			{
-				$objImport = $this->xml->importNode( $objData->documentElement, true );
-				$this->xml->documentElement->appendChild( $objImport );
+				$objImport = self::$xml->importNode( $objData->documentElement, true );
+				self::$xml->documentElement->appendChild( $objImport );
 			}
 		}
 	}
@@ -883,7 +906,7 @@ class Xerxes_Framework_Request
 	
 	public function setRedirect($url)
 	{
-		$this->strRedirect = $url;
+		self::$strRedirect = $url;
 	}
 	
 	/**
@@ -894,7 +917,7 @@ class Xerxes_Framework_Request
 	
 	public function getRedirect()
 	{
-		return $this->strRedirect;
+		return self::$strRedirect;
 	}
 	
 	/**
@@ -911,7 +934,7 @@ class Xerxes_Framework_Request
 	{
 		if ( $xpath == null && $arrNamespaces == null && $strReturnType == null )
 		{
-			return $this->xml;
+			return self::$xml;
 		}
 		
 		$strReturnType = Xerxes_Framework_Parser::strtoupper( $strReturnType );
@@ -921,7 +944,7 @@ class Xerxes_Framework_Request
 			throw new Exception( "unsupported return type" );
 		}
 		
-		$objXPath = new DOMXPath( $this->xml );
+		$objXPath = new DOMXPath( self::$xml );
 		
 		if ( $arrNamespaces != null )
 		{
@@ -999,13 +1022,13 @@ class Xerxes_Framework_Request
 		// session and server global arrays will have parent elements
 		// but querystring and cookie params will be at the root of request
 
-		$this->addElement( $objXml, $objXml->documentElement, $this->arrParams );
+		self::addElement( $objXml, $objXml->documentElement, self::$arrParams );
 		
 		// add the session global array
 
 		$objSession = $objXml->createElement( "session" );
 		$objXml->documentElement->appendChild( $objSession );
-		$this->addElement( $objXml, $objSession, $_SESSION );
+		self::addElement( $objXml, $objSession, $_SESSION );
 		
 		// we might add some calculated thigns to xml that aren't actually
 		// stored in session.
@@ -1021,7 +1044,7 @@ class Xerxes_Framework_Request
 		// ip recognized?
 
 		$authUser = Xerxes_Framework_Restrict::isAuthenticatedUser( $this );
-		$authIP = Xerxes_Framework_Restrict::isIpAddrInRanges( $this->getServer( 'REMOTE_ADDR' ), $objRegistry->getConfig( "local_ip_range" ) );
+		$authIP = Xerxes_Framework_Restrict::isIpAddrInRanges( self::getServer( 'REMOTE_ADDR' ), $objRegistry->getConfig( "local_ip_range" ) );
 		$objElement = $objXml->createElement( "affiliated", ($authUser || $authIP) ? "true" : "false" );
 		$objElement->setAttribute( "user_account", $authUser ? "true" : "false" );
 		$objElement->setAttribute( "ip_addr", $authIP ? "true" : "false" );
@@ -1036,7 +1059,7 @@ class Xerxes_Framework_Request
 			foreach ( $objRegistry->userGroups() as $group )
 			{
 				$authUser = array_key_exists( "user_groups", $_SESSION ) && is_array( $_SESSION["user_groups"] ) && in_array( $group, $_SESSION["user_groups"] );
-				$authIP = Xerxes_Framework_Restrict::isIpAddrInRanges( $this->getServer( 'REMOTE_ADDR' ), $objRegistry->getGroupLocalIpRanges( $group ) );
+				$authIP = Xerxes_Framework_Restrict::isIpAddrInRanges( self::getServer( 'REMOTE_ADDR' ), $objRegistry->getGroupLocalIpRanges( $group ) );
 				$objElement = $objXml->createElement( "group", ($authUser || $authIP) ? "true" : "false" );
 				$objElement->setAttribute( "id", $group );
 				$objElement->setAttribute( "display_name", $objRegistry->getGroupDisplayName( $group ) );
@@ -1053,16 +1076,16 @@ class Xerxes_Framework_Request
 		{
 			$objServer = $objXml->createElement( "server" );
 			$objXml->documentElement->appendChild( $objServer );
-			$this->addElement( $objXml, $objServer, $_SERVER );
+			self::addElement( $objXml, $objServer, $_SERVER );
 		}
 		
 		// add to the master xml document
 		
-		$this->addDocument( $objXml );
+		self::addDocument( $objXml );
 		
 		// once added, now return the master xml document
 		
-		return $this->xml;
+		return self::$xml;
 	}
 	
 	/**
@@ -1093,7 +1116,7 @@ class Xerxes_Framework_Request
 					if ( is_array( $strValue ) )
 					{
 						// multi-dimensional arrays will be recursively added
-						$this->addElement($objXml, $objElement, $strValue);
+						self::addElement($objXml, $objElement, $strValue);
 					}
 					else
 					{

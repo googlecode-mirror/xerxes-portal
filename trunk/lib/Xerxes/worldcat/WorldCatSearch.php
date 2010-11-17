@@ -53,10 +53,7 @@ class Xerxes_WorldCatSearch extends Xerxes_Framework_Search
 	
 	protected function getConfig()
 	{
-		$config = Xerxes_WorldCatConfig::getInstance();
-		$config->init();
-
-		return $config;
+		return Xerxes_WorldCatConfig::getInstance();
 	}
 	
 	public function getHashID()
