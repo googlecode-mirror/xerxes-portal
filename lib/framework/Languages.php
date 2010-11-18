@@ -13,20 +13,20 @@
 
 class Xerxes_Framework_Languages
 {
-	private static $xpath = "";				// language data we can query
-	private static $gettext = false; 		// whether gettext is installed
-	private static $languages_file_system = "/usr/share/xml/iso-codes/iso_639.xml";
-	private static $languages_file_xerxes = "../data/iso_639.xml"; // local version
-	private static $locale = "C";			// default locale
-	private static $domain = "iso_639";		// gettext domain
-	private static $instance;				// singleton pattern
+	protected $xpath = "";		// language data we can query
+	protected $gettext = false; // whether gettext is installed
+	protected $languages_file_system = "/usr/share/xml/iso-codes/iso_639.xml";
+	protected $languages_file_xerxes = "../data/iso_639.xml"; // local version
+	protected $locale = "C";	// default locale
+	protected $domain = "iso_639";	// gettext domain
+	private static $instance;	// singleton pattern
 	
 	protected function __construct()
 	{
 	}
 	
 	/**
-	 * Get an instance of the class; Singleton to ensure correct data
+	 * Get an instance of the file; Singleton to ensure correct data
 	 *
 	 * @return Xerxes_Framework_Languages
 	 */
@@ -35,8 +35,7 @@ class Xerxes_Framework_Languages
 	{
 		if ( empty( self::$instance ) )
 		{
-			self::$instance = new Xerxes_Framework_Languages();
-			self::init();
+			self::$instance = new Xerxes_Framework_Languages( );
 		}
 		
 		return self::$instance;
@@ -48,13 +47,13 @@ class Xerxes_Framework_Languages
 	 * @exception 	will throw exception if no file can be found
 	 */
 	
-	private static function init()
+	public function init()
 	{
 		// first, see if Getttext functions are installed
 		
 		if ( function_exists( 'bindtextdomain' ) )
 		{
-			self::$gettext = true;
+			$this->gettext = true;
 			
 			// windows hack
 			
@@ -68,19 +67,19 @@ class Xerxes_Framework_Languages
 				
 		// set full path to local copy
 		
-		self::$languages_file_xerxes = realpath(dirname(__FILE__) . DIRECTORY_SEPARATOR . self::$languages_file_xerxes);
+		$this->languages_file_xerxes = realpath(dirname(__FILE__) . DIRECTORY_SEPARATOR . $this->languages_file_xerxes);
 		
 		// if the iso-codes is not installed, use our copy
 		
 		$file = "";
 		
-		if ( file_exists( self::$languages_file_system ) )
+		if ( file_exists( $this->languages_file_system ) )
 		{
-			$file = self::$languages_file_system;
+			$file = $this->languages_file_system;
 		}
-		elseif ( file_exists( self::$languages_file_xerxes) )
+		elseif ( file_exists( $this->languages_file_xerxes) )
 		{
-			$file = self::$languages_file_xerxes;
+			$file = $this->languages_file_xerxes;
 		}
 		else
 		{
@@ -92,21 +91,21 @@ class Xerxes_Framework_Languages
 		$xml = new DOMDocument();
 		$xml->load( $file );
 		
-		self::$xpath = new DOMXPath( $xml );
+		$this->xpath = new DOMXPath( $xml );
 		
 		unset($xml);
 		
 		// which language shall we display?
 		
-		self::$locale = $objRegistry->getLocale();
+		$this->locale = $objRegistry->getConfig( 'XERXES_LOCALE', false, 'C' );
 		
 		// bindings
 		
-		if ( self::$gettext == true )
+		if ( $this->gettext == true )
 		{
-			bindtextdomain( self::$domain, '/usr/share/locale' ); // this works on windows too?
-			bind_textdomain_codeset( self::$domain, 'UTF-8' );	// assume UTF-8, all the .po files in iso_639 use it
-			textdomain( self::$domain );
+			bindtextdomain( $this->domain, '/usr/share/locale' ); // this works on windows too?
+			bind_textdomain_codeset( $this->domain, 'UTF-8' );	// assume UTF-8, all the .po files in iso_639 use it
+			textdomain( $this->domain );
 		}
 	}
 	
@@ -126,7 +125,7 @@ class Xerxes_Framework_Languages
 			$code = Xerxes_Framework_Parser::strtolower( $code );
 		}
 		
-		$elements = self::$xpath->query( "//iso_639_entry[@$type='$code']" ); 
+		$elements = $this->xpath->query( "//iso_639_entry[@$type='$code']" ); 
 		
 		if ( ! is_null( $elements ) )
 		{
@@ -134,18 +133,18 @@ class Xerxes_Framework_Languages
 			{
 				$name = $element->getAttribute( 'name' );
 				
-				if ( self::$gettext == false )
+				if ( $this->gettext == false )
 				{
 					return $name;
 				}
 				
-				$originalLocale = self::getXerxesLocale();
+				$originalLocale = $this->getXerxesLocale();
 				
-				self::setXerxesLocale( self::$locale );
+				$this->setXerxesLocale( $this->locale );
 				
-				$languageName = dgettext( self::$domain, $name );
+				$languageName = dgettext( $this->domain, $name );
 				
-				self::setXerxesLocale( $originalLocale );
+				$this->setXerxesLocale( $originalLocale );
 				
 				return $languageName;
 			}
@@ -158,7 +157,7 @@ class Xerxes_Framework_Languages
 	
 	public function getXML()
 	{
-		return self::$xml;
+		return $this->xml;
 	}
 	
 	private function getXerxesLocale()

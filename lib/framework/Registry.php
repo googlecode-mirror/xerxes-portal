@@ -13,12 +13,12 @@
 
 class Xerxes_Framework_Registry
 {
-	protected static $xml = ""; // simple xml object copy
-	protected static $config_file = "config/config";
-	private static $usergroups = array(); // user groups
-	private static $authentication_sources = array();
-	private static $arrConfig = null; // configuration settings
-	private static $arrPass = array(); // values to pass on to the view
+	protected $xml = ""; // simple xml object copy
+	protected $config_file = "config/config";
+	private $usergroups = array ( ); // user groups
+	private $authentication_sources = array ( );
+	private $arrConfig = null; // configuration settings
+	private $arrPass = array ( ); // values to pass on to the view
 	private static $instance; // singleton pattern
 
 	protected function __construct()
@@ -26,7 +26,7 @@ class Xerxes_Framework_Registry
 	}
 	
 	/**
-	 * Get an instance of the class; Singleton to ensure correct data
+	 * Get an instance of the file; Singleton to ensure correct data
 	 *
 	 * @return Xerxes_Framework_Registry
 	 */
@@ -36,7 +36,6 @@ class Xerxes_Framework_Registry
 		if ( empty( self::$instance ) )
 		{
 			self::$instance = new Xerxes_Framework_Registry( );
-			self::init();
 		}
 		
 		return self::$instance;
@@ -48,15 +47,15 @@ class Xerxes_Framework_Registry
 	 * @exception 	will throw exception if no configuration file can be found
 	 */
 	
-	protected static function init()
+	public function init()
 	{
-		if ( self::$arrConfig == null )
+		if ( $this->arrConfig == null )
 		{
 			$file = "";
-			$file_xml = self::$config_file . ".xml";
-			$file_php = self::$config_file . ".php";
+			$file_xml = $this->config_file . ".xml";
+			$file_php = $this->config_file . ".php";
 			
-			self::$arrConfig = array ();
+			$this->arrConfig = array ();
 			
 			// check if the config file has an .xml or .php extension
 			
@@ -73,12 +72,12 @@ class Xerxes_Framework_Registry
 				throw new Exception( "could not find configuration file" );
 			}
 			
-			self::$authentication_sources["guest"] = "guest";
+			$this->authentication_sources["guest"] = "guest";
 			
 			// get it!
 
 			$xml = simplexml_load_file( $file );
-			self::$xml = $xml;
+			$this->xml = $xml;
 			
 			foreach ( $xml->configuration->config as $config )
 			{
@@ -114,11 +113,11 @@ class Xerxes_Framework_Registry
 
 				if ( $name == "AUTHENTICATION_SOURCE" )
 				{
-					self::$authentication_sources[( string ) $config["id"]] = $value;
+					$this->authentication_sources[( string ) $config["id"]] = $value;
 
 					// and don't overwrite the first one in our standard config array
 
-					if ( ! empty( self::$arrConfig["AUTHENTICATION_SOURCE"] ) )
+					if ( ! empty( $this->arrConfig["AUTHENTICATION_SOURCE"] ) )
 					{
 						$value = "";
 					}
@@ -128,21 +127,21 @@ class Xerxes_Framework_Registry
 				{
 					// add it to the config array
 
-					self::$arrConfig[$name] = $value;
+					$this->arrConfig[$name] = $value;
 					
 					// types that are listed as 'pass' will be forwarded
 					// on to the xml layer for use in the view
 					
 					if ( ( string ) $config["pass"] == "true" )
 					{
-						self::$arrPass[Xerxes_Framework_Parser::strtolower( $name )] = $value;
+						$this->arrPass[Xerxes_Framework_Parser::strtolower( $name )] = $value;
 					}
 				}
 			}
 				
 			// get group information out of config.xml too
 			// we just store actual simplexml elements in the 
-			// self::$usergroups array.
+			// $this->usergroups array.
 				
 			$groups = $xml->configuration->groups->group;
 				
@@ -151,7 +150,7 @@ class Xerxes_Framework_Registry
 				foreach ( $groups as $group )
 				{
 					$id = ( string ) $group["id"];
-					self::$usergroups[$id] = $group;
+					$this->usergroups[$id] = $group;
 				}
 			}
 		}
@@ -176,28 +175,28 @@ class Xerxes_Framework_Registry
 			$name .= "_$lang";
 		}
 		
-		if ( self::$arrConfig == null )
+		if ( $this->arrConfig == null )
 		{
 			return null;
 		} 
 		
-		if ( array_key_exists( $name, self::$arrConfig ) )
+		if ( array_key_exists( $name, $this->arrConfig ) )
 		{
-			if ( self::$arrConfig[$name] == "true" )
+			if ( $this->arrConfig[$name] == "true" )
 			{
 				return true;
 			} 
-			elseif ( self::$arrConfig[$name] == "false" )
+			elseif ( $this->arrConfig[$name] == "false" )
 			{
 				return false;
 			}
-			elseif ( self::$arrConfig[$name] == "" || self::$arrConfig[$name] == null)
+			elseif ( $this->arrConfig[$name] == "" || $this->arrConfig[$name] == null)
 			{
 				// let this fall to the code below
 			} 
 			else
 			{
-				return self::$arrConfig[$name];
+				return $this->arrConfig[$name];
 			}
 		} 
 
@@ -224,7 +223,7 @@ class Xerxes_Framework_Registry
 	
 	public function getAllConfigs()
 	{
-		return self::$arrConfig;
+		return $this->arrConfig;
 	}
 	
 	/**
@@ -235,7 +234,7 @@ class Xerxes_Framework_Registry
 	
 	public function getPass()
 	{
-		return self::$arrPass;
+		return $this->arrPass;
 	}
 	
 	/**
@@ -248,19 +247,19 @@ class Xerxes_Framework_Registry
 	
 	public function setConfig($key, $value, $bolPass = false)
 	{
-		self::$arrConfig[Xerxes_Framework_Parser::strtoupper( $key )] = $value;
+		$this->arrConfig[Xerxes_Framework_Parser::strtoupper( $key )] = $value;
 		
 		if ( $bolPass == true )
 		{
-			self::$arrPass[Xerxes_Framework_Parser::strtolower( $key )] = $value;
+			$this->arrPass[Xerxes_Framework_Parser::strtolower( $key )] = $value;
 		}
 	}
 	
 	public function userGroups()
 	{
-		if ( self::$usergroups != null )
+		if ( $this->usergroups != null )
 		{
-			return array_keys( self::$usergroups );
+			return array_keys( $this->usergroups );
 		} 
 		else
 		{
@@ -270,9 +269,9 @@ class Xerxes_Framework_Registry
 	
 	public function getGroupDisplayName($id)
 	{
-		if ( array_key_exists( $id, self::$usergroups ) )
+		if ( array_key_exists( $id, $this->usergroups ) )
 		{
-			$group = self::$usergroups[$id];
+			$group = $this->usergroups[$id];
 			return ( string ) $group->display_name;
 		} 
 		else
@@ -283,9 +282,9 @@ class Xerxes_Framework_Registry
 	
 	public function getGroupLocalIpRanges($id)
 	{
-		if ( array_key_exists( $id, self::$usergroups ) )
+		if ( array_key_exists( $id, $this->usergroups ) )
 		{
-			$group = self::$usergroups[$id];
+			$group = $this->usergroups[$id];
 			return ( string ) $group->local_ip_range;
 		} 
 		else
@@ -298,29 +297,13 @@ class Xerxes_Framework_Registry
 
 	public function getGroupXml($id)
 	{
-		if ( array_key_exists( $id, self::$usergroups ) )
+		if ( array_key_exists( $id, $this->usergroups ) )
 		{
-			return self::$usergroups[$id];
+			return $this->usergroups[$id];
 		} 
 		else
 		{
 			return null;
-		}
-	}
-	
-	public function getLocale()
-	{
-		$code = self::getConfig("XERXES_LANGUAGE", true);
-		
-		$language = self::$xml->xpath("//language[@code='$code']");
-		
-		if ( $language === false || count($language) == 0 )
-		{
-			return "C";
-		}
-		else
-		{
-			return (string) $language[0]["locale"];	
 		}
 	}
 	
@@ -337,15 +320,15 @@ class Xerxes_Framework_Registry
 			// if $id was set, make sure calling code didn't ask for the main auth, 
 			// since that has no 'id'; but code below will return the right name
 			
-			if ( $id != self::getConfig( "AUTHENTICATION_SOURCE" ) )
+			if ( $id != $this->getConfig( "AUTHENTICATION_SOURCE" ) )
 			{
-				$source = self::$authentication_sources[$id];
+				$source = $this->authentication_sources[$id];
 			}
 		}
 		
 		if ( $source == null )
 		{
-			$source = self::getConfig( "AUTHENTICATION_SOURCE" );
+			$source = $this->getConfig( "AUTHENTICATION_SOURCE" );
 		}
 		
 		if ( $source == null )
@@ -358,7 +341,7 @@ class Xerxes_Framework_Registry
 	
 	public function getXML()
 	{
-		return self::$xml;
+		return $this->xml;
 	}
 	
 	public function publicXML()
@@ -368,7 +351,7 @@ class Xerxes_Framework_Registry
 		$objConfigXml = new DOMDocument( );
 		$objConfigXml->loadXML( "<config />" );
 			
-		foreach ( self::getPass() as $key => $value )
+		foreach ( $this->getPass() as $key => $value )
 		{
 			if ($value instanceof SimpleXMLElement) 
 			{
