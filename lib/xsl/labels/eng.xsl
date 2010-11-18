@@ -37,6 +37,7 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	<xsl:variable name="text_authentication_logout_pagename">Logout</xsl:variable>
 	
 	<xsl:variable name="text_breadcrumb_separator"> &gt; </xsl:variable>
+	<xsl:variable name="text_breadcrumb_seperator" select="$text_breadcrumb_separator" />
 	
 	<xsl:variable name="text_collections_add_database">Add databases</xsl:variable>
 	<xsl:variable name="text_collections_add_section">Add a new section:</xsl:variable>
