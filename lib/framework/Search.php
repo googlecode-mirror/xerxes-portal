@@ -60,6 +60,7 @@ abstract class Xerxes_Framework_Search
 		// local config
 		
 		$this->config = $this->getConfig();
+		$this->config->init();
 		$this->request->addDocument($this->config->publicXML());
 		
 		// set default sort order
