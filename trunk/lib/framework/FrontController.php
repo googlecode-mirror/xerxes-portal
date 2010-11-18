@@ -87,15 +87,11 @@ class Xerxes_Framework_FrontController
 		session_name( $session_name );
 		session_start();
 		
-		// url aliases
-		
-		$alias = $objRegistry->getConfig("BASE_ALIASES");
-		
 		// utility classes
 		
-		$objRequest = new Xerxes_Framework_Request($alias); // processes the incoming request
+		$objRequest = new Xerxes_Framework_Request(); // processes the incoming request
 		$objPage = new Xerxes_Framework_Page($objRequest, $objRegistry); // assists with basic paging/navigation elements for the view
-		$objError = new Xerxes_Framework_Error( ); // functions for special logging or handling of errors
+		$objError = new Xerxes_Framework_Error(); // functions for special logging or handling of errors
 		
 		// we'll put the remaining code in a try-catch block in order to show friendly error page
 		// for any uncaught exceptions
