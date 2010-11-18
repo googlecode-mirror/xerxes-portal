@@ -31,9 +31,11 @@ class Xerxes_Framework_Request
 	 * Process the incoming request paramaters, cookie values, url path if pretty-uri on
 	 */
 	
-	public function __construct($alias = null)
+	public function __construct()
 	{
 		$this->registry = Xerxes_Framework_Registry::getInstance();
+		
+		$alias = $this->registry->getConfig("BASE_ALIASES");
 		
 		if ( $alias != null )
 		{
