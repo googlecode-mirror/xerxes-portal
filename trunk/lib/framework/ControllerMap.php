@@ -15,29 +15,29 @@
 
 	class Xerxes_Framework_ControllerMap
 	{
-		private static $file = "config/actions.xml"; // actions configuration file
+		private $file = "config/actions.xml";	// actions configuration file
 		
-		public static $xml = null;					// simplexml object containing instructions for the actions
-		private static $path_map = null;			// xerxes_framework_pathmap object.
-		private static $instance;					// singleton pattern
+		public $xml = null;					// simplexml object containing instructions for the actions
+		private $path_map = null;			// xerxes_framework_pathmap object.
+		private static $instance;			// singleton pattern
 	
-		private static $strDocumentElement = "";	// name of the document element for the xml
-		private static $bolRestricted = false;		// whether action should require authentication
-		private static $bolLogin = false;			// whether action requires an explicit login
-		private static $bolCLI = false;				// whether action should be restricted to command line interface
+		private $strDocumentElement = "";	// name of the document element for the xml
+		private $bolRestricted = false;		// whether action should require authentication
+		private $bolLogin = false;			// whether action requires an explicit login
+		private $bolCLI = false;			// whether action should be restricted to command line interface
 		
-		private static $arrCommands = array();		// list of commands
-		private static $arrRequest = array();		// list of request params
-		private static $arrIncludes = array();		// directories and files to include
+		private $arrCommands = array();		// list of commands
+		private $arrRequest = array();		// list of request params
+		private $arrIncludes = array();		// directories and files to include
 
-		private static $strViewType = "";			// the folder the file lives in, important if it is 'xsl'
-		private static $strViewFile = "";			// name of the file to use in view
-		private static $version;					// xerxes version number
+		private $strViewType = "";			// the folder the file lives in, important if it is 'xsl'
+		private $strViewFile = "";			// name of the file to use in view
+		private $version;					// xerxes version number
 		
 		private function __construct() { }
 		
 		/**
-		 * Get an instance of the class; this is singleton to ensure consistency 
+		 * Get an instance of this class; this is singleton to ensure consistency 
 		 *
 		 * @return Xerxes_Framework_ControllerMap
 		 */
@@ -47,7 +47,6 @@
 			if ( empty( self::$instance) )
 			{
 				self::$instance = new Xerxes_Framework_ControllerMap();
-				self::init();
 			}
 			
 			return self::$instance;
@@ -59,20 +58,20 @@
 		 * @exception 	will throw exception if no configuration file can be found
 		 */
 		
-		private static function init()
+		public function init()
 		{	
-			$distro = Xerxes_Framework_FrontController::parentDirectory() . "/lib/" . self::$file;
+			$distro = Xerxes_Framework_FrontController::parentDirectory() . "/lib/" . $this->file;
 			
 			// don't parse it twice
 			
-			if ( ! self::$xml instanceof SimpleXMLElement )
+			if ( ! $this->xml instanceof SimpleXMLElement )
 			{
 				// distro actions.xml
 				
 				if ( file_exists($distro) )
 				{
-					self::$xml = simplexml_load_file($distro);
-					self::$version = (string) self::$xml["version"];
+					$this->xml = simplexml_load_file($distro);
+					$this->version = (string) $this->xml["version"];
 				}
 				else
 				{
@@ -81,20 +80,20 @@
 
 				// local actions.xml overrides, if any
 				
-				if ( file_exists(self::$file) )
+				if ( file_exists($this->file) )
 				{
-					$local = simplexml_load_file(self::$file);
+					$local = simplexml_load_file($this->file);
 					
 					if ( $local === false )
 					{
 						throw new Exception("could not parse local actions.xml");
 					}
 					
-					self::addSections(self::$xml, $local );
+					$this->addSections($this->xml, $local );
 				}				
 			}
 
-			// header("Content-type: text/xml"); echo self::$xml->asXML(); exit;	
+			// header("Content-type: text/xml"); echo $this->xml->asXML(); exit;	
 		}
 	
 		/**
@@ -151,19 +150,19 @@
 			// get include files and directories for the entire application
 			// as well as those for specific sections
 			
-			$includes = self::$xml->xpath("//commands/include|//section[@name='$strSection']/include");
+			$includes = $this->xml->xpath("//commands/include|//section[@name='$strSection']/include");
 			
 			if ( $includes != false )
 			{
 				foreach ( $includes as $include )
 				{
-					array_push(self::$arrIncludes, (string) $include );
+					array_push($this->arrIncludes, (string) $include );
 				}
 			}
 			
 			// get global commands that should be included with every request
 			
-			$global_commands = self::$xml->xpath("//global/command");
+			$global_commands = $this->xml->xpath("//global/command");
 			
 			if ( $global_commands != false )
 			{
@@ -171,7 +170,7 @@
 				{
 					$arrGlobalCommand = array((string) $global_command["directory"], (string) $global_command["namespace"], (string) $global_command, null);
 						
-					self::addCommand($arrGlobalCommand);
+					$this->addCommand($arrGlobalCommand);
 				}
 			}
 			
@@ -182,14 +181,14 @@
 				$strSection = null;
 				$strAction = null;
 				
-				$arrDefaultSections = self::$xml->xpath("//default/section");
-				$arrDefaultActions = self::$xml->xpath("//default/action");
+				$arrDefaultSections = $this->xml->xpath("//default/section");
+				$arrDefaultActions = $this->xml->xpath("//default/action");
 				
 				if ( $arrDefaultSections != false ) $strSection = (string) array_pop($arrDefaultSections);
 				if ( $arrDefaultActions != false ) $strAction = (string) array_pop($arrDefaultActions);
 				
-				self::addRequest("base", $strSection);
-				self::addRequest("action", $strAction);
+				$this->addRequest("base", $strSection);
+				$this->addRequest("action", $strAction);
 				
 				if ($strSection == null || $strAction == null )
 				{
@@ -204,7 +203,7 @@
 			
 			// make sure a section is defined
 			
-			$sections = self::$xml->xpath("//commands/section[@name='$strSection']");
+			$sections = $this->xml->xpath("//commands/section[@name='$strSection']");
 			
 			if ( $sections == false )
 			{
@@ -214,17 +213,17 @@
 			// get the basic configurations that apply to the section, which may
 			// be overriden by more specific entries in the actions
 			
-			$arrDocumentElement = self::$xml->xpath("//commands/section[@name='$strSection']/@documentElement");
-			$arrDirectory = self::$xml->xpath("//commands/section[@name='$strSection']/@directory");
-			$arrNamespace = self::$xml->xpath("//commands/section[@name='$strSection']/@namespace");
-			$arrRestricted = self::$xml->xpath("//commands/section[@name='$strSection']/@restricted");
-			$arrLogin = self::$xml->xpath("//commands/section[@name='$strSection']/@login");
+			$arrDocumentElement = $this->xml->xpath("//commands/section[@name='$strSection']/@documentElement");
+			$arrDirectory = $this->xml->xpath("//commands/section[@name='$strSection']/@directory");
+			$arrNamespace = $this->xml->xpath("//commands/section[@name='$strSection']/@namespace");
+			$arrRestricted = $this->xml->xpath("//commands/section[@name='$strSection']/@restricted");
+			$arrLogin = $this->xml->xpath("//commands/section[@name='$strSection']/@login");
 
 			if ( $arrDirectory != false ) $strDirectory = (string) array_pop($arrDirectory);
 			if ( $arrNamespace != false ) $strNamespace = (string) array_pop($arrNamespace);
 			if ( $arrRestricted != false ) $strRestricted = (string) array_pop($arrRestricted);
 			if ( $arrLogin != false ) $strLogin = (string) array_pop($arrLogin);
-			if ( $arrDocumentElement != false ) self::$strDocumentElement = (string) array_pop($arrDocumentElement);
+			if ( $arrDocumentElement != false ) $this->strDocumentElement = (string) array_pop($arrDocumentElement);
 			
 			foreach ( $sections as $section )
 			{
@@ -236,7 +235,7 @@
 				{
 					foreach ( $section_includes as $include )
 					{
-						array_push(self::$arrIncludes, (string) $include );
+						array_push($this->arrIncludes, (string) $include );
 					}
 				}
 
@@ -244,7 +243,7 @@
 						
 				foreach ( $section->request as $request )
 				{
-					self::addRequest((string) $request["name"], (string) $request);
+					$this->addRequest((string) $request["name"], (string) $request);
 				}			
 			}
 				
@@ -263,7 +262,7 @@
 			}
 
 			$actions = array();
-			$actions = self::$xml->xpath($xpath);
+			$actions = $this->xml->xpath($xpath);
 				
 			// if action was empty, we'll also need to grab the name out of the 
 			// resulting xpath query
@@ -271,7 +270,7 @@
 			if ( $strAction == "")
 			{
 				$action = (string) $actions[0]["name"];
-				self::addRequest("action", $action);
+				$this->addRequest("action", $action);
 			}
 				
 			// didn't find anything, so let's just set some defaults to allow for 
@@ -293,13 +292,13 @@
 				}
 					
 				$arrCommand = array($strDirectory, $strNamespace, $strDefaultCommand );
-				self::addCommand($arrCommand);
+				$this->addCommand($arrCommand);
 					
 				// view is similar but remains lower-case, and flip any dashes to underscore
 					
 				$strActionFile = str_replace("-", "_", $strAction);
 					
-				self::$strViewFile = "xsl/" . $strDirectory . "_" . $strActionFile . ".xsl";
+				$this->strViewFile = "xsl/" . $strDirectory . "_" . $strActionFile . ".xsl";
 			}
 			else
 			{
@@ -314,7 +313,7 @@
 						
 				// override any section values with these
 						
-				if ( $action["documentElement"] != null ) self::$strDocumentElement = (string) $action["documentElement"];
+				if ( $action["documentElement"] != null ) $this->strDocumentElement = (string) $action["documentElement"];
 				if ( $action["directory"] != null ) $strCommandDirectory = (string) $action["directory"];
 				if ( $action["namespace"] != null ) $strCommandNamespace = (string) $action["namespace"];
 				if ( $action["restricted"] != null ) $strRestricted = (string) $action["restricted"];
@@ -324,7 +323,7 @@
 						
 				if ( $action["cli"] != null )
 				{
-					self::$bolCLI = true;
+					$this->bolCLI = true;
 				}
 						
 				// get additionally defined includes
@@ -335,7 +334,7 @@
 				{
 					foreach ( $action_includes as $include )
 					{
-						array_push(self::$arrIncludes, (string) $include );
+						array_push($this->arrIncludes, (string) $include );
 					}
 				}
 						
@@ -357,24 +356,24 @@
 							
 					$arrCommand = array($strLocalCommandDirectory, $strLocalCommandNamespace, (string) $command );
 							
-					self::addCommand($arrCommand);
+					$this->addCommand($arrCommand);
 				}
 						
 				// request data for the action
 						
 				foreach ( $action->request as $request )
 				{
-					self::addRequest((string) $request["name"], (string) $request);
+					$this->addRequest((string) $request["name"], (string) $request);
 				}
 						
 				// view
 	
 				// by default we'll take the first view file in the action
 						
-				self::$strViewFile = (string) $action->view;
+				$this->strViewFile = (string) $action->view;
 				$type = (string) $action->view["type"];
 					
-				if ( $type != null ) self::$strViewType = $type;
+				if ( $type != null ) $this->strViewType = $type;
 	          
 				// if there is a format={format-name} in the request and a separate
 				// <view fomat="{format-name}"> that matches it, we'll take that as the
@@ -388,21 +387,21 @@
 					{
 						if ( $view["format"] == $format)
 						{
-							self::$strViewFile = $view;
-							self::$strViewType = $view["type"];
+							$this->strViewFile = $view;
+							$this->strViewType = $view["type"];
 						}
 					}
 				}
 				
 				// set the strings to boolean
 				
-				if ( $strRestricted == "true") self::$bolRestricted = true;
-				if ( $strLogin == "true") self::$bolLogin = true;
+				if ( $strRestricted == "true") $this->bolRestricted = true;
+				if ( $strLogin == "true") $this->bolLogin = true;
 			}
 
 			// add any predefined values to the request object from ControllerMap
 				
-			foreach ( self::getRequests() as $key => $value )
+			foreach ( $this->getRequests() as $key => $value )
 			{
 				$xerxes_request->setProperty($key, $value);
 			}		
@@ -416,11 +415,11 @@
 		
 		public function path_map_obj()
 		{
-			if ( ! self::$path_map )
+			if ( ! $this->path_map )
 			{
-				self::$path_map = new Xerxes_Framework_PathMap(self::$xml);
+				$this->path_map = new Xerxes_Framework_PathMap($this->xml);
 			}
-			return self::$path_map;
+			return $this->path_map;
 		}
 		
 		/**
@@ -432,7 +431,7 @@
 		
 		public function getFormat($format)
 		{
-			$formats = self::$xml->xpath("//formats/format[@name='$format']");
+			$formats = $this->xml->xpath("//formats/format[@name='$format']");
 			
 			if ( $formats != false )
 			{
@@ -452,13 +451,13 @@
 		
 		public function getDocumentElement()
 		{
-			if ( self::$strDocumentElement == "" )
+			if ( $this->strDocumentElement == "" )
 			{
 				return "xerxes";
 			}
 			else
 			{
-				return self::$strDocumentElement;
+				return $this->strDocumentElement;
 			}
 		}
 		
@@ -470,7 +469,7 @@
 			
 		public function isRestricted()
 		{
-			return self::$bolRestricted;
+			return $this->bolRestricted;
 		}
 		
 		/**
@@ -481,7 +480,7 @@
 		
 		public function requiresLogin()
 		{
-			return self::$bolLogin;
+			return $this->bolLogin;
 		}
 		
 		/**
@@ -492,7 +491,7 @@
 		
 		public function getCommands()
 		{
-			return self::$arrCommands;
+			return $this->arrCommands;
 		}
 		
 		/**
@@ -503,7 +502,7 @@
 		
 		public function getRequests()
 		{
-			return self::$arrRequest;
+			return $this->arrRequest;
 		}
 		
 		/**
@@ -514,7 +513,7 @@
 		
 		public function getViewType()
 		{
-			return self::$strViewType; 
+			return $this->strViewType; 
 		}
 		
 		/**
@@ -526,7 +525,7 @@
 		
 		public function restrictToCLI()
 		{
-			return self::$bolCLI;
+			return $this->bolCLI;
 		}
 		
 		/**
@@ -537,7 +536,7 @@
 		
 		public function getView()
 		{
-			return self::$strViewFile;
+			return $this->strViewFile;
 		}
 
 		/**
@@ -548,7 +547,7 @@
 		
 		public function getIncludes()
 		{
-			return array_unique(self::$arrIncludes);
+			return array_unique($this->arrIncludes);
 		}
 		
 		/**
@@ -557,7 +556,7 @@
 		
 		public function getVersion()
 		{
-			return self::$version;
+			return $this->version;
 		}
 		
 		
@@ -572,9 +571,9 @@
 			// make sure we don't accidentally add the same 
 			// command twice by only adding unique values
 			
-			if ( ! in_array($value, self::$arrCommands) )
+			if ( ! in_array($value, $this->arrCommands) )
 			{
-				array_push(self::$arrCommands, $value);               
+				array_push($this->arrCommands, $value);               
 			}
 		}
 		
@@ -591,20 +590,20 @@
 			// overriding earlier ones by converting existing
 			// values to arrays and pushing the new value on
 			
-			if ( array_key_exists($key, self::$arrRequest) )
+			if ( array_key_exists($key, $this->arrRequest) )
 			{
-				if ( is_array( self::$arrRequest[$key] ) )
+				if ( is_array( $this->arrRequest[$key] ) )
 				{
-					array_push(self::$arrRequest[$key], $value);
+					array_push($this->arrRequest[$key], $value);
 				}
 				else
 				{
-					self::$arrRequest[$key] = array(self::$arrRequest[$key], $value);
+					$this->arrRequest[$key] = array($this->arrRequest[$key], $value);
 				}
 			}
 			else
 			{
-				self::$arrRequest[$key] = $value;
+				$this->arrRequest[$key] = $value;
 			}
 		}
 	}
