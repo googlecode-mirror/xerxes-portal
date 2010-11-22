@@ -277,7 +277,7 @@
 			<a href="{url}" class="recordAction" target="" >
 				<img src="{$base_include}/images/html.png" alt="" width="16" height="16" border="0" /> 
 				<xsl:choose>
-					<xsl:when test="display">
+					<xsl:when test="display != ''">
 						<xsl:value-of select="display" />
 					</xsl:when>
 					<xsl:otherwise>
@@ -301,7 +301,7 @@
 
 	<xsl:variable name="source"  select="//request/source"/>	
 	
-	<xsl:if test="count(items/item)">
+	<xsl:if test="count(items/item) or not(//worldcat_groups/group[@id = $source]/lookup/address)">
 	
 		<xsl:element name="{$element}">
 			<xsl:attribute name="class"><xsl:value-of select="$class" /></xsl:attribute> 
