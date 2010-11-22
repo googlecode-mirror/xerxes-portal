@@ -44,7 +44,7 @@ class Xerxes_Command_DatabasesLibrarianImage extends Xerxes_Command_Databases
 			
 			if ( $image_string == "")
 			{
-				createblank();
+				$this->createblank();
 			}
 			else
 			{
@@ -54,7 +54,7 @@ class Xerxes_Command_DatabasesLibrarianImage extends Xerxes_Command_Databases
 					
 				if ( $original == false )
 				{
-					createblank();
+					$this->createblank();
 					exit;
 				}
 					
