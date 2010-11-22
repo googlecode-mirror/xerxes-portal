@@ -631,14 +631,14 @@
 		 * Send a request as either GET or POST
 		 *
 		 * @param string $url			url you want to send the request to
-		 * @param string $data			[optional] data to POST to the above url
 		 * @param int $timeout			[optional] seconds to wait before timing out
+		 * @param string $data			[optional] data to POST to the above url
 		 * @param string $content_type	[optional] content-type in the post, 'application/x-www-form-urlencoded' by default
 		 * @param bool $bolEncode		[optional] whether to encode the posted data, true by default
 		 * @return string				the response from the server
 		 */
 		
-		public static function request($url, $data = null, $timeout = null, $content_type = null, $bolEncode = true)
+		public static function request($url, $timeout = null, $data = null, $content_type = null, $bolEncode = true)
 		{
 			$objRegistry = Xerxes_Framework_Registry::getInstance();
 			
