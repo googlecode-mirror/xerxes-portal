@@ -721,7 +721,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 			
 			// subcategories excluded by config
 			
-			$strSubcatInclude = $this->registry->getConfig( "SUBCATEGORIES_INCLUDE", false );
+			$strSubcatInclude = $this->registry->getConfig( "SUBCATEGORIES_INCLUDE", false, null, $lang );
 			
 			if ( $strSubcatInclude != "" && $mode == self::metalibMode)
 			{							
