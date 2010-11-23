@@ -72,23 +72,23 @@
 		<xsl:otherwise>
 			<xsl:choose>	
 				<xsl:when test="$type = 'html'">			
-					<xsl:value-of select="$base_url" />/?{$language_param}&amp;base=folder&amp;action=redirect&amp;type=html&amp;id=<xsl:value-of select="$id" />
+					<xsl:value-of select="$base_url" />/?<xsl:value-of select="$language_param"/>&amp;base=folder&amp;action=redirect&amp;type=html&amp;id=<xsl:value-of select="$id" />
 				</xsl:when>
 					
 				<xsl:when test="$type = 'pdf'">
-					<xsl:value-of select="$base_url" />/?{$language_param}&amp;base=folder&amp;action=redirect&amp;type=pdf&amp;id=<xsl:value-of select="$id" />	
+					<xsl:value-of select="$base_url" />/?<xsl:value-of select="$language_param"/>&amp;base=folder&amp;action=redirect&amp;type=pdf&amp;id=<xsl:value-of select="$id" />	
 				</xsl:when>	
 					
 				<xsl:when test="$type = 'online'">
-					<xsl:value-of select="$base_url" />/?{$language_param}&amp;base=folder&amp;action=redirect&amp;type=fulltext&amp;id=<xsl:value-of select="$id" />
+					<xsl:value-of select="$base_url" />/?<xsl:value-of select="$language_param"/>&amp;base=folder&amp;action=redirect&amp;type=fulltext&amp;id=<xsl:value-of select="$id" />
 				</xsl:when>
 
 				<xsl:when test="$type = 'construct'">
-					<xsl:value-of select="$base_url" />/?{$language_param}&amp;base=folder&amp;action=redirect&amp;type=construct&amp;id=<xsl:value-of select="$id" />
+					<xsl:value-of select="$base_url" />/?<xsl:value-of select="$language_param"/>&amp;base=folder&amp;action=redirect&amp;type=construct&amp;id=<xsl:value-of select="$id" />
 				</xsl:when>
 			
 				<xsl:when test="$type = 'openurl'">
-					<xsl:value-of select="$base_url" />/?{$language_param}&amp;base=folder&amp;action=redirect&amp;type=openurl&amp;id=<xsl:value-of select="$id" />
+					<xsl:value-of select="$base_url" />/?<xsl:value-of select="$language_param"/>&amp;base=folder&amp;action=redirect&amp;type=openurl&amp;id=<xsl:value-of select="$id" />
 				</xsl:when>
 			</xsl:choose>
 		</xsl:otherwise>
