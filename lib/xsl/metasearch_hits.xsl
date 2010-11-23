@@ -142,6 +142,9 @@
 								<xsl:when test="find_status = 'STOP'">
 									<xsl:copy-of select="$text_metasearch_status_stopped" />
 								</xsl:when>
+								<xsl:when test="find_status = 'ERROR'">
+									<xsl:copy-of select="$text_metasearch_status_error" />
+								</xsl:when>
 								<xsl:otherwise>
 									<xsl:value-of select="find_status" />
 								</xsl:otherwise>
