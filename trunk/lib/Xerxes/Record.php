@@ -490,21 +490,27 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		
 		// examine the 856s present in the record to see if they are in
 		// fact to full-text, and not to a table of contents or something
-		// stupid like that, by checking for existence of subfield code 3
+		// stupid like that
 
 		foreach ( $this->datafield("856") as $link )
 		{
-			$strUrl =  $link->subfield("u")->__toString();
-			
-			$strDisplay =  $link->subfield("z")->__toString();
+			$strUrl = $link->subfield("u")->__toString();
+			$strHostName = $link->subfield("a")->__toString();
+			$strDisplay = $link->subfield("z")->__toString();
+			$strLinkFormatType = $link->subfield("q")->__toString();
+			$strLinkText = $link->subfield("y")->__toString();			
 			
 			if ( $strDisplay == "" )
 			{
-				$strDisplay =  $link->subfield("a")->__toString();
-			}
-
-			$strLinkFormatType = $link->subfield("q")->__toString();
-			$strLinkText = $link->subfield("y")->__toString();			
+				if ( $strLinkText != "" )
+				{
+					$strDisplay = $strLinkText;
+				}
+				elseif ( $strHostName != "")
+				{
+					$strDisplay = $strHostName;
+				}
+			}			
 			
 			// no link supplied
 			
@@ -513,9 +519,9 @@ class Xerxes_Record extends Xerxes_Marc_Record
 				continue;
 			}
 			
-			// has subfield 3 or the link includes loc url but was not specified (bad catalogers!)
+			// link includes loc url (bad catalogers!)
 			
-			if ( $link->subfield("3")->__toString() != "" || stristr($strUrl, "www.loc.gov/catdir") )
+			if ( stristr($strUrl, "www.loc.gov/catdir") )
 			{
 				array_push( $this->links, array (null, $link->subfield("u")->__toString(), "none" ) );
 			}
