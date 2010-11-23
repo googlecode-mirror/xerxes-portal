@@ -558,10 +558,12 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 	{
 		if ( $mode == self::userCreatedMode && $username == null )
 			throw new Exception( "a username argument must be supplied in userCreatedMode" );
-			
-		if ( $lang == "" )
+		
+		$lang_query = $lang;	
+		
+		if ( $lang_query == "" )
 		{
-			$lang = $this->primary_language;
+			$lang_query = $this->primary_language;
 		}
 			
 		//This can be used to fetch personal or metalib-fetched data. We get
@@ -612,7 +614,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		}
 		else
 		{
-			$args[":lang"] = $lang;
+			$args[":lang"] = $lang_query;
 		}
 		
 		$arrResults = $this->select( $strSQL, $args );
