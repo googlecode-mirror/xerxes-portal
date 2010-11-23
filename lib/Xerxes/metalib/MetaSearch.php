@@ -19,6 +19,7 @@
 		private $url = "";			// url request to server
 		private $xml = null;		// DOMDocument xml
 		private $warning = null;	// warning xml
+		private $timeout = 15;
 
 		private $username = "";		// this application's username
 		private $password = "";		// this application's password	
@@ -65,7 +66,7 @@
 
 			// get login_response from Metalib
 
-			$this->xml = $this->getResponse($this->url);
+			$this->xml = $this->getResponse($this->url, $this->timeout);
 			
 			// extract session ID
 			
@@ -114,7 +115,7 @@
 	
 			// get find_response from Metalib
 
-			$this->xml = $this->getResponse($this->url);			
+			$this->xml = $this->getResponse($this->url, $this->timeout);			
 			
 			if ( $bolWait == true)
 			{
@@ -146,7 +147,7 @@
 	
 			// find_group_info_response from Metalib
 			
-			$this->xml = $this->getResponse($this->url);
+			$this->xml = $this->getResponse($this->url, $this->timeout);
 
 			// set finished flag
 			
@@ -176,7 +177,7 @@
         
 			// get merge_response from Metalib
 
-			$this->xml = $this->getResponse($this->url);
+			$this->xml = $this->getResponse($this->url, $this->timeout);
 			
 			return $this->xml;
 		}
@@ -209,7 +210,7 @@
 
 			// get merge_response from Metalib
 
-			$this->xml = $this->getResponse($this->url);
+			$this->xml = $this->getResponse($this->url, $this->timeout);
 			
 			return $this->xml;
 		}
@@ -234,7 +235,7 @@
 
 			// get merge_response from Metalib
 
-			$this->xml = $this->getResponse($this->url);
+			$this->xml = $this->getResponse($this->url, $this->timeout);
 
 			return $this->xml;
 		}
@@ -353,7 +354,7 @@
 	
 			// get present_response from Metalib
       
-			$this->xml = $this->getResponse($this->url);
+			$this->xml = $this->getResponse($this->url, $this->timeout);
 			
 			return $this->xml;
 		}
@@ -636,7 +637,7 @@
 		 * @param string $url		url of the request
 		 */
 		
-		private function getResponse( $url )
+		private function getResponse( $url, $timeout = null)
 		{
 			// metalib takes little care to ensure propper encoding of its xml, so we will set 
 			// recover to true here in order to allow libxml to recover from errors and continue 
@@ -645,7 +646,15 @@
 			$objXml = new DOMDocument();
 			$objXml->recover = true;
 			
-			$strResponse = Xerxes_Framework_Parser::request($url);
+			// time out, should only be defined for search-related functions
+			
+			$strResponse = Xerxes_Framework_Parser::request($url, $timeout);
+			
+			if ( $strResponse == "" )
+			{
+				throw new Exception("Cannot process search at this time.");	
+			}
+			
 			$objXml->loadXML($strResponse);
 			
 			// no response?
@@ -807,7 +816,7 @@
 			else
 			{
 				$this->url = $this->server . "/X";
-				$this->xml = $this->getResponse($this->url);
+				$this->xml = $this->getResponse($this->url, $this->timeout);
 			
 				$objVersion = $this->xml->getElementsByTagName("x_server_response")->item(0);
 			}
