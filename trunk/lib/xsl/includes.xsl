@@ -1157,7 +1157,7 @@
 			<a>
 				<xsl:attribute name="href">
 					<xsl:value-of select="$base_url" /><xsl:text>/</xsl:text>
-					<xsl:text>./?{$language_param}&amp;base=databases&amp;action=proxy</xsl:text>
+					<xsl:text>./?base=databases&amp;action=proxy</xsl:text>
 					<xsl:text>&amp;database=</xsl:text><xsl:value-of select="$database_code" />
 					<xsl:choose>
 						<xsl:when test="$url != ''">
@@ -1223,7 +1223,7 @@
 		<a class="{$class}">
 			<xsl:attribute name="href">
 				<xsl:value-of select="$base_url" /><xsl:text>/</xsl:text>
-				<xsl:text>./?{$language_param}&amp;base=databases&amp;action=proxy</xsl:text>
+				<xsl:text>./?base=databases&amp;action=proxy</xsl:text>
 				<xsl:text>&amp;database=</xsl:text><xsl:value-of select="metalib_id" />
 				<xsl:text>&amp;url=</xsl:text><xsl:value-of select="$encoded_direct_url" />
 			</xsl:attribute>
