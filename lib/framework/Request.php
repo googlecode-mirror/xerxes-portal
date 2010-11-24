@@ -26,12 +26,32 @@ class Xerxes_Framework_Request
 	private $aliases = array(); // url base aliases
 	private $debugging = array(); // debugging messages
 	private $registry; // registry object
+	private static $instance; // singleton pattern
 
+	protected function __construct()
+	{
+	}
+	
+	/**
+	 * Get an instance of the file; Singleton to ensure correct data
+	 *
+	 * @return Xerxes_Framework_Request
+	 */
+	
+	public static function getInstance()
+	{
+		if ( empty( self::$instance ) )
+		{
+			self::$instance = new Xerxes_Framework_Request();
+		}
+		
+		return self::$instance;
+	}
 	/**
 	 * Process the incoming request paramaters, cookie values, url path if pretty-uri on
 	 */
 	
-	public function __construct()
+	public function init()
 	{
 		$this->registry = Xerxes_Framework_Registry::getInstance();
 		
