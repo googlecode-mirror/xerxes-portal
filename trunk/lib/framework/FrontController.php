@@ -87,9 +87,13 @@ class Xerxes_Framework_FrontController
 		session_name( $session_name );
 		session_start();
 		
+		// processes the incoming request
+		
+		$objRequest = Xerxes_Framework_Request::getInstance(); 
+		$objRequest->init();
+		
 		// utility classes
 		
-		$objRequest = new Xerxes_Framework_Request(); // processes the incoming request
 		$objPage = new Xerxes_Framework_Page($objRequest, $objRegistry); // assists with basic paging/navigation elements for the view
 		$objError = new Xerxes_Framework_Error(); // functions for special logging or handling of errors
 		
