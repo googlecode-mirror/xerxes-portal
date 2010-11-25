@@ -34,7 +34,7 @@
 			// set a higher than normal memory limit to account for 
 			// pulling down large knowledgebases
 			
-      		$configMemory = $this->registry->getConfig("HARVEST_MEMORY_LIMIT", false, "500M");
+			$configMemory = $this->registry->getConfig("HARVEST_MEMORY_LIMIT", false, "500M");
 			ini_set("memory_limit",$configMemory);
 			
 			echo "\n\nMETALIB KNOWLEDGEBASE PULL \n\n";
@@ -122,12 +122,12 @@
 				foreach ( $languages as $language )
 				{
 					$locale = (string) $language["locale"];
-					$lang = (string) $language["code"];
+					$code = (string) $language["code"];
 					
 					$oldlocale = setlocale( LC_CTYPE, 0 );
 					setlocale( LC_CTYPE, $locale ); // this influences the iconv() call with 'ASCII//TRANSLIT' target					
 					
-					$arrSubjects = $this->subjects($arrDatabases, $lang);
+					$arrSubjects = $this->subjects($arrDatabases, $code);
 					
 					foreach( $arrSubjects as $objCategory )
 					{

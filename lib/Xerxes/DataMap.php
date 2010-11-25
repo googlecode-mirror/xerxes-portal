@@ -26,11 +26,11 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		
 		// set primary language
 		
-		$lang = $this->registry->getConfig("languages");
+		$languages = $this->registry->getConfig("languages");
 		
-		if ( $lang != "")
+		if ( $languages != "")
 		{
-			$this->primary_language = (string) $lang->language["code"];
+			$this->primary_language = (string) $languages->language["code"];
 		}
 		
 		// searchable fields
@@ -548,9 +548,10 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 	 * they are. 
 	 *
 	 * @param string $normalized		normalized category name
-	 * @param string $old				old normalzied category name, for comp with Xerxes 1.0. Often can be left null in call. Only applicable to metalibMode. 
-	 * @param string $mode  			one of constants metalibMode or userCreatedMode, for metalib-imported categories or user-created categories, using different tables.
-	 * @param string $username 			only used in userCreatedMode, the particular user must be specified, becuase normalized subject names are only unique within a user. 
+	 * @param string $old			old normalzied category name, for comp with Xerxes 1.0. Often can be left null in call. Only applicable to metalibMode. 
+	 * @param string $mode  		one of constants metalibMode or userCreatedMode, for metalib-imported categories or user-created categories, using different tables.
+	 * @param string $username 		only used in userCreatedMode, the particular user must be specified, becuase normalized subject names are only unique within a user. 
+	 * @param string $lang 			language code, can be empty string
 	 * @return Xerxes_Data_Category		a Xerxes_Data_Category object, filled out with subcategories and databases. 
 	 */
 	
