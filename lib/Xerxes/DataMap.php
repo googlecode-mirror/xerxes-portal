@@ -567,13 +567,13 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 			$lang_query = $this->primary_language;
 		}
 			
-		//This can be used to fetch personal or metalib-fetched data. We get
+		// This can be used to fetch personal or metalib-fetched data. We get
 		// from different tables depending. 
 		$schema_map = $this->schema_map_by_mode( $mode );
 		
 		// we'll use the new 'categories' normalized scheme if available, but 
 		// otherwise get the old normalized scheme with the capitalizations for 
-		// compatability with xerxes 1.0 release.
+		// compatibility with xerxes 1.0 release.
 		
 
 		$column = "normalized";

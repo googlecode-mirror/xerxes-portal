@@ -29,7 +29,7 @@
 			$strController		= $this->registry->getConfig( "DIRECTORY_SERVER", true );
 			$strDomain		= $this->registry->getConfig( "DOMAIN", false );
 			
-			// backwards compatability with now deprecated domain entry
+			// backwards compatibility with now deprecated domain entry
 			
 			$strDNFormat = "";
 			
@@ -158,6 +158,7 @@
 					// register the user and stop the flow
 					
 					$this->user->username = $strUsername;
+					$this->user->usergroups = Array('UTB');
 					$this->register();
 				}
 			}

@@ -63,7 +63,7 @@
 		</xsl:if>
 	</xsl:variable>
 	
-	<!-- these have defaults here and in config.xml for backwards-compatability on older configs -->
+	<!-- these have defaults here and in config.xml for backwards-compatibility on older configs -->
 	
 	<xsl:variable name="document">
 		<xsl:choose>
