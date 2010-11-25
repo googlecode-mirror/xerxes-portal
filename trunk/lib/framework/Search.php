@@ -26,12 +26,12 @@ abstract class Xerxes_Framework_Search
 	protected $should_mark_refereed = false; // will add peer reviewed indicator to results
 	protected $should_mark_fulltext = false; // will add full-text indicator to results
 	protected $should_get_recommendations = false; // will add bx recommendations to full record
-	protected $should_get_holdings = false; // will add local catalog holdigns to records
+	protected $should_get_holdings = false; // will add local catalog holdings to records
 	
 	protected $max = 10; // maximum records per page
 	protected $sort_default; // default sort
 	protected $sid; // sid for open url identification
-	protected $link_resolver; // base address of link resolver	
+	protected $link_resolver; // base address of link resolver
 	
 	protected $search_fields_regex = '^query[0-9]{0,1}$|^field[0-9]{0,1}$|^boolean[0-9]{0,1}$';
 	protected $limit_fields_regex = 'facet.*';
@@ -48,7 +48,7 @@ abstract class Xerxes_Framework_Search
 	protected $data_map; // data map object
 
 	protected $request; // xerxes request object
-	protected $registry; // xerxes global config object	
+	protected $registry; // xerxes global config object
 	
 	public function __construct($objRequest, $objRegistry)
 	{
@@ -112,7 +112,7 @@ abstract class Xerxes_Framework_Search
 		}
 		
 		
-		// used in a couple of place
+		// used in a couple of places
 
 		$this->sort = $this->request->getProperty("sortKeys");
 		
@@ -146,7 +146,7 @@ abstract class Xerxes_Framework_Search
 	
 	
 	/**
-	 * Get the mds5 hash for the query as a kind of query identifier
+	 * Get the md5 hash for the query as a kind of query identifier
 	 */
 	
 	public function getHash()
@@ -426,7 +426,7 @@ abstract class Xerxes_Framework_Search
 			
 		if ( $already_added == true )
 		{
-			// flag this as being a delete comand in the view, in the event
+			// flag this as being a delete command in the view, in the event
 			// user has javascript turned off and we need to show them an actual page
 
 			$objDelete = $objXml->createElement( "delete", "1" );
@@ -544,7 +544,7 @@ abstract class Xerxes_Framework_Search
 				$link_full = $results_xml->createElement("url", $record_link);
 				$record_container->appendChild( $link_full );
 				
-					// this one for backwards compatability
+					// this one for backwards compatibility
 	
 					$link_full = $results_xml->createElement("url_full", $record_link);
 					$record_container->appendChild( $link_full );					
@@ -567,12 +567,12 @@ abstract class Xerxes_Framework_Search
 				$link_save = $results_xml->createElement("url_save", $record_save);
 				$record_container->appendChild( $link_save );
 
-					// this one for backwards compatability
+					// this one for backwards compatibility
 				
 					$link_save = $results_xml->createElement("url_save_delete", $record_save);
 					$record_container->appendChild( $link_save );		
 				
-		      	// openurl kev context object please
+				// openurl kev context object please
 		      	
 				$kev = Xerxes_Framework_Parser::escapeXml($result->getOpenURL(null, $this->sid));
 				$open_url = $results_xml->createElement("openurl_kev_co", $kev);
@@ -1818,7 +1818,7 @@ abstract class Xerxes_Framework_Search
 
 /**
  * Query class, providing a structure for search terms and functions for checking
- * spelling ,etc.
+ * spelling, etc.
  */
 
 abstract class Xerxes_Framework_Search_Query

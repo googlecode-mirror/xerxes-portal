@@ -75,7 +75,7 @@ function addAjaxToSaveLinks()
 }
 	
 /**
- * legacy function name and parameter list for backwards compatability < 1.3,
+ * legacy function name and parameter list for backwards compatibility < 1.3,
  * should use updateRecord(id) instead
  */
 
