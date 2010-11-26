@@ -290,6 +290,22 @@
 			This is not LDAPS (default port 636). This is LDAP+TLS (default port 389). LDAPS is now deprecated over LDAP+TLS. -->
 			
 			<config name="ldap_opt_tls">false</config>
+			
+			<!-- optional: Assign user a group based on part of his DN. Makes sense only if ldap_do_init_bind=true.
+				
+				preg_match($ldap_group_filter, $DN, $matches)
+				$group = $matches[$ldap_group_filter_match]
+				
+				Example:
+				If $DN = "cn=username,ou=department,o=organization",
+				$ldap_group_filter = "/(ou=)+?([^,]+)/i" and
+				$ldap_group_filter_match = "2",
+				preg_match() will return array ( 0 => 'ou=department', 1 => 'ou=', 2 => 'department', )
+				user will be assigned group "department" ($matches[2])
+			-->
+			<config name="ldap_group_filter"></config>
+			
+			<config name="ldap_group_filter_match"></config>
 		
 		
 		<!-- INNOVATIVE PATRON API -->

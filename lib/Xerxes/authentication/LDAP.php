@@ -55,6 +55,8 @@
 			$strOptDeref		= $this->registry->getConfig( "LDAP_OPT_DEREF", false, LDAP_DEREF_NEVER );
 			$strOptReferrals	= $this->registry->getConfig( "LDAP_OPT_REFERRALS", false, LDAP_OPT_ON );
 			$bolOptTLS		= $this->registry->getConfig( "LDAP_OPT_TLS", false, false );
+			$strGroupFilter		= $this->registry->getConfig( "LDAP_GROUP_FILTER", false, "" );
+			$strGroupFilterMatch	= $this->registry->getConfig( "LDAP_GROUP_FILTER_MATCH", false, 1 );
 			
 			if ( is_string($strOptVersion) )
 				$strOptVersion = intval($strOptVersion);
@@ -158,6 +160,11 @@
 					// register the user and stop the flow
 					
 					$this->user->username = $strUsername;
+					
+					if (preg_match($strGroupFilter, $strBindDN, $matches) > 0)
+					{
+						$this->user->usergroups = Array($matches[$strGroupFilterMatch]);
+					}
 					$this->register();
 				}
 			}
