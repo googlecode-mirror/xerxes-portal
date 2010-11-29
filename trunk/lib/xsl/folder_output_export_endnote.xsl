@@ -65,7 +65,7 @@
 			</div>
 			
 			<div>
-				<input type="submit" name="Submit" value="{$text_folder_export_download}" />
+				<input type="submit" name="Submit" value="{$text_folder_export_download}" class="export_endnote_sumbit" />
 			</div>
 			
 		</fieldset>

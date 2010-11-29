@@ -37,11 +37,11 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
 </xsl:template>
 
 <xsl:template name="main">
-
+	
 	<xsl:variable name="category_name"	select="//category/@name" />
 	<xsl:variable name="subcategory_id" select="//request/subcategory" />
 	<xsl:variable name="request_uri"	select="//request/server/request_uri" />
-
+	
 	<form name="form1" method="get" action="{$base_url}/">
 	<input type="hidden" name="lang" value="{//request/lang}" />
 	<input type="hidden" name="base" value="collections" />
@@ -52,7 +52,7 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
 	<input type="hidden" name="return" value="{//request/return}" />
 	
 	<h1><xsl:call-template name="page_name" /></h1>
-
+	
 	<table class="reorderTable">
 		<xsl:for-each select="//category/subcategory[@id = $subcategory_id]/database">
 			<tr>
@@ -62,12 +62,12 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
 			</tr>
 		</xsl:for-each>
 	</table>
-
 	
-	<p><input type="submit" name="save" value="Update"/></p>
+	
+	<p><input type="submit" name="save" value="Update" class="reorder-databases_submit" /></p>
 	
 	</form>
-
+	
 </xsl:template>
 
 </xsl:stylesheet>

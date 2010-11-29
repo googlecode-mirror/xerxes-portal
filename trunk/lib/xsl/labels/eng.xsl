@@ -41,6 +41,8 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	
 	<xsl:variable name="text_collections_add_database">Add databases</xsl:variable>
 	<xsl:variable name="text_collections_add_section">Add a new section:</xsl:variable>
+	<xsl:variable name="text_collections_reorder_db_title">Reorder Databases</xsl:variable>
+	<xsl:variable name="text_collections_reorder_subcat_title">Reorder Sections</xsl:variable>
 	<xsl:variable name="text_collections_change_database_order">Change database order</xsl:variable>
 	<xsl:variable name="text_collections_change_name">Change collection name</xsl:variable>
 	<xsl:variable name="text_collections_change_section_name">Change section name</xsl:variable>
@@ -146,6 +148,7 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	<xsl:variable name="text_folder_return">Return to search results</xsl:variable>
 
 	<xsl:variable name="text_header_collections">My Saved Databases</xsl:variable>
+	<xsl:variable name="text_header_collections_subcat">Databases</xsl:variable>
 	<xsl:variable name="text_header_embed">Embed</xsl:variable>
 	<xsl:variable name="text_header_facets">Limit top results by:</xsl:variable>
 	<xsl:variable name="text_header_login">Log-in</xsl:variable>

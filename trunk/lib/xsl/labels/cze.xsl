@@ -38,11 +38,14 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	
 	<xsl:variable name="text_collections_add_database">Přidat databáze</xsl:variable>
 	<xsl:variable name="text_collections_add_section">Přidat novou sekci:</xsl:variable>
+	<xsl:variable name="text_collections_reorder_db_title">Změnit pořadí databází</xsl:variable>
+	<xsl:variable name="text_collections_reorder_subcat_title">Změnit pořadí sekcí</xsl:variable>
+	<xsl:variable name="text_collections_reorder_title">Změnit pořadí databází</xsl:variable>
 	<xsl:variable name="text_collections_change_database_order">Změnit pořadí databází</xsl:variable>
 	<xsl:variable name="text_collections_change_name">Změnit název kolekce</xsl:variable>
 	<xsl:variable name="text_collections_change_section_name">Změnit název sekce</xsl:variable>
 	<xsl:variable name="text_collections_change_section_order">Změnit pořadí sekcí</xsl:variable>
-	<xsl:variable name="text_collections_created_by">Vytvořil<xsl:value-of select="/*/category/@owned_by_user" /></xsl:variable>
+	<xsl:variable name="text_collections_created_by">Vytvořil <xsl:value-of select="/*/category/@owned_by_user" /></xsl:variable>
 	<xsl:variable name="text_collections_delete_collection">Smazat kolekci</xsl:variable>
 	<xsl:variable name="text_collections_delete_collection_confirm">Jste si jisti, že chcete smazat tuto kolekci?</xsl:variable>
 	<xsl:variable name="text_collections_delete_section">Smazat sekci</xsl:variable>
@@ -51,8 +54,8 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	<xsl:variable name="text_collections_edit">Přidat databáze a upravit</xsl:variable>
 	<xsl:variable name="text_collections_list_databases">Vypsat vybrané databáze: </xsl:variable>
 	<xsl:variable name="text_collections_no_matches">Nebyly nalezeny odpovídající databáze</xsl:variable>	
-	<xsl:variable name="text_collections_private">Soukromé</xsl:variable>
-	<xsl:variable name="text_collections_public">Veřejné</xsl:variable>
+	<xsl:variabe name="text_collections_private">Soukromá</xsl:variable>
+	<xsl:variable name="text_collections_public">Veřejná</xsl:variable>
 	<xsl:variable name="text_collections_public_url">Veřejné URL:</xsl:variable>
 	<xsl:variable name="text_collections_publish">Vytvořit kolekci:</xsl:variable>
 	<xsl:variable name="text_collections_remove_searchbox">Skončil jsem s přidáváním databází!</xsl:variable>
@@ -70,9 +73,9 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	<xsl:variable name="text_database_save_database">Uložit databázi</xsl:variable>
 	<xsl:variable name="text_database_search_hints">Nápověda k vyhledávání:</xsl:variable>
 	
-	<xsl:variable name="text_databases_access_available">Dostupné pouze pro </xsl:variable>
+	<xsl:variable name="text_databases_access_available">Dostupné pouze pro uživatele </xsl:variable>
 	<xsl:variable name="text_databases_access_group_and">a</xsl:variable>
-	<xsl:variable name="text_databases_access_users">uživatele</xsl:variable>
+	<xsl:variable name="text_databases_access_users"></xsl:variable>
 	
 	<xsl:variable name="text_databases_az_backtop">Zpět nahoru</xsl:variable>
 	<xsl:variable name="text_databases_az_breadcrumb_all">Všechny databáze</xsl:variable>
@@ -143,6 +146,7 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	<xsl:variable name="text_folder_return">Zpět na výsledky vyhledávání</xsl:variable>
 
 	<xsl:variable name="text_header_collections">Moje uložené databáze</xsl:variable>
+	<xsl:variable name="text_header_collections_subcat">Databáze</xsl:variable>
 	<xsl:variable name="text_header_embed">Vložit</xsl:variable>
 	<xsl:variable name="text_header_facets">Omezit první výsledky dle:</xsl:variable>
 	<xsl:variable name="text_header_login">Přihlásit se</xsl:variable>
@@ -170,7 +174,7 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	<xsl:variable name="text_header_snippet_generate_database">
 		<xsl:copy-of select="$text_header_snippet_generate"/><xsl:text> </xsl:text><xsl:copy-of select="$text_record_database"/>
 	</xsl:variable>
-	<xsl:variable name="text_header_snippet_generate_subject"><xsl:copy-of select="$text_header_snippet_generate"/> Předmět</xsl:variable>
+	<xsl:variable name="text_header_snippet_generate_subject"><xsl:copy-of select="$text_header_snippet_generate"/> Předmětovou kategorii</xsl:variable>
   
 	<xsl:variable name="text_link_holdings">Dostupnost</xsl:variable>
 	<xsl:variable name="text_link_original_record">Původní záznam</xsl:variable>
@@ -268,14 +272,14 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	<xsl:variable name="text_searchbox_boolean_and">a</xsl:variable>
 	<xsl:variable name="text_searchbox_boolean_or">nebo</xsl:variable>
 	<xsl:variable name="text_searchbox_boolean_without">Bez</xsl:variable>
-	<xsl:variable name="text_searchbox_field_keyword">Všechna pole</xsl:variable>
-	<xsl:variable name="text_searchbox_field_title">název</xsl:variable>
-	<xsl:variable name="text_searchbox_field_author">autor</xsl:variable>
-	<xsl:variable name="text_searchbox_field_subject">předmět</xsl:variable>
+	<xsl:variable name="text_searchbox_field_keyword">ve všech polích</xsl:variable>
+	<xsl:variable name="text_searchbox_field_title">v názvu</xsl:variable>
+	<xsl:variable name="text_searchbox_field_author">v autorech</xsl:variable>
+	<xsl:variable name="text_searchbox_field_subject">v předmětu</xsl:variable>
 	<xsl:variable name="text_searchbox_field_year">rok</xsl:variable>
 	<xsl:variable name="text_searchbox_field_issn">ISSN</xsl:variable>
 	<xsl:variable name="text_searchbox_field_isbn">ISBN</xsl:variable>
-	<xsl:variable name="text_searchbox_for">for</xsl:variable> <!-- TODO -->
+	<xsl:variable name="text_searchbox_for"></xsl:variable>
 	<xsl:variable name="text_searchbox_go">Vykonat</xsl:variable>
 	<xsl:variable name="text_searchbox_options_fewer">Méně možností</xsl:variable>
 	<xsl:variable name="text_searchbox_options_more">Další možnosti</xsl:variable>
@@ -366,6 +370,7 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 		<xsl:param name="format" />
 		<xsl:choose>
 			<xsl:when test="$format = 'Thesis'">Kvalifikační práce</xsl:when>
+			<xsl:when test="$format = 'Dissertation'">Dizertační práce</xsl:when>
 			<xsl:when test="$format = 'Conference Paper'">Příspěvek do konference</xsl:when>
 			<xsl:when test="$format = 'Conference Proceeding'">Sborník z konference</xsl:when>
 			<xsl:when test="$format = 'Hearing'"></xsl:when>
