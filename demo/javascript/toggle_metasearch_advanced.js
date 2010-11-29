@@ -47,9 +47,9 @@
 
     
 		selected = myField.value;
-		myField.insert('<option value="ISSN">' + jsDisplayConstants['text_searchbox_field_issn'] + '</option>');
-		myField.insert('<option value="ISBN">' + jsDisplayConstants['text_searchbox_field_isbn'] + '</option>');
-		myField.insert('<option value="WYR">' +  jsDisplayConstants['text_searchbox_field_year'] + '</option>');
+		myField.insert('<option value="ISSN">' + xerxes_labels['text_searchbox_field_issn'] + '</option>');
+		myField.insert('<option value="ISBN">' + xerxes_labels['text_searchbox_field_isbn'] + '</option>');
+		myField.insert('<option value="WYR">' +  xerxes_labels['text_searchbox_field_year'] + '</option>');
 		myField.value = selected;
 		
 
@@ -74,7 +74,7 @@
 		myForm.down(".field2").enable();
 		myForm.down(".searchBox_advanced_pair").show();
 		
-		myForm.down(".searchBox_toggle").update(jsDisplayConstants['text_searchbox_options_fewer']);
+		myForm.down(".searchBox_toggle").update(xerxes_labels['text_searchbox_options_fewer']);
 		
 
     
@@ -108,6 +108,6 @@
 		myForm.down(".query2").disable();
 		myForm.down(".field2").disable();		
 		
-		myForm.down(".searchBox_toggle").update(jsDisplayConstants['text_searchbox_options_more']);
+		myForm.down(".searchBox_toggle").update(xerxes_labels['text_searchbox_options_more']);
 	}
 

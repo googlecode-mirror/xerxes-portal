@@ -152,7 +152,7 @@
 			
 			onFailure: function(transport)
 			{
-				alert('Sorry, there was an error, your labels could not be updated.');
+				alert(xerxes_labels['text_records_tags_update_err']);
 			} 
 		});
 		
@@ -166,7 +166,7 @@
 		
 		var submitID = inputTags.id.replace("tags", "submit");
 		
-		$(submitID).value = "Update";
+		$(submitID).value = xerxes_labels['text_records_tags_update'];
 		$(submitID).disabled = false;
 	}
 
@@ -198,7 +198,7 @@
 		
 		// then disable it again
 		
-		$(button.id).value = "Updated";
+		$(button.id).value = xerxes_labels['text_records_tags_updated'];
 		$(button.id).disabled = true;
 	}
 
