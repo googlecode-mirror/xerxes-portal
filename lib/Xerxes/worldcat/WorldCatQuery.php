@@ -7,7 +7,7 @@
  * @copyright 2010 California State University
  * @link http://xerxes.calstate.edu
  * @license http://www.gnu.org/licenses/
- * @version $Id: WorldCatSearch.php 1338 2010-08-05 16:18:09Z dwalker@calstate.edu $
+ * @version $Id$
  * @package Xerxes
  */
 
