@@ -4,7 +4,7 @@
 
  author: David Walker
  copyright: 2010 California State University
- version: $Id: worldcat_record.xsl 1383 2010-09-16 13:50:20Z dwalker@calstate.edu $
+ version: $Id$
  package: Worldcat
  link: http://xerxes.calstate.edu
  license: http://www.gnu.org/licenses/
