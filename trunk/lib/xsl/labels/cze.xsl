@@ -54,7 +54,7 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	<xsl:variable name="text_collections_edit">Přidat databáze a upravit</xsl:variable>
 	<xsl:variable name="text_collections_list_databases">Vypsat vybrané databáze: </xsl:variable>
 	<xsl:variable name="text_collections_no_matches">Nebyly nalezeny odpovídající databáze</xsl:variable>	
-	<xsl:variabe name="text_collections_private">Soukromá</xsl:variable>
+	<xsl:variable name="text_collections_private">Soukromá</xsl:variable>
 	<xsl:variable name="text_collections_public">Veřejná</xsl:variable>
 	<xsl:variable name="text_collections_public_url">Veřejné URL:</xsl:variable>
 	<xsl:variable name="text_collections_publish">Vytvořit kolekci:</xsl:variable>
