@@ -104,7 +104,7 @@
 			</xsl:otherwise>
 		</xsl:choose>
 		
-		<dl>
+		<dl class="databaseSummary">
 			<div class="databaseLink">
 			<dt><xsl:copy-of select="$text_database_link" /></dt>
 			<dd>		

@@ -78,7 +78,7 @@
 			</div>
 
 			<div>
-				<input type="submit" name="Submit" value="{$text_folder_export_send}" />
+				<input type="submit" name="Submit" value="{$text_folder_export_send}" class="export_email_submit" />
 			</div>
 
 		</fieldset>

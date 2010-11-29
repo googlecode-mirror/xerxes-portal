@@ -61,7 +61,7 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
 		</xsl:for-each>
 	</table>
 	
-	<p><input type="submit" name="save" value="Update"/></p>
+	<p><input type="submit" name="save" value="Update" class="reorder-sections_submit" /></p>
 	
 	</form>
 	
