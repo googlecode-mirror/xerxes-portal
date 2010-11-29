@@ -571,6 +571,13 @@
 				<view format="json">xsl/metasearch_save-delete_ajax.xsl</view>
 			</action>
 		</section>
+		
+		<section name="helper" namespace="Xerxes" directory="helper">
+			<action name="labels.js">
+				<command>HelperLabels</command>
+				<view format="json" type="php">php-views/labels-js.php</view>
+			</action>
+		</section>
 
 	</commands>
 </xerxes>

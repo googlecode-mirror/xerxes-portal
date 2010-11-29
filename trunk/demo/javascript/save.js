@@ -120,8 +120,8 @@ function saveRecord(groupID,resultSet,recordNumber)
 		// telling them they have saved a record if they really have! hooray
 		// for javascript closures.
 		
-		var workingText = "Saving...";
-		if ( $(id).hasClassName("saved") ) workingText = "Removing...";
+		var workingText = xerxes_labels['text_results_record_saving'];
+		if ( $(id).hasClassName("saved") ) workingText = xerxes_labels['text_results_record_removing'];
 		
 		$(id).update(workingText);
 		$(id).addClassName("disabled");
@@ -130,7 +130,7 @@ function saveRecord(groupID,resultSet,recordNumber)
 			
 			"onFailure": function(ajaxRequest) {
 			
-				alert('Sorry, an error occured, your record was not saved.');
+				alert(xerxes_labels['text_results_record_save_err']);
 			
 			},
 			
@@ -150,7 +150,7 @@ function saveRecord(groupID,resultSet,recordNumber)
 						node.remove();
 					});
 					$('folder_' + resultSet + recordNumber).src = "images/folder.png";
-					$(id).update( jsDisplayConstants['text_results_record_save_it'] );
+					$(id).update( xerxes_labels['text_results_record_save_it'] );
 					$(id).removeClassName("saved");
 					
 					// remove label input
@@ -169,16 +169,16 @@ function saveRecord(groupID,resultSet,recordNumber)
 					
 					if ($('login'))
 					{
-						var temporary_login_note = ' <span class="temporary_login_note"> ( <a  href="' + $('login').href +'">' + jsDisplayConstants['text_results_record_saved_perm'] + ' </a> ) </span>';
+						var temporary_login_note = ' <span class="temporary_login_note"> ( <a  href="' + $('login').href +'">' + xerxes_labels['text_results_record_saved_perm'] + ' </a> ) </span>';
 					
 						// Put the login link back please 
 						
-						$(id).update( jsDisplayConstants['text_results_record_saved_temp'] ); 
+						$(id).update( xerxes_labels['text_results_record_saved_temp'] ); 
 						$(id).insert({after: temporary_login_note  });
 					}
 					else
 					{
-						$(id).update( jsDisplayConstants['text_results_record_saved'] );
+						$(id).update( xerxes_labels['text_results_record_saved'] );
 					}
 					
 					$(id).addClassName("saved");

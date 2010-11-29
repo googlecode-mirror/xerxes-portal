@@ -245,6 +245,7 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	<xsl:variable name="text_record_standard_nos">Standard Numbers</xsl:variable>
 	<xsl:variable name="text_records_tags">Labels: </xsl:variable>
 	<xsl:variable name="text_records_tags_update">Update</xsl:variable>
+	<xsl:variable name="text_records_tags_updated">Updated</xsl:variable>
 	<xsl:variable name="text_records_tags_update_err">Sorry, there was an error, your labels could not be updated.</xsl:variable>
 	
 	<xsl:variable name="text_records_fulltext_pdf">Full-Text in PDF</xsl:variable>
@@ -262,8 +263,9 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	<xsl:variable name="text_results_record_saved_perm">login to save permanently</xsl:variable>
 	<xsl:variable name="text_results_record_save_err">Sorry, an error occured, your record was not saved.</xsl:variable>
 	<xsl:variable name="text_results_record_delete">Delete this record</xsl:variable>
-	<xsl:variable name="text_results_record_delete_confirm">Are you sure you want to delete this record?</xsl:variable>
 	<xsl:variable name="text_results_record_removing">Removing...</xsl:variable>
+	<xsl:variable name="text_results_record_saving">Saving...</xsl:variable>
+	<xsl:variable name="text_results_record_delete_confirm">Are you sure you want to delete this record?</xsl:variable>
 	<xsl:variable name="text_results_refereed">Peer Reviewed</xsl:variable>
 	<xsl:variable name="text_results_sort_by">sort by</xsl:variable>
 	<xsl:variable name="text_results_year">Year</xsl:variable>

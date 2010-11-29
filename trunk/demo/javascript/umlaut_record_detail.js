@@ -14,7 +14,7 @@
  
  document.observe("dom:loaded",  function() {
      // Add a spinner please, and preserve original content.
-     spinner = '<div class="recordAction linkResolverLink umlautLoad"><img src="' + umlaut_base + '/images/spinner.gif" alt=""/> '+jsDisplayConstants['link_resolver_load_message']+' <a href="' + umlaut_base + '/resolve?' + openurl_kev_co + '">'+jsDisplayConstants['link_resolver_name']+'</a></div>';
+     spinner = '<div class="recordAction linkResolverLink umlautLoad"><img src="' + umlaut_base + '/images/spinner.gif" alt=""/> '+xerxes_labels['link_resolver_load_message']+' <a href="' + umlaut_base + '/resolve?' + openurl_kev_co + '">'+xerxes_labels['link_resolver_name']+'</a></div>';
      $$('.recordAction.linkResolverLink').each ( function(item) {
         
          item.hide();
@@ -54,7 +54,7 @@
              $('umlaut_fulltext').down('.section_heading').hide();
              // Make the links more like Xerxes's patterns
              $$('#umlaut_fulltext .response_item a').each( function(link) {
-                 link.insert({'top': jsDisplayConstants['link_resolver_direct_link_prefix']}); 
+                 link.insert({'top': xerxes_labels['link_resolver_direct_link_prefix']}); 
              });
              // No spinner please
              $$('#umlaut_fulltext .background_progress_spinner').each(    
