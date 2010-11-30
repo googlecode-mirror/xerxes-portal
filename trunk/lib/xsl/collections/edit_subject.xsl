@@ -276,7 +276,7 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
 										
 						<xsl:if test="searchable = '1'">
 							<xsl:text> </xsl:text>
-							<img alt="searchable" title="searchable" class="miniIcon" src="{$base_url}/images/famfamfam/magnifier.png"/>
+							<img alt="{$text_databases_az_hint_searchable}" title="{$text_databases_az_hint_searchable}" class="miniIcon" src="{$base_url}/images/famfamfam/magnifier.png"/>
 						</xsl:if>
 						
 					</li>
