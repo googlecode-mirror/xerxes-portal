@@ -1739,11 +1739,20 @@ abstract class Xerxes_Framework_Search
 				
 				foreach ( $arrResults as $holding )
 				{
-					$item = new Xerxes_Record_Item();
+					$is_holdings = property_exists($holding, "holding"); 
+										
+					if ( $is_holdings == true )
+					{
+						$item = new Xerxes_Record_Holding();
+					}
+					else
+					{
+						$item = new Xerxes_Record_Item();
+					}
 					
 					foreach ( $holding as $property => $value )
 					{
-						$item->$property = $value;
+						$item->setProperty($property, $value);
 					}
 					
 					$items->addItem($item);
