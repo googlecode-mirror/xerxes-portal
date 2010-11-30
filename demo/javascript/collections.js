@@ -22,10 +22,10 @@
   // we use some defaults. 
   function loadCollectionStrings() {
      if (typeof(window['collection_default_new_name']) == "undefined") {
-      collection_default_new_name = 'My Saved Databases';
+      collection_default_new_name = xerxes_labels['text_header_collections'];
      }
      if (typeof(window['collection_default_new_section_name']) == "undefined") {     
-      collection_default_new_section_name = 'Databases';
+      collection_default_new_section_name = xerxes_labels['text_header_collections_subcat'];
      }
   }
   
@@ -44,7 +44,7 @@
     for ( i = 0; i < deleteCollectionLinks.length; i++)
 		{
 				deleteCollectionLinks[i].onclick = function () {
-					return confirm("Are you sure you want to delete this collection?");
+					return confirm(xerxes_labels['text_collections_delete_collection_confirm']);
         }
     }
     
@@ -52,7 +52,7 @@
     for ( i = 0; i < deleteSectionLinks.length; i++)
 		{
 				deleteSectionLinks[i].onclick = function () {
-					return confirm("Are you sure you want to delete this section?");
+					return confirm(xerxes_labels['text_collections_delete_section_confirm']);
         }
     }
     

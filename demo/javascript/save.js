@@ -264,12 +264,14 @@ function saveRecord(groupID,resultSet,recordNumber)
 		
 		if ( iTotal == 0 && $(form1).select('input[type="hidden"][name="database"]') == "") 
 		{
-			alert("Please select databases to search");
+			alert(xerxes_labels['text_search_err_select_databases']);
 			return false;
 		}
 		else if ( iTotal > xerxes_iSearchable )
 		{
-			alert("Sorry, you can only search up to " + xerxes_iSearchable + " databases at one time");
+			var database_limit = xerxes_labels['text_search_err_databases_limit'];
+			database_limit = database_limit.replace("%s", xerxes_iSearchable);
+			alert(database_limit);
 			return false;
 		}
 		else
@@ -295,7 +297,9 @@ function saveRecord(groupID,resultSet,recordNumber)
 			var limit_reached = (numChecked(checkbox.form) > xerxes_iSearchable);
 		
 			if (limit_reached) {
-				alert("Sorry, you can only search up to " + xerxes_iSearchable + " databases at one time");
+				var database_limit = xerxes_labels['text_search_err_databases_limit'];
+				database_limit = database_limit.replace("%s", xerxes_iSearchable);
+				alert(database_limit);
 				checkbox.checked = false;
 			return false;
 		}
@@ -314,7 +318,7 @@ function saveRecord(groupID,resultSet,recordNumber)
 	
 	function sureDelete()
 	{
-		if ( confirm("Are you sure you want to delete this record?") )
+		if ( confirm(xerxes_labels['text_results_record_delete_confirm']) )
 		{
 			return true;
 		}
