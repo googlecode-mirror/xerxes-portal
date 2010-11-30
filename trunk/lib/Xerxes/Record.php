@@ -3292,20 +3292,28 @@ class Xerxes_Record_Items
 
 class Xerxes_Record_Item
 {
-	public $bibliographicIdentifer; // string
-	public $itemIdentifier; // string
-	public $available; // int
-	public $dateAvailable; // DateTime
-	public $status; // string
-	public $institution; // string
-	public $location; // string
-	public $callnumber; // string
-	public $volume; // string
-	public $link; // string
-	public $circulating; // bool
-	public $holdQueueLength; // int
-	public $note; // string
-	public $onOrder; // string?
+	protected $bibliographicIdentifer; // string
+	protected $itemIdentifier; // string
+	protected $available; // int
+	protected $dateAvailable; // DateTime
+	protected $status; // string
+	protected $institution; // string
+	protected $location; // string
+	protected $callnumber; // string
+	protected $volume; // string
+	protected $link; // string
+	protected $circulating; // bool
+	protected $holdQueueLength; // int
+	protected $note; // string
+	protected $onOrder; // string?
+	
+	public function setProperty($name, $value)
+	{
+		if ( property_exists($this, $name) )
+		{
+			$this->$name = $value;
+		}
+	}
 	
 	public function toXML()
 	{
