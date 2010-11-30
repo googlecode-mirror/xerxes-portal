@@ -3231,7 +3231,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		}
 	}
 	
-	public function addItem(Xerxes_Record_Item $item )
+	public function addItem($item )
 	{
 		array_push($this->items, $item);
 	}
@@ -3335,6 +3335,36 @@ class Xerxes_Record_Item
 		
 		return $xml;
 	}
+}
+
+class Xerxes_Record_Holding
+{
+	private $data = array();
+	
+	public function setProperty($name, $value)
+	{
+		if ( $name != "holding" && $name != "id" )
+		{
+			$this->data[$name] = $value;
+		}
+	}
+	
+	public function toXML()
+	{
+		$xml = new DOMDocument();
+		$xml->loadXML("<holding />");
+		
+		foreach ( $this->data as $key => $value )
+		{
+			$element = $xml->createElement("data");
+			$element->setAttribute("key", $key);
+			$element->setAttribute("value", $value);
+			$xml->documentElement->appendChild($element);
+		}
+		
+		return $xml;
+	}	
+	
 }
 
 

@@ -44,7 +44,7 @@
 		<xsl:when test="//config/lookup or //worldcat_groups/group[@id = $source]/lookup/address">
 		
 			<xsl:choose>		
-				<xsl:when test="items or holdings or no_items = '1'">
+				<xsl:when test="items or no_items = '1'">
 				
 					<!-- item and holdings data already fetched and in the XML response -->
 				
@@ -52,8 +52,8 @@
 				
 					<xsl:choose>
 
-						<xsl:when test="holdings">
-
+						<xsl:when test="items/holding">
+						
 							<xsl:call-template name="availability_lookup_holdings">
 								<xsl:with-param name="context" select="$context" />
 							</xsl:call-template>
@@ -65,12 +65,26 @@
 								<xsl:with-param name="totalCopies" select="$totalCopies" />
 								<xsl:with-param name="printAvailable" select="$printAvailable" />
 							</xsl:call-template> 
+
+							<!-- check for full-text -->
+														
+							<xsl:call-template name="availability_full_text">
+								<xsl:with-param name="element">span</xsl:with-param>
+								<xsl:with-param name="class">resultsAvailability</xsl:with-param>
+							</xsl:call-template>
 							
 						</xsl:when>
 						<xsl:otherwise>
 						
 							<xsl:call-template name="availability_lookup_full">
 								<xsl:with-param name="totalCopies" select="$totalCopies" />
+							</xsl:call-template>
+
+							<!-- check for full-text -->
+														
+							<xsl:call-template name="availability_full_text">
+								<xsl:with-param name="element">span</xsl:with-param>
+								<xsl:with-param name="class">resultsAvailability</xsl:with-param>
 							</xsl:call-template>
 						
 						</xsl:otherwise>
@@ -86,13 +100,6 @@
 		
 				</xsl:otherwise>				
 			</xsl:choose>
-			
-			<!-- check for full-text -->
-										
-			<xsl:call-template name="availability_full_text">
-				<xsl:with-param name="element">span</xsl:with-param>
-				<xsl:with-param name="class">resultsAvailability</xsl:with-param>
-			</xsl:call-template>
 			
 		</xsl:when>
 		
@@ -162,7 +169,7 @@
 	
 	<xsl:param name="context">record</xsl:param>
 	
-	<xsl:if test="holdings//holding/url">
+	<xsl:if test="links">
 
 		<p><strong>Online</strong></p>
 		
@@ -174,11 +181,11 @@
 		</div>
 	</xsl:if>
 	
-	<xsl:if test="holdings/holding">
+	<xsl:if test="items/holding">
 
 		<p><strong>Print holdings</strong></p>
 	
-		<xsl:for-each select="holdings/holding">
+		<xsl:for-each select="items/holding">
 			<ul class="holdingsSummaryStatement">
 				<xsl:for-each select="data">
 					<li><xsl:value-of select="@key" />: <xsl:value-of select="@value" /></li>
