@@ -3292,20 +3292,15 @@ class Xerxes_Record_Items
 
 class Xerxes_Record_Item
 {
-	protected $bibliographicIdentifer; // string
-	protected $itemIdentifier; // string
-	protected $available; // int
-	protected $dateAvailable; // DateTime
-	protected $status; // string
+	protected $id; // string
 	protected $institution; // string
 	protected $location; // string
 	protected $callnumber; // string
-	protected $volume; // string
-	protected $link; // string
-	protected $circulating; // bool
-	protected $holdQueueLength; // int
+	protected $availability; // bool?
+	protected $duedate; // DateTime
+	protected $status; // string
+	protected $reserve; // string
 	protected $note; // string
-	protected $onOrder; // string?
 	
 	public function setProperty($name, $value)
 	{

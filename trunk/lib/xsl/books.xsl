@@ -65,26 +65,12 @@
 								<xsl:with-param name="totalCopies" select="$totalCopies" />
 								<xsl:with-param name="printAvailable" select="$printAvailable" />
 							</xsl:call-template> 
-
-							<!-- check for full-text -->
-														
-							<xsl:call-template name="availability_full_text">
-								<xsl:with-param name="element">span</xsl:with-param>
-								<xsl:with-param name="class">resultsAvailability</xsl:with-param>
-							</xsl:call-template>
 							
 						</xsl:when>
 						<xsl:otherwise>
 						
 							<xsl:call-template name="availability_lookup_full">
 								<xsl:with-param name="totalCopies" select="$totalCopies" />
-							</xsl:call-template>
-
-							<!-- check for full-text -->
-														
-							<xsl:call-template name="availability_full_text">
-								<xsl:with-param name="element">span</xsl:with-param>
-								<xsl:with-param name="class">resultsAvailability</xsl:with-param>
 							</xsl:call-template>
 						
 						</xsl:otherwise>
@@ -100,6 +86,13 @@
 		
 				</xsl:otherwise>				
 			</xsl:choose>
+
+			<!-- check for full-text -->
+										
+			<xsl:call-template name="availability_full_text">
+				<xsl:with-param name="element">span</xsl:with-param>
+				<xsl:with-param name="class">resultsAvailability</xsl:with-param>
+			</xsl:call-template>
 			
 		</xsl:when>
 		
