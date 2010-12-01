@@ -116,16 +116,18 @@ class Xerxes_Framework_FrontController
 			#   DEFAULTS       #
 			####################
 			
-			// make sure application_name is passthrough, and has a value.
-
-			$objRegistry->setConfig( "application_name", $objRegistry->getConfig( "APPLICATION_NAME", false, "Xerxes" ), true );
-			
 			// language
 			
-			if ( $objRequest->getProperty("lang") != "" )
+			$lang = $objRequest->getProperty("lang");
+			
+			if ( $lang != "" )
 			{
-				$objRegistry->setConfig("XERXES_LANGUAGE", $objRequest->getProperty("lang"));
+				$objRegistry->setConfig("LANGUAGE", $lang);
 			}
+			
+			// make sure application_name is passthrough, and has a value.
+
+			$objRegistry->setConfig( "application_name", $objRegistry->getConfig( "APPLICATION_NAME", false, "Xerxes", $lang ), true );
 			
 			####################
 			#     SET PATHS    #

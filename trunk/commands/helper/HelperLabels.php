@@ -31,7 +31,7 @@ class Xerxes_Command_HelperLabels extends Xerxes_Command_Helper
 		// if language is set to something other than english
 		// then include that file to override the english labels
 
-		$language = $this->registry->getConfig("XERXES_LANGUAGE");		
+		$language = $this->registry->getConfig("LANGUAGE");
 		
 		if ( $language != "" )
 		{

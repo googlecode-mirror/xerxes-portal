@@ -242,6 +242,7 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	<xsl:variable name="text_record_standard_nos">Standardní čísla</xsl:variable>
 	<xsl:variable name="text_records_tags">Štítky: </xsl:variable>
 	<xsl:variable name="text_records_tags_update">Aktualizovat</xsl:variable>
+	<xsl:variable name="text_records_tags_updated">Aktualizovány</xsl:variable>
 	<xsl:variable name="text_records_tags_update_err">Litujeme, nastala chyba. Vaše štítky nebylo možné aktualizovat.</xsl:variable>
 	
 	<xsl:variable name="text_records_fulltext_pdf">Plný text v PDF</xsl:variable>
@@ -259,6 +260,8 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	<xsl:variable name="text_results_record_saved_perm">trvalé uložení je možné po přihlášení</xsl:variable>
 	<xsl:variable name="text_results_record_save_err">Litujeme, nastala chyba. Váš záznam nebyl uložen.</xsl:variable>
 	<xsl:variable name="text_results_record_delete">Smazat tento záznam</xsl:variable>
+	<xsl:variable name="text_results_record_saving">Ukládá se...</xsl:variable>
+	<xsl:variable name="text_results_record_delete_confirm">Jste si jisti, že chcete smazat tento záznam?</xsl:variable>
 	<xsl:variable name="text_results_record_removing">Odstraňuje se...</xsl:variable>
 	<xsl:variable name="text_results_refereed">Recenzovaný</xsl:variable>
 	<xsl:variable name="text_results_sort_by">řadit dle</xsl:variable>
