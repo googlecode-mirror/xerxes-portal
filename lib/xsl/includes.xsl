@@ -194,8 +194,7 @@
 	<xsl:param name="surround_template"><xsl:value-of select="$template" /></xsl:param>
 	<xsl:param name="sidebar" />
 
-	<html>
-	<xsl:attribute name="lang"><xsl:value-of select="$rfc1766" /></xsl:attribute>
+	<html lang="{$rfc1766}">
 
 	<xsl:call-template name="surround-head" />
 	<body>
