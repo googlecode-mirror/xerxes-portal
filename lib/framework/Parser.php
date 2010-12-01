@@ -148,7 +148,7 @@
 			
 			$registry = Xerxes_Framework_Registry::getInstance();
 			
-			$language = $registry->getConfig("XERXES_LANGUAGE");
+			$language = $registry->getConfig("LANGUAGE");
 			
 			// english file is included by default
 			
