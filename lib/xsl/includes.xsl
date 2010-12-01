@@ -100,7 +100,7 @@
 
 	<xsl:variable name="databases_searchable"	select="//config/database_list_searchable" />
 	
-	<xsl:variable name="xerxes_language" select="//request/lang" />
+	<xsl:variable name="language" select="//request/lang" />
 	
 	<xsl:variable name="db_description_multilingual">
 		<xsl:choose>
@@ -113,7 +113,7 @@
 		</xsl:choose>
 	</xsl:variable>
 	
-	<!-- which description in order is our xerxes_language? -->
+	<!-- which description in order is our language? -->
 	
 	<xsl:variable name="xerxes_language_position">
 		<xsl:call-template name="find-item-in-list">
@@ -121,8 +121,30 @@
 				<xsl:value-of select="$db_description_multilingual" />
 			</xsl:with-param>
 			<xsl:with-param name="delimiter">,</xsl:with-param>
-			<xsl:with-param name="find-item"><xsl:value-of select="$xerxes_language" /></xsl:with-param>
+			<xsl:with-param name="find-item"><xsl:value-of select="$language" /></xsl:with-param>
 		</xsl:call-template>
+	</xsl:variable>
+
+	<xsl:variable name="locale"><xsl:value-of select="//config/languages/language[@code=$language]/@locale" /></xsl:variable>
+	<xsl:variable name="rfc1766">
+		<xsl:choose>
+			<xsl:when test="$locale = '' or $locale = 'C'">
+				<xsl:text>en</xsl:text>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="substring-before($locale, '_')" />
+				<!--
+				Code to generate RFC 1766 subcode (e.g. en-US, pt-BR, ...), if it ever becomes necessary in Xerxes
+				
+				<xsl:variable name="rfc1766temp"><xsl:value-of select="substring-before($locale, '.')" /></xsl:variable>
+				<xsl:variable name="rfc1766sub"><xsl:value-of select="substring-after($rfc1766temp, '_')" /></xsl:variable>
+				<xsl:if test="$rfc1766sub">
+					<xsl:text>-</xsl:text>
+					<xsl:value-of select="$rfc1766sub" />
+				</xsl:if>
+				-->
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:variable>
 	
 	<xsl:variable name="categories_num_columns">
@@ -172,7 +194,9 @@
 	<xsl:param name="surround_template"><xsl:value-of select="$template" /></xsl:param>
 	<xsl:param name="sidebar" />
 
-	<html lang="eng">
+	<html>
+	<xsl:attribute name="lang"><xsl:value-of select="$rfc1766" /></xsl:attribute>
+
 	<xsl:call-template name="surround-head" />
 	<body>
 	<xsl:if test="request/action = 'subject' or request/action = 'categories'">
@@ -219,10 +243,10 @@
 	<head>
 	<title><xsl:value-of select="//config/application_name" />: <xsl:call-template name="title" /></title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<xsl:call-template name="header_refresh" />	
+	<xsl:call-template name="header_refresh" />
 	<base href="{$base_include}/" />
 	<xsl:call-template name="css_include" />
-	<xsl:call-template name="header" />	
+	<xsl:call-template name="header" />
 	<xsl:call-template name="surround-google-analytics" />
 	</head>
 </xsl:template>
