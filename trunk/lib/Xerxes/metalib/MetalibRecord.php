@@ -567,9 +567,9 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 			$this->title = "";
 			$this->sub_title = "";
 			
-			foreach ( $this->subjects as $strSubject )
+			foreach ( $this->subjects as $subject )
 			{
-				$this->title .= " " . $strSubject;
+				$this->title .= " " . $subject->value;
 			}
 			
 			$this->title = trim ( $this->title );
@@ -598,7 +598,9 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 		{
 			for ( $x = 0; $x < count($this->subjects); $x++ )
 			{
-				$this->subjects[$x] = str_replace("*", "", $this->subjects[$x]);
+				$subject_object = $this->subjects[$x];
+				$subject_object->value = str_replace("*", "", $subject_object->value);
+				$this->subjects[$x] = $subject_object;
 			}
 		}
 			

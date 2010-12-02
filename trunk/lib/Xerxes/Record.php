@@ -361,8 +361,20 @@ class Xerxes_Record extends Xerxes_Marc_Record
 
 		foreach ( $this->datafield("6XX") as $subject )
 		{
-			$subfields =  $subject->subfield("abcdefghijklmnopqrstuvwxyz")->__toString();
-			array_push($this->subjects, $subfields);
+			$subfields = $subject->subfield("abcdefghijklmnopqrstuvwxyz");
+			$subfields_array = array();
+			
+			foreach ( $subfields as $subfield )
+			{
+				array_push($subfields_array, $subfield->__toString());
+			}
+			
+			$subject_object = new Xerxes_Record_Subject();
+			
+			$subject_object->display = implode(" -- ", $subfields_array );
+			$subject_object->value = $subfields->__toString();
+			
+			array_push($this->subjects, $subject_object);
 		}
 
 		// series information
@@ -610,7 +622,8 @@ class Xerxes_Record extends Xerxes_Marc_Record
 			
 			for ( $x = 0 ; $x < count( $this->subjects ) ; $x ++ )
 			{
-				$this->summary .= $this->subjects[$x];
+				$subject_object = $this->subjects[$x];
+				$this->summary .= $subject_object->value;
 				
 				if ( $x < count( $this->subjects ) - 1 )
 				{
@@ -1164,7 +1177,9 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		
 		for ( $s = 0 ; $s < count( $this->subjects ) ; $s ++ )
 		{
-			$this->subjects[$s] = $this->stripEndPunctuation( $this->subjects[$s], "./;,:" );
+			$subject_object = $this->subjects[$s];
+			$subject_object->value = $this->stripEndPunctuation( $subject_object->value, "./;,:" );
+			$this->subjects[$s] = $subject_object;
 		}
 	}
 	
@@ -1637,6 +1652,17 @@ class Xerxes_Record extends Xerxes_Marc_Record
 			}
 		}
 		
+		// subjects
+		
+		foreach ( $this->subjects as $subject_object )
+		{
+			$objSubject = $objXml->createElement("subject", $this->escapeXml($subject_object->display));
+			$objSubject->setAttribute("value", $subject_object->value);
+			$objXml->documentElement->appendChild($objSubject);
+			
+			
+		}
+		
 		## basic elements
 		
 		foreach ( $this as $key => $value )
@@ -1653,6 +1679,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 				$key == "links" || 
 				$key == "journal_title" ||
 				$key == "items" ||
+				$key == "subjects" ||
 				
 				// these are utility variables, not to be output
 				
@@ -2950,6 +2977,12 @@ class Xerxes_Record extends Xerxes_Marc_Record
 	{
 		return $this->items;
 	}
+}
+
+class Xerxes_Record_Subject
+{
+	public $value;
+	public $display;
 }
 
 class Xerxes_Record_Author

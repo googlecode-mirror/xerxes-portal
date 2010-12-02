@@ -510,7 +510,7 @@
 					<xsl:call-template name="worldcat_save_record">
 						<xsl:with-param name="element">div</xsl:with-param>
 						<xsl:with-param name="class">saveRecord</xsl:with-param>
-						<xsl:with-param name="id"><xsl:value-of select="$record_id" /></xsl:with-param>
+						<xsl:with-param name="id"><xsl:value-of select="$oclc" /></xsl:with-param>
 					</xsl:call-template>
 					
 				</div>
