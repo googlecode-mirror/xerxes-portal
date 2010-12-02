@@ -275,7 +275,14 @@ class Xerxes_Helper
 	
 	public static function unmarkSaved($strResultSet, $strRecordNumber)
 	{
-		$key = self::savedRecordKey( $strResultSet, $strRecordNumber );
+		if ( $strResultSet == "" )
+		{
+			$key = $strRecordNumber;
+		}
+		else
+		{
+			$key = self::savedRecordKey( $strResultSet, $strRecordNumber );
+		}
 		
 		if ( array_key_exists( "resultsSaved", $_SESSION ) && array_key_exists( $key, $_SESSION["resultsSaved"] ) )
 		{
