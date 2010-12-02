@@ -87,7 +87,19 @@
 			// update the session
       		// Sorry this gets a bit confusing, the api hasn't stayed entirely consistent.
 			
-			list($date, $resultSet, $recordNumber) = explode(':',$strID);
+			$resultSet = "";
+			$recordNumber = $strID;
+			
+			$id = explode(':',$strID);
+			
+			// metalib
+			
+			if ( count($id) > 1 )
+			{
+				$resultSet = $id[1];
+				$recordNumber = $id[2];
+			}
+			
 			Xerxes_Helper::unmarkSaved($resultSet, $recordNumber);
 			
 			// send the user back out, so they don't step on this again
