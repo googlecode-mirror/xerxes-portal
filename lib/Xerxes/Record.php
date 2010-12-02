@@ -3002,15 +3002,17 @@ class Xerxes_Record_Items
 
 class Xerxes_Record_Item
 {
-	protected $id; // string
-	protected $institution; // string
-	protected $location; // string
-	protected $callnumber; // string
-	protected $availability; // bool?
-	protected $duedate; // DateTime
-	protected $status; // string
-	protected $reserve; // string
-	protected $note; // string
+	protected $id; 		// the bibliographic record ID
+    protected $availability; // boolean: is this item available for checkout?
+    protected $status; 	// string describing the status of the item
+    protected $location; // string describing the physical location of the item
+    protected $reserve; // string indicating “on reserve” status – legal values: 'Y' or 'N'
+    protected $callnumber; // the call number of this item
+    protected $duedate; // string showing due date of checked out item (null if not checked out)
+    protected $number; 	// the copy number for this item (note: although called “number”, 
+    					//this may actually be a string if individual items are named rather than numbered)
+    protected $barcode; // the barcode number for this item
+	
 	
 	public function setProperty($name, $value)
 	{
