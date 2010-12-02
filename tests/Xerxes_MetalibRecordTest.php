@@ -82,7 +82,14 @@ class Xerxes_MetalibRecordTest extends PHPUnit_Framework_TestCase
 		// test subject clean-up
 		
 		$arrSubjects = array("New Zealand", "Retirement", "Goals", "Young Adults", "Aging");
-		$this->assertEquals( $record->getSubjects(), $arrSubjects);		
+		$arrSubjectsFromRecord = array();
+		
+		foreach ( $record->getSubjects() as $subject )
+		{
+			array_push($arrSubjectsFromRecord, $subject->value);
+		}
+		
+		$this->assertEquals( $arrSubjectsFromRecord, $arrSubjects);		
 	}
 	
 	public function testPsycInfoBookChapter()

@@ -443,13 +443,13 @@ class Xerxes_WorldCatSearch extends Xerxes_Framework_Search
 				"base" => $this->request->getProperty("base"),
 				"action" => "search",
 				"source" => $this->request->getProperty("source"),
-				"query" => Xerxes_Framework_Parser::escapeXML($subject),
+				"query" => Xerxes_Framework_Parser::escapeXML($subject->value),
 				"field" => "su",
 				"spell" => "none"
 			);
 			
 			$subject_url = $this->request->url_for($arrLink);
-			$objSubjectLink = $results_xml->createElement("subject_link", Xerxes_Framework_Parser::escapeXML($subject));
+			$objSubjectLink = $results_xml->createElement("subject_link", Xerxes_Framework_Parser::escapeXML($subject->display));
 			$objSubjectLink->setAttribute("link", $subject_url);
 			
 			$record_container->appendChild($objSubjectLink);
