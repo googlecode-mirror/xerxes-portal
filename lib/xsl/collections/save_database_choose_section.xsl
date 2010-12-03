@@ -48,7 +48,7 @@
 	<xsl:for-each select="/*/category">           
 	
 		<div id="subcategory_choice" class="miniForm">
-			<h2>Database: <xsl:value-of select="/*/databases/database/title_display" /></h2>
+			<h2>Database: <xsl:value-of select="/*/databases/database/title_display" /></h2><!-- @todo: i18n -->
 			
 			<h3>Choose a section</h3>
 			
@@ -75,7 +75,7 @@
 			</select>
 			</p>
 
-			<p><input type="submit" value="save" name="save"/></p>
+			<p><input type="submit" value="save" name="save" class="submit_save-db-choose-section{$language_suffix}" /></p>
 			</form>
 		</div>
 	

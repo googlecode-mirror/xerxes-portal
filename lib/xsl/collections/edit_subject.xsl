@@ -131,7 +131,7 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
 						<xsl:copy-of select="$text_collections_add_section" /><xsl:text> </xsl:text>
 					</label>
 					<input type="text" id="new_subcategory_name" name="new_subcategory_name" />	
-					<xsl:text> </xsl:text><input type="submit" name="save" value="{$text_header_my_collections_add}" class="add_new_section_submit"/>
+					<xsl:text> </xsl:text><input type="submit" name="save" value="{$text_header_my_collections_add}" class="submit_add_new_section{$language_suffix}"/>
 				</form>
 			</li>
 		</xsl:if>
@@ -251,7 +251,7 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
 				</label>
 				
 				<input type="text" id="collections_database_query" name="query" value="{/*/request/query}"/><xsl:text> </xsl:text>
-				<input type="submit" value="{$text_searchbox_search}" class="add_databases_submit" />
+				<input type="submit" value="{$text_searchbox_search}" class="submit_add_databases{$language_suffix}" />
 			</p>
 		
 		</form>

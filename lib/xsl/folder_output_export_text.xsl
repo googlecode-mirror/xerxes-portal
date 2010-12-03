@@ -53,9 +53,8 @@
 		<input type="hidden" name="username" value="{$username}" />
 		
 		
-		<input id="export_single" type="submit" name="Submit" value="{$text_folder_export_download}" />
-
-			
+		<input id="export_single" type="submit" name="Submit" value="{$text_folder_export_download}" class="submit_export_text{$language_suffix}" />
+		
 		<xsl:call-template name="folder_brief_results" />
 		
 		</form>

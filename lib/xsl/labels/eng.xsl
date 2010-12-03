@@ -199,6 +199,8 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	<xsl:variable name="text_metasearch_hits_unfinished">
 		It looks like some of the databases had technical problems.  You might want to try your search again later.
 	</xsl:variable>
+	<xsl:variable name="text_metasearch_hits_in_progress">Your search is still in progress. </xsl:variable>
+	<xsl:variable name="text_metasearch_hits_check_status">Check the status of the search</xsl:variable>
 	
 	<xsl:variable name="text_metasearch_results_limit">Limit</xsl:variable>
 	<xsl:variable name="text_metasearch_results_summary">

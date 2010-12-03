@@ -150,7 +150,7 @@
 						<input name="{@name}" value="{@value}" type="hidden" />
 					</xsl:for-each>
 					
-					<input type="submit">
+					<input type="submit" class="submit_go-to-db{$language_suffix}">
 						<xsl:attribute name="value">
 							<xsl:copy-of select="$text_metasearch_results_native_results" /><xsl:text> </xsl:text>
 							<xsl:value-of select="results/database" />

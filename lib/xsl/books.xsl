@@ -659,7 +659,7 @@
 		
 		<br />
 		
-		<input type="submit" value="Send" />
+		<input type="submit" value="Send" class="submit_send{$language_suffix}" />
 		
 		<p class="smsNote">Carrier charges may apply.</p>
 		
