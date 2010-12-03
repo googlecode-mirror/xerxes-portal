@@ -114,7 +114,7 @@
 							</tr>
 						</table>
 						
-						<p><input type="submit" value="{$text_snippet_refresh}" /></p>
+						<p><input type="submit" value="{$text_snippet_refresh}" class="embed_database_refresh" /></p>
 						  
 					</fieldset>
 					

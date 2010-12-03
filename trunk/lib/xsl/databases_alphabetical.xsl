@@ -124,14 +124,11 @@
 					&#160;
 					<a href="{url}">
 
-						<img alt="{$text_databases_az_hint_info}" title="{$text_databases_az_hint_info}" src="images/info.png" class="iconInfo miniIcon">
-							<xsl:attribute name="src"><xsl:value-of select="/knowledge_base/config/base_url" />/images/info.png</xsl:attribute>
-						</img>						
+						<xsl:call-template name="img_databases_az_hint_info" />
 						<xsl:text> </xsl:text>
             
 						<xsl:if test="searchable">
-						<img alt="{$text_databases_az_hint_searchable}" title="{$text_databases_az_hint_searchable}" 
-							class="iconSearchable miniIcon" src="{$base_url}/images/famfamfam/magnifier.png"/>
+							<xsl:call-template name="img_databases_az_hint_searchable" />
 						</xsl:if>
 					</a>
 					

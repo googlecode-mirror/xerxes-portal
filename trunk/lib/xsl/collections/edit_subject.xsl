@@ -131,7 +131,7 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
 						<xsl:copy-of select="$text_collections_add_section" /><xsl:text> </xsl:text>
 					</label>
 					<input type="text" id="new_subcategory_name" name="new_subcategory_name" />	
-					<xsl:text> </xsl:text><input type="submit" name="save" value="{$text_header_my_collections_add}"/>
+					<xsl:text> </xsl:text><input type="submit" name="save" value="{$text_header_my_collections_add}" class="add_new_section_submit"/>
 				</form>
 			</li>
 		</xsl:if>
@@ -191,12 +191,13 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
 						<xsl:for-each select="database">
 						<li>
 							<xsl:variable name="id_meta" select="metalib_id" />
-							<xsl:variable name="remove_text">
-								<xsl:call-template name="text_collections_remove_database" />
-							</xsl:variable>
 
-							<a href="./?{$language_param}&amp;base=collections&amp;action=remove_db&amp;username={//request/username}&amp;subject={//category[1]/@normalized}&amp;subcategory={../@id}&amp;id={metalib_id}&amp;return={php:function('urlencode', string(//server/request_uri))}#section_{../@id}"><img 
-								src="{$base_url}/images/delete.png" title="{$remove_text}" alt="{$remove_text}"/></a>
+							<a href="./?{$language_param}&amp;base=collections&amp;action=remove_db&amp;username={//request/username}&amp;subject={//category[1]/@normalized}&amp;subcategory={../@id}&amp;id={metalib_id}&amp;return={php:function('urlencode', string(//server/request_uri))}#section_{../@id}">
+								<xsl:call-template name="img_delete">
+									<xsl:with-param name="alt"><xsl:call-template name="text_collections_remove_database" /></xsl:with-param>
+									<xsl:with-param name="title"><xsl:call-template name="text_collections_remove_database" /></xsl:with-param>
+								</xsl:call-template>
+							</a>
 
 							<span class="subjectDatabaseTitle">
 								<a>
@@ -207,10 +208,8 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
 							</span>
 							<span class="subjectDatabaseInfo">
 								<a>
-								<xsl:attribute name="href"><xsl:value-of select="url" /></xsl:attribute>
-									<img alt="{$text_databases_az_hint_info}" src="images/info.png" >
-										<xsl:attribute name="src"><xsl:value-of select="//config/base_url" />/images/info.png</xsl:attribute>
-									</img>
+									<xsl:attribute name="href"><xsl:value-of select="url" /></xsl:attribute>
+									<xsl:call-template name="img_az_info" />
 								</a>
 							</span>
 							<xsl:if test="group_restriction">
@@ -252,7 +251,7 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
 				</label>
 				
 				<input type="text" id="collections_database_query" name="query" value="{/*/request/query}"/><xsl:text> </xsl:text>
-				<input type="submit" value="{$text_searchbox_search}"/>
+				<input type="submit" value="{$text_searchbox_search}" class="add_databases_submit" />
 			</p>
 		
 		</form>
@@ -269,14 +268,22 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
 					</xsl:variable>
 					<li>
 						<a href="./?{$language_param}&amp;base=collections&amp;action=save_complete&amp;username={/*/category[1]/@owned_by_user}&amp;subject={/*/category[1]/@normalized}&amp;subcategory={/*/request/add_to_subcategory}&amp;id={metalib_id}&amp;return={php:function('urlencode', string(//server/request_uri))}#section_{/*/request/add_to_subcategory}">
-							<img src="{$base_url}/images/famfamfam/add.png" class="miniIcon" title="{$add_text}" alt="{$add_text}" />
+							<xsl:call-template name="img_add">
+								<xsl:with-param name="alt" select="$add_text"/>
+								<xsl:with-param name="title" select="$add_text"/>
+								<xsl:with-param name="class">miniIcon</xsl:with-param>
+							</xsl:call-template>
 						</a>
 					
 						<xsl:text> </xsl:text><xsl:value-of select="title_display"/>
 										
 						<xsl:if test="searchable = '1'">
 							<xsl:text> </xsl:text>
-							<img alt="{$text_databases_az_hint_searchable}" title="{$text_databases_az_hint_searchable}" class="miniIcon" src="{$base_url}/images/famfamfam/magnifier.png"/>
+							<xsl:call-template name="img_search">
+								<xsl:with-param name="alt" select="$text_databases_az_hint_searchable"/>
+								<xsl:with-param name="title" select="$text_databases_az_hint_searchable"/>
+								<xsl:with-param name="class">miniIcon</xsl:with-param>
+							</xsl:call-template>
 						</xsl:if>
 						
 					</li>

@@ -133,7 +133,7 @@
 	<xsl:choose>
 		<xsl:when test="items/item and $printAvailable = '0'">
 		
-			<li class="worldcatAvailabilityMissing"><img src="images/book-out.png" alt="" />&#160; No Copies Available</li>
+			<li class="worldcatAvailabilityMissing"><xsl:call-template name="img_book_not_available" />&#160; No Copies Available</li>
 
 			<xsl:call-template name="ill_option">
 				<xsl:with-param name="element">li</xsl:with-param>
@@ -142,10 +142,10 @@
 
 		</xsl:when>
 		<xsl:when test="$printAvailable = '1'">
-			<li><img src="images/book.png" alt="" />&#160; 1 copy available</li>
+			<li><xsl:call-template name="img_holdings" />&#160; 1 copy available</li>
 		</xsl:when>
 		<xsl:when test="$printAvailable &gt; '1'">
-			<li><img src="images/book.png" alt="" />&#160; <xsl:value-of select="$printAvailable" /> copies available</li>
+			<li><xsl:call-template name="img_holdings" />&#160; <xsl:value-of select="$printAvailable" /> copies available</li>
 		</xsl:when>			
 	</xsl:choose>
 	
@@ -275,7 +275,7 @@
 		<xsl:element name="{$element}">
 			<xsl:attribute name="class"><xsl:value-of select="$class" /></xsl:attribute>
 			<a href="{url}" class="recordAction" target="" >
-				<img src="{$base_include}/images/html.png" alt="" width="16" height="16" border="0" /> 
+				<xsl:call-template name="img_format_html" />
 				<xsl:choose>
 					<xsl:when test="display != ''">
 						<xsl:value-of select="display" />
@@ -308,14 +308,16 @@
 			<a target="{$link_target}" href="{../url_open}" class="recordAction">
 				<xsl:choose>
 					<xsl:when test="//worldcat_groups/group[@id = $source]/lookup/ill_text">
-						<img src="images/ill.png" alt="" border="0" class="miniIcon linkResolverLink "/>
+						<xsl:call-template name="img_ill">
+							<xsl:with-param name="class">miniIcon linkResolverLink</xsl:with-param>
+						</xsl:call-template>
 						<xsl:text> </xsl:text>
 						<xsl:value-of select="//worldcat_groups/group[@id = $source]/lookup/ill_text" />
 					</xsl:when>
 					<xsl:otherwise>
 						<img src="{$image_sfx}" alt="" border="0" class="miniIcon linkResolverLink "/>
 						<xsl:text> </xsl:text>
-						<xsl:text> Check for availability </xsl:text>
+						<xsl:text> <xsl:copy-of select="$text_link_resolver_check" /> </xsl:text>
 					</xsl:otherwise>
 				</xsl:choose>
 			</a>
@@ -341,14 +343,10 @@
 	
 		<xsl:attribute name="class">saveRecord <xsl:value-of select="$class" /> recordAction</xsl:attribute>
 
-		<img id="folder_worldcat{$id}" width="17" height="15" alt="" border="0" >
-		<xsl:attribute name="src">
-			<xsl:choose> 
-				<xsl:when test="//request/session/resultssaved[@key = $record_id]">images/folder_on.png</xsl:when>
-				<xsl:otherwise>images/folder.png</xsl:otherwise>
-			</xsl:choose>
-		</xsl:attribute>
-		</img>
+		<xsl:call-template name="img_save_record">
+			<xsl:with-param name="id" select="concat('folder_worldcat', $id)" />
+			<xsl:with-param name="test" select="//request/session/resultssaved[@key = $record_id]" />
+		</xsl:call-template>
 
 		<xsl:text> </xsl:text>
 		
@@ -528,7 +526,7 @@
 	
 		<div id="smsOption" class="resultsAvailability recordAction">
 
-			<img src="images/phone.png" alt="" />
+			<xsl:call-template name="img_phone" />
 			<xsl:text> </xsl:text>
 			<a id="smsLink" href="{../url_sms}">Send location to your phone</a> 
 		

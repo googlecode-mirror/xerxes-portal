@@ -233,7 +233,7 @@
 					<div class="worldcatHoldings">
 						
 						<p>
-							<img src="images/book.png" alt="" /><xsl:text> </xsl:text>
+							<xsl:call-template name="img_holdings" /><xsl:text> </xsl:text>
 							
 							<xsl:variable name="campus_count" select="count(//holdings/holding)" />
 							

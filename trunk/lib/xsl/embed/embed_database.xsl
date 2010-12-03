@@ -55,7 +55,9 @@
           <span class="xerxes_db_info">
           <a>
             <xsl:attribute name="href"><xsl:value-of select="url" /></xsl:attribute>
-            <img alt="info" src="{$base_url}/images/info.png" style="border: 0px none" />             
+            <xsl:call-template name="img_embed_info">
+              <xsl:with-param name="class">embedInfo</xsl:with-param>
+            </xsl:call-template>
           </a>
           </span>  
         </xsl:if>
