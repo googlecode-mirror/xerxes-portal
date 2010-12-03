@@ -100,7 +100,16 @@
 
 	<xsl:variable name="databases_searchable"	select="//config/database_list_searchable" />
 	
-	<xsl:variable name="language" select="//request/lang" />
+	<xsl:variable name="language">
+		<xsl:choose>
+			<xsl:when test="//request/lang">
+				<xsl:value-of select="//request/lang" />
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:text>eng</xsl:text>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
 
 	<!--
 		For languages other than English, will add "_code" suffix, where code is language code.
