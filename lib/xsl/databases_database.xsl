@@ -74,7 +74,10 @@
 					</form>
 				</xsl:when>
 				<xsl:otherwise>
-					<i><img src="{$base_url}/images/famfamfam/magnifier.png" />Search <xsl:call-template name="db_restriction_display" />.</i>
+					<i>
+						<xsl:call-template name="img_search" />
+						<xsl:copy-of select="text_searchbox_search" /> <xsl:call-template name="db_restriction_display" />.
+					</i>
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:if>

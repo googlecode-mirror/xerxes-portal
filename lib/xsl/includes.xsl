@@ -160,12 +160,6 @@
 	
 	<xsl:variable name="base_include" select="$base_url" />
 	
-	<!-- images -->
-	
-	<xsl:variable name="app_mini_icon_url"><xsl:value-of select="$base_url" />/images/famfamfam/page_find.png</xsl:variable>
-	<xsl:variable name="image_sfx"><xsl:value-of select="$base_url" />/images/sfx.gif</xsl:variable>
-	
-	
 	<xsl:variable name="global_advanced_mode" 
 		select="(//request/metasearch_input_mode = 'advanced') or 
 		( //results/search/pair[@position = '2']/query != '' ) or 
@@ -859,7 +853,7 @@
 					<xsl:choose>
 						<xsl:when test="$should_lock_nonsearchable	and searchable_by_user != '1'" >
 							<!-- if we have a logged in user (or a registered guest), but they can't search this, show them a lock. -->
-							<img src="{$base_url}/images/lock.png" alt="{$text_databases_subject_hint_restricted}" title="{$text_databases_subject_hint_restricted}" />
+							<xsl:call-template name="img_databases_subject_hint_restricted" />
 						</xsl:when>
 						<xsl:otherwise>
 							<!-- if no user logged in, or user logged in and they can
@@ -879,7 +873,7 @@
 					<xsl:text> </xsl:text>
 				</xsl:when>
 				<xsl:otherwise>
-					<img src="{$base_url}/images/link-out.png" alt="{$text_databases_subject_hint_restricted}" title="{$text_databases_subject_hint_native_only}"/>
+					<xsl:call-template name="img_grey_checkbox" />
 					<xsl:text> </xsl:text>
 				</xsl:otherwise>
 				</xsl:choose>
@@ -911,9 +905,9 @@
 				<span class="subjectDatabaseInfo">
 					<a  title="{$text_databases_subject_hint_more_info_about} {title_display}">
 					<xsl:attribute name="href"><xsl:value-of select="url" /></xsl:attribute>
-					<img src="images/info.png" alt="{$text_databases_subject_hint_more_info_about} {title_display}">
-						<xsl:attribute name="src"><xsl:value-of select="//config/base_url" />/images/info.png</xsl:attribute>
-					</img>
+					<xsl:call-template name="img_info_about">
+						<xsl:with-param name="alt" select="concat($text_databases_subject_hint_more_info_about, ' ', title_display)" />
+					</xsl:call-template>
 					</a>
 					<xsl:text> </xsl:text>
 				</span>
@@ -1056,14 +1050,22 @@
 	
 	<xsl:if test="request/label">
 		<h2>
-			<a href="./?{$language_param}&amp;base=folder"><img src="{$base_url}/images/delete.png" alt="remove limit" /></a>
+			<a href="./?{$language_param}&amp;base=folder">
+				<xsl:call-template name="img_delete">
+					<xsl:with-param name="alt">remove limit</xsl:with-param>
+				</xsl:call-template>
+			</a>
 			<xsl:copy-of select="$text_folder_limit_tag" /><xsl:text>: </xsl:text><xsl:value-of select="request/label" />
 		</h2>
 	</xsl:if>
 	
 	<xsl:if test="request/type">
 		<h2>
-			<a href="./?{$language_param}&amp;base=folder"><img src="{$base_url}/images/delete.png" alt="remove limit" /></a>
+			<a href="./?{$language_param}&amp;base=folder">
+				<xsl:call-template name="img_delete">
+					<xsl:with-param name="alt">remove limit</xsl:with-param>
+				</xsl:call-template>
+			</a>
 			<xsl:copy-of select="$text_folder_limit_format" /><xsl:text>: </xsl:text><xsl:value-of select="request/type" />
 		</h2>
 	</xsl:if>
@@ -1127,7 +1129,7 @@
 			contains(request/session/saved_return,'record')">
 
 		<div class="folderReturn">
-			<img src="{$base_include}/images/back.png" alt="" />
+			<xsl:call-template name="img_back" />
 			<span class="folderReturnText">
 				<a href="{$back}"><xsl:copy-of select="$text_folder_return" /></a>
 			</span>
@@ -1202,17 +1204,23 @@
 			
 				<xsl:choose>
 					<xsl:when test="@type = 'pdf'">
-						<img src="{$base_include}/images/pdf.png" alt="" width="16" height="16" border="0" class="miniIcon fullTextLink pdf"/>
+						<xsl:call-template name="img_format_pdf">
+							<xsl:with-param name="class">miniIcon fullTextLink pdf</xsl:with-param>
+						</xsl:call-template>
 						<xsl:text> </xsl:text>
 						<xsl:copy-of select="$text_records_fulltext_pdf" />
 					</xsl:when>
 					<xsl:when test="@type = 'html'">
-						<img src="{$base_include}/images/html.png" alt="" width="16" height="16" border="0" class="miniIcon fullTextLink html"/>
+						<xsl:call-template name="img_format_html">
+							<xsl:with-param name="class">miniIcon fullTextLink html</xsl:with-param>
+						</xsl:call-template>
 						<xsl:text> </xsl:text>
 						<xsl:copy-of select="$text_records_fulltext_html" />
 					</xsl:when>
 					<xsl:otherwise>
-						<img src="{$base_include}/images/html.png" alt="" width="16" height="16" border="0" class="miniIcon fullTextLink unknown"/>
+						<xsl:call-template name="img_format_unknown">
+							<xsl:with-param name="class">miniIcon fullTextLink unknown</xsl:with-param>
+						</xsl:call-template>
 						<xsl:text> </xsl:text>
 						<xsl:copy-of select="$text_records_fulltext_available" />
 					</xsl:otherwise>
@@ -1289,14 +1297,10 @@
 			</li>
 		
 			<li id="my_saved_records" class="sidebarFolder">
-				<img name="folder" width="17" height="15" border="0" id="folder" alt="">
-					<xsl:attribute name="src">
-					<xsl:choose>
-					<xsl:when test="//navbar/element[@id='saved_records']/@numSessionSavedRecords &gt; 0"><xsl:value-of select="$base_include" />/images/folder_on.png</xsl:when>
-					<xsl:otherwise><xsl:value-of select="$base_include"/>/images/folder.png</xsl:otherwise>
-					</xsl:choose>
-					</xsl:attribute>
-				</img>
+				<xsl:call-template name="img_save_record">
+					<xsl:with-param name="id">folder</xsl:with-param>
+					<xsl:with-param name="test" select="//navbar/element[@id='saved_records']/@numSessionSavedRecords &gt; 0" />
+				</xsl:call-template>
 				<xsl:text> </xsl:text>
 				<a>
 				<xsl:attribute name="href"><xsl:value-of select="//navbar/element[@id='saved_records']/url" /></xsl:attribute>
@@ -1306,7 +1310,10 @@
 			
 			<xsl:if test="//navbar/element[@id='saved_collections']">
 				<li id="my_databases" class="sidebarFolder">
-					<img src="{$base_include}/images/folder.png" width="17" height="15" border="0" alt=""/><xsl:text> </xsl:text>
+					<xsl:call-template name="img_save_record">
+						<xsl:with-param name="test" select="0" />
+					</xsl:call-template>
+					<xsl:text> </xsl:text>
 					<a href="{//navbar/element[@id='saved_collections']/url}"><xsl:copy-of select="$text_header_collections"/></a>
 				</li>
 			</xsl:if>
@@ -1655,7 +1662,7 @@
 					<!-- peer reviewed -->
 					
 					<xsl:if test="$refereed = 'true'">
-						<xsl:text> </xsl:text><img src="images/refereed_hat.png" width="20" height="14" alt="" />
+						<xsl:text> </xsl:text><xsl:call-template name="img_refereed" />
 						<xsl:text> </xsl:text><xsl:copy-of select="$text_results_refereed" />
 					</xsl:if>
 				</div>
@@ -1733,7 +1740,10 @@
 						
 							<div class="folderAvailability deleteRecord">
 								<a class="recordAction deleteRecord" href="{../url_delete}">
-									<img src="{$base_url}/images/delete.png" alt="" border="0" class="miniIcon deleteRecordLink"/>
+									<xsl:call-template name="img_delete">
+										<xsl:with-param name="class">miniIcon deleteRecordLink</xsl:with-param>
+										<xsl:with-param name="alt">remove limit</xsl:with-param>
+									</xsl:call-template>
 									<xsl:text> </xsl:text>
 									<xsl:copy-of select="$text_results_record_delete" />
 								 </a>
@@ -1751,15 +1761,11 @@
 							<!-- save facility in search results area -->
 							
 							<div id="saveRecordOption_{$result_set}_{$record_number}" class="recordAction saveRecord">
-								<img id="folder_{$result_set}{$record_number}"	width="17" height="15" alt="" border="0" class="miniIcon saveRecordLink">
-								<xsl:attribute name="src">
-									<xsl:choose> 
-										<xsl:when test="//request/session/resultssaved[@key = $record_id]">images/folder_on.png</xsl:when>
-										<xsl:otherwise>images/folder.png</xsl:otherwise>
-									</xsl:choose>
-								</xsl:attribute>
-								</img>
-								
+								<xsl:call-template name="img_save_record">
+									<xsl:with-param name="id" select="concat('folder_', $result_set, $record_number)" />
+									<xsl:with-param name="class">miniIcon saveRecordLink</xsl:with-param>
+									<xsl:with-param name="test" select="//request/session/resultssaved[@key = $record_id]" />
+								</xsl:call-template>
 								<xsl:text> </xsl:text>
 								<a id="link_{$result_set}:{$record_number}" href="{../url_save_delete}">
 									<!-- 'saved' class used as a tag by ajaxy stuff -->
@@ -1821,7 +1827,7 @@
 			<xsl:call-template name="record_link">
 				<xsl:with-param name="type">holdings</xsl:with-param>
 				<xsl:with-param name="text" select="$text_link_holdings"/>
-				<xsl:with-param name="img_src" select="concat($base_url, '/images/book.png')"/>
+				<xsl:with-param name="img_src" select="$img_src_holdings"/>
 			</xsl:call-template>
 	</xsl:if>
 	
@@ -1839,7 +1845,9 @@
 		
 		<xsl:when test="$link_resolver_allowed and (subscription = 1 or //fulltext/issn = standard_numbers/issn)">
 				<a href="{../url_open}&amp;fulltext=1" target="{$link_target}" class="recordAction linkResolverLink">
-					<img src="{$base_include}/images/html.png" alt="" width="16" height="16" border="0" class="miniIcon linkResolverLink"/>
+					<xsl:call-template name="img_format_html">
+						<xsl:with-param name="class">miniIcon linkResolverLink</xsl:with-param>
+					</xsl:call-template>
 					<xsl:text> </xsl:text>
 					<xsl:copy-of select="$text_link_resolver_available" />
 				</a>
@@ -1859,7 +1867,7 @@
 			<xsl:call-template name="record_link">
 			<xsl:with-param name="type">original_record</xsl:with-param>
 			<xsl:with-param name="text" select="$text_link_original_record"/>
-			<xsl:with-param name="img_src" select="concat($base_url,'/images/famfamfam/link.png')"/>
+			<xsl:with-param name="img_src" select="$img_src_chain"/>
 			</xsl:call-template>
 		</xsl:when>
 		
@@ -2379,7 +2387,11 @@
 				<xsl:for-each select="results/facets_applied/facet_level">
 					<li>
 						<div class="remove" style="position: absolute; top: 10px; right: 10px;">
-							<a href="{@url}"><img src="images/facet-remove.gif" alt="remove limit" /></a>
+							<a href="{@url}">
+								<xsl:call-template name="img_facet_remove">
+									<xsl:with-param name="alt">remove limit</xsl:with-param>
+								</xsl:call-template>
+							</a>
 						</div> 
 						Limited to: <xsl:value-of select="text()" /> 
 					</li>
@@ -2569,6 +2581,183 @@
 
 </xsl:template>
 
+<!--
+	#############################
+	#                           #
+	#      IMAGE TEMPLATES      #
+	#                           #
+	#############################
+-->
+
+<xsl:variable name="app_mini_icon_url"		select="concat($base_url, '/images/famfamfam/page_find.png')" />
+<xsl:variable name="image_sfx"			select="concat($base_url, '/images/sfx.gif')" />
+<xsl:variable name="img_src_original_record"	select="concat($base_url, '/images/famfamfam/link.png')" />
+<xsl:variable name="img_src_holdings"		select="concat($base_url, '/images/book.png')" />
+<xsl:variable name="img_src_chain"		select="concat($base_url, '/images/famfamfam/link.png')" />
+
+<xsl:template name="img_databases_az_hint_info">
+	<img alt="{$text_databases_az_hint_info}" title="{$text_databases_az_hint_info}" src="images/info.png" class="iconInfo miniIcon">
+		<xsl:attribute name="src"><xsl:value-of select="/knowledge_base/config/base_url" />/images/info.png</xsl:attribute>
+	</img>
+</xsl:template>
+
+<xsl:template name="img_databases_az_hint_searchable">
+	<img alt="{$text_databases_az_hint_searchable}" title="{$text_databases_az_hint_searchable}" 
+		class="iconSearchable miniIcon" src="{$base_url}/images/famfamfam/magnifier.png"/>
+</xsl:template>
+
+<xsl:template name="img_refereed">
+	<img src="images/refereed_hat.png" width="20" height="14" alt="" />
+</xsl:template>
+
+<xsl:template name="img_save_record">
+	<xsl:param name="id" />
+	<xsl:param name="class" />
+	<xsl:param name="alt" />
+	<xsl:param name="test" />
+	<img id="$id" name="$id" width="17" height="15" alt="$alt" border="0" class="$class">
+		<xsl:attribute name="src">
+			<xsl:choose> 
+				<xsl:when test="$test">images/folder_on.png</xsl:when>
+				<xsl:otherwise>images/folder.png</xsl:otherwise>
+			</xsl:choose>
+		</xsl:attribute>
+	</img>
+</xsl:template>
+
+<xsl:template name="img_delete">
+	<xsl:param name="alt" />
+	<xsl:param name="title" />
+	<xsl:param name="class" />
+	<img src="{$base_url}/images/delete.png" alt="{$alt}" title="{$title}" class="{$class}" />
+</xsl:template>
+
+<xsl:template name="img_facet_remove">
+	<xsl:param name="alt" />
+	<xsl:param name="title" />
+	<xsl:param name="class" />
+	<img src="{$base_url}/images/facet-remove.gif" alt="{$alt}" title="{$title}" class="{$class}" />
+</xsl:template>
+
+<xsl:template name="img_holdings">
+	<xsl:param name="alt" />
+	<xsl:param name="title" />
+	<xsl:param name="class" />
+	<img src="images/book.png" alt="{$alt}" title="{$title}" class="{$class}" />
+</xsl:template>
+
+<xsl:template name="img_results_hint_remove_limit">
+	<xsl:param name="alt" select="$text_results_hint_remove_limit" />
+	<xsl:param name="title" />
+	<xsl:param name="class" />
+	<img src="{$base_url}/images/delete.png" alt="{$alt}" title="{$title}" class="{$class}" />
+</xsl:template>
+
+<xsl:template name="img_az_info">
+	<xsl:param name="alt" select="$text_results_hint_remove_limit" />
+	<xsl:param name="title" />
+	<xsl:param name="class" />
+	<img src="{$base_url}/images/info.png" alt="{$alt}" title="{$title}" class="{$class}" />
+</xsl:template>
+
+<xsl:template name="img_info_about">
+	<xsl:param name="alt" />
+	<xsl:param name="title" />
+	<xsl:param name="class" />
+	<img src="{$base_url}/images/info.png" alt="{$alt}" title="{$title}" class="{$class}" />
+</xsl:template>
+
+<xsl:template name="img_embed_info">
+	<xsl:param name="alt">info</xsl:param>
+	<xsl:param name="title" />
+	<xsl:param name="class" />
+	<img src="{$base_url}/images/info.png" alt="{$alt}" title="{$title}" class="{$class}" />
+</xsl:template>
+
+<xsl:template name="img_book_not_available">
+	<xsl:param name="alt" />
+	<xsl:param name="title" />
+	<xsl:param name="class" />
+	<img src="images/book-out.png" alt="{$alt}" title="{$title}" class="{$class}" />
+</xsl:template>
+
+<xsl:template name="img_format_pdf">
+	<xsl:param name="alt" />
+	<xsl:param name="title" />
+	<xsl:param name="class" />
+	<img src="{$base_url}/images/pdf.png" width="16" height="16" border="0" alt="{$alt}" title="{$title}" class="{$class}" />
+</xsl:template>
+
+<xsl:template name="img_format_html">
+	<xsl:param name="alt" />
+	<xsl:param name="title" />
+	<xsl:param name="class" />
+	<img src="{$base_url}/images/html.png" width="16" height="16" border="0" alt="{$alt}" title="{$title}" class="{$class}" />
+</xsl:template>
+
+<xsl:template name="img_format_unknown">
+	<xsl:param name="alt" />
+	<xsl:param name="title" />
+	<xsl:param name="class" />
+	<img src="{$base_url}/images/html.png" width="16" height="16" border="0" alt="{$alt}" title="{$title}" class="{$class}" />
+</xsl:template>
+
+<xsl:template name="img_databases_subject_hint_restricted">
+	<xsl:param name="alt" select="$text_databases_subject_hint_restricted" />
+	<xsl:param name="title" select="$text_databases_subject_hint_restricted" />
+	<xsl:param name="class" />
+	<img src="{$base_url}/images/lock.png" alt="{$alt}" title="{$title}" class="{$class}" />
+</xsl:template>
+
+<xsl:template name="img_grey_checkbox">
+	<xsl:param name="alt" select="$text_databases_subject_hint_restricted" />
+	<xsl:param name="title" select="$text_databases_subject_hint_native_only" />
+	<xsl:param name="class" />
+	<img src="{$base_url}/images/link-out.png" alt="{$alt}" title="{$title}" class="{$class}" />
+</xsl:template>
+
+<xsl:template name="img_back">
+	<xsl:param name="alt" />
+	<xsl:param name="title" />
+	<xsl:param name="class" />
+	<img src="{$base_url}/images/back.png" alt="{$alt}" title="{$title}" class="{$class}" />
+</xsl:template>
+
+<xsl:template name="img_ill">
+	<xsl:param name="alt" />
+	<xsl:param name="title" />
+	<xsl:param name="class" />
+	<img src="{$base_url}/images/ill.png" border="0" alt="{$alt}" title="{$title}" class="{$class}" />
+</xsl:template>
+
+<xsl:template name="img_phone">
+	<xsl:param name="alt" />
+	<xsl:param name="title" />
+	<xsl:param name="class" />
+	<img src="{$base_url}/images/phone.png" alt="{$alt}" title="{$title}" class="{$class}" />
+</xsl:template>
+
+<xsl:template name="img_search">
+	<xsl:param name="alt" />
+	<xsl:param name="title" />
+	<xsl:param name="class" />
+	<img src="{$base_url}/images/famfamfam/magnifier.png" alt="{$alt}" title="{$title}" class="{$class}" />
+</xsl:template>
+
+<xsl:template name="img_add">
+	<xsl:param name="alt" />
+	<xsl:param name="title" />
+	<xsl:param name="class" />
+	<img src="{$base_url}/images/famfamfam/add.png" alt="{$alt}" title="{$title}" class="{$class}" />
+</xsl:template>
+
+<!--
+	#############################
+	#                           #
+	#     SUBMIT TEMPLATES      #
+	#                           #
+	#############################
+-->
 
 <!--
 	#############################

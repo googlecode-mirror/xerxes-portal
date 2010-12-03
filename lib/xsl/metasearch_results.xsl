@@ -84,7 +84,7 @@
 		<xsl:when test="results/facet_name != ''">
 			<h3>
 				<a href="{//base_info[base = 'MERGESET']/url}">
-					<img src="{$base_url}/images/delete.png" alt="{$text_results_hint_remove_limit}" />
+					<xsl:call-template name="img_results_hint_remove_limit" />
 				</a>
 				<xsl:copy-of select="$text_metasearch_results_limit" /><xsl:text>: </xsl:text><xsl:value-of select="results/facet_name" />
 			</h3>

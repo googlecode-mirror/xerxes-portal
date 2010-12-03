@@ -979,3 +979,6 @@ div.autocomplete ul li {
 	border: 1px solid #cbcbcb;
 }
 
+.embedInfo {
+	border: 0px none;
+}
