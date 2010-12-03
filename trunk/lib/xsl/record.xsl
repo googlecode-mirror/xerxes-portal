@@ -327,7 +327,11 @@
 	<xsl:if test="not(/folder)">
 		<div class="saveRecord recordAction" id="saveRecordOption_{$result_set}_{$record_number}">
 			<xsl:call-template name="img_save_record">
-				<xsl:with-param name="id" select="folder_{$result_set}{$record_number}" />
+				<xsl:with-param name="id">
+					<xsl:text>folder_</xsl:text>
+					<xsl:value-of select="$result_set"/>
+					<xsl:value-of select="$record_number" />
+				</xsl:with-param>
 				<xsl:with-param name="class">miniIcon</xsl:with-param>
 				<xsl:with-param name="test" select="//request/session/resultssaved[@key = $record_id]" />
 			</xsl:call-template>
