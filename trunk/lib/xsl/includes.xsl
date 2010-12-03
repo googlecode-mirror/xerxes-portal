@@ -2648,7 +2648,7 @@
 	<xsl:param name="class" />
 	<xsl:param name="alt" />
 	<xsl:param name="test" />
-	<img id="$id" name="$id" width="17" height="15" alt="$alt" border="0" class="$class">
+	<img id="{$id}" name="{$id}" width="17" height="15" alt="$alt" border="0" class="{$class}">
 		<xsl:attribute name="src">
 			<xsl:choose> 
 				<xsl:when test="$test">images/folder_on.png</xsl:when>
