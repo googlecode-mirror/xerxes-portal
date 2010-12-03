@@ -69,7 +69,7 @@ collection_default_new_section_name = '<xsl:value-of select="$text_collection_de
       
       <div id="subjectChoice" class="miniForm">
       
-        <h3>1. Choose a collection</h3>
+        <h3>1. Choose a collection</h3><!-- @todo: i18n -->
         <p>
           <select id="subject" name="subject">
             <!-- if no existing ones, use our default name -->
@@ -85,7 +85,7 @@ collection_default_new_section_name = '<xsl:value-of select="$text_collection_de
       
       <!-- hidden div that will be shown and loaded by javascript -->
       <div id="subcategory_choice" class="miniForm" style="display: none">
-        <h3>2. Choose a section</h3>
+        <h3>2. Choose a section</h3><!-- @todo: i18n -->
         <p>
           <select id="subcategory" name="subcategory">
           </select>
@@ -93,7 +93,7 @@ collection_default_new_section_name = '<xsl:value-of select="$text_collection_de
       </div>
   
       <p>      
-        <input type="submit" name="save" value="save"/>
+        <input type="submit" name="save" value="save" class="submit_save-db-choose-cat{$language_suffix}"/>
       </p>
     </form>
     </xsl:for-each>

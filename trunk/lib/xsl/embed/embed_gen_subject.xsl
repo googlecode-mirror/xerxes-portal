@@ -173,7 +173,7 @@
 
 					<p class="optionInfo"><xsl:copy-of select="$text_snippet_show_css_explain" /></p>
 					
-					<p><input type="submit" value="{$text_snippet_refresh}" class="embed_subject_refresh" /></p>
+					<p><input type="submit" value="{$text_snippet_refresh}" class="embed_subject_refresh{$language_suffix}" /></p>
 					
 					</fieldset>
 					

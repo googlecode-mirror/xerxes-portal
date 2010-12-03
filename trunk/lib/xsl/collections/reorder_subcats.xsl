@@ -28,7 +28,7 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
 </xsl:template>
 
 <xsl:template name="page_name">
-	Reorder Sections
+	Reorder Sections<!-- @todo: i18n -->
 </xsl:template>
 
 <xsl:template name="sidebar">
@@ -61,7 +61,7 @@ Edit subject page for user-created subjects. Only used for non-AJAX version.
 		</xsl:for-each>
 	</table>
 	
-	<p><input type="submit" name="save" value="Update" class="reorder-sections_submit" /></p>
+	<p><input type="submit" name="save" value="Update" class="submit_reorder-sections{$language_suffix}" /></p>
 	
 	</form>
 	

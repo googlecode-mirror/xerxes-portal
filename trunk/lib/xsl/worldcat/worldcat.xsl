@@ -143,7 +143,7 @@
 
 
 			<div id="searchSubmit">
-				<input type="submit" value="Search" />
+				<input type="submit" value="Search" class="submit_searchbox{$language_suffix}" />
 			</div>
 			
 		</fieldset>

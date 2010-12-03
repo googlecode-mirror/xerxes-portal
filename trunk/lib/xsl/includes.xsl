@@ -101,6 +101,30 @@
 	<xsl:variable name="databases_searchable"	select="//config/database_list_searchable" />
 	
 	<xsl:variable name="language" select="//request/lang" />
+
+	<!--
+		For languages other than English, will add "_code" suffix, where code is language code.
+		This can be used to define language-dependent CSS classes, e.g. for buttons.
+		If you wish to turn this off, just define <xsl:variable name="language_suffix" /> in your local includes.xsl
+		
+		XSLT example: <a href='example.html' class='myclass{$language_suffix}'></a>
+		CSS example:
+			.myclass {
+				background-image:url('english-label.png')
+			}
+			.myclass_ger {
+				background-image:url('german-label.png')
+			}
+	-->
+	<xsl:variable name="language_suffix">
+		<xsl:choose>
+			<xsl:when test="//request/lang and //request/lang != 'eng'">
+				<xsl:text>_</xsl:text><xsl:value-of select="//request/lang" />
+			</xsl:when>
+			<xsl:otherwise>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
 	
 	<xsl:variable name="db_description_multilingual">
 		<xsl:choose>
@@ -646,7 +670,7 @@
 				</xsl:call-template>
 				<xsl:text>&nbsp;</xsl:text>
 			</span>
-			<input class="searchbox_submit" type="submit" name="Submit" value="{$text_searchbox_go}" />
+			<input class="submit_searchbox{$language_suffix}" type="submit" name="Submit" value="{$text_searchbox_go}" />
 		</div>
 		
 		<xsl:if test="results/search/spelling != ''">
@@ -788,7 +812,7 @@
 			
 			<input type="text" name="tags" id="tags-{$id}" class="tagsInput" value="{$tag_list}" />			
 			<xsl:text> </xsl:text>
-			<input id="submit-{$id}" type="submit" name="submitButton" value="Update" class="tagsSubmit" />
+			<input id="submit-{$id}" type="submit" name="submitButton" value="Update" class="tagsSubmit{$language_suffix}" />
 		</form>
 	</div>
 	
@@ -946,7 +970,7 @@
 				<xsl:attribute name="value"><xsl:value-of select="request/query" /></xsl:attribute>
 			</input>
 			<xsl:text> </xsl:text>
-			<input type="submit" value="{$text_searchbox_go}" />
+			<input type="submit" value="{$text_searchbox_go}" class="submit_searchbox{$language_suffix}" />
 		</div>		
 	</form>
 	
@@ -1357,7 +1381,7 @@
 		<input type="hidden" name="new_subcategory_name" value="{$text_collection_default_new_section_name}"/>
 		
 		<p><label for="new_subject_name"><xsl:copy-of select="$text_header_my_collections_new" /></label></p>
-		<input type="text" id="new_subject_name" name="new_subject_name"/><xsl:text> </xsl:text><input type="submit" class="col_add_submit" name="add" value="{$text_header_my_collections_add}" />
+		<input type="text" id="new_subject_name" name="new_subject_name"/><xsl:text> </xsl:text><input type="submit" class="submit_col_add{$language_suffix}" name="add" value="{$text_header_my_collections_add}" />
 		
 		</form>
 	</div>
@@ -2060,7 +2084,7 @@
 	<div style="margin-bottom: 1em">
 		<input type="text" name="query" value="{$query}" />
 		<xsl:text> </xsl:text>
-		<input class="searchbox_submit" type="submit" name="Submit" value="{$text_searchbox_go}" />
+		<input class="submit_searchbox{$language_suffix}" type="submit" name="Submit" value="{$text_searchbox_go}" />
 	</div>
 	
 </xsl:template>
@@ -2205,12 +2229,12 @@
 			
 			<input id="query" name="query" type="text" size="32" value="{$query}" /><xsl:text> </xsl:text>
 			
-			<input type="submit" name="Submit" value="GO" />
+			<input type="submit" name="Submit" value="GO" class="submit_searchbox{$language_suffix}" />
 		
 		</div>
 		
 		<xsl:if test="results/spelling != ''">
-			<p class="spellSuggest error">Did you mean: <a href="{results/spelling/@url}"><xsl:value-of select="results/spelling" /></a></p>
+			<p class="spellSuggest error"><xsl:value-of select="$text_searchbox_spelling_error" /><a href="{results/spelling/@url}"><xsl:value-of select="results/spelling" /></a></p>
 		</xsl:if>	
 		
 		<xsl:call-template name="generic_advanced_search_option" />
@@ -2750,14 +2774,6 @@
 	<xsl:param name="class" />
 	<img src="{$base_url}/images/famfamfam/add.png" alt="{$alt}" title="{$title}" class="{$class}" />
 </xsl:template>
-
-<!--
-	#############################
-	#                           #
-	#     SUBMIT TEMPLATES      #
-	#                           #
-	#############################
--->
 
 <!--
 	#############################

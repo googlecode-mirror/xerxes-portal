@@ -197,6 +197,8 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	<xsl:variable name="text_metasearch_hits_unfinished">
 		Pravděpodobně má některá z databází technické potíže. Můžete se později vrátit a opakovat vyhledávání.
 	</xsl:variable>
+	<xsl:variable name="text_metasearch_hits_in_progress">Hledání pořád probíhá. </xsl:variable>
+	<xsl:variable name="text_metasearch_hits_check_status">Zkontrolovat stav hledání</xsl:variable>
 	
 	<xsl:variable name="text_metasearch_results_limit">Omezení</xsl:variable>
 	<xsl:variable name="text_metasearch_results_summary">

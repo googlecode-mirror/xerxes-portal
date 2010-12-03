@@ -51,7 +51,7 @@
 		
 		<xsl:call-template name="folder_header_limit" />
 		
-		<input id="export_single" type="submit" name="Submit" value="{$text_folder_export_export}" />
+		<input id="export_single{$language_suffix}" type="submit" name="Submit" value="{$text_folder_export_export}" />
 			
 		<xsl:call-template name="folder_brief_results" />
 		

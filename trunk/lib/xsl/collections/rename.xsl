@@ -63,14 +63,14 @@ Edit subject page for user-created subjects.
 
 
 	<h1><xsl:call-template name="page_name" /> 
-	<xsl:choose>
+	<xsl:choose><!-- @todo: i18n -->
 		<xsl:when test="string(//request/subcategory)">Section</xsl:when>
 		<xsl:otherwise>Collection</xsl:otherwise>
 	</xsl:choose>
 	</h1>
 	
-	<p>Name: <input type="text" name="new_name" value="{$old_name}"/>
-	<xsl:text> </xsl:text><input type="submit" name="save" value="save"/></p>
+	<p>Name: <input type="text" name="new_name" value="{$old_name}"/><!-- @todo: i18n -->
+	<xsl:text> </xsl:text><input type="submit" name="save" value="save" class="submit_collection_rename{$language_suffix}" /></p>
 	
 	</form>
 	

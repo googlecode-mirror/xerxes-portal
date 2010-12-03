@@ -41,7 +41,7 @@
 	
 	<h1><xsl:call-template name="page_name" /></h1>
 	<p><xsl:copy-of select="$text_authentication_logout_confirm" /></p>
-	<p><input type="submit" class="logout_submit" name="Submit" value="{$text_authentication_logout_pagename}" /></p>
+	<p><input type="submit" class="submit_logout{$language_suffix}" name="Submit" value="{$text_authentication_logout_pagename}" /></p>
 	</form>
 	
 </xsl:template>
