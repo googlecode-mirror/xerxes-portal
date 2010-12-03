@@ -317,7 +317,7 @@
 					<xsl:otherwise>
 						<img src="{$image_sfx}" alt="" border="0" class="miniIcon linkResolverLink "/>
 						<xsl:text> </xsl:text>
-						<xsl:text> <xsl:copy-of select="$text_link_resolver_check" /> </xsl:text>
+						<xsl:copy-of select="$text_link_resolver_check" /> 
 					</xsl:otherwise>
 				</xsl:choose>
 			</a>
