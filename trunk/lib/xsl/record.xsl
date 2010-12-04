@@ -471,13 +471,13 @@
 </xsl:template>
 
 <xsl:template name="record-subjects">
-	<xsl:if test="subjects">
+	<xsl:if test="subject">
 		<h2><xsl:copy-of select="$text_record_subjects" />:</h2>
 		<ul>
-			<xsl:for-each select="subjects/subject">
-				<li><xsl:value-of select="text()" /></li>
+                  	<xsl:for-each select="subject">
+				<li><xsl:value-of select="@value" /></li>
 			</xsl:for-each>
-		</ul>
+                </ul>
 	</xsl:if>
 </xsl:template>
 
