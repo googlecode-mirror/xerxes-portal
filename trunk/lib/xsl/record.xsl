@@ -190,12 +190,22 @@
 				<xsl:choose>
 					<xsl:when test="book_title">
 						<xsl:value-of select="book_title" />
-					</xsl:when>
+                                        </xsl:when>
 					<xsl:otherwise>
 						<xsl:value-of select="journal" />
 					</xsl:otherwise>
 				</xsl:choose>
 			</dd>
+			<xsl:if test="format = 'Book Chapter'">
+                            <xsl:if test="publisher">
+	                        <dt><xsl:copy-of select="$text_record_publisher" />:</dt>
+	                         <dd>
+	                               <xsl:value-of select="place" /><xsl:text>: </xsl:text>
+	                               <xsl:value-of select="publisher" /><xsl:text>, </xsl:text>
+	                               <xsl:value-of select="year" />
+	                          </dd>
+                            </xsl:if>
+                         </xsl:if>
 		</xsl:when>
 		<xsl:when test="format = 'Book'">
 			<xsl:if test="publisher">
