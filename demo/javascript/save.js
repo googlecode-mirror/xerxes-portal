@@ -149,7 +149,7 @@ function saveRecord(groupID,resultSet,recordNumber)
 					$$('#saveRecordOption_' + resultSet+ '_' + recordNumber + ' .temporary_login_note').each(function(node) {
 						node.remove();
 					});
-					$('folder_' + resultSet + recordNumber).src = "images/folder.png";
+					$('folder_' + resultSet + recordNumber).src = "images/folder.gif";
 					$(id).update( xerxes_labels['text_results_record_save_it'] );
 					$(id).removeClassName("saved");
 					
@@ -161,7 +161,7 @@ function saveRecord(groupID,resultSet,recordNumber)
 				else
 				{
 					numSavedRecords++;
-					$('folder_' + resultSet + recordNumber).src = "images/folder_on.png";
+					$('folder_' + resultSet + recordNumber).src = "images/folder_on.gif";
 					
 					// different label depending on whether they are logged in or not. 
 					// we tell if they are logged in or not, as well as find the login
@@ -235,10 +235,10 @@ function saveRecord(groupID,resultSet,recordNumber)
 				// change master folder image
 				
 				if ( numSavedRecords > 0 ) {
-					$('folder').src = 'images/folder_on.png';
+					$('folder').src = 'images/folder_on.gif';
 				}
 				else {
-					$('folder').src = 'images/folder.png';
+					$('folder').src = 'images/folder.gif';
 				}
 			}
 		});

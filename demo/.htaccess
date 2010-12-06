@@ -36,13 +36,6 @@ RewriteRule ^categories/([a-zA-Z\-]{1,})$ index.php?base=databases&action=subjec
 RewriteRule ^database/([a-zA-Z0-9]{1,})$ index.php?base=databases&action=database&id=$1 [QSA]
 RewriteRule ^databases/([A-Z]{1}[a-zA-Z]{1,})$ index.php?base=databases&action=old-subject&category=$1 [QSA]
 
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule images/(.*).gif images/$1.png
-
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule images/(.*).png images/$1.gif
-
-
 ###############
 # pretty urls #
 ###############
