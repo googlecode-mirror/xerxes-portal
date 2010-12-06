@@ -248,7 +248,7 @@ a:hover {
 
 .raisedBox {
 	padding: 1.8em;
-	background-image: url(../images/bg.png);
+	background-image: url(../images/bg.gif);
 	background-repeat: repeat-x;
 	background-position: bottom;
 	border-top-width: 1px;
@@ -294,7 +294,7 @@ a:hover {
 }
 
 .iconCommand.delete {
-  background-image: url(../images/delete.png);
+  background-image: url(../images/delete.gif);
 }
 
 .iconCommand.add {
@@ -302,7 +302,7 @@ a:hover {
 }
 
 .iconCommand.reorder {
-  background-image: url(../images/reorder.png);
+  background-image: url(../images/reorder.gif);
 }
 
 .iconCommand.edit {
@@ -830,11 +830,11 @@ div.autocomplete ul li {
   padding: 0;
 }
 #recordFullText .umlaut_section.fulltext li {
-  background: transparent url(../images/html.png) no-repeat scroll;
+  background: transparent url(../images/html.gif) no-repeat scroll;
   padding: 0 0 3px 21px
 }
 #recordFullText .umlaut_section.excerpts li {
-  background: transparent url(../images/book_open.png) no-repeat scroll;
+  background: transparent url(../images/book_open.gif) no-repeat scroll;
   padding: 0 0 3px 21px
 }
 
@@ -903,7 +903,7 @@ div.autocomplete ul li {
 	float: left;
 	width: 99%;
 	line-height: normal;
- 	background: #fff url("../images/tabs/bg.png") repeat-x bottom;
+ 	background: #fff url("../images/tabs/bg.gif") repeat-x bottom;
 	padding-left: 10px;
 	margin-right: 10px;
 }
@@ -973,7 +973,7 @@ div.autocomplete ul li {
 	padding: 10px; 
 	padding-left: 30px; 
 	margin: 2px;
-	background-image: url(../images/facet-bg.png);
+	background-image: url(../images/facet-bg.gif);
 	background-repeat:repeat-x;
 	background-color: #efefef; 
 	border: 1px solid #cbcbcb;

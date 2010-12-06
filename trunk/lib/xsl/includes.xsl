@@ -2625,12 +2625,12 @@
 <xsl:variable name="app_mini_icon_url"		select="concat($base_url, '/images/famfamfam/page_find.png')" />
 <xsl:variable name="image_sfx"			select="concat($base_url, '/images/sfx.gif')" />
 <xsl:variable name="img_src_original_record"	select="concat($base_url, '/images/famfamfam/link.png')" />
-<xsl:variable name="img_src_holdings"		select="concat($base_url, '/images/book.png')" />
+<xsl:variable name="img_src_holdings"		select="concat($base_url, '/images/book.gif')" />
 <xsl:variable name="img_src_chain"		select="concat($base_url, '/images/famfamfam/link.png')" />
 
 <xsl:template name="img_databases_az_hint_info">
-	<img alt="{$text_databases_az_hint_info}" title="{$text_databases_az_hint_info}" src="images/info.png" class="iconInfo miniIcon">
-		<xsl:attribute name="src"><xsl:value-of select="/knowledge_base/config/base_url" />/images/info.png</xsl:attribute>
+	<img alt="{$text_databases_az_hint_info}" title="{$text_databases_az_hint_info}" src="images/info.gif" class="iconInfo miniIcon">
+		<xsl:attribute name="src"><xsl:value-of select="/knowledge_base/config/base_url" />/images/info.gif</xsl:attribute>
 	</img>
 </xsl:template>
 
@@ -2640,7 +2640,7 @@
 </xsl:template>
 
 <xsl:template name="img_refereed">
-	<img src="images/refereed_hat.png" width="20" height="14" alt="" />
+	<img src="images/refereed_hat.gif" width="20" height="14" alt="" />
 </xsl:template>
 
 <xsl:template name="img_save_record">
@@ -2651,8 +2651,8 @@
 	<img id="{$id}" name="{$id}" width="17" height="15" alt="$alt" border="0" class="{$class}">
 		<xsl:attribute name="src">
 			<xsl:choose> 
-				<xsl:when test="$test">images/folder_on.png</xsl:when>
-				<xsl:otherwise>images/folder.png</xsl:otherwise>
+				<xsl:when test="$test">images/folder_on.gif</xsl:when>
+				<xsl:otherwise>images/folder.gif</xsl:otherwise>
 			</xsl:choose>
 		</xsl:attribute>
 	</img>
@@ -2662,7 +2662,7 @@
 	<xsl:param name="alt" />
 	<xsl:param name="title" />
 	<xsl:param name="class" />
-	<img src="{$base_url}/images/delete.png" alt="{$alt}" title="{$title}" class="{$class}" />
+	<img src="{$base_url}/images/delete.gif" alt="{$alt}" title="{$title}" class="{$class}" />
 </xsl:template>
 
 <xsl:template name="img_facet_remove">
@@ -2676,91 +2676,91 @@
 	<xsl:param name="alt" />
 	<xsl:param name="title" />
 	<xsl:param name="class" />
-	<img src="images/book.png" alt="{$alt}" title="{$title}" class="{$class}" />
+	<img src="images/book.gif" alt="{$alt}" title="{$title}" class="{$class}" />
 </xsl:template>
 
 <xsl:template name="img_results_hint_remove_limit">
 	<xsl:param name="alt" select="$text_results_hint_remove_limit" />
 	<xsl:param name="title" />
 	<xsl:param name="class" />
-	<img src="{$base_url}/images/delete.png" alt="{$alt}" title="{$title}" class="{$class}" />
+	<img src="{$base_url}/images/delete.gif" alt="{$alt}" title="{$title}" class="{$class}" />
 </xsl:template>
 
 <xsl:template name="img_az_info">
 	<xsl:param name="alt" select="$text_results_hint_remove_limit" />
 	<xsl:param name="title" />
 	<xsl:param name="class" />
-	<img src="{$base_url}/images/info.png" alt="{$alt}" title="{$title}" class="{$class}" />
+	<img src="{$base_url}/images/info.gif" alt="{$alt}" title="{$title}" class="{$class}" />
 </xsl:template>
 
 <xsl:template name="img_info_about">
 	<xsl:param name="alt" />
 	<xsl:param name="title" />
 	<xsl:param name="class" />
-	<img src="{$base_url}/images/info.png" alt="{$alt}" title="{$title}" class="{$class}" />
+	<img src="{$base_url}/images/info.gif" alt="{$alt}" title="{$title}" class="{$class}" />
 </xsl:template>
 
 <xsl:template name="img_embed_info">
 	<xsl:param name="alt">info</xsl:param>
 	<xsl:param name="title" />
 	<xsl:param name="class" />
-	<img src="{$base_url}/images/info.png" alt="{$alt}" title="{$title}" class="{$class}" />
+	<img src="{$base_url}/images/info.gif" alt="{$alt}" title="{$title}" class="{$class}" />
 </xsl:template>
 
 <xsl:template name="img_book_not_available">
 	<xsl:param name="alt" />
 	<xsl:param name="title" />
 	<xsl:param name="class" />
-	<img src="images/book-out.png" alt="{$alt}" title="{$title}" class="{$class}" />
+	<img src="images/book-out.gif" alt="{$alt}" title="{$title}" class="{$class}" />
 </xsl:template>
 
 <xsl:template name="img_format_pdf">
 	<xsl:param name="alt" />
 	<xsl:param name="title" />
 	<xsl:param name="class" />
-	<img src="{$base_url}/images/pdf.png" width="16" height="16" border="0" alt="{$alt}" title="{$title}" class="{$class}" />
+	<img src="{$base_url}/images/pdf.gif" width="16" height="16" border="0" alt="{$alt}" title="{$title}" class="{$class}" />
 </xsl:template>
 
 <xsl:template name="img_format_html">
 	<xsl:param name="alt" />
 	<xsl:param name="title" />
 	<xsl:param name="class" />
-	<img src="{$base_url}/images/html.png" width="16" height="16" border="0" alt="{$alt}" title="{$title}" class="{$class}" />
+	<img src="{$base_url}/images/html.gif" width="16" height="16" border="0" alt="{$alt}" title="{$title}" class="{$class}" />
 </xsl:template>
 
 <xsl:template name="img_format_unknown">
 	<xsl:param name="alt" />
 	<xsl:param name="title" />
 	<xsl:param name="class" />
-	<img src="{$base_url}/images/html.png" width="16" height="16" border="0" alt="{$alt}" title="{$title}" class="{$class}" />
+	<img src="{$base_url}/images/html.gif" width="16" height="16" border="0" alt="{$alt}" title="{$title}" class="{$class}" />
 </xsl:template>
 
 <xsl:template name="img_databases_subject_hint_restricted">
 	<xsl:param name="alt" select="$text_databases_subject_hint_restricted" />
 	<xsl:param name="title" select="$text_databases_subject_hint_restricted" />
 	<xsl:param name="class" />
-	<img src="{$base_url}/images/lock.png" alt="{$alt}" title="{$title}" class="{$class}" />
+	<img src="{$base_url}/images/lock.gif" alt="{$alt}" title="{$title}" class="{$class}" />
 </xsl:template>
 
 <xsl:template name="img_grey_checkbox">
 	<xsl:param name="alt" select="$text_databases_subject_hint_restricted" />
 	<xsl:param name="title" select="$text_databases_subject_hint_native_only" />
 	<xsl:param name="class" />
-	<img src="{$base_url}/images/link-out.png" alt="{$alt}" title="{$title}" class="{$class}" />
+	<img src="{$base_url}/images/link-out.gif" alt="{$alt}" title="{$title}" class="{$class}" />
 </xsl:template>
 
 <xsl:template name="img_back">
 	<xsl:param name="alt" />
 	<xsl:param name="title" />
 	<xsl:param name="class" />
-	<img src="{$base_url}/images/back.png" alt="{$alt}" title="{$title}" class="{$class}" />
+	<img src="{$base_url}/images/back.gif" alt="{$alt}" title="{$title}" class="{$class}" />
 </xsl:template>
 
 <xsl:template name="img_ill">
 	<xsl:param name="alt" />
 	<xsl:param name="title" />
 	<xsl:param name="class" />
-	<img src="{$base_url}/images/ill.png" border="0" alt="{$alt}" title="{$title}" class="{$class}" />
+	<img src="{$base_url}/images/ill.gif" border="0" alt="{$alt}" title="{$title}" class="{$class}" />
 </xsl:template>
 
 <xsl:template name="img_phone">
