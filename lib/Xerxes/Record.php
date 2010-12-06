@@ -2768,6 +2768,11 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		return $this->format;
 	}
 	
+	public function setFormat($format)
+	{
+		$this->format = $format;
+	}
+	
 	public function getTechnology()
 	{
 		return $this->technology;
