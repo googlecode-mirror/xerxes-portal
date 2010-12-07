@@ -1795,31 +1795,36 @@ abstract class Xerxes_Framework_Search
 
 		$ids = $this->extractRecordIDs();
 		
-		// we do this all in one database query for speed
-				
-		$arrResults = $this->data_map->getCache($strSource,$ids);
+		// only if there are actually records
 		
-		foreach ( $arrResults as $cache )
+		if ( count($ids) > 0 )
 		{
-			$item = unserialize($cache->data);
-			
-			if ( ! $item instanceof Xerxes_Record_Items )
-			{
-				throw new Exception("cached item (" . $cache->id. ") is not an instance of Xerxes_Record_Items");
-			}
-			
-			// now associate this item with its corresponding record
-		
-			for( $x = 0; $x < count($this->results); $x++ )
-			{
-				$xerxes_record = $this->results[$x];
-				
-				if ( $xerxes_record->getRecordID() == $cache->id )
-				{
-					$xerxes_record->addItems($item);
-				}
+			// we do this all in one database query for speed
 					
-				$this->results[$x] = $xerxes_record;
+			$arrResults = $this->data_map->getCache($strSource,$ids);
+			
+			foreach ( $arrResults as $cache )
+			{
+				$item = unserialize($cache->data);
+				
+				if ( ! $item instanceof Xerxes_Record_Items )
+				{
+					throw new Exception("cached item (" . $cache->id. ") is not an instance of Xerxes_Record_Items");
+				}
+				
+				// now associate this item with its corresponding record
+			
+				for( $x = 0; $x < count($this->results); $x++ )
+				{
+					$xerxes_record = $this->results[$x];
+					
+					if ( $xerxes_record->getRecordID() == $cache->id )
+					{
+						$xerxes_record->addItems($item);
+					}
+						
+					$this->results[$x] = $xerxes_record;
+				}
 			}
 		}
 	}
