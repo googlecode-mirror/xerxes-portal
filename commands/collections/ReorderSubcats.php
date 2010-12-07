@@ -83,7 +83,7 @@ class Xerxes_Command_ReorderSubcats extends Xerxes_Command_Collections
 			$objData->updateUserSubcategoryProperties( $subcategory );
 		}
 		
-		$this->returnWithMessage( "Section order changed", $arrDefaultReturn );
+		$this->returnWithMessage( $this->getLabel("text_collections_section_order_changed"), $arrDefaultReturn );
 		
 		return 1;
 	}

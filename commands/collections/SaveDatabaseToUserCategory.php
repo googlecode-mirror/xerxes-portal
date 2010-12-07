@@ -75,7 +75,7 @@ class Xerxes_Command_SaveDatabaseToUserCategory extends Xerxes_Command_Collectio
 		
 		if ( ! $strDatabaseID )
 		{
-			$this->returnWithMessage( "New section created" );
+			$this->returnWithMessage( $this->getLabel("text_collections_section_new") );
 			return 1;
 		}
 		
@@ -101,7 +101,7 @@ class Xerxes_Command_SaveDatabaseToUserCategory extends Xerxes_Command_Collectio
 		{
 			if ( $db->metalib_id == $strDatabaseID )
 			{
-				$this->returnWithMessage( "Database was already saved to  " . $subcategory->name . " in " . $category->name );
+				$this->returnWithMessage( $this->getLabel("text_collections_database_already_saved", $subcategory->name, $category->name) );
 				return 1;
 			}
 		}
@@ -110,7 +110,7 @@ class Xerxes_Command_SaveDatabaseToUserCategory extends Xerxes_Command_Collectio
 		
 		// send them back where they came from, with a message.
 		 
-		$this->returnWithMessage( "Saved database in " . $category->name );
+		$this->returnWithMessage( $this->getLabel("text_collections_database_saved", $category->name) );
 		
 		return 1;
 	}

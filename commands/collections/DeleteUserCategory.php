@@ -32,7 +32,7 @@ class Xerxes_Command_DeleteUserCategory extends Xerxes_Command_Collections
 		$objData->deleteUserCreatedCategory( $category );
 		
 		// Send them back where they came from, with a message. 
-		$this->returnWithMessage( "Deleted '" . $category->name . "'", array ("base" => "collections", "action" => "list", "username" => $strUsername ) );
+		$this->returnWithMessage( $this->getLabel("text_collections_deleted_category", $category->name), array ("base" => "collections", "action" => "list", "username" => $strUsername ) );
 		
 		return 1;
 	}

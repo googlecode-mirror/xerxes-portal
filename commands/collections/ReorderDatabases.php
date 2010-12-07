@@ -82,7 +82,7 @@ class Xerxes_Command_ReorderDatabases extends Xerxes_Command_Collections
 			$objData->updateUserDatabaseOrder( $db, $subcategory, $i + 1 );
 		}
 		
-		$this->returnWithMessage( "Database order changed", $arrDefaultReturn );
+		$this->returnWithMessage( $this->getLabel("text_collections_database_order_changed"), $arrDefaultReturn );
 		
 		return 1;
 	}

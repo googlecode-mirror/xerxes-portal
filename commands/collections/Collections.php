@@ -34,6 +34,15 @@ abstract class Xerxes_Command_Collections extends Xerxes_Framework_Command
 		$this->request->setRedirect( $url );
 	}
 	
+	public function getLabel($id, $param1 = null, $param2 = null, $param3 = null)
+	{
+		$label = Xerxes_Framework_Labels::getInstance();
+		$value = $label->getLabel($id);
+ 		$value = sprintf($value, $param1, $param2, $param3);
+	 	return $value;
+	}
+	
+	
 	/**
 	 * Find the subcategory with the given id, from the Xerxes_Data_Category object passed in.
 	 *

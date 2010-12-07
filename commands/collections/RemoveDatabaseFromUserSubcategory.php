@@ -38,7 +38,7 @@ class Xerxes_Command_RemoveDatabaseFromUserSubcategory extends Xerxes_Command_Co
 		$objData->removeDatabaseFromUserCreatedSubcategory( $strDatabaseID, $subcategory );
 		
 		// Send them back where they came from, with a message. 
-		$this->returnWithMessage( "Removed database" );
+		$this->returnWithMessage( $this->getLabel("text_collections_removed_database") );
 		
 		return 1;
 	}

@@ -41,17 +41,22 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	
 	<xsl:variable name="text_collections_add_database">Add databases</xsl:variable>
 	<xsl:variable name="text_collections_add_section">Add a new section:</xsl:variable>
-	<xsl:variable name="text_collections_reorder_db_title">Reorder Databases</xsl:variable>
-	<xsl:variable name="text_collections_reorder_subcat_title">Reorder Sections</xsl:variable>
+	<xsl:variable name="text_collections_blank_name">Blank name, not changed</xsl:variable>
+	<xsl:variable name="text_collections_cancelled">Cancelled</xsl:variable>
 	<xsl:variable name="text_collections_change_database_order">Change database order</xsl:variable>
 	<xsl:variable name="text_collections_change_name">Change collection name</xsl:variable>
 	<xsl:variable name="text_collections_change_section_name">Change section name</xsl:variable>
 	<xsl:variable name="text_collections_change_section_order">Change section order</xsl:variable>
 	<xsl:variable name="text_collections_created_by">Created by <xsl:value-of select="/*/category/@owned_by_user" /></xsl:variable>
+	<xsl:variable name="text_collections_database_already_saved">Database was already saved to %s in %s</xsl:variable>
+	<xsl:variable name="text_collections_database_order_changed">Database order changed</xsl:variable>
+	<xsl:variable name="text_collections_database_saved">Saved database in %s</xsl:variable>
 	<xsl:variable name="text_collections_delete_collection">Delete collection</xsl:variable>
 	<xsl:variable name="text_collections_delete_collection_confirm">Are you sure you want to delete this collection?</xsl:variable>
 	<xsl:variable name="text_collections_delete_section">Delete section</xsl:variable>
 	<xsl:variable name="text_collections_delete_section_confirm">Are you sure you want to delete this section?</xsl:variable>
+	<xsl:variable name="text_collections_deleted_category">Deleted %s</xsl:variable>
+	<xsl:variable name="text_collections_deleted_subcategory">Deleted %s</xsl:variable>
 	<xsl:variable name="text_collections_done_editing">I'm done editing!</xsl:variable>
 	<xsl:variable name="text_collections_edit">Add databases and Edit</xsl:variable>
 	<xsl:variable name="text_collections_list_databases">List databases matching: </xsl:variable>
@@ -61,7 +66,12 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	<xsl:variable name="text_collections_public_url">Public URL:</xsl:variable>
 	<xsl:variable name="text_collections_publish">Make collection:</xsl:variable>
 	<xsl:variable name="text_collections_remove_searchbox">I'm done adding databases!</xsl:variable>
-	
+	<xsl:variable name="text_collections_removed_database">Removed Database</xsl:variable>
+	<xsl:variable name="text_collections_renamed">Renamed</xsl:variable>
+	<xsl:variable name="text_collections_reorder_db_title">Reorder Databases</xsl:variable>
+	<xsl:variable name="text_collections_reorder_subcat_title">Reorder Sections</xsl:variable>
+	<xsl:variable name="text_collections_section_new">New section created</xsl:variable>
+	<xsl:variable name="text_collections_section_order_changed">Section order changed</xsl:variable>
 	
 	<xsl:variable name="text_database_availability">Availability:</xsl:variable>
 	<xsl:variable name="text_database_available_registered">Only available to registered users.</xsl:variable>

@@ -24,7 +24,7 @@ class Xerxes_Command_EditUserCategory extends Xerxes_Command_Collections
 		
 		if ( $this->request->getProperty( "cancel" ) )
 		{
-			$this->returnWithMessage( "Cancelled", $arrDefaultReturn );
+			$this->returnWithMessage( $this->getLabel("text_collections_cancelled"), $arrDefaultReturn );
 			return 1;
 		}
 		
