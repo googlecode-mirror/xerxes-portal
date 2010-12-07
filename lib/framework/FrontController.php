@@ -116,14 +116,11 @@ class Xerxes_Framework_FrontController
 			#   DEFAULTS       #
 			####################
 			
-			// language
+			// labels
 			
+			$objLabels = Xerxes_Framework_Labels::getInstance();
 			$lang = $objRequest->getProperty("lang");
-			
-			if ( $lang != "" )
-			{
-				$objRegistry->setConfig("LANGUAGE", $lang);
-			}
+			$objLabels->init($lang)	;		
 			
 			// make sure application_name is passthrough, and has a value.
 

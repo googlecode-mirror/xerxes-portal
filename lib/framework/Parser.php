@@ -146,9 +146,8 @@
 			
 			### language file
 			
-			$registry = Xerxes_Framework_Registry::getInstance();
-			
-			$language = $registry->getConfig("LANGUAGE");
+			$request = Xerxes_Framework_Request::getInstance();
+			$language = $request->getProperty("lang");
 			
 			// english file is included by default
 			
