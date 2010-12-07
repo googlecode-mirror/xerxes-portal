@@ -209,16 +209,15 @@ class EzProxyExportGen {
   protected function getDomain($parsed_url) {
     $host = $parsed_url['host'];
     
-    
     // If host is numeric, we can't create a domain statement.
     // It's bad to use a numeric host, but oh well. 
     if (preg_match("/^(\d|\.)+$/", $host)) {
       return $host;
     }
-    $components = explode("\.", $host);
+    $components = explode('.', $host);
+    
     if ( count($components) > 2 ) {
       $domain = join('.', array_slice($components, 1));
-      
       // Make sure it's not on our configured avoid list
       if (! $this->shouldAvoidDomain($domain)) {
         return $domain;
