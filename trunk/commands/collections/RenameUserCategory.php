@@ -31,7 +31,7 @@ class Xerxes_Command_RenameUserCategory extends Xerxes_Command_Collections
 		
 		if ( $this->request->getProperty( "cancel" ) )
 		{
-			$this->returnWithMessage( "Cancelled", $arrDefaultReturn );
+			$this->returnWithMessage( $this->getLabel("text_collections_cancelled"), $arrDefaultReturn );
 			return 1;
 		}
 		
@@ -42,7 +42,7 @@ class Xerxes_Command_RenameUserCategory extends Xerxes_Command_Collections
 		
 		if ( empty( $strNewName ) )
 		{
-			$this->returnWithMessage( "Blank name, not changed.", $arrDefaultReturn );
+			$this->returnWithMessage( $this->getLabel("text_collections_blank_name"), $arrDefaultReturn );
 			return 1;
 		}
 		
@@ -71,7 +71,7 @@ class Xerxes_Command_RenameUserCategory extends Xerxes_Command_Collections
 		// new name if it's been changed!
 		
 		$arrDefaultReturn["subject"] = $category->normalized;
-		$this->returnWithMessage( "Renamed", $arrDefaultReturn );
+		$this->returnWithMessage( $this->getLabel("text_collections_renamed"), $arrDefaultReturn );
 		
 		return 1;
 	}
