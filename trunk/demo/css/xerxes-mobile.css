@@ -154,7 +154,7 @@ ul.databaseSectionList li, #databases_categories li, .result, #bd .recordFullTex
 
 /** books: this is hacked in here until we get the search arch finished **/
 
-.tabs {
+#tabnav {
 	display: none;
 }
 
