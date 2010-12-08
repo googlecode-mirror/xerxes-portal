@@ -115,8 +115,11 @@
 			<xsl:variable name="id_meta" select="metalib_id" />		
 		
 			<div class="resultsTitle">
+			
 				<a target="{$link_target_databases}">
-					<xsl:attribute name="href"><xsl:value-of select="xerxes_native_link_url" /></xsl:attribute>
+					<xsl:if test="link_native_home">
+						<xsl:attribute name="href"><xsl:value-of select="xerxes_native_link_url" /></xsl:attribute>
+					</xsl:if>
 					<xsl:value-of select="title_display" />
 				</a>
 				
