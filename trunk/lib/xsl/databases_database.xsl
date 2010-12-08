@@ -108,15 +108,18 @@
 		</xsl:choose>
 		
 		<dl class="databaseSummary">
-			<div class="databaseLink">
-			<dt><xsl:copy-of select="$text_database_link" /></dt>
-			<dd>		
-				<a target="{$link_target_databases}">
-				<xsl:attribute name="href"><xsl:value-of select="xerxes_native_link_url" /></xsl:attribute>
-				<xsl:copy-of select="$text_database_go_to_database" />
-				</a>
-			</dd>
-			</div>
+
+			<xsl:if test="link_native_home">
+				<div class="databaseLink">
+				<dt><xsl:copy-of select="$text_database_link" /></dt>
+				<dd>		
+					<a target="{$link_target_databases}">
+					<xsl:attribute name="href"><xsl:value-of select="xerxes_native_link_url" /></xsl:attribute>
+					<xsl:copy-of select="$text_database_go_to_database" />
+					</a>
+				</dd>
+				</div>
+			</xsl:if>
 			
 			<div class="databaseAvailability">
 			<dt><xsl:copy-of select="$text_database_availability" /></dt>
