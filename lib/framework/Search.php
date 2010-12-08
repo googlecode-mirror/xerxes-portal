@@ -105,8 +105,9 @@ abstract class Xerxes_Framework_Search
 		
 		$include_original_main = $this->registry->getConfig("INCLUDE_ORIGINAL_XML", false, false);
 		$include_original_module = $this->config->getConfig("INCLUDE_ORIGINAL_XML", false, false);
+		$include_original_url = $this->request->getProperty("original");
 		
-		if ( $include_original_main == true || $include_original_module == true )
+		if ( $include_original_main == true || $include_original_module == true || $include_original_url != "")
 		{
 			$this->include_original = true;
 		}
