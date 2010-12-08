@@ -60,6 +60,8 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	<xsl:variable name="text_collections_done_editing">I'm done editing!</xsl:variable>
 	<xsl:variable name="text_collections_edit">Add databases and Edit</xsl:variable>
 	<xsl:variable name="text_collections_list_databases">List databases matching: </xsl:variable>
+	<xsl:variable name="text_collections_made_private">Collection made private.</xsl:variable>
+	<xsl:variable name="text_collections_made_published">Collection published.</xsl:variable>
 	<xsl:variable name="text_collections_no_matches">No databases found matching</xsl:variable>	
 	<xsl:variable name="text_collections_private">Private</xsl:variable>
 	<xsl:variable name="text_collections_public">Public</xsl:variable>

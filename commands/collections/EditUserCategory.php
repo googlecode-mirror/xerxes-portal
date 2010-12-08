@@ -74,11 +74,11 @@ class Xerxes_Command_EditUserCategory extends Xerxes_Command_Collections
 				
 				if ( $boolPublished )
 				{
-					$message .= " Collection published. ";
+					$message .= $this->getLabel("text_collections_made_published");
 				} 
 				else
 				{
-					$message .= " Collection made private. ";
+					$message .= $this->getLabel("text_collections_made_private");
 				}
 			}
 			$objData->updateUserCategoryProperties( $category );
