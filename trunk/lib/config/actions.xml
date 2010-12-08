@@ -288,7 +288,7 @@
 				<command>FolderResults</command>
 				<command>FolderTags</command>
 				<view>xsl/folder_output_refworks.xsl</view>
-			</action>>
+			</action>
 			<action name="export">
 				<command>FolderResults</command>
 				<view format="text-file">xsl/citation/basic.xsl</view>
