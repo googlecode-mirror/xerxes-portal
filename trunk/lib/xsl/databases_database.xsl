@@ -88,7 +88,7 @@
 		
 		<xsl:choose>
 			<xsl:when test="$db_description_multilingual != 'false'">
-				<div class="resultsDescription">
+				<div class="databasesDescription">
 					<xsl:call-template name="n-th-item-in-list">
 						<xsl:with-param name="list">
 							<xsl:value-of select="description" disable-output-escaping="yes" />
@@ -101,7 +101,7 @@
 				</div>
 			</xsl:when>
 			<xsl:otherwise>
-				<div class="resultsDescription">
+				<div class="databasesDescription">
 					<xsl:value-of select="description" disable-output-escaping="yes" />
 				</div>
 			</xsl:otherwise>
