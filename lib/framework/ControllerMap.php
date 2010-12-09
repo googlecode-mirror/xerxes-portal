@@ -254,7 +254,7 @@
 				
 			if ( $strAction == "")
 			{
-				$xpath = "//commands/section[@name='$strSection']/action[position() = 1]";
+				$xpath = "//commands/section[@name='$strSection']/action[position() = 1 and not(@nothome)]";
 			}
 			else
 			{
