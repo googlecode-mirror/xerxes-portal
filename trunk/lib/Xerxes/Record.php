@@ -1654,13 +1654,17 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		
 		// subjects
 		
-		foreach ( $this->subjects as $subject_object )
+		if ( count($this->subjects) > 0 )
 		{
-			$objSubject = $objXml->createElement("subject", $this->escapeXml($subject_object->display));
-			$objSubject->setAttribute("value", $subject_object->value);
-			$objXml->documentElement->appendChild($objSubject);
-			
-			
+			$objSubjects = $objXml->createElement("subjects");
+			$objXml->documentElement->appendChild($objSubjects);
+		
+			foreach ( $this->subjects as $subject_object )
+			{
+				$objSubject = $objXml->createElement("subject", $this->escapeXml($subject_object->display));
+				$objSubject->setAttribute("value", $subject_object->value);
+				$objSubjects->appendChild($objSubject);
+			}
 		}
 		
 		## basic elements
