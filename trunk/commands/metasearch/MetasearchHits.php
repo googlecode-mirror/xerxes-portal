@@ -154,7 +154,8 @@ class Xerxes_Command_MetasearchHits extends Xerxes_Command_Metasearch
 					// redirect to results page
 					
 					$arrParams["resultSet"] = $strSetNumber;					
-
+					
+					$this->cache->save();
 					$this->request->setRedirect($this->request->url_for($arrParams));
 					
 					return 1;
@@ -243,7 +244,8 @@ class Xerxes_Command_MetasearchHits extends Xerxes_Command_Metasearch
 							// redirect to individual results page
 							
 							$arrParams["resultSet"] = $strIndividualSet;	
-
+							
+							$this->cache->save();
 							$this->request->setRedirect( $this->request->url_for($arrParams) );
 							
 							return 1;
@@ -254,7 +256,8 @@ class Xerxes_Command_MetasearchHits extends Xerxes_Command_Metasearch
 						// redirect to merged results page
 						
 						$arrParams["resultSet"] = $strMergeSet;
-
+						
+						$this->cache->save();
 						$this->request->setRedirect( $this->request->url_for($arrParams) );
 						
 						return 1;
@@ -273,6 +276,7 @@ class Xerxes_Command_MetasearchHits extends Xerxes_Command_Metasearch
 		$objXml = $this->addProgress( $objXml, $this->request->getSession( "refresh-$strGroup" ) );
 		
 		$this->request->addDocument( $objXml );
+		$this->saveCache();
 		
 		return 1;
 	}
