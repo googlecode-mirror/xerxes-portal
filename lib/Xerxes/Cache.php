@@ -145,12 +145,7 @@
 			$objCache->expiry = $this->expiry;
 			
 			return $this->datamap->setCache($objCache);	
-		}
-		
-		public function __destruct()
-		{
-			$this->save();
-		}
+		}		
 	}
 	
 	class Xerxes_Cache_Metalib

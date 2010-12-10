@@ -389,7 +389,7 @@ class Xerxes_Command_MetasearchSearch extends Xerxes_Command_Metasearch
 			"group" => $strGroup
 		);
 		
-		$this->cache->save();
+		$this->saveCache();
 
 		$this->request->setRedirect($this->request->url_for($arrParams));
 		return 1;
