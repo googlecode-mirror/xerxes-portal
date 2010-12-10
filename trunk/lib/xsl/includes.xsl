@@ -257,6 +257,7 @@
 		</xsl:call-template>
 
 		<xsl:call-template name="surround-ft" />
+		<xsl:call-template name="surround-google-analytics" />
 
 	</div>
 	
@@ -273,7 +274,6 @@
 	<base href="{$base_include}/" />
 	<xsl:call-template name="css_include" />
 	<xsl:call-template name="header" />
-	<xsl:call-template name="surround-google-analytics" />
 	</head>
 </xsl:template>
 
