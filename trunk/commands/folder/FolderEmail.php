@@ -47,7 +47,7 @@
 			
 			$configFromEmail = $this->registry->getConfig("EMAIL_FROM", false, null);
 			
-			if ( $strEmail == null ) throw new Exception("Please enter an email address", 1);
+			if ( $strEmail == null ) throw new Exception("text_folder_error_no_email");
 			
 			// transform the documents to a basic style for now
 			// will give them citation style options in the future
@@ -86,7 +86,7 @@
 			}
 			else
 			{
-				throw new Exception("Could not send email", 2);
+				throw new Exception("text_folder_error_email_not_sent");
 			}
 		}
 	}

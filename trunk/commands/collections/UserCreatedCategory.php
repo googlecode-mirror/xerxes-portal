@@ -47,7 +47,7 @@ class Xerxes_Command_UserCreatedCategory extends Xerxes_Command_Collections
 			} 
 			else
 			{
-				throw new Xerxes_Exception_NotFound( "Personal collection not found." );
+				throw new Xerxes_Exception_NotFound( "text_collections_error_personal_collection_not_found" );
 			}
 		}
 		
@@ -55,7 +55,7 @@ class Xerxes_Command_UserCreatedCategory extends Xerxes_Command_Collections
 		
 		if ( ! $objCategoryData->published )
 		{
-			Xerxes_Helper::ensureSpecifiedUser( $objCategoryData->owned_by_user, $this->request, $this->registry, "This is a private database set only accessible to the user who created it. Please log in if you are that user." );
+			Xerxes_Helper::ensureSpecifiedUser( $objCategoryData->owned_by_user, $this->request, $this->registry, "text_collections_error_private_collection" );
 		}
 		
 		$y = 1;

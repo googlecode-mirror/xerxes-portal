@@ -21,7 +21,7 @@ class Xerxes_Command_EmbedGenUserCreatedCategory extends Xerxes_Command_Embed
 		$strPublished = $this->request->getData( '/*/category/@published' );
 		if ( $strPublished != '1' )
 		{
-			throw new Xerxes_Exception_AccessDenied( "Your collection must be published in order to use the 'embed' feature" );
+			throw new Xerxes_Exception_AccessDenied("text_collections_error_embed_not_published");
 		}
 		
 		// define url params for subject display action, and call helper.

@@ -27,6 +27,7 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	
 	<xsl:variable name="text_app_name"	select="//config/application_name" />
 	
+	<xsl:variable name="text_authentication_error_not_authorized">Sorry, our records show you are not authorized to use this service</xsl:variable>
 	<xsl:variable name="text_authentication_login_explain"></xsl:variable>
 	<xsl:variable name="text_authentication_login_failed">Sorry, your username or password was incorrect.</xsl:variable>
 	<xsl:variable name="text_authentication_login_pagename">Login</xsl:variable>
@@ -59,10 +60,20 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	<xsl:variable name="text_collections_deleted_subcategory">Deleted %s</xsl:variable>
 	<xsl:variable name="text_collections_done_editing">I'm done editing!</xsl:variable>
 	<xsl:variable name="text_collections_edit">Add databases and Edit</xsl:variable>
+	
+	<xsl:variable name="text_collections_error_embed_not_published">Your collection must be published in order to use the 'embed' feature</xsl:variable>	
+	<xsl:variable name="text_collections_error_no_such_category">Selected category not found.</xsl:variable>
+	<xsl:variable name="text_collections_error_no_such_section">Selected section not found.</xsl:variable>	
+	<xsl:variable name="text_collections_error_not_logged_in">You must be logged in to use this function.</xsl:variable>
+	<xsl:variable name="text_collections_error_personal_collection_not_found">Personal collection not found.</xsl:variable>
+	<xsl:variable name="text_collections_error_private_collection_save">You must be logged in as %s to save to a personal database collection owned by that user.</xsl:variable>
+	<xsl:variable name="text_collections_error_private_collection">This is a private database collection only accessible to the user who created it. Please log in if you are that user.</xsl:variable>
+
 	<xsl:variable name="text_collections_list_databases">List databases matching: </xsl:variable>
 	<xsl:variable name="text_collections_made_private">Collection made private.</xsl:variable>
 	<xsl:variable name="text_collections_made_published">Collection published.</xsl:variable>
 	<xsl:variable name="text_collections_no_matches">No databases found matching</xsl:variable>	
+	<xsl:variable name="text_collections_name_changed">Collection name changed.</xsl:variable>
 	<xsl:variable name="text_collections_private">Private</xsl:variable>
 	<xsl:variable name="text_collections_public">Public</xsl:variable>
 	<xsl:variable name="text_collections_public_url">Public URL:</xsl:variable>
@@ -102,7 +113,6 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	<xsl:variable name="text_databases_az_pagename">Databases A-Z</xsl:variable>
 	<xsl:variable name="text_databases_az_search">List databases matching: </xsl:variable>
 	
-	
 	<xsl:variable name="text_databases_category_pagename">Home</xsl:variable>
 	<xsl:variable name="text_databases_category_quick_desc">
 		<xsl:text>Search </xsl:text>
@@ -124,10 +134,14 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	<xsl:variable name="text_databases_subject_librarian_fax">Fax:</xsl:variable>
 	<xsl:variable name="text_databases_subject_librarian_telephone">Telephone:</xsl:variable>
 
-	
+	<xsl:variable name="text_error">Sorry, there was an error</xsl:variable>
+	<xsl:variable name="text_error_access_denied">Access Denied</xsl:variable>
 	<xsl:variable name="text_error_databases_permission">You do not have access to search these databases</xsl:variable>
 	<xsl:variable name="text_error_databases_registered">Only available to registered users.</xsl:variable>
 	<xsl:variable name="text_error_pdo_exception">There was a problem with the database.</xsl:variable>
+	<xsl:variable name="text_error_not_authorized_db">Not authorized to search certain databases</xsl:variable>
+	<xsl:variable name="text_error_not_found">Not Found</xsl:variable>
+	<xsl:variable name="text_error_search_expired">Your search appears to have expired</xsl:variable>
 	
 	<xsl:variable name="text_folder_email_address">email address</xsl:variable>
 	<xsl:variable name="text_folder_email_notes">notes</xsl:variable>
@@ -139,6 +153,9 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	<xsl:variable name="text_folder_endnote_direct">directly into Endnote, Zotero, or other citation management application</xsl:variable>
 	<xsl:variable name="text_folder_endnote_file">to a file I will import myself</xsl:variable>
 	<xsl:variable name="text_folder_endnote_pagename">Download to Endnote, Zotero, etc.</xsl:variable>
+	
+	<xsl:variable name="text_folder_error_email_not_sent">Could not send email</xsl:variable>
+	<xsl:variable name="text_folder_error_no_email">Please enter an email address</xsl:variable>
 	
 	<xsl:variable name="text_folder_export_download">Download</xsl:variable>
 	<xsl:variable name="text_folder_export_export">Export</xsl:variable>
@@ -199,6 +216,11 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	<xsl:variable name="text_link_resolver_load_msg">Loading content from</xsl:variable>
 	<xsl:variable name="text_link_resolver_direct_link_prefix">Full-Text Available: </xsl:variable>
 
+	<xsl:variable name="text_metasearch_error_no_databases">Please choose one or more databases to search</xsl:variable>
+	<xsl:variable name="text_metasearch_error_no_search_terms">Please enter search terms</xsl:variable>
+	<xsl:variable name="text_metasearch_error_not_authorized">You are not authorized to search the databases you selected. Please choose other databases and try again.</xsl:variable>
+	<xsl:variable name="text_metasearch_error_too_many_databases">You can only search up to %s databases at a time</xsl:variable>
+	
 	<xsl:variable name="text_metasearch_hits_error">Sorry, we're having technical difficulties right now.</xsl:variable>
 	<xsl:variable name="text_metasearch_hits_error_explain">
 		You can try again later, or use the library's website to select and search databases individually.

@@ -66,7 +66,7 @@
 			
 			if ( $this->cache->$strType == null )
 			{
-				throw new Exception("sorry, your search appears to have expired");
+				throw new Exception("text_error_search_expired");
 			}
 			
 			// convert it to XML

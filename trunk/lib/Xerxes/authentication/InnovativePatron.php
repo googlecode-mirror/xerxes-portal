@@ -54,7 +54,7 @@
 
 					if ( ! in_array( (int) $this->user_data["P TYPE"], $arrTypes) )
 					{
-						throw new Xerxes_Exception_AccessDenied("Sorry, our records show you are not authorized to use this service");
+						throw new Xerxes_Exception_AccessDenied("text_authentication_error_not_authorized");
 					}
 				}
 				

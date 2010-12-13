@@ -120,7 +120,7 @@ class Xerxes_Command_MetasearchSearch extends Xerxes_Command_Metasearch
 
 		if ( $strQuery == "" )
 		{
-			throw new Exception( "Please enter search terms" );
+			throw new Exception( "text_metasearch_error_no_search_terms" );
 		}
 		if ( $strField == "" )
 		{
@@ -193,18 +193,21 @@ class Xerxes_Command_MetasearchSearch extends Xerxes_Command_Metasearch
 		
 		if ( count( $arrDatabases ) < 1 && count( $excludedDbs ) > 0 )
 		{
-			$e = new Xerxes_Exception_DatabasesDenied( "You are not authorized to search the databases you selected. Please choose other databases and try again." );
+			$e = new Xerxes_Exception_DatabasesDenied( "text_metasearch_error_not_authorized" );
 			$e->setDeniedDatabases( $excludedDbs );
 			throw $e;
 		} 
 		elseif ( count( $arrDatabases ) < 1 )
 		{
-			throw new Exception( "Please choose one or more databases to search" );
+			throw new Exception( "text_metasearch_error_no_databases" );
 		}
 		
 		if ( count( $arrDatabases ) > $configSearchLimit )
 		{
-			throw new Exception( "You can only search up to $configSearchLimit databases at a time" );
+			$labels = Xerxes_Framework_Labels::getInstance();
+			$error = $labels->getLabel("text_metasearch_error_too_many_databases");
+			$error = sprintf($error, $configSearchLimit);
+			throw new Exception($error);
 		}
 		
 		$strSpellCorrect = ""; // spelling correction

@@ -33,10 +33,10 @@ class Xerxes_Command_SaveDatabaseToUserCategory extends Xerxes_Command_Collectio
 		$strNewSubcat = $this->request->getProperty( "new_subcategory_name" );
 		
 		// make sure they are logged in as the user they are trying to save as. 
+
+		$this->ensureSpecifiedUser();
 		
-		Xerxes_Helper::ensureSpecifiedUser( $strUsername, $this->request, $this->registry, "You must be logged in as $strUsername to save to a personal database collection owned by that user." );
-		
-		$objData = new Xerxes_DataMap( );
+		$objData = new Xerxes_DataMap();
 		$subcategory = null;
 		
 		// find the category
@@ -47,7 +47,7 @@ class Xerxes_Command_SaveDatabaseToUserCategory extends Xerxes_Command_Collectio
 		
 		if ( ! $category )
 		{
-			throw new Exception( "Selected category not found in database." );
+			throw new Exception( "text_collections_error_no_such_category" );
 		}
 			
 		// were we directed to create a new one?
@@ -93,7 +93,7 @@ class Xerxes_Command_SaveDatabaseToUserCategory extends Xerxes_Command_Collectio
 		// now we better have one. 
 		
 		if ( ! $subcategory )
-			throw new Exception( "Selected section not found." );
+			throw new Exception("text_collections_error_no_such_section");
 			
 		// and add the db to it, unless it already is there. 
 		
