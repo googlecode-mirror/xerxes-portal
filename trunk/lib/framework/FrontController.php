@@ -516,10 +516,6 @@ class Xerxes_Framework_FrontController
 				 
 				$objRequest->setSession( "flash_message", null );
 			}
-			
-			// register this url as being viewed
-			
-			$objRequest->setSession("last_page", $objRequest->getServer('REQUEST_URI'));
 		} 
 
 		// we'll catch all exceptions here, but the Xerxes_Error class can perform actions
