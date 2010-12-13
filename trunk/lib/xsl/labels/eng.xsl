@@ -250,6 +250,7 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 		or select an individual set of results to the right.
 	</xsl:variable>
 	<xsl:variable name="text_metasearch_results_found">results found</xsl:variable>
+	<xsl:variable name="text_metasearch_status_done">DONE</xsl:variable>
 	<xsl:variable name="text_metasearch_status_error">ERROR</xsl:variable>
 	<xsl:variable name="text_metasearch_status_fetching">FETCHING</xsl:variable>
 	<xsl:variable name="text_metasearch_status_start">START</xsl:variable>
