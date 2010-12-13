@@ -324,6 +324,10 @@ abstract class Xerxes_Framework_Search
 			$this->results[0] = $record;
 		}
 		
+		// register this url as being viewed
+			
+		$this->request->setSession("last_page", $this->request->getServer('REQUEST_URI'));
+		
 		// done
 		
 		$this->request->addDocument($this->resultsXML());
