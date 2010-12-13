@@ -44,9 +44,25 @@ class Xerxes_Framework_Error
 		} 
 		else
 		{
+			// translate heading and message
+			
+			$labels = Xerxes_Framework_Labels::getInstance();
+
+			if ( $e instanceof Xerxes_Exception )
+			{
+				$heading = $e->heading();
+			}			
+			else
+			{
+				$heading = "text_error";
+			}
+			
+			$heading = $labels->getLabel($heading);
+			$message = $labels->getLabel($e->getMessage());
+			
 			// first output to apache error log
 			
-			error_log( "Xerxes error: " . $e->getMessage() . ": " . $e->getTraceAsString() );
+			error_log( "Xerxes error: " . $message . ": " . $e->getTraceAsString() );
 			
 			//set proper http response code
 
@@ -69,17 +85,10 @@ class Xerxes_Framework_Error
 			$objError = new DOMDocument( );
 			
 			$objError->loadXML( "<error />" );
-			
-			$objMessage = $objError->createElement( "message", $e->getMessage() );
+
+			$objMessage = $objError->createElement( "message", $message );
 			$objMessage->setAttribute( "type", $strErrorType );
 			$objError->documentElement->appendChild( $objMessage );
-			
-			$heading = "Sorry, there was an error";
-			
-			if ( $e instanceof Xerxes_Exception )
-			{
-				$heading = $e->heading();
-			}
 			
 			$objHeading = $objError->createElement( "heading", $heading );
 			$objError->documentElement->appendChild( $objHeading );

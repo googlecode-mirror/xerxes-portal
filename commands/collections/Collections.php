@@ -76,6 +76,19 @@ abstract class Xerxes_Command_Collections extends Xerxes_Framework_Command
 	{
 		return ($objCategoryData->normalized == Xerxes_Data_Category::normalize( $this->registry->getConfig( "default_collection_name", false, "My Saved Databases" ) ));
 	}
+	
+	public function ensureSpecifiedUser()
+	{
+		$strUsername = $this->request->getProperty( "username" );		
+		
+		$labels = Xerxes_Framework_Labels::getInstance();
+		$error = $labels->getLabel("text_collections_error_private_collection_save");
+		$error = sprintf($error, $strUsername);
+
+		Xerxes_Helper::ensureSpecifiedUser( $strUsername, $this->request, $this->registry, $error );		
+		
+	}
+	
 }
 
 ?>

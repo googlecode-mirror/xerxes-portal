@@ -15,7 +15,7 @@ class Xerxes_Exception extends Exception
 {
 	public $heading;
 	
-	public function __construct($message, $heading = "Sorry, there was an error")
+	public function __construct($message, $heading = "text_error")
 	{
 		parent::__construct ( $message );
 		$this->heading = $heading;
@@ -29,26 +29,26 @@ class Xerxes_Exception extends Exception
 	{
 		return $this->heading = $h;
 	}
+	
+	protected function getLabelObject()
+	{
+		return ;
+	}
 }
 
 class Xerxes_Exception_NotFound extends Xerxes_Exception
 {
-	//New default heading. 
-	public function __construct($message, $heading = "Not Found")
+	public function __construct($message, $heading = "text_error_not_found")
 	{
 		parent::__construct ( $message, $heading );
-		$this->heading = $heading;
 	}
 }
 
 class Xerxes_Exception_AccessDenied extends Xerxes_Exception
 {
-	
-	//New default heading. 
-	public function __construct($message, $heading = "Access Denied")
+	public function __construct($message, $heading = "text_error_access_denied")
 	{
 		parent::__construct ( $message, $heading );
-		$this->heading = $heading;
 	}
 }
 
@@ -56,11 +56,9 @@ class Xerxes_Exception_DatabasesDenied extends Xerxes_Exception_AccessDenied
 {
 	protected $deniedDatabases = array ();
 	
-	//New arg 
-	public function __construct($message = "Not authorized to search certain databases.", $heading = "Access Denied", $arrDenied = array())
+	public function __construct($message = "text_error_not_authorized_db", $heading = "text_error_access_denied", $arrDenied = array())
 	{
 		parent::__construct ( $message, $heading );
-		$this->heading = $heading;
 		$this->deniedDatabases = $arrDenied;
 	}
 	

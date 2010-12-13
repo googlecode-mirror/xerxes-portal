@@ -90,7 +90,7 @@ class Xerxes_Framework_Labels
 		}
 		else
 		{
-			throw new Exception("could not find a label with name '$name'");
+			return $name;
 		}
 	}
 }
