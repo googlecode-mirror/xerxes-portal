@@ -935,7 +935,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		// remove certain databases based on type(s), if so configured
 		// unless we're asking for specific id's, yo	
 	
-		if ( $configDatabaseTypesExclude != null )
+		if ( $configDatabaseTypesExclude != null && $id == null )
 		{
 			$arrTypes = explode(",", $configDatabaseTypesExclude);
 			$arrTypeQuery = array();
