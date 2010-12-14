@@ -339,6 +339,26 @@ class Xerxes_Framework_Registry
 		return $source;
 	}
 	
+	public function getLocale($lang)
+	{
+		$languages = $this->getConfig("languages");
+		
+		if ( $languages != null )
+		{
+			foreach ( $languages->language as $language )
+			{
+				if ( $language["code"] == $lang )
+				{
+					return $language["locale"];
+				}
+			}
+		}
+		
+		// we got this far, then no matcches!
+		
+		return "C";
+	}
+	
 	public function getXML()
 	{
 		return $this->xml;
