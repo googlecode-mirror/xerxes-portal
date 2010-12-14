@@ -63,8 +63,6 @@ class Xerxes_Framework_Languages
 			}
 		}
 			
-		$objRegistry = Xerxes_Framework_Registry::getInstance();
-				
 		// set full path to local copy
 		
 		$this->languages_file_xerxes = realpath(dirname(__FILE__) . DIRECTORY_SEPARATOR . $this->languages_file_xerxes);
@@ -97,7 +95,11 @@ class Xerxes_Framework_Languages
 		
 		// which language shall we display?
 		
-		$this->locale = $objRegistry->getConfig( 'XERXES_LOCALE', false, 'C' );
+		$registry = Xerxes_Framework_Registry::getInstance();
+		$request = Xerxes_Framework_Request::getInstance();
+		$lang = $request->getProperty("lang");
+		
+		$this->locale = $registry->getLocale($lang);
 		
 		// bindings
 		
