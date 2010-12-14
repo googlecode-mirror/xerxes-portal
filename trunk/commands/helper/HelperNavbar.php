@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Constructs links for 'my stuff' navigation elements
+ * Constructs links for navigation elements
  * 
  * @author David Walker
  * @copyright 2008 California State University
@@ -18,7 +18,9 @@ class Xerxes_Command_HelperNavbar extends Xerxes_Command_Helper
 		$objXml = new DOMDocument( );
 		$objXml->loadXML( "<navbar />" );
 		
-		// saved records link
+		
+		
+		### saved records link
 		
 		$arrLink = array ("base" => "folder" );
 		
@@ -39,7 +41,10 @@ class Xerxes_Command_HelperNavbar extends Xerxes_Command_Helper
 		$savedRecordsLink->setAttribute( "numSavedRecords", ( string ) $num );
 		$savedRecordsLink->setAttribute( "numSessionSavedRecords", Xerxes_Helper::numMarkedSaved() );
 		
-		// my collections (i.e., databases)
+		
+		
+		
+		### my collections (i.e., databases)
 		
 		$arrCollectionUrl = array ("base" => "collections", "action" => "list" );
 		
@@ -50,7 +55,12 @@ class Xerxes_Command_HelperNavbar extends Xerxes_Command_Helper
 		
 		$this->addNavbarElement( $objXml, "saved_collections", $arrCollectionUrl );
 		
-		// login, tell it to force an https url if so configured. 
+		
+		
+		
+		### authentication
+		
+		// tell it to force an https url if so configured. 
 		
 		$force_secure_login = false;
 		
@@ -58,6 +68,8 @@ class Xerxes_Command_HelperNavbar extends Xerxes_Command_Helper
 		{
 			$force_secure_login = true;
 		}
+
+		// login
 		
 		$this->addNavbarElement( $objXml, "login", array ("base" => "authenticate", "action" => "login", "return" => $this->request->getServer( "REQUEST_URI" ) ), $force_secure_login );
 		
@@ -65,11 +77,43 @@ class Xerxes_Command_HelperNavbar extends Xerxes_Command_Helper
 		
 		$this->addNavbarElement( $objXml, "logout", array ("base" => "authenticate", "action" => "logout", "return" => $this->request->getServer( "REQUEST_URI" ) ) );
 		
-		// db alphbetical list
+		
+		
+		
+		### db alphbetical list
 		
 		$this->addNavbarElement( $objXml, "database_list", array ("base" => "databases", "action" => "alphabetical" ) );
 		
-		$this->request->addDocument( $objXml );
+		
+		
+		### languages
+		
+		$languages = $this->registry->getConfig("LANGUAGES", false);
+		
+		if ( $languages != null )
+		{
+			$languages_xml = $objXml->createElement("languages");
+			$objXml->documentElement->appendChild($languages_xml);
+			
+			$language_names = Xerxes_Framework_Languages::getInstance();
+			
+			foreach ( $languages->language as $language )
+			{
+				$code = (string) $language["code"];
+				$readable_name = $language_names->getNameFromCode("iso_639_2B_code", $code);
+				
+				$language_node = $objXml->createElement("language");
+				$languages_xml->appendChild($language_node);
+				
+				$language_node->setAttribute("name", $readable_name);
+				$language_node->setAttribute("code", $code);
+			}
+		}
+		
+		
+		
+
+		$this->request->addDocument( $objXml );		
 		
 		return 1;
 	}
