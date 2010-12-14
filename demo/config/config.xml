@@ -72,8 +72,10 @@
 				See details here: http://www.php.net/manual/en/function.iconv.php
 			-->
 		
-			<language code="eng" locale="" display="English" />
-			<!-- <language code="cze" locale="cs_CS.utf8" display="Czech" /> -->
+			<!-- 
+			<language code="eng" locale="" />
+			<language code="cze" locale="cs_CS.utf8" />
+			 -->
 		</config>
 		
 		
