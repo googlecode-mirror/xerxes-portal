@@ -264,12 +264,12 @@ function saveRecord(groupID,resultSet,recordNumber)
 		
 		if ( iTotal == 0 && $(form1).select('input[type="hidden"][name="database"]') == "") 
 		{
-			alert(xerxes_labels['text_search_err_select_databases']);
+			alert(xerxes_labels['text_metasearch_error_no_databases']);
 			return false;
 		}
 		else if ( iTotal > xerxes_iSearchable )
 		{
-			var database_limit = xerxes_labels['text_search_err_databases_limit'];
+			var database_limit = xerxes_labels['text_metasearch_error_too_many_databases'];
 			database_limit = database_limit.replace("%s", xerxes_iSearchable);
 			alert(database_limit);
 			return false;

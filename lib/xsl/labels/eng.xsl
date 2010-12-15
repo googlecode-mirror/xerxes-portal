@@ -308,9 +308,6 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	<xsl:variable name="text_results_year">Year</xsl:variable>
 	<xsl:variable name="text_results_next">Next</xsl:variable>
 	
-	<xsl:variable name="text_search_err_select_databases">Please select databases to search</xsl:variable>
-	<xsl:variable name="text_search_err_databases_limit">Sorry, you can only search up to %s databases at one time</xsl:variable>
-	
 	<xsl:variable name="text_searchbox_ada_boolean">Boolean operator: </xsl:variable>
 	<xsl:variable name="text_searchbox_boolean_and">And</xsl:variable>
 	<xsl:variable name="text_searchbox_boolean_or">Or</xsl:variable>
