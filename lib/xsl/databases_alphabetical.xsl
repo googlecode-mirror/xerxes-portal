@@ -140,26 +140,9 @@
 					</xsl:if>
 				</xsl:if>
 			</div>
-			<xsl:choose>
-				<xsl:when test="$db_description_multilingual != 'false'">
-					<div class="resultsDescription">
-						<xsl:call-template name="n-th-item-in-list">
-							<xsl:with-param name="list">
-								<xsl:value-of select="description" disable-output-escaping="yes" />
-							</xsl:with-param>
-							<xsl:with-param name="delimiter">\n\n\n</xsl:with-param>
-							<xsl:with-param name="index">
-								<xsl:value-of select="$xerxes_language_position" />
-							</xsl:with-param>
-						</xsl:call-template>
-					</div>
-				</xsl:when>
-				<xsl:otherwise>
-					<div class="resultsDescription">
-						<xsl:value-of select="description" disable-output-escaping="yes" />
-					</div>
-				</xsl:otherwise>
-			</xsl:choose>
+			<div class="resultsDescription">
+				<xsl:call-template name="show_db_description" />
+			</div>
 		</div>
 		
 	</xsl:for-each>

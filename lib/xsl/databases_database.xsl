@@ -86,40 +86,20 @@
 			<a href="{add_to_collection_url}" class="iconCommand add"><xsl:copy-of select="$text_database_save_database" /></a>
 		</div>
 		
-		<xsl:choose>
-			<xsl:when test="$db_description_multilingual != 'false'">
-				<div class="databasesDescription">
-					<xsl:call-template name="n-th-item-in-list">
-						<xsl:with-param name="list">
-							<xsl:value-of select="description" disable-output-escaping="yes" />
-						</xsl:with-param>
-						<xsl:with-param name="delimiter">\n\n\n</xsl:with-param>
-						<xsl:with-param name="index">
-							<xsl:value-of select="$xerxes_language_position" />
-						</xsl:with-param>
-					</xsl:call-template>
-				</div>
-			</xsl:when>
-			<xsl:otherwise>
-				<div class="databasesDescription">
-					<xsl:value-of select="description" disable-output-escaping="yes" />
-				</div>
-			</xsl:otherwise>
-		</xsl:choose>
+		<div class="databasesDescription">
+			<xsl:call-template name="show_db_description" />
+		</div>
 		
 		<dl class="databaseSummary">
-
-			<xsl:if test="link_native_home">
-				<div class="databaseLink">
-				<dt><xsl:copy-of select="$text_database_link" /></dt>
-				<dd>		
-					<a target="{$link_target_databases}">
-					<xsl:attribute name="href"><xsl:value-of select="xerxes_native_link_url" /></xsl:attribute>
-					<xsl:copy-of select="$text_database_go_to_database" />
-					</a>
-				</dd>
-				</div>
-			</xsl:if>
+			<div class="databaseLink">
+			<dt><xsl:copy-of select="$text_database_link" /></dt>
+			<dd>		
+				<a target="{$link_target_databases}">
+				<xsl:attribute name="href"><xsl:value-of select="xerxes_native_link_url" /></xsl:attribute>
+				<xsl:copy-of select="$text_database_go_to_database" />
+				</a>
+			</dd>
+			</div>
 			
 			<div class="databaseAvailability">
 			<dt><xsl:copy-of select="$text_database_availability" /></dt>

@@ -316,9 +316,9 @@
 			
 			<config name="innovative_patron_api" />
 			
-			<!-- patron types allowed to use this system remotely: separate multilple entries by comma; 
+			<!-- patron types allowed to use this system remotely: separate multiple entries by comma; 
 			leave blank if all users are allowed -->
-				 
+			
 			<config name="innovative_patron_types" />
 		
 		
@@ -416,12 +416,14 @@
 			Three newlines (exported as ###### by Metalib X-Server, replaced back to newlines in Xerxes)
 			will be recognized by XSLT as language separator.
 			
-			Values:
-			comma-separated sequence of language codes, e.g. 'eng,spa,ger' from xerxes_languages config
-			
 			If this option is left empty, Xerxes will display description as it is regardless of Xerxes language -->
 			
-		<config name="db_description_multilingual" pass="true"></config>
+		<config name="db_description_multilingual" xml="true" pass="true">
+			<!-- Example:
+			<language code="eng" order="1" display="English" />
+			<language code="cze" order="2" display="Czech" />
+			-->
+		</config>
 		
 		<!-- tags NOT to strip in database descriptions.
 		
