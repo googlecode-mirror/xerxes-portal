@@ -358,8 +358,9 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 		CSS styles for the snippet in the external website itself.
 	</xsl:variable>
 	<xsl:variable name="text_snippet_show_databases">Show databases?</xsl:variable>
-	<xsl:variable name="text_snippet_show_desc">Show description?</xsl:variable>
 	<xsl:variable name="text_snippet_show_info_button">Show info button?</xsl:variable>
+	<xsl:variable name="text_snippet_show_desc">Show description?</xsl:variable>
+	<xsl:variable name="text_snippet_show_desc_lang">Description language:</xsl:variable>
 	<xsl:variable name="text_snippet_show_searchbox">Show search box?</xsl:variable>
 	<xsl:variable name="text_snippet_show_section">Show specific section?</xsl:variable>	
 	<xsl:variable name="text_snippet_show_title">Show title?</xsl:variable>

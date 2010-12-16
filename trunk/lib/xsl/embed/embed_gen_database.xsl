@@ -75,25 +75,6 @@
 						
 						<table id="snippetDisplayTable" summary="{$text_ada_table_for_display}">
 							<tr>
-								<td><label for="disp_show_search"><xsl:copy-of select="$text_snippet_show_desc" /></label></td> 
-								<td>
-									<select name="disp_show_desc" id="disp_show_search">
-										<option value="true">
-											<xsl:if test="request/disp_show_desc = 'true'">
-											<xsl:attribute name="selected">selected</xsl:attribute>
-											</xsl:if>
-											<xsl:value-of select="$text_snippet_display_yes" />
-										</option>
-										<option value="false">
-											<xsl:if test="request/disp_show_desc = 'false'">
-											<xsl:attribute name="selected">selected</xsl:attribute>
-											</xsl:if>      
-											<xsl:value-of select="$text_snippet_display_no" />
-										</option>
-									</select>    
-								</td>
-							</tr>
-							<tr>
 								<td><label for="disp_show_info_link"><xsl:copy-of select="$text_snippet_show_info_button" /></label></td> 
 								<td>
 									<select name="disp_show_info_link" id="disp_show_info_link">
@@ -112,6 +93,48 @@
 									</select>
 								</td>
 							</tr>
+							<tr>
+								<td><label for="disp_show_search"><xsl:copy-of select="$text_snippet_show_desc" /></label></td> 
+								<td>
+									<select name="disp_show_desc" id="disp_show_search">
+										<option value="true">
+											<xsl:if test="request/disp_show_desc = 'true'">
+											<xsl:attribute name="selected">selected</xsl:attribute>
+											</xsl:if>
+											<xsl:value-of select="$text_snippet_display_yes" />
+										</option>
+										<option value="false">
+											<xsl:if test="request/disp_show_desc = 'false'">
+											<xsl:attribute name="selected">selected</xsl:attribute>
+											</xsl:if>      
+											<xsl:value-of select="$text_snippet_display_no" />
+										</option>
+									</select>
+								</td>
+							</tr>
+							<xsl:if test="//config/db_description_multilingual/language">
+								<tr id="snippetDisplayLanguage">
+									<td><label for="disp_show_desc_lang"><xsl:copy-of select="$text_snippet_show_desc_lang" /></label></td> 
+									<td>
+										<select name="disp_show_desc_lang" id="disp_show_desc_lang">
+											<option value="ALL">
+												<xsl:if test="request/disp_show_desc_lang = 'ALL'">
+												<xsl:attribute name="selected">selected</xsl:attribute>
+												</xsl:if>
+												<xsl:value-of select="$text_snippet_display_all" />
+											</option>
+											<xsl:for-each select="//config/db_description_multilingual/language">
+												<option value="{@code}">
+													<xsl:if test="request/disp_show_desc_lang = '@code'">
+													<xsl:attribute name="selected">selected</xsl:attribute>
+													</xsl:if>
+													<xsl:value-of select="@display" />
+												</option>
+											</xsl:for-each>
+										</select>
+									</td>
+								</tr>
+							</xsl:if>
 						</table>
 						
 						<p><input type="submit" value="{$text_snippet_refresh}" class="embed_database_refresh{$language_suffix}" /></p>

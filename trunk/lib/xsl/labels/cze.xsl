@@ -292,7 +292,7 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	<xsl:variable name="text_searchbox_spelling_error">Měli jste na mysli: </xsl:variable>
 	
 	<xsl:variable name="text_snippet_display_all">VŠECHNY</xsl:variable>
-	<xsl:variable name="text_snippet_display_no">žádné</xsl:variable>
+	<xsl:variable name="text_snippet_display_no">ne</xsl:variable>
 	<xsl:variable name="text_snippet_display_options">Možnosti zobrazení</xsl:variable>
 	<xsl:variable name="text_snippet_display_yes">ano</xsl:variable>
 	<xsl:variable name="text_snippet_example">Příklad</xsl:variable>	
@@ -322,8 +322,9 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 		Vložení CSS souboru funguje nedokonale. Vhodnější je definovat CSS styly kódu na samotné externí stránce.
 	</xsl:variable>
 	<xsl:variable name="text_snippet_show_databases">Zobrazit databáze?</xsl:variable>
-	<xsl:variable name="text_snippet_show_desc">Zobrazit popis?</xsl:variable>
 	<xsl:variable name="text_snippet_show_info_button">Zobrazit tlačítko info?</xsl:variable>
+	<xsl:variable name="text_snippet_show_desc">Zobrazit popis?</xsl:variable>
+	<xsl:variable name="text_snippet_show_desc_lang">Jazyk popisu:</xsl:variable>
 	<xsl:variable name="text_snippet_show_searchbox">Zobrazit vyhledávací pole?</xsl:variable>
 	<xsl:variable name="text_snippet_show_section">Zobrazit konkrétní sekci?</xsl:variable>	
 	<xsl:variable name="text_snippet_show_title">Zobrazit název?</xsl:variable>

@@ -102,7 +102,7 @@
 	
 	<xsl:variable name="language">
 		<xsl:choose>
-			<xsl:when test="//request/lang">
+			<xsl:when test="//request/lang and //request/lang != ''"> <!-- @todo: allow only languages defined in //config/languages/language[@code] -->
 				<xsl:value-of select="//request/lang" />
 			</xsl:when>
 			<xsl:otherwise>
@@ -127,35 +127,16 @@
 	-->
 	<xsl:variable name="language_suffix">
 		<xsl:choose>
-			<xsl:when test="//request/lang and //request/lang != 'eng'">
-				<xsl:text>_</xsl:text><xsl:value-of select="//request/lang" />
+			<xsl:when test="$language != 'eng'">
+				<xsl:text>_</xsl:text><xsl:value-of select="$language" />
 			</xsl:when>
 			<xsl:otherwise>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
 	
-	<xsl:variable name="db_description_multilingual">
-		<xsl:choose>
-			<xsl:when test="//config/db_description_multilingual">
-				<xsl:value-of select="//config/db_description_multilingual" />
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:text>false</xsl:text>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:variable>
-	
-	<!-- which description in order is our language? -->
-	
-	<xsl:variable name="xerxes_language_position">
-		<xsl:call-template name="find-item-in-list">
-			<xsl:with-param name="list">
-				<xsl:value-of select="$db_description_multilingual" />
-			</xsl:with-param>
-			<xsl:with-param name="delimiter">,</xsl:with-param>
-			<xsl:with-param name="find-item"><xsl:value-of select="$language" /></xsl:with-param>
-		</xsl:call-template>
+	<xsl:variable name="language_position">
+		<xsl:value-of select="//config/db_description_multilingual/language[@code=$language]/@order" />
 	</xsl:variable>
 
 	<xsl:variable name="locale"><xsl:value-of select="//config/languages/language[@code=$language]/@locale" /></xsl:variable>
@@ -2491,7 +2472,41 @@
 </xsl:template>
 
 
-<!-- 	
+<!--
+	TEMPLATE: show_db_description
+	Shows database description from IRD, respecting current language and the db_description_multilingual
+	config option.
+-->
+
+<xsl:template name="show_db_description">
+	<xsl:param name='description_language' />
+
+	<xsl:choose>
+		<xsl:when test="//config/db_description_multilingual/language and $description_language != 'ALL'">
+			<xsl:call-template name="n-th-item-in-list">
+				<xsl:with-param name="list">
+					<xsl:value-of select="description" disable-output-escaping="yes" />
+				</xsl:with-param>
+				<xsl:with-param name="delimiter">\n\n\n</xsl:with-param>
+				<xsl:with-param name="index">
+					<xsl:choose>
+						<xsl:when test="$description_language">	<!-- we're asking for a specific language -->
+							<xsl:value-of select="//config/db_description_multilingual/language[@code=$description_language]/@order" />
+						</xsl:when>
+						<xsl:otherwise>	<!-- use pre-computed value -->
+							<xsl:value-of select="$language_position" />
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:with-param>
+			</xsl:call-template>
+		</xsl:when>
+		<xsl:otherwise>
+			<xsl:value-of select="description" disable-output-escaping="yes" />
+		</xsl:otherwise>
+	</xsl:choose>
+</xsl:template>
+
+<!--
 	TEMPLATE: HEADER
 	header content, such as Javascript functions that should appear on specific page.
 -->
