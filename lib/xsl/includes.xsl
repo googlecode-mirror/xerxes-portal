@@ -2308,7 +2308,7 @@
 		</xsl:variable>
 		
 		<li>
-			<xsl:if test="//request/base = $id">
+			<xsl:if test="//request/base = $id and ($source = //request/source or $source = '')">
 				<xsl:attribute name="class">here</xsl:attribute>
 			</xsl:if>
 			
@@ -2317,13 +2317,13 @@
 				
 				<span class="tabsHit">
 					<xsl:choose>
-						<xsl:when test="//request/base = $id">
+						<xsl:when test="//request/base = $id and ($source = //request/source or $source = '')">
 							(<xsl:value-of select="//results/total" />)
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:choose>
-								<xsl:when test="//results/other[@module=$module]">
-									(<xsl:value-of select="//results/other[@module=$module]" />)
+								<xsl:when test="//results/other[@module=$module and (not(@source) or @source = $source)]">
+									(<xsl:value-of select="//results/other[@module=$module and (not(@source) or @source = $source)]" />)
 								</xsl:when>
 								<xsl:otherwise>
 									<span class="tabsHitNumber" id="tab:{$id}:{$source}"></span>
@@ -2663,7 +2663,7 @@
 	<xsl:param name="class" />
 	<xsl:param name="alt" />
 	<xsl:param name="test" />
-	<img id="{$id}" name="{$id}" width="17" height="15" alt="$alt" border="0" class="{$class}">
+	<img id="{$id}" name="{$id}" width="17" height="15" alt="{$alt}" border="0" class="{$class}">
 		<xsl:attribute name="src">
 			<xsl:choose> 
 				<xsl:when test="$test">images/folder_on.gif</xsl:when>
