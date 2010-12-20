@@ -46,7 +46,7 @@
 
 	<xsl:variable name="source" select="request/source" />
 			
-	<div class="yui-gc">
+	<div class="yui-ge">
 		<div class="yui-u first">
 			<h1><xsl:value-of select="$text_worldcat_name" /></h1>
 			<xsl:call-template name="generic_searchbox" />
@@ -59,6 +59,13 @@
 	</div>
 	
 	<xsl:choose>
+		<xsl:when test="//config/tabs/top/tab[@id='worldcat']">
+			<xsl:call-template name="tabs" />		
+			<div class="tabs">
+				<xsl:call-template name="generic_sort_bar" />
+			</div>
+		
+		</xsl:when>
 		<xsl:when test="count(//worldcat_groups/group) > 1 and $source != ''">
 			
 			<div class="tabs">
