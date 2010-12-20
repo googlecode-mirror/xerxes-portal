@@ -214,6 +214,7 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 		nebo si vyberte individuální sadu výsledků vpravo.
 	</xsl:variable>
 	<xsl:variable name="text_metasearch_results_found">nalezených výsledků</xsl:variable>
+	<xsl:variable name="text_metasearch_status_done">HOTOVO</xsl:variable>
 	<xsl:variable name="text_metasearch_status_error">CHYBA</xsl:variable>
 	<xsl:variable name="text_metasearch_status_fetching">STAHUJE SE</xsl:variable>
 	<xsl:variable name="text_metasearch_status_start">SPUSTIT</xsl:variable>
