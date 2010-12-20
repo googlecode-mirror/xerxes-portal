@@ -51,25 +51,30 @@ class Xerxes_Helper
 		$multilingual = $objRegistry->getConfig ( "db_description_multilingual", false, "" ); // XML object
 		
 		$lang = $objRequest->getProperty("lang");
+		
 		if ($lang == "")
 			$lang = "eng";
 		
 		// build a list of configured description languages
-		foreach ($multilingual->language as $language)
-		{
-			$order = NULL;
-			$code  = NULL;
-			foreach ($language->attributes() as $name => $val)
-			{
-				if ($name == "code")
-					$code = (string) $val;
-				if ($name == "order")
-					$order = (int) $val;
-			}
-			$db_languages_order[$code] = $order;
-			$db_languages_code[$order] = $code;
-		}
 		
+		if ( $multilingual != "" )
+		{
+			foreach ($multilingual->language as $language)
+			{
+				$order = NULL;
+				$code  = NULL;
+				foreach ($language->attributes() as $name => $val)
+				{
+					if ($name == "code")
+						$code = (string) $val;
+					if ($name == "order")
+						$order = (int) $val;
+				}
+				$db_languages_order[$code] = $order;
+				$db_languages_code[$order] = $code;
+			}
+		}
+			
 		$notes = array ("description", "search_hints");
 		
 		foreach ( $notes as $note_field_name )
