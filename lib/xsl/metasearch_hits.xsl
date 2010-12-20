@@ -127,7 +127,7 @@
 						</td>
 						<td>
 							<xsl:choose>
-								<xsl:when test="find_status = 'DONE1' or find_status = 'DONE2' or find_status = 'DONE3'">
+								<xsl:when test="find_status = 'DONE1' or find_status = 'DONE2' or find_status = 'DONE3' or find_status = 'DONE4'">
 									<xsl:copy-of select="$text_metasearch_status_fetching" />
 								</xsl:when>
 								<xsl:when test="find_status = 'START'">
