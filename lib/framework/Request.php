@@ -27,7 +27,7 @@ class Xerxes_Framework_Request
 	private $debugging = array(); // debugging messages
 	private $registry; // registry object
 	private static $instance; // singleton pattern
-
+	
 	protected function __construct()
 	{
 	}
@@ -60,7 +60,7 @@ class Xerxes_Framework_Request
 		if ( $alias != null )
 		{
 			$aliases = array();
-		
+			
 			if ( $alias != null )
 			{
 				foreach ( explode(";", $alias) as $part )
@@ -80,16 +80,16 @@ class Xerxes_Framework_Request
 		if ( array_key_exists( "REQUEST_METHOD", $_SERVER ) )
 		{
 			// request has come in from GET or POST
-
+			
 			$this->method = $_SERVER['REQUEST_METHOD'];
 			
 			// now extract remaining params in query string. 
-
+			
 			if ( $_SERVER['QUERY_STRING'] != "" )
 			{
 				// querystring can be delimited either with ampersand
 				// or semicolon
-
+				
 				$arrParams = preg_split( "/&|;/", $_SERVER['QUERY_STRING'] );
 				
 				foreach ( $arrParams as $strParam )
@@ -127,14 +127,14 @@ class Xerxes_Framework_Request
 			{
 				$this->extractParamsFromPath();
 			}
-
+			
 			// set mobile
 			
 			if ( $this->getSession('is_mobile') == null )
 			{
 				$this->setSession('is_mobile', (string) $this->isMobileDevice());
 			}
-
+			
 			// troubleshooting mobile
 			
 			if ( $this->getProperty("is_mobile") != "" )
@@ -145,7 +145,7 @@ class Xerxes_Framework_Request
 		else
 		{
 			// request has come in from the command line
-
+			
 			$this->method = "COMMAND";
 			
 			foreach ( $_SERVER['argv'] as $arg )
@@ -173,7 +173,7 @@ class Xerxes_Framework_Request
 			}
 			
 			// since iis doesn't hold value for request_uri
-	
+			
 			if ( ! isset( $_SERVER['REQUEST_URI'] ) )
 			{
 				if ( ! isset( $_SERVER['QUERY_STRING'] ) )
@@ -216,7 +216,7 @@ class Xerxes_Framework_Request
 		$is_mobile = mobile_device_detect(true, false);
 		return $is_mobile[0];
 	}
-
+	
 	/**
 	 * Extract params from pretty-urls when turned on in config. Requires base url to be set in config.
 	 * will get from $_SERVER['REQUEST_URI'], first stripping base url.
@@ -257,7 +257,7 @@ class Xerxes_Framework_Request
 		
 		// if the action has any specific parmaters it defines beyond base and action
 		// they are extracted here
-
+		
 		$objMap = Xerxes_Framework_ControllerMap::getInstance()->path_map_obj();
 		$map = $objMap->indexToPropertyMap( $this->getProperty( "base" ), $this->getProperty( "action" ) );
 		
@@ -308,7 +308,7 @@ class Xerxes_Framework_Request
 			$request_uri = $this->getServer( 'REQUEST_URI' );
 			
 			// get the path by stripping off base url + querystring
-
+			
 			$configBase = $this->registry->getConfig( 'BASE_WEB_PATH', false, "" );
 			
 			// remove base path, which might be simply '/'
@@ -319,12 +319,12 @@ class Xerxes_Framework_Request
 				$request_uri = substr_replace ( $request_uri, '', 0, strlen ( $configBase ) + 1 );
 			}
 			
-      		// remove query string
+			// remove query string
 			
 			$request_uri = Xerxes_Framework_Parser::removeRight( $request_uri, "?" );
 			
 			// now get the elements
-
+			
 			$path_elements = explode( '/', $request_uri );
 			
 			for ( $x = 0 ; $x < count( $path_elements ) ; $x ++ )
@@ -333,7 +333,7 @@ class Xerxes_Framework_Request
 			}
 			
 			// for an empty path, we'll have one empty string element, get rid of it.
-
+			
 			if ( strlen( $path_elements[0] ) == 0 )
 			{
 				unset( $path_elements[0] );
@@ -382,7 +382,7 @@ class Xerxes_Framework_Request
 			// if there is an existing element, then we always push in the
 			// the new value into an array, first converting the exising value
 			// to an array if it is not already one 
-
+			
 			if ( ! is_array( $this->arrParams[$key] ) )
 			{
 				$this->arrParams[$key] = array ($this->arrParams[$key] );
@@ -394,7 +394,7 @@ class Xerxes_Framework_Request
 		{
 			// no existing value in property, but the calling code says 
 			// this *must* be added as an array, so make it an array, if not one already
-
+			
 			if ( ! is_array( $value ) )
 			{
 				$value = array ($value );
@@ -421,15 +421,15 @@ class Xerxes_Framework_Request
 		if ( array_key_exists( $key, $this->arrParams ) )
 		{
 			// if the value is requested as array, but is not array, make it one!
-
+			
 			if ( $bolArray == true && ! is_array( $this->arrParams[$key] ) )
 			{
 				return array ($this->arrParams[$key] );
 			} 
-
+			
 			// the opposite: if the the value is not requested as array but is,
 			// take just the first value in the array
-
+			
 			elseif ( $bolArray == false && is_array( $this->arrParams[$key] ) )
 			{
 				return $this->arrParams[$key][0];
@@ -444,7 +444,7 @@ class Xerxes_Framework_Request
 			return null;
 		}
 	}
-
+	
 	/**
 	 * Retrieve all request paramaters as array
 	 *
@@ -465,16 +465,16 @@ class Xerxes_Framework_Request
 	 * 
 	 * @return array
 	 * */
-
+	
 	public function getProperties($regex, $shrink = false, $shrink_del = ",")
 	{
 		$arrFinal = array();
 		
 		if ( $regex == "")
 		{
-			throw new Exception("you must suply a regular expression for the properties to extract");
+			throw new Exception("you must supply a regular expression for the properties to extract");
 		}
-
+		
 		foreach ( $this->getAllProperties() as $key => $value )
 		{
 			$key = urldecode($key);
@@ -699,7 +699,7 @@ class Xerxes_Framework_Request
 		
 		// should we generate full absolute urls with hostname? indicated by a
 		// request property, set automatically by snippet embed controllers. 
-
+		
 		if ( $this->getProperty( "gen_full_urls" ) == 'true' || $full )
 		{
 			$base_path = $this->registry->getConfig( 'BASE_URL', true ) . "/";
@@ -744,12 +744,12 @@ class Xerxes_Framework_Request
 			}
 			
 			// base in path
-
+			
 			$extra_path_arr[0 + $x] = urlencode( $this->getAlias($base)); //alias
 			unset( $properties["base"] );
 			
 			// action in path
-
+			
 			if ( array_key_exists( "action", $properties ) )
 			{
 				$extra_path_arr[1 + $x] = urlencode( $action );
@@ -757,7 +757,7 @@ class Xerxes_Framework_Request
 			}
 			
 			// action-specific stuff
-
+			
 			foreach ( array_keys( $properties ) as $property )
 			{
 				$controller_map = Xerxes_Framework_ControllerMap::getInstance();
@@ -811,7 +811,7 @@ class Xerxes_Framework_Request
 				 $query_string .= "$key=" . urlencode($value);
 			}
 		}
-
+		
 		if ( $query_string != null )
 		{
 			$assembled_path = $assembled_path . '?' . $query_string;
@@ -940,7 +940,7 @@ class Xerxes_Framework_Request
 		
 		if ( $strReturnType != null && $strReturnType != "DOMNODELIST" && $strReturnType != "ARRAY" )
 		{
-			throw new Exception( "unsupported return type" );
+			vthrow new Exception( "unsupported return type" );
 		}
 		
 		$objXPath = new DOMXPath( $this->xml );
@@ -959,21 +959,21 @@ class Xerxes_Framework_Request
 		{
 			// no value found
 			
-
+			
 			return null;
 		} 
 		elseif ( $strReturnType == "DOMNODELIST" )
 		{
 			// return nodelist
 			
-
+			
 			return $objNodes;
 		} 
 		elseif ( $strReturnType == "ARRAY" )
 		{
 			// return nodelist as array, for convenience
 			
-
+			
 			$arrReturn = array ( );
 			
 			foreach ( $objNodes as $objNode )
@@ -988,7 +988,7 @@ class Xerxes_Framework_Request
 			// just grab the value, if you know it is the 
 			// only one or first one in the query
 			
-
+			
 			if ( $objNodes->item( 0 ) != null )
 			{
 				return $objNodes->item( 0 )->nodeValue;
@@ -1014,17 +1014,17 @@ class Xerxes_Framework_Request
 		
 		// add the url parameters and session and server global arrays
 		// to the master xml document
-
+		
 		$objXml = new DOMDocument( );
 		$objXml->loadXML( "<request />" );
 		
 		// session and server global arrays will have parent elements
 		// but querystring and cookie params will be at the root of request
-
+		
 		$this->addElement( $objXml, $objXml->documentElement, $this->arrParams );
 		
 		// add the session global array
-
+		
 		$objSession = $objXml->createElement( "session" );
 		$objXml->documentElement->appendChild( $objSession );
 		$this->addElement( $objXml, $objSession, $_SESSION );
@@ -1035,13 +1035,13 @@ class Xerxes_Framework_Request
 		// okay, yeah, we already have group memberships listed from the session,
 		// but it doesn't have all the data we need, plus we need to stick
 		// group memberships by virtue of IP address. 
-
+		
 		$objAuth = $objXml->createElement( "authorization_info" );
 		$objXml->documentElement->appendChild( $objAuth );
 		
 		// are they an affiliated user at all, meaning either logged in or
 		// ip recognized?
-
+		
 		$authUser = Xerxes_Framework_Restrict::isAuthenticatedUser( $this );
 		$authIP = Xerxes_Framework_Restrict::isIpAddrInRanges( $this->getServer( 'REMOTE_ADDR' ), $objRegistry->getConfig( "local_ip_range" ) );
 		$objElement = $objXml->createElement( "affiliated", ($authUser || $authIP) ? "true" : "false" );
@@ -1070,7 +1070,7 @@ class Xerxes_Framework_Request
 		
 		// add the server global array, but only if the request
 		// asks for it, for security purposes
-
+		
 		if ( $bolHideServer == true )
 		{
 			$objServer = $objXml->createElement( "server" );
@@ -1101,7 +1101,7 @@ class Xerxes_Framework_Request
 		{
 			// need to make sure the xml element has a valid name
 			// and not something crazy with spaces or commas, etc.
-
+			
 			$strSafeKey = Xerxes_Framework_Parser::strtolower( preg_replace( '/\W/', '_', $key ) );
 			
 			if ( is_array( $value ) )
@@ -1111,7 +1111,7 @@ class Xerxes_Framework_Request
 					$objElement = $objXml->createElement( $strSafeKey );
 					$objElement->setAttribute( "key", $strKey );
 					$objAppend->appendChild( $objElement );
-
+					
 					if ( is_array( $strValue ) )
 					{
 						// multi-dimensional arrays will be recursively added
