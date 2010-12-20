@@ -48,17 +48,34 @@ class Xerxes_Helper
 			}
 		}
 			
-		// description we handle special for escaping setting. Note that we
-		// handle html escpaing here in controller for description, view
-		// should use disable-output-escaping="yes" on value-of of description.
-
-		$escape_behavior = $objRegistry->getConfig ( "db_description_html", false, "escape" ); // 'escape' ; 'allow' ; or 'strip'
-		$multilingual = $objRegistry->getConfig ( "db_description_multilingual", false, "" ); // '' or comma-separated list of languages
-
+		$multilingual = $objRegistry->getConfig ( "db_description_multilingual", false, "" ); // XML object
+		
+		$lang = $objRequest->getProperty("lang");
+		if ($lang == "")
+			$lang = "eng";
+		
+		// build a list of configured description languages
+		foreach ($multilingual->language as $language)
+		{
+			$order = NULL;
+			$code  = NULL;
+			foreach ($language->attributes() as $name => $val)
+			{
+				if ($name == "code")
+					$code = (string) $val;
+				if ($name == "order")
+					$order = (int) $val;
+			}
+			$db_languages_order[$code] = $order;
+			$db_languages_code[$order] = $code;
+		}
+		
 		$notes = array ("description", "search_hints");
 		
 		foreach ( $notes as $note_field_name )
 		{
+			$node_queue = array();	// nodes to add when done looping to prevent looping over nodes added inside the loop
+			
 			foreach ($xml->$note_field_name as $note_field_xml )
 			{
 				$note_field = (string) $note_field_xml;
@@ -66,33 +83,35 @@ class Xerxes_Helper
 				// strip out "##" chars, not just singular "#" to allow # in markup
 				// or other places. 
 				
-				if ($multilingual != "")
+				$pos = strpos( $note_field, '######' );
+				if ($multilingual == false or $pos === false)
 				{
 					$note_field = str_replace ( '######', '\n\n\n', $note_field );
 				}
-				
-				$note_field = str_replace ( '##', ' ', $note_field );
-				
-				if ($escape_behavior == "strip")
+				else
 				{
-					$allow_tag_list = $objRegistry->getConfig ( "db_description_allow_tags", false, '' );
-					$arr_allow_tags = split ( ',', $allow_tag_list );
-					$param_allow_tags = '';
-
-					foreach ( $arr_allow_tags as $tag )
-					{
-						$param_allow_tags .= "<$tag>";
+					$descriptions = explode( '######', $note_field );
+					$i = 1;
+					foreach ($descriptions as $description) {
+						$description = self::embedNoteField($description);
+						$node_queue[] = array (
+							'note_field_name' => $note_field_name,
+							'description' => $description,
+							'code' => $db_languages_code[$i++]
+						);
 					}
-					
-					$note_field = strip_tags ( $note_field, $param_allow_tags );
 				}
 				
-				if ($escape_behavior == "escape")
-				{
-					$note_field = htmlspecialchars ( $note_field );
-				}
+				$note_filed = self::embedNoteField($note_field);
 				
-				$xml->$note_field_name =  Xerxes_Framework_Parser::escapeXml ( $note_field );
+				$xml->$note_field_name = Xerxes_Framework_Parser::escapeXml ( $note_field );
+				$xml->$note_field_name->addAttribute('lang', 'ALL');
+			}
+
+			foreach ($node_queue as $node)
+			{
+				$descNode = $xml->addChild($node['note_field_name'], $node['description']);
+				$descNode->addAttribute('lang', $node['code']);
 			}
 		}
 		
@@ -314,6 +333,40 @@ class Xerxes_Helper
 		$key = $strResultSet . ":" . $strRecordNumber;
 		
 		return $key;
+	}
+	
+	public static function embedNoteField($note_field)
+	{
+		// description we handle special for escaping setting. Note that we
+		// handle html escpaing here in controller for description, view
+		// should use disable-output-escaping="yes" on value-of of description.
+
+		$objRegistry = Xerxes_Framework_Registry::getInstance();
+		$escape_behavior = $objRegistry->getConfig ( "db_description_html", false, "escape" ); // 'escape' ; 'allow' ; or 'strip'
+		
+		
+		$note_field = str_replace ( '##', ' ', $note_field );
+		
+		if ($escape_behavior == "strip")
+		{
+			$allow_tag_list = $objRegistry->getConfig ( "db_description_allow_tags", false, '' );
+			$arr_allow_tags = split ( ',', $allow_tag_list );
+			$param_allow_tags = '';
+			
+			foreach ( $arr_allow_tags as $tag )
+			{
+				$param_allow_tags .= "<$tag>";
+			}
+			
+			$note_field = strip_tags ( $note_field, $param_allow_tags );
+		}
+		
+		if ($escape_behavior == "escape")
+		{
+			$note_field = htmlspecialchars ( $note_field );
+		}
+		
+		return $note_field;
 	}
 }
 ?>

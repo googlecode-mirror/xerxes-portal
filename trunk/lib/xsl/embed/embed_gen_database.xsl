@@ -117,15 +117,21 @@
 									<td><label for="disp_show_desc_lang"><xsl:copy-of select="$text_snippet_show_desc_lang" /></label></td> 
 									<td>
 										<select name="disp_show_desc_lang" id="disp_show_desc_lang">
+											<xsl:variable name="disp_show_desc_lang">
+												<xsl:choose>
+													<xsl:when test="not(request/disp_show_desc_lang)"><xsl:value-of select="$language" /></xsl:when>
+													<xsl:otherwise><xsl:value-of select="request/disp_show_desc_lang" /></xsl:otherwise>
+												</xsl:choose>
+											</xsl:variable>
 											<option value="ALL">
-												<xsl:if test="request/disp_show_desc_lang = 'ALL'">
+												<xsl:if test="$disp_show_desc_lang = 'ALL'">
 												<xsl:attribute name="selected">selected</xsl:attribute>
 												</xsl:if>
 												<xsl:value-of select="$text_snippet_display_all" />
 											</option>
 											<xsl:for-each select="//config/db_description_multilingual/language">
 												<option value="{@code}">
-													<xsl:if test="request/disp_show_desc_lang = '@code'">
+													<xsl:if test="$disp_show_desc_lang = @code">
 													<xsl:attribute name="selected">selected</xsl:attribute>
 													</xsl:if>
 													<xsl:value-of select="@display" />
@@ -205,6 +211,10 @@
 			</fieldset>
 		</div>
 	</div>
-
+	
+	<!-- on first load, reflect the selected state of the listboxes -->
+	<script language="javascript" type="text/javascript">
+		updateExample();
+	</script>
 </xsl:template>
 </xsl:stylesheet>
