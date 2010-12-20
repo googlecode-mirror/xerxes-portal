@@ -160,7 +160,7 @@ class Xerxes_Framework_Request
 		
 		if ( isset($_SERVER) )
 		{
-			### iis fixes
+			### IIS fixes
 			
 			// to make this consistent with apache
 			
@@ -172,7 +172,7 @@ class Xerxes_Framework_Request
 				}
 			}
 			
-			// since iis doesn't hold value for request_uri
+			// since IIS doesn't hold value for request_uri
 			
 			if ( ! isset( $_SERVER['REQUEST_URI'] ) )
 			{
@@ -940,7 +940,7 @@ class Xerxes_Framework_Request
 		
 		if ( $strReturnType != null && $strReturnType != "DOMNODELIST" && $strReturnType != "ARRAY" )
 		{
-			vthrow new Exception( "unsupported return type" );
+			throw new Exception( "unsupported return type" );
 		}
 		
 		$objXPath = new DOMXPath( $this->xml );
