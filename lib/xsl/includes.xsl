@@ -2479,31 +2479,9 @@
 -->
 
 <xsl:template name="show_db_description">
-	<xsl:param name='description_language' />
+	<xsl:param name='description_language' select="$language" />
 
-	<xsl:choose>
-		<xsl:when test="//config/db_description_multilingual/language and $description_language != 'ALL'">
-			<xsl:call-template name="n-th-item-in-list">
-				<xsl:with-param name="list">
-					<xsl:value-of select="description" disable-output-escaping="yes" />
-				</xsl:with-param>
-				<xsl:with-param name="delimiter">\n\n\n</xsl:with-param>
-				<xsl:with-param name="index">
-					<xsl:choose>
-						<xsl:when test="$description_language">	<!-- we're asking for a specific language -->
-							<xsl:value-of select="//config/db_description_multilingual/language[@code=$description_language]/@order" />
-						</xsl:when>
-						<xsl:otherwise>	<!-- use pre-computed value -->
-							<xsl:value-of select="$language_position" />
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:with-param>
-			</xsl:call-template>
-		</xsl:when>
-		<xsl:otherwise>
-			<xsl:value-of select="description" disable-output-escaping="yes" />
-		</xsl:otherwise>
-	</xsl:choose>
+	<xsl:value-of select="description[@lang=$description_language]" disable-output-escaping="yes" />
 </xsl:template>
 
 <!--

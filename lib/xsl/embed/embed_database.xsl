@@ -29,6 +29,14 @@
 		<!-- default false -->
 		<xsl:variable name="disp_embed_css" select="request/disp_embed_css = 'true'"/>
 		
+		<!-- default 'ALL' -->
+		<xsl:variable name="disp_show_desc_lang">
+			<xsl:choose>
+				<xsl:when test="not(request/disp_show_desc_lang)">ALL</xsl:when>
+				<xsl:otherwise><xsl:value-of select="request/disp_show_desc_lang" /></xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		
 		<!-- if it's a partial page and we want to include CSS anyway, do it.-->
 		<xsl:if test="$disp_embed_css">
 			<xsl:call-template name="disp_embed_css" />
@@ -62,7 +70,7 @@
 			<xsl:if test="$disp_show_desc">
 				<div class="alphaDescription">
 					<xsl:call-template name="show_db_description">
-						<xsl:with-param name="description_language" select="//request/disp_show_desc_lang" />
+						<xsl:with-param name="description_language" select="$disp_show_desc_lang" />
 					</xsl:call-template>
 				</div>
 			</xsl:if>
