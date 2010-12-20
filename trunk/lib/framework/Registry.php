@@ -349,12 +349,16 @@ class Xerxes_Framework_Registry
 			{
 				if ( $language["code"] == $lang )
 				{
-					return $language["locale"];
+					foreach ($language->attributes() as $name => $value) {
+						if ( $name == "locale" ) {
+							return (string) $value;
+						}
+					}
 				}
 			}
 		}
 		
-		// we got this far, then no matcches!
+		// we got this far, then no matches!
 		
 		return "C";
 	}
