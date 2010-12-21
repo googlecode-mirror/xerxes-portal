@@ -56,6 +56,13 @@
 		
 			<!-- 
 			
+			List of languages Xerxes and Metalib interface is available in.
+			
+			* during 'populate databases', Xerxes will try to pull category names in these languages from
+			  Metalib X-Server. Code is ISO 936 bibliographic code, Metalib uses the same code for languages.
+			
+			* Don't leave the list empty, leave at least one language here.
+			
 			  @code = language code
 			  @locale = used for:
 				
@@ -71,10 +78,10 @@
 				in their Xerxes normalized titles (e.g. in URL).
 				See details here: http://www.php.net/manual/en/function.iconv.php
 			-->
-		
+			
 			
 			<language code="eng" locale="" />
-			<!-- <language code="cze" locale="cs_CS.utf8" /> -->
+			<!-- <language code="cze" locale="cs_CZ.utf8" /> -->
 		</config>
 		
 		
