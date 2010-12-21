@@ -2481,7 +2481,15 @@
 <xsl:template name="show_db_description">
 	<xsl:param name='description_language' select="$language" />
 
-	<xsl:value-of select="description[@lang=$description_language]" disable-output-escaping="yes" />
+	<xsl:choose>
+		<xsl:when test="//config/db_description_multilingual/language">
+			<xsl:value-of select="description[@lang=$description_language]" disable-output-escaping="yes" />
+		</xsl:when>
+		<xsl:otherwise>
+			<xsl:value-of select="description" disable-output-escaping="yes" />
+		</xsl:otherwise>
+	</xsl:choose>
+	
 </xsl:template>
 
 <!--
