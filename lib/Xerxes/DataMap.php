@@ -584,10 +584,6 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 			$column = "old";
 		}
 		
-		// we're outer joining only to group_restrictions, because it's
-		// really confusing and complicated to write this SQL, and that's all
-		// we need right now.
-
 		$strSQL = "SELECT $schema_map[categories_table].id as category_id, 
 			$schema_map[categories_table].name as category,
 			$schema_map[subcategories_table].$schema_map[subcategories_pk] as subcat_id,
@@ -693,7 +689,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 				}
 				
 				// if the current row's outter join value is not already stored,
-				// then then we've come to a unique value, so add it
+				// then we've come to a unique value, so add it
 
 				$arrColumns = array ("usergroup" => "group_restrictions" );
 				
