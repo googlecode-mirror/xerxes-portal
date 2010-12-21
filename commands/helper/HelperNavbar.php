@@ -80,7 +80,7 @@ class Xerxes_Command_HelperNavbar extends Xerxes_Command_Helper
 		
 		
 		
-		### db alphbetical list
+		### db alphabetical list
 		
 		$this->addNavbarElement( $objXml, "database_list", array ("base" => "databases", "action" => "alphabetical" ) );
 		
