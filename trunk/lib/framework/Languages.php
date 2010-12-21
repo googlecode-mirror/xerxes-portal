@@ -17,6 +17,8 @@ class Xerxes_Framework_Languages
 	protected $gettext = false; // whether gettext is installed
 	protected $languages_file_system = "/usr/share/xml/iso-codes/iso_639.xml";
 	protected $languages_file_xerxes = "../data/iso_639.xml"; // local version
+	protected $gettext_domain_system = "/usr/share/locale";
+	protected $gettext_domain_xerxes = "../data/locale"; // local version
 	protected $locale = "C";	// default locale
 	protected $domain = "iso_639";	// gettext domain
 	private static $instance;	// singleton pattern
@@ -66,6 +68,7 @@ class Xerxes_Framework_Languages
 		// set full path to local copy
 		
 		$this->languages_file_xerxes = realpath(dirname(__FILE__) . DIRECTORY_SEPARATOR . $this->languages_file_xerxes);
+		$this->gettext_domain_xerxes = realpath(dirname(__FILE__) . DIRECTORY_SEPARATOR . $this->gettext_domain_xerxes);
 		
 		// if the iso-codes is not installed, use our copy
 		
@@ -105,7 +108,22 @@ class Xerxes_Framework_Languages
 		
 		if ( $this->gettext == true )
 		{
-			bindtextdomain( $this->domain, '/usr/share/locale' ); // this works on windows too?
+			$gettext_domain_path = "";
+			
+			if ( file_exists( $this->gettext_domain_xerxes) )
+			{
+				$gettext_domain_path = $this->gettext_domain_xerxes;
+			}
+			elseif ( file_exists( $this->gettext_domain_system ) )
+			{
+				$gettext_domain_path = $this->gettext_domain_system;
+			}
+			else
+			{
+				trigger_error ( ".mo files of the iso_639 gettext domain not found. Xerxes will continue normally, but language names will be shown in English instead of localized.", E_USER_WARNING );
+			}
+			
+			bindtextdomain( $this->domain, $gettext_domain_path ); // this works on windows too?
 			bind_textdomain_codeset( $this->domain, 'UTF-8' );	// assume UTF-8, all the .po files in iso_639 use it
 			textdomain( $this->domain );
 		}
