@@ -107,11 +107,17 @@ class Xerxes_Command_HelperNavbar extends Xerxes_Command_Helper
 				
 				$language_node->setAttribute("name", $readable_name);
 				$language_node->setAttribute("code", $code);
+				
+				// link back to home page
+				
+				$current_params = array("base" => ""); // the home page
+				$current_params["lang"] = $code; // with language set
+				
+				$url = $this->request->url_for($current_params);
+				
+				$language_node->setAttribute("url", $url);
 			}
 		}
-		
-		
-		
 
 		$this->request->addDocument( $objXml );		
 		
