@@ -118,10 +118,6 @@ class Xerxes_Framework_Languages
 			{
 				$gettext_domain_path = $this->gettext_domain_system;
 			}
-			else
-			{
-				trigger_error ( ".mo files of the iso_639 gettext domain not found. Xerxes will continue normally, but language names will be shown in English instead of localized.", E_USER_WARNING );
-			}
 			
 			bindtextdomain( $this->domain, $gettext_domain_path ); // this works on windows too?
 			bind_textdomain_codeset( $this->domain, 'UTF-8' );	// assume UTF-8, all the .po files in iso_639 use it
