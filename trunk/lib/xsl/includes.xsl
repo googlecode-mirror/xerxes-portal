@@ -27,9 +27,6 @@
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	
-	<!-- currently used to parse multilingual database descriptions -->
-	<xsl:import href="list-tokenizer.xsl" />
-
 	<!-- text labels are defined in a separate place -->
 	<xsl:include href="labels/eng.xsl" />
 
