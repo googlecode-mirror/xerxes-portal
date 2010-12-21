@@ -52,7 +52,7 @@
 		
 	<!-- LANGUAGES -->
 		
-		<config name="languages" xml="true" pass="true">
+		<config name="languages" xml="true">
 		
 			<!-- 
 			
