@@ -238,10 +238,13 @@ class Xerxes_Framework_Request
 				// first path element includes language, so map it
 				// and then push all other path elements up one
 				
-				if ( $path[0] == $language["code"] )
+				if ( array_key_exists(0, $path) )
 				{
-					$this->mapPathToProperty( 0, "lang" );
-					$x = 1;
+					if ( $path[0] == $language["code"] )
+					{
+						$this->mapPathToProperty( 0, "lang" );
+						$x = 1;
+					}
 				}
 			}
 		}
