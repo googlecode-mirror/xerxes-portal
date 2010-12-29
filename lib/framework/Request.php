@@ -17,6 +17,7 @@ class Xerxes_Framework_Request
 {
 	private $method = ""; // request method: GET, POST, COMMAND
 	private $arrParams = array ( ); // request paramaters
+	private $arrURI = array(); // just the uri (sans-cookie, hidden values) params
 	private $arrSession = array ( ); // session array for command line, unused right now
 	private $arrCookieSetParams = array ( ); // cookies that will be set with response. 
 		// value is array of args to php set_cookie. 
@@ -186,6 +187,19 @@ class Xerxes_Framework_Request
 				}
 			}
 		}
+		
+		// just uri params
+		
+		$this->arrURI = $this->arrParams;
+		$keys = array_keys($this->arrParams);
+			
+		foreach ( $keys as $key )
+		{
+			if ( array_key_exists($key, $_COOKIE) )
+			{
+				unset($this->arrURI[$key]);
+			}
+		}		
 	}
 	
 	/**
@@ -213,7 +227,7 @@ class Xerxes_Framework_Request
 	public function isMobileDevice()
 	{
 		require_once(Xerxes_Framework_FrontController::parentDirectory() . '/lib/mobile/mobile_device_detect.php');		
-		$is_mobile = mobile_device_detect(true, false);
+		$is_mobile = @mobile_device_detect(true, false); // supress errors because this library is goofy
 		return $is_mobile[0];
 	}
 	
@@ -458,6 +472,17 @@ class Xerxes_Framework_Request
 	{
 		return $this->arrParams;
 	}
+
+	/**
+	 * Retrieve original URI properties
+	 *
+	 * @return array
+	 */
+	
+	public function getURIProperties()
+	{
+		return $this->arrURI;
+	}	
 	
 	/**
 	 * Get a group of properties using regular expression
