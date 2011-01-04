@@ -110,7 +110,26 @@ class Xerxes_Command_HelperNavbar extends Xerxes_Command_Helper
 				
 				// link back to home page
 				
-				$current_params = array("base" => ""); // the home page
+				$current_params = $this->request->getURIProperties(); // this page
+				
+				// this is necessary on the home page
+				
+				if ( ! array_key_exists("base", $current_params) )
+				{
+					$current_params["base"] = "";
+				}
+				
+				// subject pages can't support a swap, so send user back to home page
+				
+				if ( ($current_params["base"] == "databases" || $current_params["base"] == "embed") && 
+					array_key_exists("subject", $current_params) )
+				{
+					$current_params = array();
+					$current_params["base"] = "";
+				}
+				
+				// add the languages
+				
 				$current_params["lang"] = $code; // with language set
 				
 				$url = $this->request->url_for($current_params);
