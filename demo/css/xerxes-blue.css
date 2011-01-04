@@ -218,6 +218,15 @@ a:hover {
 	top: -1000px; 
 }
 
+#languages {
+	float: right;
+	color: #fff;
+}
+
+#languages a, #languages a:visited {
+	color: #fff;
+}
+
 #message_display {
 	padding: .8em;
 	margin: 2em;

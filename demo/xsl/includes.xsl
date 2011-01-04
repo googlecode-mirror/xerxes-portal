@@ -22,7 +22,19 @@
 	<div id="hd-banner">
 		<a href="{$base_url}" id="hd-banner-link">
 			<xsl:value-of select="//config/application_name" />
-		</a>
+		</a>		
+			
+		<xsl:if test="count(config/languages/language) &gt; 1">
+			<div id="languages">
+				<xsl:for-each select="navbar/languages/language">
+					<a href="{@url}"><xsl:value-of select="@name" /></a>
+					<xsl:if test="following-sibling::language">
+						<xsl:text> | </xsl:text>
+					</xsl:if>
+				</xsl:for-each>
+			</div>
+		</xsl:if>
+		
 	</div>
 
 </xsl:template>
