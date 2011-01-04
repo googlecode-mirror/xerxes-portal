@@ -751,9 +751,10 @@ class Xerxes_Framework_Request
 			$action = $properties["action"];
 		}
 		
-		// add in the the language element automatically
+		// add in the the language element automatically, 
+		// unless it's been set explicitly in the url
 		
-		if ( $this->getProperty("lang") != "" )
+		if ( $this->getProperty("lang") != "" && ! array_key_exists("lang", $properties) )
 		{
 			$properties["lang"] = $this->getProperty("lang");
 		}
