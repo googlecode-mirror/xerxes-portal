@@ -84,7 +84,7 @@ class Xerxes_Framework_Registry
 				$name = Xerxes_Framework_Parser::strtoupper( $config["name"] );
 				$lang = (string) $config["lang"];
 				
-				if ( $lang != "" )
+				if ( $lang != "" && $lang != $this->defaultLanguage() )
 				{
 					$name .= "_$lang";
 				}
@@ -170,7 +170,7 @@ class Xerxes_Framework_Registry
 	{
 		$name = Xerxes_Framework_Parser::strtoupper( $name );
 		
-		if ( $lang != "" )
+		if ( $lang != "" && $lang != $this->defaultLanguage() )
 		{
 			$name .= "_$lang";
 		}
@@ -337,6 +337,20 @@ class Xerxes_Framework_Registry
 		}
 		
 		return $source;
+	}
+	
+	public function defaultLanguage()
+	{
+		$default_language = $this->xml->xpath("configuration/config[@name='languages']/language[position()=1]/@code");
+		
+		if ( count($default_language) > 0)
+		{
+			return (string) $default_language[0]["code"];
+		}		
+		else
+		{
+			return null;
+		}
 	}
 	
 	public function getLocale($lang)
