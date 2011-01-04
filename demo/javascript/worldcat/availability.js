@@ -113,7 +113,7 @@
 			{
 				if ( imgs[i].width == 1 )
 				{
-					imgs[i].src = "images/no-image.png";
+					imgs[i].src = "images/no-image.gif";
 				}
 			}
 		}
