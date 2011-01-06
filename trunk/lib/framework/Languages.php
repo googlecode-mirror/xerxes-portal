@@ -98,15 +98,15 @@ class Xerxes_Framework_Languages
 		
 		// which language shall we display?
 		
-		$registry = Xerxes_Framework_Registry::getInstance();
-		$request = Xerxes_Framework_Request::getInstance();
-		$lang = $request->getProperty("lang");
-
+		$objRegistry = Xerxes_Framework_Registry::getInstance();
+		$objRequest = Xerxes_Framework_Request::getInstance();
+		$lang = $objRequest->getProperty("lang");
+		
 		if ( $lang == null ) {
-			$lang = $registry->defaultLanguage();
+			$lang = $objRegistry->defaultLanguage();
 		}
 		
-		$this->locale = $registry->getLocale($lang);
+		$this->locale = $objRegistry->getLocale($lang);
 		
 		// bindings
 		
