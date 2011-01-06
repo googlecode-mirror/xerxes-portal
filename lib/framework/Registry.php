@@ -17,6 +17,7 @@ class Xerxes_Framework_Registry
 	protected $config_file = "config/config";
 	private $usergroups = array ( ); // user groups
 	private $authentication_sources = array ( );
+	private $default_language = array ( );
 	private $arrConfig = null; // configuration settings
 	private $arrPass = array ( ); // values to pass on to the view
 	private static $instance; // singleton pattern
@@ -84,7 +85,7 @@ class Xerxes_Framework_Registry
 				$name = Xerxes_Framework_Parser::strtoupper( $config["name"] );
 				$lang = (string) $config["lang"];
 				
-				if ( $lang != "" && $lang != $this->defaultLanguage() )
+				if ( $lang != "" && $lang != $this->initDefaultLanguage() )
 				{
 					$name .= "_$lang";
 				}
@@ -339,18 +340,25 @@ class Xerxes_Framework_Registry
 		return $source;
 	}
 	
-	public function defaultLanguage()
+	public function initDefaultLanguage()
 	{
 		$default_language = $this->xml->xpath("configuration/config[@name='languages']/language[position()=1]/@code");
 		
 		if ( count($default_language) > 0)
 		{
-			return (string) $default_language[0]["code"];
+			$this->default_language = (string) $default_language[0]["code"];
 		}		
 		else
 		{
-			return null;
+			$this->default_language = null;
 		}
+
+		return $this->default_language;
+	}
+
+	public function defaultLanguage()
+	{
+		return $this->default_language;
 	}
 	
 	public function getLocale($lang)
