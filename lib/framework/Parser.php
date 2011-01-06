@@ -146,9 +146,6 @@
 			
 			### language file
 			
-var_export($_SERVER['HTTP_ACCEPT_LANGUAGE']);
-
-
 			$request = Xerxes_Framework_Request::getInstance();
 			$language = $request->getProperty("lang");
 			
