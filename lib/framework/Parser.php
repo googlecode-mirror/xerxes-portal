@@ -310,7 +310,7 @@
 			$strLetter = ""; // first letter of subtitle, if any
 	
 			// if there are no lowercase letters (and its sufficiently long a title to 
-			// not just be an aconym or something) then this is likely a title stupdily
+			// not just be an acronym or something) then this is likely a title stupdily
 			// entered into a database in ALL CAPS, so drop it entirely to 
 			// lower-case first
 	
