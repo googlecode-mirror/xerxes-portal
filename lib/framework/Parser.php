@@ -149,18 +149,21 @@
 			$request = Xerxes_Framework_Request::getInstance();
 			$language = $request->getProperty("lang");
 			
-			// english file is included by default
+			if ( $language == "" )
+			{
+				$language = $objRegistry->defaultLanguage();
+			}
+			
+			// english file is included by default (as a fallback)
 			
 			array_push($arrInclude, "xsl/labels/eng.xsl");
 			
 			// if language is set to something other than english
 			// then include that file to override the english labels
 			
-			if ( $language != "" )
-			{
+			if ( $language != "eng" ) {
 				array_push($arrInclude, "xsl/labels/$language.xsl");
-			}			
-			
+			}
 			
 			### add a refence for files programatically added (including the language file above)
 			

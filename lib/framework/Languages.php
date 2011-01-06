@@ -101,6 +101,10 @@ class Xerxes_Framework_Languages
 		$registry = Xerxes_Framework_Registry::getInstance();
 		$request = Xerxes_Framework_Request::getInstance();
 		$lang = $request->getProperty("lang");
+
+		if ( $lang == null ) {
+			$lang = $registry->defaultLanguage();
+		}
 		
 		$this->locale = $registry->getLocale($lang);
 		
