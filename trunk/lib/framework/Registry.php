@@ -17,7 +17,7 @@ class Xerxes_Framework_Registry
 	protected $config_file = "config/config";
 	private $usergroups = array ( ); // user groups
 	private $authentication_sources = array ( );
-	private $default_language = array ( );
+	private $default_language = null;
 	private $arrConfig = null; // configuration settings
 	private $arrPass = array ( ); // values to pass on to the view
 	private static $instance; // singleton pattern
