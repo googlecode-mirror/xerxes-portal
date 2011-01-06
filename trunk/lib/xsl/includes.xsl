@@ -94,13 +94,19 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
-
+	
 	<xsl:variable name="databases_searchable"	select="//config/database_list_searchable" />
 	
+	<xsl:variable name="default_language">
+		<xsl:value-of select="//config/languages/language[position()=1]/@code" />
+	</xsl:variable>
 	<xsl:variable name="language">
 		<xsl:choose>
 			<xsl:when test="//request/lang and //request/lang != ''"> <!-- @todo: allow only languages defined in //config/languages/language[@code] -->
 				<xsl:value-of select="//request/lang" />
+			</xsl:when>
+			<xsl:when test="$default_language"> <!-- if it's defined, use it -->
+				<xsl:value-of select="$default_language" />
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:text>eng</xsl:text>
