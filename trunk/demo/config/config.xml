@@ -12,7 +12,7 @@
 	 
 	<configuration>
 		
-	<!-- BASIC CONFIGURATION -->	
+	<!-- BASIC CONFIGURATION -->
 	
 		<!-- the base web server path for your xerxes installation. 
 			NO trailing slash. If you have installed at web root, empty string. -->
@@ -27,7 +27,7 @@
 		
 		<config name="display_errors">false</config>
 		
-		<!-- inlcude here the range of local ip addresses that should not be challenged for a login.
+		<!-- include here the range of local ip addresses that should not be challenged for a login.
 		 	enter as either 144.37.*.*, with * as wildcard, or as 144.37.0.0-144.37.255.255,
 		 	separate multiple entries by comma -->
 			 
@@ -46,7 +46,7 @@
 		
 		<config name="http_use_curl"></config>
 		
-		<!-- if you are running xerxes behind a reverse proxy server set this to 'true'-->
+		<!-- if you are running xerxes behind a reverse proxy server set this to 'true' -->
 		
 		<config name="reverse_proxy"></config>
 		
@@ -138,8 +138,7 @@
 		<config name="link_resolver_address"></config>
 		
 		<!--  If you want to do the SFX 'populate' action from another link resolver, perhaps because 
-			your main one is not SFX, configure this 
-			-->
+			your main one is not SFX, configure this -->
 		
 		<config name="alternate_fulltext_harvest_address"></config>
 		
@@ -148,7 +147,7 @@
 		eg http://findit.library.jhu.edu -->
 		
 		<config name="umlaut_base" pass="true"></config>
-    
+    		
 		<!-- the sid that will be passed to the link resolver, xerxes will also append the name 
 			of the database to the sid -->
 		
@@ -166,14 +165,14 @@
 			
 			WAM Proxy: enter in your catalog information with '{WAM}' as the domain/port wildcard 
 			e.g.,	http://{WAM}.catalog.library.edu
-		 -->
+		-->
 		
 		<config name="proxy_server"></config>
-
+		
 		<!-- Google analytics -->
 		
 		<config name="google_analytics" pass="true"></config>
-
+		
 		
 	<!-- EZPROXY EXPORT -->
 	
@@ -224,10 +223,10 @@
 			Use IP, hostname or URI (ldap://hostname:port/ or ldaps://hostname:port/). -->
 			
 			<config name="directory_server"></config>
-	
+			
 			<!-- deprecated, use ldap_dn_format instead -->
 			<!-- <config name="domain"></config> -->
-	
+			
 			<!-- required: format of user DN we want to authenticate, %s will be replaced by username from the login form -->
 			<!-- another example, for Novell eDir: cn=%s,ou=department,o=organization -->
 			
@@ -237,47 +236,47 @@
 				 If this is false, the rest of LDAP options will be ignored. -->
 			
 			<config name="ldap_do_init_bind">false</config>
-	
+			
 			<!-- required if ldap_do_init_bind=true but may be empty for anonymous bind -->
 			<!-- DN for the initial bind. If do_init_bind is true and both ldap_init_bind_dn and 
 				 ldap_init_bind_password are empty, perform an anonymous bind. -->
 				 
 			<config name="ldap_init_bind_dn">cn=dir_admin,o=organization</config>
-	
+			
 			<!-- required if ldap_do_init_bind=true but may be empty for anonymous bind -->
 			<!-- password for the initial bind -->
 			
 			<config name="ldap_init_bind_password">dir_admin_password</config>
-	
+			
 			<!-- optional: part of tree to search for user DN (used to restrict search to a particular context) -->
 			
 			<config name="ldap_search_base">o=organization</config>
-	
+			
 			<!-- required if do_init_bind=true -->
 			<!-- find only users matching this criteria (e.g. restrict only to users with a mail attribute or 
 			     within a certain ou) -->
 			
 			<config name="ldap_search_filter">(cn=%s)</config>
-	
+			
 			<!-- required if ldap_do_init_bind=true -->
 			<!-- attribute containing the username -->
 			
 			<config name="ldap_search_uid">cn</config>
-	
+			
 			<!-- if the following options are not empty and the directory contains attributes with these names, 
 				 their values will be imported to Xerxes users table on first login -->
 			<!-- optional: attribute containing user's given name -->
 			
 			<config name="ldap_search_name">givenName</config>
-	
+			
 			<!-- optional: attribute containing user's surname -->
 			
 			<config name="ldap_search_surname">sn</config>
-	
+			
 			<!-- optional: attribute containing user's email address -->
 			
 			<config name="ldap_search_mail">mail</config>
-		
+			
 			<!-- LDAP options; see details in http://tools.ietf.org/html/draft-ietf-ldapext-ldap-c-api-05#section-11.2 -->
 			
 			<!-- optional: LDAP protocol version -->
@@ -293,7 +292,7 @@
 			returned by LDAP servers or not (LDAP_OPT_ON, LDAP_OPT_OFF) -->
 			
 			<config name="ldap_opt_referrals">LDAP_OPT_OFF</config>
-
+			
 			<!-- optional: Use TLS with LDAP connection (StartTLS)?
 			This is not LDAPS (default port 636). This is LDAP+TLS (default port 389). LDAPS is now deprecated over LDAP+TLS. -->
 			
@@ -361,7 +360,7 @@
 		
 		<!-- bx recommendations -->
 		
-		<config name="bx_token"></config>		
+		<config name="bx_token"></config>
 		
 		<!-- ask bX for at most bx_max_records results per item -->
 		
@@ -378,7 +377,7 @@
 		<!-- overall template for page design, see wiki for details! -->
 		
 		<config name="template" pass="true">yui-t6</config>
-	
+		
 		<!-- subject/category ID to use on the home page (the "categories" page) for a quicksearch search box.
 			The "lang" attribute defines language code for which this value (category name translation) applies
 			(define this variable for each language you use). -->
@@ -396,16 +395,16 @@
 			of the words, not an exact match -->
 		
 		<config name="subcategories_include"></config>
-	
+		
 		<!-- subcategories that should be taken out of the 'main' part of the subject page
 		     and made part of the sidebar -->
 		
 		<config name="subcategories_sidebar"></config>
-
+		
 		<!-- database types to exclude from the A-Z listing -->
 		
 		<config name="databases_type_exclude_az"></config>
-
+		
 		<!-- strip out HTML tags in database description. Possible values:
 		
 			escape: Escape all HTML so it shows up as source.
@@ -442,7 +441,7 @@
 			databases by name or other information -->
 		
 		<config name="database_list_searchable" pass="true">false</config>
-
+		
 		<!-- whether to show a search box in the database detail page -->
 		
 		<config name="show_db_detail_search" pass="true">true</config>
@@ -455,7 +454,7 @@
 			'_blank' causes the browser to open the links in a new window. -->
 		
 		<config name="link_target" pass="true">_blank</config>
-
+		
 		<!-- open window for links to databases (for values see above), by default no new window -->
 		
 		<config name="link_target_databases" pass="true"></config>
@@ -467,10 +466,10 @@
 		<!-- show link to catalog for holdings when present -->
 		
 		<config name="show_all_holdings_links" pass="true">true</config>
-
+		
 		<!-- show holdings links only for specific catalogs
 			enter as xml inside this config, like <database metalib_id="JHU0001" /> -->
-
+		
 		<config name="holdings_links" pass="true" xml="true">
 		</config>
 		
@@ -492,7 +491,7 @@
 		<!-- the url to send users when they logout, 
 			if left blank, then the base url of the application will be used -->
 		
-		<config name="logout_url" />	
+		<config name="logout_url" />
 		
 		<!-- normalize query; this is experimental, only set this to true after reading the wiki! -->
 		
