@@ -425,8 +425,8 @@
 			
 		<config name="db_description_multilingual" xml="true" pass="true">
 			<!-- Example:
-			<language code="eng" order="1" display="English" />
-			<language code="cze" order="2" display="Czech" />
+			<language code="eng" />
+			<language code="cze" />
 			-->
 		</config>
 		

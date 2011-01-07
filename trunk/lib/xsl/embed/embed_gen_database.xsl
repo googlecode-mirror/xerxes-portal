@@ -134,7 +134,8 @@
 													<xsl:if test="$disp_show_desc_lang = @code">
 													<xsl:attribute name="selected">selected</xsl:attribute>
 													</xsl:if>
-													<xsl:value-of select="@display" />
+													<xsl:variable name="current_code" select="@code" />
+													<xsl:value-of select="//navbar/languages/language[@code=$current_code]/@native_name" />
 												</option>
 											</xsl:for-each>
 										</select>
