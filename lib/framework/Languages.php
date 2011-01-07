@@ -135,10 +135,11 @@ class Xerxes_Framework_Languages
 	 * @param string $type			the standard according to which the code will be interpreted;
 	 * 					one of: iso_639_1_code, iso_639_2B_code
 	 * @param string $code			the 2-letter language code
+	 * @param string $override_locale	use this locale instead of Xerxes locale
 	 * @return mixed			A string with the localized language name or NULL if the code is not valid
 	 */
 	
-	public function getNameFromCode( $type, $code )
+	public function getNameFromCode( $type, $code, $override_locale = null )
 	{
 		if ($type != 'name')
 		{
@@ -160,7 +161,11 @@ class Xerxes_Framework_Languages
 				
 				$originalLocale = $this->getXerxesLocale();
 				
-				$this->setXerxesLocale( $this->locale );
+				if  ( $override_locale == null) {
+					$this->setXerxesLocale( $this->locale );
+				} else {
+					$this->setXerxesLocale( $override_locale );
+				}
 				
 				$languageName = dgettext( $this->domain, $name );
 				
