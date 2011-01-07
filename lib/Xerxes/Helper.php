@@ -66,16 +66,15 @@ class Xerxes_Helper
 		
 		if ( $multilingual != "" )
 		{
+			$order = 0;
 			foreach ($multilingual->language as $language)
 			{
-				$order = NULL;
+				$order++;
 				$code  = NULL;
 				foreach ($language->attributes() as $name => $val)
 				{
 					if ($name == "code")
 						$code = (string) $val;
-					if ($name == "order")
-						$order = (int) $val;
 				}
 				$db_languages_order[$code] = $order;
 				$db_languages_code[$order] = $code;
