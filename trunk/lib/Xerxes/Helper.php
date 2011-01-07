@@ -52,8 +52,8 @@ class Xerxes_Helper
 		
 		foreach ( $xml->group_restriction as $group_restriction )
 		{
-			$group_restriction->addAttribute("display_name" ,$objRegistry->getGroupDisplayName((string)$group_restriction));
-		}		
+			$group_restriction->addAttribute( "display_name", $objRegistry->getGroupDisplayName( (string) $group_restriction) );
+		}
 		
 		$multilingual = $objRegistry->getConfig ( "db_description_multilingual", false, "" ); // XML object
 		

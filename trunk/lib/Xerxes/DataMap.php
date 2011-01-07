@@ -222,7 +222,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 	}
 	
 	/**
-	 * Add a type to the local knowldgebase
+	 * Add a type to the local knowledgebase
 	 *
 	 * @param Xerxes_Data_Type $objType
 	 * @return int status
