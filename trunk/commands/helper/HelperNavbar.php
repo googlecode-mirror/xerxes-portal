@@ -90,6 +90,24 @@ class Xerxes_Command_HelperNavbar extends Xerxes_Command_Helper
 		
 		$languages = $this->registry->getConfig("LANGUAGES", false);
 		
+		// map locales to language codes
+		foreach ($languages as $language)
+		{
+			$order = NULL;
+			$code  = NULL;
+			foreach ($language->attributes() as $name => $val)
+			{
+				if ($name == "code")
+					$code = (string) $val;
+				if ($name == "locale") {
+					$locale = (string) $val;
+					if ($locale == '')
+						$locale = 'C';
+				}
+			}
+			$locales[$code] = $locale;
+		}
+		
 		if ( $languages != null )
 		{
 			$languages_xml = $objXml->createElement("languages");
@@ -100,13 +118,16 @@ class Xerxes_Command_HelperNavbar extends Xerxes_Command_Helper
 			foreach ( $languages->language as $language )
 			{
 				$code = (string) $language["code"];
-				$readable_name = $language_names->getNameFromCode("iso_639_2B_code", $code);
+				$readable_name = $language_names->getNameFromCode("iso_639_2B_code", $code, $locales[$code]);
+				$native_name   = $language_names->getNameFromCode("iso_639_2B_code", $code);
 				
 				$language_node = $objXml->createElement("language");
 				$languages_xml->appendChild($language_node);
 				
-				$language_node->setAttribute("name", $readable_name);
 				$language_node->setAttribute("code", $code);
+				$language_node->setAttribute("name", $readable_name);
+				$language_node->setAttribute("native_name", $native_name);
+				$language_node->setAttribute("locale", $locales[$code]);
 				
 				// link back to home page
 				
