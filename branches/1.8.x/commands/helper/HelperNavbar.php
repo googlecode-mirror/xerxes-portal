@@ -90,26 +90,27 @@ class Xerxes_Command_HelperNavbar extends Xerxes_Command_Helper
 		
 		$languages = $this->registry->getConfig("LANGUAGES", false);
 		
-		// map locales to language codes
-		foreach ($languages as $language)
-		{
-			$order = NULL;
-			$code  = NULL;
-			foreach ($language->attributes() as $name => $val)
-			{
-				if ($name == "code")
-					$code = (string) $val;
-				if ($name == "locale") {
-					$locale = (string) $val;
-					if ($locale == '')
-						$locale = 'C';
-				}
-			}
-			$locales[$code] = $locale;
-		}
-		
 		if ( $languages != null )
 		{
+			// map locales to language codes
+			
+			foreach ($languages as $language)
+			{
+				$order = NULL;
+				$code  = NULL;
+				foreach ($language->attributes() as $name => $val)
+				{
+					if ($name == "code")
+						$code = (string) $val;
+					if ($name == "locale") {
+						$locale = (string) $val;
+						if ($locale == '')
+							$locale = 'C';
+					}
+				}
+				$locales[$code] = $locale;
+			}			
+			
 			$languages_xml = $objXml->createElement("languages");
 			$objXml->documentElement->appendChild($languages_xml);
 			
