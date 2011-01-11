@@ -19,6 +19,9 @@ Once everything looks good, you'll need to schedule an off time to copy the deve
 ==3. In MySQL, execute sql/create-kb.sql==
  
 Every time you upgrade, you should execute the latest sql/create-kb.sql file.  This will drop and recreate (with any new definitions) the tables that Xerxes uses to cache the Metalib knowledgebase. Do that in MySQL and then run the Xerxes populate databases command from the command line.  In that way, Xerxes will refresh its cache.
+
+   php -f /path/to/your/app/index.php base=databases action=populate
+
  
 ==4. In MySQL, execute sql/migrate/migrate-1.6-to-1.7.sql==
  
