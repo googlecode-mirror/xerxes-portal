@@ -10,6 +10,12 @@ USE xerxes;
 
 SET storage_engine = INNODB;
 
+DROP TABLE IF EXISTS xerxes_database_alternate_publishers;
+DROP TABLE IF EXISTS xerxes_database_alternate_titles;
+DROP TABLE IF EXISTS xerxes_database_keywords;
+DROP TABLE IF EXISTS xerxes_database_group_restrictions;
+DROP TABLE IF EXISTS xerxes_database_languages;
+DROP TABLE IF EXISTS xerxes_database_notes;
 DROP TABLE IF EXISTS xerxes_databases_search;
 DROP TABLE IF EXISTS xerxes_subcategory_databases;
 DROP TABLE IF EXISTS xerxes_subcategories;
