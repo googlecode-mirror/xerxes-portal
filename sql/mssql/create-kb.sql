@@ -8,8 +8,14 @@
 
 USE xerxes;
 
-/* uncomment these statements if you are doing an upgrade */
+/* uncomment these statements if you are doing an upgrade from 1.7 to 1.8*/
 /*
+DROP TABLE xerxes_database_alternate_publishers;
+DROP TABLE xerxes_database_alternate_titles;
+DROP TABLE xerxes_database_keywords;
+DROP TABLE xerxes_database_group_restrictions;
+DROP TABLE xerxes_database_languages;
+DROP TABLE xerxes_database_notes;
 DROP TABLE xerxes_databases_search;
 DROP TABLE xerxes_subcategory_databases;
 DROP TABLE xerxes_subcategories;
