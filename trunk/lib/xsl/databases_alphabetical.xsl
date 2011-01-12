@@ -135,9 +135,8 @@
 						</xsl:if>
 					</a>
 					
-					<xsl:if test="count(group_restriction) > 0" >
-						<xsl:text> </xsl:text>(<xsl:call-template name="db_restriction_display" />)
-					</xsl:if>
+          <xsl:call-template name="db_restriction_display" />
+					
 				</xsl:if>
 			</div>
 			<div class="resultsDescription">

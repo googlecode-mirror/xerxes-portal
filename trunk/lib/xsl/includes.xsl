@@ -929,11 +929,7 @@
 					<xsl:text> </xsl:text>
 				</span>
 				
-				<xsl:if test="group_restriction">
-					<span class="subjectDatabaseRestriction">
-						<xsl:call-template name="db_restriction_display" />
-					</span>
-				</xsl:if>
+				<xsl:call-template name="db_restriction_display" />
 				
 				</li>
 			</xsl:for-each>
@@ -979,12 +975,10 @@
 	<xsl:param name="database" select="current()" />
 
 	<xsl:variable name="group_restrictions" select="$database/group_restriction" />
-	
 	<xsl:if test="$group_restrictions">
-		<xsl:copy-of select="$text_databases_access_available" />
+		<xsl:text> </xsl:text>(<xsl:copy-of select="$text_databases_access_available" />
 	</xsl:if>
-	
-	<xsl:for-each select="$group_restrictions">
+	 <xsl:for-each select="$group_restrictions">
 		<xsl:value-of select="@display_name" />
 		<xsl:choose>
 			<xsl:when test="count(following-sibling::group_restriction) = 1">
@@ -996,7 +990,7 @@
 		</xsl:choose>
 	</xsl:for-each>
 	<xsl:if test="$group_restrictions">
-	<xsl:text>  </xsl:text><xsl:copy-of select="$text_databases_access_users" />
+	  <xsl:text>  </xsl:text><xsl:copy-of select="$text_databases_access_users" />)
 	</xsl:if>
 </xsl:template>
 
