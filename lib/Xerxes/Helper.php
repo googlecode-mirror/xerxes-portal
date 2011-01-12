@@ -36,7 +36,7 @@ class Xerxes_Helper
 	public static function databaseToNodeset(Xerxes_Data_Database $objDatabaseData, Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry, &$index = null)
 	{
 		$xml = $objDatabaseData->xml;
-		
+				
 		foreach ( $xml->searchable as $searchable )
 		{
 			// sometimes we're asked to track and record index.
@@ -47,13 +47,17 @@ class Xerxes_Helper
 				$index++;
 			}
 		}
-
 		// display name for group restrictions
-		
-		foreach ( $xml->group_restriction as $group_restriction )
-		{
-			$group_restriction->addAttribute( "display_name", $objRegistry->getGroupDisplayName( (string) $group_restriction) );
-		}
+		// bug in PGP 5.1.6 SimpleXML, if we do the foreach WITHOUT wrapping
+		// it in this if testing count first, 
+		// it'll add on an empty <group_restriction/> to the xml
+		// graph even if none were there previously. That's bad. 		
+		if (count($xml->group_restriction) > 0) {
+      foreach ( $xml->group_restriction as $group_restriction )
+      {
+        //$group_restriction->addAttribute( "display_name", $objRegistry->getGroupDisplayName( (string) $group_restriction) );
+      }
+    }
 		
 		$multilingual = $objRegistry->getConfig ( "db_description_multilingual", false, "" ); // XML object
 		
