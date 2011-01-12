@@ -55,7 +55,7 @@ class Xerxes_Helper
 		if (count($xml->group_restriction) > 0) {
       foreach ( $xml->group_restriction as $group_restriction )
       {
-        //$group_restriction->addAttribute( "display_name", $objRegistry->getGroupDisplayName( (string) $group_restriction) );
+        $group_restriction->addAttribute( "display_name", $objRegistry->getGroupDisplayName( (string) $group_restriction) );
       }
     }
 		
