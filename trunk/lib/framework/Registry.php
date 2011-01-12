@@ -151,7 +151,7 @@ class Xerxes_Framework_Registry
 				foreach ( $groups as $group )
 				{
 					$id = ( string ) $group["id"];
-					$this->usergroups[$id] = $group;
+					$this->usergroups[Xerxes_Framework_Parser::strtoupper($id)] = $group; //case insensitive
 				}
 			}
 		}
@@ -269,8 +269,9 @@ class Xerxes_Framework_Registry
 	}
 	
 	public function getGroupDisplayName($id)
-	{
-		if ( array_key_exists( $id, $this->usergroups ) )
+	{	  
+	  $id = Xerxes_Framework_Parser::strtoupper($id); //case insensitive
+	  if ( array_key_exists( $id, $this->usergroups ) )
 		{
 			$group = $this->usergroups[$id];
 			return ( string ) $group->display_name;
