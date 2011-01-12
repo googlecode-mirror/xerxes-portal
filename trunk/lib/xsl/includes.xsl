@@ -2673,7 +2673,7 @@
 	<xsl:param name="alt" />
 	<xsl:param name="title" />
 	<xsl:param name="class" />
-	<img src="{$base_url}/images/facet-remove.gif" alt="{$alt}" title="{$title}" class="{$class}" />
+	<img src="{$base_url}/images/facet-remove.png" alt="{$alt}" title="{$title}" class="{$class}" />
 </xsl:template>
 
 <xsl:template name="img_holdings">
