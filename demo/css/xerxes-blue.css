@@ -912,7 +912,7 @@ div.autocomplete ul li {
 	float: left;
 	width: 99%;
 	line-height: normal;
- 	background: #fff url("../images/tabs/bg.gif") repeat-x bottom;
+ 	background: #fff url("../images/tabs/bg.png") repeat-x bottom;
 	padding-left: 10px;
 	margin-right: 10px;
 }
@@ -982,7 +982,7 @@ div.autocomplete ul li {
 	padding: 10px; 
 	padding-left: 30px; 
 	margin: 2px;
-	background-image: url(../images/facet-bg.gif);
+	background-image: url(../images/facet-bg.png);
 	background-repeat:repeat-x;
 	background-color: #efefef; 
 	border: 1px solid #cbcbcb;
