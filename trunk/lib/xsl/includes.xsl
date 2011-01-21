@@ -2437,7 +2437,7 @@
 			
 			<div class="citation" id="citation_apa">
 			
-				<h3>APA</h3>
+				<h3><xsl:value-of select="$text_citation_apa" /></h3>
 				<p class="citationStyle">
 					<xsl:call-template name="apa" />
 				</p>
@@ -2446,7 +2446,7 @@
 			
 			<div class="citation" id="citation_mla">
 				
-				<h3>MLA</h3>
+				<h3><xsl:value-of select="$text_citation_mla" /></h3>
 				<p class="citationStyle">
 					<xsl:call-template name="mla" />
 				</p>
@@ -2455,7 +2455,7 @@
 			
 			<div class="citation" id="citation_turabian">
 				
-				<h3>Turabian</h3>
+				<h3><xsl:value-of select="$text_citation_turabian" /></h3>
 				<p class="citationStyle">
 					<xsl:call-template name="turabian" />
 				</p>
