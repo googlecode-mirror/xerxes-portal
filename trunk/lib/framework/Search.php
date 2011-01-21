@@ -2172,6 +2172,27 @@ class Xerxes_Framework_Search_Config extends Xerxes_Framework_Registry
 			return null;
 		}
 	}
+
+	public function getValuePublicName($internal_group, $internal_field)
+	{
+		if ( strstr($internal_field, "'") || strstr($internal_field, " ") )
+		{
+			return $internal_field;
+		}
+		
+		$query = "//config[@name='facet_fields']/facet[@internal='$internal_group']/value[@internal='$internal_field']";
+		
+		$values = $this->xml->xpath($query);
+		
+		if ( count($values) > 0 )
+		{
+			return (string) $values[0]["public"];
+		}
+		else
+		{
+			return $internal_field;
+		}
+	}	
 	
 	public function getFacetType($internal)
 	{
