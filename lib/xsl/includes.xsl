@@ -2385,6 +2385,8 @@
 	
 			</xsl:for-each>
 		</div>
+		
+		<xsl:call-template name="sidebar_additional" />
 	
 	</xsl:if>
 
