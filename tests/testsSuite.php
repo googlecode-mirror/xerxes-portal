@@ -1,7 +1,7 @@
 <?php
 
-require_once 'tests/Xerxes_MetalibRecordTest.php';
-require_once 'tests/Xerxes_Record_DocumentTest.php';
+require_once 'Xerxes_MetalibRecordTest.php';
+require_once 'Xerxes_Record_DocumentTest.php';
 
 /**
  * Static test suite.
