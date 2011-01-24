@@ -36,17 +36,22 @@ class Xerxes_Helper
 	public static function databaseToNodeset(Xerxes_Data_Database $objDatabaseData, Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry, &$index = null)
 	{
 		$xml = $objDatabaseData->xml;
-				
-		foreach ( $xml->searchable as $searchable )
-		{
-			// sometimes we're asked to track and record index.
-
-			if ( (string) $searchable == "1" )
-			{
-				$searchable["count"] = $index;
-				$index++;
-			}
-		}
+		
+		//PHP 5.1.6 simplexml bug, 'for' iteration over ->searchable will create
+		//it already if it doesn't exist, which we don't want, so
+		//we have to wrap 'for' in 'if'. 
+    if (count($xml->searchable)) {		
+      foreach ( $xml->searchable as $searchable )
+      {
+        // sometimes we're asked to track and record index.
+  
+        if ( (string) $searchable == "1" )
+        {
+          $searchable["count"] = $index;
+          $index++;
+        }
+      }
+    }
 		// display name for group restrictions
 		// bug in PGP 5.1.6 SimpleXML, if we do the foreach WITHOUT wrapping
 		// it in this if testing count first, 
