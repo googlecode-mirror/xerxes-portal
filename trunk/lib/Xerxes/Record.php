@@ -506,6 +506,9 @@ class Xerxes_Record extends Xerxes_Marc_Record
 
 		foreach ( $this->datafield("856") as $link )
 		{
+			$resource_type = $link->ind2;
+			$part = $link->subfield("3")->__toString();
+			
 			$strUrl = $link->subfield("u")->__toString();
 			$strHostName = $link->subfield("a")->__toString();
 			$strDisplay = $link->subfield("z")->__toString();
@@ -522,7 +525,12 @@ class Xerxes_Record extends Xerxes_Marc_Record
 				{
 					$strDisplay = $strHostName;
 				}
-			}			
+			}
+
+			if ( $part != "" )
+			{
+				$strDisplay = $part . " " . $strDisplay;
+			}
 			
 			// no link supplied
 			
@@ -533,7 +541,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 			
 			// link includes loc url (bad catalogers!)
 			
-			if ( stristr($strUrl, "www.loc.gov/catdir") )
+			if ( stristr($strUrl, "catdir") || $resource_type == 2 )
 			{
 				array_push( $this->links, array (null, $link->subfield("u")->__toString(), "none" ) );
 			}
