@@ -240,7 +240,7 @@
 		
 		<table class="holdingsTable">
 		<tr>
-			<xsl:if test="institution">
+			<xsl:if test="items/item/institution">
 				<th>Institution</th>
 			</xsl:if>
 			<th>Location</th>
