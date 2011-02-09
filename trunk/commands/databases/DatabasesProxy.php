@@ -169,6 +169,8 @@
 						$strBase = str_replace("{WAM}", $strPort . "-" . $arrMatch[1], $strProxyServer);
 						
 						$strFinal =  $strBase . "/" . $arrMatch[2];
+						
+						$strFinal = str_replace("..", ".", $strFinal);
 					}
 					else
 					{
