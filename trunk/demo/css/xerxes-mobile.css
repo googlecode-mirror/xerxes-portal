@@ -192,3 +192,7 @@ table.holdingsTable {
 .holdingsTable th {
 	background-color: #efefef;
 }
+
+#smsOption {
+	display: none;
+}
