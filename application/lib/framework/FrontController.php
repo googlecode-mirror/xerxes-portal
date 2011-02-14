@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * Provides the framework for performing actions in the system
  *
