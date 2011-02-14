@@ -7,7 +7,7 @@
  * @copyright 2009 California State University
  * @link http://xerxes.calstate.edu
  * @license http://www.gnu.org/licenses/
- * @version $Id: Authenticate.php 1026 2009-12-18 18:17:15Z dwalker@calstate.edu $
+ * @version $Id$
  * @package Xerxes
  */
 

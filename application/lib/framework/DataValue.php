@@ -6,7 +6,7 @@
 	 * @abstract
 	 * @author David Walker
 	 * @copyright 2008 California State University
-	 * @version $Id: DataValue.php 1475 2010-11-04 13:04:41Z helix84@centrum.sk $
+	 * @version $Id$
 	 * @package  Xerxes_Framework
 	 * @link http://xerxes.calstate.edu
 	 * @license http://www.gnu.org/licenses/

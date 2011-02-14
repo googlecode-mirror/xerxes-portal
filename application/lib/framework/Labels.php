@@ -7,7 +7,7 @@
  * @copyright 2008 California State University
  * @link http://xerxes.calstate.edu
  * @license http://www.gnu.org/licenses/
- * @version $Id: Labels.php 1563 2010-12-13 18:08:57Z dwalker@calstate.edu $
+ * @version $Id$
  * @package Xerxes
  */
 

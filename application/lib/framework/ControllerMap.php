@@ -6,7 +6,7 @@
 	 * 
 	 * @author David Walker
 	 * @copyright 2008 California State University
-	 * @version $Id: ControllerMap.php 1558 2010-12-09 21:57:03Z dwalker@calstate.edu $
+	 * @version $Id$
 	 * @package  Xerxes_Framework
 	 * @link http://xerxes.calstate.edu
 	 * @license http://www.gnu.org/licenses/

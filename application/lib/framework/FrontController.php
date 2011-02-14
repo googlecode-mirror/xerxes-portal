@@ -6,7 +6,7 @@
  *
  * @author David Walker
  * @copyright 2008 California State University
- * @version $Id: FrontController.php 1569 2010-12-14 23:57:37Z dwalker@calstate.edu $
+ * @version $Id$
  * @package  Xerxes_Framework
  * @link http://xerxes.calstate.edu
  * @license http://www.gnu.org/licenses/

@@ -7,7 +7,7 @@
  * @copyright 2008 California State University
  * @link http://xerxes.calstate.edu
  * @license http://www.gnu.org/licenses/
- * @version $Id: Registry.php 1620 2011-01-12 17:13:01Z rochkind@jhu.edu $
+ * @version $Id$
  * @package  Xerxes_Framework
  */
 

@@ -12,7 +12,7 @@ class Xerxes_Record_Document extends Xerxes_Marc_Document
  * @copyright 2009 California State University
  * @link http://xerxes.calstate.edu
  * @license http://www.gnu.org/licenses/
- * @version $Id: Record.php 1626 2011-01-28 21:28:20Z dwalker@calstate.edu $
+ * @version $Id$
  * @todo ->__toString() madness below due to php 5.1 object-string casting problem
  * @package Xerxes
  */

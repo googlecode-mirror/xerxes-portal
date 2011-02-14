@@ -7,7 +7,7 @@
 	 * @abstract
 	 * @author David Walker
 	 * @copyright 2008 California State University
-	 * @version $Id: DataMap.php 1496 2010-11-16 18:39:58Z dwalker@calstate.edu $
+	 * @version $Id$
 	 * @package  Xerxes_Framework
 	 * @link http://xerxes.calstate.edu
 	 * @license http://www.gnu.org/licenses/
