@@ -1,72 +1,72 @@
 <?php
-	
-	/**
-	 * Provides basic helper function for instatiated Value Objects
-	 *
-	 * @abstract
-	 * @author David Walker
-	 * @copyright 2008 California State University
-	 * @version $Id$
-	 * @package  Xerxes_Framework
-	 * @link http://xerxes.calstate.edu
-	 * @license http://www.gnu.org/licenses/
-	 */
 
-	abstract class Xerxes_Framework_DataValue
+/**
+ * Provides basic helper function for instatiated Value Objects
+ *
+ * @abstract
+ * @author David Walker
+ * @copyright 2008 California State University
+ * @version $Id$
+ * @package  Xerxes_Framework
+ * @link http://xerxes.calstate.edu
+ * @license http://www.gnu.org/licenses/
+ */
+
+abstract class Xerxes_Framework_DataValue
+{
+	/**
+	 * Return all properties from the object as an array; excludes
+	 * properties that are themselves arrays, those should be handled
+	 * separately
+	 *
+	 * @param string $prefix		[optional] a value to prepend to the array keys
+	 * @return array
+	 */
+	
+	public function properties($prefix = null)
 	{
-		/**
-		 * Return all properties from the object as an array; excludes
-		 * properties that are themselves arrays, those should be handled
-		 * separately
-		 *
-		 * @param string $prefix		[optional] a value to prepend to the array keys
-		 * @return array
-		 */
+		$arrReturn = array();
+		$arrProperties = get_object_vars($this);
 		
-		public function properties($prefix = null)
+		foreach ( $arrProperties as $key => $value )
 		{
-			$arrReturn = array();
-			$arrProperties = get_object_vars($this);
+			$array_key = $prefix . $key;
 			
-			foreach ( $arrProperties as $key => $value )
+			// exclude arrays
+			
+			if ( ! is_array($value) )
 			{
-				$array_key = $prefix . $key;
-				
-				// exclude arrays
-				
-				if ( ! is_array($value) )
-				{
-					$arrReturn[$array_key] = $value;
-				}
+				$arrReturn[$array_key] = $value;
 			}
-			
-			return $arrReturn;
 		}
 		
-		/**
-		 * Assign values to the object's properties via a supplied associative
-		 * array, where the array keys correspond to the properties, such as an
-		 * individual result array from a PDO result set
-		 *
-		 * @param array $arrResult
-		 */
+		return $arrReturn;
+	}
+	
+	/**
+	 * Assign values to the object's properties via a supplied associative
+	 * array, where the array keys correspond to the properties, such as an
+	 * individual result array from a PDO result set
+	 *
+	 * @param array $arrResult
+	 */
+	
+	public function load($arrResult)
+	{
+		$arrProperties = $this->properties();
 		
-		public function load($arrResult)
+		foreach ( $arrResult as $key => $value )
 		{
-			$arrProperties = $this->properties();
+			// exclude the numeric keys as these are repetitions
+			// of the data in PDO
 			
-			foreach ( $arrResult as $key => $value )
+			if ( is_string($key) )
 			{
-				// exclude the numeric keys as these are repetitions
-				// of the data in PDO
-				
-				if ( is_string($key) )
+				if ( array_key_exists($key, $arrProperties) )
 				{
-					if ( array_key_exists($key, $arrProperties) )
-					{
-						$this->$key = $value;
-					}
+					$this->$key = $value;
 				}
 			}
 		}
 	}
+}
