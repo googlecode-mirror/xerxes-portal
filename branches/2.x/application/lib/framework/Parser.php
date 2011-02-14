@@ -642,7 +642,7 @@ class Xerxes_Framework_Parser
 	
 	public static function request($url, $timeout = null, $data = null, $content_type = null, $bolEncode = true)
 	{
-		Xerxes_Framework_HTTP::request($url, $timeout, $data, $content_type, $bolEncode);
+		return Xerxes_Framework_HTTP::request($url, $timeout, $data, $content_type, $bolEncode);
 	}
 }
 

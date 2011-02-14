@@ -2,6 +2,7 @@
 
 require_once 'PHPUnit/Framework/TestCase.php';
 
+require_once '../lib/framework/HTTP.php';
 require_once '../lib/framework/Parser.php';
 require_once '../lib/framework/Registry.php';
 require_once '../lib/framework/Languages.php';
