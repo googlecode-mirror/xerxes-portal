@@ -2,28 +2,28 @@
 
 require_once 'PHPUnit/Framework/TestCase.php';
 
-require_once 'lib/framework/Parser.php';
-require_once 'lib/framework/Registry.php';
-require_once 'lib/framework/Languages.php';
-require_once 'lib/framework/Response.php';
+require_once '../lib/framework/Parser.php';
+require_once '../lib/framework/Registry.php';
+require_once '../lib/framework/Languages.php';
+require_once '../lib/framework/Response.php';
 
-require_once 'lib/Xerxes/Marc.php';
-require_once 'lib/Xerxes/Record.php';
-require_once 'lib/Xerxes/bx/BxRecord.php';
+require_once '../lib/Xerxes/Marc.php';
+require_once '../lib/Xerxes/Record.php';
+require_once '../lib/Xerxes/BxRecord.php';
 
-require_once 'models/Search/Engine.php';
-require_once 'models/Search/Config.php';
-require_once 'models/Search/Query.php';
-require_once 'models/Search/QueryTerm.php';
-require_once 'models/Search/LimitTerm.php';
-require_once 'models/Search/ResultSet.php';
-require_once 'models/Search/Result.php';
-require_once 'models/Search/Facet.php';
-require_once 'models/Search/FacetGroup.php';
-require_once 'models/Search/Facets.php';
+require_once '../models/Search/Engine.php';
+require_once '../models/Search/Config.php';
+require_once '../models/Search/Query.php';
+require_once '../models/Search/QueryTerm.php';
+require_once '../models/Search/LimitTerm.php';
+require_once '../models/Search/ResultSet.php';
+require_once '../models/Search/Result.php';
+require_once '../models/Search/Facet.php';
+require_once '../models/Search/FacetGroup.php';
+require_once '../models/Search/Facets.php';
 
-require_once 'models/Solr/Engine.php';
-require_once 'models/Solr/Config.php';
+require_once '../models/Solr/Engine.php';
+require_once '../models/Solr/Config.php';
 
 
 
