@@ -3123,6 +3123,3 @@ class Xerxes_Record_Holding
 	}	
 	
 }
-
-
-?>

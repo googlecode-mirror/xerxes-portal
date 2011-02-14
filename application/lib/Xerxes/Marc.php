@@ -702,6 +702,3 @@ class Xerxes_Marc_DataFieldList extends Xerxes_Marc_FieldList
 class Xerxes_Marc_SubFieldList extends Xerxes_Marc_FieldList 
 {
 }
-
-
-?>

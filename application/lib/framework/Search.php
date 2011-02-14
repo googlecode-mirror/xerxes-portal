@@ -2248,7 +2248,3 @@ class Xerxes_Framework_Search_Config extends Xerxes_Framework_Registry
 		}
 	}
 }
-
-
-
-?>

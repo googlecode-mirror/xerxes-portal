@@ -176,6 +176,3 @@ class Xerxes_Framework_Authenticate_User extends Xerxes_Framework_DataValue
 		$this->username = $username;
 	}
 }
-
-
-?>

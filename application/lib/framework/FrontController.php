@@ -673,4 +673,3 @@ function __autoload($name)
 		}
 	}
 }
-?>
