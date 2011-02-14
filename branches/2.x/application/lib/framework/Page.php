@@ -339,4 +339,3 @@ class Xerxes_Framework_Page
 		return $html;
 	}
 }
-?>

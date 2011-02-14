@@ -861,5 +861,3 @@
 			return $values;
 		}		
 	}
-	
-?>

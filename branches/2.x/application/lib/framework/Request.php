@@ -1221,5 +1221,3 @@ class Xerxes_Framework_Request_URL
 		return $this->arrParams;
 	}
 }
-
-?>

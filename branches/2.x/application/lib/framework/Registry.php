@@ -427,4 +427,3 @@ class Xerxes_Framework_Registry
 		return $objConfigXml;
 	}
 }
-?>

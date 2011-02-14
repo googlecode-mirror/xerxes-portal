@@ -94,4 +94,3 @@ class Xerxes_Framework_Labels
 		}
 	}
 }
-?>

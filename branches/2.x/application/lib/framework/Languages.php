@@ -197,4 +197,3 @@ class Xerxes_Framework_Languages
 		return $result;
 	}
 }
-?>

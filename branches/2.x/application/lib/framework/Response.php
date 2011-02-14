@@ -181,5 +181,3 @@ class Xerxes_Framework_Response
 		return $xml;
 	}
 }
-
-?>

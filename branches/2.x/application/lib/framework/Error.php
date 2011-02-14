@@ -176,5 +176,3 @@ class Xerxes_Framework_Error
 
 	}
 }
-
-?>

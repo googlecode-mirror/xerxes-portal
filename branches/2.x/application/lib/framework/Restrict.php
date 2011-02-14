@@ -187,5 +187,3 @@ class Xerxes_Framework_Restrict
 	}
 
 }
-
-?>
