@@ -92,13 +92,6 @@ class Xerxes_Framework_Response
 			return null;
 		}
 		
-		// this object defines its own toXML method, so use that
-		
-		if ( method_exists($object, "toXML") )
-		{
-			$object_xml = $object->toXML();
-		}
-		
 		// already in xml, so take it
 		
 		elseif ( $object instanceof DOMDocument )
@@ -118,25 +111,34 @@ class Xerxes_Framework_Response
 		
 		elseif ( is_object($object) )
 		{
-			// this object tells us to use this id in the xml
-			
-			if ( property_exists($object, "id") )
+			// this object defines its own toXML method, so use that
+		
+			if ( method_exists($object, "toXML") )
 			{
-				$id = $object->id;
+				$object_xml = $object->toXML();
 			}
-			
-			$object_xml = new DOMDocument();
-			$object_xml->loadXML("<$id />");
-			
-			// only public properties
-			
-			$public = array_keys(get_class_vars(get_class($object)));
-			
-			foreach ( get_object_vars($object) as $property => $value )
+			else
 			{
-				if ( in_array($property, $public) )
+				// this object tells us to use this id in the xml
+				
+				if ( property_exists($object, "id") )
 				{
-					$this->addToXML($object_xml, $property, $value);
+					$id = $object->id;
+				}
+				
+				$object_xml = new DOMDocument();
+				$object_xml->loadXML("<$id />");
+				
+				// only public properties
+				
+				$public = array_keys(get_class_vars(get_class($object)));
+				
+				foreach ( get_object_vars($object) as $property => $value )
+				{
+					if ( in_array($property, $public) )
+					{
+						$this->addToXML($object_xml, $property, $value);
+					}
 				}
 			}
 		}
@@ -145,6 +147,11 @@ class Xerxes_Framework_Response
 		
 		elseif ( is_array($object) ) 
 		{
+			if ( count($object) == 0 )
+			{
+				return null;
+			}
+			
 			$object_xml = new DOMDocument();
 			$object_xml->loadXML("<$id />");
 			
@@ -168,7 +175,9 @@ class Xerxes_Framework_Response
 		{
 			// just create a simple new element and return this thing
 			
-			$element = $xml->createElement($id, $object);
+			echo "$id=>$object<br/>";
+			
+			$element = $xml->createElement($id, Xerxes_Framework_Parser::escapeXml($object) );
 			$xml->documentElement->appendChild($element);
 			return $xml;
 		}
