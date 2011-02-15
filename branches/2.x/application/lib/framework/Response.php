@@ -175,8 +175,6 @@ class Xerxes_Framework_Response
 		{
 			// just create a simple new element and return this thing
 			
-			echo "$id=>$object<br/>";
-			
 			$element = $xml->createElement($id, Xerxes_Framework_Parser::escapeXml($object) );
 			$xml->documentElement->appendChild($element);
 			return $xml;
