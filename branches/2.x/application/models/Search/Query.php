@@ -28,7 +28,7 @@ class Xerxes_Model_Search_Query
 	 * @param Xerxes_Framework_Request $request
 	 */
 	
-	public function __construct(Xerxes_Framework_Request $request = null)
+	public function __construct(Xerxes_Framework_Request $request = null, Xerxes_Model_Search_Config $config = null)
 	{
 		if ( $request != null )
 		{
@@ -40,10 +40,15 @@ class Xerxes_Model_Search_Query
 			
 			foreach ( $this->extractSearchGroupings() as $term )
 			{
-				$this->query->addTerm(
+				if ( $config != null )
+				{
+					$term["field"] = $config->swapForInternalField($term["field"]);
+				}
+				
+				$this->addTerm(
 					$term["id"], 
 					$term["boolean"], 
-					$this->swapForInternalField($term["field"]), 
+					$term["field"], 
 					$term["relation"], 
 					$term["query"]);
 			}
@@ -52,7 +57,7 @@ class Xerxes_Model_Search_Query
 			
 			foreach ( $this->extractLimitGroupings() as $limit )
 			{
-				$this->query->addLimit($limit["field"], $limit["relation"], $limit["value"]);
+				$this->addLimit($limit["field"], $limit["relation"], $limit["value"]);
 			}
 		}
 	}
