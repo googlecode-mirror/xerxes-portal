@@ -17,6 +17,28 @@ class Xerxes_Framework_Response
 	private $_data = array(); // data
 	private $_redirect = ""; // redirect url
 	
+	private static $instance; // singleton pattern
+
+	protected function __construct()
+	{
+	}
+	
+	/**
+	 * Get an instance of the file; Singleton to ensure correct data
+	 *
+	 * @return Xerxes_Framework_Request
+	 */
+	
+	public static function getInstance()
+	{
+		if ( empty( self::$instance ) )
+		{
+			self::$instance = new Xerxes_Framework_Response();
+		}
+		
+		return self::$instance;
+	}	
+	
 	/**
 	 * Add data to the response
 	 * 
@@ -51,17 +73,9 @@ class Xerxes_Framework_Response
 		return $this->_redirect;
 	}
 	
-	public function get($id)
-	{
-		if ( array_key_exists($id, $this->_data) )
-		{
-			return $this->_data[$id];
-		}
-		else
-		{
-			return null;
-		}
-	}
+	/**
+	 * Output results to XML
+	 */
 	
 	public function toXML()
 	{
@@ -75,6 +89,10 @@ class Xerxes_Framework_Response
 		
 		return $xml;
 	}
+	
+	/**
+	 * Recursively convert data to XML
+	 */
 	
 	private function addToXML(DOMDocument &$xml, $id, $object)
 	{	

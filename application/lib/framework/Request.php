@@ -16,16 +16,12 @@
 class Xerxes_Framework_Request
 {
 	private $method = ""; // request method: GET, POST, COMMAND
-	private $arrParams = array ( ); // request paramaters
+	private $arrParams = array(); // request paramaters
 	private $arrURI = array(); // just the uri (sans-cookie, hidden values) params
-	private $arrSession = array ( ); // session array for command line, unused right now
-	private $arrCookieSetParams = array ( ); // cookies that will be set with response. 
-		// value is array of args to php set_cookie. 
-	private $xml = null; // main xml document for holding data from commands
-	private $strRedirect = ""; // redirect url
 	private $path_elements = null; // http path tranlsated into array of elements.
 	private $aliases = array(); // url base aliases
-	private $debugging = array(); // debugging messages
+	private $arrCookieSetParams = array(); // cookies that will be set with response. 
+	                                       // value is array of args to php set_cookie. 
 	private $registry; // registry object
 	private static $instance; // singleton pattern
 	
@@ -48,6 +44,7 @@ class Xerxes_Framework_Request
 		
 		return self::$instance;
 	}
+	
 	/**
 	 * Process the incoming request paramaters, cookie values, url path if pretty-uri on
 	 */
@@ -226,7 +223,7 @@ class Xerxes_Framework_Request
 	
 	public function isMobileDevice()
 	{
-		require_once(Xerxes_Framework_FrontController::parentDirectory() . '/lib/mobile/mobile_device_detect.php');		
+		require_once('lib/mobile/mobile_device_detect.php');		
 		$is_mobile = @mobile_device_detect(true, false); // supress errors because this library is goofy
 		return $is_mobile[0];
 	}
@@ -595,14 +592,15 @@ class Xerxes_Framework_Request
 	
 	public function getSession($key)
 	{
-		if ( array_key_exists( $key, $_SESSION ) )
+		if ( isset($_SESSION) )
 		{
-			return $_SESSION[$key];
-		} 
-		else
-		{
-			return null;
+			if ( array_key_exists( $key, $_SESSION ) )
+			{
+				return $_SESSION[$key];
+			} 
 		}
+		
+		return null;
 	}
 	
 	public function getAllSession()
@@ -860,175 +858,6 @@ class Xerxes_Framework_Request
 		return Xerxes_Framework_Restrict::isAuthenticatedUser( $this );
 	}
 	
-	public function addDebugging($message)
-	{
-		array_push($this->debugging, $message);
-	}
-	
-	
-	##############
-	#  RESPONSE  # 
-	##############
-	
-	
-	
-	/**
-	 * Set the name of the document element for the stored xml; if this
-	 * is not set before adding a document via addDocument, the document
-	 * element will be set to 'xerxes'
-	 *
-	 * @param string $strName	document element name
-	 */
-	
-	public function setDocumentElement($strName)
-	{
-		if ( $strName == null )
-		{
-			error_log( "document element name was null" );
-		} 
-		else
-		{
-			$this->xml = new DOMDocument( );
-			$this->xml->loadXML( "<$strName />" );
-		}
-	}
-	
-	public function addData($name, $attribute, $value)
-	{
-		$xml = new DOMDocument();
-		$xml->loadXML("<$name />");
-		$xml->documentElement->setAttribute($attribute, $value);
-		
-		$this->addDocument($xml);
-	}
-	
-	/**
-	 * Add an XML DOMDocument to the master xml
-	 *
-	 * @param DOMDocument $objData
-	 */
-	
-	public function addDocument(DOMDocument $objData)
-	{
-		if ( ! $this->xml instanceof DOMDocument )
-		{
-			$this->xml = new DOMDocument( );
-			$this->xml->loadXML( "<xerxes />" );
-		}
-		
-		if ( $objData != null )
-		{
-			if ( $objData->documentElement != null )
-			{
-				$objImport = $this->xml->importNode( $objData->documentElement, true );
-				$this->xml->documentElement->appendChild( $objImport );
-			}
-		}
-	}
-	
-	/**
-	 * Set the URL for redirect
-	 *
-	 * @param string $url
-	 */
-	
-	public function setRedirect($url)
-	{
-		$this->strRedirect = $url;
-	}
-	
-	/**
-	 * Get the URL to redirect user
-	 *
-	 * @return unknown
-	 */
-	
-	public function getRedirect()
-	{
-		return $this->strRedirect;
-	}
-	
-	/**
-	 * Extract a value from the master xml
-	 *
-	 * @param string $xpath				[optional] xpath expression to the element(s)
-	 * @param array $arrNamespaces		[optional] key / value pair of url / namespace reference for the xpath
-	 * @param string $strReturnType		[optional] return query results as 'DOMNODELIST' or 'ARRAY', otherwise as 'sting'
-	 * @return mixed					if no paramaters set, returns entire xml as DOMDocument
-	 * 									otherwise returns a string, unless value supplied in return type
-	 */
-	
-	public function getData($xpath = null, $arrNamespaces = null, $strReturnType = null)
-	{
-		if ( $xpath == null && $arrNamespaces == null && $strReturnType == null )
-		{
-			return $this->xml;
-		}
-		
-		$strReturnType = Xerxes_Framework_Parser::strtoupper( $strReturnType );
-		
-		if ( $strReturnType != null && $strReturnType != "DOMNODELIST" && $strReturnType != "ARRAY" )
-		{
-			throw new Exception( "unsupported return type" );
-		}
-		
-		$objXPath = new DOMXPath( $this->xml );
-		
-		if ( $arrNamespaces != null )
-		{
-			foreach ( $arrNamespaces as $prefix => $identifier )
-			{
-				$objXPath->registerNamespace( $prefix, $identifier );
-			}
-		}
-		
-		$objNodes = $objXPath->query( $xpath );
-		
-		if ( $objNodes == null )
-		{
-			// no value found
-			
-			
-			return null;
-		} 
-		elseif ( $strReturnType == "DOMNODELIST" )
-		{
-			// return nodelist
-			
-			
-			return $objNodes;
-		} 
-		elseif ( $strReturnType == "ARRAY" )
-		{
-			// return nodelist as array, for convenience
-			
-			
-			$arrReturn = array ( );
-			
-			foreach ( $objNodes as $objNode )
-			{
-				array_push( $arrReturn, $objNode->nodeValue );
-			}
-			
-			return $arrReturn;
-		} 
-		else
-		{
-			// just grab the value, if you know it is the 
-			// only one or first one in the query
-			
-			
-			if ( $objNodes->item( 0 ) != null )
-			{
-				return $objNodes->item( 0 )->nodeValue;
-			} 
-			else
-			{
-				return null;
-			}
-		}
-	}	
-	
 	/**
 	 * Retrieve master XML and all request paramaters
 	 * 
@@ -1107,13 +936,7 @@ class Xerxes_Framework_Request
 			$this->addElement( $objXml, $objServer, $_SERVER );
 		}
 		
-		// add to the master xml document
-		
-		$this->addDocument( $objXml );
-		
-		// once added, now return the master xml document
-		
-		return $this->xml;
+		return $objXml;
 	}
 	
 	/**
