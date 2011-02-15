@@ -28,7 +28,14 @@ class Xerxes_Model_Search_ResultSet
 	public function __construct()
 	{
 		$this->data_map = new Xerxes_DataMap();
-	}	
+	}
+	
+	/**
+	 * Return an individual Xerxes Records by position
+	 * 
+	 * @param int $id		array position
+	 * @return Xerxes_Model_Search_Result
+	 */	
 	
 	public function getRecord($id)
 	{
@@ -41,11 +48,23 @@ class Xerxes_Model_Search_ResultSet
 			return null;
 		}
 	}
+	
+	/**
+	 * Return all Results
+	 * 
+	 * @return array 		of Xerxes_Model_Search_Result objects
+	 */
 
 	public function getRecords()
 	{
 		return $this->records;
 	}
+	
+	/**
+	 * Add a Xerxes Record to this result set
+	 * 
+	 * @param Xerxes_Record $record
+	 */
 
 	public function addRecord( Xerxes_Record $record)
 	{

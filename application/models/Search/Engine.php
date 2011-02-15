@@ -18,8 +18,7 @@ abstract class Xerxes_Model_Search_Engine
 	protected $url; // url to the search service
 	protected $max = 10; // max records per page
 	protected $sort; // default sort order
-	protected $sid; // sid for open url identification
-	protected $link_resolver; // base address of link resolver
+	
 	protected $registry; // xerxes application config
 	
 	/**
@@ -34,8 +33,6 @@ abstract class Xerxes_Model_Search_Engine
 		
 		// defaults for the application
 				
-		$this->link_resolver = $this->registry->getConfig("LINK_RESOLVER_ADDRESS", true);
-		$this->sid = $this->registry->getConfig("APPLICATION_SID", false, "calstate.edu:xerxes");
 		$this->max = $this->registry->getConfig("RECORDS_PER_PAGE", false, 10);
 		$this->sort = $this->registry->getConfig("SORT_ORDER_PRIMARY", false, "relevance");
 	}

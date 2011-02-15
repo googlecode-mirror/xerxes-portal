@@ -11,7 +11,7 @@
  * @package Xerxes
  */
 
-class Xerxes_Model_Search_Config extends Xerxes_Framework_Registry
+abstract class Xerxes_Model_Search_Config extends Xerxes_Framework_Registry
 {
 	private $facets = array();
 	private $fields = array();
