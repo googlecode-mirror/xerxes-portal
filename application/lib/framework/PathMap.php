@@ -31,7 +31,7 @@ class Xerxes_Framework_PathMap
 	 * @param SimpleXML $actions_xml_arg		SimpleXML object of actions.xml directives
 	 */
 	
-	public function __construct($actions_xml_arg)
+	public function __construct(SimpleXMLElement $actions_xml_arg)
 	{ 
 		$this->actions_xml = $actions_xml_arg;
 	}

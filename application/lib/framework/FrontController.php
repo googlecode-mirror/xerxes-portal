@@ -17,33 +17,8 @@ class Xerxes_Framework_FrontController
 	 * Fire-up the framework
 	 */
 	
-	private static $parent_directory = "";
-	
 	public static function execute()
 	{		
-		// calculate current file, this directory
-
-		$this_directory = dirname( __FILE__ );
-		
-		// calculate root directory of the app ../../ from here
-
-		$path_to_parent = $this_directory;
-		$path_to_parent = str_replace( "\\", "/", $path_to_parent );
-		$arrPath = explode( "/", $path_to_parent );
-		
-		array_pop( $arrPath );
-		array_pop( $arrPath );
-		
-		$path_to_parent = implode( "/", $arrPath );
-		
-		// here so other framework files can reference it
-		
-		self::$parent_directory = $path_to_parent;
-				
-		// register framework any main xerxes class files
-		
-		self::registerClasses( "$path_to_parent/lib/framework", "Xerxes_Framework");
-		
 		// initialize the configuration setting (Registry), 
 		// command-view mapping (ControllerMap), and
 		// language translation (Languages) objects 
@@ -200,7 +175,6 @@ class Xerxes_Framework_FrontController
 			// register these values
 			
 			$objRegistry->setConfig( "SERVER_URL", $web );
-			$objRegistry->setConfig( "PATH_PARENT_DIRECTORY", $path_to_parent );
 			$objRegistry->setConfig( "APP_DIRECTORY", $working_dir );
 			$objRegistry->setConfig( "BASE_URL", $web . $base_path , true );
 
@@ -298,7 +272,7 @@ class Xerxes_Framework_FrontController
 							
 				// directory where commands live
 				
-				$command_path = "$path_to_parent/commands/$strDirectory";
+				$command_path = realpath("../commands/$strDirectory");
 				
 				// allow for a local override, even
 				
@@ -529,82 +503,6 @@ class Xerxes_Framework_FrontController
 			$objError->handle( $e, $objRequest, $objRegistry );
 		}
 	}
-	
-	/**
-	 * Returns the root directory ../../ of xerxes
-	 * 
-	 * @return string path to application root
-	 */
-	
-	public static function parentDirectory()
-	{
-		return self::$parent_directory;
-	}
-	
-	/**
-	 * A class-file mapping mechanism used for inclusion of library files
-	 *
-	 * @param string $path		path to the file or directory
-	 */
-	
-	public static function registerClasses($path, $namespace = "Xerxes")
-	{
-		global $xerxes_include_file_array;
-		
-		// recursively grab all the php files
-		
-		$files = self::directoryToArray($path, true);
-		
-		foreach ( $files as $file_path )
-		{
-			$file_path = str_replace("\\", "/", $file_path);
-			$file_array = explode("/", $file_path);
-			$file = array_pop($file_array);
-			
-			// php files only, please
-			
-			if ( strstr( $file_path, ".php" ) )
-			{
-				$class_name = str_replace(".php", "", $file);
-				$class_name = $namespace . "_" . $class_name;
-				$xerxes_include_file_array[$class_name] = $file_path;
-			}	
-		}
-	}
-	
-	private function directoryToArray($directory, $recursive)
-	{
-		$array_items = array ();
-		
-		if ($handle = opendir ( $directory ))
-		{
-			while ( false !== ($file = readdir ( $handle )) )
-			{
-				if ($file != "." && $file != "..")
-				{
-					if (is_dir ( $directory . "/" . $file ))
-					{
-						if ($recursive)
-						{
-							$array_items = array_merge ( $array_items, self::directoryToArray ( $directory . "/" . $file, $recursive ) );
-						}
-						
-						$file = $directory . "/" . $file;
-						$array_items[] = preg_replace ( '/\/\//si', "/", $file );
-					} 
-					else
-					{
-						$file = $directory . "/" . $file;
-						$array_items[] = preg_replace ( '/\/\//si', "/", $file );
-					}
-				}
-			}
-			closedir ( $handle );
-		}
-		
-		return $array_items;
-	}
-	
 	
 	private function setHeader($format)
 	{
