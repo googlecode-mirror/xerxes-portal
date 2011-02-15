@@ -138,9 +138,14 @@ class Xerxes_Model_Solr_EngineTest extends PHPUnit_Framework_TestCase
 		
 		// search results
 				
-		$config = Xerxes_Model_Solr_Config::getInstance(); $config->init();
-		$search = new Xerxes_Model_Search_Query($this->request, $config);
-		$results = $this->Xerxes_Model_Solr_Engine->searchRetrieve($search, 1, 10, "date");
+		$config = Xerxes_Model_Solr_Config::getInstance(); 
+		$config->init();
+		
+		$query = new Xerxes_Model_Search_Query($this->request, $config);
+		
+		$results = $this->Xerxes_Model_Solr_Engine->searchRetrieve($query, 1, 10, "date");
+		
+		// link helper
 		
 		foreach ( $results->getRecords() as $result )
 		{
@@ -159,29 +164,34 @@ class Xerxes_Model_Solr_EngineTest extends PHPUnit_Framework_TestCase
 
 			$result->url_save = $controller->linkSaveRecord($xerxes_record);
 			$result->url_save_delete = $result->url_save; // backwards compatibility
-			
-			// $this->linkOther($result);
+		}
+
+		$facets = $results->getFacets();
 		
-		/*
-			// existing url
-					
-			$url = $this->currentParams();
-					
-			// now add the new one
-					
-			if ( $is_date == true ) // dates are different 
+		if ( $facets != "" )
+		{
+			foreach ( $facets->getGroups() as $group )
 			{
-				$facet->name = $decade_display[$key];
-				$url["facet.date.$group_internal_name." . urlencode($key)] = $decade_display[$key];
+				foreach ( $group->getFacets() as $facet )
+				{
+					// existing url
+						
+					$url = $controller->currentParams($query);
+							
+					// now add the new one
+							
+					if ( $facet->is_date == true ) // dates are different 
+					{
+						$url["facet.date." . $group->name . "." . urlencode($facet->key)] = $facet->name;
+					}
+					else
+					{
+						$url["facet." . $group->name] = $facet->name;									
+					}
+							
+					$facet->url = $this->request->url_for($url);
+				}
 			}
-			else
-			{
-				$url["facet." . $group_internal_name] = $facet->name;									
-			}
-					
-			$facet->url = $this->request->url_for($url);
-		 */
-			
 		}
 
 		$this->toXML($results);

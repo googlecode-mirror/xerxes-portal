@@ -485,9 +485,13 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 					$facet->name = $key;
 					$facet->count = number_format( $value, 0, null, $strThousSep);
 					
-					if ( $is_date == true ) // dates are different 
+					// dates are different
+					
+					if ( $is_date == true )  
 					{
 						$facet->name = $decade_display[$key];
+						$facet->is_date = true;
+						$facet->key = $key;
 					}
 
 					$group->addFacet($facet);
