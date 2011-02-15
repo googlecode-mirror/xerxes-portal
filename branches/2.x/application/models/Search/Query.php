@@ -395,4 +395,17 @@ class Xerxes_Model_Search_Query
 		
 		return $arrFinal;
 	}
+
+	/**
+	 * Extract both query and limit params from the URL
+	 * @return array
+	 */
+	
+	public function getAllSearchParams()
+	{
+		$limits = $this->extractLimitParams();
+		$search = $this->extractSearchParams();
+		
+		return array_merge($search, $limits);
+	}
 }

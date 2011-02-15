@@ -16,4 +16,6 @@ class Xerxes_Model_Search_Facet
 	public $name;
 	public $count;
 	public $url;
+	public $is_date = false;
+	public $key;
 }
