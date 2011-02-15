@@ -646,6 +646,10 @@ class Xerxes_Framework_Parser
 	}
 }
 
+/**
+ * Utility class for parsing some XML
+ */
+
 class Xerxes_Framework_Parser_XML extends DOMElement 
 {
 	private $node;
