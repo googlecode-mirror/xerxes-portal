@@ -8,6 +8,35 @@ import("Xerxes_Model", "models");
 import("Xerxes", "lib/Xerxes");
 
 /**
+ * Mock Object
+ */
+
+class Xerxes_Framework_HTTP
+{
+	public static function request($url)
+	{
+		switch ( $url )
+		{
+			case 'http://localhost/solr/select/?version=2.2&defType=dismax&qf=title&pf=title&q=java&start=0&rows=0&sort=score+desc%2CpublishDate+desc':
+			
+				return file_get_contents('data/solr_hits_java.xml');
+				break;
+				
+			case 'http://localhost/solr/select/?version=2.2&q=id%3A38034':
+			
+				return file_get_contents('data/solr_record_38034.xml');
+				break;
+				
+			case 'http://localhost/bx/recommender/openurl?token=not_a_real_token&url_ver=Z39.88-2004&rfr_id=info:sid/calstate.edu%3Axerxes&rft_id=info%3Aoclcnum%2F28889970&rft.genre=book&rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Abook&rft.isbn=0252063929&rft.place=Champaign%2C+Ill.&rft.pub=University+of+Illinois+Press&rft.date=1994&rft.tpages=xii%2C+218+p.+%3B&rft.btitle=William+James%2C+public+philosopher+&rft.aulast=Cotkin&rft.aufirst=George&res_dat=source=global&threshold=0&maxRecords=10':
+			
+				return file_get_contents('data/bx_islam.xml');
+		}
+		
+		echo $url; exit;
+	}
+}
+
+/**
  * Xerxes_Model_Solr_Engine test case.
  */
 
@@ -21,6 +50,7 @@ class Xerxes_Model_Solr_EngineTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Prepares the environment before running a test.
 	 */
+	
 	protected function setUp() 
 	{
 		parent::setUp();
@@ -30,7 +60,7 @@ class Xerxes_Model_Solr_EngineTest extends PHPUnit_Framework_TestCase
 		$registry = Xerxes_Framework_Registry::getInstance();
 		$registry->init();
 		
-		$server = "http://cowewpaq02.calstate.edu:8080/solr/monterey/";
+		$server = "http://localhost/solr/";
 		$this->Xerxes_Model_Solr_Engine = new Xerxes_Model_Solr_Engine($server);
 	}
 	
