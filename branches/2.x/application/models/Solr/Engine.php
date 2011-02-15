@@ -436,6 +436,7 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 		if ( $groups !== false && count($groups) > 0 )
 		{
 			$facets = new Xerxes_Model_Search_Facets();
+			
 			$strThousSep = $this->registry->getConfig( "HITS_THOUSANDS_SEPERATOR", false, "," );
 			
 			foreach ( $groups as $facet_group )
@@ -453,8 +454,8 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 				$group_internal_name = (string) $facet_group["name"];
 				
 				$group = new Xerxes_Model_Search_FacetGroup();
-				$group->id = $group_internal_name;
-				$group->name = $this->config->getFacetPublicName($group_internal_name);
+				$group->name = $group_internal_name;
+				$group->public = $this->config->getFacetPublicName($group_internal_name);
 				
 				// put facets into an array
 				

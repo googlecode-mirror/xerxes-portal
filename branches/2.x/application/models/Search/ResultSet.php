@@ -73,6 +73,28 @@ class Xerxes_Model_Search_ResultSet
 	}
 	
 	/**
+	 * Get the facets
+	 * 
+	 * @return Xerxes_Model_Search_Facets
+	 */
+	
+	public function getFacets()
+	{
+		return $this->facets;
+	}
+	
+	/**
+	 * Add facets to the result set
+	 * 
+	 * @param Xerxes_Model_Search_Facets $facets
+	 */
+	
+	public function setFacets(Xerxes_Model_Search_Facets $facets)
+	{
+		$this->facets = $facets;
+	}
+	
+	/**
 	 * Add a peer-reviewed indicator for refereed journals
 	 */
 	

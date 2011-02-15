@@ -13,19 +13,38 @@
 
 class Xerxes_Model_Search_FacetGroup
 {
-	public $id;
-	public $name;
-	private $facets = array();
+	public $id = "group";
+	public $name; // internal name
+	public $public; // public facing name
+	public $facets = array();
 
+	/**
+	 * Add a facet
+	 * 
+	 * @param Xerxes_Model_Search_Facet $facets
+	 */
+	
 	public function addFacet($facet)
 	{
 		array_push($this->facets, $facet);
 	}
 	
+	/**
+	 * Get the facets
+	 * 
+	 * @return array of Xerxes_Model_Search_Facet's
+	 */	
+	
 	public function getFacets()
 	{
 		return $this->facets;
 	}
+	
+	/**
+	 * Sort facets by name
+	 * 
+	 * @param string $order		'desc' or 'asc'
+	 */
 	
 	public function sortByName($order)
 	{

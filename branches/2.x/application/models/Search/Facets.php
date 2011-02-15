@@ -17,46 +17,27 @@
 
 class Xerxes_Model_Search_Facets
 {
-	private $groups = array();
+	public $groups = array();
 	
-	public function addGroup($group)
+	/**
+	 * Add a facet grouping
+	 * 
+	 * @param Xerxes_Model_Search_FacetGroup $group
+	 */
+	
+	public function addGroup(Xerxes_Model_Search_FacetGroup $group)
 	{
 		array_push($this->groups, $group);
 	}
+	
+	/**
+	 * Return facet groups
+	 * 
+	 * @return array of Xerxes_Model_Search_FacetGroup's
+	 */	
 	
 	public function getGroups()
 	{
 		return $this->groups;
 	}	
-	
-	public function toXML()
-	{
-		$xml = new DOMDocument();
-		$xml->loadXML("<facets />");
-		
-		foreach ( $this->getGroups() as $group )
-		{
-			$group_node = $xml->createElement("group");
-			$group_node->setAttribute("id", $group->id);
-			$group_node->setAttribute("name", $group->name);
-			$xml->documentElement->appendChild($group_node);
-			
-			foreach ( $group->getFacets() as $facet )
-			{
-				$facet_node = $xml->createElement("facet");
-				
-				foreach ( $facet as $key => $value )
-				{ 
-					if ( $value != "" )
-					{
-						$facet_node->setAttribute($key, $value);
-					}
-				}
-				
-				$group_node->appendChild($facet_node);				
-			}
-		}
-		
-		return $xml;
-	}
 }
