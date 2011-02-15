@@ -149,14 +149,11 @@ class Xerxes_Framework_Response
 				
 				// only public properties
 				
-				$public = array_keys(get_class_vars(get_class($object)));
+				$reflection = new ReflectionObject($object);
 				
-				foreach ( get_object_vars($object) as $property => $value )
+				foreach ( $reflection->getProperties(ReflectionProperty::IS_PUBLIC) as $property )
 				{
-					if ( in_array($property, $public) )
-					{
-						$this->addToXML($object_xml, $property, $value);
-					}
+					$this->addToXML($object_xml, $property->name, $property->getValue($object));
 				}
 			}
 		}
