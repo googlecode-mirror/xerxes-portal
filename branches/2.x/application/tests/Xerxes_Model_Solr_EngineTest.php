@@ -1,32 +1,11 @@
 <?php
 
 require_once 'PHPUnit/Framework/TestCase.php';
+require_once '../lib/framework/autoload.php';
 
-require_once '../lib/framework/HTTP.php';
-require_once '../lib/framework/Parser.php';
-require_once '../lib/framework/Registry.php';
-require_once '../lib/framework/Languages.php';
-require_once '../lib/framework/Response.php';
-
-require_once '../lib/Xerxes/Marc.php';
-require_once '../lib/Xerxes/Record.php';
-require_once '../lib/Xerxes/BxRecord.php';
-
-require_once '../models/Search/Engine.php';
-require_once '../models/Search/Config.php';
-require_once '../models/Search/Query.php';
-require_once '../models/Search/QueryTerm.php';
-require_once '../models/Search/LimitTerm.php';
-require_once '../models/Search/ResultSet.php';
-require_once '../models/Search/Result.php';
-require_once '../models/Search/Facet.php';
-require_once '../models/Search/FacetGroup.php';
-require_once '../models/Search/Facets.php';
-
-require_once '../models/Solr/Engine.php';
-require_once '../models/Solr/Config.php';
-
-
+import("Xerxes_Framework", "lib/framework");
+import("Xerxes_Model", "models");
+import("Xerxes", "lib/Xerxes");
 
 /**
  * Xerxes_Model_Solr_Engine test case.

@@ -636,39 +636,3 @@ class Xerxes_Framework_FrontController
 		}
 	}
 }
-
-$xerxes_include_file_array = array();
-
-/**
- * Include library files
- *
- * @param string $name	the name of the class
- */
-
-function __autoload($name)
-{
-	global $xerxes_include_file_array;
-	
-	if ( array_key_exists($name, $xerxes_include_file_array) )
-	{
-		require_once $xerxes_include_file_array[$name];
-	}
-	else
-	{
-		// could be a secondary class in the file, so check the stub
-		// form of the name
-		
-		$name_array = explode("_", $name);
-		array_pop($name_array);
-		$stub = implode("_", $name_array);
-		
-		if ( array_key_exists($stub, $xerxes_include_file_array) )
-		{
-			require_once $xerxes_include_file_array[$stub];
-		}
-		else
-		{
-			throw new Exception("could not find a file for the class '$name'");	
-		}
-	}
-}
