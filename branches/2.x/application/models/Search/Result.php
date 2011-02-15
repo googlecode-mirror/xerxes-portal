@@ -21,10 +21,11 @@ class Xerxes_Model_Search_Result
 	public $xerxes_record; // record
 	public $original_record; // original xml
 	public $holdings; // holdings from an ils
-	public $recommendations; // recommendations object	
+	public $recommendations = array(); // recommendations object	
 	public $reviews; // reviews
 	
 	protected $registry;
+	protected $sid; // open url sid
 	
 	/**
 	 * Constructor
@@ -36,6 +37,14 @@ class Xerxes_Model_Search_Result
 	{
 		$this->xerxes_record = $record;
 		$this->registry = Xerxes_Framework_Registry::getInstance();
+		
+		// pop
+		
+		$link_resolver = $this->registry->getConfig("LINK_RESOLVER_ADDRESS", true);
+		$this->sid = $this->registry->getConfig("APPLICATION_SID", false, "calstate.edu:xerxes");
+		
+		$this->url_open = $record->getOpenURL($link_resolver, $this->sid);
+		$this->openurl_kev_co = $record->getOpenURL(null, $this->sid);
 	}
 	
 	/**
@@ -50,14 +59,14 @@ class Xerxes_Model_Search_Result
 		{
 			$configBX = $this->registry->getConfig("BX_SERVICE_URL", false, 
 				"http://recommender.service.exlibrisgroup.com/service");
-			$configSID = $this->registry->getConfig("APPLICATION_SID", false, "calstate.edu:xerxes");
+
 			$configMaxRecords = $this->registry->getConfig("BX_MAX_RECORDS", false, "10");
 			$configMinRelevance	= $this->registry->getConfig("BX_MIN_RELEVANCE", false, "0");
 			
 			
 			// now get the open url
 				
-			$open_url = $this->xerxes_record->getOpenURL(null, $configSID);
+			$open_url = $this->xerxes_record->getOpenURL(null, $this->sid);
 			
 			// send it to bx service
 			
@@ -89,11 +98,10 @@ class Xerxes_Model_Search_Result
 				
 				if ( count($records) > 0 ) // and only if there are any records
 				{
-					$this->recommendations = new Xerxes_Model_Search_Records(); 
-							
 					foreach ( $records as $bx_record )
 					{
-						$this->recommendations->addRecord($bx_record);
+						$result = new Xerxes_Model_Search_Result($bx_record);
+						array_push($this->recommendations, $result);
 					} 
 				}
 			}
