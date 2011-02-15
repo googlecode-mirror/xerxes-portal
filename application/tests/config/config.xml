@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xerxes>
+	<configuration>
+		<config name="link_resolver_address">http://localhost/sfx</config>
+		<config name="bx_token">not_a_real_token</config>
+		<config name="bx_service_url">http://localhost/bx</config>
+	</configuration>
+</xerxes>
