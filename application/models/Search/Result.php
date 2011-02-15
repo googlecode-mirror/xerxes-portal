@@ -16,7 +16,6 @@ class Xerxes_Model_Search_Result
 	protected $id = "record";
 	
 	public $url_open; // open url
-	public $url_save_delete; // url for saving and deleting the record
 	public $openurl_kev_co;	 // just the key-encoded-values of the openurl
 	public $xerxes_record; // record
 	public $original_record; // original xml
