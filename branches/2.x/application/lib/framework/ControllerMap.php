@@ -60,12 +60,12 @@ class Xerxes_Framework_ControllerMap
 	
 	public function init()
 	{	
-		$distro = Xerxes_Framework_FrontController::parentDirectory() . "/lib/" . $this->file;
-		
 		// don't parse it twice
 		
 		if ( ! $this->xml instanceof SimpleXMLElement )
 		{
+			$distro = realpath("../lib/" . $this->file);	
+			
 			// distro actions.xml
 			
 			if ( file_exists($distro) )

@@ -98,7 +98,7 @@ class Xerxes_Framework_Parser
 		      
 		// the 'distro' xsl lives here
 	
-		$distro_xsl_dir = $objRegistry->getConfig("PATH_PARENT_DIRECTORY", true) . '/lib/';
+		$distro_xsl_dir = realpath('../lib/');
 		$distro_path =  $distro_xsl_dir . $strXsltRelPath;
 		
 		

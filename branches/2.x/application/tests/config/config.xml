@@ -4,5 +4,6 @@
 		<config name="link_resolver_address">http://localhost/sfx</config>
 		<config name="bx_token">not_a_real_token</config>
 		<config name="bx_service_url">http://localhost/bx</config>
+		<config name="rewrite" pass="true">true</config>
 	</configuration>
 </xerxes>
