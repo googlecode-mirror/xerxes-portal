@@ -779,6 +779,11 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		}
 	}
 	
+	public function getDatabasesStartingWith($alpha)
+	{
+		return $this->getDatabases(null, null, $alpha);	
+	}
+	
 	/**
 	 * Get one or a set of databases from the knowledgebase
 	 *
@@ -788,7 +793,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 	 * @return array			array of Xerxes_Data_Database objects
 	 */
 	
-	public function getDatabases($id = null, $query = null)
+	public function getDatabases($id = null, $query = null, $alpha = null)
 	{
 		$configDatabaseTypesExclude = $this->registry->getConfig("DATABASES_TYPE_EXCLUDE_AZ", false);
 		$configAlwaysTruncate = $this->registry->getConfig("DATABASES_SEARCH_ALWAYS_TRUNCATE", false, false);		
@@ -828,6 +833,15 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 				$arrParams[":id$x"] = $id[$x];
 			}
 		} 
+		
+		// alpha query
+		
+		elseif ( $alpha != null )
+		{
+			$strSQL .= " WHERE UPPER(title_display) LIKE :alpha ";
+			$arrParams[":alpha"] = "$alpha%";
+			$where = true;
+		}
 		
 		// user-supplied query
 		

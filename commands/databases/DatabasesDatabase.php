@@ -26,6 +26,8 @@ class Xerxes_Command_DatabasesDatabase extends Xerxes_Command_Databases
 		
 		$strID = $this->request->getProperty( "id" );
 		$strQuery = $this->request->getProperty( "query" );
+		$alpha = $this->request->getProperty( "alpha" );
+		
 		$objData = new Xerxes_DataMap( );
 		$arrResults = array ( );
 		
@@ -37,7 +39,11 @@ class Xerxes_Command_DatabasesDatabase extends Xerxes_Command_Databases
 			{
 				throw new Xerxes_Exception_NotFound( "Can not find database with id $strID" );
 			}
-		} 
+		}
+		elseif ($alpha != "")
+		{
+			$arrResults = $objData->getDatabasesStartingWith( $alpha );			
+		}
 		elseif ( $strQuery )
 		{
 			$arrResults = $objData->getDatabases( null, $strQuery );
