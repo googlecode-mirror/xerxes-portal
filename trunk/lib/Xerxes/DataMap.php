@@ -779,6 +779,36 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		}
 	}
 	
+	/**
+	 * Get the starting letters for database titles
+	 *
+	 * @return array of letters
+	 */	
+	
+	public function getDatabaseAlpha()
+	{
+		$strSQL = "SELECT DISTINCT alpha FROM " .
+			"(SELECT SUBSTRING(UPPER(title_display),1,1) AS alpha FROM xerxes_databases) AS TEMP " .
+			"ORDER BY alpha";
+			
+		$letters = array();
+		$results = $this->select( $strSQL );
+		
+		foreach ( $results as $result )
+		{
+			array_push($letters, $result['alpha']);	
+		}
+		
+		return $letters;
+	}
+
+	/**
+	 * Get databases that start with a particular letter
+	 *
+	 * @param string $alpha letter to start with 
+	 * @return array of Xerxes_Data_Database objects
+	 */	
+
 	public function getDatabasesStartingWith($alpha)
 	{
 		return $this->getDatabases(null, null, $alpha);	
