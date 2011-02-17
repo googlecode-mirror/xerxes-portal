@@ -42,6 +42,33 @@ class Xerxes_Command_DatabasesDatabase extends Xerxes_Command_Databases
 		}
 		elseif ($alpha != "")
 		{
+			// get just the letters
+			
+			$alpha_list = $this->request->getSession("alpha_list");
+			
+			if ( $alpha_list == "" )
+			{
+				$alpha_list_array = $objData->getDatabaseAlpha();
+				$alpha_list = implode(',', $alpha_list_array);
+				
+				// cache it in session too!
+				
+				$this->request->setSession("alpha_list", $alpha_list);
+			}	
+			
+			// add it to the interface
+			
+			$objAlpha = new DOMDocument();
+			$objAlpha->loadXML("<alpha />");
+			
+			foreach ( explode(',', $alpha_list) as $letter )
+			{
+				$objLetter = $objAlpha->createElement("letter", $letter);
+				$objAlpha->documentElement->appendChild($objLetter);
+			}
+			
+			$this->request->addDocument( $objAlpha );
+			
 			$arrResults = $objData->getDatabasesStartingWith( $alpha );			
 		}
 		elseif ( $strQuery )
