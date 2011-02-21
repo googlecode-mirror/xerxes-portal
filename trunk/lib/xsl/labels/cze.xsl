@@ -25,6 +25,9 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	<xsl:variable name="text_ada_version">Nejlepší výsledky poskytne přístupná verze, kterou získáte kliknutím na tento odkaz</xsl:variable>
 	<xsl:variable name="text_ada_table_for_display">pouze pro prohlížení</xsl:variable>
 	
+	<xsl:variable name="text_app_name"	select="//config/application_name" />
+	
+	<xsl:variable name="text_authentication_error_not_authorized">Litujeme, dle našich záznamů nemáte oprávnění používat tuto službu</xsl:variable>
 	<xsl:variable name="text_authentication_login_explain"></xsl:variable>
 	<xsl:variable name="text_authentication_login_failed">Litujeme, vaše uživatelské jméno nebo heslo bylo nesprávné.</xsl:variable>
 	<xsl:variable name="text_authentication_login_pagename">Přihlásit se</xsl:variable>
@@ -35,30 +38,57 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	<xsl:variable name="text_authentication_logout_pagename">Odhlásit se</xsl:variable>
 	
 	<xsl:variable name="text_breadcrumb_separator"> &gt; </xsl:variable>
+	<xsl:variable name="text_breadcrumb_seperator" select="$text_breadcrumb_separator" />
+	
+	<xsl:variable name="text_citation_apa">APA</xsl:variable>
+	<xsl:variable name="text_citation_mla">MLA</xsl:variable>
+	<xsl:variable name="text_citation_turabian">Turabian / Chicago</xsl:variable>
 	
 	<xsl:variable name="text_collections_add_database">Přidat databáze</xsl:variable>
 	<xsl:variable name="text_collections_add_section">Přidat novou sekci:</xsl:variable>
-	<xsl:variable name="text_collections_reorder_db_title">Změnit pořadí databází</xsl:variable>
-	<xsl:variable name="text_collections_reorder_subcat_title">Změnit pořadí sekcí</xsl:variable>
-	<xsl:variable name="text_collections_reorder_title">Změnit pořadí databází</xsl:variable>
+	<xsl:variable name="text_collections_blank_name">Zadán prázdný název, nebude nezmeněn</xsl:variable>
+	<xsl:variable name="text_collections_cancelled">Zrušeno</xsl:variable>
 	<xsl:variable name="text_collections_change_database_order">Změnit pořadí databází</xsl:variable>
 	<xsl:variable name="text_collections_change_name">Změnit název kolekce</xsl:variable>
 	<xsl:variable name="text_collections_change_section_name">Změnit název sekce</xsl:variable>
 	<xsl:variable name="text_collections_change_section_order">Změnit pořadí sekcí</xsl:variable>
 	<xsl:variable name="text_collections_created_by">Vytvořil <xsl:value-of select="/*/category/@owned_by_user" /></xsl:variable>
+	<xsl:variable name="text_collections_database_already_saved">Databáze už byla uložena do %s v %s</xsl:variable>
+	<xsl:variable name="text_collections_database_order_changed">Pořadí databází změněno</xsl:variable>
+	<xsl:variable name="text_collections_database_saved">Databáze uložena do %s</xsl:variable>
 	<xsl:variable name="text_collections_delete_collection">Smazat kolekci</xsl:variable>
 	<xsl:variable name="text_collections_delete_collection_confirm">Jste si jisti, že chcete smazat tuto kolekci?</xsl:variable>
 	<xsl:variable name="text_collections_delete_section">Smazat sekci</xsl:variable>
 	<xsl:variable name="text_collections_delete_section_confirm">Jste si jisti, že chcete smazat tuto sekci?</xsl:variable>
+	<xsl:variable name="text_collections_deleted_category">Smazána kategorie %s</xsl:variable>
+	<xsl:variable name="text_collections_deleted_subcategory">Smazána podkategorie %s</xsl:variable>
 	<xsl:variable name="text_collections_done_editing">Dokončil jsem úpravy!</xsl:variable>
 	<xsl:variable name="text_collections_edit">Přidat databáze a upravit</xsl:variable>
+	
+	<xsl:variable name="text_collections_error_embed_not_published">Vaše kolekce musí být publikována, aby jste moli využívat funkcionalitu embed</xsl:variable>	
+	<xsl:variable name="text_collections_error_no_such_category">Zvolená kategorie nebyla nalezena.</xsl:variable>
+	<xsl:variable name="text_collections_error_no_such_section">Zvolená sekce nebyla nalezena.</xsl:variable>	
+	<xsl:variable name="text_collections_error_not_logged_in">Abyste mohli využívat tuto funkci, musíte se přihlásit.</xsl:variable>
+	<xsl:variable name="text_collections_error_personal_collection_not_found">Osobní kolekce nebyla nalezena.</xsl:variable>
+	<xsl:variable name="text_collections_error_private_collection_save">Abyste mohli ukládat do kolekce, kterou vlastní uživatel %s, musíte se přihlásit jako tento uživatel.</xsl:variable>
+	<xsl:variable name="text_collections_error_private_collection">Toto je soukromá kolekce databázi, která je přístupná pouze uživateli, který ji vytvořil. Jestli vy jste tento uživatel, přihlašte se, prosím.</xsl:variable>
+	
 	<xsl:variable name="text_collections_list_databases">Vypsat vybrané databáze: </xsl:variable>
+	<xsl:variable name="text_collections_made_private">Kolekce byla označena jako soukromá.</xsl:variable>
+	<xsl:variable name="text_collections_made_published">Kolekce byla označena jako veřejná.</xsl:variable>
 	<xsl:variable name="text_collections_no_matches">Nebyly nalezeny odpovídající databáze</xsl:variable>	
+	<xsl:variable name="text_collections_name_changed">Název kolekce se změnil.</xsl:variabe>
 	<xsl:variable name="text_collections_private">Soukromá</xsl:variable>
 	<xsl:variable name="text_collections_public">Veřejná</xsl:variable>
 	<xsl:variable name="text_collections_public_url">Veřejné URL:</xsl:variable>
 	<xsl:variable name="text_collections_publish">Vytvořit kolekci:</xsl:variable>
 	<xsl:variable name="text_collections_remove_searchbox">Skončil jsem s přidáváním databází!</xsl:variable>
+	<xsl:variable name="text_collections_removed_database">Databáze odstraněna</xsl:variable>
+	<xsl:variable name="text_collections_renamed">Prejmenována</xsl:variable>
+	<xsl:variable name="text_collections_reorder_db_title">Změnit pořadí databází</xsl:variable>
+	<xsl:variable name="text_collections_reorder_subcat_title">Změnit pořadí sekcí</xsl:variable>
+	<xsl:variable name="text_collections_section_new">Vytvořena nová sekce</xsl:variable>
+	<xsl:variable name="text_collections_section_order_changed">Pořadí sekcí změněno</xsl:variable>
 	
 	<xsl:variable name="text_database_availability">Dostupnost:</xsl:variable>
 	<xsl:variable name="text_database_available_registered">Dostupné pouze pro registrované uživatele.</xsl:variable>
@@ -83,9 +113,9 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	<xsl:variable name="text_databases_az_databases">databází</xsl:variable>
 	<xsl:variable name="text_databases_az_hint_info">další informace</xsl:variable>
 	<xsl:variable name="text_databases_az_hint_searchable">prohledatelné pomocí <xsl:value-of select="$text_app_name" /></xsl:variable>
+	<xsl:variable name="text_databases_az_letter_separator"> | </xsl:variable>
 	<xsl:variable name="text_databases_az_pagename">Databáze A-Z</xsl:variable>
 	<xsl:variable name="text_databases_az_search">Seznam vybraných databází: </xsl:variable>
-	
 	
 	<xsl:variable name="text_databases_category_pagename">Domů</xsl:variable>
 	<xsl:variable name="text_databases_category_quick_desc">
@@ -101,18 +131,21 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	<xsl:variable name="text_databases_subject_hint_direct_search">Přejít přímo na </xsl:variable>
 	<xsl:variable name="text_databases_subject_hint_more_info_about">Další informace o </xsl:variable>
 	<xsl:variable name="text_databases_subject_hint_native_only">Klikněte na název databáze pro individuální hledání</xsl:variable>
-	<xsl:variable name="text_databases_subject_hint_restricted">Omezené, klikněte na název databáze pro individuální hledání
-</xsl:variable>
+	<xsl:variable name="text_databases_subject_hint_restricted">Omezené, klikněte na název databáze pro individuální hledání</xsl:variable>
 	
 	<xsl:variable name="text_databases_subject_librarian_address">Kancelář:</xsl:variable>
 	<xsl:variable name="text_databases_subject_librarian_email">Email:</xsl:variable>
 	<xsl:variable name="text_databases_subject_librarian_fax">Fax:</xsl:variable>
 	<xsl:variable name="text_databases_subject_librarian_telephone">Telefon:</xsl:variable>
 
-	
+	<xsl:variable name="text_error">Litujeme, vyskytla se chyba</xsl:variable>
+	<xsl:variable name="text_error_access_denied">Přístup zamítnut</xsl:variable>
 	<xsl:variable name="text_error_databases_permission">Nemáte přístup k hledání v těchto databázích</xsl:variable>
 	<xsl:variable name="text_error_databases_registered">Dostupné pouze pro registrované uživatele.</xsl:variable>
 	<xsl:variable name="text_error_pdo_exception">Vyskytl se problém s databází.</xsl:variable>
+	<xsl:variable name="text_error_not_authorized_db">Nemáte oprávnění prohledávat jisté databáze</xsl:variable>
+	<xsl:variable name="text_error_not_found">Nenalezeno</xsl:variable>
+	<xsl:variable name="text_error_search_expired">Zdá se, že vaše vyhledávací relace vypršela</xsl:variable>
 	
 	<xsl:variable name="text_folder_email_address">emailová adresa</xsl:variable>
 	<xsl:variable name="text_folder_email_notes">poznámky</xsl:variable>
@@ -125,9 +158,11 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	<xsl:variable name="text_folder_endnote_file">do souboru, který sám importuji</xsl:variable>
 	<xsl:variable name="text_folder_endnote_pagename">Stáhnout do Endnote, Zotero atd.</xsl:variable>
 	
+	<xsl:variable name="text_folder_error_email_not_sent">Nepodařilo se poslat mail</xsl:variable>
+	<xsl:variable name="text_folder_error_no_email">Prosím, zadejte emailovou adresu</xsl:variable>
+	
 	<xsl:variable name="text_folder_export_download">Stáhnout</xsl:variable>
 	<xsl:variable name="text_folder_export_export">Exportovat</xsl:variable>
-
 	<xsl:variable name="text_folder_export_send">Poslat</xsl:variable>
 	<xsl:variable name="text_folder_file_pagename">Stáhnout do textového souboru</xsl:variable>
 	<xsl:variable name="text_folder_header_export">Exportovat záznamy</xsl:variable>
@@ -184,7 +219,12 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	<xsl:variable name="text_link_resolver_name">Překladač odkazů</xsl:variable>
 	<xsl:variable name="text_link_resolver_load_msg">Načítá se obsah z</xsl:variable>
 	<xsl:variable name="text_link_resolver_direct_link_prefix">Dostupný plný text: </xsl:variable>
-
+	
+	<xsl:variable name="text_metasearch_error_no_databases">Prosím, vyberte jednu nebo více databází k prohledání</xsl:variable>
+	<xsl:variable name="text_metasearch_error_no_search_terms">Prosím, vyplňte vyhledávací dotaz</xsl:variable>
+	<xsl:variable name="text_metasearch_error_not_authorized">Nemáte oprávnění prohledávat databáze, které jste zvolili. Prosím, vyberte jiné databáze a zkuste to znovu.</xsl:variable>
+	<xsl:variable name="text_metasearch_error_too_many_databases">Můžete prohledávat pouze %s databází najednou</xsl:variable>
+	
 	<xsl:variable name="text_metasearch_hits_error">Litujeme, momentálně máme technické potíže.</xsl:variable>
 	<xsl:variable name="text_metasearch_hits_error_explain">
 		Můžete to zkusit později nebo použít web knihovny a jednotlivě prohledávat databáze.
@@ -271,9 +311,6 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	<xsl:variable name="text_results_year">Rok</xsl:variable>
 	<xsl:variable name="text_results_next">Další</xsl:variable>
 	
-	<xsl:variable name="text_search_err_select_databases">Prosím, vyberte databáze k prohledání</xsl:variable>
-	<xsl:variable name="text_search_err_databases_limit">Litujeme, najednou je možné prohledávat pouze %s databází</xsl:variable>
-	
 	<xsl:variable name="text_searchbox_ada_boolean">Booleovský operátor: </xsl:variable>
 	<xsl:variable name="text_searchbox_boolean_and">a</xsl:variable>
 	<xsl:variable name="text_searchbox_boolean_or">nebo</xsl:variable>
@@ -337,15 +374,15 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	<xsl:template name="text_number_to_words">
 		<xsl:param name="number" />
 		<xsl:choose>
-			<xsl:when test="$number = 1">one</xsl:when> <!-- TODO -->
-			<xsl:when test="$number = 2">two</xsl:when>
-			<xsl:when test="$number = 3">three</xsl:when>
-			<xsl:when test="$number = 4">four</xsl:when>
-			<xsl:when test="$number = 5">five</xsl:when>
-			<xsl:when test="$number = 6">six</xsl:when>
-			<xsl:when test="$number = 7">seven</xsl:when>
-			<xsl:when test="$number = 8">eight</xsl:when>
-			<xsl:when test="$number = 9">nine</xsl:when>
+			<xsl:when test="$number = 1">jednu</xsl:when>
+				<xsl:when test="$number = 2">dvě</xsl:when>
+			<xsl:when test="$number = 3">tři</xsl:when>
+			<xsl:when test="$number = 4">čtyři</xsl:when>
+			<xsl:when test="$number = 5">pět</xsl:when>
+			<xsl:when test="$number = 6">šest</xsl:when>
+			<xsl:when test="$number = 7">sedm</xsl:when>
+			<xsl:when test="$number = 8">osum</xsl:when>
+			<xsl:when test="$number = 9">devět</xsl:when>
 			<xsl:otherwise>
 				<xsl:value-of select="$number" />
 			</xsl:otherwise>
