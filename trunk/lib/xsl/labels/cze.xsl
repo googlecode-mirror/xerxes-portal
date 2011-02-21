@@ -77,7 +77,7 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	<xsl:variable name="text_collections_made_private">Kolekce byla označena jako soukromá.</xsl:variable>
 	<xsl:variable name="text_collections_made_published">Kolekce byla označena jako veřejná.</xsl:variable>
 	<xsl:variable name="text_collections_no_matches">Nebyly nalezeny odpovídající databáze</xsl:variable>	
-	<xsl:variable name="text_collections_name_changed">Název kolekce se změnil.</xsl:variabe>
+	<xsl:variable name="text_collections_name_changed">Název kolekce se změnil.</xsl:variable>
 	<xsl:variable name="text_collections_private">Soukromá</xsl:variable>
 	<xsl:variable name="text_collections_public">Veřejná</xsl:variable>
 	<xsl:variable name="text_collections_public_url">Veřejné URL:</xsl:variable>
