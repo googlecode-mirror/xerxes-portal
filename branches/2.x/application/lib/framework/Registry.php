@@ -15,7 +15,6 @@ class Xerxes_Framework_Registry
 {
 	protected $xml = ""; // simple xml object copy
 	protected $config_file = "config/config";
-	private $usergroups = array ( ); // user groups
 	private $authentication_sources = array ( );
 	private $default_language = null;
 	private $arrConfig = null; // configuration settings
@@ -139,21 +138,6 @@ class Xerxes_Framework_Registry
 					}
 				}
 			}
-				
-			// get group information out of config.xml too
-			// we just store actual simplexml elements in the 
-			// $this->usergroups array.
-				
-			$groups = $xml->configuration->groups->group;
-				
-			if ( $groups != false )
-			{
-				foreach ( $groups as $group )
-				{
-					$id = ( string ) $group["id"];
-					$this->usergroups[Xerxes_Framework_Parser::strtoupper($id)] = $group; //case insensitive
-				}
-			}
 		}
 	}
 	
@@ -230,7 +214,7 @@ class Xerxes_Framework_Registry
 	/**
 	 * Get all configuration settings that should be passed to the XML and the XSLT
 	 *
-	 * @return unknown
+	 * @return array
 	 */
 	
 	public function getPass()
@@ -255,63 +239,15 @@ class Xerxes_Framework_Registry
 			$this->arrPass[Xerxes_Framework_Parser::strtolower( $key )] = $value;
 		}
 	}
-	
-	public function userGroups()
-	{
-		if ( $this->usergroups != null )
-		{
-			return array_keys( $this->usergroups );
-		} 
-		else
-		{
-			return null;
-		}
-	}
-	
-	public function getGroupDisplayName($id)
-	{	  
-	  $id = Xerxes_Framework_Parser::strtoupper($id); //case insensitive
-	  if ( array_key_exists( $id, $this->usergroups ) )
-		{
-			$group = $this->usergroups[$id];
-			return ( string ) $group->display_name;
-		} 
-		else
-		{
-			return $id;
-		}
-	}
-	
-	public function getGroupLocalIpRanges($id)
-	{
-		if ( array_key_exists( $id, $this->usergroups ) )
-		{
-			$group = $this->usergroups[$id];
-			return ( string ) $group->local_ip_range;
-		} 
-		else
-		{
-			return $id;
-		}
-	}
-	
-	// returns a simple xml object from the config
 
-	public function getGroupXml($id)
-	{
-		if ( array_key_exists( $id, $this->usergroups ) )
-		{
-			return $this->usergroups[$id];
-		} 
-		else
-		{
-			return null;
-		}
-	}
-	
-	// Gets an authentication source by id. If id is null or no such
-	// source can be found, returns first authentication source in config file.
-	// If not even that, returns "demo".
+	/**
+	 * Gets an authentication source by id. If id is null or no such
+	 * source can be found, returns first authentication source in config file.
+	 * If not even that, returns "demo"
+	 * 
+	 * @param $id		authentication identifier
+	 * @return string	authentication source
+	 */
 	
 	public function getAuthenticationSource($id)
 	{
@@ -341,7 +277,13 @@ class Xerxes_Framework_Registry
 		return $source;
 	}
 	
-	public function initDefaultLanguage()
+	/**
+	 * Initialize the default language
+	 * 
+	 * @return string		default language
+	 */
+	
+	private function initDefaultLanguage()
 	{
 		$default_language = $this->xml->xpath("configuration/config[@name='languages']/language[position()=1]/@code");
 		
@@ -356,11 +298,24 @@ class Xerxes_Framework_Registry
 
 		return $this->default_language;
 	}
+	
+	/**
+	 * Get the default language
+	 * 
+	 * @return string
+	 */
 
 	public function defaultLanguage()
 	{
 		return $this->default_language;
 	}
+	
+	/**
+	 * Get locale name for given language ID
+	 * 
+	 * @param string		language id
+	 * @return string		locale
+	 */
 	
 	public function getLocale($lang)
 	{
@@ -386,17 +341,32 @@ class Xerxes_Framework_Registry
 		return "C";
 	}
 	
+	/**
+	 * Get the config file as XML
+	 * 
+	 * @return simplexml
+	 */
+	
 	public function getXML()
 	{
 		return $this->xml;
 	}
 	
-	public function publicXML()
+	/**
+	 * Publically accessible config entries
+	 * 
+	 * @return DOMDocument
+	 */
+	
+	public function toXML()
 	{
 		// pass any configuration options defined as type=pass to the xml
+		
+		$source = explode('/', $this->config_file);
+		$source = array_pop($source);
 
 		$objConfigXml = new DOMDocument( );
-		$objConfigXml->loadXML( "<config />" );
+		$objConfigXml->loadXML( "<config source=\"$source\" />" );
 			
 		foreach ( $this->getPass() as $key => $value )
 		{
