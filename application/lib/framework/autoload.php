@@ -37,7 +37,7 @@ function __autoload($class_name)
 		
 		$length = strlen($namespace);
 		
-		if ( strlen($class_name) > $length )
+		if ( strlen($class_name) >= $length )
 		{
 			if ( substr($class_name,0,$length) == $namespace )
 			{
