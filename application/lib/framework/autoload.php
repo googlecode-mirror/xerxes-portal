@@ -58,7 +58,14 @@ function __autoload($class_name)
 	// now everthing after the prefix should map to the file system
 	
 	$pieces = explode("_", $file_location);
-	$file_location = implode("/", $pieces) . ".php";
+	$file_location = implode("/", $pieces);
+	
+	// and add .php if not specifically defined in location
+	
+	if ( ! strpos($file_location, '.php') )
+	{
+		$file_location .= '.php';
+	}
 	
 	// try to include it
 	
