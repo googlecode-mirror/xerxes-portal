@@ -479,7 +479,8 @@ class Xerxes_Model_DataMap_Databases extends Xerxes_Framework_DataMap
 				"subcategories_table" => "xerxes_user_subcategories", 
 				"database_join_table" => "xerxes_user_subcategory_databases", 
 				"subcategories_pk" => "id", 
-				"extra_select" => ", xerxes_user_categories.published AS published, xerxes_user_categories.username AS username", 
+				"extra_select" => ", xerxes_user_categories.published AS published, " .
+					"xerxes_user_categories.username AS username", 
 				"extra_where" => " AND xerxes_user_categories.username = :username "
 			);
 		} 
@@ -495,14 +496,16 @@ class Xerxes_Model_DataMap_Databases extends Xerxes_Framework_DataMap
 	 * they are. 
 	 *
 	 * @param string $normalized		normalized category name
-	 * @param string $old			old normalzied category name, for comp with Xerxes 1.0. Often can be left null in call. Only applicable to METALIB_MODE. 
-	 * @param string $mode  		one of constants METALIB_MODE or USER_CREATE_MODE, for metalib-imported categories or user-created categories, using different tables.
-	 * @param string $username 		only used in USER_CREATE_MODE, the particular user must be specified, becuase normalized subject names are only unique within a user. 
-	 * @param string $lang 			language code, can be empty string
+	 * @param string $lang 				language code, can be empty string
+	 * @param string $mode  			one of constants METALIB_MODE or USER_CREATE_MODE, 
+	 * 									for metalib-imported categories or user-created categories, 
+	 * 									using different tables.
+	 * @param string $username 			only used in USER_CREATE_MODE, the particular user must be specified, 
+	 * 									becuase normalized subject names are only unique within a user. 
 	 * @return Xerxes_Data_Category		a Xerxes_Data_Category object, filled out with subcategories and databases. 
 	 */
 	
-	public function getSubject($normalized, $old = null, $mode = self::METALIB_MODE, $username = null, $lang = "")
+	public function getSubject($normalized, $lang = "", $mode = self::METALIB_MODE, $username = null )
 	{
 		if ( $mode == self::USER_CREATE_MODE && $username == null )
 		{
@@ -518,20 +521,8 @@ class Xerxes_Model_DataMap_Databases extends Xerxes_Framework_DataMap
 			
 		// This can be used to fetch personal or metalib-fetched data. We get
 		// from different tables depending. 
-		$schema_map = $this->schema_map_by_mode( $mode );
-		
-		// we'll use the new 'categories' normalized scheme if available, but 
-		// otherwise get the old normalized scheme with the capitalizations for 
-		// compatibility with xerxes 1.0 release.
-		
 
-		$column = "normalized";
-		
-		if ( $normalized == null && $old != null )
-		{
-			$normalized = $old;
-			$column = "old";
-		}
+		$schema_map = $this->schema_map_by_mode( $mode );
 		
 		$strSQL = "SELECT $schema_map[categories_table].id as category_id, 
 			$schema_map[categories_table].name as category,
@@ -545,7 +536,7 @@ class Xerxes_Model_DataMap_Databases extends Xerxes_Framework_DataMap
 			LEFT OUTER JOIN $schema_map[subcategories_table] ON $schema_map[categories_table].id = $schema_map[subcategories_table].category_id
 			LEFT OUTER JOIN $schema_map[database_join_table] ON $schema_map[database_join_table].subcategory_id = $schema_map[subcategories_table].$schema_map[subcategories_pk]
 			LEFT OUTER JOIN xerxes_databases ON $schema_map[database_join_table].database_id = xerxes_databases.metalib_id
-			WHERE $schema_map[categories_table].$column = :value
+			WHERE $schema_map[categories_table].normalized = :value
 			AND 
 			($schema_map[subcategories_table].name NOT LIKE UPPER('All%') OR
 			$schema_map[subcategories_table].name is NULL)
