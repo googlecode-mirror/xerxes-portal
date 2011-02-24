@@ -55,7 +55,7 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 	public function getHits( Xerxes_Model_Search_Query $search )
 	{
 		$results = $this->searchRetrieve($search, 0, 0, null, false);
-		return $results->total;
+		return $results->getTotal();
 	}
 
 	/**
@@ -88,11 +88,9 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 		
 		// sort
 		
-		$this->sort = $this->config->getConfig("SORT_ORDER_PRIMARY", false, $this->sort);
-		
 		if ( $sort == null )
 		{
-			$sort = $this->sort;
+			$sort = $this->config->getConfig("SORT_ORDER_PRIMARY", false, $this->sort);
 		}
 		
 		$sort = $this->config->swapForInternalSort($sort);
