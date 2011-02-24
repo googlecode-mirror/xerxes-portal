@@ -14,7 +14,17 @@ $xerxes_namespaces = array();
 function import($namespace, $location)
 {
 	global $xerxes_namespaces;
-	$xerxes_namespaces[$namespace] = $location;
+	$xerxes_namespaces[$location] = $namespace;
+	uasort($xerxes_namespaces,'xerxes_namespace_sort');
+}
+
+/**
+ * Sort array by size of values
+ */
+
+function xerxes_namespace_sort($a,$b)
+{
+    return strlen($b)-strlen($a);
 }
 
 /**
@@ -30,7 +40,7 @@ function __autoload($class_name)
 	$file_location = "";
 	$found = false;
 	
-	foreach ( $xerxes_namespaces as $namespace => $location )
+	foreach ( $xerxes_namespaces as $location => $namespace  )
 	{
 		// if the first part of the class name matches the first part
 		// of one of our registerd namespaces, take that location
