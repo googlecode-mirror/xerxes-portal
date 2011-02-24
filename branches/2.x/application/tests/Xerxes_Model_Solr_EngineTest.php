@@ -79,14 +79,11 @@ class Xerxes_Model_Solr_EngineTest extends PHPUnit_Framework_TestCase
 		$search->addTerm(1, null, "title", "=", "java"); 
 		
 		$results = $this->Xerxes_Model_Solr_Engine->searchRetrieve($search, 1, 10, "date");
-		$this->toXML($results);
-	}
-	
-	private function toXML($results)
-	{
-		$response = Xerxes_Framework_Response::getInstance();
-		$response->add($results, "results");
-		file_put_contents("c:/test.xml", $response->toXML()->saveXML());
+		
+		$total = $results->getTotal();
+		$this->assertEquals(218, $total);
+		
+		$records 
 	}
 }
 
