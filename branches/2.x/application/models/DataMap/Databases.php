@@ -16,8 +16,8 @@ class Xerxes_Model_DataMap_Databases extends Xerxes_Framework_DataMap
 	protected $primary_language = "eng"; // primary language
 	protected $searchable_fields; // fields that can be searched on for databases
 	
-	const metalibMode = 'metalib';
-	const userCreatedMode = 'user_created';
+	const METALIB_MODE = 'metalib';
+	const USER_CREATE_MODE = 'user_created';
 	
 	/**
 	 * Constructor
@@ -461,7 +461,7 @@ class Xerxes_Model_DataMap_Databases extends Xerxes_Framework_DataMap
 	
 	protected function schema_map_by_mode($mode)
 	{
-		if ( $mode == self::metalibMode )
+		if ( $mode == self::METALIB_MODE )
 		{
 			return array (
 				"categories_table" => "xerxes_categories", 
@@ -472,7 +472,7 @@ class Xerxes_Model_DataMap_Databases extends Xerxes_Framework_DataMap
 				"extra_where" => " AND lang = :lang " 
 			);
 		} 
-		elseif ( $mode == self::userCreatedMode )
+		elseif ( $mode == self::USER_CREATE_MODE )
 		{
 			return array (
 				"categories_table" => "xerxes_user_categories", 
@@ -491,22 +491,22 @@ class Xerxes_Model_DataMap_Databases extends Xerxes_Framework_DataMap
 	
 	/**
 	 * Get an inlined set of subcategories and databases for a subject. In
-	 * metalibMode, empty subcategories are not included. In userCreatedMode,
+	 * METALIB_MODE, empty subcategories are not included. In USER_CREATE_MODE,
 	 * they are. 
 	 *
 	 * @param string $normalized		normalized category name
-	 * @param string $old			old normalzied category name, for comp with Xerxes 1.0. Often can be left null in call. Only applicable to metalibMode. 
-	 * @param string $mode  		one of constants metalibMode or userCreatedMode, for metalib-imported categories or user-created categories, using different tables.
-	 * @param string $username 		only used in userCreatedMode, the particular user must be specified, becuase normalized subject names are only unique within a user. 
+	 * @param string $old			old normalzied category name, for comp with Xerxes 1.0. Often can be left null in call. Only applicable to METALIB_MODE. 
+	 * @param string $mode  		one of constants METALIB_MODE or USER_CREATE_MODE, for metalib-imported categories or user-created categories, using different tables.
+	 * @param string $username 		only used in USER_CREATE_MODE, the particular user must be specified, becuase normalized subject names are only unique within a user. 
 	 * @param string $lang 			language code, can be empty string
 	 * @return Xerxes_Data_Category		a Xerxes_Data_Category object, filled out with subcategories and databases. 
 	 */
 	
-	public function getSubject($normalized, $old = null, $mode = self::metalibMode, $username = null, $lang = "")
+	public function getSubject($normalized, $old = null, $mode = self::METALIB_MODE, $username = null, $lang = "")
 	{
-		if ( $mode == self::userCreatedMode && $username == null )
+		if ( $mode == self::USER_CREATE_MODE && $username == null )
 		{
-			throw new Exception( "a username argument must be supplied in userCreatedMode" );
+			throw new Exception( "a username argument must be supplied in USER_CREATE_MODE" );
 		}
 		
 		$lang_query = $lang;	
@@ -610,7 +610,7 @@ class Xerxes_Model_DataMap_Databases extends Xerxes_Framework_DataMap
 					// only add subcategory if it actually has databases, to
 					// maintain consistency with previous semantics.
 					
-					if ( ($mode == self::userCreatedMode && $objSubcategory->id) || ! empty( $objSubcategory->databases ) )
+					if ( ($mode == self::USER_CREATE_MODE && $objSubcategory->id) || ! empty( $objSubcategory->databases ) )
 					{
 						array_push( $objCategory->subcategories, $objSubcategory );
 					}
@@ -662,7 +662,7 @@ class Xerxes_Model_DataMap_Databases extends Xerxes_Framework_DataMap
 				array_push( $objSubcategory->databases, $objDatabase );
 			}
 			
-			if ( ($mode == self::userCreatedMode && $objSubcategory->id) || ! empty( $objSubcategory->databases ) )
+			if ( ($mode == self::USER_CREATE_MODE && $objSubcategory->id) || ! empty( $objSubcategory->databases ) )
 			{
 				array_push( $objCategory->subcategories, $objSubcategory );
 			}
@@ -671,7 +671,7 @@ class Xerxes_Model_DataMap_Databases extends Xerxes_Framework_DataMap
 			
 			$strSubcatInclude = $this->registry->getConfig( "SUBCATEGORIES_INCLUDE", false, null, $lang );
 			
-			if ( $strSubcatInclude != "" && $mode == self::metalibMode)
+			if ( $strSubcatInclude != "" && $mode == self::METALIB_MODE)
 			{							
 				// this is kind of funky, but if we simply unset the subcategory, the array keys get out
 				// of order, and the first one may therefore not be 0, which is a problem in higher parts of 
