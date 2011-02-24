@@ -24,10 +24,7 @@ class Xerxes_Framework_FrontController
 		// language translation (Languages) objects 
 		
 		$objRegistry = Xerxes_Framework_Registry::getInstance();
-		$objRegistry->init();
-		
 		$objControllerMap = Xerxes_Framework_ControllerMap::getInstance();
-		$objControllerMap->init();
 			
 		// set the version number, for interface or other places
 		
@@ -61,19 +58,17 @@ class Xerxes_Framework_FrontController
 		// processes the incoming request
 		
 		$objRequest = Xerxes_Framework_Request::getInstance(); 
-		$objRequest->init();
 		
 		// utility classes
 		
 		// assists with basic paging/navigation elements for the view
 		$objPage = new Xerxes_Framework_Page($objRequest, $objRegistry); 
 		
-		// functions for special logging or handling of errors
-		$objError = new Xerxes_Framework_Error(); 
-		
 		// language names
 		$objLanguage = Xerxes_Framework_Languages::getInstance();
-		$objLanguage->init();	
+		
+		// functions for special logging or handling of errors
+		$objError = new Xerxes_Framework_Error(); 
 		
 		// we'll put the remaining code in a try-catch block in order to show friendly error page
 		// for any uncaught exceptions
