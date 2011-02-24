@@ -72,6 +72,10 @@ abstract class Xerxes_Framework_DataMap
 		{
 			// options to ensure utf-8
 			
+			$arrDriverOptions = array(
+				PDO::ATTR_PERSISTENT => true // keep open the connection for speed
+			);
+			
 			if ( $this->rdbms == "mysql" )
 			{
 				// php 5.3.0 and 5.3.1 have a bug where this is not defined
@@ -85,11 +89,7 @@ abstract class Xerxes_Framework_DataMap
 					$init_command = PDO::MYSQL_ATTR_INIT_COMMAND;
 				}
 				
-				$arrDriverOptions = array($init_command => "SET NAMES 'utf8'");
-			}
-			else
-			{
-				$arrDriverOptions = null;  // @todo: with MS SQL
+				$arrDriverOptions[$init_command] = "SET NAMES 'utf8'";
 			}
 			
 			// data access object
