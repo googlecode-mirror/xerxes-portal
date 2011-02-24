@@ -33,13 +33,13 @@ class Xerxes_Framework_Languages
 	 * @return Xerxes_Framework_Languages
 	 */
 	
-	public static function getInstance()
+	public static function getInstance($lang)
 	{
 		if ( empty( self::$instance ) )
 		{
 			self::$instance = new Xerxes_Framework_Languages();
 			$object = self::$instance;
-			$object->init();			
+			$object->init($lang);			
 		}
 		
 		return self::$instance;
@@ -51,7 +51,7 @@ class Xerxes_Framework_Languages
 	 * @exception 	will throw exception if no file can be found
 	 */
 	
-	public function init()
+	public function init($lang)
 	{
 		// first, see if Getttext functions are installed
 		
@@ -74,37 +74,27 @@ class Xerxes_Framework_Languages
 		
 		// if the iso-codes is not installed, use our copy
 		
-		$file = "";
+		$xml = new DOMDocument();
+
+		// load the languages file
 		
 		if ( file_exists( $this->languages_file_system ) )
 		{
-			$file = $this->languages_file_system;
+			$xml->load( $this->languages_file_system );
 		}
 		elseif ( file_exists( $this->languages_file_xerxes) )
 		{
-			$file = $this->languages_file_xerxes;
+			$xml->load( $this->languages_file_xerxes );
 		}
-		else
-		{
-			throw new Exception( "could not find file with the ISO 639 language list" );
-		}
-		
-		// load the languages file
-		
-		$xml = new DOMDocument();
-		$xml->load( $file );
 		
 		$this->xpath = new DOMXPath( $xml );
 		
-		unset($xml);
-		
 		// which language shall we display?
 		
-		$objRegistry = Xerxes_Framework_Registry::getInstance();
-		$objRequest = Xerxes_Framework_Request::getInstance();
-		$lang = $objRequest->getProperty("lang");
+		$objRegistry = Xerxes_Framework_Registry::getInstance();		
 		
-		if ( $lang == null ) {
+		if ( $lang == null ) 
+		{
 			$lang = $objRegistry->defaultLanguage();
 		}
 		

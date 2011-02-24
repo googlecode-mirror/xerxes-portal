@@ -471,7 +471,9 @@ class Xerxes_Record extends Xerxes_Marc_Record
 			{
 				$this->language = str_ireplace( "In ", "", $strLanguageNote );
 				$language = $langConverter->getNameFromCode( 'name', ucfirst( $this->language ) );
-				if ($language != null) {
+				
+				if ($language != null) 
+				{
 					$this->language = $language;
 				}
 			}
