@@ -82,6 +82,15 @@ class Xerxes_Model_Search_ResultSet
 	}
 	
 	/**
+	 * Get the total number of hits for this result set
+	 */
+	
+	public function getTotal()
+	{
+		return $this->total;	
+	}
+	
+	/**
 	 * Add a peer-reviewed indicator for refereed journals
 	 */
 	
