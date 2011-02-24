@@ -37,7 +37,9 @@ class Xerxes_Framework_Languages
 	{
 		if ( empty( self::$instance ) )
 		{
-			self::$instance = new Xerxes_Framework_Languages( );
+			self::$instance = new Xerxes_Framework_Languages();
+			$object = self::$instance;
+			$object->init();			
 		}
 		
 		return self::$instance;

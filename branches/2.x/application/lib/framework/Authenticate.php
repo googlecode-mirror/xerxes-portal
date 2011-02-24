@@ -21,10 +21,11 @@ abstract class Xerxes_Framework_Authenticate
 	protected $return; // the return url to get the user back to where they are in Xerxes
 	protected $validate_url; // the url to return for a validate request, for external auths
 	
-	public function __construct($objRequest, $objRegistry)
+	public function __construct()
 	{
-		$this->request = $objRequest;
-		$this->registry = $objRegistry;
+		$this->request = Xerxes_Framework_Request::getInstance();
+		$this->registry = Xerxes_Framework_Registry::getInstance();
+		
 		$this->user = new Xerxes_Framework_Authenticate_User();
 		$this->return = $this->request->getProperty( "return" );
 		

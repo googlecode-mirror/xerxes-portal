@@ -40,6 +40,8 @@ class Xerxes_Framework_Request
 		if ( empty( self::$instance ) )
 		{
 			self::$instance = new Xerxes_Framework_Request();
+			$object = self::$instance;
+			$object->init();			
 		}
 		
 		return self::$instance;
