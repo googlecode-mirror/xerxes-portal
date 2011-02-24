@@ -18,7 +18,7 @@ class Xerxes_Model_Search_ResultSet
 	public $facets; // facet object
 	
 	/**
-	 * Return an individual Xerxes Records by position
+	 * Return an individual search result by position
 	 * 
 	 * @param int $id		array position
 	 * @return Xerxes_Model_Search_Result
@@ -37,9 +37,9 @@ class Xerxes_Model_Search_ResultSet
 	}
 	
 	/**
-	 * Return all Results
+	 * Return all search results
 	 * 
-	 * @return array 		of Xerxes_Model_Search_Result objects
+	 * @return array of Xerxes_Model_Search_Result objects
 	 */
 
 	public function getRecords()
@@ -226,7 +226,7 @@ class Xerxes_Model_Search_ResultSet
 	}
 
 	/**
-	 * Extract all the ISSNs from the records, convenience funciton
+	 * Extract all the ISSNs from the records, convenience function
 	 */
 
 	protected function extractISSNs()
@@ -249,7 +249,7 @@ class Xerxes_Model_Search_ResultSet
 	}
 
 	/**
-	 * Extract all the ISBNs from the records, convenience funciton
+	 * Extract all the ISBNs from the records, convenience function
 	 */	
 	
 	protected function extractISBNs()
@@ -270,7 +270,7 @@ class Xerxes_Model_Search_ResultSet
 	}
 
 	/**
-	 * Extract all the OCLC numbers from the records, convenience funciton
+	 * Extract all the OCLC numbers from the records, convenience function
 	 */	
 	
 	protected function extractOCLCNumbers()
@@ -288,7 +288,7 @@ class Xerxes_Model_Search_ResultSet
 	}
 
 	/**
-	 * Extract all the record ids from the records, convenience funciton
+	 * Extract all the record ids from the records, convenience function
 	 */	
 	
 	protected function extractRecordIDs()
@@ -305,34 +305,29 @@ class Xerxes_Model_Search_ResultSet
 		return $id;
 	}
 
-	protected function extractLookupIDs()
-	{
-		return $this->extractRecordIDs();
-	}
-	
 	/**
 	 * Look for any holdings data in the cache and add it to results
 	 */
 	
-	public function getHoldingsInject()
+	public function injectHoldings()
 	{
-		$strSource = $this->getSource();
-		
 		// get the record ids for all search results
 
 		$ids = $this->extractRecordIDs();
 		
-		// only if there are actually records
+		// only if there are actually records here
 		
 		if ( count($ids) > 0 )
 		{
-			// we do this all in one database query for speed
-					
-			$arrResults = $data_map->getCache($strSource,$ids);
+			// look for any of our items
 			
-			foreach ( $arrResults as $cache )
+			$cache = new Xerxes_Framework_Cache();
+			
+			$arrResults = $cache->get($ids);
+			
+			foreach ( $arrResults as $data )
 			{
-				$item = unserialize($cache->data);
+				$item = unserialize($data);
 				
 				if ( ! $item instanceof Xerxes_Record_Items )
 				{
