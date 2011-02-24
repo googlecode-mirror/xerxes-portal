@@ -1,7 +1,18 @@
 <?php
 
-set_include_path(get_include_path() . PATH_SEPARATOR . realpath("../")); // path to application root
+// register the autoload function 
 
+spl_autoload_register('xerxes_autoload');
+
+// and path to application root
+
+set_include_path(get_include_path() . PATH_SEPARATOR . realpath("../"));
+
+/**
+ * The global namespace array
+ */
+
+global $xerxes_namespaces;
 $xerxes_namespaces = array();
 
 /**
@@ -33,7 +44,7 @@ function xerxes_namespace_sort($a,$b)
  * @param string $class_name	the name of the class
  */
 
-function __autoload($class_name)
+function xerxes_autoload($class_name)
 {
 	global $xerxes_namespaces;
 	
