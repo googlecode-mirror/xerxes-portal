@@ -141,6 +141,7 @@ abstract class Xerxes_Framework_DataMap
 
 	public function commit()
 	{
+		$this->init();
 		$this->pdo->commit();
 	}
 	
@@ -265,8 +266,6 @@ abstract class Xerxes_Framework_DataMap
 	
 	protected function delete($sql, $arrValues = null)
 	{
-		$this->init();
-		
 		return $this->update($sql, $arrValues);
 	}
 	
@@ -276,6 +275,7 @@ abstract class Xerxes_Framework_DataMap
 	
 	protected function lastInsertId()
 	{
+		$this->init();
 		return $this->pdo->lastInsertId();
 	}
 
