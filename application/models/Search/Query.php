@@ -28,7 +28,7 @@ class Xerxes_Model_Search_Query
 	 * @param Xerxes_Framework_Request $request
 	 */
 	
-	public function __construct(Xerxes_Framework_Request $request = null, Xerxes_Model_Search_Config $config = null)
+	public function __construct(Xerxes_Framework_Request $request = null )
 	{
 		if ( $request != null )
 		{
@@ -40,11 +40,6 @@ class Xerxes_Model_Search_Query
 			
 			foreach ( $this->extractSearchGroupings() as $term )
 			{
-				if ( $config != null )
-				{
-					$term["field"] = $config->swapForInternalField($term["field"]);
-				}
-				
 				$this->addTerm(
 					$term["id"], 
 					$term["boolean"], 
@@ -407,5 +402,20 @@ class Xerxes_Model_Search_Query
 		$search = $this->extractSearchParams();
 		
 		return array_merge($search, $limits);
+	}
+	
+	/**
+	 * Swap the supplied field identifiers with the internal field name
+	 * as defined by the search engines config
+	 */
+	
+	public function swapForInternalFields(Xerxes_Model_Search_Config $config )
+	{
+		for ( $x = 0; $x < count($this->query_list); $x++ )
+		{
+			$term = $this->query_list[$x];
+			$term->field = $config->swapForInternalField($term->field);
+			$this->query_list[$x] = $term;
+		}
 	}
 }

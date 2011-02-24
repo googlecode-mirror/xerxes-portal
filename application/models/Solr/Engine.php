@@ -113,6 +113,7 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 		
 		### parse the query
 		
+		$search->swapForInternalFields($this->config);
 		
 		$query = ""; // query, these are url params, not just the query itself
 		$type = ""; // dismax or standard

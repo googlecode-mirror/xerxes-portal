@@ -43,6 +43,11 @@ class Xerxes_Framework_HTTP
 	}
 }
 
+class Xerxes_DataMap
+{
+	
+}
+
 /**
  * Xerxes_Model_Solr_Engine test case.
  */
@@ -203,10 +208,5 @@ class Xerxes_Model_Solr_EngineTest extends PHPUnit_Framework_TestCase
 		$response->add($results, "results");
 		file_put_contents("c:/test.xml", $response->toXML()->saveXML());
 	}
-}
-
-class Xerxes_DataMap
-{
-	
 }
 
