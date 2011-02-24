@@ -17,19 +17,6 @@ class Xerxes_Model_Search_ResultSet
 	public $records = array(); // records object
 	public $facets; // facet object
 	
-	protected $datamap; // database access object
-	
-	/**
-	 * Constructor
-	 * 
-	 * @param string $response		response from the search engine
-	 */
-	
-	public function __construct()
-	{
-		$this->data_map = new Xerxes_DataMap();
-	}
-	
 	/**
 	 * Return an individual Xerxes Records by position
 	 * 
@@ -106,10 +93,12 @@ class Xerxes_Model_Search_ResultSet
 		$issns = $this->extractISSNs();
 
 		if ( count($issns) > 0 )
-		{		
+		{
 			// get all from our peer-reviewed list
 			
-			$refereed_list = $this->data_map->getRefereed($issns);
+			$data_map = new Xerxes_Model_DataMap_Refereed();
+			
+			$refereed_list = $data_map->getRefereed($issns);
 			
 			// now mark the records that matched
 			
@@ -145,10 +134,12 @@ class Xerxes_Model_Search_ResultSet
 			
 		if ( count($issns) > 0 )
 		{
+			$data_map = new Xerxes_Model_DataMap_Availability();
+			
 			// execute this in a single query							
 			// reduce to just the unique ISSNs
 				
-			$arrResults = $this->data_map->getFullText($issns);
+			$arrResults = $data_map->getFullText($issns);
 			
 			// we'll now go back over the results, looking to see 
 			// if also the years match, marking records as being in our list
@@ -337,7 +328,7 @@ class Xerxes_Model_Search_ResultSet
 		{
 			// we do this all in one database query for speed
 					
-			$arrResults = $this->data_map->getCache($strSource,$ids);
+			$arrResults = $data_map->getCache($strSource,$ids);
 			
 			foreach ( $arrResults as $cache )
 			{
