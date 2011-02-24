@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Database access mapper for full-text and peer-reviewed data
+ * Database access mapper for sfx institutioanl holdings (google scholar) full-text cache
  *
  * @author David Walker
  * @copyright 2011 California State University
