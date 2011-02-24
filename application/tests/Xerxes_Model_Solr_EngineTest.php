@@ -80,10 +80,8 @@ class Xerxes_Model_Solr_EngineTest extends PHPUnit_Framework_TestCase
 		
 		$results = $this->Xerxes_Model_Solr_Engine->searchRetrieve($search, 1, 10, "date");
 		
-		$total = $results->getTotal();
-		$this->assertEquals(218, $total);
-		
-		$records 
+		$this->assertEquals(218, $results->getTotal());
+		$this->assertEquals(10, count($results->getRecords()));
 	}
 }
 
