@@ -33,7 +33,7 @@ class Xerxes_Framework_Languages
 	 * @return Xerxes_Framework_Languages
 	 */
 	
-	public static function getInstance($lang)
+	public static function getInstance($lang = null)
 	{
 		if ( empty( self::$instance ) )
 		{
@@ -51,7 +51,7 @@ class Xerxes_Framework_Languages
 	 * @exception 	will throw exception if no file can be found
 	 */
 	
-	public function init($lang)
+	public function init($lang = null)
 	{
 		// first, see if Getttext functions are installed
 		
