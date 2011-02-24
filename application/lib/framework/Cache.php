@@ -23,7 +23,7 @@ class Xerxes_Framework_Cache extends Xerxes_Framework_DataMap
 	 * @param int $expiry		[optional] timestamp when this data should expire
 	 */
 	
-	public function setCache( $id, $data, $expiry = null )
+	public function set( $id, $data, $expiry = null )
 	{
 		// ensure proper data
 		
@@ -82,7 +82,7 @@ class Xerxes_Framework_Cache extends Xerxes_Framework_DataMap
 	 * 									otherwise array of data if supplied array
 	 */	
 	
-	public function getCache($id)
+	public function get($id)
 	{
 		// integrity check
 		
@@ -181,7 +181,7 @@ class Xerxes_Framework_Cache extends Xerxes_Framework_DataMap
 	 * @return int					SQL status code
 	 */
 	
-	public function pruneCache($timestamp = "")
+	public function prune($timestamp = "")
 	{
 		$arrParams = array();
 		
