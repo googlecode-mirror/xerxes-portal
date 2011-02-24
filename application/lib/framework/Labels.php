@@ -21,11 +21,13 @@ class Xerxes_Framework_Labels
 	{
 	}
 	
-	public static function getInstance()
+	public static function getInstance($language)
 	{
 		if ( empty( self::$instance ) )
 		{
 			self::$instance = new Xerxes_Framework_Labels();
+			$object = self::$instance;
+			$object->init($language);
 		}
 		
 		return self::$instance;
@@ -74,7 +76,6 @@ class Xerxes_Framework_Labels
 		{
 			$this->labels[(string) $label->getAttribute("name")] = $label->nodeValue;
 		}		
-	
 	}
 	
 	public function getXML()

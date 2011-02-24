@@ -35,7 +35,9 @@ class Xerxes_Framework_Registry
 	{
 		if ( empty( self::$instance ) )
 		{
-			self::$instance = new Xerxes_Framework_Registry( );
+			self::$instance = new Xerxes_Framework_Registry();
+			$object = self::$instance;
+			$object->init();
 		}
 		
 		return self::$instance;
