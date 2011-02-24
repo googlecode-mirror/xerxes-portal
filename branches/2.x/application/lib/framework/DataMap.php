@@ -15,69 +15,112 @@
 
 abstract class Xerxes_Framework_DataMap
 {
-	private $objPDO = null;				// pdo data object
-	private $strSQL = null;				// sql statement, here for debugging
-	private $arrValues = array();		// values passed to insert or update statement, here for debugging
-
-	protected $registry;	// registry object, here for convenience
-	protected $rdbms;		// the explicit rdbms name (should be 'mysql' or 'mssql' as of 1.5.1) 
+	private $pdo = null;	// pdo data object
 	
+	private $connection; // database connection info
+	private $username; // username to connect with
+	private $password; // password to connect with	
+	
+	private $sql = null;	// sql statement, here for debugging
+	private $arrValues = array(); // values passed to insert or update statement, here for debugging
+
+	protected $registry; // registry object, here for convenience
+	protected $rdbms; // the explicit rdbms name (should be 'mysql' or 'mssql' as of 1.5.1) 
+
+	/**
+	 * Constructor
+	 * 
+	 * @param string $connection	[optional] database connection info
+	 * @param string $username		[optional] username to connect with
+	 * @param string $password		[optional] password to connect with
+	 */
+	
+	public function __construct($connection = null, $username = null, $password = null)
+	{
+		$this->registry = Xerxes_Framework_Registry::getInstance();
+		
+		// pdo can't tell us which rdbms we're using exactly, especially for 
+		// ms sql server, since we'll be using odbc driver, so we make this
+		// explicit in the config
+		
+		$this->rdbms = $this->registry->getConfig("RDBMS", false, "mysql");
+		
+		// take conn and credentials from config, unless overriden in constructor
+		
+		if ( $connection == null) $connection = $this->registry->getConfig( "DATABASE_CONNECTION", true );
+		if ( $username == null ) $username = $this->registry->getConfig( "DATABASE_USERNAME", true );
+		if ( $password == null ) $password = $this->registry->getConfig( "DATABASE_PASSWORD", true );
+		
+		// assign it
+		
+		$this->connection = $connection;
+		$this->username = $username;
+		$this->password = $password;		
+	}	
 	
 	/**
-	 * Initialize the object, should be called from the constructor of the child;
+	 * Lazy load initialization of the database object
 	 *
 	 * @param string $connection		pdo connection string
 	 * @param string $username			database username
 	 * @param string $password			database password
 	 */
 	
-	protected function init($connection, $username, $password)
-	{		
-		// options to ensure utf-8
-		
-		if ( $this->rdbms == "mysql" )
+	protected function init()
+	{
+		if ( ! $this->pdo instanceof PDO )
 		{
-			// php 5.3.0 and 5.3.1 have a bug where this is not defined
+			// options to ensure utf-8
 			
-			if ( ! defined("PDO::MYSQL_ATTR_INIT_COMMAND") )
+			if ( $this->rdbms == "mysql" )
 			{
-				$init_command = 1002;
+				// php 5.3.0 and 5.3.1 have a bug where this is not defined
+				
+				if ( ! defined("PDO::MYSQL_ATTR_INIT_COMMAND") )
+				{
+					$init_command = 1002;
+				}
+				else
+				{
+					$init_command = PDO::MYSQL_ATTR_INIT_COMMAND;
+				}
+				
+				$arrDriverOptions = array($init_command => "SET NAMES 'utf8'");
 			}
 			else
 			{
-				$init_command = PDO::MYSQL_ATTR_INIT_COMMAND;
+				$arrDriverOptions = null;  // @todo: with MS SQL
 			}
 			
-			$arrDriverOptions = array($init_command => "SET NAMES 'utf8'");
+			// data access object
+			
+			$this->pdo = new PDO($this->connection, $this->username, $this->password, $arrDriverOptions);
+			
+			// will force PDO to throw exceptions on error
+			
+			$this->pdo->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
 		}
-		else
-		{
-			$arrDriverOptions = null;  // @todo: with MS SQL
-		}
-		
-		// data access object
-		
-		$this->objPDO = new PDO($connection,$username, $password, $arrDriverOptions);
-		
-		// will force PDO to throw exceptions on error
-		
-		$this->objPDO->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
 	}
+	
+	/**
+	 * Destructor to explicitly end the database connection
+	 */
 	
 	public function __destruct()
 	{
-		$this->objPDO = null;
+		$this->pdo = null;
 	}
 	
 	/**
 	 * Return the pdo object for specific handling
 	 *
-	 * @return unknown
+	 * @return PDO 
 	 */
 	
 	protected function getDatabaseObject()
 	{
-		return $this->objPDO;
+		$this->init();
+		return $this->pdo;
 	}
 	
 	/**
@@ -87,7 +130,8 @@ abstract class Xerxes_Framework_DataMap
 		
 	public function beginTransaction()
 	{
-		$this->objPDO->beginTransaction();
+		$this->init();
+		$this->pdo->beginTransaction();
 	}
 	
 	/**
@@ -97,26 +141,28 @@ abstract class Xerxes_Framework_DataMap
 
 	public function commit()
 	{
-		$this->objPDO->commit();
+		$this->pdo->commit();
 	}
 	
 	/**
 	 * Fetch all records from a select query
 	 *
-	 * @param string $strSQL		SQL query
+	 * @param string $sql		SQL query
 	 * @param array $arrValues		paramaterized values
 	 * @return array				array of results as supplied by PDO
 	 */
 	
-	public function select($strSQL, $arrValues = null, $arrClean = null)
+	public function select($sql, $arrValues = null, $arrClean = null)
 	{
-		$this->sqlServerFix($strSQL, $arrValues, $arrClean);
+		$this->init();
 		
-		$this->echoSQL($strSQL);
+		$this->sqlServerFix($sql, $arrValues, $arrClean);
 		
-		$this->strSQL = $strSQL;
+		$this->echoSQL($sql);
+		
+		$this->sql = $sql;
 			
-		$objStatement = $this->objPDO->prepare($strSQL);
+		$objStatement = $this->pdo->prepare($sql);
 		
 		if ( $arrValues != null )
 		{
@@ -134,20 +180,22 @@ abstract class Xerxes_Framework_DataMap
 	/**
 	 * Update rows in the database
 	 *
-	 * @param string $strSQL		SQL query
+	 * @param string $sql		SQL query
 	 * @param array $arrValues		paramaterized values
 	 * @return mixed				status of the request, as set by PDO
 	 */
 	
-	public function update($strSQL, $arrValues = null, $arrClean = null)
+	public function update($sql, $arrValues = null, $arrClean = null)
 	{
-		$this->sqlServerFix($strSQL, $arrValues, $arrClean);
+		$this->init();
 		
-		$this->echoSQL($strSQL);
+		$this->sqlServerFix($sql, $arrValues, $arrClean);
 		
-		$this->strSQL = $strSQL;
+		$this->echoSQL($sql);
 		
-		$objStatement = $this->objPDO->prepare($this->strSQL);
+		$this->sql = $sql;
+		
+		$objStatement = $this->pdo->prepare($this->sql);
 		
 		if ( $arrValues != null )
 		{
@@ -163,7 +211,7 @@ abstract class Xerxes_Framework_DataMap
 	/**
 	 * Insert rows in the database
 	 *
-	 * @param string $strSQL		SQL query
+	 * @param string $sql		SQL query
 	 * @param array $arrValues		paramaterized values
 	 * @param boolean $boolReturnPk  return the inserted pk value?
 	 * @return mixed				if $boolReturnPk is false, status of the request (true or false), 
@@ -171,11 +219,13 @@ abstract class Xerxes_Framework_DataMap
 	 * 								or 'false' for a failed insert. 
 	 */
 	
-	public function insert($strSQL, $arrValues = null, $boolReturnPk = false, $arrClean = null)
+	public function insert($sql, $arrValues = null, $boolReturnPk = false, $arrClean = null)
 	{
-		$this->sqlServerFix($strSQL, $arrValues, $arrClean);
+		$this->init();
 		
-		$status = $this->update($strSQL, $arrValues);      
+		$this->sqlServerFix($sql, $arrValues, $arrClean);
+		
+		$status = $this->update($sql, $arrValues);      
 		
 		if ($status && $boolReturnPk)
 		{
@@ -208,27 +258,78 @@ abstract class Xerxes_Framework_DataMap
 	/**
 	 * Delete rows in the database
 	 *
-	 * @param string $strSQL		SQL query
+	 * @param string $sql			SQL query
 	 * @param array $arrValues		paramaterized values
 	 * @return mixed				status of the request, as set by PDO
 	 */
 	
-	protected function delete($strSQL, $arrValues = null)
+	protected function delete($sql, $arrValues = null)
 	{
-		return $this->update($strSQL, $arrValues);
+		$this->init();
+		
+		return $this->update($sql, $arrValues);
 	}
+	
+	/**
+	 * Get the last inserted ID
+	 */
 	
 	protected function lastInsertId()
 	{
-		return $this->objPDO->lastInsertId();
+		return $this->pdo->lastInsertId();
 	}
+
+	/**
+	 * A utility method for adding single-value data to a table
+	 *
+	 * @param string $table_name		table name
+	 * @param mixed $value_object		object derived from Xerxes_Framework_DataValue
+	 * @param boolean $boolReturnPk  	default false, return the inserted pk value?
+	 * @return false if failure. on success, true or inserted pk based on $boolReturnPk
+	 */
 	
-	private function echoSQL($strSQL)
+	protected function doSimpleInsert($table_name, $value_object, $boolReturnPk = false)
 	{
-		// echo "<p>" . $strSQL . "</p>";
+		$arrProperties = array ( );
+		
+		foreach ( $value_object->properties() as $key => $value )
+		{
+			if ( ! is_int($value) && $value == "" )
+			{
+				unset($value_object->$key);
+			}
+			else
+			{
+				$arrProperties[":$key"] = $value;
+			}
+		}
+		
+		$fields = implode( ",", array_keys( $value_object->properties() ) );
+		$values = implode( ",", array_keys( $arrProperties ) );
+		
+		$sql = "INSERT INTO $table_name ( $fields ) VALUES ( $values )";
+		
+		return $this->insert( $sql, $arrProperties, $boolReturnPk );
+	}
+
+	/**
+	 * For debugging
+	 */
+	
+	private function echoSQL($sql)
+	{
+		// echo "<p>" . $sql . "</p>";
 	}
 	
-	private function sqlServerFix(&$strSQL, &$params, $clean = null)
+	/**
+	 * Nasty hacks for MS SQL Server
+	 * 
+	 * @param string $sql	SQL statement
+	 * @param array $params		bound parameters
+	 * @param array $clean		parameters to clean
+	 */
+	
+	private function sqlServerFix(&$sql, &$params, $clean = null)
 	{
 		// a bug in the sql server native client makes this necessary, barf!
 		
@@ -245,7 +346,7 @@ abstract class Xerxes_Framework_DataMap
 					if ( in_array($key, $clean) )
 					{
 						$value = str_replace($dirtystuff, "", $value); 
-						$strSQL = str_replace($key, "'$value'", $strSQL);
+						$sql = str_replace($key, "'$value'", $sql);
 						unset($params[$key]);
 					}
 				}
