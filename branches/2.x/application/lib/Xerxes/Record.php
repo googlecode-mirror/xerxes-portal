@@ -1338,25 +1338,25 @@ class Xerxes_Record extends Xerxes_Marc_Record
 			
 			if ( $objXerxesAuthor->last_name != "" )
 			{
-				$objAuthorLast = $objXml->createElementNS($ns_referrant, "aulast", $this->escapeXml( $objXerxesAuthor->last_name ) );
+				$objAuthorLast = $objXml->createElementNS($ns_referrant, "aulast", Xerxes_Framework_Parser::escapeXml( $objXerxesAuthor->last_name ) );
 				$objAuthor->appendChild( $objAuthorLast );
 			}
 			
 			if ( $objXerxesAuthor->first_name != "" )
 			{
-				$objAuthorFirst = $objXml->createElementNS($ns_referrant, "aufirst", $this->escapeXml( $objXerxesAuthor->first_name ) );
+				$objAuthorFirst = $objXml->createElementNS($ns_referrant, "aufirst", Xerxes_Framework_Parser::escapeXml( $objXerxesAuthor->first_name ) );
 				$objAuthor->appendChild( $objAuthorFirst );
 			}
 			
 			if ( $objXerxesAuthor->init != "" )
 			{
-				$objAuthorInit = $objXml->createElementNS($ns_referrant, "auinit", $this->escapeXml( $objXerxesAuthor->init ) );
+				$objAuthorInit = $objXml->createElementNS($ns_referrant, "auinit", Xerxes_Framework_Parser::escapeXml( $objXerxesAuthor->init ) );
 				$objAuthor->appendChild( $objAuthorInit );
 			}
 			
 			if ( $objXerxesAuthor->name != "" )
 			{
-				$objAuthorCorp = $objXml->createElementNS($ns_referrant, "aucorp", $this->escapeXml( $objXerxesAuthor->name ) );
+				$objAuthorCorp = $objXml->createElementNS($ns_referrant, "aucorp", Xerxes_Framework_Parser::escapeXml( $objXerxesAuthor->name ) );
 				$objAuthor->appendChild( $objAuthorCorp );
 			}
 			
@@ -1381,7 +1381,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		{
 			// rft_id goes in the <referent> element directly, as a <ctx:identifier>
 			
-			$objNode = $objXml->createElementNS($ns_context, "identifier", $this->escapeXml ( $id ) );
+			$objNode = $objXml->createElementNS($ns_context, "identifier", Xerxes_Framework_Parser::escapeXml ( $id ) );
 			$objReferrent->appendChild ( $objNode );
 		}
 		
@@ -1395,14 +1395,14 @@ class Xerxes_Record extends Xerxes_Marc_Record
 				{
 					foreach ( $value as $element )
 					{
-						$objNode = $objXml->createElementNS($ns_referrant, $key, $this->escapeXml( $element ) );
+						$objNode = $objXml->createElementNS($ns_referrant, $key, Xerxes_Framework_Parser::escapeXml( $element ) );
 						$objItem->appendChild( $objNode );
 					}
 				}
 			} 
 			elseif ( $value != "" )
 			{
-				$objNode = $objXml->createElementNS($ns_referrant, $key, $this->escapeXml( $value ) );
+				$objNode = $objXml->createElementNS($ns_referrant, $key, Xerxes_Framework_Parser::escapeXml( $value ) );
 				$objItem->appendChild( $objNode );
 			}
 		}
@@ -1487,31 +1487,31 @@ class Xerxes_Record extends Xerxes_Marc_Record
 
 				if ( $objXerxesAuthor->last_name != "" )
 				{					
-					$objAuthorLast =  $objXml->createElement("aulast", $this->escapeXml( $objXerxesAuthor->last_name ) );
+					$objAuthorLast =  $objXml->createElement("aulast", Xerxes_Framework_Parser::escapeXml( $objXerxesAuthor->last_name ) );
 					$objAuthor->appendChild($objAuthorLast);
 				}
 				
 				if ( $objXerxesAuthor->first_name != "" )
 				{
-					$objAuthorFirst =  $objXml->createElement("aufirst", $this->escapeXml( $objXerxesAuthor->first_name ) );
+					$objAuthorFirst =  $objXml->createElement("aufirst", Xerxes_Framework_Parser::escapeXml( $objXerxesAuthor->first_name ) );
 					$objAuthor->appendChild($objAuthorFirst);
 				}
 				
 				if ( $objXerxesAuthor->init != "" )
 				{
-					$objAuthorInit =  $objXml->createElement("auinit", $this->escapeXml( $objXerxesAuthor->init) );
+					$objAuthorInit =  $objXml->createElement("auinit", Xerxes_Framework_Parser::escapeXml( $objXerxesAuthor->init) );
 					$objAuthor->appendChild($objAuthorInit);
 				}
 
 				if ( $objXerxesAuthor->name != "" )
 				{
-					$objAuthorCorp =  $objXml->createElement("aucorp", $this->escapeXml( $objXerxesAuthor->name) );
+					$objAuthorCorp =  $objXml->createElement("aucorp", Xerxes_Framework_Parser::escapeXml( $objXerxesAuthor->name) );
 					$objAuthor->appendChild($objAuthorCorp);
 				}
 
 				if ( $objXerxesAuthor->display != "" )
 				{
-					$objAuthorDisplay = $objXml->createElement("display", $this->escapeXml( $objXerxesAuthor->display) );
+					$objAuthorDisplay = $objXml->createElement("display", Xerxes_Framework_Parser::escapeXml( $objXerxesAuthor->display) );
 					$objAuthor->appendChild($objAuthorDisplay);
 				}				
 				
@@ -1540,7 +1540,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 			{
 				foreach ( $this->issns as $strIssn )
 				{
-					$objIssn = $objXml->createElement("issn", $this->escapeXml($strIssn));
+					$objIssn = $objXml->createElement("issn", Xerxes_Framework_Parser::escapeXml($strIssn));
 					$objStandard->appendChild($objIssn);
 				}
 			}
@@ -1549,26 +1549,26 @@ class Xerxes_Record extends Xerxes_Marc_Record
 			{
 				foreach ( $this->isbns as $strIsbn )
 				{
-					$objIssn = $objXml->createElement("isbn", $this->escapeXml($strIsbn));
+					$objIssn = $objXml->createElement("isbn", Xerxes_Framework_Parser::escapeXml($strIsbn));
 					$objStandard->appendChild($objIssn);
 				}
 			}
 			
 			if ( $this->govdoc_number != "" )
 			{
-				$objGovDoc = $objXml->createElement("gpo", $this->escapeXml($this->govdoc_number));
+				$objGovDoc = $objXml->createElement("gpo", Xerxes_Framework_Parser::escapeXml($this->govdoc_number));
 				$objStandard->appendChild($objGovDoc);
 			}
 			
 			if ( $this->gpo_number != "" )
 			{
-				$objGPO = $objXml->createElement("govdoc", $this->escapeXml($this->gpo_number));
+				$objGPO = $objXml->createElement("govdoc", Xerxes_Framework_Parser::escapeXml($this->gpo_number));
 				$objStandard->appendChild($objGPO);
 			}
 				
 			if ( $this->oclc_number != "" )
 			{
-				$objOCLC = $objXml->createElement("oclc", $this->escapeXml($this->oclc_number));
+				$objOCLC = $objXml->createElement("oclc", Xerxes_Framework_Parser::escapeXml($this->oclc_number));
 				$objStandard->appendChild($objOCLC);					
 			}
 				
@@ -1591,15 +1591,15 @@ class Xerxes_Record extends Xerxes_Marc_Record
 				{
 					$arrChapterTitleAuth = explode("/", $strTitleStatement);
 					
-					$objChapterTitle = $objXml->createElement("title",  $this->escapeXml(trim($arrChapterTitleAuth[0])));
-					$objChapterAuthor = $objXml->createElement("author",  $this->escapeXml(trim($arrChapterTitleAuth[1])));
+					$objChapterTitle = $objXml->createElement("title",  Xerxes_Framework_Parser::escapeXml(trim($arrChapterTitleAuth[0])));
+					$objChapterAuthor = $objXml->createElement("author",  Xerxes_Framework_Parser::escapeXml(trim($arrChapterTitleAuth[1])));
 					
 					$objChapter->appendChild($objChapterTitle);
 					$objChapter->appendChild($objChapterAuthor);
 				}
 				else 
 				{
-					$objStatement = $objXml->createElement("statement", $this->escapeXml(trim($strTitleStatement)));
+					$objStatement = $objXml->createElement("statement", Xerxes_Framework_Parser::escapeXml(trim($strTitleStatement)));
 					$objChapter->appendChild($objStatement);
 				}
 				
@@ -1620,7 +1620,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 				$objLink = $objXml->createElement("link");
 				$objLink->setAttribute("type", $arrLink[2]);
 				
-				$objDisplay = $objXml->createElement("display", $this->escapeXml($arrLink[0]));
+				$objDisplay = $objXml->createElement("display", Xerxes_Framework_Parser::escapeXml($arrLink[0]));
 				$objLink->appendChild($objDisplay);
 				
 				// if this is a "construct" link, then the second element is an associative 
@@ -1631,14 +1631,14 @@ class Xerxes_Record extends Xerxes_Marc_Record
 				{
 					foreach ( $arrLink[1] as $strField => $strValue )
 					{
-						$objParam = $objXml->createElement("param", $this->escapeXml($strValue));
+						$objParam = $objXml->createElement("param", Xerxes_Framework_Parser::escapeXml($strValue));
 						$objParam->setAttribute("field", $strField);
 						$objLink->appendChild($objParam);
 					}
 				}
 				else
 				{
-					$objURL = $objXml->createElement("url", $this->escapeXml($arrLink[1]));
+					$objURL = $objXml->createElement("url", Xerxes_Framework_Parser::escapeXml($arrLink[1]));
 					$objLink->appendChild($objURL);
 				}
 				
@@ -1671,7 +1671,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		
 			foreach ( $this->subjects as $subject_object )
 			{
-				$objSubject = $objXml->createElement("subject", $this->escapeXml($subject_object->display));
+				$objSubject = $objXml->createElement("subject", Xerxes_Framework_Parser::escapeXml($subject_object->display));
 				$objSubject->setAttribute("value", $subject_object->value);
 				$objSubjects->appendChild($objSubject);
 			}
@@ -2364,35 +2364,8 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		}
 	}
 	
-	protected function escapeXml($string)
-	{
-		// NOTE: if you make a change to this function, make a corresponding change 
-		// in the Xerxes_Framework_Parser class, since this one here is a duplicate function 
-		// allowing Xerxes_Record it be as a stand-alone class 
-		
-		$string = str_replace( '&', '&amp;', $string );
-		$string = str_replace( '<', '&lt;', $string );
-		$string = str_replace( '>', '&gt;', $string );
-		$string = str_replace( '\'', '&#39;', $string );
-		$string = str_replace( '"', '&quot;', $string );
-		
-		$string = str_replace( "&amp;#", "&#", $string );
-		$string = str_replace( "&amp;amp;", "&amp;", $string );
-		
-		$string = preg_replace('/&#[a-zA-Z0-9]{2,5}(?!;)/', "$0;", $string);
-		
-		return $string;
-	}
-	
 	protected function toTitleCase($strInput)
 	{
-		// NOTE: if you make a change to this function, make a corresponding change 
-		// in the Xerxes_Framework_Parser class, since this one here is a duplicate function 
-		// allowing Xerxes_Record to be a stand-alone class
-		
-		
-		
-
 		$arrMatches = ""; // matches from regular expression
 		$arrSmallWords = ""; // words that shouldn't be capitalized if they aren't the first word.
 		$arrWords = ""; // individual words in input
