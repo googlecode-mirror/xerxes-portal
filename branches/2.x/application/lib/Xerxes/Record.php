@@ -1414,8 +1414,8 @@ class Xerxes_Record extends Xerxes_Marc_Record
 	}
 	
 	/**
-	 * Convert record to Xerxes_Record XML object
-	 *
+	 * Serialize to XML
+	 * 
 	 * @return DOMDocument
 	 */
 	

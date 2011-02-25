@@ -24,7 +24,13 @@ class Xerxes_Model_Search_Item
     					//this may actually be a string if individual items are named rather than numbered)
     protected $barcode; // the barcode number for this item
 	
-	
+	/**
+	 * Set a property for this item
+	 * 
+	 * @param string $name		property name
+	 * @param mixed $value		the value
+	 */
+    
 	public function setProperty($name, $value)
 	{
 		if ( property_exists($this, $name) )
@@ -32,6 +38,12 @@ class Xerxes_Model_Search_Item
 			$this->$name = $value;
 		}
 	}
+	
+	/**
+	 * Serialize to XML
+	 * 
+	 * @return DOMDocument
+	 */
 	
 	public function toXML()
 	{
