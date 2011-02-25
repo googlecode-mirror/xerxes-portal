@@ -303,7 +303,8 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 		
 		$xml = simplexml_load_string($response);
 		
-		$results = new Xerxes_Model_Search_ResultSet();
+		$results = new Xerxes_Model_Search_ResultSet($this->config);
+		
 		$results->total = (int) $xml->result["numFound"]; // extract total
 		
 		// extract records
@@ -352,10 +353,10 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 	}
 	
 	/**
-	 * Extract facets from the Solr response
+	 * Extract records from the Solr response
 	 * 
 	 * @param simplexml	$xml	solr response
-	 * @return Xerxes_Model_Search_Records
+	 * @return array of Xerxes_Model_Search_Records
 	 */	
 	
 	protected function extractRecords($xml)

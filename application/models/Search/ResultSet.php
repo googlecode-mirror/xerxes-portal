@@ -14,8 +14,21 @@
 class Xerxes_Model_Search_ResultSet
 {
 	public $total = 0; // total number of hits
-	public $records = array(); // records object
+	public $records = array(); // result objects
 	public $facets; // facet object
+	
+	protected $config; // local config
+	
+	/**
+	 * Constructor
+	 * 
+	 * @param Xerxes_Model_Search_Config $config
+	 */
+	
+	public function __construct(Xerxes_Model_Search_Config $config )
+	{
+		$this->config = $config;	
+	}
 	
 	/**
 	 * Return an individual search result by position
@@ -55,7 +68,7 @@ class Xerxes_Model_Search_ResultSet
 
 	public function addRecord( Xerxes_Record $record)
 	{
-		$record = new Xerxes_Model_Search_Result($record);
+		$record = new Xerxes_Model_Search_Result($record, $this->config);
 		array_push($this->records, $record);
 	}
 	
@@ -324,8 +337,6 @@ class Xerxes_Model_Search_ResultSet
 
 		$ids = $this->extractRecordIDs();
 		
-		print_r($ids);
-		
 		// only if there are actually records here
 		
 		if ( count($ids) > 0 )
@@ -334,29 +345,29 @@ class Xerxes_Model_Search_ResultSet
 			
 			$cache = new Xerxes_Framework_Cache();
 			
-			$arrResults = $cache->get($ids);
+			$items = $cache->get($ids);
 			
-			foreach ( $arrResults as $data )
+			foreach ( $items as $data )
 			{
 				$item = unserialize($data);
 				
-				if ( ! $item instanceof Xerxes_Record_Items )
+				if ( ! $item instanceof Xerxes_Model_Search_Items  )
 				{
-					throw new Exception("cached item (" . $cache->id. ") is not an instance of Xerxes_Record_Items");
+					throw new Exception("cached item (" . $cache->id. ") is not an instance of Xerxes_Model_Search_Items");
 				}
 				
-				// now associate this item with its corresponding record
+				// now associate this item with its corresponding result
 			
 				for( $x = 0; $x < count($this->records); $x++ )
 				{
-					$xerxes_record = $this->records[$x];
+					$search_result = $this->records[$x];
 					
-					if ( $xerxes_record->getRecordID() == $cache->id )
+					if ( $search_result->xerxes_record->getRecordID() == $cache->id )
 					{
-						$xerxes_record->addItems($item);
+						$search_result->addItems($item);
 					}
 						
-					$this->records[$x] = $xerxes_record;
+					$this->records[$x] = $search_result;
 				}
 			}
 		}
