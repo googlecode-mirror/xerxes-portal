@@ -11,7 +11,7 @@
  * @package Xerxes
  */
 
-class Xerxes_Record_Items
+class Xerxes_Model_Search_Items
 {
 	public $items = array();
 	

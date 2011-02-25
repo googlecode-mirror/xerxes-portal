@@ -1433,7 +1433,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		
 		if ( $strTitle != "" )
 		{
-			$objTitle = $objXml->createElement("title_normalized",  $this->escapeXML($strTitle));
+			$objTitle = $objXml->createElement("title_normalized",  Xerxes_Framework_Parser::escapeXML($strTitle));
 			$objXml->documentElement->appendChild($objTitle);
 		}
 		
@@ -1443,7 +1443,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		
 		if ( $strJournalTitle != "" )
 		{
-			$objJTitle = $objXml->createElement("journal_title",  $this->escapeXML($strJournalTitle));
+			$objJTitle = $objXml->createElement("journal_title",  Xerxes_Framework_Parser::escapeXML($strJournalTitle));
 			$objXml->documentElement->appendChild($objJTitle);
 		}		
 		
@@ -1453,7 +1453,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		
 		if ( $strPrimaryAuthor != "")
 		{
-			$objPrimaryAuthor= $objXml->createElement("primary_author", $this->escapeXML($strPrimaryAuthor));
+			$objPrimaryAuthor= $objXml->createElement("primary_author", Xerxes_Framework_Parser::escapeXML($strPrimaryAuthor));
 			$objXml->documentElement->appendChild($objPrimaryAuthor);
 		}
 		
@@ -1736,7 +1736,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		}
 		else
 		{
-			$objNode = $objDocument->createElement($key, $this->escapeXML($value));
+			$objNode = $objDocument->createElement($key, Xerxes_Framework_Parser::escapeXML($value));
 			$objParent->appendChild($objNode);
 		}
 	}

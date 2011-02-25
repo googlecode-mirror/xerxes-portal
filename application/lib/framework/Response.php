@@ -141,9 +141,9 @@ class Xerxes_Framework_Response
 			{
 				// this object tells us to use this id in the xml
 				
-				if ( property_exists($object, "id") )
+				if ( property_exists($object, "nodeName") )
 				{
-					$id = $object->id;
+					$id = $object->nodeName;
 				}
 				
 				$object_xml = new DOMDocument();

@@ -13,8 +13,6 @@
 
 class Xerxes_Model_Search_Result
 {
-	protected $id = "record";
-	
 	public $url_open; // open url
 	public $openurl_kev_co;	 // just the key-encoded-values of the openurl
 	public $xerxes_record; // record
@@ -46,7 +44,7 @@ class Xerxes_Model_Search_Result
 		$this->url_open = $record->getOpenURL($link_resolver, $this->sid);
 		$this->openurl_kev_co = $record->getOpenURL(null, $this->sid);
 		
-		$this->items = new Xerxes_Record_Items();
+		$this->items = new Xerxes_Model_Search_Items();
 	}
 	
 	/**

@@ -13,7 +13,7 @@
 
 class Xerxes_Model_Search_FacetGroup
 {
-	public $id = "group";
+	public $nodeName = "group";
 	public $name; // internal name
 	public $public; // public facing name
 	public $facets = array();
