@@ -21,7 +21,7 @@ class Xerxes_Model_Search_Item
     protected $callnumber; // the call number of this item
     protected $duedate; // string showing due date of checked out item (null if not checked out)
     protected $number; 	// the copy number for this item (note: although called “number”, 
-    					//this may actually be a string if individual items are named rather than numbered)
+    					// this may actually be a string if individual items are named rather than numbered)
     protected $barcode; // the barcode number for this item
 	
 	/**
@@ -36,6 +36,25 @@ class Xerxes_Model_Search_Item
 		if ( property_exists($this, $name) )
 		{
 			$this->$name = $value;
+		}
+	}
+
+	/**
+	 * Get a property from this item
+	 * 
+	 * @param string $name		property name
+	 * @return mixed the value
+	 */
+	
+	public function getProperty($name)
+	{
+		if ( property_exists($this, $name) )
+		{
+			return $this->$name;
+		}
+		else
+		{
+			throw new Exception("trying to access propety '$name', which does not exist");
 		}
 	}
 	

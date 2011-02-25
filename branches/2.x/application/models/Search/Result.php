@@ -22,19 +22,22 @@ class Xerxes_Model_Search_Result
 	public $reviews; // reviews
 	public $items; // holdings
 	
-	protected $registry;
+	protected $registry; // global config
+	protected $config; // local config
 	protected $sid; // open url sid
 	
 	/**
 	 * Constructor
 	 * 
-	 * @param Xerxes_Record $record
+	 * @param Xerxes_Record $record						record
+	 * @param Xerxes_Model_Search_Config $config		local config
 	 */
 	
-	public function __construct(Xerxes_Record $record)
+	public function __construct(Xerxes_Record $record, Xerxes_Model_Search_Config $config)
 	{
 		$this->xerxes_record = $record;
 		$this->registry = Xerxes_Framework_Registry::getInstance();
+		$this->config = $config;
 		
 		// pop
 		
@@ -100,7 +103,7 @@ class Xerxes_Model_Search_Result
 				{
 					foreach ( $records as $bx_record )
 					{
-						$result = new Xerxes_Model_Search_Result($bx_record);
+						$result = new Xerxes_Model_Search_Result($bx_record, $this->config);
 						array_push($this->recommendations, $result);
 					} 
 				}
@@ -112,10 +115,32 @@ class Xerxes_Model_Search_Result
 	 * Add holdings to this result
 	 */
 	
-	public function setItems( Xerxes_Record_Items $items )
+	public function setItems( Xerxes_Model_Search_Items $items )
 	{
 		$this->items = $items;
 	}
+	
+	/**
+	 * Return item records
+	 * 
+	 * @return array of Xerxes_Model_Search_Item
+	 */
+	
+	public function getItems()
+	{
+		return $this->items->getItems();
+	}
+
+	/**
+	 * Return holdings records
+	 * 
+	 * @return array of Xerxes_Model_Search_Holding
+	 */
+	
+	public function getHoldings()
+	{
+		return $this->items->getHoldings();
+	}	
 	
 	/**
 	 * Fetch item and holding records from an ILS for this record
@@ -123,12 +148,15 @@ class Xerxes_Model_Search_Result
 	
 	public function fetchHoldings()
 	{
-		$id = $this->getLookupID(); // TODO: id from the record
-		$url = $this->getHoldingsURL(); // TODO: url to availability server
+		$xerxes_record = $this->getXerxesRecord();
+		
+		$id = $xerxes_record->getRecordID(); // id from the record
+		$cache_id = $xerxes_record->getSource(). "." . $id; // to identify this in the cache
+		$url = $this->config->getConfig("LOOKUP"); // url to availability server
 		
 		// no holdings source defined or somehow id's are blank
 		
-		if ( $url == null || $id == null )
+		if ( $url == "" || $id == "" )
 		{
 			return null; // empty items
 		}
@@ -147,20 +175,7 @@ class Xerxes_Model_Search_Result
 			throw new Exception("could not connect to availability server");
 		}
 		
-		return $this->parseHoldings($data);
-	}
-	
-	/**
-	 * Parse item holdings data from an ILS driver
-	 * 
-	 * @param string $data 
-	 */
-
-	protected function parseHoldings($data)
-	{
 		$items = new Xerxes_Model_Search_Items();
-		
-		$cache_id = ""; // TODO: figure out how to uniquely identify this
 		
 		// response is (currently) an array of json objects
 		
