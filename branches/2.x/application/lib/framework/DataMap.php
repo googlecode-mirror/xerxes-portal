@@ -72,9 +72,7 @@ abstract class Xerxes_Framework_DataMap
 		{
 			// options to ensure utf-8
 			
-			$arrDriverOptions = array(
-				PDO::ATTR_PERSISTENT => true // keep open the connection for speed
-			);
+			$arrDriverOptions = array();
 			
 			if ( $this->rdbms == "mysql" )
 			{
