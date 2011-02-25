@@ -18,14 +18,13 @@ abstract class Xerxes_Framework_Controller
 	protected $registry;	// the global registry object
 	protected $response;	// the global response object
 	
-	public function __construct( Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry, 
-		Xerxes_Framework_Response $objResponse  )
+	public function __construct()
 	{
 		// map the request and registry objects here to memeber variables
 		// so any subclassed command can get at them easily
 		
-		$this->request = $objRequest;
-		$this->registry = $objRegistry;
-		$this->response = $objResponse;
+		$this->request = Xerxes_Framework_Request::getInstance();
+		$this->registry = Xerxes_Framework_Registry::getInstance();
+		$this->response = Xerxes_Framework_Response::getInstance();
 	}
 }
