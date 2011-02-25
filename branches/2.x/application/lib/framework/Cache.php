@@ -116,7 +116,9 @@ class Xerxes_Framework_Cache extends Xerxes_Framework_DataMap
 		
 		// set up the query
 		
-		$strSQL = "SELECT * FROM xerxes_cache WHERE expiry > $now ";
+		$strSQL = "SELECT * FROM xerxes_cache WHERE expiry > :expiry ";
+		
+		$arrParams[":expiry"] = $now;
 		
 		if ( is_array($id) )
 		{
