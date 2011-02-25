@@ -4,6 +4,7 @@
 	<configuration>
 	
 		<config name="solr">http://localhost/solr/</config>
+		<config name="lookup" pass="true">http://localhost/lookup/</config>
 
 		<config name="facet_fields" xml="true" pass="true">
 			<facet public="Format" internal="format" />

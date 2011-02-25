@@ -63,10 +63,25 @@ class Xerxes_Model_Solr_EngineTest extends PHPUnit_Framework_TestCase
 	public function testGetRecord() 
 	{
 		$results = $this->Xerxes_Model_Solr_Engine->getRecord("38034");
-		$record = $results->getRecord(0)->getXerxesRecord();
+		$record = $results->getRecord(0);
+
+		$xerxes_record = $record->getXerxesRecord();
 		
-		$this->assertEquals("28889970", $record->getOCLCNumber());
-		$this->assertEquals("University of Illinois Press", $record->getPublisher());
+		$this->assertEquals("28889970", $xerxes_record->getOCLCNumber());
+		$this->assertEquals("University of Illinois Press", $xerxes_record->getPublisher());
+		
+		$record->fetchHoldings();
+		$this->assertEquals(1, $record->getItems()->length());
+		
+		$items = $record->getItems();
+		$item = $items[0];
+		
+		$this->assertEquals(1, $item->getProperty("availability"));
+		$this->assertEquals("Not Checked Out", $item->getProperty("status"));
+		$this->assertEquals("Book Stacks (2nd Floor)", $item->getProperty("location"));
+		$this->assertEquals("QA76.73.J39 H3734 2010", $item->getProperty("callnumber"));
+		
+		$this->toXML($results);
 	}
 	
 	/**
@@ -82,8 +97,6 @@ class Xerxes_Model_Solr_EngineTest extends PHPUnit_Framework_TestCase
 		
 		$this->assertEquals(218, $results->getTotal());
 		$this->assertEquals(10, count($results->getRecords()));
-		
-		$this->toXML($results);
 	}
 	
 	private function toXML($results)
@@ -122,9 +135,47 @@ class Xerxes_Framework_HTTP
 				
 				return file_get_contents('data/solr_results_java.xml');
 				break;
+				
+			case 'http://localhost/lookup/?action=status&id=38034':
+				
+				return file_get_contents('data/status-38034.txt');
+				break;
 		}
 		
 		echo $url; exit;
+	}
+}
+
+class Xerxes_Framework_DataMap
+{
+	public function __call($name, $params)
+	{
+		if ( $name == 'select' )
+		{
+			$sql = $this->decompose($params[0]);
+		}
+	}
+	
+	private function decompose($param)
+	{
+		$final = "";
+		
+		if ( is_array($param) )
+		{
+			foreach ( $param as $key => $value )
+			{
+				$final .= " " . $key . " "  . $this->decompose($value);
+			}
+		}
+		else
+		{
+			$final .= " " . $param;
+		}
+		
+		$final = trim($final);
+		$final = str_replace(' ', '_', $final);
+		
+		return $final;
 	}
 }
 
