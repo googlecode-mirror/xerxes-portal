@@ -87,9 +87,6 @@ class Xerxes_Record extends Xerxes_Marc_Record
 	protected $alt_scripts = array (); // alternate character-scripts like cjk or hebrew, taken from 880s
 	protected $alt_script_name = ""; // the name of the alternate character-script; we'll just assume one for now, I guess
 	
-	protected $items = array(); // item records attached
-	protected $no_items = false; // wheter the item has no items
-	
 	protected $serialized_xml; // for serializing the object
 	
 	
@@ -1648,20 +1645,6 @@ class Xerxes_Record extends Xerxes_Marc_Record
 			$objXml->documentElement->appendChild($objLinks);
 		}
 		
-		// items
-		
-		if ( count($this->items) > 0 )
-		{
-			$objItems = $objXml->createElement("items");
-			$objXml->documentElement->appendChild($objItems);
-			
-			foreach ( $this->items as $item )
-			{
-				$import = $objXml->importNode($item->toXML()->documentElement, true);
-				$objItems->appendChild($import);
-			}
-		}
-		
 		// subjects
 		
 		if ( count($this->subjects) > 0 )
@@ -1692,7 +1675,6 @@ class Xerxes_Record extends Xerxes_Marc_Record
 				$key == "toc" ||
 				$key == "links" || 
 				$key == "journal_title" ||
-				$key == "items" ||
 				$key == "subjects" ||
 				
 				// these are utility variables, not to be output
@@ -2941,34 +2923,6 @@ class Xerxes_Record extends Xerxes_Marc_Record
 	{
 		return $this->record_id = $id;
 	}	
-	
-	public function setNoItems($bool)
-	{
-		$this->no_items = $bool;
-	}
-	
-	public function addItems(Xerxes_Record_Items $items )
-	{
-		if ( $items->length() == 0 )
-		{
-			$this->setNoItems(true);
-		}
-		
-		foreach ( $items->getItems() as $item )
-		{
-			$this->addItem($item);
-		}
-	}
-	
-	public function addItem($item )
-	{
-		array_push($this->items, $item);
-	}
-	
-	public function getItems()
-	{
-		return $this->items;
-	}
 }
 
 class Xerxes_Record_Subject
@@ -3003,98 +2957,4 @@ class Xerxes_Record_Author
 		
 		return trim($values);
 	}
-}
-
-class Xerxes_Record_Items
-{
-	private $items = array();
-	
-	public function addItem($item)
-	{
-		array_push($this->items, $item);
-	}
-	
-	public function getItems()
-	{
-		return $this->items;
-	}
-	
-	public function length()
-	{
-		return count($this->items);
-	}
-}
-
-class Xerxes_Record_Item
-{
-	protected $id; 		// the bibliographic record ID
-    protected $availability; // boolean: is this item available for checkout?
-    protected $status; 	// string describing the status of the item
-    protected $location; // string describing the physical location of the item
-    protected $reserve; // string indicating “on reserve” status – legal values: 'Y' or 'N'
-    protected $callnumber; // the call number of this item
-    protected $duedate; // string showing due date of checked out item (null if not checked out)
-    protected $number; 	// the copy number for this item (note: although called “number”, 
-    					//this may actually be a string if individual items are named rather than numbered)
-    protected $barcode; // the barcode number for this item
-	
-	
-	public function setProperty($name, $value)
-	{
-		if ( property_exists($this, $name) )
-		{
-			$this->$name = $value;
-		}
-	}
-	
-	public function toXML()
-	{
-		$xml = new DOMDocument();
-		$xml->loadXML("<item />");
-		
-		foreach ( $this as $key => $value )
-		{
-			if ( $value == "")
-			{
-				continue;
-			}
-			
-			$key = preg_replace('/\W|\s/', '', $key);
-			
-			$element = $xml->createElement($key, Xerxes_Framework_Parser::escapeXml($value));
-			$xml->documentElement->appendChild($element);
-		}
-		
-		return $xml;
-	}
-}
-
-class Xerxes_Record_Holding
-{
-	private $data = array();
-	
-	public function setProperty($name, $value)
-	{
-		if ( $name != "holding" && $name != "id" )
-		{
-			$this->data[$name] = $value;
-		}
-	}
-	
-	public function toXML()
-	{
-		$xml = new DOMDocument();
-		$xml->loadXML("<holding />");
-		
-		foreach ( $this->data as $key => $value )
-		{
-			$element = $xml->createElement("data");
-			$element->setAttribute("key", $key);
-			$element->setAttribute("value", $value);
-			$xml->documentElement->appendChild($element);
-		}
-		
-		return $xml;
-	}	
-	
 }
