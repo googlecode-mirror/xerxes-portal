@@ -14,23 +14,28 @@
 class Xerxes_Model_Search_Items
 {
 	public $items = array();
+	public $holdings = array();
 	
 	/**
 	 * Add an item to this group of items
 	 * 
-	 * @param Xerxes_Model_Search_Item or Xerxes_Model_Search_Holding $item
+	 * @param Xerxes_Model_Search_Item $item
 	 */
 	
-	public function addItem($item)
+	public function addItem(Xerxes_Model_Search_Item $item)
 	{
-		if ( ! $item instanceof Xerxes_Model_Search_Holding && 
-		     ! $item instanceof Xerxes_Model_Search_Item )
-		{
-			throw new Exception("parameter must be instance of Xerxes_Model_Search_Holding or " .
-				"Xerxes_Model_Search_Item");
-		}
-		
 		array_push($this->items, $item);
+	}
+
+	/**
+	 * Add (journal) holdings record to this group of items
+	 * 
+	 * @param Xerxes_Model_Search_Holding $holdings
+	 */
+	
+	public function addHolding(Xerxes_Model_Search_Holding $holdings)
+	{
+		array_push($this->holdings, $holdings);
 	}
 	
 	/**
@@ -41,6 +46,15 @@ class Xerxes_Model_Search_Items
 	{
 		return $this->items;
 	}
+
+	/**
+	 * Get all holdings
+	 */
+	
+	public function getHoldings()
+	{
+		return $this->holdings;
+	}	
 	
 	/**
 	 * The number of items
