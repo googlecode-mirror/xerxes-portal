@@ -22,6 +22,7 @@ class Xerxes_Model_Search_Result
 	public $holdings; // holdings from an ils
 	public $recommendations = array(); // recommendations object	
 	public $reviews; // reviews
+	public $items; // holdings
 	
 	protected $registry;
 	protected $sid; // open url sid
@@ -44,6 +45,8 @@ class Xerxes_Model_Search_Result
 		
 		$this->url_open = $record->getOpenURL($link_resolver, $this->sid);
 		$this->openurl_kev_co = $record->getOpenURL(null, $this->sid);
+		
+		$this->items = new Xerxes_Record_Items();
 	}
 	
 	/**
@@ -108,69 +111,33 @@ class Xerxes_Model_Search_Result
 	}
 	
 	/**
+	 * Add holdings to this result
+	 */
+	
+	public function setItems( Xerxes_Record_Items $items )
+	{
+		$this->items = $items;
+	}
+	
+	/**
 	 * Fetch item and holding records from an ILS for this record
 	 */
 	
-	public function addHoldings()
+	public function fetchHoldings()
 	{
-		$arrIDs = array(); // TODO: make this a look up
-		
-		$items = new Xerxes_Record_Items();
-		
-		$cache_id = ""; // id used in cache
-		$bib_id = ""; // bibliographic id number
-		$oclc = ""; // oclc number
-		
-		// figure out what is what
-		
-		foreach ( $arrIDs as $id )
-		{
-			if ( stristr($id,"ISBN:") )
-			{
-				continue;
-			}
-			
-			if ( stristr($id,"OCLC:") )
-			{
-				$oclc = $id;
-			}
-			else
-			{
-				$bib_id = $id;
-			}
-		}
-
-		// no bib id supplied, so use oclc number as id
-		
-		if ( $bib_id == "")
-		{
-			if ( $oclc == "" )
-			{
-				throw new Exception("no bibliographic id or oclc number suppled in availability lookup");
-			}
-			
-			$cache_id = str_replace("OCLC:", "",$oclc);
-		}
-		else
-		{
-			$cache_id = $bib_id;
-		}
-		
-		// get url to availability server
-		
-		$strSource = $this->getSource();
-		$url = $this->getHoldingsURL($strSource);
+		$id = $this->getLookupID(); // TODO: id from the record
+		$url = $this->getHoldingsURL(); // TODO: url to availability server
 		
 		// no holdings source defined or somehow id's are blank
 		
-		if ( $url == null || count($arrIDs) == 0 )
+		if ( $url == null || $id == null )
 		{
 			return null; // empty items
 		}
 		
 		// get the data
 		
-		$url .= "?action=status&id=" . urlencode(implode(" ", $arrIDs));
+		$url .= "?action=status&id=" . urlencode($id);
 		$data = Xerxes_Framework_Parser::request($url, 10);
 		
 		// echo $url; exit;
@@ -182,31 +149,44 @@ class Xerxes_Model_Search_Result
 			throw new Exception("could not connect to availability server");
 		}
 		
-		// echo $data; exit;
+		return $this->parseHoldings($data);
+	}
+	
+	/**
+	 * Parse item holdings data from an ILS driver
+	 * 
+	 * @param string $data 
+	 */
+
+	protected function parseHoldings($data)
+	{
+		$items = new Xerxes_Model_Search_Items();
+		
+		$cache_id = ""; // TODO: figure out how to uniquely identify this
 		
 		// response is (currently) an array of json objects
 		
-		$arrResults = json_decode($data);
+		$results = json_decode($data);
 		
 		// parse the response
 		
-		if ( is_array($arrResults) )
+		if ( is_array($results) )
 		{
-			if ( count($arrResults) > 0 )
+			if ( count($results) > 0 )
 			{
 				// now just slot them into our item object
 				
-				foreach ( $arrResults as $holding )
+				foreach ( $results as $holding )
 				{
 					$is_holdings = property_exists($holding, "holding"); 
 										
 					if ( $is_holdings == true )
 					{
-						$item = new Xerxes_Record_Holding();
+						$item = new Xerxes_Model_Search_Holding();
 					}
 					else
 					{
-						$item = new Xerxes_Record_Item();
+						$item = new Xerxes_Model_Search_Item();
 					}
 					
 					foreach ( $holding as $property => $value )
@@ -221,16 +201,12 @@ class Xerxes_Model_Search_Result
 		
 		// cache it for the future
 		
+		$cache = new Xerxes_Framework_Cache();
+		
 		$expiry = $this->config->getConfig("HOLDINGS_CACHE_EXPIRY", false, 2 * 60 * 60); // expiry set for two hours
 		$expiry += time(); 
 		
-		$cache = new Xerxes_Data_Cache();
-		$cache->source = $this->getSource();
-		$cache->id = $cache_id;
-		$cache->expiry = $expiry;
-		$cache->data = serialize($items);
-		
-		$this->data_map->setCache($cache);
+		$cache->set($cache_id, serialize($items), $expiry);
 		
 		// add it to the record
 		
@@ -238,6 +214,10 @@ class Xerxes_Model_Search_Result
 		
 		return null;
 	}
+	
+	/**
+	 * Get the Xerxes_Record object
+	 */
 	
 	public function getXerxesRecord()
 	{

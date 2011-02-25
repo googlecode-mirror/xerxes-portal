@@ -17,6 +17,13 @@ class Xerxes_Record_Items
 	
 	public function addItem($item)
 	{
+		if ( ! $item instanceof Xerxes_Model_Search_Holding && 
+		     ! $item instanceof Xerxes_Model_Search_Item )
+		{
+			throw new Exception("parameter must be instance of Xerxes_Model_Search_Holding or " .
+				"Xerxes_Model_Search_Item");
+		}
+		
 		array_push($this->items, $item);
 	}
 	

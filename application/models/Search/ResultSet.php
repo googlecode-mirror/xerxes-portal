@@ -306,7 +306,7 @@ class Xerxes_Model_Search_ResultSet
 		
 		foreach ( $this->records as $record )
 		{
-			array_push($id, $record->getRecordID() );
+			array_push( $id, $record->getXerxesRecord()->getRecordID() );
 		}
 		
 		$id = array_unique($id);
@@ -323,6 +323,8 @@ class Xerxes_Model_Search_ResultSet
 		// get the record ids for all search results
 
 		$ids = $this->extractRecordIDs();
+		
+		print_r($ids);
 		
 		// only if there are actually records here
 		
@@ -359,5 +361,4 @@ class Xerxes_Model_Search_ResultSet
 			}
 		}
 	}		
-	
 }
