@@ -13,7 +13,13 @@
 
 class Xerxes_Record_Items
 {
-	private $items = array();
+	public $items = array();
+	
+	/**
+	 * Add an item to this group of items
+	 * 
+	 * @param Xerxes_Model_Search_Item or Xerxes_Model_Search_Holding $item
+	 */
 	
 	public function addItem($item)
 	{
@@ -27,10 +33,18 @@ class Xerxes_Record_Items
 		array_push($this->items, $item);
 	}
 	
+	/**
+	 * Get all items
+	 */
+	
 	public function getItems()
 	{
 		return $this->items;
 	}
+	
+	/**
+	 * The number of items
+	 */
 	
 	public function length()
 	{

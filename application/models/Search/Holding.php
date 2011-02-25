@@ -15,6 +15,13 @@ class Xerxes_Model_Search_Holding
 {
 	private $data = array();
 	
+	/**
+	 * Set a property for this item
+	 * 
+	 * @param string $name		property name
+	 * @param mixed $value		the value
+	 */	
+	
 	public function setProperty($name, $value)
 	{
 		if ( $name != "holding" && $name != "id" )
@@ -22,6 +29,12 @@ class Xerxes_Model_Search_Holding
 			$this->data[$name] = $value;
 		}
 	}
+	
+	/**
+	 * Serialize to XML
+	 * 
+	 * @return DOMDocument
+	 */
 	
 	public function toXML()
 	{

@@ -74,7 +74,9 @@ class Xerxes_Framework_Response
 	}
 	
 	/**
-	 * Output results to XML
+	 * Serialize to XML
+	 * 
+	 * @return DOMDocument
 	 */
 	
 	public function toXML()
