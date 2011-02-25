@@ -1,6 +1,12 @@
 <?php
 
 /**
+ * One PDO connection to rule them all
+ */
+
+global $xerxes_pdo;
+
+/**
  * Basic functions for selecting, instering, updating, and deleting data from a 
  * database, including transactions; basically a convenience wrapper around PDO
  *
@@ -68,7 +74,9 @@ abstract class Xerxes_Framework_DataMap
 	
 	protected function init()
 	{
-		if ( ! $this->pdo instanceof PDO )
+		global $xerxes_pdo; // grab the global variable so we don't create multiple connections
+		
+		if ( ! $xerxes_pdo instanceof PDO )
 		{
 			// options to ensure utf-8
 			
@@ -92,21 +100,14 @@ abstract class Xerxes_Framework_DataMap
 			
 			// data access object
 			
-			$this->pdo = new PDO($this->connection, $this->username, $this->password, $arrDriverOptions);
+			$xerxes_pdo = new PDO($this->connection, $this->username, $this->password, $arrDriverOptions);
 			
 			// will force PDO to throw exceptions on error
 			
-			$this->pdo->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
+			$xerxes_pdo->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
+			
+			$this->pdo = $xerxes_pdo;
 		}
-	}
-	
-	/**
-	 * Destructor to explicitly end the database connection
-	 */
-	
-	public function __destruct()
-	{
-		$this->pdo = null;
 	}
 	
 	/**
