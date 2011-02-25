@@ -285,6 +285,8 @@ class Xerxes_Model_DataMap_SavedRecords extends Xerxes_Framework_DataMap
 					$strCriteria .= " OR";
 				}
 				
+				$num = sprintf("%04d", $x); // pad it to keep id's unique for mssql
+				
 				$strCriteria .= " id = :id$x ";
 				$arrParams[":id$x"] = $arrID[$x];
 			}
@@ -344,7 +346,8 @@ class Xerxes_Model_DataMap_SavedRecords extends Xerxes_Framework_DataMap
 			                        
 			for ( $x = 0 ; $x < count( $arrID ) ; $x ++ )
 			{
-			        array_push($sql_server_clean, ":id$x");
+					$num = sprintf("%04d", $x); // pad it to keep id's unique for mssql
+			        array_push($sql_server_clean, ":id$num");
 			}
 		}
 
