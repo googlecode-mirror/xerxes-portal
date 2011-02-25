@@ -95,7 +95,7 @@ class Xerxes_Framework_HTTP
 	{
 		switch ( $url )
 		{
-			case 'http://localhost/solr/select/?version=2.2&defType=dismax&qf=title+title_sub%5E0.8+title_full%5E0.5+title_alt%5E0.5+title_preceding%5E0.3+title_succeeding%5E0.3+title_series%5E0.3+title_contents%5E0.3&pf=title+title_sub%5E0.8+title_full%5E0.5+title_alt%5E0.5+title_preceding%5E0.3+title_succeeding%5E0.3+title_series%5E0.3+title_contents%5E0.3&q=java&start=0&rows=0&sort=':
+			case 'http://localhost/solr/select/?version=2.2&defType=dismax&qf=title+title_sub%5E0.8+title_full%5E0.5+title_alt%5E0.5+title_preceding%5E0.3+title_succeeding%5E0.3+title_series%5E0.3+title_contents%5E0.3&pf=title+title_sub%5E0.8+title_full%5E0.5+title_alt%5E0.5+title_preceding%5E0.3+title_succeeding%5E0.3+title_series%5E0.3+title_contents%5E0.3&q=java&start=0&rows=0&sort=score+desc%2CpublishDate+desc':
 				return file_get_contents('data/solr_hits_java.xml');
 				break;
 				
