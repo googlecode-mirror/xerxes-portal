@@ -20,6 +20,15 @@ class Xerxes_Model_Search_QueryTerm
 	public $phrase;
 	public $spell_correct;
 	
+	/**
+	 * Constructor
+	 * 
+	 * @param string $id			a unique identifier for this term
+	 * @param string $boolen		a boolean operator (AND, OR, NOT) that joins this term to the query
+	 * @param string $value			field to search one
+	 * @param string $phrase		value
+	 */
+	
 	public function __construct($id, $boolean, $field, $relation, $phrase)
 	{
 		$this->id = $id;

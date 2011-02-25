@@ -16,6 +16,10 @@ abstract class Xerxes_Model_Search_Config extends Xerxes_Framework_Registry
 	private $facets = array();
 	private $fields = array();
 	
+	/**
+	 * Initialize the object by picking up and processing the config xml file
+	 */	
+	
 	public function init()
 	{
 		parent::init();
@@ -45,6 +49,13 @@ abstract class Xerxes_Model_Search_Config extends Xerxes_Framework_Registry
 		}
 	}
 	
+	/**
+	 * Get the defined public name of a given facet
+	 * 
+	 * @param string $internal		facet internal id
+	 * @return string 				public name, or null if not defined
+	 */
+	
 	public function getFacetPublicName($internal)
 	{
 		if ( array_key_exists($internal, $this->facets) )
@@ -59,6 +70,15 @@ abstract class Xerxes_Model_Search_Config extends Xerxes_Framework_Registry
 		}
 	}
 
+	/**
+	 * Get the defined public name of a facet value
+	 * 
+	 * @param string $internal_group		group internal id
+	 * @param string $internal_group		internal field id
+	 * 
+	 * @return string 						public name, or the internal field name supplied if not found
+	 */	
+	
 	public function getValuePublicName($internal_group, $internal_field)
 	{
 		if ( strstr($internal_field, "'") || strstr($internal_field, " ") )
@@ -78,13 +98,27 @@ abstract class Xerxes_Model_Search_Config extends Xerxes_Framework_Registry
 		{
 			return $internal_field;
 		}
-	}	
+	}
+
+	/**
+	 * Get the defined facet type for a given facet
+	 * 
+	 * @param string $internal			facet internal id
+	 * @return string 					type
+	 */		
 	
 	public function getFacetType($internal)
 	{
 		$facet = $this->getFacet($internal);
 		return (string) $facet["type"];
 	}
+	
+	/**
+	 * Whether the supplied facet is a date facet
+	 * 
+	 * @param string $internal			facet internal id
+	 * @return bool 					true if date, false if not
+	 */		
 	
 	public function isDateType($internal)
 	{
@@ -97,6 +131,13 @@ abstract class Xerxes_Model_Search_Config extends Xerxes_Framework_Registry
 			return false;
 		}
 	}
+	
+	/**
+	 * Return a facet definition from the config file
+	 * 
+	 * @param string $internal			facet internal id
+	 * @return simplexml
+	 */			
 
 	public function getFacet($internal)
 	{
@@ -108,19 +149,40 @@ abstract class Xerxes_Model_Search_Config extends Xerxes_Framework_Registry
 		{
 			return null;
 		}
-	}	
+	}
+
+	/**
+	 * Return all of the facet definitions
+	 * 
+	 * @return array of simplexml objects
+	 */		
 	
 	public function getFacets()
 	{
 		return $this->facets;
 	}
 	
+	/**
+	 * Return all of the field definitions
+	 * 
+	 * @return array of simplexml objects
+	 */		
+	
 	public function getFields()
 	{
 		return $this->fields;
 	}
 	
-	public function getFieldAttribute($field,$attribute)
+	/**
+	 * Return a specific attribute from a field definition
+	 * 
+	 * @param string $internal			facet internal id
+	 * @param string $internal			facet internal id
+	 * 
+	 * @return string if found, null if not
+	 */		
+	
+	public function getFieldAttribute( $field, $attribute )
 	{
 		$values = $this->xml->xpath("//config[@name='basic_search_fields']/field[@internal='$field']/@$attribute");
 		

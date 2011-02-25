@@ -45,8 +45,6 @@ class Xerxes_Framework_Registry
 	
 	/**
 	 * Initialize the object by picking up and processing the config xml file
-	 * 
-	 * @exception 	will throw exception if no configuration file can be found
 	 */
 	
 	public function init()
