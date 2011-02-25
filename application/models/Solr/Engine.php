@@ -39,7 +39,6 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 		// local config
 		
 		$this->config = Xerxes_Model_Solr_Config::getInstance();
-		$this->config->init();
 		
 		// change max, if set
 		
