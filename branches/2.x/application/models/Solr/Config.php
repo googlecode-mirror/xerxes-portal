@@ -21,6 +21,8 @@ class Xerxes_Model_Solr_Config extends Xerxes_Model_Search_Config
 		if ( empty( self::$instance ) )
 		{
 			self::$instance = new Xerxes_Model_Solr_Config();
+			$object = self::$instance;
+			$object->init();			
 		}
 		
 		return self::$instance;
