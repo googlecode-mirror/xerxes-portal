@@ -28,7 +28,7 @@ class Xerxes_Model_Search_Result
 	/**
 	 * Constructor
 	 * 
-	 * @param Xerxes_Record
+	 * @param Xerxes_Record $record
 	 */
 	
 	public function __construct(Xerxes_Record $record)

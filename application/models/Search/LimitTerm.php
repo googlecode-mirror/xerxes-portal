@@ -17,6 +17,14 @@ class Xerxes_Model_Search_LimitTerm
 	public $relation;
 	public $value;
 	
+	/**
+	 * Constructor
+	 * 
+	 * @param string $field			field name
+	 * @param string $relation		operator ('=', '>', etc.)
+	 * @param string $value			value
+	 */
+	
 	public function __construct($field, $relation, $value)
 	{
 		$this->field = $field;
