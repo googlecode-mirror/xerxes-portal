@@ -52,8 +52,8 @@ class Xerxes_Model_Solr_EngineTest extends PHPUnit_Framework_TestCase
 	public function testGetHits() 
 	{
 		$this->Xerxes_Model_Search_Query->addTerm(1, null, "title", "=", "java"); 
-		
 		$total = $this->Xerxes_Model_Solr_Engine->getHits($this->Xerxes_Model_Search_Query);
+		
 		$this->assertEquals(218, $total);
 	}
 	
@@ -63,28 +63,28 @@ class Xerxes_Model_Solr_EngineTest extends PHPUnit_Framework_TestCase
 	
 	public function testGetRecord() 
 	{
-		$results = $this->Xerxes_Model_Solr_Engine->getRecord("38034");
-		$record = $results->getRecord(0);
+		$Xerxes_Model_Search_ResultSet = $this->Xerxes_Model_Solr_Engine->getRecord("38034");
+		$Xerxes_Model_Search_Result = $Xerxes_Model_Search_ResultSet->getRecord(0);
 		
-		$xerxes_record = $record->getXerxesRecord();
+		$Xerxes_Record = $Xerxes_Model_Search_Result->getXerxesRecord();
 		
-		$this->assertEquals("28889970", $xerxes_record->getOCLCNumber());
-		$this->assertEquals("University of Illinois Press", $xerxes_record->getPublisher());
+		$this->assertEquals("28889970", $Xerxes_Record->getOCLCNumber());
+		$this->assertEquals("University of Illinois Press", $Xerxes_Record->getPublisher());
 		
-		$record->fetchHoldings();
-		$holdings = $record->getHoldings();
+		$Xerxes_Model_Search_Result->fetchHoldings();
+		$Xerxes_Model_Search_Holdings = $Xerxes_Model_Search_Result->getHoldings();
 		
-		$this->assertEquals(1, $holdings->length());
+		$this->assertEquals(1, $Xerxes_Model_Search_Holdings->length());
 		
-		$items = $holdings->getItems();
-		$item = $items[0];
+		$items = $Xerxes_Model_Search_Holdings->getItems();
+		$Xerxes_Model_Search_Item = $items[0];
 		
-		$this->assertEquals(true, $item->getProperty("availability"));
-		$this->assertEquals("Not Checked Out", $item->getProperty("status"));
-		$this->assertEquals("Book Stacks (2nd Floor)", $item->getProperty("location"));
-		$this->assertEquals("QA76.73.J39 H3734 2010", $item->getProperty("callnumber"));
+		$this->assertEquals(true, $Xerxes_Model_Search_Item->getProperty("availability"));
+		$this->assertEquals("Not Checked Out", $Xerxes_Model_Search_Item->getProperty("status"));
+		$this->assertEquals("Book Stacks (2nd Floor)", $Xerxes_Model_Search_Item->getProperty("location"));
+		$this->assertEquals("QA76.73.J39 H3734 2010", $Xerxes_Model_Search_Item->getProperty("callnumber"));
 		
-		$this->toXML($results);
+		$this->toXML($Xerxes_Model_Search_Result);
 	}
 	
 	/**
@@ -95,10 +95,10 @@ class Xerxes_Model_Solr_EngineTest extends PHPUnit_Framework_TestCase
 	{
 		$this->Xerxes_Model_Search_Query->addTerm(1, null, "title", "=", "java"); 
 		
-		$results = $this->Xerxes_Model_Solr_Engine->searchRetrieve($this->Xerxes_Model_Search_Query, 1, 10, "date");
+		$Xerxes_Model_Search_ResultSet = $this->Xerxes_Model_Solr_Engine->searchRetrieve($this->Xerxes_Model_Search_Query, 1, 10, "date");
 		
-		$this->assertEquals(218, $results->getTotal());
-		$this->assertEquals(10, count($results->getRecords()));
+		$this->assertEquals(218, $Xerxes_Model_Search_ResultSet->getTotal());
+		$this->assertEquals(10, count($Xerxes_Model_Search_ResultSet->getRecords()));
 	}
 	
 	private function toXML($results)
