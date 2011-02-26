@@ -24,7 +24,7 @@ class Xerxes_Model_Solr_EngineTest extends PHPUnit_Framework_TestCase
 	{
 		parent::setUp();
 		
-		// set the location and environment
+		// set the location
 		
 		chdir(dirname(__FILE__));
 		
@@ -42,6 +42,7 @@ class Xerxes_Model_Solr_EngineTest extends PHPUnit_Framework_TestCase
 	protected function tearDown() 
 	{
 		$this->Xerxes_Model_Solr_Engine = null;
+		$this->Xerxes_Model_Search_Query = null;
 		parent::tearDown();
 	}
 	
