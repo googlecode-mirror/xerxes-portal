@@ -1,0 +1,1 @@
+[{"id":"133792","callnumber":"QA76.73.J39 H3734 2010","status":"Not Checked Out","availability":true,"location":"Book Stacks (2nd Floor)"}]
