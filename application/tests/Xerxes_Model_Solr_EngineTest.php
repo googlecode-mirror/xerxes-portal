@@ -14,6 +14,7 @@ class Xerxes_Model_Solr_EngineTest extends PHPUnit_Framework_TestCase
 	 */
 	
 	private $Xerxes_Model_Solr_Engine;
+	private $Xerxes_Model_Search_Query;
 	
 	/**
 	 * Prepares the environment before running a test.
@@ -29,8 +30,9 @@ class Xerxes_Model_Solr_EngineTest extends PHPUnit_Framework_TestCase
 		
 		// engine
 		
-		$server = "http://localhost/solr/";
-		$this->Xerxes_Model_Solr_Engine = new Xerxes_Model_Solr_Engine($server);
+		$this->Xerxes_Model_Solr_Engine = new Xerxes_Model_Solr_Engine("http://localhost/solr/");
+		$config = Xerxes_Model_Solr_Config::getInstance();
+		$this->Xerxes_Model_Search_Query = new Xerxes_Model_Search_Query(null, $config);
 	}
 	
 	/**
@@ -49,10 +51,9 @@ class Xerxes_Model_Solr_EngineTest extends PHPUnit_Framework_TestCase
 	
 	public function testGetHits() 
 	{
-		$search = new Xerxes_Model_Search_Query();
-		$search->addTerm(1, null, "title", "=", "java"); 
+		$this->Xerxes_Model_Search_Query->addTerm(1, null, "title", "=", "java"); 
 		
-		$total = $this->Xerxes_Model_Solr_Engine->getHits($search);
+		$total = $this->Xerxes_Model_Solr_Engine->getHits($this->Xerxes_Model_Search_Query);
 		$this->assertEquals(218, $total);
 	}
 	
@@ -64,19 +65,21 @@ class Xerxes_Model_Solr_EngineTest extends PHPUnit_Framework_TestCase
 	{
 		$results = $this->Xerxes_Model_Solr_Engine->getRecord("38034");
 		$record = $results->getRecord(0);
-
+		
 		$xerxes_record = $record->getXerxesRecord();
 		
 		$this->assertEquals("28889970", $xerxes_record->getOCLCNumber());
 		$this->assertEquals("University of Illinois Press", $xerxes_record->getPublisher());
 		
 		$record->fetchHoldings();
-		$this->assertEquals(1, $record->getItems()->length());
+		$holdings = $record->getHoldings();
 		
-		$items = $record->getItems();
+		$this->assertEquals(1, $holdings->length());
+		
+		$items = $holdings->getItems();
 		$item = $items[0];
 		
-		$this->assertEquals(1, $item->getProperty("availability"));
+		$this->assertEquals(true, $item->getProperty("availability"));
 		$this->assertEquals("Not Checked Out", $item->getProperty("status"));
 		$this->assertEquals("Book Stacks (2nd Floor)", $item->getProperty("location"));
 		$this->assertEquals("QA76.73.J39 H3734 2010", $item->getProperty("callnumber"));
@@ -90,10 +93,9 @@ class Xerxes_Model_Solr_EngineTest extends PHPUnit_Framework_TestCase
 
 	public function testSearchRetrieve() 
 	{
-		$search = new Xerxes_Model_Search_Query();
-		$search->addTerm(1, null, "title", "=", "java"); 
+		$this->Xerxes_Model_Search_Query->addTerm(1, null, "title", "=", "java"); 
 		
-		$results = $this->Xerxes_Model_Solr_Engine->searchRetrieve($search, 1, 10, "date");
+		$results = $this->Xerxes_Model_Solr_Engine->searchRetrieve($this->Xerxes_Model_Search_Query, 1, 10, "date");
 		
 		$this->assertEquals(218, $results->getTotal());
 		$this->assertEquals(10, count($results->getRecords()));

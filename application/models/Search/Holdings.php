@@ -1,17 +1,17 @@
 <?php
 
 /**
- * Search Items
+ * Result Holdings
  *
  * @author David Walker
  * @copyright 2011 California State University
  * @link http://xerxes.calstate.edu
  * @license http://www.gnu.org/licenses/
- * @version $Id$
+ * @version $Id: Items.php 1717 2011-02-25 21:47:55Z dwalker@calstate.edu $
  * @package Xerxes
  */
 
-class Xerxes_Model_Search_Items
+class Xerxes_Model_Search_Holdings
 {
 	public $items = array();
 	public $holdings = array();
@@ -51,7 +51,7 @@ class Xerxes_Model_Search_Items
 	 * Get all holdings
 	 */
 	
-	public function getHoldings()
+	public function getHoldingRecords()
 	{
 		return $this->holdings;
 	}	

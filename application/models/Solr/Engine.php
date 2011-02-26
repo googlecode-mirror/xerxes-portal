@@ -110,8 +110,6 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 		
 		### parse the query
 		
-		$search->swapForInternalFields($this->config);
-		
 		$query = ""; // query, these are url params, not just the query itself
 		$type = ""; // dismax or standard
 	
@@ -120,17 +118,16 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 		$terms = $search->getQueryTerms();
 		$term = $terms[0];
 		
-		// these to decide between basic and dismax handler
+		// decide between basic and dismax handler
 		
-		$phrase_test = $this->alterQuery($term->phrase, $term->field, $this->config) . " ";	
 		$trunc_test = $this->config->getFieldAttribute($term->field, "truncate");
 		
 		// use dismax if this is a simple search, that is:
 		// only if there is one phrase (i.e., not advanced), no boolean OR and no wildcard
 
 		if ( count($terms) == 1 && 
-			! strstr($phrase_test, " OR ") && 
-			! strstr($phrase_test, "*") && 
+			! strstr($term->phrase, " OR ") && 
+			! strstr($term->phrase, "*") && 
 			$trunc_test == null )
 		{
 			# dismax
@@ -248,7 +245,6 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 			}
 			
 			$query .= "&fq=" . urlencode( "$index:$value");
-			
 		}
 		
 		$auto_limit = $this->config->getConfig("LIMIT", false);
@@ -291,21 +287,33 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 		
 		return $this->doSearch($this->url);
 	}
+	
+	/**
+	 * Actually send the url to Solr and parse the response
+	 * 
+	 * @param string $url 
+	 * @return Xerxes_Model_Search_ResultSet
+	 */
 
 	private function doSearch($url)
 	{
-		$response = Xerxes_Framework_Parser::request($url, 10);
+		// get the data
 		
-		if ( $response == null )
+		$response = Xerxes_Framework_Parser::request($url, 10);
+		$xml = simplexml_load_string($response);
+		
+		if ( $response == null || $xml === false )
 		{
 			throw new Exception("Could not connect to search engine.");
 		}
 		
-		$xml = simplexml_load_string($response);
+		// parse the results
 		
 		$results = new Xerxes_Model_Search_ResultSet($this->config);
 		
-		$results->total = (int) $xml->result["numFound"]; // extract total
+		// extract total
+		
+		$results->total = (int) $xml->result["numFound"]; 
 		
 		// extract records
 		
@@ -314,42 +322,11 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 			$results->addRecord($record);
 		}
 		
-		$results->facets = $this->extractFacets($xml);	 // extract facets
+		// extract facets
+		
+		$results->facets = $this->extractFacets($xml);
 		
 		return $results;
-	}
-
-	private function alterQuery($phrase, $field, $config)
-	{
-		$phrase = trim($phrase);
-		
-		$case = $config->getFieldAttribute($field, "case");
-		$trunc = $config->getFieldAttribute($field, "truncate");
-
-		switch($case)
-		{
-			case "upper":
-				$phrase = strtoupper($phrase);
-				break;
-			case "lower":
-				$phrase = strtolower($phrase);
-				break;			
-		}
-
-		switch($trunc)
-		{
-			case "left":
-				$phrase = "*" . $phrase;
-				break;
-			case "right":
-				$phrase = $phrase . "*";
-				break;
-			case "both":
-				$phrase = "*" . $phrase . "*";
-				break;	
-		}
-		
-		return $phrase;
 	}
 	
 	/**
@@ -374,6 +351,8 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 				
 				foreach ( $doc->str as $str )
 				{
+					// marc record
+											
 					if ( (string) $str["name"] == 'fullrecord' )
 					{
 						$marc = trim( (string) $str );
@@ -394,11 +373,16 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 					        $xml_data = $marc_record->toXML();
 						}
 					}
+					
+					// record id
+					
 					elseif ( (string) $str["name"] == 'id' )
 					{
 						$id = (string) $str;
 					}
 				}
+				
+				// format
 				
 				foreach ( $doc->arr as $arr )
 				{
