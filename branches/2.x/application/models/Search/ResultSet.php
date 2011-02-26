@@ -351,9 +351,9 @@ class Xerxes_Model_Search_ResultSet
 			{
 				$item = unserialize($data);
 				
-				if ( ! $item instanceof Xerxes_Model_Search_Items  )
+				if ( ! $item instanceof Xerxes_Model_Search_Holdings   )
 				{
-					throw new Exception("cached item (" . $cache->id. ") is not an instance of Xerxes_Model_Search_Items");
+					throw new Exception("cached item (" . $cache->id. ") is not an instance of Xerxes_Model_Search_Holdings");
 				}
 				
 				// now associate this item with its corresponding result

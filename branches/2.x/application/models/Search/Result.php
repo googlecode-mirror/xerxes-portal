@@ -20,7 +20,6 @@ class Xerxes_Model_Search_Result
 	public $holdings; // holdings from an ils
 	public $recommendations = array(); // recommendations object	
 	public $reviews; // reviews
-	public $items; // holdings
 	
 	protected $registry; // global config
 	protected $config; // local config
@@ -47,7 +46,7 @@ class Xerxes_Model_Search_Result
 		$this->url_open = $record->getOpenURL($link_resolver, $this->sid);
 		$this->openurl_kev_co = $record->getOpenURL(null, $this->sid);
 		
-		$this->items = new Xerxes_Model_Search_Items();
+		$this->holdings = new Xerxes_Model_Search_Holdings();
 	}
 	
 	/**
@@ -115,9 +114,9 @@ class Xerxes_Model_Search_Result
 	 * Add holdings to this result
 	 */
 	
-	public function setItems( Xerxes_Model_Search_Items $items )
+	public function setHoldings( Xerxes_Model_Search_Holdings $holdings )
 	{
-		$this->items = $items;
+		$this->holdings = $holdings;
 	}
 	
 	/**
@@ -126,22 +125,11 @@ class Xerxes_Model_Search_Result
 	 * @return array of Xerxes_Model_Search_Item
 	 */
 	
-	public function getItems()
-	{
-		return $this->items->getItems();
-	}
-
-	/**
-	 * Return holdings records
-	 * 
-	 * @return array of Xerxes_Model_Search_Holding
-	 */
-	
 	public function getHoldings()
 	{
-		return $this->items->getHoldings();
-	}	
-	
+		return $this->holdings;
+	}
+
 	/**
 	 * Fetch item and holding records from an ILS for this record
 	 */
@@ -151,14 +139,14 @@ class Xerxes_Model_Search_Result
 		$xerxes_record = $this->getXerxesRecord();
 		
 		$id = $xerxes_record->getRecordID(); // id from the record
-		$cache_id = $xerxes_record->getSource(). "." . $id; // to identify this in the cache
+		$cache_id = $xerxes_record->getSource() . "." . $id; // to identify this in the cache
 		$url = $this->config->getConfig("LOOKUP"); // url to availability server
 		
 		// no holdings source defined or somehow id's are blank
 		
 		if ( $url == "" || $id == "" )
 		{
-			return null; // empty items
+			return null; // empty holdings
 		}
 		
 		// get the data
@@ -175,7 +163,7 @@ class Xerxes_Model_Search_Result
 			throw new Exception("could not connect to availability server");
 		}
 		
-		$items = new Xerxes_Model_Search_Items();
+		$holdings = new Xerxes_Model_Search_Holdings();
 		
 		// response is (currently) an array of json objects
 		
@@ -191,9 +179,9 @@ class Xerxes_Model_Search_Result
 				
 				foreach ( $results as $holding )
 				{
-					$is_holdings = property_exists($holding, "holding"); 
+					$is_holding = property_exists($holding, "holding"); 
 										
-					if ( $is_holdings == true )
+					if ( $is_holding == true )
 					{
 						$item = new Xerxes_Model_Search_Holding();
 					}
@@ -207,7 +195,7 @@ class Xerxes_Model_Search_Result
 						$item->setProperty($property, $value);
 					}
 					
-					$items->addItem($item);
+					$holdings->addItem($item);
 				}
 			}
 		}
@@ -219,11 +207,11 @@ class Xerxes_Model_Search_Result
 		$expiry = $this->config->getConfig("HOLDINGS_CACHE_EXPIRY", false, 2 * 60 * 60); // expiry set for two hours
 		$expiry += time(); 
 		
-		$cache->set($cache_id, serialize($items), $expiry);
+		$cache->set($cache_id, serialize($holdings), $expiry);
 		
 		// add it to the record
 		
-		$this->items = $items;
+		$this->holdings = $holdings;
 		
 		return null;
 	}

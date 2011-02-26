@@ -21,6 +21,7 @@ class Xerxes_Model_Search_Query
 	protected $limit_fields_regex = 'facet.*';	
 	
 	protected $request; // xerxes request object
+	protected $config; // local config
 	
 	/**
 	 * Constructor
@@ -28,8 +29,10 @@ class Xerxes_Model_Search_Query
 	 * @param Xerxes_Framework_Request $request
 	 */
 	
-	public function __construct(Xerxes_Framework_Request $request = null )
+	public function __construct(Xerxes_Framework_Request $request = null, Xerxes_Model_Search_Config $config = null )
 	{
+		$this->config = $config;
+		
 		if ( $request != null )
 		{
 			// make these available
@@ -91,6 +94,14 @@ class Xerxes_Model_Search_Query
 	
 	public function addTerm($id, $boolean, $field, $relation, $phrase)
 	{
+		// alter query based on config
+				
+		if ( $this->config != null )
+		{
+			$field = $this->config->swapForInternalField($field);
+			$phrase = $this->alterQuery( $phrase, $field );
+		}		
+		
 		$term = new Xerxes_Model_Search_QueryTerm($id, $boolean, $field, $relation, $phrase);
 		array_push($this->query_list , $term);
 	}
@@ -373,7 +384,7 @@ class Xerxes_Model_Search_Query
 				$arrTerm["query"] = $value;
 				$arrTerm["field"] = $this->request->getProperty("field$id");
 				
-				// boolean only counts if this is not the first quert term
+				// boolean only counts if this is not the first query term
 				
 				if ( count($arrFinal) > 0 )
 				{
@@ -405,17 +416,44 @@ class Xerxes_Model_Search_Query
 	}
 	
 	/**
-	 * Swap the supplied field identifiers with the internal field name
-	 * as defined by the search engines config
+	 * Change the case or add truncation to a search based on config
+	 * 
+	 * @param string $phrase		the search phrase
+	 * @param string $field			field to search on
+	 * 
+	 * @return string 				altereted phrase, or original as supplied if field has no definitions
 	 */
-	
-	public function swapForInternalFields(Xerxes_Model_Search_Config $config )
+
+	protected function alterQuery($phrase, $field)
 	{
-		for ( $x = 0; $x < count($this->query_list); $x++ )
+		$phrase = trim($phrase);
+		
+		$case = $this->config->getFieldAttribute($field, "case");
+		$trunc = $this->config->getFieldAttribute($field, "truncate");
+
+		switch($case)
 		{
-			$term = $this->query_list[$x];
-			$term->field = $config->swapForInternalField($term->field);
-			$this->query_list[$x] = $term;
+			case "upper":
+				$phrase = strtoupper($phrase);
+				break;
+			case "lower":
+				$phrase = strtolower($phrase);
+				break;			
 		}
+
+		switch($trunc)
+		{
+			case "left":
+				$phrase = "*" . $phrase;
+				break;
+			case "right":
+				$phrase = $phrase . "*";
+				break;
+			case "both":
+				$phrase = "*" . $phrase . "*";
+				break;	
+		}
+		
+		return $phrase;
 	}
 }
