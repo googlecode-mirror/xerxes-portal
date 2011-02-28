@@ -267,11 +267,11 @@ abstract class Xerxes_Model_Search_Config extends Xerxes_Framework_Registry
 	 * @return array
 	 */
 	
-	protected function sortOptions()
+	public function sortOptions()
 	{
 		$options = array();
 		
-		$config = $this->config->getConfig("sort_options");
+		$config = $this->getConfig("sort_options");
 		
 		if ( $config != null )
 		{

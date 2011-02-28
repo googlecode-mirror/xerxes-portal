@@ -20,7 +20,7 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 	/**
 	 * Constructor
 	 * 
-	 * @param string $server	address of the solr server
+	 * @param Xerxes_Model_Solr_Config $config
 	 */
 	
 	public function __construct( Xerxes_Model_Solr_Config $config )
@@ -49,7 +49,7 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 	{
 		// create the url
 		
-		$this->url = $this->prepareSearchURL($search, 0, 0, null, false);
+		$this->url = $this->prepareSearchURL($search, 0, 0, "relevance", false);
 		
 		// get the results
 		
@@ -87,14 +87,21 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 	 * @return Xerxes_Model_Search_Results
 	 */	
 	
-	public function searchRetrieve( Xerxes_Model_Search_Query $search, $start, $max = 10, $sort = null )
+	public function searchRetrieve( Xerxes_Model_Search_Query $search, $start = 1, $max = 10, $sort )
 	{
 		// max
 		
-		if ( $max == null || $max < 1 )
+		if ( $max == "" || $max < 1 )
 		{
-			throw new Exception("param 3 (max) must be a possitive integefer");
+			throw new Exception("param 3 (max) must be a possitive integer");
 		}
+		
+		// sort
+
+		if ( $sort == "" )
+		{
+			throw new Exception("param 4 (sort) must not be null");
+		}		
 		
 		// create the url
 		
@@ -153,13 +160,6 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 	{
 		
 		### defaults
-		
-		// sort
-		
-		if ( $sort == null )
-		{
-			$sort = $this->config->getConfig("SORT_ORDER_PRIMARY", false, $this->sort);
-		}
 		
 		$sort = $this->config->swapForInternalSort($sort);
 		

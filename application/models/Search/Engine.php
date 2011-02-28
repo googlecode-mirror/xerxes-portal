@@ -16,12 +16,12 @@ abstract class Xerxes_Model_Search_Engine
 	public $id; // identifier of this search engine
 	
 	protected $url; // url to the search service
-	protected $sort; // default sort order
-	
 	protected $registry; // xerxes application config
 	
 	/**
 	 * Constructor
+	 * 
+	 * @param Xerxes_Model_Solr_Config $config
 	 */
 	
 	public function __construct( Xerxes_Model_Search_Config $config )
@@ -33,10 +33,6 @@ abstract class Xerxes_Model_Search_Engine
 		// local config
 		
 		$this->config = $config;
-		
-		// defaults for the application
-				
-		$this->sort = $this->registry->getConfig("SORT_ORDER_PRIMARY", false, "relevance");
 	}
 	
 	/**
@@ -61,7 +57,7 @@ abstract class Xerxes_Model_Search_Engine
 	 * @return Xerxes_Model_Search_ResultSet
 	 */
 	
-	abstract function searchRetrieve( Xerxes_Model_Search_Query $search, $start, $max = null, $sort = null );
+	abstract function searchRetrieve( Xerxes_Model_Search_Query $search, $start = 1, $max = 10, $sort );
 	
 	/**
 	 * Return the URL sent ot the web service
