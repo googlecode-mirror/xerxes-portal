@@ -18,29 +18,29 @@ class Xerxes_Framework_FrontController
 	 */
 	
 	public static function execute()
-	{		
-		// initialize the configuration setting (Registry), 
-		// command-view mapping (ControllerMap), and
-		// language translation (Languages) objects 
+	{
+		// registry
 		
-		$objRegistry = Xerxes_Framework_Registry::getInstance();
-		$objControllerMap = Xerxes_Framework_ControllerMap::getInstance();
+		$registry = Xerxes_Framework_Registry::getInstance();
+		
+		// controller map
+		
+		$controller_map = Xerxes_Framework_ControllerMap::getInstance();
 			
 		// set the version number, for interface or other places
 		
-		$objRegistry->setConfig("XERXES_VERSION", $objControllerMap->getVersion(), true);
+		$registry->setConfig("XERXES_VERSION", $controller_map->getVersion(), true);
 		
-		// dynamically set the web path, if config says so, 
-		// doesn't work on all webserver/php set-ups, so an 
-		// explicit web path from config is preferred
+		// dynamically set the web path, if config says so, doesn't work on all webserver/php 
+		// set-ups, so an explicit web path from config is preferred
 		
-		if ( $objRegistry->getConfig( "base_web_path", false ) == '{dynamic}' )
+		if ( $registry->getConfig( "base_web_path", false ) == '{dynamic}' )
 		{
 			if ( isset($_SERVER) )
 			{
 				$script_name = $_SERVER['SCRIPT_NAME'];
 				$script_name = str_replace("/index.php", "", $script_name);
-				$objRegistry->setConfig( "base_web_path", $script_name);
+				$registry->setConfig( "base_web_path", $script_name);
 			}
 		}
 		
@@ -48,8 +48,7 @@ class Xerxes_Framework_FrontController
 		// instances of xerxes on one server.  use base_path (preferably) or
 		// application_name config directives.
 		
-		$path_key = preg_replace( '/\W/', '_', $objRegistry->getConfig( "base_web_path", false ) );
-		
+		$path_key = preg_replace( '/\W/', '_', $registry->getConfig( "base_web_path", false ) );
 		$session_name = "xerxessession_" . $path_key;
 		
 		session_name( $session_name );
@@ -57,18 +56,11 @@ class Xerxes_Framework_FrontController
 		
 		// processes the incoming request
 		
-		$objRequest = Xerxes_Framework_Request::getInstance(); 
+		$request = Xerxes_Framework_Request::getInstance();
 		
-		// utility classes
+		// set-up the response
 		
-		// assists with basic paging/navigation elements for the view
-		$objPage = new Xerxes_Framework_Page($objRequest, $objRegistry); 
-		
-		// language names
-		$objLanguage = Xerxes_Framework_Languages::getInstance();
-		
-		// functions for special logging or handling of errors
-		$objError = new Xerxes_Framework_Error(); 
+		$response = Xerxes_Framework_Response::getInstance();
 		
 		// we'll put the remaining code in a try-catch block in order to show friendly error page
 		// for any uncaught exceptions
@@ -79,7 +71,7 @@ class Xerxes_Framework_FrontController
 			#  DISPLAY ERRORS  #
 			####################
 			
-			if ( $objRegistry->getConfig( "DISPLAY_ERRORS" ) == true )
+			if ( $registry->getConfig( "DISPLAY_ERRORS" ) == true )
 			{
 				error_reporting( E_ALL );
 				ini_set( 'display_errors', '1' );
@@ -91,13 +83,16 @@ class Xerxes_Framework_FrontController
 			
 			// labels
 			
-			$objLabels = Xerxes_Framework_Labels::getInstance();
-			$lang = $objRequest->getProperty("lang");
-			$objLabels->init($lang)	;		
-			
+			$lang = $request->getParam("lang");
+			$labels = Xerxes_Framework_Labels::getInstance($lang);
+
 			// make sure application_name is passthrough, and has a value.
 
-			$objRegistry->setConfig( "application_name", $objRegistry->getConfig( "APPLICATION_NAME", false, "Xerxes", $lang ), true );
+			$registry->setConfig( 
+				"application_name", 
+				$registry->getConfig( "APPLICATION_NAME", false, "Xerxes", $lang ), 
+				true 
+			);
 			
 			####################
 			#     SET PATHS    #
@@ -110,14 +105,14 @@ class Xerxes_Framework_FrontController
 			// but only if configured for this, since client can spoof the header 
 			// if xerxes is not, in fact, behind a reverse proxy
 			
-			if ( $objRegistry->getConfig("REVERSE_PROXY", false, false ) == true )
+			if ( $registry->getConfig("REVERSE_PROXY", false, false ) == true )
 			{
-				$forward_host = $objRequest->getServer('HTTP_X_FORWARDED_HOST');
-				$forward_address = $objRequest->getServer('HTTP_X_FORWARDED_FOR');
+				$forward_host = $request->getServer('HTTP_X_FORWARDED_HOST');
+				$forward_address = $request->getServer('HTTP_X_FORWARDED_FOR');
 				
 				if ( $forward_host != "" )
 				{
-					$objRequest->setServer('SERVER_NAME', $forward_host);
+					$request->setServer('SERVER_NAME', $forward_host);
 				}
 				
 				// last ip address is the user's
@@ -125,7 +120,7 @@ class Xerxes_Framework_FrontController
 				if ( $forward_address != "" )
 				{
 					$arrIP = explode(",", $forward_address);
-					$objRequest->setServer('REMOTE_ADDR', trim(array_pop($arrIP)));
+					$request->setServer('REMOTE_ADDR', trim(array_pop($arrIP)));
 				}		
 			}
 			
@@ -142,12 +137,12 @@ class Xerxes_Framework_FrontController
 			// there in case something goes horribly wrong and we need to set the
 			// web path for proper display of a (friendly) error page 
 			
-			$base_path = $objRegistry->getConfig( 'BASE_WEB_PATH', false, "" );
-			$this_server_name = $objRequest->getServer( 'SERVER_NAME' );
+			$base_path = $registry->getConfig( 'BASE_WEB_PATH', false, "" );
+			$this_server_name = $request->getServer( 'SERVER_NAME' );
 			
 			// check for a non-standard port
 						
-			$port = $objRequest->getServer( 'SERVER_PORT' );
+			$port = $request->getServer( 'SERVER_PORT' );
 			
 			if ( $port == 80 || $port == 443 )
 			{
@@ -160,7 +155,7 @@ class Xerxes_Framework_FrontController
 			
 			$protocol = "http://";
 			
-			if ( $objRequest->getServer("HTTPS") )
+			if ( $request->getServer("HTTPS") )
 			{
 				$protocol = "https://";
 			}
@@ -169,9 +164,9 @@ class Xerxes_Framework_FrontController
 			
 			// register these values
 			
-			$objRegistry->setConfig( "SERVER_URL", $web );
-			$objRegistry->setConfig( "APP_DIRECTORY", $working_dir );
-			$objRegistry->setConfig( "BASE_URL", $web . $base_path , true );
+			$registry->setConfig("SERVER_URL", $web);
+			$registry->setConfig("APP_DIRECTORY", $working_dir);
+			$registry->setConfig("BASE_URL", $web . $base_path , true);
 
 			####################
 			#   INSTRUCTIONS   #
@@ -180,160 +175,60 @@ class Xerxes_Framework_FrontController
 			// ControllerMap contains instructions for commands and views
 			// based on the url parameters 'base' and 'action'
 			
-			$strBase = $objRequest->getProperty( "base" );
-			$strAction = $objRequest->getProperty( "action" );
+			$base = $request->getParam("base");
+			$action = $request->getParam("action");
 			
-			$objControllerMap->setAction( $strBase, $strAction, $objRequest );
+			$controller_map->setAction( $base, $action, $request );
 			
 			####################
 			#  ACCESS CONTROL  #
 			####################
 			
-			// if this part of the application is restricted to a local ip range, or requires a named login, then the
-			// Restrict class will check the user's ip address or if they have logged in; failure stops the flow 
-			// and redirects user to a login page with the current request passed as 'return' paramater in the url
+			// if this part of the application is restricted to a local ip range, or 
+			// requires a named login, then the Restrict class will check the user's 
+			// ip address or if they have logged in; failure stops the flow and redirects 
+			// user to a login page with the current request passed as 'return' paramater 
+			// in the url
 
-			$objRestrict = new Xerxes_Framework_Restrict($objRequest);
+			$restrict = new Xerxes_Framework_Restrict();
 			
 			// command line scripts will ignore access rules
 
-			if ( $objRequest->isCommandLine() != true )
+			if ( $request->isCommandLine() != true )
 			{
-				if ( $objControllerMap->isRestricted() == true )
+				if ( $controller_map->isRestricted() == true )
 				{
-					if ( $objControllerMap->requiresLogin() == true )
+					if ( $controller_map->requiresLogin() == true )
 					{
 						// resource requires a valid named username
-						$objRestrict->checkLogin();
+						$restrict->checkLogin();
 					} 
 					else
 					{
 						// resource is resricted, but local ip range is okay
-						$objRestrict->checkIP();
+						$restrict->checkIP();
 					}
 				}
 				else
 				{
 					// go ahead and register local users, but don't prompt for login
-					$objRestrict->checkIP(false);
+					$restrict->checkIP(false);
 				}
 			}
 			
 			// if this action is set to only be run via the command line, in order to prevent
 			// web execution of potentially long-running tasks, then restrict it here
 			
-			if ( ! $objRequest->isCommandLine() && $objControllerMap->restrictToCLI() )
+			if ( ! $request->isCommandLine() && $controller_map->restrictToCLI() )
 			{
 				throw new Exception( "cannot run command from web" );
 			}
 
 			####################
-			#     INCLUDES     #
-			####################
-
-			// files and directories that have been set to be included by the config file
-			
-			foreach ( $objControllerMap->getIncludes() as $path_to_include )
-			{
-				self::registerClasses( $path_to_parent . "/$path_to_include" );
-			}
-			
-			####################
 			#       DATA       #
 			####################
 			
-			// set-up the data by defining the root element
-			
-			$strDocumentElement = $objControllerMap->getDocumentElement();
-			$objRequest->setDocumentElement( $strDocumentElement );
-			
-			// pass config values that should be made available to the XSLT
-			
-			$objRequest->addDocument( $objRegistry->publicXML() );
-			
-			// the data will be built-up by calling one or more command classes
-			// which will fetch their data based on other parameters supplied in
-			// the request; returning that data as xml to a master xml dom document
-			// inside the Xerxes_Framework_Request class, or in some cases specififying 
-			// a url to redirect the user out
-			
-			$commands = $objControllerMap->getCommands();
-			
-			foreach ( $commands as $arrCommand )
-			{
-				$strDirectory = $arrCommand[0]; // directory where the command class is located
-				$strNamespace = $arrCommand[1]; // prefix namespace of the command class
-				$strClassFile = $arrCommand[2]; // suffix name of the command class
-							
-				// directory where commands live
-				
-				$command_path = realpath("../commands/$strDirectory");
-				
-				// allow for a local override, even
-				
-				$local_command_path = "commands/$strDirectory";
-				
-				// echo "<h3>$strClassFile</h3>";
 
-				// first, include any parent class, assuming that the parent class will
-				// follow the naming convention of having the same name as the directory
-
-				$strParentClass = Xerxes_Framework_Parser::strtoupper( substr( $strDirectory, 0, 1 ) ) . substr( $strDirectory, 1 );
-				
-				if ( file_exists( "$local_command_path/$strParentClass.php" ) )
-				{
-					require_once ("$local_command_path/$strParentClass.php");
-				}
-				elseif ( file_exists( "$command_path/$strParentClass.php" ) )
-				{
-					require_once ("$command_path/$strParentClass.php");
-				}
-				
-				// if the specified command class exists in the distro or local commands folder, then
-				// instantiate an object and execute it
-
-				$strClass = $strNamespace . "_Command_" . $strClassFile;
-				
-				$local_command = file_exists( "$local_command_path/$strClassFile.php" );
-				
-				if ( file_exists( "$command_path/$strClassFile.php" ) || $local_command )
-				{
-					// if the instance has a local version, take it!
-					
-					if ( $local_command )
-					{
-						require_once ("$local_command_path/$strClassFile.php");
-					}
-					else
-					{
-						require_once ("$command_path/$strClassFile.php");
-					}
-					
-					// instantiate the command class and execute it, but only
-					// if it extends xerxes_framework_command
-
-					$objCommand = new $strClass( );
-					
-					if ( $objCommand instanceof Xerxes_Framework_Command )
-					{
-						$objCommand->execute( $objRequest, $objRegistry );
-					} 
-					else
-					{
-						throw new Exception( "command classes must be instance of Xerxes_Framework_Command" );
-					}
-				} 
-				else
-				{
-					// if no command but a view was specified, then go ahead and show the view
-					// minus any data, since the view is doin' its own thang
-					
-					if ( ! file_exists($objControllerMap->getView()) )
-					{
-						throw new Exception( "invalid command $strClass" );
-					}
-				}
-			}
 			
 			####################
 			#     COOKIES      #
@@ -341,10 +236,13 @@ class Xerxes_Framework_FrontController
 
 			// any cookies specified in the reuqest object? if so, set em now.
 
-			$cookieSetParams = $objRequest->cookieSetParams();
+			$cookieSetParams = $request->cookieSetParams();
+			
 			foreach ( $cookieSetParams as $cookieParams )
 			{
-				set_cookie( $cookieParams[0], $cookieParams[1], $cookieParams[2], $cookieParams[3], $cookieParams[4], $cookieParams[5] );
+				set_cookie( $cookieParams[0], $cookieParams[1], $cookieParams[2], $cookieParams[3], 
+					$cookieParams[4], $cookieParams[5] 
+				);
 			}
       
 			
@@ -356,17 +254,17 @@ class Xerxes_Framework_FrontController
 			// flow and redirect the user out, unless overridden by the noRedirect
 			// directive
 
-			if ( $objRequest->getRedirect() != null )
+			if ( $request->getRedirect() != null )
 			{
-				if ( $objRequest->getProperty( "noRedirect" ) == null )
+				if ( $request->getParam( "noRedirect" ) == null )
 				{
-					header( "Location: " . $objRequest->getRedirect() );
+					header( "Location: " . $request->getRedirect() );
 					exit();
 				}
 				else
 				{
 					// include in the resposne what the redirect would have been
-					$objRequest->setProperty( "redirect", $objRequest->getRedirect() );
+					$request->setProperty( "redirect", $request->getRedirect() );
 				}
 			}
 			
@@ -381,15 +279,15 @@ class Xerxes_Framework_FrontController
 			// defined format set in action.xml
 			
 
-			$format = $objRequest->getProperty( "format" );
+			$format = $request->getParam( "format" );
 			
-			if ( $objControllerMap->getFormat( $format ) != null )
+			if ( $controller_map->getFormat( $format ) != null )
 			{
-				header( $objControllerMap->getFormat( $format ) );
+				header( $controller_map->getFormat( $format ) );
 			} 
 			else
 			{
-				self::setHeader( $format );
+				$response->setHeader( $format );
 			}
 			
 			// get the xml from the request object, but exclude any server information
@@ -402,8 +300,7 @@ class Xerxes_Framework_FrontController
 				$bolShowServer = false;
 			}
 			
-			$objXml = new DOMDocument( );
-			$objXml = $objRequest->toXML( $bolShowServer );
+			$xml = $response->toXML( $bolShowServer );
 			
 			// RAW XML DISPLAY
 			//
@@ -412,7 +309,7 @@ class Xerxes_Framework_FrontController
 
 			if ( $format == "xerxes" )
 			{
-				echo $objXml->saveXML();
+				echo $xml->saveXML();
 			} 
 			else
 			{
@@ -420,10 +317,9 @@ class Xerxes_Framework_FrontController
 				//
 				// ControllerMap contains instructions on what file to include for the view; typically
 				// this will be an xslt file, but could be a php file if the xslt does not
-				// provide enough flexibility; php page will inherit the xml dom document and
-				// can go from there
+				// provide enough flexibility
 				
-				if ( $objControllerMap->getView() == "" )
+				if ( $controller_map->getView() == "" )
 				{
 					// No view specified, no view will be executed. 
 					return;
@@ -431,11 +327,11 @@ class Xerxes_Framework_FrontController
 				
 				// PHP CODE
 				
-				if ( $objControllerMap->getViewType() != "xsl" && $objControllerMap->getViewType() != null )
+				if ( $controller_map->getViewType() != "xsl" && $controller_map->getViewType() != null )
 				{
-					$file = $objControllerMap->getView();
+					$file = $controller_map->getView();
 					
-					$distro_file = $objRegistry->getConfig( "PATH_PARENT_DIRECTORY", true ) . "/lib/$file";
+					$distro_file = $registry->getConfig( "PATH_PARENT_DIRECTORY", true ) . "/lib/$file";
 					
 					if ( file_exists( $file ) )
 					{
@@ -454,7 +350,7 @@ class Xerxes_Framework_FrontController
 				{
 					// XSLT CODE
 					
-					$output = $objPage->transform( $objXml, $objControllerMap->getView(), null );
+					$output = $objPage->transform( $xml, $controller_map->getView(), null );
 					
 					// EMBEDED JAVASCRIPT DISPLAY
 					//
@@ -486,7 +382,7 @@ class Xerxes_Framework_FrontController
 				
 				//remove the flash message, intended for one display only.
 				 
-				$objRequest->setSession( "flash_message", null );
+				$request->setSession( "flash_message", null );
 			}
 		} 
 
@@ -495,37 +391,8 @@ class Xerxes_Framework_FrontController
 
 		catch ( Exception $e )
 		{
-			$objError->handle( $e, $objRequest, $objRegistry );
-		}
-	}
-	
-	private function setHeader($format)
-	{
-		$arrFormats = array 
-		(
-			// basic types
-	
-			"javascript" => "Content-type: application/javascript", 
-			"json" => "Content-type: application/json", 
-			"pdf" => "Content-type: application/pdf", 
-			"text" => "Content-type: text/plain", 
-			"xml" => "Content-type: text/xml", 
-	
-			// complex types
-	
-			"atom" => "Content-type: text/xml", 
-			"bibliographic" => "Content-type: application/x-research-info-systems", 
-			"embed_html_js" => "Content-type: application/javascript", 
-			"ris" => "Content-type: text/plain", 
-			"rss" => "Content-type: text/xml", 
-			"xerxes" => "Content-type: text/xml", 
-			"text-file" => "Content-Disposition: attachment; Content-type: text/plain; filename=download.txt", 
-			"ris-file" => "Content-Disposition: attachment; Content-type: text/plain; filename=download.ris" 
-		);
-		
-		if ( array_key_exists( $format, $arrFormats ) )
-		{
-			header( $arrFormats[$format] . "; charset=UTF-8" );
+			$error_handler = new Xerxes_Framework_Error();
+			$error_handler->handle( $e );
 		}
 	}
 }
