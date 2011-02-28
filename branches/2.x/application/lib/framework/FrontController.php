@@ -48,7 +48,7 @@ class Xerxes_Framework_FrontController
 		// instances of xerxes on one server.  use base_path (preferably) or
 		// application_name config directives.
 		
-		$path_key = preg_replace( '/\W/', '_', $registry->getConfig( "base_web_path", false ) );
+		$path_key = preg_replace( '/\W/', '_', $registry->getConfig( "BASE_WEB_PATH", false ) );
 		$session_name = "xerxessession_" . $path_key;
 		
 		session_name( $session_name );
@@ -179,7 +179,7 @@ class Xerxes_Framework_FrontController
 			$action = $request->getParam("action");
 			
 			$controller_map->setAction( $base, $action, $request );
-			
+
 			####################
 			#  ACCESS CONTROL  #
 			####################
@@ -228,7 +228,15 @@ class Xerxes_Framework_FrontController
 			#       DATA       #
 			####################
 			
-
+			$controller_name = "Xerxes_Controller_" . strtoupper(substr($base, 0, 1)) . substr($base,1); 
+				
+			$controller = new $controller_name();
+			
+			$controller->$action();
+			
+			header('Content-type: text/xml');
+			echo $response->toXML()->saveXML();
+			
 			
 			####################
 			#     COOKIES      #
@@ -245,7 +253,6 @@ class Xerxes_Framework_FrontController
 				);
 			}
       
-			
 			####################
 			#     REDIRECT     #
 			####################
@@ -254,136 +261,23 @@ class Xerxes_Framework_FrontController
 			// flow and redirect the user out, unless overridden by the noRedirect
 			// directive
 
-			if ( $request->getRedirect() != null )
+			if ( $response->getRedirect() != null )
 			{
 				if ( $request->getParam( "noRedirect" ) == null )
 				{
-					header( "Location: " . $request->getRedirect() );
+					header( "Location: " . $response->getRedirect() );
 					exit();
 				}
 				else
 				{
 					// include in the resposne what the redirect would have been
-					$request->setProperty( "redirect", $request->getRedirect() );
+					$request->setProperty( "redirect", $response->getRedirect() );
 				}
 			}
-			
-			####################
-			#       VIEW       #
-			####################
-
-			// SET THE HTTP HEADER
-			//
-			// we'll set the content-type, and potentially other header elements, based on the paramater 'format';
-			// format must correspond to one of the pre-defined format content-types in setHeader() or can be a user-
-			// defined format set in action.xml
-			
-
-			$format = $request->getParam( "format" );
-			
-			if ( $controller_map->getFormat( $format ) != null )
-			{
-				header( $controller_map->getFormat( $format ) );
-			} 
-			else
-			{
-				$response->setHeader( $format );
-			}
-			
-			// get the xml from the request object, but exclude any server information
-			// from being included if format=source
-			
-			$bolShowServer = true;
-			
-			if ( $format == "xerxes" )
-			{
-				$bolShowServer = false;
-			}
-			
-			$xml = $response->toXML( $bolShowServer );
-			
-			// RAW XML DISPLAY
-			//
-			// you can append 'format=xerxes' to the querystring to have this controller spit back
-			// the response in plain xml, which can be useful in some cases, like maybe AJAX?
-
-			if ( $format == "xerxes" )
-			{
-				echo $xml->saveXML();
-			} 
-			else
-			{
-				// VIEW CODE
-				//
-				// ControllerMap contains instructions on what file to include for the view; typically
-				// this will be an xslt file, but could be a php file if the xslt does not
-				// provide enough flexibility
-				
-				if ( $controller_map->getView() == "" )
-				{
-					// No view specified, no view will be executed. 
-					return;
-				}
-				
-				// PHP CODE
-				
-				if ( $controller_map->getViewType() != "xsl" && $controller_map->getViewType() != null )
-				{
-					$file = $controller_map->getView();
-					
-					$distro_file = $registry->getConfig( "PATH_PARENT_DIRECTORY", true ) . "/lib/$file";
-					
-					if ( file_exists( $file ) )
-					{
-						require_once ($file);
-					} 
-					elseif ( file_exists( $distro_file ) )
-					{
-						require_once ($distro_file);
-					} 
-					else
-					{
-						throw new Exception( "Could not find non-xsl view specified to include: $file" );
-					}
-				} 
-				else
-				{
-					// XSLT CODE
-					
-					$output = $objPage->transform( $xml, $controller_map->getView(), null );
-					
-					// EMBEDED JAVASCRIPT DISPLAY
-					//
-					// you can append 'format=embed_html_js' to the querystring to output 
-					// the content as a javascript source document with everything wrapped in 
-					// document.write() statements
-
-					if ( $format == "embed_html_js" )
-					{
-						// first escape any single quotes
 						
-						$output = str_replace( "'", "\\'", $output );
-						
-						// now break the html into lines and output with document.write('')
-
-						$lines = explode( "\n", $output );
-						$new_lines = array ("// Javascript output. " );
-						
-						foreach ( $lines as $line )
-						{
-							array_push( $new_lines, "document.write('" . $line . "');" );
-						}
-						
-						$output = implode( "\n", $new_lines );
-					}
-					
-					echo $output;
-				}
-				
-				//remove the flash message, intended for one display only.
+			// remove any flash message, intended for one display only.
 				 
-				$request->setSession( "flash_message", null );
-			}
+			$request->setSession( "flash_message", null );
 		} 
 
 		// we'll catch all exceptions here, but the Xerxes_Error class can perform actions
@@ -391,6 +285,8 @@ class Xerxes_Framework_FrontController
 
 		catch ( Exception $e )
 		{
+			throw $e; exit;
+			
 			$error_handler = new Xerxes_Framework_Error();
 			$error_handler->handle( $e );
 		}

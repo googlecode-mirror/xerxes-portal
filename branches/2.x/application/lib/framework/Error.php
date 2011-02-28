@@ -49,7 +49,8 @@ class Xerxes_Framework_Error
 		{
 			// translate heading and message
 			
-			$labels = Xerxes_Framework_Labels::getInstance();
+			$lang = $request->getParam("lang");
+			$labels = Xerxes_Framework_Labels::getInstance($lang);
 
 			if ( $e instanceof Xerxes_Exception )
 			{

@@ -35,10 +35,8 @@ class Xerxes_Framework_Labels
 		
 	public function init($language)
 	{
-		$parent = Xerxes_Framework_FrontController::parentDirectory();
-		
 		$this->xml = new DOMDocument();
-		$this->xml->load("$parent/lib/xsl/labels/eng.xsl");
+		$this->xml->load( XERXES_APPLICATION_PATH . "views/xsl/labels/eng.xsl");
 		
 		if ( file_exists("xsl/labels/eng.xsl") )
 		{
@@ -54,7 +52,7 @@ class Xerxes_Framework_Labels
 		if ( $language != "" )
 		{
 			$language_xml = new DOMDocument();
-			$language_xml->load("$parent/lib/xsl/labels/$language.xsl");
+			$language_xml->load( XERXES_APPLICATION_PATH . "views/xsl/labels/$language.xsl");
 			
 			$import = $this->xml->importNode($language_xml->documentElement, true);
 			$this->xml->documentElement->appendChild($import);

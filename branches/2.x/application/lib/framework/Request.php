@@ -970,7 +970,9 @@ class Xerxes_Framework_Request
 		$objElement->setAttribute( "ip_addr", $authIP ? "true" : "false" );
 		$objAuth->appendChild( $objElement );
 		
-		// now each group
+		// now each group?
+		
+		/*
 		
 		$arrGroups = $objRegistry->userGroups();
 		
@@ -996,6 +998,8 @@ class Xerxes_Framework_Request
 				$objAuth->appendChild( $objElement );
 			}
 		}
+
+		*/
 		
 		// add the server global array, but only if the request
 		// asks for it, for security purposes

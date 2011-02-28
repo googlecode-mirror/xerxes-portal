@@ -16,6 +16,8 @@ class Xerxes_Framework_Response
 {
 	private $_data = array(); // data
 	private $_redirect = ""; // redirect url
+	private $_view = array(); // view file
+	private $_format = "html";
 	
 	private static $instance; // singleton pattern
 
@@ -184,7 +186,7 @@ class Xerxes_Framework_Response
 			}
 		}
 		
-		// assumed to be primitive type (string, bool, or int)		
+		// assumed to be primitive type (string, bool, or int, etc.)		
 		
 		else 
 		{
@@ -202,9 +204,45 @@ class Xerxes_Framework_Response
 		
 		return $xml;
 	}
-
-	public function setHeader($format)
+	
+	/**
+	 * Display the response by calling view
+	 */
+	
+	public function display()
 	{
+		$view = $this->_view[$this->_format]; // file location
+		
+		if (strstr($view, 'xsl') )
+		{
+			$xml = $this->toXML();
+			$html = Xerxes_Framework_Parser::transform($xml);
+			echo $html;
+		}
+	}
+	
+	/**
+	 * Set the view file to use
+	 * 
+	 * @param string $file			location to view file
+	 * @param string $format		[optional] only do this view when this format is requested 
+	 */
+	
+	public function setView($file, $format = "html")
+	{
+		$this->_view[$format] = $file;
+	}
+	
+	/**
+	 * Set the header type based on format
+	 * 
+	 * @param string $format		format id
+	 */
+
+	public function setFormat($format)
+	{
+		$this->_format = $format;
+		
 		$arrFormats = array 
 		(
 			// basic types
