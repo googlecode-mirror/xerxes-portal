@@ -14,14 +14,30 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 		$max = $this->request->getParam('max');
 		$sort = $this->request->getParam('sort');
 		
+		// max from config
+		
+		$this->max = $this->registry->getConfig("RECORDS_PER_PAGE", false, 10);
+		$this->max = $this->config->getConfig("MAX_RECORDS_PER_PAGE", false, $this->max);
+		
+		if ( $max == "" )
+		{
+			$max = $this->max;
+		}
+		
 		// search
 				
 		$results = $this->engine->searchRetrieve($this->query, $start, $max, $sort);
+		$total = $results->getTotal();
 		
 		// add links
 		
 		$this->addRecordLinks($results);
 		$this->addFacetLinks($results);
+		
+		// summary and paging elements
+		
+		$results->summary = $this->summary($total, $start, $max);
+		$results->pager = $this->pager($total, $start, $max);
 		
 		// response
 		
@@ -48,13 +64,18 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 	 *
 	 * @param int $total 		total # of hits for query
 	 * @param int $start 		start value for the page
-	 * @param int $max 		maximum number of results to show
+	 * @param int $max 			maximum number of results to show
 	 *
 	 * @return array or null	summary of page results 
 	 */
 	
 	public function summary( $total, $start, $max )
-	{	
+	{
+		if ( $total < 1 )
+		{
+			return null;
+		}
+		
 		if ( $start == 0 )
 		{
 			$start = 1;
@@ -72,31 +93,29 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 			$stop = $total;
 		}
 		
-		if ( $total > 0 )
-		{
-			return array ( 
-				"range" => "$start-$stop",
-				"total" => number_format( $total )
-			);
-		}
-		else
-		{
-			return null;
-		}
+		return array ( 
+			"range" => "$start-$stop",
+			"total" => number_format( $total )
+		);
 	}
 	
 	/**
 	 * Paging element
 	 * 
-	 * @param int $start
-	 * @param int $total
-	 * @param int $max
+	 * @param int $total 		total # of hits for query
+	 * @param int $start 		start value for the page
+	 * @param int $max 			maximum number of results to show
 	 * 
 	 * @return DOMDocument formatted paging navigation
 	 */
 	
-	public function pager( $start, $total, $max )
+	public function pager( $total, $start, $max )
 	{
+		if ( $total < 1 )
+		{
+			return null;
+		}
+		
 		$objXml = new DOMDocument( );
 		$objXml->loadXML( "<pager />" );
 		

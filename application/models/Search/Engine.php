@@ -16,7 +16,6 @@ abstract class Xerxes_Model_Search_Engine
 	public $id; // identifier of this search engine
 	
 	protected $url; // url to the search service
-	protected $max = 10; // max records per page
 	protected $sort; // default sort order
 	
 	protected $registry; // xerxes application config
@@ -37,7 +36,6 @@ abstract class Xerxes_Model_Search_Engine
 		
 		// defaults for the application
 				
-		$this->max = $this->registry->getConfig("RECORDS_PER_PAGE", false, 10);
 		$this->sort = $this->registry->getConfig("SORT_ORDER_PRIMARY", false, "relevance");
 	}
 	
