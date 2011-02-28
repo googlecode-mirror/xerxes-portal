@@ -5,6 +5,8 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 	protected $config;
 	protected $query;
 	protected $engine;
+	protected $max;
+	protected $sort;
 	
 	public function results()
 	{
@@ -14,15 +16,23 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 		$max = $this->request->getParam('max');
 		$sort = $this->request->getParam('sort');
 		
-		// max from config
+		// defaults
 		
 		$this->max = $this->registry->getConfig("RECORDS_PER_PAGE", false, 10);
-		$this->max = $this->config->getConfig("MAX_RECORDS_PER_PAGE", false, $this->max);
+		$this->max = $this->config->getConfig("RECORDS_PER_PAGE", false, $this->max);
 		
 		if ( $max == "" )
 		{
 			$max = $this->max;
 		}
+		
+		$this->sort = $this->registry->getConfig("SORT_ORDER_PRIMARY", false, "relevance");
+		$this->sort = $this->config->getConfig("SORT_ORDER_PRIMARY", false, $this->sort);
+		
+		if ( $sort == "" )
+		{
+			$sort = $this->sort;
+		}		
 		
 		// search
 				
@@ -34,10 +44,11 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 		$this->addRecordLinks($results);
 		$this->addFacetLinks($results);
 		
-		// summary and paging elements
+		// summary, sort & paging elements
 		
 		$results->summary = $this->summary($total, $start, $max);
 		$results->pager = $this->pager($total, $start, $max);
+		$results->sort_display = $this->sortDisplay($sort);
 		
 		// response
 		
@@ -168,7 +179,7 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 				$objPage = $objXml->createElement( "page", "1" );
 				
 				$params = $this->currentParams();
-				$params["startRecord"] = 1;
+				$params["start"] = 1;
 				
 				$link = $this->request->url_for( $params );
 				
@@ -194,7 +205,7 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 						$objPage = $objXml->createElement( "page", $page_number );
 						
 						$params = $this->currentParams();
-						$params["startRecord"] = $base_record;
+						$params["start"] = $base_record;
 						
 						$link = $this->request->url_for( $params );
 						
@@ -215,7 +226,7 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 				$objPage = $objXml->createElement( "page", "" ); // element to hold the text_results_next label
 				
 				$params = $this->currentParams();
-				$params["startRecord"] =  $next;
+				$params["start"] =  $next;
 				
 				$link = $this->request->url_for( $params );
 				
@@ -233,49 +244,43 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 	 *
 	 * @param string $strSortQuery		initial page and querystring values
 	 * @param string $strSortKeys		selected sort value
-	 * @param array $arrOptions		list of sort options and values
+	 * @param array $arrOptions			list of sort options and values
 	 *
 	 * @return DOMDocument 			sort navigation
 	 */
 	
-	public function sortDisplay( $strSortQuery, $strSortKeys, $arrOptions )
+	public function sortDisplay($sort)
 	{
-		$objXml = new DOMDocument();
-		$objXml->loadXML( "<sort_display />" );
+		$sort_options = $this->config->sortOptions();
 		
-		$strBase = "";
-		
-		if ( strstr( $strSortQuery, "?" ) )
-		{
-			$strBase = "$strSortQuery&sortKeys";
-		} 
-		else
-		{
-			$strBase = "$strSortQuery?sortKeys";
-		}
+		$xml = new DOMDocument();
+		$xml->loadXML( "<sort_display />" );
 		
 		$x = 1;
 		
-		foreach ( $arrOptions as $key => $value )
+		foreach ( $sort_options as $key => $value )
 		{
-			if ( $key == $strSortKeys )
+			if ( $key == $sort )
 			{
-				$objHere = $objXml->createElement( "option", $value );
-				$objHere->setAttribute( "active", "true" );
-				$objXml->documentElement->appendChild( $objHere );
+				$here = $xml->createElement( "option", $value );
+				$here->setAttribute( "active", "true" );
+				$xml->documentElement->appendChild( $here );
 			} 
 			else
 			{
-				$objHere = $objXml->createElement( "option", $value );
-				$objHere->setAttribute( "active", "false" );
-				$objHere->setAttribute( "link", Xerxes_Framework_Parser::escapeXml( "$strBase=$key" ) );
-				$objXml->documentElement->appendChild( $objHere );
+				$params = $this->sortLinkParams();
+				$params["sort"] = $key;
+				
+				$here = $xml->createElement( "option", $value );
+				$here->setAttribute( "active", "false" );
+				$here->setAttribute( "link", $this->request->url_for($params) );
+				$xml->documentElement->appendChild( $here );
 			}
 			
-			$x ++;
+			$x++;
 		}
 		
-		return $objXml;
+		return $xml;
 	}
 	
 	
@@ -452,7 +457,7 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 		$params = $this->query->getAllSearchParams();
 		$params["base"] = $this->request->getProperty("base");
 		$params["action"] = $this->request->getProperty("action");
-		$params["sortKeys"] = $this->request->getProperty("sortKeys");
+		$params["sort"] = $this->request->getProperty("sort");
 		
 		return $params;
 	}	
@@ -493,7 +498,7 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 		// remove the current sort, since we'll add the new
 		// sort explicitly to the url
 		
-		unset($params["sortKeys"]);
+		unset($params["sort"]);
 		
 		return $params;
 	}
