@@ -84,6 +84,7 @@ class Xerxes_Model_Search_Result
 				$records = array();
 				
 				$objDocument = new DOMDocument();
+				$objDocument->recover = true;
 				$objDocument->loadXML($xml);				
 
 				$objXPath = new DOMXPath($objDocument);
@@ -134,7 +135,7 @@ class Xerxes_Model_Search_Result
 	 * Fetch item and holding records from an ILS for this record
 	 */
 	
-	public function fetchHoldings()
+	public function addHoldings()
 	{
 		$xerxes_record = $this->getXerxesRecord();
 		
@@ -152,7 +153,7 @@ class Xerxes_Model_Search_Result
 		// get the data
 		
 		$url .= "?action=status&id=" . urlencode($id);
-		$data = Xerxes_Framework_Parser::request($url, 10);
+		$data = Xerxes_Framework_Parser::request($url, 5);
 		
 		// echo $url; exit;
 		
@@ -214,6 +215,34 @@ class Xerxes_Model_Search_Result
 		$this->holdings = $holdings;
 		
 		return null;
+	}
+	
+	/**
+	 * Add reviews from Good Reads
+	 */
+	
+	public function addReviews()
+	{
+		$xerxes_record = $this->getXerxesRecord();
+		$isbn = $xerxes_record->getISBN();
+		
+		$key = $this->registry->getConfig("GOOD_READS_API_KEY", false );
+		
+		if ( $key != null )
+		{
+			$url = "http://www.goodreads.com/book/isbn?isbn=$isbn&key=$key";
+			
+			$data = Xerxes_Framework_Parser::request($url, 5);
+			
+			if ( $data != "" )
+			{
+				$xml = new DOMDocument();
+				$xml->recover = true;
+				$xml->loadXML($data);
+				
+				$this->reviews = $xml;
+			}
+		}
 	}
 	
 	/**
