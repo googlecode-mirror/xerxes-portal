@@ -23,11 +23,17 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 	 * @param string $server	address of the solr server
 	 */
 	
-	public function __construct($server)
+	public function __construct( Xerxes_Model_Solr_Config $config )
 	{
 		parent::__construct();
+
+		// local config
 		
-		$this->server = $server;
+		$this->config = $config;
+
+		// server address
+		
+		$this->server = $this->config->getConfig('solr', true);
 		
 		if ( substr($this->server,-1,1) != "/" )
 		{
@@ -36,10 +42,6 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 		
 		$this->server .= "select/?version=2.2";
 
-		// local config
-		
-		$this->config = Xerxes_Model_Solr_Config::getInstance();
-		
 		// change max, if set
 		
 		$this->max = $this->config->getConfig("MAX_RECORDS_PER_PAGE", false, $this->max);	
@@ -113,9 +115,17 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 		$query = ""; // query, these are url params, not just the query itself
 		$type = ""; // dismax or standard
 	
+		$terms = $search->getQueryTerms();
+		
+		// check if a query was supplied
+		
+		if ( count($terms) == 0 )
+		{
+			throw new Exception("No search terms supplied");
+		}
+		
 		// get just the first term for now
 		
-		$terms = $search->getQueryTerms();
 		$term = $terms[0];
 		
 		// decide between basic and dismax handler
@@ -367,6 +377,8 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 						{
 					        $marc = preg_replace('/#31;/', "\x1F", $marc);
 					        $marc = preg_replace('/#30;/', "\x1E", $marc);
+					        
+					        require_once 'File/MARC.php'; // from pear
 					        
 					        $marc_file = new File_MARC($marc, File_MARC::SOURCE_STRING);
 					        $marc_record = $marc_file->next();
