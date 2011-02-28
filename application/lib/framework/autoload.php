@@ -6,7 +6,14 @@ spl_autoload_register('xerxes_autoload');
 
 // and path to application root
 
-set_include_path(get_include_path() . PATH_SEPARATOR . realpath("../"));
+$xerxes_application_path = realpath(__FILE__);
+$xerxes_application_path = explode(DIRECTORY_SEPARATOR, $xerxes_application_path);
+array_pop($xerxes_application_path);
+array_pop($xerxes_application_path);
+array_pop($xerxes_application_path);
+$xerxes_application_path = implode(DIRECTORY_SEPARATOR, $xerxes_application_path);
+
+set_include_path( get_include_path() . PATH_SEPARATOR . $xerxes_application_path );
 
 /**
  * The global namespace array
