@@ -526,7 +526,7 @@ class Xerxes_Framework_Request
 	 * @return array
 	 */
 	
-	protected function getParams( $regex = "", $shrink = false, $shrink_del = "," )
+	public function getParams( $regex = "", $shrink = false, $shrink_del = "," )
 	{
 		$arrFinal = array();
 		

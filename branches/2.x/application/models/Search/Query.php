@@ -269,7 +269,7 @@ class Xerxes_Model_Search_Query
 	{
 		if ( $this->limit_fields_regex != "" )
 		{
-			return $this->request->getProperties($this->limit_fields_regex);
+			return $this->request->getParams($this->limit_fields_regex);
 		}
 		else
 		{
