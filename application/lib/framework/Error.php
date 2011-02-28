@@ -17,9 +17,12 @@ class Xerxes_Framework_Error
 	 * Do something with uncaught errors
 	 */
 	
-	public static function handle($e, Xerxes_Framework_Request $objRequest, Xerxes_Framework_Registry $objRegistry)
+	public static function handle( $e )
 	{
-		if ( $objRegistry->getConfig( "DISPLAY_ERRORS", false, false ) )
+		$request = Xerxes_Framework_Request::getInstance();
+		$registry = Xerxes_Framework_Registry::getInstance();
+		
+		if ( $registry->getConfig( "DISPLAY_ERRORS", false, false ) )
 		{
 			throw $e;
 		}
@@ -38,7 +41,7 @@ class Xerxes_Framework_Error
 		// if this is the command line, just rethrow the error so we can see it; might
 		// make this a little better formatted in the future
 
-		if ( $objRequest->isCommandLine() )
+		if ( $request->isCommandLine() )
 		{
 			throw $e;
 		} 
@@ -95,19 +98,19 @@ class Xerxes_Framework_Error
 			
 			// make sure we're showing the main error file
 			
-			$objRegistry->setConfig("XSL_PARENT_DIRECTORY", null);
+			$registry->setConfig("XSL_PARENT_DIRECTORY", null);
 			
 			
 			
 			// set the base url for the error.xsl file's benefit; don't want to assume that 
 			// the earlier code to this effect was executed before an exception, so this is redundant
 			
-			$base_path = $objRegistry->getConfig( 'BASE_WEB_PATH', false, "" );
-			$this_server_name = $objRequest->getServer( 'SERVER_NAME' );
+			$base_path = $registry->getConfig( 'BASE_WEB_PATH', false, "" );
+			$this_server_name = $request->getServer( 'SERVER_NAME' );
 			
 			// check for a non-standard port
 						
-			$port = $objRequest->getServer( 'SERVER_PORT' );
+			$port = $request->getServer( 'SERVER_PORT' );
 			
 			if ( $port == 80 || $port == 443 )
 			{
@@ -120,7 +123,7 @@ class Xerxes_Framework_Error
 			
 			$protocol = "http://";
 			
-			if ( $objRequest->getServer("HTTPS") )
+			if ( $request->getServer("HTTPS") )
 			{
 				$protocol = "https://";
 			}
@@ -138,7 +141,7 @@ class Xerxes_Framework_Error
 				$objError->documentElement->appendChild( $excluded_xml );
 				foreach ( $e->deniedDatabases() as $db )
 				{
-					$element = Xerxes_Helper::databaseToNodeset( $db, $objRequest, $objRegistry );
+					$element = Xerxes_Helper::databaseToNodeset( $db, $request, $registry );
 					$element = $objError->importNode( $element, true );
 					$excluded_xml->appendChild( $element );
 				}
@@ -147,7 +150,7 @@ class Xerxes_Framework_Error
 			// add in the request object's stuff
 			
 
-			$request_xml = $objRequest->toXML();
+			$request_xml = $request->toXML();
 			
 			$imported = $objError->importNode( $request_xml->documentElement, true );
 			foreach ( $imported->childNodes as $childNode )
@@ -155,7 +158,7 @@ class Xerxes_Framework_Error
 				$objError->documentElement->appendChild( $childNode );
 			}
 			
-			if ( $objRequest->getProperty( "format" ) == "xerxes" )
+			if ( $request->getProperty( "format" ) == "xerxes" )
 			{
 				header( 'Content-type: text/xml' );
 				echo $objError->saveXML();

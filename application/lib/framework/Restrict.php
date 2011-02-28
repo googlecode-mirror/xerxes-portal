@@ -22,15 +22,14 @@ class Xerxes_Framework_Restrict
 	 * @param $objRequest request object
 	 */
 	
-	public function __construct(Xerxes_Framework_Request $objRequest)
+	public function __construct()
 	{
-		$objRegistry = Xerxes_Framework_Registry::getInstance();
-		
-		$this->request = $objRequest;
+		$registry = Xerxes_Framework_Registry::getInstance();
+		$this->request = Xerxes_Framework_Request::getInstance();
 		
 		$configAuthPage = $this->request->url_for( array ("base" => "authenticate", "action" => "login" ) );
 		
-		$this->ip_range = $objRegistry->getConfig( "LOCAL_IP_RANGE", false, null );
+		$this->ip_range = $registry->getConfig( "LOCAL_IP_RANGE", false, null );
 		
 		// if the return url has a querystring mark in it, then append
 		// return url to other params, otherwise it is sole param
@@ -185,5 +184,4 @@ class Xerxes_Framework_Restrict
 		
 		return $bolLocal;
 	}
-
 }

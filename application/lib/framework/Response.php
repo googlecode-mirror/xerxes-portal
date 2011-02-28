@@ -4,7 +4,7 @@
  * Response Object
  * 
  * @author David Walker
- * @copyright 2008 California State University
+ * @copyright 2011 California State University
  * @link http://xerxes.calstate.edu
  * @license http://www.gnu.org/licenses/
  * @version $Id$
@@ -19,9 +19,7 @@ class Xerxes_Framework_Response
 	
 	private static $instance; // singleton pattern
 
-	protected function __construct()
-	{
-	}
+	protected function __construct() { }
 	
 	/**
 	 * Get an instance of the file; Singleton to ensure correct data
@@ -203,5 +201,35 @@ class Xerxes_Framework_Response
 		$xml->documentElement->appendChild($import);			
 		
 		return $xml;
+	}
+
+	public function setHeader($format)
+	{
+		$arrFormats = array 
+		(
+			// basic types
+	
+			"javascript" => "Content-type: application/javascript", 
+			"json" => "Content-type: application/json", 
+			"pdf" => "Content-type: application/pdf", 
+			"text" => "Content-type: text/plain", 
+			"xml" => "Content-type: text/xml", 
+	
+			// complex types
+	
+			"atom" => "Content-type: text/xml", 
+			"bibliographic" => "Content-type: application/x-research-info-systems", 
+			"embed_html_js" => "Content-type: application/javascript", 
+			"ris" => "Content-type: text/plain", 
+			"rss" => "Content-type: text/xml", 
+			"xerxes" => "Content-type: text/xml", 
+			"text-file" => "Content-Disposition: attachment; Content-type: text/plain; filename=download.txt", 
+			"ris-file" => "Content-Disposition: attachment; Content-type: text/plain; filename=download.ris" 
+		);
+		
+		if ( array_key_exists( $format, $arrFormats ) )
+		{
+			header( $arrFormats[$format] . "; charset=UTF-8" );
+		}
 	}
 }

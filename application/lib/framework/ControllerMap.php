@@ -47,6 +47,8 @@ class Xerxes_Framework_ControllerMap
 		if ( empty( self::$instance) )
 		{
 			self::$instance = new Xerxes_Framework_ControllerMap();
+			$object = self::$instance;
+			$object->init();
 		}
 		
 		return self::$instance;

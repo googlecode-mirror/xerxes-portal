@@ -1,8 +1,7 @@
 <?php
 
 /**
- * Process parameter in the request, either from URL or command line, and store
- * XML produced by the command classes
+ * Process parameter in the request, either from HTTP or CLI
  * 
  * @author David Walker
  * @copyright 2008 California State University
@@ -10,11 +9,11 @@
  * @license http://www.gnu.org/licenses/
  * @version $Id$
  * @package Xerxes_Framework
- * @uses Xerxes_Framework_Parser
  */
 
 class Xerxes_Framework_Request
 {
+	private $init = false; // have we initialized
 	private $method = ""; // request method: GET, POST, COMMAND
 	private $arrParams = array(); // request paramaters
 	private $arrURI = array(); // just the uri (sans-cookie, hidden values) params
@@ -25,9 +24,7 @@ class Xerxes_Framework_Request
 	private $registry; // registry object
 	private static $instance; // singleton pattern
 	
-	protected function __construct()
-	{
-	}
+	protected function __construct() { }
 	
 	/**
 	 * Get an instance of the file; Singleton to ensure correct data
@@ -53,151 +50,158 @@ class Xerxes_Framework_Request
 	
 	public function init()
 	{
-		$this->registry = Xerxes_Framework_Registry::getInstance();
+		// only do this once
 		
-		$alias = $this->registry->getConfig("BASE_ALIASES");
-		
-		if ( $alias != null )
+		if ( $this->init == false ) 
 		{
-			$aliases = array();
+			$this->registry = Xerxes_Framework_Registry::getInstance();
+			
+			$alias = $this->registry->getConfig("BASE_ALIASES");
 			
 			if ( $alias != null )
 			{
-				foreach ( explode(";", $alias) as $part )
+				$aliases = array();
+				
+				if ( $alias != null )
 				{
-					$parts = explode("=", $part);
-					
-					if ( count($parts) == 2 )
+					foreach ( explode(";", $alias) as $part )
 					{
-						$aliases[$parts[0]] = $parts[1]; 
+						$parts = explode("=", $part);
+						
+						if ( count($parts) == 2 )
+						{
+							$aliases[$parts[0]] = $parts[1]; 
+						}
+					}
+				}			
+				
+				$this->aliases = $aliases;
+			}
+			
+			if ( array_key_exists( "REQUEST_METHOD", $_SERVER ) )
+			{
+				// request has come in from GET or POST
+				
+				$this->method = $_SERVER['REQUEST_METHOD'];
+				
+				// now extract remaining params in query string. 
+				
+				if ( $_SERVER['QUERY_STRING'] != "" )
+				{
+					// querystring can be delimited either with ampersand
+					// or semicolon
+					
+					$arrParams = preg_split( "/&|;/", $_SERVER['QUERY_STRING'] );
+					
+					foreach ( $arrParams as $strParam )
+					{
+						// split out key and value on equal sign
+						
+						$iEqual = strpos( $strParam, "=" );
+						
+						if ( $iEqual !== false )
+						{
+							$strKey = substr( $strParam, 0, $iEqual );
+							$strValue = substr( $strParam, $iEqual + 1 );
+							
+							$this->setParam( $strKey, urldecode( $strValue ) );
+						}
 					}
 				}
-			}			
-			
-			$this->aliases = $aliases;
-		}
-		
-		if ( array_key_exists( "REQUEST_METHOD", $_SERVER ) )
-		{
-			// request has come in from GET or POST
-			
-			$this->method = $_SERVER['REQUEST_METHOD'];
-			
-			// now extract remaining params in query string. 
-			
-			if ( $_SERVER['QUERY_STRING'] != "" )
-			{
-				// querystring can be delimited either with ampersand
-				// or semicolon
 				
-				$arrParams = preg_split( "/&|;/", $_SERVER['QUERY_STRING'] );
-				
-				foreach ( $arrParams as $strParam )
+				foreach ( $_POST as $key => $value )
 				{
-					// split out key and value on equal sign
-					
-					$iEqual = strpos( $strParam, "=" );
-					
-					if ( $iEqual !== false )
+					$this->setParam( $key, $value );
+				}
+				foreach ( $_COOKIE as $key => $value )
+				{
+					$this->setParam( $key, $value );
+				}
+							
+				// aliases: when base is explicitly in the url
+				
+				$this->swapAliases();
+							
+				// if pretty-urls is turned on, extract params from uri. 
+				
+				if ( $this->registry->getConfig( "REWRITE", false ) )
+				{
+					$this->extractParamsFromPath();
+				}
+				
+				// set mobile
+				
+				if ( $this->getSession('is_mobile') == null )
+				{
+					$this->setSession('is_mobile', (string) $this->isMobileDevice());
+				}
+				
+				// troubleshooting mobile
+				
+				if ( $this->getParam("is_mobile") != "" )
+				{
+					$this->setSession('is_mobile', $this->getParam("is_mobile"));
+				}
+			} 
+			else
+			{
+				// request has come in from the command line
+				
+				$this->method = "COMMAND";
+				
+				foreach ( $_SERVER['argv'] as $arg )
+				{
+					if ( strpos( $arg, "=" ) )
 					{
-						$strKey = substr( $strParam, 0, $iEqual );
-						$strValue = substr( $strParam, $iEqual + 1 );
-						
-						$this->setProperty( $strKey, urldecode( $strValue ) );
+						list ( $key, $val ) = explode( "=", $arg );
+						$this->setParam( $key, $val );
 					}
 				}
 			}
 			
-			foreach ( $_POST as $key => $value )
+			if ( isset($_SERVER) )
 			{
-				$this->setProperty( $key, $value );
-			}
-			foreach ( $_COOKIE as $key => $value )
-			{
-				$this->setProperty( $key, $value );
-			}
-						
-			// aliases: when base is explicitly in the url
-			
-			$this->swapAliases();
-						
-			// if pretty-urls is turned on, extract params from uri. 
-			
-			if ( $this->registry->getConfig( "REWRITE", false ) )
-			{
-				$this->extractParamsFromPath();
-			}
-			
-			// set mobile
-			
-			if ( $this->getSession('is_mobile') == null )
-			{
-				$this->setSession('is_mobile', (string) $this->isMobileDevice());
-			}
-			
-			// troubleshooting mobile
-			
-			if ( $this->getProperty("is_mobile") != "" )
-			{
-				$this->setSession('is_mobile', $this->getProperty("is_mobile"));
-			}
-		} 
-		else
-		{
-			// request has come in from the command line
-			
-			$this->method = "COMMAND";
-			
-			foreach ( $_SERVER['argv'] as $arg )
-			{
-				if ( strpos( $arg, "=" ) )
+				### IIS fixes
+				
+				// to make this consistent with apache
+				
+				if ( array_key_exists('HTTPS', $_SERVER) )
 				{
-					list ( $key, $val ) = explode( "=", $arg );
-					$this->setProperty( $key, $val );
+					if ( $_SERVER['HTTPS'] == "off" )
+					{
+						unset($_SERVER['HTTPS']);
+					}
 				}
-			}
-		}
-		
-		if ( isset($_SERVER) )
-		{
-			### IIS fixes
-			
-			// to make this consistent with apache
-			
-			if ( array_key_exists('HTTPS', $_SERVER) )
-			{
-				if ( $_SERVER['HTTPS'] == "off" )
+				
+				// since IIS doesn't hold value for request_uri
+				
+				if ( ! isset( $_SERVER['REQUEST_URI'] ) )
 				{
-					unset($_SERVER['HTTPS']);
+					if ( ! isset( $_SERVER['QUERY_STRING'] ) )
+					{
+						$_SERVER['REQUEST_URI'] = $_SERVER["SCRIPT_NAME"];
+					} 
+					else
+					{
+						$_SERVER['REQUEST_URI'] = $_SERVER["SCRIPT_NAME"] . '?' . $_SERVER['QUERY_STRING'];
+					}
 				}
 			}
 			
-			// since IIS doesn't hold value for request_uri
+			// just uri params
 			
-			if ( ! isset( $_SERVER['REQUEST_URI'] ) )
+			$this->arrURI = $this->arrParams;
+			$keys = array_keys($this->arrParams);
+				
+			foreach ( $keys as $key )
 			{
-				if ( ! isset( $_SERVER['QUERY_STRING'] ) )
+				if ( array_key_exists($key, $_COOKIE) )
 				{
-					$_SERVER['REQUEST_URI'] = $_SERVER["SCRIPT_NAME"];
-				} 
-				else
-				{
-					$_SERVER['REQUEST_URI'] = $_SERVER["SCRIPT_NAME"] . '?' . $_SERVER['QUERY_STRING'];
+					unset($this->arrURI[$key]);
 				}
 			}
-		}
-		
-		// just uri params
-		
-		$this->arrURI = $this->arrParams;
-		$keys = array_keys($this->arrParams);
 			
-		foreach ( $keys as $key )
-		{
-			if ( array_key_exists($key, $_COOKIE) )
-			{
-				unset($this->arrURI[$key]);
-			}
+			$this->init = truel
 		}		
 	}
 	
@@ -275,26 +279,37 @@ class Xerxes_Framework_Request
 		// they are extracted here
 		
 		$objMap = Xerxes_Framework_ControllerMap::getInstance()->path_map_obj();
-		$map = $objMap->indexToPropertyMap( $this->getProperty( "base" ), $this->getProperty( "action" ) );
+		$map = $objMap->indexToPropertyMap( $this->getParam( "base" ), $this->getParam( "action" ) );
 		
 		foreach ( $map as $index => $property )
 		{
 			$this->mapPathToProperty( $index + $x, $property );
 		}
 	}
+
+	/**
+	 * If alias supplied, swap controller name for alias
+	 */
 	
 	private function swapAliases()
 	{
 		foreach ( $this->aliases as $old => $alias )
 		{
-			if ( $this->getProperty("base") == $old )
+			if ( $this->getParam("base") == $old )
 			{
 				$this->arrParams["base"] = $alias;
 			}
 		}		
 	}
+
+	/**
+	 * Get the name of the controller given the supplied alias
+	 *
+	 * @param string $new 		the alias
+	 * @return string		the controller, or the alias if no controller matched
+	 */
 	
-	private function getAlias($new)
+	private function getAlias( $new )
 	{
 		foreach ( $this->aliases as $old => $alias )
 		{
@@ -364,18 +379,27 @@ class Xerxes_Framework_Request
 	/**
 	 * Maps and inserts the path elements into the request parameters
 	 *
-	 * @param int $path_index			the numbered path element
+	 * @param int $path_index		the numbered path element
 	 * @param string $property_name		the property name
 	 */
 	
-	public function mapPathToProperty($path_index, $property_name)
+	public function mapPathToProperty( $path_index, $property_name )
 	{
 		$path_elements = $this->pathElements();
 		
 		if ( array_key_exists( $path_index, $path_elements ) )
 		{
-			$this->setProperty( ( string ) $property_name, ( string ) $path_elements[$path_index] );
+			$this->setParam( ( string ) $property_name, ( string ) $path_elements[$path_index] );
 		}
+	}
+	
+	/**
+	* Alias of setParam
+	*/
+	
+	public function setProperty( $key, $value, $bolArray = false, $override = false )
+	{
+		$this->setParam)$key, $value, $bolArray, $override );
 	}
 	
 	/**
@@ -386,7 +410,7 @@ class Xerxes_Framework_Request
 	 * @param bool $bolArray	[optional] set to true will ensure property is set as array
 	 */
 	
-	public function setProperty($key, $value, $bolArray = false, $override = false)
+	public function setParam( $key, $value, $bolArray = false, $override = false )
 	{
 		if ( ! is_array($value) )
 		{
@@ -425,6 +449,15 @@ class Xerxes_Framework_Request
 	}
 	
 	/**
+	* Alias of getParam
+	*/
+	
+	public function getProperty( $key, $bolArray = false )
+	{
+		return $this->getParam($key, $bolArray);
+	}
+	
+	/**
 	 * Retrieve a value from the request parameters
 	 *
 	 * @param string $key		key that identify the value
@@ -432,7 +465,7 @@ class Xerxes_Framework_Request
 	 * @return mixed 			[string or array] value if available, otherwise null
 	 */
 	
-	public function getProperty($key, $bolArray = false)
+	public function getParam( $key, $bolArray = false )
 	{
 		if ( array_key_exists( $key, $this->arrParams ) )
 		{
@@ -460,16 +493,14 @@ class Xerxes_Framework_Request
 			return null;
 		}
 	}
-	
+
 	/**
-	 * Retrieve all request paramaters as array
-	 *
-	 * @return array
+	 * Alias of getAllParams
 	 */
 	
 	public function getAllProperties()
 	{
-		return $this->arrParams;
+		return $this->getParams();
 	}
 
 	/**
@@ -486,20 +517,24 @@ class Xerxes_Framework_Request
 	/**
 	 * Get a group of properties using regular expression
 	 * 
-	 * @param string $regex		regular expression for properties to get
-	 * @param bool $shrink		(optional) whether to collapse properties stored as array into simple element, default false
-	 * @param string $shrink_del (opptional) if $shrink is true, then separate multiple elements by this character, default comma
+	 * @param string $regex		(optional) regular expression for properties to get
+	 * @param bool $shrink		(optional) whether to collapse properties stored as 
+	 * 				array into simple element, default false
+	 * @param string $shrink_del 	(opptional) if $shrink is true, then separate multiple 
+	 *				elements by this character, default comma
 	 * 
 	 * @return array
-	 * */
+	 */
 	
-	public function getProperties($regex, $shrink = false, $shrink_del = ",")
+	protected function getParams( $regex = "", $shrink = false, $shrink_del = "," )
 	{
 		$arrFinal = array();
 		
+		// no filter supplied, so return all params
+		
 		if ( $regex == "")
 		{
-			throw new Exception("you must supply a regular expression for the properties to extract");
+			return $this->arrParams;
 		}
 		
 		foreach ( $this->getAllProperties() as $key => $value )
@@ -579,6 +614,13 @@ class Xerxes_Framework_Request
 			return null;
 		}
 	}
+
+	/**
+	 * Set a value in the $_SERVER global array
+	 *
+	 * @param string $key	server variable
+	 * @return mixed
+	 */
 	
 	public function setServer($key, $value)
 	{
@@ -589,7 +631,7 @@ class Xerxes_Framework_Request
 	 * Get a value stored in the session
 	 *
 	 * @param string $key	variable name
-	 * @return mixed		stored variable value
+	 * @return mixed
 	 */
 	
 	public function getSession($key)
@@ -604,6 +646,12 @@ class Xerxes_Framework_Request
 		
 		return null;
 	}
+
+	/**
+	 * Get all session variables
+	 *
+	 * @return array
+	 */
 	
 	public function getAllSession()
 	{
@@ -660,11 +708,17 @@ class Xerxes_Framework_Request
 	{
 		return $this->arrCookieSetParams;
 	}
-		
+	
 	/**
 	 * Take a url, and set a particular key/value in the url parameters.
 	 * Replace existing value if neccesary; works whether or not url
-	 * to begin with has a query string component. 
+	 * to begin with has a query string component.
+	 *
+	 * @param string $url		the url you are working on
+	 * @param string $key		the key of the pair
+	 * @param mixed $value		the value of the pair
+	 *
+	 * @return string		the new url
 	 */
 	
 	public static function setParamInUrl($url, $key, $value)
@@ -693,13 +747,16 @@ class Xerxes_Framework_Request
 	 * Generate a url for a given action. Used by commands to generate action
 	 * urls, rather than calculating manually. This method returns different
 	 * urls depending on whether rewrite is on in config. Will use
-	 * configured base_web_path if available, which is best.	
-	 * 
-	 * @param array $properties	Keys are xerxes request properties, values are 
-	 * the values. For an action url, "base" and "action" are required as keys.
+	 * configured base_web_path if available, which is best.
+	 *
 	 * Properties will be put in path or query string of url, if pretty-urls are turned on
 	 * in config.xml, as per action configuration in actions.xml.
-	 * @param boolean $full Optional, force full absolute url with hostname. 
+	 *
+	 * 
+	 * @param array $properties		keys are xerxes request properties, values are 
+	 * 					the values. For an action url, "base" and "action" are 
+	 *					required as keys.
+	 * @param boolean $full 		[optional] force full absolute url with hostname. 
 	 *
 	 * @return string url 
 	 */
@@ -728,7 +785,7 @@ class Xerxes_Framework_Request
 		// should we generate full absolute urls with hostname? indicated by a
 		// request property, set automatically by snippet embed controllers. 
 		
-		if ( $this->getProperty( "gen_full_urls" ) == 'true' || $full )
+		if ( $this->getParam( "gen_full_urls" ) == 'true' || $full )
 		{
 			$base_path = $this->registry->getConfig( 'BASE_URL', true ) . "/";
 			
@@ -754,9 +811,9 @@ class Xerxes_Framework_Request
 		// add in the the language element automatically, 
 		// unless it's been set explicitly in the url
 		
-		if ( $this->getProperty("lang") != "" && ! array_key_exists("lang", $properties) )
+		if ( $this->getParam("lang") != "" && ! array_key_exists("lang", $properties) )
 		{
-			$properties["lang"] = $this->getProperty("lang");
+			$properties["lang"] = $this->getParam("lang");
 		}
 		
 		if ( $this->registry->getConfig( 'REWRITE', false ) )
@@ -799,7 +856,7 @@ class Xerxes_Framework_Request
 				}
 			}
 			
-		    // need to resort since we may have added indexes in a weird order. Silly PHP. 
+			// need to resort since we may have added indexes in a weird order. Silly PHP. 
 			
 			ksort($extra_path_arr); 	
 			$extra_path = implode( "/", $extra_path_arr );
@@ -903,7 +960,11 @@ class Xerxes_Framework_Request
 		// ip recognized?
 		
 		$authUser = Xerxes_Framework_Restrict::isAuthenticatedUser( $this );
-		$authIP = Xerxes_Framework_Restrict::isIpAddrInRanges( $this->getServer( 'REMOTE_ADDR' ), $objRegistry->getConfig( "local_ip_range" ) );
+		
+		$authIP = Xerxes_Framework_Restrict::isIpAddrInRanges( $this->getServer( 'REMOTE_ADDR' ), 
+			$objRegistry->getConfig( "local_ip_range" ) 
+		);
+		
 		$objElement = $objXml->createElement( "affiliated", ($authUser || $authIP) ? "true" : "false" );
 		$objElement->setAttribute( "user_account", $authUser ? "true" : "false" );
 		$objElement->setAttribute( "ip_addr", $authIP ? "true" : "false" );
@@ -917,8 +978,16 @@ class Xerxes_Framework_Request
 		{
 			foreach ( $objRegistry->userGroups() as $group )
 			{
-				$authUser = array_key_exists( "user_groups", $_SESSION ) && is_array( $_SESSION["user_groups"] ) && in_array( $group, $_SESSION["user_groups"] );
-				$authIP = Xerxes_Framework_Restrict::isIpAddrInRanges( $this->getServer( 'REMOTE_ADDR' ), $objRegistry->getGroupLocalIpRanges( $group ) );
+				$authUser = array_key_exists( "user_groups", $_SESSION ) && 
+					is_array( $_SESSION["user_groups"] ) && 
+					in_array( $group, $_SESSION["user_groups"] 
+				);
+				
+				$authIP = Xerxes_Framework_Restrict::isIpAddrInRanges( 
+					$this->getServer( 'REMOTE_ADDR' ), 
+					$objRegistry->getGroupLocalIpRanges( $group ) 
+				);
+				
 				$objElement = $objXml->createElement( "group", ($authUser || $authIP) ? "true" : "false" );
 				$objElement->setAttribute( "id", $group );
 				$objElement->setAttribute( "display_name", $objRegistry->getGroupDisplayName( $group ) );
@@ -995,7 +1064,7 @@ class Xerxes_Framework_Request_URL
 		$this->arrParams = $params;
 	}
 	
-	public function setProperty($key, $value)
+	public function setParam($key, $value)
 	{
 		if ( array_key_exists( $key, $this->arrParams ) )
 		{
