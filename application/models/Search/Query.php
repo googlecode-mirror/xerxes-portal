@@ -287,7 +287,7 @@ class Xerxes_Model_Search_Query
 	{
 		if ( $this->search_fields_regex != "" )
 		{
-			return $this->request->getProperties($this->search_fields_regex);
+			return $this->request->getParams($this->search_fields_regex);
 		}
 		else
 		{
