@@ -25,7 +25,7 @@ class Xerxes_Model_Search_ResultSet
 	 * @param Xerxes_Model_Search_Config $config
 	 */
 	
-	public function __construct(Xerxes_Model_Search_Config $config )
+	public function __construct( Xerxes_Model_Search_Config $config )
 	{
 		$this->config = $config;	
 	}
@@ -37,7 +37,7 @@ class Xerxes_Model_Search_ResultSet
 	 * @return Xerxes_Model_Search_Result
 	 */	
 	
-	public function getRecord($id)
+	public function getRecord( $id )
 	{
 		if ( array_key_exists($id, $this->records) )
 		{
@@ -66,7 +66,7 @@ class Xerxes_Model_Search_ResultSet
 	 * @param Xerxes_Record $record
 	 */
 
-	public function addRecord( Xerxes_Record $record)
+	public function addRecord( Xerxes_Record $record )
 	{
 		$record = new Xerxes_Model_Search_Result($record, $this->config);
 		array_push($this->records, $record);
@@ -89,7 +89,7 @@ class Xerxes_Model_Search_ResultSet
 	 * @param Xerxes_Model_Search_Facets $facets
 	 */
 	
-	public function setFacets(Xerxes_Model_Search_Facets $facets)
+	public function setFacets( Xerxes_Model_Search_Facets $facets )
 	{
 		$this->facets = $facets;
 	}
@@ -192,7 +192,7 @@ class Xerxes_Model_Search_ResultSet
 	 * @param array $arrResults			the array from the sql query 
 	 */
 	
-	protected function determineFullText(&$xerxes_record, $arrResults)
+	protected function determineFullText( &$xerxes_record, $arrResults )
 	{
 		$strRecordIssn = $xerxes_record->getIssn();
 		$strRecordYear = $xerxes_record->getYear();
