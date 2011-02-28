@@ -25,11 +25,7 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 	
 	public function __construct( Xerxes_Model_Solr_Config $config )
 	{
-		parent::__construct();
-
-		// local config
-		
-		$this->config = $config;
+		parent::__construct($config);
 
 		// server address
 		
@@ -55,7 +51,16 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 	
 	public function getHits( Xerxes_Model_Search_Query $search )
 	{
-		$results = $this->searchRetrieve($search, 0, 0, null, false);
+		// create the url
+		
+		$this->url = $this->prepareSearchURL($search, 0, 0, null, false);
+		
+		// get the results
+		
+		$results = $this->doSearch($this->url);
+
+		// return total
+		
 		return $results->getTotal();
 	}
 
@@ -71,7 +76,10 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 		$this->url = $this->server .= "&q=" . urlencode("id:$id");
 		$results = $this->doSearch($this->url);
 
-		$results->getRecord(0)->addRecommendations();
+		$record = $results->getRecord(0);
+		
+		$record->addHoldings(); // item availability
+		$record->addReviews(); // good read reviews
 		
 		return $results;
 		
@@ -83,8 +91,64 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 	 * @return Xerxes_Model_Search_Results
 	 */	
 	
-	public function searchRetrieve( Xerxes_Model_Search_Query $search, $start, $max = null, $sort = null, $include_facets = true)
+	public function searchRetrieve( Xerxes_Model_Search_Query $search, $start, $max = null, $sort = null )
 	{
+		// create the url
+		
+		$this->url = $this->prepareSearchURL($search, $start, $max, $sort, true);
+		
+		// get the results
+		
+		$results = $this->doSearch($this->url);
+		
+		return $results;
+	}
+	
+	/**
+	 * Actually send the url to Solr and parse the response
+	 * 
+	 * @param string $url 
+	 * @return Xerxes_Model_Search_ResultSet
+	 */
+
+	private function doSearch($url)
+	{
+		// get the data
+		
+		$response = Xerxes_Framework_Parser::request($url, 10);
+		$xml = simplexml_load_string($response);
+		
+		if ( $response == null || $xml === false )
+		{
+			throw new Exception("Could not connect to search engine.");
+		}
+		
+		// parse the results
+		
+		$results = new Xerxes_Model_Search_ResultSet($this->config);
+		
+		// extract total
+		
+		$results->total = (int) $xml->result["numFound"]; 
+		
+		// extract records
+		
+		foreach ( $this->extractRecords($xml) as $record )
+		{
+			$results->addRecord($record);
+		}
+		
+		// extract facets
+		
+		$results->facets = $this->extractFacets($xml);
+		
+		return $results;
+	}
+
+	protected function prepareSearchURL( Xerxes_Model_Search_Query $search, $start, $max = null, 
+		$sort = null, $include_facets = true)
+	{
+		
 		### defaults
 		
 		// sort
@@ -108,8 +172,7 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 		if ( $max !== null )
 		{
 			$this->max = $max; 
-		}
-		
+		}		
 		### parse the query
 		
 		$query = ""; // query, these are url params, not just the query itself
@@ -294,49 +357,8 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 				}					
 			}
 		}
-		
-		return $this->doSearch($this->url);
-	}
-	
-	/**
-	 * Actually send the url to Solr and parse the response
-	 * 
-	 * @param string $url 
-	 * @return Xerxes_Model_Search_ResultSet
-	 */
 
-	private function doSearch($url)
-	{
-		// get the data
-		
-		$response = Xerxes_Framework_Parser::request($url, 10);
-		$xml = simplexml_load_string($response);
-		
-		if ( $response == null || $xml === false )
-		{
-			throw new Exception("Could not connect to search engine.");
-		}
-		
-		// parse the results
-		
-		$results = new Xerxes_Model_Search_ResultSet($this->config);
-		
-		// extract total
-		
-		$results->total = (int) $xml->result["numFound"]; 
-		
-		// extract records
-		
-		foreach ( $this->extractRecords($xml) as $record )
-		{
-			$results->addRecord($record);
-		}
-		
-		// extract facets
-		
-		$results->facets = $this->extractFacets($xml);
-		
-		return $results;
+		return $this->url;
 	}
 	
 	/**

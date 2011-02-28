@@ -25,11 +25,15 @@ abstract class Xerxes_Model_Search_Engine
 	 * Constructor
 	 */
 	
-	public function __construct()
+	public function __construct( Xerxes_Model_Search_Config $config )
 	{
 		// application config
 		
 		$this->registry = Xerxes_Framework_Registry::getInstance();
+		
+		// local config
+		
+		$this->config = $config;
 		
 		// defaults for the application
 				
@@ -43,10 +47,15 @@ abstract class Xerxes_Model_Search_Engine
 	 * @return int
 	 */
 	
-	public function getHits()
-	{
-		
-	}
+	abstract function getHits( Xerxes_Model_Search_Query $search );
+	
+	/**
+	 * Return an individual record
+	 * 
+	 * @return Xerxes_Model_Search_ResultSet
+	 */
+	
+	abstract function getRecord( $id );
 	
 	/**
 	 * Search and return results
@@ -54,21 +63,7 @@ abstract class Xerxes_Model_Search_Engine
 	 * @return Xerxes_Model_Search_ResultSet
 	 */
 	
-	public function searchRetrieve()
-	{
-		
-	}
-
-	/**
-	 * Return an individual record
-	 * 
-	 * @return Xerxes_Model_Search_ResultSet
-	 */
-	
-	public function getRecord()
-	{
-		
-	}
+	abstract function searchRetrieve( Xerxes_Model_Search_Query $search, $start, $max = null, $sort = null );
 	
 	/**
 	 * Return the URL sent ot the web service
