@@ -14,8 +14,8 @@
 class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine 
 {
 	protected $server; // solr server address
-	protected $config; // config?
-	protected $url;
+	protected $config; // local config
+	protected $url; // track the url
 
 	/**
 	 * Constructor
@@ -37,10 +37,6 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 		}
 		
 		$this->server .= "select/?version=2.2";
-
-		// change max, if set
-		
-		$this->max = $this->config->getConfig("MAX_RECORDS_PER_PAGE", false, $this->max);	
 	}
 	
 	/**
@@ -91,8 +87,15 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 	 * @return Xerxes_Model_Search_Results
 	 */	
 	
-	public function searchRetrieve( Xerxes_Model_Search_Query $search, $start, $max = null, $sort = null )
+	public function searchRetrieve( Xerxes_Model_Search_Query $search, $start, $max = 10, $sort = null )
 	{
+		// max
+		
+		if ( $max == null || $max < 1 )
+		{
+			throw new Exception("param 3 (max) must be a possitive integefer");
+		}
+		
 		// create the url
 		
 		$this->url = $this->prepareSearchURL($search, $start, $max, $sort, true);
@@ -167,12 +170,6 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 			$start--; // solr is 0-based
 		}
 		
-		// override the max
-		
-		if ( $max !== null )
-		{
-			$this->max = $max; 
-		}		
 		### parse the query
 		
 		$query = ""; // query, these are url params, not just the query itself
@@ -333,7 +330,7 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 		
 		$this->url = $this->server . $type . $query;
 
-		$this->url .= "&start=$start&rows=" . $this->max . "&sort=" . urlencode($sort);
+		$this->url .= "&start=$start&rows=" . $max . "&sort=" . urlencode($sort);
 		
 		if ( $include_facets == true )
 		{

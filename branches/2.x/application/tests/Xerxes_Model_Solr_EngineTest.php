@@ -94,7 +94,9 @@ class Xerxes_Model_Solr_EngineTest extends PHPUnit_Framework_TestCase
 	{
 		$this->Xerxes_Model_Search_Query->addTerm(1, null, "title", "=", "java"); 
 		
-		$Xerxes_Model_Search_ResultSet = $this->Xerxes_Model_Solr_Engine->searchRetrieve($this->Xerxes_Model_Search_Query, 1, 10, "date");
+		$Xerxes_Model_Search_ResultSet = $this->Xerxes_Model_Solr_Engine->searchRetrieve(
+			$this->Xerxes_Model_Search_Query, 1, 10, "date"
+		);
 		
 		$this->assertEquals(218, $Xerxes_Model_Search_ResultSet->getTotal());
 		$this->assertEquals(10, count($Xerxes_Model_Search_ResultSet->getRecords()));
