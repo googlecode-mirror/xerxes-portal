@@ -66,7 +66,7 @@ class Xerxes_Framework_ControllerMap
 		
 		if ( ! $this->xml instanceof SimpleXMLElement )
 		{
-			$distro = realpath("../lib/" . $this->file);	
+			$distro = XERXES_APPLICATION_PATH . "lib/" . $this->file;	
 			
 			// distro actions.xml
 			
