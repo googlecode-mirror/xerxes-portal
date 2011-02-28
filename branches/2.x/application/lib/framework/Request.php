@@ -201,7 +201,7 @@ class Xerxes_Framework_Request
 				}
 			}
 			
-			$this->init = truel
+			$this->init = true;
 		}		
 	}
 	
@@ -399,7 +399,7 @@ class Xerxes_Framework_Request
 	
 	public function setProperty( $key, $value, $bolArray = false, $override = false )
 	{
-		$this->setParam)$key, $value, $bolArray, $override );
+		$this->setParam( $key, $value, $bolArray, $override );
 	}
 	
 	/**
