@@ -42,7 +42,7 @@ class Xerxes_Command_DatabasesDatabase extends Xerxes_Command_Databases
 		}
 		elseif ($alpha != "")
 		{
-			$this->addAlphaList();
+			$this->addAlphaList();			
 			$arrResults = $objDataMap->getDatabasesStartingWith( $alpha );			
 		}
 		elseif ( $strQuery )
@@ -53,7 +53,23 @@ class Xerxes_Command_DatabasesDatabase extends Xerxes_Command_Databases
 		{
 			$this->addAlphaList();
 			
+			// only show single letters, please
+
+			if ( $this->registry->getConfig("DATABASE_LIST_SINGLE_LETTER_DISPAY", false, false) )
+			{
+				$params = array(
+					"base" => "databases",
+					"action" => "alphabetical",
+					"alpha" => "A" // assume we want to go to 'A' as the start
+				);
+			
+				$link = $this->request->url_for($params);
+				$this->request->setRedirect($link);
+				return 0;
+			}
+
 			// all database
+			
 			$arrResults = $objDataMap->getDatabases();
 		}
 		
