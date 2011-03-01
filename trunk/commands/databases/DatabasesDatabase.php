@@ -28,12 +28,12 @@ class Xerxes_Command_DatabasesDatabase extends Xerxes_Command_Databases
 		$strQuery = $this->request->getProperty( "query" );
 		$alpha = $this->request->getProperty( "alpha" );
 		
-		$objData = new Xerxes_DataMap( );
+		$objDataMap = new Xerxes_DataMap( );
 		$arrResults = array ( );
 		
 		if ( $strID )
 		{
-			$arrResults = $objData->getDatabases( $strID );
+			$arrResults = $objDataMap->getDatabases( $strID );
 			
 			if ( count( $arrResults ) == 0 )
 			{
@@ -42,43 +42,19 @@ class Xerxes_Command_DatabasesDatabase extends Xerxes_Command_Databases
 		}
 		elseif ($alpha != "")
 		{
-			// get just the letters
-			
-			$alpha_list = $this->request->getSession("alpha_list");
-			
-			if ( $alpha_list == "" )
-			{
-				$alpha_list_array = $objData->getDatabaseAlpha();
-				$alpha_list = implode(',', $alpha_list_array);
-				
-				// cache it in session too!
-				
-				$this->request->setSession("alpha_list", $alpha_list);
-			}	
-			
-			// add it to the interface
-			
-			$objAlpha = new DOMDocument();
-			$objAlpha->loadXML("<alpha />");
-			
-			foreach ( explode(',', $alpha_list) as $letter )
-			{
-				$objLetter = $objAlpha->createElement("letter", $letter);
-				$objAlpha->documentElement->appendChild($objLetter);
-			}
-			
-			$this->request->addDocument( $objAlpha );
-			
-			$arrResults = $objData->getDatabasesStartingWith( $alpha );			
+			$this->addAlphaList();
+			$arrResults = $objDataMap->getDatabasesStartingWith( $alpha );			
 		}
 		elseif ( $strQuery )
 		{
-			$arrResults = $objData->getDatabases( null, $strQuery );
+			$arrResults = $objDataMap->getDatabases( null, $strQuery );
 		} 
 		elseif ( $this->request->getProperty( "suppress_full_db_list" ) != "true" )
 		{
-			// all database.
-			$arrResults = $objData->getDatabases();
+			$this->addAlphaList();
+			
+			// all database
+			$arrResults = $objDataMap->getDatabases();
 		}
 		
 		foreach ( $arrResults as $objDatabaseData )
@@ -91,6 +67,76 @@ class Xerxes_Command_DatabasesDatabase extends Xerxes_Command_Databases
 		$this->request->addDocument( $objXml );
 		
 		return 1;
+	}
+	
+	protected function addAlphaList()
+	{
+		// check for letters in session
+		
+		$alpha_list = $this->request->getSession("alpha_list");
+		
+		if ( $alpha_list == "" ) // not in session
+		{
+			$objDataMap = new Xerxes_DataMap( );
+			
+			// check database cache
+			
+			$arrCache = $objDataMap->getCache("dblist", "az");
+			
+			if ( count($arrCache) > 0 ) // yup
+			{
+				$objCache = $arrCache[0];
+				$alpha_list = $objCache->data;
+			}
+			else // not here either
+			{
+				// so create it
+				
+				$alpha_list_array = $objDataMap->getDatabaseAlpha();
+				$alpha_list = implode(',', $alpha_list_array);
+				
+				// and cache it in the database
+				
+				$objCache = new Xerxes_Data_Cache();
+				$objCache->source = "dblist";
+				$objCache->id = "az";
+				$objCache->data = $alpha_list;
+				$objCache->expiry = time() + ( 60 * 60 ); // for one hour
+									
+				$objDataMap->setCache($objCache);
+			}
+			
+			// cache it in session too!
+				
+			$this->request->setSession("alpha_list", $alpha_list);
+		}	
+		
+		// add it to the interface
+		
+		$objAlpha = new DOMDocument();
+		$objAlpha->loadXML("<alpha />");
+		
+		foreach ( explode(',', $alpha_list) as $letter )
+		{
+			$objEntry = $objAlpha->createElement("entry");
+			$objAlpha->documentElement->appendChild($objEntry);
+			
+			$objLetter = $objAlpha->createElement("letter", $letter);
+			$objEntry->appendChild($objLetter);
+			
+			$params = array(
+				"base" => "databases",
+				"action" => "alphabetical",
+				"alpha" => $letter
+			);
+			
+			$link = $this->request->url_for($params);
+			
+			$objLink = $objAlpha->createElement("link", Xerxes_Framework_Parser::escapeXML($link) );
+			$objEntry->appendChild($objLink);
+		}
+		
+		$this->request->addDocument( $objAlpha );
 	}
 }
 ?>
