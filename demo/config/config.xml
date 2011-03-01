@@ -442,6 +442,11 @@
 		
 		<config name="database_list_searchable" pass="true">false</config>
 		
+		<!-- whether the alphabetical database list should only show databases from individual letters, otherwise
+			false = show all databases at once -->		
+		
+		<config name="database_list_single_letter_dispay">false</config>
+		
 		<!-- whether to show a search box in the database detail page -->
 		
 		<config name="show_db_detail_search" pass="true">true</config>
