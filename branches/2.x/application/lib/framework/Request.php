@@ -278,7 +278,7 @@ class Xerxes_Framework_Request
 		// if the action has any specific parmaters it defines beyond base and action
 		// they are extracted here
 		
-		$objMap = Xerxes_Framework_ControllerMap::getInstance()->path_map_obj();
+		$objMap = Xerxes_Framework_ControllerMap::getInstance()->getPathMapObject();
 		$map = $objMap->indexToPropertyMap( $this->getParam( "base" ), $this->getParam( "action" ) );
 		
 		foreach ( $map as $index => $property )
@@ -847,7 +847,7 @@ class Xerxes_Framework_Request
 			foreach ( array_keys( $properties ) as $property )
 			{
 				$controller_map = Xerxes_Framework_ControllerMap::getInstance();
-				$index = $controller_map->path_map_obj()->indexForProperty( $base, $action, $property );
+				$index = $controller_map->getPathMapObject()->indexForProperty( $base, $action, $property );
 				
 				if ( $index )
 				{

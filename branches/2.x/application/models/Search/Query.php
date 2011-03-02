@@ -13,8 +13,8 @@
 
 class Xerxes_Model_Search_Query
 {
-	protected $query_list = array(); // search terms
-	protected $limit_list = array(); // limits
+	public $terms = array(); // search terms
+	public $limits = array(); // limits
 	
 	protected $stop_words = "";
 	protected $search_fields_regex = '^query[0-9]{0,1}$|^field[0-9]{0,1}$|^boolean[0-9]{0,1}$';
@@ -68,7 +68,7 @@ class Xerxes_Model_Search_Query
 	
 	public function getQueryTerms()
 	{
-		return $this->query_list;
+		return $this->terms;
 	}
 	
 	/**
@@ -79,7 +79,7 @@ class Xerxes_Model_Search_Query
 
 	public function getLimits()
 	{
-		return $this->limit_list;
+		return $this->limits;
 	}
 	
 	/**
@@ -94,16 +94,23 @@ class Xerxes_Model_Search_Query
 	
 	public function addTerm($id, $boolean, $field, $relation, $phrase)
 	{
+		if ( $field == "" )
+		{
+			$field = "keyword";
+		}
+		
 		// alter query based on config
+		
+		$field_internal = "";
 				
 		if ( $this->config != null )
 		{
-			$field = $this->config->swapForInternalField($field);
+			$field_internal = $this->config->swapForInternalField($field);
 			$phrase = $this->alterQuery( $phrase, $field );
 		}		
 		
-		$term = new Xerxes_Model_Search_QueryTerm($id, $boolean, $field, $relation, $phrase);
-		array_push($this->query_list , $term);
+		$term = new Xerxes_Model_Search_QueryTerm($id, $boolean, $field, $field_internal, $relation, $phrase);
+		array_push($this->terms , $term);
 	}
 	
 	/**
@@ -124,7 +131,7 @@ class Xerxes_Model_Search_Query
 		foreach ( $phrase as $value )
 		{
 			$term = new Xerxes_Model_Search_LimitTerm($field, $relation, $value);
-			array_push($this->limit_list , $term);
+			array_push($this->limits , $term);
 		}
 	}
 	
@@ -141,9 +148,9 @@ class Xerxes_Model_Search_Query
 		
 		$spell_return = array(); // we'll return this one
 		
-		for ( $x = 0; $x < count($this->query_list); $x++ )
+		for ( $x = 0; $x < count($this->terms); $x++ )
 		{
-			$term = $this->query_list[$x];
+			$term = $this->terms[$x];
 			$url = "";
 			
 			if ( $strAltYahoo != "" )
@@ -170,7 +177,7 @@ class Xerxes_Model_Search_Query
 			
 			// also put it here so we can return it
 			
-			$this->query_list[$x] = $term;
+			$this->terms[$x] = $term;
 		}
 		
 		return $spell_return;

@@ -520,14 +520,14 @@ class Xerxes_Framework_Parser
 	 * @param string $url			url you want to send the request to
 	 * @param int $timeout			[optional] seconds to wait before timing out
 	 * @param string $data			[optional] data to POST to the above url
-	 * @param string $content_type	[optional] content-type in the post, 'application/x-www-form-urlencoded' by default
+	 * @param string $headers		[optional] http headers
 	 * @param bool $bolEncode		[optional] whether to encode the posted data, true by default
 	 * @return string				the response from the server
 	 */
 	
-	public static function request($url, $timeout = null, $data = null, $content_type = null, $bolEncode = true)
+	public static function request($url, $timeout = null, $data = null, $headers = null, $bolEncode = true)
 	{
-		return Xerxes_Framework_HTTP::request($url, $timeout, $data, $content_type, $bolEncode);
+		return Xerxes_Framework_HTTP::request($url, $timeout, $data, $headers, $bolEncode);
 	}
 }
 

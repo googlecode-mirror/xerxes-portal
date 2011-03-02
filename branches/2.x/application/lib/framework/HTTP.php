@@ -13,16 +13,16 @@
 
 class Xerxes_Framework_HTTP
 {
-	public static function request($url, $timeout = null, $data = null, $content_type = null, $bolEncode = true)
+	public static function request($url, $timeout = null, $data = null, $headers = null, $bolEncode = true)
 	{
-		$objRegistry = Xerxes_Framework_Registry::getInstance();
+		$registry = Xerxes_Framework_Registry::getInstance();
 		
-		$proxy = $objRegistry->getConfig("HTTP_PROXY_SERVER", false);
-		$curl = $objRegistry->getConfig("HTTP_USE_CURL", false, false);
+		$proxy = $registry->getConfig("HTTP_PROXY_SERVER", false);
+		$curl = $registry->getConfig("HTTP_USE_CURL", false, false);
 		
 		### GET REQUEST (NON-PROXY)
 		
-		if ( $data == null && $proxy == null && $curl == null )
+		if ( $data == null && $proxy == null && $curl == null && $headers == null )
 		{
 			$ctx = null;
 			
@@ -47,11 +47,6 @@ class Xerxes_Framework_HTTP
 
 		if ( $data != null )
 		{
-			if ( $content_type == null )
-			{
-				$content_type = "application/x-www-form-urlencoded";
-			}
-			
 			// split the host from the path
 			
 			$arrMatches = array();
@@ -80,13 +75,14 @@ class Xerxes_Framework_HTTP
 			}				
 		}
 
-		### POST OR GET USING AN HTTP PROXY or need to use CURL
+		### POST OR GET USING CURL
 		
-		if ( $proxy != null || $curl != null )
+		if ( $proxy != null || $curl != null || $headers != null)
 		{				
 			$response = ""; // the response
 			$ch = curl_init(); // curl object
-				
+			$header = array();
+			
 			// basic curl settings
 			
 			curl_setopt($ch, CURLOPT_URL, $url); // the url we're sending the request to
@@ -107,13 +103,21 @@ class Xerxes_Framework_HTTP
 				// in case this is a custom HTTP POST request
 
 				$header[] = "Host: $host\r\n";
-				$header[] = "Content-type: $content_type\r\n";
+				$header[] = "Content-type: application/x-www-form-urlencoded\r\n";
 				$header[] = "Content-length: " . strlen($data) . "\r\n";
 				$header[] = $data;
 					
-				curl_setopt( $ch, CURLOPT_HTTPHEADER, $header ); 
 				curl_setopt( $ch, CURLOPT_CUSTOMREQUEST, 'POST' );
 			}
+			
+			// headers
+			
+			if ( count($header) > 0 )
+			{
+				curl_setopt( $ch, CURLOPT_HTTPHEADER, $header ); 
+			}
+			
+			curl_setopt( $ch, CURLOPT_HTTPHEADER, $header ); 			
 			
 			// proxy settings
 			
@@ -123,8 +127,8 @@ class Xerxes_Framework_HTTP
 
 				// proxy username and password, if necessary
 				
-				$username = $objRegistry->getConfig("HTTP_PROXY_USERNAME", false);
-				$password = $objRegistry->getConfig("HTTP_PROXY_PASSWORD", false);				
+				$username = $registry->getConfig("HTTP_PROXY_USERNAME", false);
+				$password = $registry->getConfig("HTTP_PROXY_PASSWORD", false);				
 				
 				if ( $username != null && $password != null )
 				{
@@ -146,7 +150,7 @@ class Xerxes_Framework_HTTP
 			return $response;
 		}
 
-		### POST REQUEST (NON-PROXY)
+		### POST REQUEST NOT USING CURL
 		
 		else
 		{
@@ -160,7 +164,7 @@ class Xerxes_Framework_HTTP
 			
 			fputs($fp, "POST $path HTTP/1.1\r\n");
 			fputs($fp, "Host: $host\r\n");
-			fputs($fp, "Content-type: $content_type\r\n");
+			fputs($fp, "Content-type: application/x-www-form-urlencoded\r\n");
 			fputs($fp, "Content-length: " . strlen($data) . "\r\n");
 			fputs($fp, "Connection: close\r\n\r\n");
 			fputs($fp, $data);

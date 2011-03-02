@@ -5,8 +5,8 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 	protected $config;
 	protected $query;
 	protected $engine;
-	protected $max;
-	protected $sort;
+	protected $max; // default max
+	protected $sort; // default sort
 	
 	public function results()
 	{
@@ -26,8 +26,8 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 			$max = $this->max;
 		}
 		
-		$this->sort = $this->registry->getConfig("SORT_ORDER_PRIMARY", false, "relevance");
-		$this->sort = $this->config->getConfig("SORT_ORDER_PRIMARY", false, $this->sort);
+		$this->sort = $this->registry->getConfig("SORT_ORDER", false, "relevance");
+		$this->sort = $this->config->getConfig("SORT_ORDER", false, $this->sort);
 		
 		if ( $sort == "" )
 		{
@@ -52,6 +52,7 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 		
 		// response
 		
+		$this->response->add($this->query, "query");
 		$this->response->add($results, "results");
 	}
 	
@@ -242,9 +243,7 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 	/**
 	 * Creates a sorting page element
 	 *
-	 * @param string $strSortQuery		initial page and querystring values
-	 * @param string $strSortKeys		selected sort value
-	 * @param array $arrOptions			list of sort options and values
+	 * @param string $sort			current sort
 	 *
 	 * @return DOMDocument 			sort navigation
 	 */
