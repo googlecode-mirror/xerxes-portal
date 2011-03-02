@@ -462,10 +462,12 @@ class Xerxes_Framework_Request
 	 *
 	 * @param string $key		key that identify the value
 	 * @param bool $bolArray	[optional] whether value should be returned as an array, even if only one value
-	 * @return mixed 			[string or array] value if available, otherwise null
+	 * @param string $default	[optional] a default value to return if no param supplied
+	 * 
+	 * @return mixed 			[string or array] value if available, otherwise default
 	 */
 	
-	public function getParam( $key, $bolArray = false )
+	public function getParam( $key, $bolArray = false, $default = null )
 	{
 		if ( array_key_exists( $key, $this->arrParams ) )
 		{
@@ -490,7 +492,7 @@ class Xerxes_Framework_Request
 		} 
 		else
 		{
-			return null;
+			return $default;
 		}
 	}
 
