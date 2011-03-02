@@ -10,29 +10,19 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 	
 	public function results()
 	{
-		// params
-		
-		$start = $this->request->getParam('start');
-		$max = $this->request->getParam('max');
-		$sort = $this->request->getParam('sort');
-		
 		// defaults
 		
 		$this->max = $this->registry->getConfig("RECORDS_PER_PAGE", false, 10);
 		$this->max = $this->config->getConfig("RECORDS_PER_PAGE", false, $this->max);
 		
-		if ( $max == "" )
-		{
-			$max = $this->max;
-		}
-		
 		$this->sort = $this->registry->getConfig("SORT_ORDER", false, "relevance");
 		$this->sort = $this->config->getConfig("SORT_ORDER", false, $this->sort);
 		
-		if ( $sort == "" )
-		{
-			$sort = $this->sort;
-		}		
+		// params
+		
+		$start = $this->request->getParam('start', false, 1);
+		$max = $this->request->getParam('max', false, $this->max);
+		$sort = $this->request->getParam('sort', false, $this->sort);
 		
 		// search
 				
