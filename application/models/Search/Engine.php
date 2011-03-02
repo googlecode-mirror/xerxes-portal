@@ -57,7 +57,7 @@ abstract class Xerxes_Model_Search_Engine
 	 * @return Xerxes_Model_Search_ResultSet
 	 */
 	
-	abstract function searchRetrieve( Xerxes_Model_Search_Query $search, $start = 1, $max = 10, $sort );
+	abstract function searchRetrieve( Xerxes_Model_Search_Query $search, $start = 1, $max = 10, $sort = "" );
 	
 	/**
 	 * Return the URL sent ot the web service

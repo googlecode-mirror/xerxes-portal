@@ -87,22 +87,8 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 	 * @return Xerxes_Model_Search_Results
 	 */	
 	
-	public function searchRetrieve( Xerxes_Model_Search_Query $search, $start = 1, $max = 10, $sort )
+	public function searchRetrieve( Xerxes_Model_Search_Query $search, $start = 1, $max = 10, $sort = "")
 	{
-		// max
-		
-		if ( $max == "" || $max < 1 )
-		{
-			throw new Exception("param 3 (max) must be a possitive integer");
-		}
-		
-		// sort
-
-		if ( $sort == "" )
-		{
-			throw new Exception("param 4 (sort) must not be null");
-		}		
-		
 		// create the url
 		
 		$this->url = $this->prepareSearchURL($search, $start, $max, $sort, true);
@@ -158,8 +144,21 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 	protected function prepareSearchURL( Xerxes_Model_Search_Query $search, $start, $max = null, 
 		$sort = null, $include_facets = true)
 	{
-		
 		### defaults
+
+		// max
+		
+		if ( $max == "" )
+		{
+			$max = $this->config->getConfig("RECORDS_PER_PAGE", false, $this->max);
+		}
+		
+		// sort
+
+		if ( $sort == "" )
+		{
+			$sort = $this->config->getConfig("SORT_ORDER", false, $this->sort);
+		}		
 		
 		$sort = $this->config->swapForInternalSort($sort);
 		
@@ -190,7 +189,7 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 		
 		// decide between basic and dismax handler
 		
-		$trunc_test = $this->config->getFieldAttribute($term->field, "truncate");
+		$trunc_test = $this->config->getFieldAttribute($term->field_internal, "truncate");
 		
 		// use dismax if this is a simple search, that is:
 		// only if there is one phrase (i.e., not advanced), no boolean OR and no wildcard
@@ -210,10 +209,10 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 			$phrase = strtolower($phrase);
 			$phrase = str_replace(" NOT ", " -", $phrase);
 			
-			if ( $term->field != "" )
+			if ( $term->field_internal != "" )
 			{
-				$query .= "&qf=" . urlencode($term->field);
-				$query .= "&pf=" . urlencode($term->field);
+				$query .= "&qf=" . urlencode($term->field_internal);
+				$query .= "&pf=" . urlencode($term->field_internal);
 			}
 	
 			$query .= "&q=" . urlencode($phrase);
@@ -229,7 +228,7 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 				$phrase = $term->phrase;
 				$phrase = strtolower($phrase);
 				$phrase = str_replace(':', '', $phrase);
-				$phrase = $this->alterQuery($phrase, $term->field, $this->config);
+				$phrase = $this->alterQuery($phrase, $term->field_internal, $this->config);
 				
 				// break up the query into words
 				
@@ -239,7 +238,7 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 				// we'll now search for this term across multiple fields
 				// specified in the config
 	
-				if ( $term->field != "" )
+				if ( $term->field_internal != "" )
 				{
 					// we'll use this to get the phrase as a whole, but minus
 					// the boolean operators in order to boost this
@@ -265,7 +264,7 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 						
 						// take the fields we're searching on,
 						
-						foreach ( explode(" ", $term->field) as $field )
+						foreach ( explode(" ", $term->field_internal) as $field )
 						{
 							// split them out into index and boost score
 						
