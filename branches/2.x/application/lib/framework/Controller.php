@@ -27,4 +27,47 @@ abstract class Xerxes_Framework_Controller
 		$this->registry = Xerxes_Framework_Registry::getInstance();
 		$this->response = Xerxes_Framework_Response::getInstance();
 	}
+	
+	/**
+	 * Checks if the user is within local IP range or has logged in,
+	 * failure stops the flow and redirects user to a login page
+	 */
+	
+	protected function restrict()
+	{
+		if ( $this->request->isCommandLine() != true )
+		{
+			$restrict = new Xerxes_Framework_Restrict();
+			$restrict->checkIP();
+		}
+	}
+
+	/**
+	 * Checks of the user has logged in, failure stops the flow and 
+	 * redirects user to a login page
+	 */
+	
+	protected function requireLogin()
+	{
+		if ( $this->request->isCommandLine() != true )
+		{
+			$restrict = new Xerxes_Framework_Restrict();
+			$restrict->checkLogin();
+		}		
+	}
+	
+	/**
+	 * Require that this action only be run via the command line, in order 
+	 * to prevent web execution of potentially long-running tasks
+	 */
+	
+	protected function limitToCLI()
+	{
+		// if this action is set to only be run via the 
+			
+		if ( ! $this->request->isCommandLine() )
+		{
+			throw new Exception( "cannot run command from web" );
+		}
+	}
 }

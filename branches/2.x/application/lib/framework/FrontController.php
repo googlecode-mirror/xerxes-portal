@@ -44,16 +44,6 @@ class Xerxes_Framework_FrontController
 			}
 		}
 		
-		// give our session a name to keep sessions distinct between multiple
-		// instances of xerxes on one server.  use base_path (preferably) or
-		// application_name config directives.
-		
-		$path_key = preg_replace( '/\W/', '_', $registry->getConfig( "BASE_WEB_PATH", false ) );
-		$session_name = "xerxessession_" . $path_key;
-		
-		session_name( $session_name );
-		session_start();
-		
 		// processes the incoming request
 		
 		$request = Xerxes_Framework_Request::getInstance();
@@ -83,8 +73,8 @@ class Xerxes_Framework_FrontController
 			
 			// labels
 			
-			$lang = $request->getParam("lang");
-			$labels = Xerxes_Framework_Labels::getInstance($lang);
+			// $lang = $request->getParam("lang");
+			// $labels = Xerxes_Framework_Labels::getInstance($lang);
 
 			// make sure application_name is passthrough, and has a value.
 
@@ -98,32 +88,6 @@ class Xerxes_Framework_FrontController
 			#     SET PATHS    #
 			####################
 
-			### reverse proxy
-			
-			// check to see if xerxes is running behind a reverse proxy and swap
-			// host and remote ip here with their http_x_forwarded counterparts;
-			// but only if configured for this, since client can spoof the header 
-			// if xerxes is not, in fact, behind a reverse proxy
-			
-			if ( $registry->getConfig("REVERSE_PROXY", false, false ) == true )
-			{
-				$forward_host = $request->getServer('HTTP_X_FORWARDED_HOST');
-				$forward_address = $request->getServer('HTTP_X_FORWARDED_FOR');
-				
-				if ( $forward_host != "" )
-				{
-					$request->setServer('SERVER_NAME', $forward_host);
-				}
-				
-				// last ip address is the user's
-				
-				if ( $forward_address != "" )
-				{
-					$arrIP = explode(",", $forward_address);
-					$request->setServer('REMOTE_ADDR', trim(array_pop($arrIP)));
-				}		
-			}
-			
 			// the working directory is the instance, so any relative paths will
 			// be executed in relation to the root directory of the instance
 						
@@ -180,49 +144,7 @@ class Xerxes_Framework_FrontController
 			
 			$controller_map->setAction( $base, $action, $request );
 
-			####################
-			#  ACCESS CONTROL  #
-			####################
-			
-			// if this part of the application is restricted to a local ip range, or 
-			// requires a named login, then the Restrict class will check the user's 
-			// ip address or if they have logged in; failure stops the flow and redirects 
-			// user to a login page with the current request passed as 'return' paramater 
-			// in the url
 
-			$restrict = new Xerxes_Framework_Restrict();
-			
-			// command line scripts will ignore access rules
-
-			if ( $request->isCommandLine() != true )
-			{
-				if ( $controller_map->isRestricted() == true )
-				{
-					if ( $controller_map->requiresLogin() == true )
-					{
-						// resource requires a valid named username
-						$restrict->checkLogin();
-					} 
-					else
-					{
-						// resource is resricted, but local ip range is okay
-						$restrict->checkIP();
-					}
-				}
-				else
-				{
-					// go ahead and register local users, but don't prompt for login
-					$restrict->checkIP(false);
-				}
-			}
-			
-			// if this action is set to only be run via the command line, in order to prevent
-			// web execution of potentially long-running tasks, then restrict it here
-			
-			if ( ! $request->isCommandLine() && $controller_map->restrictToCLI() )
-			{
-				throw new Exception( "cannot run command from web" );
-			}
 
 			####################
 			#       DATA       #
