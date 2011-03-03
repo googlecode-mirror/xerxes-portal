@@ -556,7 +556,7 @@ class Xerxes_Model_DataMap_SavedRecords extends Xerxes_Framework_DataMap
 		$arrValues[":timestamp"] = date( "Y-m-d H:i:s" );
 		$arrValues[":username"] = $username;
 		$arrValues[":nonsort"] = $objXerxesRecord->getNonSort();
-		$arrValues[":title"] = $strTitle;
+		$arrValues[":title"] = substr($strTitle, 0, 90);
 		$arrValues[":author"] = $objXerxesRecord->getPrimaryAuthor( true );
 		$arrValues[":year"] = $iYear;
 		$arrValues[":format"] = $objXerxesRecord->getFormat();
