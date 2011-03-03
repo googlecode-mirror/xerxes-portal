@@ -56,6 +56,8 @@ class Xerxes_Framework_Request
 		{
 			$this->registry = Xerxes_Framework_Registry::getInstance();
 			
+			// aliases
+			
 			$alias = $this->registry->getConfig("BASE_ALIASES");
 			
 			if ( $alias != null )
@@ -77,6 +79,23 @@ class Xerxes_Framework_Request
 				
 				$this->aliases = $aliases;
 			}
+			
+			// start a session
+			
+			if ( isset($_SERVER) )
+			{
+				// give our session a name to keep sessions distinct between multiple
+				// instances of xerxes on one server.  use base_path (preferably) or
+				// application_name config directives.
+				
+				$path_key = preg_replace( '/\W/', '_', $this->registry->getConfig( "BASE_WEB_PATH", false ) );
+				$session_name = "xerxessession_" . $path_key;
+				
+				session_name( $session_name );
+				session_start();
+			}
+			
+			// extract params
 			
 			if ( array_key_exists( "REQUEST_METHOD", $_SERVER ) )
 			{
@@ -186,6 +205,32 @@ class Xerxes_Framework_Request
 						$_SERVER['REQUEST_URI'] = $_SERVER["SCRIPT_NAME"] . '?' . $_SERVER['QUERY_STRING'];
 					}
 				}
+
+				### reverse proxy
+			
+				// check to see if xerxes is running behind a reverse proxy and swap
+				// host and remote ip here with their http_x_forwarded counterparts;
+				// but only if configured for this, since client can spoof the header 
+				// if xerxes is not, in fact, behind a reverse proxy
+				
+				if ( $this->registry->getConfig("REVERSE_PROXY", false, false ) == true )
+				{
+					$forward_host = $_SERVER['HTTP_X_FORWARDED_HOST'];
+					$forward_address = $_SERVER['HTTP_X_FORWARDED_FOR'];
+					
+					if ( $forward_host != "" )
+					{
+						$_SERVER['SERVER_NAME'] = $forward_host;
+					}
+					
+					// last ip address is the user's
+					
+					if ( $forward_address != "" )
+					{
+						$arrIP = explode(",", $forward_address);
+						$_SERVER['REMOTE_ADDR'] = trim(array_pop($arrIP));
+					}		
+				}				
 			}
 			
 			// just uri params

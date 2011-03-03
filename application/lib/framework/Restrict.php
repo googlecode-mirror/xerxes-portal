@@ -13,8 +13,9 @@
 
 class Xerxes_Framework_Restrict
 {
-	private $ip_range = ""; // set of local ip ranges
-	private $request = "";
+	private $ip_range; // set of local ip ranges
+	private $request; // request object
+	private $return; // return link
 
 	/**
 	 * Constructor
@@ -27,20 +28,20 @@ class Xerxes_Framework_Restrict
 		$registry = Xerxes_Framework_Registry::getInstance();
 		$this->request = Xerxes_Framework_Request::getInstance();
 		
-		$configAuthPage = $this->request->url_for( array ("base" => "authenticate", "action" => "login" ) );
+		$authentication_page = $this->request->url_for( array ("base" => "authenticate", "action" => "login" ) );
 		
 		$this->ip_range = $registry->getConfig( "LOCAL_IP_RANGE", false, null );
 		
 		// if the return url has a querystring mark in it, then append
 		// return url to other params, otherwise it is sole param
 
-		if ( strstr( $configAuthPage, "?" ) )
+		if ( strstr( $authentication_page, "?" ) )
 		{
-			$this->strReturn = "$configAuthPage&return=";
+			$this->return = "$authentication_page&return=";
 		}
 		else
 		{
-			$this->strReturn = "$configAuthPage?return=";
+			$this->return = "$authentication_page?return=";
 		}
 	}
 	
@@ -54,17 +55,22 @@ class Xerxes_Framework_Restrict
 		{
 			// redirect to authentication page
 
-			header( "Location: " . $this->strReturn . urlencode( $this->request->getServer( 'REQUEST_URI' ) ) );
+			header( "Location: " . $this->return . urlencode( $this->request->getServer( 'REQUEST_URI' ) ) );
 			exit();
 		}
 	}
 	
-	// session has a logged in authenticated user. not "guest" or "local" role, 
-	// both of which imply a temporary session, not an authenticated user.
+	/**
+	 * Checks if the session has a logged in authenticated user. not "guest" or "local" role, 
+	 * both of which imply a temporary session, not an authenticated user.
+	 */
 	
 	public static function isAuthenticatedUser(Xerxes_Framework_Request $objRequest)
 	{
-		return ($objRequest->getSession( "username" ) != null && $objRequest->getSession( "role" ) != "local" && $objRequest->getSession( "role" ) != "guest");
+		return ( $objRequest->getSession( "username" ) != null && 
+			$objRequest->getSession( "role" ) != "local" && 
+			$objRequest->getSession( "role" ) != "guest"
+		);
 	}
 	
 	/**
@@ -91,7 +97,7 @@ class Xerxes_Framework_Restrict
 			{
 				// redirect to authentication page
 
-				header( "Location: " . $this->strReturn . urlencode( $this->request->getServer( 'REQUEST_URI' ) ) );
+				header( "Location: " . $this->return . urlencode( $this->request->getServer( 'REQUEST_URI' ) ) );
 				exit();
 			}
 		}
