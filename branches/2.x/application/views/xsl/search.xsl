@@ -27,11 +27,11 @@
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 
-	<xsl:template name="generic_sort_bar">
+	<xsl:template name="sort_bar">
 	
 		<xsl:choose>
 			<xsl:when test="results/total = '0'">
-				<xsl:call-template name="generic_no_hits" />
+				<xsl:call-template name="no_hits" />
 			</xsl:when>
 			<xsl:otherwise>
 	
@@ -74,13 +74,13 @@
 	
 	</xsl:template>
 	
-	<xsl:template name="generic_no_hits">
+	<xsl:template name="no_hits">
 	
 		<p class="error"><xsl:value-of select="$text_metasearch_hits_no_match" /></p>
 	
 	</xsl:template>
 	
-	<xsl:template name="generic_searchbox">
+	<xsl:template name="searchbox">
 	
 		<form action="./" method="get">
 	
@@ -88,7 +88,7 @@
 			<input type="hidden" name="base" value="{//request/base}" />
 			<input type="hidden" name="action" value="search" />
 			
-			<xsl:call-template name="generic_searchbox_hidden_fields_local" />
+			<xsl:call-template name="searchbox_hidden_fields_local" />
 	
 			<xsl:if test="request/sortkeys">
 				<input type="hidden" name="sortKeys" value="{request/sortkeys}" />
@@ -96,10 +96,10 @@
 	
 		<xsl:choose>
 			<xsl:when test="$is_mobile = '1'">
-				<xsl:call-template name="generic_searchbox_mobile" />
+				<xsl:call-template name="searchbox_mobile" />
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:call-template name="generic_searchbox_full" />
+				<xsl:call-template name="searchbox_full" />
 			</xsl:otherwise>
 		</xsl:choose>
 	
@@ -108,7 +108,7 @@
 	</xsl:template>
 	
 	
-	<xsl:template name="generic_searchbox_mobile">
+	<xsl:template name="searchbox_mobile">
 	
 		<xsl:variable name="search_query" select="//request/query" />
 		<xsl:call-template name="mobile_search_box">
@@ -117,20 +117,20 @@
 			
 	</xsl:template>
 	
-	<xsl:template name="generic_searchbox_full">
+	<xsl:template name="searchbox_full">
 	
 		<xsl:choose>
 			<xsl:when test="request/advanced or request/advancedfull">
-				<xsl:call-template name="generic_advanced_search" />
+				<xsl:call-template name="advanced_search" />
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:call-template name="generic_simple_search" />			
+				<xsl:call-template name="simple_search" />			
 			</xsl:otherwise>
 		</xsl:choose>
 	
 	</xsl:template>
 	
-	<xsl:template name="generic_simple_search">
+	<xsl:template name="simple_search">
 	
 		<xsl:variable name="query"	select="request/query" />
 		
@@ -178,7 +178,7 @@
 				</p>
 			</xsl:if>	
 			
-			<xsl:call-template name="generic_advanced_search_option" />
+			<xsl:call-template name="advanced_search_option" />
 			
 		</div>
 	
@@ -187,9 +187,9 @@
 	
 	<!-- search box fields overriden in templates -->
 	
-	<xsl:template name="generic_advanced_search_option" />
-	<xsl:template name="generic_advanced_search" />
-	<xsl:template name="generic_searchbox_hidden_fields_local" />
+	<xsl:template name="advanced_search_option" />
+	<xsl:template name="advanced_search" />
+	<xsl:template name="searchbox_hidden_fields_local" />
 	
 	<!-- 	
 		TEMPLATE: TABS
@@ -286,7 +286,7 @@
 		
 	</xsl:template>
 	
-	<xsl:template name="generic_sidebar">
+	<xsl:template name="sidebar">
 	
 		<xsl:call-template name="subtabs" />
 		
