@@ -95,11 +95,6 @@ class Xerxes_Framework_FrontController
 			$working_dir = str_replace( "\\", "/", $working_dir );
 			
 			// full web path
-			//
-			// NOTE :if you change this code  make sure you make a corresponding
-			// change in lib/framework/Error.php, since there is redundant code
-			// there in case something goes horribly wrong and we need to set the
-			// web path for proper display of a (friendly) error page 
 			
 			$base_path = $registry->getConfig( 'BASE_WEB_PATH', false, "" );
 			$this_server_name = $request->getServer( 'SERVER_NAME' );
@@ -145,7 +140,6 @@ class Xerxes_Framework_FrontController
 			$controller_map->setAction( $base, $action, $request );
 
 
-
 			####################
 			#       DATA       #
 			####################
@@ -154,11 +148,10 @@ class Xerxes_Framework_FrontController
 			$controller = new $controller_name();
 
 			$controller->$action();
-			echo $controller->display(); exit;
 			
-			header('Content-type: text/xml');
-			echo $response->toXML()->saveXML();
-			
+			$response->setFormat($request->getParam('format'));	
+
+			echo $response->display(); exit;
 			
 			####################
 			#     COOKIES      #
