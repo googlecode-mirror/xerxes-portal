@@ -10,4 +10,10 @@ class Xerxes_Controller_Solr extends Xerxes_Controller_Search
 		$this->query = new Xerxes_Model_Search_Query($this->request, $this->config);
 		$this->engine = new Xerxes_Model_Solr_Engine($this->config);
 	}
+	
+	public function results()
+	{
+		parent::results();
+		$this->response->setView("xsl/solr/solr_results.xsl");
+	}
 }

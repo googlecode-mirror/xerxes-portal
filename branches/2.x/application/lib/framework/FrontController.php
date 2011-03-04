@@ -73,7 +73,7 @@ class Xerxes_Framework_FrontController
 			
 			// labels
 			
-			// $lang = $request->getParam("lang");
+			$lang = $request->getParam("lang");
 			// $labels = Xerxes_Framework_Labels::getInstance($lang);
 
 			// make sure application_name is passthrough, and has a value.
@@ -129,7 +129,7 @@ class Xerxes_Framework_FrontController
 			// register these values
 			
 			$registry->setConfig("SERVER_URL", $web);
-			$registry->setConfig("APP_DIRECTORY", $working_dir);
+			$registry->setConfig("LOCAL_DIRECTORY", $working_dir);
 			$registry->setConfig("BASE_URL", $web . $base_path , true);
 
 			####################
@@ -151,10 +151,10 @@ class Xerxes_Framework_FrontController
 			####################
 			
 			$controller_name = "Xerxes_Controller_" . strtoupper(substr($base, 0, 1)) . substr($base,1); 
-				
 			$controller = new $controller_name();
-			
+
 			$controller->$action();
+			echo $controller->display(); exit;
 			
 			header('Content-type: text/xml');
 			echo $response->toXML()->saveXML();

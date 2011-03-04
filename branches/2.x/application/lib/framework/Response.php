@@ -216,8 +216,8 @@ class Xerxes_Framework_Response
 		if (strstr($view, 'xsl') )
 		{
 			$xml = $this->toXML();
-			$html = Xerxes_Framework_Parser::transform($xml);
-			echo $html;
+			$html = Xerxes_Framework_Parser::transform($xml, $view);
+			return $html;
 		}
 	}
 	

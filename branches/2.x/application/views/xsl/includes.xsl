@@ -27,17 +27,17 @@
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	
-<!-- 
-	TEXT LABLES
-	These are variables that define the labels of the system
--->
+	<!-- 
+		TEXT LABLES
+		These are variables that define the labels of the system
+	-->
 	
 	<xsl:include href="labels/eng.xsl" />
 
-<!-- 
-	GLOBAL VARIABLES
-	Configuration values used throughout the application
--->
+	<!-- 
+		GLOBAL VARIABLES
+		Configuration values used throughout the application
+	-->
 	
 	<xsl:variable name="xerxes_version" select="//config/xerxes_version" />
 	
@@ -62,10 +62,10 @@
 	
 	<xsl:variable name="text_extra_html_head_content" />
 
-<!-- 
-	LANGUAGE VARIABLES
-	Things that only helix84 understands ;-)
--->
+	<!-- 
+		LANGUAGE VARIABLES
+		Things that only helix84 understands ;-)
+	-->
 	
 	<xsl:variable name="language_param">
 		<xsl:if test="//request/lang">
@@ -201,10 +201,9 @@
 		<head>
 		<title><xsl:value-of select="//config/application_name" />: <xsl:call-template name="title" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-		<xsl:call-template name="header_refresh" />
 		<base href="{$base_url}/" />
 		<xsl:call-template name="css_include" />
-		<xsl:call-template name="header" />
+		<!-- TODO: FIX THIS?  <xsl:call-template name="header" /> -->
 		<xsl:call-template name="surround-google-analytics" />
 		</head>
 	</xsl:template>
@@ -413,6 +412,57 @@
 	-->
 	
 	<xsl:template name="mobile_footer" />
+	
+	<!--
+		TEMPLATE: MY ACCOUNT SIDEBAR
+		links to login/out, my saved records, and other personalization features
+	-->
+	
+	<xsl:template name="account_sidebar">
+		<div id="account" class="box">
+			<h2><xsl:copy-of select="$text_header_myaccount" /></h2>
+			<ul>
+				<li id="login_option">
+					<xsl:choose>
+						<xsl:when test="//request/session/role and //request/session/role != 'local'">
+							<a id="logout">
+							<xsl:attribute name="href"><xsl:value-of select="//navbar/element[@id = 'logout']/url" /></xsl:attribute>
+								<xsl:copy-of select="$text_header_logout" />
+							</a>
+						</xsl:when>
+						<xsl:otherwise>
+							<a id="login">
+							<xsl:attribute name="href"><xsl:value-of select="//navbar/element[@id = 'login']/url" /></xsl:attribute>
+								<xsl:copy-of select="$text_header_login" />
+							</a>
+						</xsl:otherwise>
+					</xsl:choose>
+				</li>
+			
+				<li id="my_saved_records" class="sidebarFolder">
+					<xsl:call-template name="img_save_record">
+						<xsl:with-param name="id">folder</xsl:with-param>
+						<xsl:with-param name="test" select="//navbar/element[@id='saved_records']/@numSessionSavedRecords &gt; 0" />
+					</xsl:call-template>
+					<xsl:text> </xsl:text>
+					<a>
+					<xsl:attribute name="href"><xsl:value-of select="//navbar/element[@id='saved_records']/url" /></xsl:attribute>
+						<xsl:copy-of select="$text_header_savedrecords" />
+					</a>
+				</li>
+				
+				<xsl:if test="//navbar/element[@id='saved_collections']">
+					<li id="my_databases" class="sidebarFolder">
+						<xsl:call-template name="img_save_record">
+							<xsl:with-param name="test" select="0" />
+						</xsl:call-template>
+						<xsl:text> </xsl:text>
+						<a href="{//navbar/element[@id='saved_collections']/url}"><xsl:copy-of select="$text_header_collections"/></a>
+					</li>
+				</xsl:if>
+			</ul>
+		</div>
+	</xsl:template>	
 		
 	<!-- 	
 		TEMPLATE: JSLABELS
@@ -424,5 +474,203 @@
 		<script language="javascript" type="text/javascript" src="{$base_url}/?{$language_param}&amp;base=helper&amp;action=labels.js" /> 
 	
 	</xsl:template>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+<!--
+	#############################
+	#                           #
+	#      IMAGE TEMPLATES      #
+	#                           #
+	#############################
+-->
+
+<xsl:variable name="app_mini_icon_url"		select="concat($base_url, '/images/famfamfam/page_find.png')" />
+<xsl:variable name="image_sfx"			select="concat($base_url, '/images/sfx.gif')" />
+<xsl:variable name="img_src_original_record"	select="concat($base_url, '/images/famfamfam/link.png')" />
+<xsl:variable name="img_src_holdings"		select="concat($base_url, '/images/book.gif')" />
+<xsl:variable name="img_src_chain"		select="concat($base_url, '/images/famfamfam/link.png')" />
+
+<xsl:template name="img_databases_az_hint_info">
+	<img alt="{$text_databases_az_hint_info}" title="{$text_databases_az_hint_info}" src="images/info.gif" class="iconInfo miniIcon">
+		<xsl:attribute name="src"><xsl:value-of select="/knowledge_base/config/base_url" />/images/info.gif</xsl:attribute>
+	</img>
+</xsl:template>
+
+<xsl:template name="img_databases_az_hint_searchable">
+	<img alt="{$text_databases_az_hint_searchable}" title="{$text_databases_az_hint_searchable}" 
+		class="iconSearchable miniIcon" src="{$base_url}/images/famfamfam/magnifier.png"/>
+</xsl:template>
+
+<xsl:template name="img_refereed">
+	<img src="images/refereed_hat.gif" width="20" height="14" alt="" />
+</xsl:template>
+
+<xsl:template name="img_save_record">
+	<xsl:param name="id" />
+	<xsl:param name="class" />
+	<xsl:param name="alt" />
+	<xsl:param name="test" />
+	<img id="{$id}" name="{$id}" width="17" height="15" alt="{$alt}" border="0" class="{$class}">
+		<xsl:attribute name="src">
+			<xsl:choose> 
+				<xsl:when test="$test">images/folder_on.gif</xsl:when>
+				<xsl:otherwise>images/folder.gif</xsl:otherwise>
+			</xsl:choose>
+		</xsl:attribute>
+	</img>
+</xsl:template>
+
+<xsl:template name="img_delete">
+	<xsl:param name="alt" />
+	<xsl:param name="title" />
+	<xsl:param name="class" />
+	<img src="{$base_url}/images/delete.gif" alt="{$alt}" title="{$title}" class="{$class}" />
+</xsl:template>
+
+<xsl:template name="img_facet_remove">
+	<xsl:param name="alt" />
+	<xsl:param name="title" />
+	<xsl:param name="class" />
+	<img src="{$base_url}/images/facet-remove.png" alt="{$alt}" title="{$title}" class="{$class}" />
+</xsl:template>
+
+<xsl:template name="img_holdings">
+	<xsl:param name="alt" />
+	<xsl:param name="title" />
+	<xsl:param name="class" />
+	<img src="images/book.gif" alt="{$alt}" title="{$title}" class="{$class}" />
+</xsl:template>
+
+<xsl:template name="img_results_hint_remove_limit">
+	<xsl:param name="alt" select="$text_results_hint_remove_limit" />
+	<xsl:param name="title" />
+	<xsl:param name="class" />
+	<img src="{$base_url}/images/delete.gif" alt="{$alt}" title="{$title}" class="{$class}" />
+</xsl:template>
+
+<xsl:template name="img_az_info">
+	<xsl:param name="alt" select="$text_results_hint_remove_limit" />
+	<xsl:param name="title" />
+	<xsl:param name="class" />
+	<img src="{$base_url}/images/info.gif" alt="{$alt}" title="{$title}" class="{$class}" />
+</xsl:template>
+
+<xsl:template name="img_info_about">
+	<xsl:param name="alt" />
+	<xsl:param name="title" />
+	<xsl:param name="class" />
+	<img src="{$base_url}/images/info.gif" alt="{$alt}" title="{$title}" class="{$class}" />
+</xsl:template>
+
+<xsl:template name="img_embed_info">
+	<xsl:param name="alt">info</xsl:param>
+	<xsl:param name="title" />
+	<xsl:param name="class" />
+	<img src="{$base_url}/images/info.gif" alt="{$alt}" title="{$title}" class="{$class}" />
+</xsl:template>
+
+<xsl:template name="img_book_not_available">
+	<xsl:param name="alt" />
+	<xsl:param name="title" />
+	<xsl:param name="class" />
+	<img src="images/book-out.gif" alt="{$alt}" title="{$title}" class="{$class}" />
+</xsl:template>
+
+<xsl:template name="img_format_pdf">
+	<xsl:param name="alt" />
+	<xsl:param name="title" />
+	<xsl:param name="class" />
+	<img src="{$base_url}/images/pdf.gif" width="16" height="16" border="0" alt="{$alt}" title="{$title}" class="{$class}" />
+</xsl:template>
+
+<xsl:template name="img_format_html">
+	<xsl:param name="alt" />
+	<xsl:param name="title" />
+	<xsl:param name="class" />
+	<img src="{$base_url}/images/html.gif" width="16" height="16" border="0" alt="{$alt}" title="{$title}" class="{$class}" />
+</xsl:template>
+
+<xsl:template name="img_format_unknown">
+	<xsl:param name="alt" />
+	<xsl:param name="title" />
+	<xsl:param name="class" />
+	<img src="{$base_url}/images/html.gif" width="16" height="16" border="0" alt="{$alt}" title="{$title}" class="{$class}" />
+</xsl:template>
+
+<xsl:template name="img_databases_subject_hint_restricted">
+	<xsl:param name="alt" select="$text_databases_subject_hint_restricted" />
+	<xsl:param name="title" select="$text_databases_subject_hint_restricted" />
+	<xsl:param name="class" />
+	<img src="{$base_url}/images/lock.gif" alt="{$alt}" title="{$title}" class="{$class}" />
+</xsl:template>
+
+<xsl:template name="img_grey_checkbox">
+	<xsl:param name="alt" select="$text_databases_subject_hint_restricted" />
+	<xsl:param name="title" select="$text_databases_subject_hint_native_only" />
+	<xsl:param name="class" />
+	<img src="{$base_url}/images/link-out.gif" alt="{$alt}" title="{$title}" class="{$class}" />
+</xsl:template>
+
+<xsl:template name="img_back">
+	<xsl:param name="alt" />
+	<xsl:param name="title" />
+	<xsl:param name="class" />
+	<img src="{$base_url}/images/back.gif" alt="{$alt}" title="{$title}" class="{$class}" />
+</xsl:template>
+
+<xsl:template name="img_ill">
+	<xsl:param name="alt" />
+	<xsl:param name="title" />
+	<xsl:param name="class" />
+	<img src="{$base_url}/images/ill.gif" border="0" alt="{$alt}" title="{$title}" class="{$class}" />
+</xsl:template>
+
+<xsl:template name="img_phone">
+	<xsl:param name="alt" />
+	<xsl:param name="title" />
+	<xsl:param name="class" />
+	<img src="{$base_url}/images/phone.png" alt="{$alt}" title="{$title}" class="{$class}" />
+</xsl:template>
+
+<xsl:template name="img_search">
+	<xsl:param name="alt" />
+	<xsl:param name="title" />
+	<xsl:param name="class" />
+	<img src="{$base_url}/images/famfamfam/magnifier.png" alt="{$alt}" title="{$title}" class="{$class}" />
+</xsl:template>
+
+<xsl:template name="img_add">
+	<xsl:param name="alt" />
+	<xsl:param name="title" />
+	<xsl:param name="class" />
+	<img src="{$base_url}/images/famfamfam/add.png" alt="{$alt}" title="{$title}" class="{$class}" />
+</xsl:template>
 
 </xsl:stylesheet>
