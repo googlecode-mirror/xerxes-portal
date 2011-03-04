@@ -89,7 +89,7 @@ class Summon
 	 * @return  string              The requested resource
 	 */
 	
-	function getRecord($id)
+	public function getRecord($id)
 	{
 		if ( $this->debug )
 		{
@@ -105,6 +105,7 @@ class Summon
 		{
 			PEAR::raiseError($result);
 		}
+		
 		return $result;
 	}
 	
@@ -113,8 +114,8 @@ class Summon
 	 *
 	 * @param   string  $query      The search query
 	 * @param   array   $filter     The fields and values to filter results on
-	 * @param   string  $start      The record to start with
-	 * @param   string  $limit      The amount of records to return
+	 * @param   int  $page       	The page to start with
+	 * @param   int  $limit      	The amount of records to return
 	 * @param   string  $sortBy     The value to be used by for sorting
 	 * @param   string  $facets     An array of facets to return.  Default list is used if null.
 	 * @access  public
@@ -122,7 +123,7 @@ class Summon
 	 * @return  array               An array of query results
 	 */
 	
-	function query($query, $filter = null, $start = 1, $limit = 20, $sortBy = null, $facets = null)
+	public function query($query, $filter = null, $page = 1, $limit = 20, $sortBy = null, $facets = null)
 	{
 		if ( $this->debug )
 		{
@@ -163,9 +164,9 @@ class Summon
 				'SubjectTerms,or,1,30' , 
 				'Language,or,1,30'
 			);
+			
+			$options['s.ff'] = $facets;
 		}
-		
-		$options['s.ff'] = $facets;
 		
 		// Define filters to be applied
 		
@@ -183,11 +184,12 @@ class Summon
 		// Define Paging Parameters
 		
 		$options['s.ps'] = $limit;
-		$options['s.pn'] = $start;
+		$options['s.pn'] = $page;
 		
 		// Define Visibility 
 		
-		$options['s.ho'] = 'true';
+		// $options['s.ho'] = 'true';
+		
 		$result = $this->call($options);
 		
 		if ( PEAR::isError($result) )
@@ -204,12 +206,11 @@ class Summon
 	 * @param   array       $params     An array of parameters for the request
 	 * @param   string      $service    The API Service to call
 	 * @param   string      $method     The HTTP Method to use
-	 * @param   bool        $raw        Whether to return raw XML or processed
 	 * @return  string                  The response from the Summon API
 	 * @access  private
 	 */
 	
-	private function call($params = array(), $service = 'search', $method = 'POST', $raw = false)
+	private function call($params = array(), $service = 'search', $method = 'POST')
 	{
 		$this->client->setURL($this->host . '/' . $service);
 		//$this->client->setMethod($method);
@@ -285,7 +286,7 @@ class Summon
 		}
 	}
 	
-	function _process($result)
+	private function _process($result)
 	{
 		// Unpack JSON Data
 		if ( $result = json_decode($result, true) )
@@ -304,7 +305,7 @@ class Summon
 		return $result;
 	}
 	
-	function hmacsha1($key, $data)
+	private function hmacsha1($key, $data)
 	{
 		$blocksize = 64;
 		$hashfunc = 'sha1';
