@@ -35,7 +35,7 @@
 	
 		<div class="yui-ge">
 			<div class="yui-u first">
-				<h1><xsl:value-of select="$text_solr_name" /></h1>
+				<h1>Testing</h1>
 				<xsl:call-template name="searchbox" />
 			</div>
 			<div class="yui-u">
@@ -56,13 +56,7 @@
 					<xsl:call-template name="sort_bar" />
 				</div>
 		
-				<ul id="results">
-				
-					<xsl:for-each select="results/records/record/xerxes_record">
-						<xsl:call-template name="result" />	
-					</xsl:for-each>
-				
-				</ul>
+				<xsl:call-template name="brief_results" />
 
 				<xsl:call-template name="paging_navigation" />
 				<xsl:call-template name="hidden_tag_layers" />
@@ -358,6 +352,50 @@
 		</xsl:for-each>
 		
 	</xsl:template>
+
+	<!-- 
+		TEMPLATE PAGING NAVIGATION
+		Provides the visual display for moving through a set of results
+	-->
+	
+	<xsl:template name="paging_navigation">
+	
+		<xsl:if test="//pager/page">
+			<div class="resultsPager">
+	
+				<ul class="resultsPagerList">
+				<xsl:for-each select="//pager/page">
+					<li>
+					<xsl:variable name="link" select="@link" />
+					<xsl:choose>
+						<xsl:when test="@here = 'true'">
+							<strong><xsl:value-of select="text()" /></strong>
+						</xsl:when>
+						<xsl:otherwise>
+							<a href="{$link}">
+								<xsl:choose>
+									<xsl:when test="@type = 'next'">
+										<xsl:attribute name="class">resultsPagerNext</xsl:attribute>
+										<xsl:copy-of select="$text_results_next" />
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:attribute name="class">resultsPagerLink</xsl:attribute>
+									</xsl:otherwise>
+								</xsl:choose>
+								<xsl:call-template name="text_results_sort_options">
+									<xsl:with-param name="option" select="text()" />
+								</xsl:call-template>
+							</a>
+						</xsl:otherwise>
+					</xsl:choose>
+					</li>
+				</xsl:for-each>
+				</ul>
+			</div>
+		</xsl:if>
+	
+	</xsl:template>
+
 	
 	<xsl:template name="sidebar">
 	
@@ -763,5 +801,127 @@
 		<xsl:call-template name="safari_tag_fix" />
 		
 	</xsl:template>
+
+	<!-- 
+		TEMPLATE: SAFARI TAG FIX
+		This hidden iframe essentially thwarts the Safari backforward cache so that
+		tags don't get wacky
+	-->
+	
+	<xsl:template name="safari_tag_fix">
+		
+		<xsl:if test="contains(//server/http_user_agent,'Safari')">
+		
+			<iframe style="height:0px;width:0px;visibility:hidden" src="about:blank">
+				<!-- this frame prevents back-forward cache for safari -->
+			</iframe>
+			
+		</xsl:if>
+	
+	</xsl:template>
+
+	<!-- 
+		TEMPLATE: TAGS DISPLAY
+		used by a couple of pages in the folder area for displaying tags
+	-->
+	
+	<xsl:template name="tags_display">
+		
+		<h2><xsl:copy-of select="$text_folder_options_tags" /></h2>
+		<ul>
+		<xsl:for-each select="tags/tag">
+			<li>
+			<xsl:choose>
+				<xsl:when test="@label = //request/label">
+					<strong><xsl:value-of select="@label" /></strong> ( <xsl:value-of select="@total" /> )
+				</xsl:when>
+				<xsl:otherwise>
+					<a href="{@url}"><span class="label_list_item"><xsl:value-of select="@label" /></span></a> ( <xsl:value-of select="@total" /> )
+				</xsl:otherwise>
+			</xsl:choose>
+			</li>
+		</xsl:for-each>
+		</ul>
+		
+	</xsl:template>
+
+
+	<!--
+		TEMPLATE: TAG INPUT
+		tab/label input form used to enter labels/tags for saved record, on both folder page and search results
+		page (for saved records only) one of record (usually) or id (unusually) are required. 
+		parameter: record  =>  XSL node representing a savedRecord with a child <id> and optional children <tags>
+		parameter: id => pass a string id instead of a record in nodeset. Used for the 'template' form for ajax 
+		label input adder. 
+	-->
+	
+	<xsl:template name="tag_input">
+		<xsl:param name="record" select="." />
+		<xsl:param name="id" select="$record/id" /> 
+		<xsl:param name="context">the saved records page</xsl:param>
+	
+		<div class="folderLabels recordAction" id="tag_input_div-{$id}">
+			<form action="./" method="get" class="tags">
+			
+				<!-- note that if this event is fired with ajax, the javascript changes
+				the action element here to 'tags_edit_ajax' so the server knows to display a 
+				different view, which the javascript captures and uses to updates the totals above. -->
+				
+				<input type="hidden" name="base" value="folder" />
+				<input type="hidden" name="lang" value="{//request/lang}" />
+				<input type="hidden" name="action" value="tags_edit" />
+				<input type="hidden" name="record" value="{$id}" />
+				<input type="hidden" name="context" value="{$context}" />
+				
+				<xsl:variable name="tag_list">
+					<xsl:for-each select="$record/tag">
+						<xsl:value-of select="text()" />
+						<xsl:if test="following-sibling::tag">
+							<xsl:text>, </xsl:text>
+						</xsl:if>
+					</xsl:for-each>
+				</xsl:variable>
+				
+				<input type="hidden" name="tagsShaddow" id="shadow-{$id}" value="{$tag_list}" />
+				
+				<label for="tags-{$id}"><xsl:copy-of select="$text_records_tags" /></label>
+				
+				<input type="text" name="tags" id="tags-{$id}" class="tagsInput" value="{$tag_list}" />			
+				<xsl:text> </xsl:text>
+				<input id="submit-{$id}" type="submit" name="submitButton" value="Update" class="tagsSubmit{$language_suffix}" />
+			</form>
+		</div>
+		
+	</xsl:template>
+
+
+
+
+
+
+
+
+
+
+
+
+	<xsl:template name="additional_record_links" />
+	<xsl:template name="additional_brief_record_data" />
+	<xsl:template name="additional_full_record_data_main" />
+	<xsl:template name="additional_full_record_data_supplemental" />
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<xsl:template name="full_text_links" />
 	
 </xsl:stylesheet>

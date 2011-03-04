@@ -28,6 +28,11 @@ abstract class Xerxes_Framework_Controller
 		$this->response = Xerxes_Framework_Response::getInstance();
 	}
 	
+	public function display()
+	{
+		return $this->response->display();
+	}
+	
 	/**
 	 * Checks if the user is within local IP range or has logged in,
 	 * failure stops the flow and redirects user to a login page
