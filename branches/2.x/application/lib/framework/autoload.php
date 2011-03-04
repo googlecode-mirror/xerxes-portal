@@ -9,12 +9,12 @@ spl_autoload_register('xerxes_autoload');
 $xerxes_application_path = realpath(__FILE__);
 
 $xerxes_application_path = explode(DIRECTORY_SEPARATOR, $xerxes_application_path);
-array_pop($xerxes_application_path);
-array_pop($xerxes_application_path);
-array_pop($xerxes_application_path);
+array_pop($xerxes_application_path); // autoload.php
+array_pop($xerxes_application_path); // framework
+array_pop($xerxes_application_path); // lib
 $xerxes_application_path = implode(DIRECTORY_SEPARATOR, $xerxes_application_path). DIRECTORY_SEPARATOR;
 
-define('XERXES_APPLICATION_PATH', $xerxes_application_path);
+define('XERXES_APPLICATION_PATH', $xerxes_application_path); // application
 
 set_include_path( get_include_path() . PATH_SEPARATOR . $xerxes_application_path );
 
@@ -35,8 +35,8 @@ $xerxes_namespaces = array();
 function import($namespace, $location)
 {
 	global $xerxes_namespaces;
-	$xerxes_namespaces[$location] = $namespace;
-	uasort($xerxes_namespaces,'xerxes_namespace_sort');
+	$xerxes_namespaces[$namespace] = $location;
+	uksort($xerxes_namespaces,'xerxes_namespace_sort');
 }
 
 /**
@@ -61,7 +61,7 @@ function xerxes_autoload($class_name)
 	$file_location = "";
 	$found = false;
 	
-	foreach ( $xerxes_namespaces as $location => $namespace  )
+	foreach ( $xerxes_namespaces as $namespace => $location )
 	{
 		// if the first part of the class name matches the first part
 		// of one of our registerd namespaces, take that location
