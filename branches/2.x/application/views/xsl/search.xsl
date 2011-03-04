@@ -26,6 +26,60 @@
 <xsl:stylesheet version="1.0"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
+	
+	<!--
+		TEMPLATE: SEARCH PAGE
+	-->
+
+	<xsl:template name="search_page">
+	
+		<div class="yui-ge">
+			<div class="yui-u first">
+				<h1><xsl:value-of select="$text_solr_name" /></h1>
+				<xsl:call-template name="searchbox" />
+			</div>
+			<div class="yui-u">
+				<div id="sidebar">
+					<xsl:call-template name="account_sidebar" />
+				</div>
+			</div>
+		</div>
+		
+		<xsl:call-template name="tabs" />
+		
+		<div class="yui-ge">
+			<div class="yui-u first">	
+			
+				<xsl:call-template name="facets_applied" />
+		
+				<div class="tabs">
+					<xsl:call-template name="sort_bar" />
+				</div>
+		
+				<ul id="results">
+				
+					<xsl:for-each select="results/records/record/xerxes_record">
+						<xsl:call-template name="result" />	
+					</xsl:for-each>
+				
+				</ul>
+
+				<xsl:call-template name="paging_navigation" />
+				<xsl:call-template name="hidden_tag_layers" />
+	
+			</div>
+			<div class="yui-u">
+				<div id="sidebar">
+					<xsl:call-template name="sidebar" />
+				</div>
+			</div>
+		</div>	
+		
+	</xsl:template>
+
+	<!--
+		TEMPLATE: SORT BAR
+	-->
 
 	<xsl:template name="sort_bar">
 	
@@ -73,12 +127,20 @@
 		</xsl:choose>
 	
 	</xsl:template>
+
+	<!--
+		TEMPLATE: NO HITS
+	-->
 	
 	<xsl:template name="no_hits">
 	
 		<p class="error"><xsl:value-of select="$text_metasearch_hits_no_match" /></p>
 	
 	</xsl:template>
+	
+	<!--
+		TEMPLATE: SEARCH BOX
+	-->
 	
 	<xsl:template name="searchbox">
 	
@@ -106,7 +168,10 @@
 		</form>	
 		
 	</xsl:template>
-	
+
+	<!--
+		TEMPLATE: SEARCH BOX MOBILE
+	-->	
 	
 	<xsl:template name="searchbox_mobile">
 	
@@ -116,6 +181,10 @@
 		</xsl:call-template>
 			
 	</xsl:template>
+
+	<!--
+		TEMPLATE: SEARCH BOX FULL
+	-->
 	
 	<xsl:template name="searchbox_full">
 	
@@ -129,6 +198,10 @@
 		</xsl:choose>
 	
 	</xsl:template>
+
+	<!--
+		TEMPLATE: SIMPLE SEARCH ????
+	-->
 	
 	<xsl:template name="simple_search">
 	
