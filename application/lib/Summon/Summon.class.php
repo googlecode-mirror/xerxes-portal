@@ -123,20 +123,24 @@ class Summon
 	 * @return  array               An array of query results
 	 */
 	
-	public function query($query, $filter = null, $page = 1, $limit = 20, $sortBy = null, $facets = null)
+	public function query($query, $filter = array(), $page = 1, $limit = 20, $sortBy = null, $facets = null)
 	{
 		if ( $this->debug )
 		{
 			echo '<pre>Query: ';
+			
 			print_r($query);
+			
 			if ( $filter )
 			{
 				echo "\nFilterQuery: ";
+				
 				foreach ( $filter as $filterItem )
 				{
 					echo " $filterItem";
 				}
 			}
+			
 			echo "</pre>\n";
 		}
 		
@@ -172,6 +176,10 @@ class Summon
 		
 		if ( isset($filter) )
 		{
+			foreach ( $filter as $filterItem )
+			{
+				$options['s.fvf'] = $filterItem;
+			}
 		}
 		
 		// Define which sorting to use
