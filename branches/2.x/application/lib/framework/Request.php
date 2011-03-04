@@ -810,7 +810,7 @@ class Xerxes_Framework_Request
 	
 	public function url_for($properties, $full = false, $force_secure = false)
 	{
-		if ( $properties instanceof Xerxes_Framework_Request_URL )
+		if ( $properties instanceof Xerxes_Framework_URL )
 		{
 			$properties = $properties->toArray();
 		}
@@ -1103,66 +1103,5 @@ class Xerxes_Framework_Request
 				$objAppend->appendChild( $objElement );
 			}
 		}
-	}
-}
-
-class Xerxes_Framework_Request_URL
-{
-	private $arrParams;
-	
-	public function __construct($params = "")
-	{
-		$this->arrParams = $params;
-	}
-	
-	public function setParam($key, $value)
-	{
-		if ( array_key_exists( $key, $this->arrParams ) )
-		{
-			if ( ! is_array( $this->arrParams[$key] ) )
-			{
-				$this->arrParams[$key] = array ($this->arrParams[$key] );
-			}
-			
-			array_push( $this->arrParams[$key], $value );
-		} 
-		else
-		{
-			$this->arrParams[$key] = $value;
-		}
-	}
-	
-	public function removeProperty($key, $value)
-	{
-		if ( array_key_exists( $key, $this->arrParams ) )
-		{
-			$stored = $this->arrParams[$key];
-			
-			// if this is an array, we need to find the right one
-			
-			if ( is_array( $stored ) )
-			{
-				for ( $x = 0; $x < count($stored); $x++ )
-				{
-					if ( $stored[$x] == $value )
-					{
-						unset($this->arrParams[$key][$x]);
-					}
-				}
-				
-				// reset the keys
-				
-				$this->arrParams[$key] = array_values($this->arrParams[$key]);
-			}
-			else
-			{
-				unset($this->arrParams[$key]);
-			}
-		} 
-	}
-	
-	public function toArray()
-	{
-		return $this->arrParams;
 	}
 }
