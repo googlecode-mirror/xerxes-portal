@@ -26,11 +26,9 @@ abstract class Xerxes_Framework_Controller
 		$this->request = Xerxes_Framework_Request::getInstance();
 		$this->registry = Xerxes_Framework_Registry::getInstance();
 		$this->response = Xerxes_Framework_Response::getInstance();
-	}
-	
-	public function display()
-	{
-		return $this->response->display();
+		
+		$this->response->add($this->request->toXML(), "request");
+		$this->response->add($this->registry->toXML(), "config");
 	}
 	
 	/**

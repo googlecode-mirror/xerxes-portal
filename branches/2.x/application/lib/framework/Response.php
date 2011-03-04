@@ -211,11 +211,17 @@ class Xerxes_Framework_Response
 	
 	public function display()
 	{
+		$xml = $this->toXML();
+		
+		if ( $this->_format == "xerxes" )
+		{
+			return $xml->saveXML();
+		}
+		
 		$view = $this->_view[$this->_format]; // file location
 		
 		if (strstr($view, 'xsl') )
 		{
-			$xml = $this->toXML();
 			$html = Xerxes_Framework_Parser::transform($xml, $view);
 			return $html;
 		}
@@ -241,33 +247,36 @@ class Xerxes_Framework_Response
 
 	public function setFormat($format)
 	{
-		$this->_format = $format;
-		
-		$arrFormats = array 
-		(
-			// basic types
-	
-			"javascript" => "Content-type: application/javascript", 
-			"json" => "Content-type: application/json", 
-			"pdf" => "Content-type: application/pdf", 
-			"text" => "Content-type: text/plain", 
-			"xml" => "Content-type: text/xml", 
-	
-			// complex types
-	
-			"atom" => "Content-type: text/xml", 
-			"bibliographic" => "Content-type: application/x-research-info-systems", 
-			"embed_html_js" => "Content-type: application/javascript", 
-			"ris" => "Content-type: text/plain", 
-			"rss" => "Content-type: text/xml", 
-			"xerxes" => "Content-type: text/xml", 
-			"text-file" => "Content-Disposition: attachment; Content-type: text/plain; filename=download.txt", 
-			"ris-file" => "Content-Disposition: attachment; Content-type: text/plain; filename=download.ris" 
-		);
-		
-		if ( array_key_exists( $format, $arrFormats ) )
+		if ( $format != "" )
 		{
-			header( $arrFormats[$format] . "; charset=UTF-8" );
+			$this->_format = $format;
+			
+			$arrFormats = array 
+			(
+				// basic types
+		
+				"javascript" => "Content-type: application/javascript", 
+				"json" => "Content-type: application/json", 
+				"pdf" => "Content-type: application/pdf", 
+				"text" => "Content-type: text/plain", 
+				"xml" => "Content-type: text/xml", 
+		
+				// complex types
+		
+				"atom" => "Content-type: text/xml", 
+				"bibliographic" => "Content-type: application/x-research-info-systems", 
+				"embed_html_js" => "Content-type: application/javascript", 
+				"ris" => "Content-type: text/plain", 
+				"rss" => "Content-type: text/xml", 
+				"xerxes" => "Content-type: text/xml", 
+				"text-file" => "Content-Disposition: attachment; Content-type: text/plain; filename=download.txt", 
+				"ris-file" => "Content-Disposition: attachment; Content-type: text/plain; filename=download.ris" 
+			);
+			
+			if ( array_key_exists( $format, $arrFormats ) )
+			{
+				header( $arrFormats[$format] . "; charset=UTF-8" );
+			}
 		}
 	}
 }

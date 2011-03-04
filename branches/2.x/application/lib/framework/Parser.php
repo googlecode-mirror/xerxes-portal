@@ -57,7 +57,7 @@ class Xerxes_Framework_Parser
 			
 		// transform
 		
-		$objXsl = $objProcessor->importStylesheet($objXsl);
+		$objProcessor->importStylesheet($objXsl);
 			
 		if ($bolDoc == true)
 		{
