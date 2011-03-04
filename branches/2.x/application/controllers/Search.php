@@ -9,6 +9,7 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 	protected $max_allowed; // upper-limit per page
 	protected $sort; // default sort
 	
+	
 	public function results()
 	{
 		// defaults

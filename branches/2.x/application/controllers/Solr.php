@@ -9,6 +9,8 @@ class Xerxes_Controller_Solr extends Xerxes_Controller_Search
 		$this->config = Xerxes_Model_Solr_Config::getInstance();
 		$this->query = new Xerxes_Model_Search_Query($this->request, $this->config);
 		$this->engine = new Xerxes_Model_Solr_Engine($this->config);
+		
+		$this->response->add($this->config->toXML(), "config_local");
 	}
 	
 	public function results()
