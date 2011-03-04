@@ -46,6 +46,7 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 		
 		$this->addRecordLinks($results);
 		$this->addFacetLinks($results);
+		$this->addFilterLinks();
 		
 		// summary, sort & paging elements
 		
@@ -363,6 +364,20 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 				}
 			}
 		}
+	}
+	
+	/**
+	 * Add links to the query object limits
+	 */
+	
+	protected function addFilterLinks()
+	{
+		foreach ( $this->query->getLimits() as $limit )
+		{
+			$url = new Xerxes_Framework_URL($this->currentParams());
+			$url->removeParam($limit->field, $limit->value);
+			$limit->remove_url = $this->request->url_for($url);
+		}		
 	}
 	
 	/**
