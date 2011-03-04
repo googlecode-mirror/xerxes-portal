@@ -141,7 +141,7 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 		
 		// extract facets
 		
-		$results->facets = $this->extractFacets($xml);
+		$results->setFacets($this->extractFacets($xml));
 		
 		return $results;
 	}
@@ -466,8 +466,6 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 		{
 			$facets = new Xerxes_Model_Search_Facets();
 			
-			$strThousSep = $this->registry->getConfig( "HITS_THOUSANDS_SEPERATOR", false, "," );
-			
 			foreach ( $groups as $facet_group )
 			{
 				// if only one entry, then all the results have this same facet,
@@ -512,7 +510,7 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 				{
 					$facet = new Xerxes_Model_Search_Facet();
 					$facet->name = $key;
-					$facet->count = number_format( $value, 0, null, $strThousSep);
+					$facet->count = $value;
 					
 					// dates are different
 					
