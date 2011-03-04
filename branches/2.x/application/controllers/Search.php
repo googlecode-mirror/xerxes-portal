@@ -2,10 +2,11 @@
 
 abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 {
-	protected $config;
-	protected $query;
-	protected $engine;
-	protected $max; // default max
+	protected $config; // local config
+	protected $query; // query object
+	protected $engine; // search engine
+	protected $max; // default records per page
+	protected $max_allowed; // upper-limit per page
 	protected $sort; // default sort
 	
 	public function results()
@@ -15,6 +16,10 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 		$this->max = $this->registry->getConfig("RECORDS_PER_PAGE", false, 10);
 		$this->max = $this->config->getConfig("RECORDS_PER_PAGE", false, $this->max);
 		
+		$this->max_allowed = $this->registry->getConfig("MAX_RECORDS_PER_PAGE", false, 30);
+		$this->max_allowed = $this->config->getConfig("MAX_RECORDS_PER_PAGE", false, $this->max_allowed);
+		
+		
 		$this->sort = $this->registry->getConfig("SORT_ORDER", false, "relevance");
 		$this->sort = $this->config->getConfig("SORT_ORDER", false, $this->sort);
 		
@@ -23,6 +28,13 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 		$start = $this->request->getParam('start', false, 1);
 		$max = $this->request->getParam('max', false, $this->max);
 		$sort = $this->request->getParam('sort', false, $this->sort);
+		
+		// make sure records per page does not exceed upper bound
+		
+		if ( $max > $this->max_allowed )
+		{
+			$max = $this->max_allowed;
+		}
 		
 		// search
 				
