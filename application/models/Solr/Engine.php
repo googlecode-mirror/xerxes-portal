@@ -80,9 +80,14 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 		return $results;
 		
 	}	
-	
+
 	/**
 	 * Search and return results
+	 * 
+	 * @param Xerxes_Model_Search_Query $search		search object
+	 * @param int $start							[optional] starting record number
+	 * @param int $max								[optional] max records
+	 * @param string $sort							[optional] sort order
 	 * 
 	 * @return Xerxes_Model_Search_Results
 	 */	
@@ -140,7 +145,18 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 		
 		return $results;
 	}
-
+	
+	/**
+	 * Prepare search URL
+	 * 
+	 * @param Xerxes_Model_Search_Query $search		search object
+	 * @param int $start							[optional] starting record number
+	 * @param int $max								[optional] max records
+	 * @param string $sort							[optional] sort order
+	 * 
+	 * @return string
+	 */		
+	
 	protected function prepareSearchURL( Xerxes_Model_Search_Query $search, $start, $max = null, 
 		$sort = null, $include_facets = true)
 	{
