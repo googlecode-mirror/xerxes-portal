@@ -19,11 +19,11 @@
 
 class Xerxes_Framework_PathMap
 {
-	private $actions_xml = null; 		// simplexml object containing instructions for the actions
-	private $mapsByProperty = array();	// array keyed by section name or "section/action"
-										// value is an array mapping properties (key) to path indexes (value) 
-	private $mapsByIndex = array();		// array keyed by section name or "section/action"
-										// value is an array mapping path indexes (key) to properties (value) 
+	private $actions_xml = null; // simplexml object containing instructions for the actions
+	private $mapsByProperty = array(); // array keyed by section name or "section/action"
+	                                   // value is an array mapping properties (key) to path indexes (value) 
+	private $mapsByIndex = array();	 // array keyed by section name or "section/action"
+	                                 // value is an array mapping path indexes (key) to properties (value) 
 	
 	/**
 	 * Constructor

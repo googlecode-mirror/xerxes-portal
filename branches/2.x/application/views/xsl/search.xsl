@@ -195,7 +195,7 @@
 	</xsl:template>
 
 	<!--
-		TEMPLATE: SIMPLE SEARCH ????
+		TEMPLATE: SIMPLE SEARCH
 	-->
 	
 	<xsl:template name="simple_search">
