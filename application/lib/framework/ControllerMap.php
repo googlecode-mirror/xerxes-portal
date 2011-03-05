@@ -15,20 +15,13 @@
 
 class Xerxes_Framework_ControllerMap
 {
-	private $file = "config/actions.xml";	// actions configuration file
+	private $file = "config/actions.xml"; // actions configuration file
 	
-	public $xml = null;					// simplexml object containing instructions for the actions
-	private $path_map = null;			// xerxes_framework_pathmap object.
-
-	private $bolRestricted = false;		// whether action should require authentication
-	private $bolLogin = false;			// whether action requires an explicit login
-	private $bolCLI = false;			// whether action should be restricted to command line interface
+	public $xml = null; // simplexml object containing instructions for the actions
+	private $path_map = null; // xerxes_framework_pathmap object
+	private $version; // xerxes version number
 	
-	private $view_type = "";			// the folder the file lives in, important if it is 'xsl'
-	private $view_file = "";			// name of the file to use in view
-	private $version;					// xerxes version number
-	
-	private static $instance;			// singleton pattern	
+	private static $instance; // singleton pattern	
 	
 	private function __construct() { }
 	
@@ -163,105 +156,6 @@ class Xerxes_Framework_ControllerMap
 		return $this->path_map;
 	}
 	
-	/**
-	 * Get the header for a user-defined format
-	 *
-	 * @param string $format	name of the format
-	 * @return stringq			http header to be output for format
-	 */
-	
-	public function getFormat($format)
-	{
-		$formats = $this->xml->xpath("//formats/format[@name='$format']");
-		
-		if ( $formats != false )
-		{
-			return (string) $formats[0]["header"];
-		}
-		else
-		{
-			return null;
-		}
-	}
-
-	/**
-	 * Whether this portion of the application should be restricted by IP adddress
-	 *
-	 * @return bool
-	 */
-		
-	public function isRestricted()
-	{
-		return $this->bolRestricted;
-	}
-	
-	/**
-	 * Whether this part of the application required a valid, named login
-	 *
-	 * @return bool
-	 */
-	
-	public function requiresLogin()
-	{
-		return $this->bolLogin;
-	}
-	
-	/**
-	 * Get the list of commands
-	 *
-	 * @return array	each array element consists of another array(directory, namespace, command name)
-	 */
-	
-	public function getCommands()
-	{
-		return $this->arrCommands;
-	}
-	
-	/**
-	 * Get any parameters that should be included in the request 
-	 *
-	 * @return array
-	 */
-	
-	public function getRequests()
-	{
-		return $this->arrRequest;
-	}
-	
-	/**
-	 * Get the file type of the view, either php or xml
-	 *
-	 * @return string
-	 */
-	
-	public function getViewType()
-	{
-		return $this->strViewType; 
-	}
-	
-	/**
-	 * Whether this command should be restricted to command line interface
-	 * only to prevent execution via the web
-	 *
-	 * @return bool		true if should be restricted
-	 */
-	
-	public function restrictToCLI()
-	{
-		return $this->bolCLI;
-	}
-	
-	/**
-	 * Get the location of the view, relative to the root of the instance
-	 *
-	 * @return string
-	 */
-	
-	public function getView()
-	{
-		return $this->strViewFile;
-	}
-
 	/**
 	 * Get the Xerxes version number
 	 */
