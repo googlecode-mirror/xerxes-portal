@@ -209,9 +209,15 @@ class Xerxes_Model_DataMap_Databases extends Xerxes_Framework_DataMap
 			
 			foreach ( $objSubcategory->databases as $objDatabase )
 			{
-				$strSQL = "INSERT INTO xerxes_subcategory_databases ( database_id, subcategory_id, sequence ) " . "VALUES ( :database_id, :subcategory_id, :sequence )";
+				$strSQL = "INSERT INTO xerxes_subcategory_databases " .
+					"( database_id, subcategory_id, sequence ) " . 
+					"VALUES ( :database_id, :subcategory_id, :sequence )";
 				
-				$arrValues = array (":database_id" => $objDatabase->metalib_id, ":subcategory_id" => $objSubcategory->metalib_id, ":sequence" => $d );
+				$arrValues = array (
+					":database_id" => $objDatabase->metalib_id, 
+					":subcategory_id" => $objSubcategory->metalib_id, 
+					":sequence" => $d 
+				);
 				
 				$this->insert( $strSQL, $arrValues );
 				$d++;
@@ -252,9 +258,17 @@ class Xerxes_Model_DataMap_Databases extends Xerxes_Framework_DataMap
 	{
 		$objCategory->normalized = Xerxes_Data_Category::normalize( $objCategory->name );
 		
-		$sql = "UPDATE xerxes_user_categories SET name = :name, normalized = :normalized, published = :published WHERE id = " . $objCategory->id;
+		$sql = "UPDATE xerxes_user_categories " .
+			"SET name = :name, normalized = :normalized, published = :published " .
+			"WHERE id = " . $objCategory->id;
 		
-		return $this->update( $sql, array (":name" => $objCategory->name, ":normalized" => $objCategory->normalized, ":published" => $objCategory->published ) );
+		return $this->update( $sql, 
+			array (
+				":name" => $objCategory->name, 
+				":normalized" => $objCategory->normalized, 
+				":published" => $objCategory->published 
+				) 
+			);
 	}
 	
 	/**
@@ -315,9 +329,14 @@ class Xerxes_Model_DataMap_Databases extends Xerxes_Framework_DataMap
 		if ( $sequence == null )
 			$sequence = count( $objSubcat->databases ) + 1;
 		
-		$strSQL = "INSERT INTO xerxes_user_subcategory_databases ( database_id, subcategory_id, sequence ) " . "VALUES ( :database_id, :subcategory_id, :sequence )";
+		$strSQL = "INSERT INTO xerxes_user_subcategory_databases ( database_id, subcategory_id, sequence ) " . 
+			"VALUES ( :database_id, :subcategory_id, :sequence )";
 		
-		$arrValues = array (":database_id" => $databaseID, ":subcategory_id" => $objSubcat->id, ":sequence" => $sequence );
+		$arrValues = array (
+			":database_id" => $databaseID, 
+			":subcategory_id" => $objSubcat->id, 
+			":sequence" => $sequence
+		);
 		
 		$this->insert( $strSQL, $arrValues );
 	}
@@ -332,8 +351,16 @@ class Xerxes_Model_DataMap_Databases extends Xerxes_Framework_DataMap
 	
 	public function updateUserSubcategoryProperties(Xerxes_Data_Subcategory $objSubcat)
 	{
-		$sql = "UPDATE xerxes_user_subcategories SET name = :name, sequence = :sequence WHERE id = " . $objSubcat->id;
-		return $this->update( $sql, array (":name" => $objSubcat->name, ":sequence" => $objSubcat->sequence ) );
+		$sql = "UPDATE xerxes_user_subcategories " .
+			"SET name = :name, sequence = :sequence " .
+			"WHERE id = " . $objSubcat->id;
+			
+		return $this->update( $sql, 
+			array (
+				":name" => $objSubcat->name, 
+				":sequence" => $objSubcat->sequence 
+				) 
+			);
 	}
 	
 	/**
@@ -345,8 +372,15 @@ class Xerxes_Model_DataMap_Databases extends Xerxes_Framework_DataMap
 	
 	public function removeDatabaseFromUserCreatedSubcategory($databaseID, Xerxes_Data_Subcategory $objSubcat)
 	{
-		$strDeleteSql = "DELETE from xerxes_user_subcategory_databases WHERE database_id = :database_id AND subcategory_id = :subcategory_id";
-		$this->delete( $strDeleteSql, array (":database_id" => $databaseID, ":subcategory_id" => $objSubcat->id ) );
+		$strDeleteSql = "DELETE from xerxes_user_subcategory_databases " .
+			"WHERE database_id = :database_id AND subcategory_id = :subcategory_id";
+			
+		$this->delete( $strDeleteSql, 
+			array (
+				":database_id" => $databaseID, 
+				":subcategory_id" => $objSubcat->id 
+				) 
+			);
 	}
 	
 	/**
@@ -496,12 +530,12 @@ class Xerxes_Model_DataMap_Databases extends Xerxes_Framework_DataMap
 	 * they are. 
 	 *
 	 * @param string $normalized		normalized category name
-	 * @param string $lang 				language code, can be empty string
-	 * @param string $mode  			one of constants METALIB_MODE or USER_CREATE_MODE, 
-	 * 									for metalib-imported categories or user-created categories, 
-	 * 									using different tables.
-	 * @param string $username 			only used in USER_CREATE_MODE, the particular user must be specified, 
-	 * 									becuase normalized subject names are only unique within a user. 
+	 * @param string $lang 			language code, can be empty string
+	 * @param string $mode  		one of constants METALIB_MODE or USER_CREATE_MODE, 
+	 * 					for metalib-imported categories or user-created categories, 
+	 * 					using different tables.
+	 * @param string $username 		only used in USER_CREATE_MODE, the particular user must be specified, 
+	 * 					becuase normalized subject names are only unique within a user. 
 	 * @return Xerxes_Data_Category		a Xerxes_Data_Category object, filled out with subcategories and databases. 
 	 */
 	
@@ -601,7 +635,8 @@ class Xerxes_Model_DataMap_Databases extends Xerxes_Framework_DataMap
 					// only add subcategory if it actually has databases, to
 					// maintain consistency with previous semantics.
 					
-					if ( ($mode == self::USER_CREATE_MODE && $objSubcategory->id) || ! empty( $objSubcategory->databases ) )
+					if ( ($mode == self::USER_CREATE_MODE && 
+						$objSubcategory->id) || ! empty( $objSubcategory->databases ) )
 					{
 						array_push( $objCategory->subcategories, $objSubcategory );
 					}
