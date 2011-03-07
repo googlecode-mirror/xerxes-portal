@@ -9,6 +9,32 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 	protected $max_allowed; // upper-limit per page
 	protected $sort; // default sort
 	
+	public function search()
+	{
+		// set the url params for where are gong to redirect,
+		// usually to the results action, but can be overriden
+		
+		$base = $this->searchRedirectParams();
+		$params = $this->query->getAllSearchParams();
+		$params = array_merge($base, $params);
+		
+		// check spelling
+		
+		if ( $this->request->getProperty("spell") != "none" )
+		{
+			$spelling = $this->query->checkSpelling();
+			
+			foreach ( $spelling as $key => $correction )
+			{
+				$params["spelling_$key"] = $correction;
+			}
+		}
+		
+		// construct the actual url and redirect
+
+		$url = $this->request->url_for($params);
+		$this->response->setRedirect($url);
+	}
 	
 	public function results()
 	{
@@ -46,7 +72,7 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 		
 		$this->addRecordLinks($results);
 		$this->addFacetLinks($results);
-		$this->addFilterLinks();
+		$this->addQueryLinks();
 		
 		// summary, sort & paging elements
 		
@@ -370,8 +396,23 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 	 * Add links to the query object limits
 	 */
 	
-	protected function addFilterLinks()
+	protected function addQueryLinks()
 	{
+		// link to corrected spelling
+		
+		$spelling_corrected = $this->request->getParam("spelling_query");
+		
+		if ( $spelling_corrected != null )
+		{
+			$spell = array();
+			$spell["url"] = $this->linkSpelling();
+			$spell["text"] = $spelling_corrected;
+			
+			$this->query->spelling_url = $spell;
+		}
+		
+		// links to remove facets
+		
 		foreach ( $this->query->getLimits() as $limit )
 		{
 			$url = new Xerxes_Framework_URL($this->currentParams());

@@ -239,10 +239,10 @@
 			
 			</div>
 			
-			<xsl:if test="results/spelling != ''">
+			<xsl:if test="query/spelling_url">
 				<p class="spellSuggest error">
 					<xsl:value-of select="$text_searchbox_spelling_error" /><xsl:text> </xsl:text>
-					<a href="{results/spelling/@url}"><xsl:value-of select="results/spelling" /></a>
+					<a href="{query/spelling_url/url}"><xsl:value-of select="query/spelling_url/text" /></a>
 				</p>
 			</xsl:if>	
 			
