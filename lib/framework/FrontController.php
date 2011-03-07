@@ -573,7 +573,7 @@ class Xerxes_Framework_FrontController
 		}
 	}
 	
-	private function directoryToArray($directory, $recursive)
+	private static function directoryToArray($directory, $recursive)
 	{
 		$array_items = array ();
 		
@@ -607,7 +607,7 @@ class Xerxes_Framework_FrontController
 	}
 	
 	
-	private function setHeader($format)
+	private static function setHeader($format)
 	{
 		$arrFormats = array 
 		(
