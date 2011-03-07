@@ -184,7 +184,7 @@ class Summon
 		
 		// Define which sorting to use
 		
-		if ( isset($sortBy) )
+		if ( $sortBy != "" )
 		{
 			$options['s.sort'] = $sortBy;
 		}
