@@ -27,10 +27,34 @@
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	
+	<!-- 
+		TEMPLATE: MODULE HEADER
+		add the book css and javascript to the header
+	-->	
+	
 	<xsl:template name="module-header">
 	
 		<link href="{$base_url}/css/books.css?xerxes_version={$xerxes_version}" rel="stylesheet" type="text/css" />
 	
+	</xsl:template>
+
+	<!-- 
+		TEMPLATE: BRIEF RESULTS
+		override and choose book
+	-->
+
+	<xsl:template name="brief_results">
+	
+		<ul id="results">
+		
+		<xsl:for-each select="//records/record/xerxes_record">
+
+			<xsl:call-template name="brief_result_book" />
+
+		</xsl:for-each>
+		
+		</ul>
+		
 	</xsl:template>
 	
 	<!-- 

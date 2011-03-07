@@ -508,7 +508,7 @@
 		
 		<xsl:for-each select="//records/record/xerxes_record">
 
-			<xsl:call-template name="brief_result_book" />
+			<xsl:call-template name="brief_result" />
 
 		</xsl:for-each>
 		
