@@ -277,27 +277,16 @@
 	-->	
 	
 	<xsl:template name="record-database">
-		<div>
-		<dt><xsl:copy-of select="$text_record_database" />:</dt>
-		<dd>
-			<xsl:variable name="metalib_id" select="metalib_id"/>
-			
-			<xsl:choose>
-				<xsl:when test="//database_links/database[@metalib_id = $metalib_id]/url">				
-					<a>
-					<xsl:attribute name="href">
-						<xsl:value-of select="//database_links/database[@metalib_id = $metalib_id]/url"/>
-					</xsl:attribute>
-					
-					<xsl:value-of select="database_name" />
-					</a>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:value-of select="database_name" />
-				</xsl:otherwise>
-			</xsl:choose>
-		</dd>
-		</div>
+	
+		<xsl:if test="database_name">
+			<div>
+			<dt><xsl:copy-of select="$text_record_database" />:</dt>
+			<dd>
+				<xsl:value-of select="database_name" />
+			</dd>
+			</div>
+		</xsl:if>
+		
 	</xsl:template>
 
 	<!--
@@ -306,8 +295,8 @@
 	
 	<xsl:template name="record-actions">
 		<div id="recordFullText" class="raisedBox recordActions">
-			<xsl:call-template name="record-action-fulltext" />	<!-- Full-Text -->
-			<xsl:call-template name="record-action-save" />		<!-- save record option -->
+			<xsl:call-template name="record-action-fulltext" />
+			<xsl:call-template name="record-action-save" />
 		</div>
 	</xsl:template>
 	
