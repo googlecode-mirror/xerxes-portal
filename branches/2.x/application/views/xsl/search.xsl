@@ -39,7 +39,7 @@
 				<xsl:call-template name="searchbox" />
 			</div>
 			<div class="yui-u">
-				<div id="sidebar">
+				<div class="sidebar">
 					<xsl:call-template name="account_sidebar" />
 				</div>
 			</div>
@@ -64,7 +64,7 @@
 	
 			</div>
 			<div class="yui-u">
-				<div id="sidebar">
+				<div class="sidebar">
 					<xsl:call-template name="search_sidebar" />
 				</div>
 			</div>
@@ -508,7 +508,7 @@
 		
 		<xsl:for-each select="//records/record/xerxes_record">
 
-			<xsl:call-template name="brief_result_article" />
+			<xsl:call-template name="brief_result" />
 
 		</xsl:for-each>
 		
@@ -517,15 +517,12 @@
 	</xsl:template>
 	
 	<!-- 
-		TEMPLATE: BRIEF RESULT ARTICLE
+		TEMPLATE: BRIEF RESULT
 		display of results geared toward articles (or really any non-book display)
 	-->
 	
-	<xsl:template name="brief_result_article">
-	
-		<xsl:param name="source" select="source" />
-		<xsl:param name="record_number" select="record_id" />		
-					
+	<xsl:template name="brief_result">
+
 		<li class="result">
 			
 			<xsl:variable name="title">
@@ -628,62 +625,20 @@
 				
 				<div class="recordActions">
 					
+					<!-- full text -->
+					
 					<xsl:call-template name="full_text_options" />
+					
+					<!-- custom area for additional links -->
 					
 					<xsl:call-template name="additional_record_links" />
 					
-									
-					<div id="saveRecordOption_{$source}_{$record_number}" class="recordAction saveRecord">
-						
-						<xsl:call-template name="img_save_record">
-							<xsl:with-param name="id" select="concat('folder_', $source, $record_number)" />
-							<xsl:with-param name="class">miniIcon saveRecordLink</xsl:with-param>
-							<xsl:with-param name="test" select="//request/session/resultssaved[@key = $record_id]" />
-						</xsl:call-template>
-						<xsl:text> </xsl:text>
-						
-						<a id="link_{$source}:{$record_number}" href="{../url_save_delete}">				
-							<!-- 'saved' class used as a tag by ajaxy stuff -->
-							<xsl:attribute name="class">
-								 saveRecord <xsl:if test="//request/session/resultssaved[@key = $record_id]">saved</xsl:if>
-							</xsl:attribute>
-							<xsl:choose>
-								<xsl:when test="//request/session/resultssaved[@key = $record_id]">
-									<xsl:choose>
-										<xsl:when test="//session/role = 'named'">
-											<xsl:copy-of select="$text_results_record_saved" />
-										</xsl:when>
-										<xsl:otherwise>
-											<xsl:copy-of select="$text_results_record_saved_temp" />
-										</xsl:otherwise>
-									</xsl:choose>
-								</xsl:when>
-								<xsl:otherwise><xsl:copy-of select="$text_results_record_save_it" /></xsl:otherwise>
-							</xsl:choose>
-						</a>
-						
-						<!-- temporary save note -->
-						
-						<xsl:if test="//request/session/resultssaved[@key = $record_id] and //request/session/role != 'named'"> 
-							<span class="temporary_login_note">
-								(<xsl:text> </xsl:text><a href="{//navbar/element[@id = 'login']/url}">
-									<xsl:copy-of select="$text_results_record_saved_perm" />
-								</a><xsl:text> </xsl:text>)
-							</span>
-						</xsl:if>
-					</div>
+					<!-- save record -->
 					
-					<!-- label/tag input for saved records, if record is saved and it's not a temporary session -->
-					
-					<xsl:if test="//request/session/resultssaved[@key = $record_id] and $temporarySession != 'true'">
-						<div id="label_{$source}:{$record_number}" > 
-							<xsl:call-template name="tag_input">
-								<xsl:with-param name="record" select="//saved_records/saved[@id = $record_id]" />
-								<xsl:with-param name="context">the results page</xsl:with-param>
-							</xsl:call-template>	
-						</div>
-					</xsl:if>				
+					<xsl:call-template name="save_record" />
+								
 				</div>
+				
 			</div>
 			
 		</li>
@@ -744,6 +699,69 @@
 			
 		</xsl:choose>
 		
+	</xsl:template>
+
+	<!-- 
+		TEMPLATE: SAVE RECORD
+		Display for saving (and also deleting) a record
+	-->
+
+	<xsl:template name="save_record">
+
+		<xsl:param name="source" select="source" />
+		<xsl:param name="record_number" select="record_id" />
+	
+		<div id="saveRecordOption_{$source}_{$record_number}" class="recordAction saveRecord">
+			
+			<xsl:call-template name="img_save_record">
+				<xsl:with-param name="id" select="concat('folder_', $source, $record_number)" />
+				<xsl:with-param name="class">miniIcon saveRecordLink</xsl:with-param>
+				<xsl:with-param name="test" select="//request/session/resultssaved[@key = $record_id]" />
+			</xsl:call-template>
+			<xsl:text> </xsl:text>
+			
+			<a id="link_{$source}:{$record_number}" href="{../url_save_delete}">				
+				<!-- 'saved' class used as a tag by ajaxy stuff -->
+				<xsl:attribute name="class">
+					 saveRecord <xsl:if test="//request/session/resultssaved[@key = $record_id]">saved</xsl:if>
+				</xsl:attribute>
+				<xsl:choose>
+					<xsl:when test="//request/session/resultssaved[@key = $record_id]">
+						<xsl:choose>
+							<xsl:when test="//session/role = 'named'">
+								<xsl:copy-of select="$text_results_record_saved" />
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:copy-of select="$text_results_record_saved_temp" />
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:when>
+					<xsl:otherwise><xsl:copy-of select="$text_results_record_save_it" /></xsl:otherwise>
+				</xsl:choose>
+			</a>
+			
+			<!-- temporary save note -->
+			
+			<xsl:if test="//request/session/resultssaved[@key = $record_id] and //request/session/role != 'named'"> 
+				<span class="temporary_login_note">
+					(<xsl:text> </xsl:text><a href="{//navbar/element[@id = 'login']/url}">
+						<xsl:copy-of select="$text_results_record_saved_perm" />
+					</a><xsl:text> </xsl:text>)
+				</span>
+			</xsl:if>
+		</div>
+		
+		<!-- label/tag input for saved records, if record is saved and it's not a temporary session -->
+		
+		<xsl:if test="//request/session/resultssaved[@key = $record_id] and $temporarySession != 'true'">
+			<div id="label_{$source}:{$record_number}" > 
+				<xsl:call-template name="tag_input">
+					<xsl:with-param name="record" select="//saved_records/saved[@id = $record_id]" />
+					<xsl:with-param name="context">the results page</xsl:with-param>
+				</xsl:call-template>	
+			</div>
+		</xsl:if>		
+	
 	</xsl:template>
 	
 	<!-- 

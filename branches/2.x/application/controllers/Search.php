@@ -421,7 +421,7 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 	{
 		$arrParams = array(
 			"base" => $this->request->getProperty("base"),
-			"action" => "save-delete",
+			"action" => "save",
 			"id" => $result->getRecordID()
 		);
 		
