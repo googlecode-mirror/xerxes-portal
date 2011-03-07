@@ -460,12 +460,12 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 	
 	protected function extractFacets($xml)
 	{
+		$facets = new Xerxes_Model_Search_Facets();
+		
 		$groups = $xml->xpath("//lst[@name='facet_fields']/lst");
 		
 		if ( $groups !== false && count($groups) > 0 )
 		{
-			$facets = new Xerxes_Model_Search_Facets();
-			
 			foreach ( $groups as $facet_group )
 			{
 				// if only one entry, then all the results have this same facet,
@@ -526,12 +526,8 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 				
 				$facets->addGroup($group);
 			}
-			
-			return $facets;
 		}
-		else
-		{
-			return null;
-		}
+		
+		return $facets;
 	}
 }
