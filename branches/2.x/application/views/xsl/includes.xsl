@@ -201,9 +201,22 @@
 		<title><xsl:value-of select="//config/application_name" />: <xsl:call-template name="title" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<base href="{$base_url}/" />
+		
+		<!-- css -->
 		<xsl:call-template name="css_include" />
-		<!-- TODO: FIX THIS?  <xsl:call-template name="header" /> -->
-		<xsl:call-template name="module-header" />
+		
+		<!-- javascript: only when not ada or mobile -->
+		<xsl:if test="not(request/session/ada) and $is_mobile = 0">
+			<xsl:call-template name="javascript_include" />
+		</xsl:if>
+		
+		<!-- header content added by module -->
+		<xsl:call-template name="module-header" />	
+		
+		<!-- and by local implementation -->
+		<xsl:copy-of select="$text_extra_html_head_content" />
+		
+		<!-- good junk -->
 		<xsl:call-template name="surround-google-analytics" />
 		</head>
 	</xsl:template>
@@ -463,7 +476,52 @@
 				</xsl:if>
 			</ul>
 		</div>
-	</xsl:template>	
+	</xsl:template>
+
+	<!--
+		TEMPLATE: JAVASCRIPT
+	-->
+	
+	<xsl:template name="javascript_include">
+		
+		<!-- exclude javascript for ada (because it messes with screen readers) and mobile devices (makes loading faster) -->
+		
+		<!-- <xsl:call-template name="jslabels" /> -->
+			
+		<!-- framework -->
+		<!-- TODO: Swap for jQuery -->
+	
+		<script src="javascript/onload.js" language="javascript" type="text/javascript"></script>
+		<script src="javascript/prototype.js" language="javascript" type="text/javascript"></script>
+		<script src="javascript/scriptaculous/scriptaculous.js" language="javascript" type="text/javascript"></script>
+				
+		<!-- controls the adding and editing of tags -->
+		
+		<script src="javascript/tags.js" language="javascript" type="text/javascript"></script>
+		<script src="javascript/facet-tabs.js" language="javascript" type="text/javascript"></script>
+			
+		<!-- saved records -->
+		
+		<script type="text/javascript">
+			
+			// change numSessionSavedRecords to numSavedRecords if you prefer the folder icon to change
+			// if there are any records at all in saved records. Also fix initial display in navbar.
+			
+			numSavedRecords = parseInt('0<xsl:value-of select="navbar/element[@id='saved_records']/@numSessionSavedRecords" />', 10);
+			
+			<xsl:variable name="is_temporary_session">
+				<xsl:choose>
+					<xsl:when test="$temporarySession = 'true'">true</xsl:when>
+					<xsl:otherwise>false</xsl:otherwise>
+				</xsl:choose>
+			</xsl:variable>
+			
+			isTemporarySession = <xsl:value-of select="$is_temporary_session" />;
+		</script>
+		
+		<script src="javascript/save.js" language="javascript" type="text/javascript"></script>
+		
+	</xsl:template>
 		
 	<!-- 	
 		TEMPLATE: JSLABELS
