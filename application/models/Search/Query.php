@@ -165,19 +165,22 @@ class Xerxes_Model_Search_Query
 			$url .= "?appid=" . $configYahooID . "&query=" . urlencode($term->phrase);
 			
 			$strResponse = Xerxes_Framework_Parser::request($url);
-				
-			$objSpelling = new DOMDocument();
-			$objSpelling->loadXML($strResponse);
-				
-			if ( $objSpelling->getElementsByTagName("Result")->item(0) != null )
+			
+			if ( $strResponse != "" )
 			{
-				$term->spell_correct = $objSpelling->getElementsByTagName("Result")->item(0)->nodeValue;
-				$spell_return[$term->id] = $term->spell_correct;
+				$objSpelling = new DOMDocument();
+				$objSpelling->loadXML($strResponse);
+					
+				if ( $objSpelling->getElementsByTagName("Result")->item(0) != null )
+				{
+					$term->spell_correct = $objSpelling->getElementsByTagName("Result")->item(0)->nodeValue;
+					$spell_return[$term->id] = $term->spell_correct;
+				}
+				
+				// also put it here so we can return it
+				
+				$this->terms[$x] = $term;
 			}
-			
-			// also put it here so we can return it
-			
-			$this->terms[$x] = $term;
 		}
 		
 		return $spell_return;
