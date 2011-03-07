@@ -2,6 +2,8 @@
 
 abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 {
+	protected $id;
+	
 	protected $config; // local config
 	protected $query; // query object
 	protected $engine; // search engine
@@ -36,6 +38,32 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 		$this->response->setRedirect($url);
 	}
 	
+	public function hits()
+	{
+		// create an identifier for this search
+		
+		$id = $this->getQueryID();
+		
+		// see if one exists in session already
+		
+		$total = $this->request->getSession($id);
+		
+		// nope
+		
+		if ( $total == null )
+		{
+			// so do a search (just the hit count) 
+			// and cache the hit total
+			
+			$total = $this->engine->getHits($this->query);
+			$this->request->setSession($id, $total);
+		}
+		
+		// and tell the browser too
+		
+		$this->response->add($total, "hits");
+	}
+	
 	public function results()
 	{
 		// defaults
@@ -65,7 +93,15 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 		// search
 				
 		$results = $this->engine->searchRetrieve($this->query, $start, $max, $sort);
+		
+		// total
+		
 		$total = $results->getTotal();
+		
+		// cache it
+		
+		$id = $this->getQueryID();
+		$this->request->setSession($id, $total);
 		
 		// add links
 		
@@ -418,6 +454,17 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 		{
 			foreach ( $tabs->top->tab as $tab )
 			{
+				// current?
+
+				if ( $this->request->getParam('base') == (string) $tab["id"] 
+				     && ( $this->request->getParam('source') == (string) $tab["source"] 
+				     	|| (string) $tab["source"] == '') )
+				    {
+				    	$tab->addAttribute('current', "1");	
+				    }
+				
+				// url
+				
 				$params = $this->query->extractSearchParams();
 				
 				$params['base'] = (string) $tab["id"];
@@ -427,6 +474,22 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 				$url = $this->request->url_for($params);
 				
 				$tab->addAttribute('url', $url);
+				
+				// cached search hit count?
+		
+				foreach ( $this->request->getAllSession() as $session_id => $session_value )
+				{
+					// does this value in the cache have the save id as our tab?
+					
+					$id = str_replace("_" . $this->query->getHash(), "", $session_id);
+					
+					if ( $id == (string) $tab["id"] )
+					{
+						// yup, so add it
+						
+						$tab->addAttribute('hits', $session_value);
+					}
+				}
 			}
 			
 			$this->response->add($tabs, "tabs");
@@ -580,6 +643,15 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 		unset($params["sort"]);
 		
 		return $params;
+	}
+	
+	/**
+	 * Return identifier for this query = search ID + query hash
+	 */
+	
+	protected function getQueryID()
+	{
+		return $this->id . "_" . $this->query->getHash();
 	}
 	
 	

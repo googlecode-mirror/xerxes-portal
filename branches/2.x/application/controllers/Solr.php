@@ -2,6 +2,8 @@
 
 class Xerxes_Controller_Solr extends Xerxes_Controller_Search
 {
+	protected $id = "solr";
+	
 	public function __construct()
 	{
 		parent::__construct();

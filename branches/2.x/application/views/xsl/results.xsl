@@ -259,11 +259,11 @@
 	
 	<xsl:template name="tabs">
 	
-		<xsl:if test="config/tabs">
+		<xsl:if test="config[@name='tabs']">
 		
 			<div class="tabs">
 				
-				<xsl:for-each select="config/tabs/top">
+				<xsl:for-each select="config[@name='tabs']/top">
 						
 					<ul id="tabnav">
 						<xsl:call-template name="tab_options" />
@@ -311,41 +311,27 @@
 	<xsl:template name="tab_options">
 	
 		<xsl:for-each select="tab">
-			<xsl:variable name="id" select="@id" />
-			<xsl:variable name="source">
-				<xsl:if test="@source">
-					<xsl:value-of select="@source" />
-				</xsl:if>
-			</xsl:variable>
-			<xsl:variable name="module">
-				<xsl:value-of select="$id">
-				<xsl:if test="@source">
-					<xsl:text>-</xsl:text>
-					<xsl:value-of select="@source" />
-				</xsl:if>			
-				</xsl:value-of>
-			</xsl:variable>
 			
 			<li>
-				<xsl:if test="//request/base = $id and ($source = //request/source or $source = '')">
+				<xsl:if test="@current = 1">
 					<xsl:attribute name="class">here</xsl:attribute>
 				</xsl:if>
 				
-				<a href="{$id}/results/{$source}?{//query_normalized/@url}">
+				<a href="{@url}">
 					<xsl:value-of select="@public" /> 
 					
 					<span class="tabsHit">
 						<xsl:choose>
-							<xsl:when test="//request/base = $id and ($source = //request/source or $source = '')">
+							<xsl:when test="@current = 1">
 								(<xsl:value-of select="//results/total" />)
 							</xsl:when>
 							<xsl:otherwise>
 								<xsl:choose>
-									<xsl:when test="//results/other[@module=$module and (not(@source) or @source = $source)]">
-										(<xsl:value-of select="//results/other[@module=$module and (not(@source) or @source = $source)]" />)
+									<xsl:when test="@hits">
+										(<xsl:value-of select="@hits" />)
 									</xsl:when>
 									<xsl:otherwise>
-										<span class="tabsHitNumber" id="tab:{$id}:{$source}"></span>
+										<span class="tabsHitNumber" id="tab:{@id}:{@source}"></span>
 									</xsl:otherwise>
 								</xsl:choose>								
 							</xsl:otherwise>
@@ -905,7 +891,7 @@
 	
 	
 	
-	
+	<!-- TODO: DO THIS! -->
 
 	<xsl:template name="full_text_links" />
 	
