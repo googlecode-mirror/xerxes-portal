@@ -166,7 +166,7 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 		
 		if ( $max == "" )
 		{
-			$max = $this->config->getConfig("RECORDS_PER_PAGE", false, $this->max);
+			$max = $this->config->getConfig("RECORDS_PER_PAGE", false, 10);
 		}
 		
 		// sort

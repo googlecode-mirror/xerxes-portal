@@ -75,15 +75,15 @@
 	
 	<xsl:template name="record-summary">
 		<dl>
-			<xsl:call-template name="record-authors" />	<!-- Authors -->
-			<xsl:call-template name="record-corp-authors" />	<!-- Corp. Authors -->
-			<xsl:call-template name="record-conference" />	<!-- Conference -->
-			<xsl:call-template name="record-format" />	<!-- Format -->
-			<xsl:call-template name="record-year" />	<!-- Year -->
+			<xsl:call-template name="record-authors" /> <!-- Authors -->
+			<xsl:call-template name="record-corp-authors" /> <!-- Corp. Authors -->
+			<xsl:call-template name="record-conference" /> <!-- Conference -->
+			<xsl:call-template name="record-format" /> <!-- Format -->
+			<xsl:call-template name="record-year" /> <!-- Year -->
 			<xsl:call-template name="record-institution" /> <!-- Institution -->
-			<xsl:call-template name="record-degree" />	<!-- Degree -->
-			<xsl:call-template name="record-source" />	<!-- Source -->
-			<xsl:call-template name="record-database" />	<!-- Database -->
+			<xsl:call-template name="record-degree" /> <!-- Degree -->
+			<xsl:call-template name="record-source" /> <!-- Source -->
+			<xsl:call-template name="record-database" /> <!-- Database -->
 		</dl>
 	</xsl:template>
 
@@ -489,8 +489,7 @@
 
 
 
-
-
+	<!-- TODO: DO THIS! -->
 
 	<xsl:template name="record-action-save" />
 	<xsl:template name="record-action-fulltext-catalog" />
