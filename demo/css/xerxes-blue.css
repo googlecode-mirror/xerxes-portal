@@ -133,23 +133,23 @@ a:hover {
 
 /** SIDEBAR **/
 
-#sidebar {
+.sidebar {
 	background-color: #efefef;
 	padding: 1.3em;
 	color: #333;
 }
 
-#sidebar .box {
+.sidebar .box {
 	margin-left: 1em;
 	margin-bottom: 2em;
 }
 
-#sidebar .box li {
+.sidebar .box li {
 	list-style: square;
 	margin-left: 1.5em;
 }
 
-#sidebar h2, #sidebar .umlaut_section h3 {
+.sidebar h2, .sidebar .umlaut_section h3 {
 	padding-top: 0;
 	margin-left: -1em;
 	font-size: 120%;
@@ -158,7 +158,7 @@ a:hover {
 
 
 
-#sidebar li {
+.sidebar li {
 	padding-bottom: .5em;
 }
 
@@ -167,16 +167,16 @@ a:hover {
 	padding-top: 1em;
 }
 
-#sidebar .box li {
+.sidebar .box li {
 	margin-left: 1.5em;
 }
 
-#sidebar .box li.sidebarFolder {
+.sidebar .box li.sidebarFolder {
 	list-style: none;
 	margin-left: 0;
 }
 
-#sidebar .box li.subjectLibrarian {
+.sidebar .box li.subjectLibrarian {
 	list-style: none;
 	margin-left: 0;
 }
@@ -195,16 +195,16 @@ a:hover {
 	font-size: 110%;
 }
 
-#sidebar .box li.subjectLibrarian dl {
+.sidebar .box li.subjectLibrarian dl {
 	margin-top: 1em;
 	margin-left: .5em;
 }
 
-#sidebar .box li.subjectLibrarian dl div{
+.sidebar .box li.subjectLibrarian dl div{
 	margin-bottom: .3em;
 }
 
-#sidebar .box li.subjectLibrarian dd,  #sidebar .box li.subjectLibrarian dt {
+.sidebar .box li.subjectLibrarian dd,  .sidebar .box li.subjectLibrarian dt {
 	display: inline;
 	margin: 0px;
 	padding-right: .5em;
@@ -954,7 +954,7 @@ div.autocomplete ul li {
 	padding-bottom: 10px;
 }
 
-#sidebar #subtab {
+.sidebar #subtab {
 	margin-left: 0;
 	border: 1px solid #ccc;
 	padding: .5em;
