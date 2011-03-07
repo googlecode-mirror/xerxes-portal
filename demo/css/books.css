@@ -1,19 +1,19 @@
-/* results */
+/** RESULTS **/
 
 li.result {
 	border-bottom: 1px dotted #ccc;
 }
 
-.worldcatBookCover {
+.bookCover {
 	width: 80px;
 	float: left; 
 }
 
-.worldcatResult {
+.bookResult {
 	margin-left: 90px;
 }
 
-.worldcatAbstractData {
+.bookAbstractData {
 	margin-bottom: 10px;
 }
 
@@ -26,17 +26,9 @@ li.result {
 	border-left: 0px;
 }
 
-.worldcatNoHits{
-	margin: 50px
-}
+/** RECORD **/
 
-.worldcatNoHits p.error {
-	margin-left: 0;
-}
-
-/* record */
-
-#worldcatRecordBookCover {
+#bookRecordBookCover {
 	width: 120px;
 	float: left; 
 }
@@ -55,25 +47,21 @@ li.result {
 	margin-bottom: 1.2em;
 }
 
-#record .worldcatHoldings li {
+#record .bookHoldings li {
 	margin-left: 30px;
 }
 
-.worldcatAvailableRecord {
+.bookAvailableRecord {
 	max-height: 400px; 
 	overflow-y: scroll; 
 	margin-bottom: 20px;
-}
-
-.worldcatConsortiumRequest {
-	padding: 20px;
 }
 
 .google_preview {
 	margin: 1em;
 }
 
-/** holdings **/
+/** HOLDINGS **/
 
 .holdingsTable {
 	border-collapse:collapse;
@@ -104,13 +92,13 @@ ul.holdingsSummaryStatement {
 	padding-bottom: .5em;
 }
 
-#worldcatAdvancedMore {
+#bookAdvancedMore {
 	margin-top: 20px;
 }
 
-/** advanced seach form **/
+/** ADVANCED SEARCH FORM **/
 	
-#worldcatAdvancedSearch fieldset {
+#bookAdvancedSearch fieldset {
 	margin: 10px;
 	padding: 20px;
 	border: 2px solid #CCCCCC;
@@ -118,25 +106,25 @@ ul.holdingsSummaryStatement {
 	clear: left;
 }
 
-#worldcatAdvancedSearch legend {
+#bookAdvancedSearch legend {
 	background-color: #FFFFFF;
 	margin-top: -10px;
 	font-weight: bold;
 	padding: 10px;
 }
 
-#worldcatAdvancedSearch p { 
+#bookAdvancedSearch p { 
 	margin-top: 10px;
 	margin-bottom: 10px;
 }
 
-#worldcatAdvancedSearch .explain {
+#bookAdvancedSearch .explain {
 	font-size: 90%;
 	color: #666;
 	margin: 10px;
 }
 
-#worldcatAdvancedSearch td {
+#bookAdvancedSearch td {
 	vertical-align: top;
 }
 	
@@ -150,11 +138,11 @@ ul.holdingsSummaryStatement {
 	margin-top: 30px;
 }
 
-#worldcatAdvancedSearch input {
+#bookAdvancedSearch input {
 	padding: 2px;
 }
 
-#worldcatAdvancedSearch option { 
+#bookAdvancedSearch option { 
 	padding: 2px;
 	padding-right: 4px;
 }
@@ -196,6 +184,8 @@ option.basicOption {
 	cursor: pointer;
 	font-weight: bold;
 }
+
+/** SMS **/
 
 #sms {
 	margin: 2em;
