@@ -46,7 +46,6 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 		$this->max_allowed = $this->registry->getConfig("MAX_RECORDS_PER_PAGE", false, 30);
 		$this->max_allowed = $this->config->getConfig("MAX_RECORDS_PER_PAGE", false, $this->max_allowed);
 		
-		
 		$this->sort = $this->registry->getConfig("SORT_ORDER", false, "relevance");
 		$this->sort = $this->config->getConfig("SORT_ORDER", false, $this->sort);
 		
@@ -409,6 +408,28 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 			$spell["text"] = $spelling_corrected;
 			
 			$this->query->spelling_url = $spell;
+		}
+		
+		// tab links
+		
+		$tabs = $this->registry->getConfig('tabs');
+		
+		if ( $tabs instanceof SimpleXMLElement )
+		{
+			foreach ( $tabs->top->tab as $tab )
+			{
+				$params = $this->query->extractSearchParams();
+				
+				$params['base'] = (string) $tab["id"];
+				$params['action'] = "results";
+				$params['source'] = (string) $tab["source"];
+				
+				$url = $this->request->url_for($params);
+				
+				$tab->addAttribute('url', $url);
+			}
+			
+			$this->response->add($tabs, "tabs");
 		}
 		
 		// links to remove facets
