@@ -252,13 +252,6 @@
 	
 	</xsl:template>
 	
-	
-	<!-- search box fields overriden in templates -->
-	
-	<xsl:template name="advanced_search_option" />
-	<xsl:template name="advanced_search" />
-	<xsl:template name="searchbox_hidden_fields_local" />
-	
 	<!-- 	
 		TEMPLATE: TABS
 		displays a tab configuration in the search architecture
@@ -889,8 +882,15 @@
 
 
 
-
-
+	
+	<!-- search box fields overriden in templates -->
+	
+	<xsl:template name="advanced_search_option" />
+	<xsl:template name="advanced_search" />
+	<xsl:template name="searchbox_hidden_fields_local" />
+	
+	<!-- additional record data overriden in templates -->
+	
 	<xsl:template name="additional_record_links" />
 	<xsl:template name="additional_brief_record_data" />
 	<xsl:template name="additional_full_record_data_main" />

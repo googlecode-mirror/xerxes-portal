@@ -293,7 +293,7 @@ class Xerxes_Model_Search_Query
 	 * @return array
 	 */		
 	
-	protected function extractSearchParams()
+	public function extractSearchParams()
 	{
 		if ( $this->search_fields_regex != "" )
 		{
