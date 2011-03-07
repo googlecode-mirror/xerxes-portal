@@ -148,11 +148,7 @@ class Xerxes_Framework_FrontController
 			$controller = new $controller_name();
 
 			$controller->$action();
-			
-			$response->setFormat($request->getParam('format'));	
 
-			echo $response->display(); exit;
-			
 			####################
 			#     COOKIES      #
 			####################
@@ -189,6 +185,13 @@ class Xerxes_Framework_FrontController
 					$request->setProperty( "redirect", $response->getRedirect() );
 				}
 			}
+
+			####################
+			#      DISPLAY     #
+			####################			
+			
+			$response->setFormat($request->getParam('format'));				
+			echo $response->display();
 						
 			// remove any flash message, intended for one display only.
 				 
