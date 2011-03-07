@@ -58,13 +58,6 @@ class Xerxes_Framework_Languages
 		if ( function_exists( 'bindtextdomain' ) )
 		{
 			$this->gettext = true;
-			
-			// windows hack
-			
-			if ( ! defined("LC_MESSAGES") )
-			{
-				define("LC_MESSAGES", 6);
-			}
 		}
 			
 		// set full path to local copy
@@ -179,12 +172,20 @@ class Xerxes_Framework_Languages
 	
 	private function getXerxesLocale()
 	{
-		return setlocale( LC_MESSAGES, null );
+		if ( defined('LC_MESSAGES') )
+		{
+			return setlocale( LC_MESSAGES, null );
+		}
 	}
 	
 	private function setXerxesLocale( $locale )
 	{
-		$result = setlocale( LC_MESSAGES, $locale );
+		$result = false;
+		
+		if ( defined('LC_MESSAGES') )
+		{
+			$result = setlocale( LC_MESSAGES, $locale );
+		}
 		
 		return $result;
 	}
