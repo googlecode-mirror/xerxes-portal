@@ -266,6 +266,8 @@ class Xerxes_Framework_Parser
 	
 	private static function addImportReference($xsltStylesheet, $absoluteFilePath, $insertPoint)
 	{
+		$absoluteFilePath = str_replace('\\', '/', $absoluteFilePath); // darn windows
+		
 		$import_element = $xsltStylesheet->createElementNS("http://www.w3.org/1999/XSL/Transform", "xsl:import");
 		$import_element->setAttribute("href", $absoluteFilePath);
 		$xsltStylesheet->documentElement->insertBefore( $import_element, $insertPoint);
