@@ -156,10 +156,8 @@
 		<html lang="{$rfc1766}">
 	
 		<xsl:call-template name="surround-head" />
+
 		<body>
-		<xsl:if test="request/action = 'subject' or request/action = 'categories'">
-			<xsl:attribute name="onLoad">if (document.forms.form1) if  (document.forms.form1.query)  document.forms.form1.query.focus()</xsl:attribute>
-		</xsl:if>
 		
 		<div class="ada">
 			<xsl:if test="not(request/session/ada)">
