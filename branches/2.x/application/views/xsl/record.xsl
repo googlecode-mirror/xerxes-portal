@@ -26,6 +26,8 @@
 <xsl:stylesheet version="1.0"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
+	
+	<xsl:include href="results.xsl" />
 
 	<!--
 		TEMPLATE: RECORD
@@ -38,7 +40,7 @@
 				
 				<!-- Title -->
 				
-				<h1><xsl:call-template name="page_name" /></h1>
+				<h1><xsl:value-of select="title_normalized" /></h1>
 				
 				<!-- Basic record information (Author, Year, Format, Database, ...) -->
 				
@@ -58,6 +60,7 @@
 				<!-- Detailed record information (Summary, Topics, Standard numbers, ...) -->
 				
 				<xsl:call-template name="record-details" />
+				
 			</xsl:for-each>
 				
 			<!-- tag input -->
@@ -82,6 +85,20 @@
 			<xsl:call-template name="record-source" />	<!-- Source -->
 			<xsl:call-template name="record-database" />	<!-- Database -->
 		</dl>
+	</xsl:template>
+
+	<!--
+		TEMPLATE: RECORD DETAILS
+	-->
+	
+	<xsl:template name="record-details">
+		<xsl:call-template name="record-abstract" />
+		<xsl:call-template name="record-recommendations" />
+		<xsl:call-template name="record-toc" />
+		<xsl:call-template name="record-language" />
+		<xsl:call-template name="record-subjects" />
+		<xsl:call-template name="record-standard_numbers" />
+		<xsl:call-template name="record-notes" />
 	</xsl:template>
 
 	<!--
@@ -224,7 +241,7 @@
 					<xsl:choose>
 						<xsl:when test="book_title">
 							<xsl:value-of select="book_title" />
-											</xsl:when>
+						</xsl:when>
 						<xsl:otherwise>
 							<xsl:value-of select="journal" />
 						</xsl:otherwise>
@@ -310,21 +327,6 @@
 		<!-- other fulltext links -->
 		<xsl:call-template name="record-action-fulltext-option"/>
 		
-	</xsl:template>
-	
-	<!--
-		TEMPLATE: RECORD DETAILS
-	-->
-	
-	<xsl:template name="record-details">
-		<xsl:call-template name="record-abstract" />
-		<xsl:call-template name="record-recommendations" />
-		<xsl:call-template name="record-toc" />
-		<xsl:call-template name="record-language" />
-		<xsl:call-template name="record-subjects" />
-		<xsl:call-template name="record-standard_numbers" />
-		<xsl:call-template name="record-embedded_text" />
-		<xsl:call-template name="record-notes" />
 	</xsl:template>
 
 	<!--
@@ -490,8 +492,8 @@
 
 
 
-
-	<xsl:template name="record-action-fulltext-catalog"/>
+	<xsl:template name="record-action-save" />
+	<xsl:template name="record-action-fulltext-catalog" />
 	<xsl:template name="record-action-fulltext-option" />
 
 
