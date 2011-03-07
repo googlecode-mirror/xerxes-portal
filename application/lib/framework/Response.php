@@ -213,6 +213,10 @@ class Xerxes_Framework_Response
 	{
 		$xml = $this->toXML();
 		
+		// testing
+		
+		if ( ! array_key_exists($this->_format, $this->_view) ) $this->setFormat("xerxes");
+		
 		if ( $this->_format == "xerxes" )
 		{
 			return $xml->saveXML();
