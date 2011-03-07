@@ -56,12 +56,13 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 			// and cache the hit total
 			
 			$total = $this->engine->getHits($this->query);
-			$this->request->setSession($id, $total);
+			$this->request->setSession($id, (string) $total);
 		}
 		
 		// and tell the browser too
 		
 		$this->response->add($total, "hits");
+		$this->response->setView("xsl/hits.xsl");
 	}
 	
 	public function results()
@@ -101,7 +102,7 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 		// cache it
 		
 		$id = $this->getQueryID();
-		$this->request->setSession($id, $total);
+		$this->request->setSession($id, (string) $total);
 		
 		// add links
 		
