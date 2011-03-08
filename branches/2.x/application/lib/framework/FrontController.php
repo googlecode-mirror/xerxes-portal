@@ -11,6 +11,13 @@
  * @license http://www.gnu.org/licenses/
  */
 
+require_once realpath(dirname(__FILE__) . '/autoload.php');
+
+import("Xerxes_Controller", "controllers");
+import("Xerxes_Framework", "lib/framework");
+import("Xerxes_Model", "models");
+import("Xerxes", "lib/Xerxes");
+
 class Xerxes_Framework_FrontController
 {
 	/**
