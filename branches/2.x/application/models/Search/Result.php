@@ -186,18 +186,18 @@ class Xerxes_Model_Search_Result
 					if ( $is_holding == true )
 					{
 						$item = new Xerxes_Model_Search_Holding();
+						$holdings->addHolding($item);
 					}
 					else
 					{
 						$item = new Xerxes_Model_Search_Item();
+						$holdings->addItem($item);
 					}
 					
 					foreach ( $holding as $property => $value )
 					{
 						$item->setProperty($property, $value);
 					}
-					
-					$holdings->addItem($item);
 				}
 			}
 		}
