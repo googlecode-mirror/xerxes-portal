@@ -71,6 +71,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 	protected $description = ""; // physical description
 	protected $abstract = ""; // abstract
 	protected $summary = ""; // summary
+	protected $snippet = ""; // snippet
 	protected $summary_type = ""; // the type of summary
 	protected $language = ""; // primary language of the record
 	protected $notes = array (); // notes that are not the abstract, language, or table of contents
@@ -618,6 +619,11 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		{
 			$this->summary = $this->abstract;
 			$this->summary_type = "abstract";
+		}
+		elseif ( $this->snippet != "" )
+		{
+			$this->summary = $this->snippet;
+			$this->summary_type = "snippet";
 		} 
 		elseif ( $this->toc != "" )
 		{

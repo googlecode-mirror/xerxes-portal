@@ -113,7 +113,7 @@ class Xerxes_Model_Search_ResultSet
 		// single shot to make this more efficient
 		
 		$issns = $this->extractISSNs();
-
+		
 		if ( count($issns) > 0 )
 		{
 			// get all from our peer-reviewed list
@@ -124,21 +124,19 @@ class Xerxes_Model_Search_ResultSet
 			
 			// now mark the records that matched
 			
-			for ( $x = 0; $x < count($this->records); $x++ )
+			foreach ( $this->records as $record )
 			{
-				$record = $this->records[$x];
+				$xerxes_record = $record->getXerxesRecord();
 				
 				// check if the issn matched
 				
 				foreach ( $refereed_list as $refereed )
 				{
-					if ( in_array($refereed->issn,$record->getAllISSN()))
+					if ( in_array($refereed->issn,$xerxes_record->getAllISSN()))
 					{
-						$record->setRefereed(true);
+						$xerxes_record->setRefereed(true);
 					}
 				}
-				
-				$this->records[$x] = $record;
 			}
 		}
 	}
