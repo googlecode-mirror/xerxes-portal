@@ -69,16 +69,7 @@
 		<xsl:variable name="oclc" 		select="standard_numbers/oclc" />
 		<xsl:variable name="year" 		select="year" />
 				
-		<xsl:variable name="display">
-			<xsl:choose>
-				<xsl:when test="//worldcat_groups/group[@id = $source]/lookup/display">
-					<xsl:value-of select="//worldcat_groups/group[@id = $source]/lookup/display" />
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:value-of select="//config/lookup_display" />
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:variable>
+		<xsl:variable name="display" select="//config/lookup_display" />
 		
 		<li class="result">
 		
@@ -162,9 +153,7 @@
 						
 						<!-- availability -->
 						
-						<xsl:call-template name="availability_lookup">
-							<xsl:with-param name="context">results</xsl:with-param>
-						</xsl:call-template>
+						<xsl:call-template name="availability" />
 						
 						<!-- save record -->
 		
@@ -178,6 +167,21 @@
 		</li>
 	
 	</xsl:template>
+	
+	<!-- 
+		TEMPLATE: AVAILABILITY
+	-->
+	
+	<xsl:template name="availability">
+		<xsl:param name="context">results</xsl:param>
+		
+		<xsl:call-template name="availability_lookup">
+			<xsl:with-param name="record_id" select="record_id" />
+			<xsl:with-param name="context" select="$context" />
+		</xsl:call-template>
+	
+	</xsl:template>	
+	
 	
 	<!-- 	
 		TEMPLATE: AVAILABILITY LOOKUP
@@ -193,24 +197,24 @@
 			
 		<xsl:variable name="source" select="//request/source" />
 		
-		<xsl:variable name="printAvailable" select="count(items/item[availability=1])" />
+		<xsl:variable name="printAvailable" select="count(../holdings/items/item[availability=1])" />
 		<xsl:variable name="onlineCopies" select="count(links/link[@type != 'none'])" />
 		<xsl:variable name="totalCopies" select="$printAvailable + $onlineCopies" />
 	
 		<xsl:choose>
 		
-			<xsl:when test="//config/lookup or //worldcat_groups/group[@id = $source]/lookup/address">
+			<xsl:when test="//config/lookup">
 			
 				<xsl:choose>		
-					<xsl:when test="items or no_items = '1'">
-					
+					<xsl:when test="../holdings/checked">
+										
 						<!-- item and holdings data already fetched and in the XML response -->
 					
 						<!-- pick display type -->
 					
 						<xsl:choose>
 	
-							<xsl:when test="items/holding">
+							<xsl:when test="../holdings/holdings">
 							
 								<xsl:call-template name="availability_lookup_holdings">
 									<xsl:with-param name="context" select="$context" />
@@ -286,12 +290,12 @@
 		<xsl:param name="totalCopies" />
 		<xsl:param name="printAvailable" />	
 		
-		<ul class="worldcatAvailabilitySummary">
+		<ul class="booksAvailabilitySummary">
 		
 		<xsl:choose>
-			<xsl:when test="items/item and $printAvailable = '0'">
+			<xsl:when test="../holdings/items/item and $printAvailable = '0'">
 			
-				<li class="worldcatAvailabilityMissing"><xsl:call-template name="img_book_not_available" />&#160; No Copies Available</li>
+				<li class="booksAvailabilityMissing"><xsl:call-template name="img_book_not_available" />&#160; No Copies Available</li>
 	
 				<xsl:call-template name="ill_option">
 					<xsl:with-param name="element">li</xsl:with-param>
@@ -333,11 +337,11 @@
 			</div>
 		</xsl:if>
 		
-		<xsl:if test="items/holding">
+		<xsl:if test="../holdings/holdings">
 	
 			<p><strong>Print holdings</strong></p>
 		
-			<xsl:for-each select="items/holding">
+			<xsl:for-each select="../holdings/holdings/holding">
 				<ul class="holdingsSummaryStatement">
 					<xsl:for-each select="data">
 						<li><xsl:value-of select="@key" />: <xsl:value-of select="@value" /></li>
@@ -349,7 +353,7 @@
 	
 		<xsl:if test="$context = 'record'">
 		
-			<xsl:if test="items/item">
+			<xsl:if test="../holdings/items/item">
 		
 				<p><strong><xsl:value-of select="$temp_text_bound_volumes" /></strong></p>					
 				<xsl:call-template name="availability_item_table" />
@@ -369,7 +373,7 @@
 		<xsl:param name="totalCopies" />
 	
 		
-		<xsl:if test="count(items/item) != '0'">
+		<xsl:if test="count(../holdings/items/item) != '0'">
 			<xsl:call-template name="availability_item_table" />
 		</xsl:if>
 		
@@ -391,22 +395,22 @@
 	
 		<div>
 			<xsl:attribute name="class">
-				<xsl:text>worldcatAvailable</xsl:text>
+				<xsl:text>booksAvailable</xsl:text>
 				<xsl:if test="//request/action = 'record'">
-					<xsl:text> worldcatAvailableRecord</xsl:text>
+					<xsl:text> booksAvailableRecord</xsl:text>
 				</xsl:if>
 			</xsl:attribute>
 			
 			<table class="holdingsTable">
 			<tr>
-				<xsl:if test="items/item/institution">
+				<xsl:if test="../holdings/items/item/institution">
 					<th>Institution</th>
 				</xsl:if>
 				<th>Location</th>
 				<th>Call Number</th>
 				<th>Status</th>
 			</tr>
-			<xsl:for-each select="items/item">
+			<xsl:for-each select="../holdings/items/item">
 				<tr>
 					<xsl:if test="institution">
 						<td><xsl:value-of select="institution" /></td>
@@ -460,25 +464,12 @@
 	
 		<xsl:variable name="source"  select="//request/source"/>	
 		
-		<xsl:if test="count(items/item) or not(//worldcat_groups/group[@id = $source]/lookup/address)">
+		<xsl:if test="count(../holdings/items/item)">
 		
 			<xsl:element name="{$element}">
 				<xsl:attribute name="class"><xsl:value-of select="$class" /></xsl:attribute> 
 				<a target="{$link_target}" href="{../url_open}" class="recordAction">
-					<xsl:choose>
-						<xsl:when test="//worldcat_groups/group[@id = $source]/lookup/ill_text">
-							<xsl:call-template name="img_ill">
-								<xsl:with-param name="class">miniIcon linkResolverLink</xsl:with-param>
-							</xsl:call-template>
-							<xsl:text> </xsl:text>
-							<xsl:value-of select="//worldcat_groups/group[@id = $source]/lookup/ill_text" />
-						</xsl:when>
-						<xsl:otherwise>
-							<img src="{$image_sfx}" alt="" border="0" class="miniIcon linkResolverLink "/>
-							<xsl:text> </xsl:text>
-							<xsl:copy-of select="$text_link_resolver_check" /> 
-						</xsl:otherwise>
-					</xsl:choose>
+					<img src="{$image_sfx}" alt="" border="0" class="miniIcon linkResolverLink "/>
 				</a>
 			</xsl:element>
 			
@@ -492,7 +483,7 @@
 
 	<xsl:template name="sms_option">
 		
-		<xsl:if test="count(items/item) &gt; 0">
+		<xsl:if test="count(../holdings/items/item) &gt; 0">
 		
 			<div id="smsOption" class="resultsAvailability recordAction">
 	
@@ -519,7 +510,7 @@
 	<xsl:template name="sms">
 		<xsl:param name="header">h1</xsl:param>
 		
-		<xsl:variable name="num_copies" select="count(//items/item)" />
+		<xsl:variable name="num_copies" select="count(//holdings/items/item)" />
 			
 		<xsl:element name="{$header}">
 			Send title and location to your mobile phone
@@ -597,7 +588,7 @@
 				<h3>Choose one of the copies</h3>
 			</xsl:if>
 							
-			<xsl:for-each select="items/item">
+			<xsl:for-each select="../holdings/items/item">
 				
 				<xsl:variable name="item">
 					<xsl:value-of select="location" />
