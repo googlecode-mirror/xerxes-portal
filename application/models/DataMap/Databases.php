@@ -76,10 +76,10 @@ class Xerxes_Model_DataMap_Databases extends Xerxes_Framework_DataMap
 	/**
 	 * Add a database to the local knowledgebase
 	 *
-	 * @param Xerxes_Data_Database $objDatabase
+	 * @param Xerxes_Model_DataMap_Data_Database $objDatabase
 	 */
 	
-	public function addDatabase(Xerxes_Data_Database $objDatabase)
+	public function addDatabase(Xerxes_Model_DataMap_Data_Database $objDatabase)
 	{
 		// load our data into xml object
 		
@@ -175,24 +175,24 @@ class Xerxes_Model_DataMap_Databases extends Xerxes_Framework_DataMap
 	/**
 	 * Add a type to the local knowledgebase
 	 *
-	 * @param Xerxes_Data_Type $objType
+	 * @param Xerxes_Model_DataMap_Data_Type $objType
 	 * @return int status
 	 */
 	
-	public function addType(Xerxes_Data_Type $objType)
+	public function addType(Xerxes_Model_DataMap_Data_Type $objType)
 	{
 		return $this->doSimpleInsert( "xerxes_types", $objType );
 	}
 	
 	/**
 	 * Add a category to the local knowledgebase; should also include
-	 * Xerxes_Data_Subcategory subcategories ( as array in subcategory property) 
-	 * and databases Xerxes_Data_Database as array in subcategory property.
+	 * Xerxes_Model_DataMap_Data_Subcategory subcategories ( as array in subcategory property) 
+	 * and databases Xerxes_Model_DataMap_Data_Database as array in subcategory property.
 	 *
-	 * @param Xerxes_Data_Category $objCategory
+	 * @param Xerxes_Model_DataMap_Data_Category $objCategory
 	 */
 	
-	public function addCategory(Xerxes_Data_Category $objCategory)
+	public function addCategory(Xerxes_Model_DataMap_Data_Category $objCategory)
 	{
 		$this->doSimpleInsert( "xerxes_categories", $objCategory );
 		
@@ -232,10 +232,10 @@ class Xerxes_Model_DataMap_Databases extends Xerxes_Framework_DataMap
 	 * just the category. Category should not have an 'id' property, will be
 	 * supplied by auto-incremented db column.
 	 *
-	 * @param Xerxes_Data_Category $objCategory
+	 * @param Xerxes_Model_DataMap_Data_Category $objCategory
 	 */
 	
-	public function addUserCreatedCategory(Xerxes_Data_Category $objCategory)
+	public function addUserCreatedCategory(Xerxes_Model_DataMap_Data_Category $objCategory)
 	{
 		// We don't use metalib-id or old for user-created categories
 		unset( $objCategory->metalib_id );
@@ -251,12 +251,12 @@ class Xerxes_Model_DataMap_Databases extends Xerxes_Framework_DataMap
 	 * Does not update subcategory assignments, only the actual category
 	 * values, at present. Right now, just name and normalized!
 	 * 
-	 * @param Xerxes_Data_Category $objCategory 	a category object
+	 * @param Xerxes_Model_DataMap_Data_Category $objCategory 	a category object
 	 */
 
-	public function updateUserCategoryProperties(Xerxes_Data_Category $objCategory)
+	public function updateUserCategoryProperties(Xerxes_Model_DataMap_Data_Category $objCategory)
 	{
-		$objCategory->normalized = Xerxes_Data_Category::normalize( $objCategory->name );
+		$objCategory->normalized = Xerxes_Model_DataMap_Data_Category::normalize( $objCategory->name );
 		
 		$sql = "UPDATE xerxes_user_categories " .
 			"SET name = :name, normalized = :normalized, published = :published " .
@@ -276,11 +276,11 @@ class Xerxes_Model_DataMap_Databases extends Xerxes_Framework_DataMap
 	 * just the subcategory. Category should not have an 'id' property, will be
 	 * supplied by auto-incremented db column.
 	 *
-	 * @param Xerxes_Data_Subcategory $objSubcat
-	 * @return Xerxes_Data_Subcategory subcategory
+	 * @param Xerxes_Model_DataMap_Data_Subcategory $objSubcat
+	 * @return Xerxes_Model_DataMap_Data_Subcategory subcategory
 	 */
 	
-	public function addUserCreatedSubcategory(Xerxes_Data_Subcategory $objSubcat)
+	public function addUserCreatedSubcategory(Xerxes_Model_DataMap_Data_Subcategory $objSubcat)
 	{
 		//We don't use metalib-id, we use id instead, sorry. 
 		unset( $objSubcat->metalib_id );
@@ -293,11 +293,11 @@ class Xerxes_Model_DataMap_Databases extends Xerxes_Framework_DataMap
 	/**
 	 * Delete a user subcategory
 	 *
-	 * @param Xerxes_Data_Subcategory $objSubcat	subcategort oject
+	 * @param Xerxes_Model_DataMap_Data_Subcategory $objSubcat	subcategort oject
 	 * @return int 									delete status
 	 */
 	
-	public function deleteUserCreatedSubcategory(Xerxes_Data_Subcategory $objSubcat)
+	public function deleteUserCreatedSubcategory(Xerxes_Model_DataMap_Data_Subcategory $objSubcat)
 	{
 		$sql = "DELETE FROM xerxes_user_subcategories WHERE ID = :subcategory_id";
 		return $this->delete( $sql, array (":subcategory_id" => $objSubcat->id ) );
@@ -306,11 +306,11 @@ class Xerxes_Model_DataMap_Databases extends Xerxes_Framework_DataMap
 	/**
 	 * Delete a user created category
 	 *
-	 * @param Xerxes_Data_Category $objCat		category object
+	 * @param Xerxes_Model_DataMap_Data_Category $objCat		category object
 	 * @return int 								detelete status
 	 */
 	
-	public function deleteUserCreatedCategory(Xerxes_Data_Category $objCat)
+	public function deleteUserCreatedCategory(Xerxes_Model_DataMap_Data_Category $objCat)
 	{
 		$sql = "DELETE FROM xerxes_user_categories WHERE ID = :category_id";
 		return $this->delete( $sql, array (":category_id" => $objCat->id ) );
@@ -320,11 +320,11 @@ class Xerxes_Model_DataMap_Databases extends Xerxes_Framework_DataMap
 	 * Add a database to a user-created subcategory; 
 	 *
 	 * @param String $databaseID the metalib_id of a Xerxes database object
-	 * @param Xerxes_Data_Subcategory $objSubcat object representing user created subcat
+	 * @param Xerxes_Model_DataMap_Data_Subcategory $objSubcat object representing user created subcat
 	 * @param int sequence optional, will default to end of list if null. 
 	 */
 
-	public function addDatabaseToUserCreatedSubcategory($databaseID, Xerxes_Data_Subcategory $objSubcat, $sequence = null)
+	public function addDatabaseToUserCreatedSubcategory($databaseID, Xerxes_Model_DataMap_Data_Subcategory $objSubcat, $sequence = null)
 	{
 		if ( $sequence == null )
 			$sequence = count( $objSubcat->databases ) + 1;
@@ -345,11 +345,11 @@ class Xerxes_Model_DataMap_Databases extends Xerxes_Framework_DataMap
 	 * Does not update database assignments, only the actual subcat values. 
 	 * Right now, just name and sequence!
 	 *
-	 * @param Xerxes_Data_Subcategory $objSubcat	subcatgeory object
+	 * @param Xerxes_Model_DataMap_Data_Subcategory $objSubcat	subcatgeory object
 	 * @return int 									update status
 	 */
 	
-	public function updateUserSubcategoryProperties(Xerxes_Data_Subcategory $objSubcat)
+	public function updateUserSubcategoryProperties(Xerxes_Model_DataMap_Data_Subcategory $objSubcat)
 	{
 		$sql = "UPDATE xerxes_user_subcategories " .
 			"SET name = :name, sequence = :sequence " .
@@ -367,10 +367,10 @@ class Xerxes_Model_DataMap_Databases extends Xerxes_Framework_DataMap
 	 * Remove database from user created subcategory
 	 *
 	 * @param string $databaseID					database id		
-	 * @param Xerxes_Data_Subcategory $objSubcat	subcategory object
+	 * @param Xerxes_Model_DataMap_Data_Subcategory $objSubcat	subcategory object
 	 */
 	
-	public function removeDatabaseFromUserCreatedSubcategory($databaseID, Xerxes_Data_Subcategory $objSubcat)
+	public function removeDatabaseFromUserCreatedSubcategory($databaseID, Xerxes_Model_DataMap_Data_Subcategory $objSubcat)
 	{
 		$strDeleteSql = "DELETE from xerxes_user_subcategory_databases " .
 			"WHERE database_id = :database_id AND subcategory_id = :subcategory_id";
@@ -386,12 +386,12 @@ class Xerxes_Model_DataMap_Databases extends Xerxes_Framework_DataMap
 	/**
 	 * Update the 'sequence' number of a database in a user created category
 	 *
-	 * @param Xerxes_Data_Database $objDb			database object 
-	 * @param Xerxes_Data_Subcategory $objSubcat	subcategory
+	 * @param Xerxes_Model_DataMap_Data_Database $objDb			database object 
+	 * @param Xerxes_Model_DataMap_Data_Subcategory $objSubcat	subcategory
 	 * @param int $sequence							sequence number
 	 */
 	
-	public function updateUserDatabaseOrder(Xerxes_Data_Database $objDb, Xerxes_Data_Subcategory $objSubcat, $sequence)
+	public function updateUserDatabaseOrder(Xerxes_Model_DataMap_Data_Database $objDb, Xerxes_Model_DataMap_Data_Subcategory $objSubcat, $sequence)
 	{
 		$this->beginTransaction();
 		
@@ -430,7 +430,7 @@ class Xerxes_Model_DataMap_Databases extends Xerxes_Framework_DataMap
 	/**
 	 * Get the top level categories (subjects) from the knowledgebase
 	 *
-	 * @return array		array of Xerxes_Data_Category objects
+	 * @return array		array of Xerxes_Model_DataMap_Data_Category objects
 	 */
 	
 	public function getCategories($lang = "")
@@ -448,7 +448,7 @@ class Xerxes_Model_DataMap_Databases extends Xerxes_Framework_DataMap
 		
 		foreach ( $arrResults as $arrResult )
 		{
-			$objCategory = new Xerxes_Data_Category( );
+			$objCategory = new Xerxes_Model_DataMap_Data_Category( );
 			$objCategory->load( $arrResult );
 			
 			array_push( $arrCategories, $objCategory );
@@ -460,7 +460,7 @@ class Xerxes_Model_DataMap_Databases extends Xerxes_Framework_DataMap
 	/**
 	 * Get user-created categories for specified user. 
 	 * @param string $username
-	 * @return array		array of Xerxes_Data_Category objects
+	 * @return array		array of Xerxes_Model_DataMap_Data_Category objects
 	 */
 	
 	public function getUserCreatedCategories($username)
@@ -476,7 +476,7 @@ class Xerxes_Model_DataMap_Databases extends Xerxes_Framework_DataMap
 		
 		foreach ( $arrResults as $arrResult )
 		{
-			$objCategory = new Xerxes_Data_Category( );
+			$objCategory = new Xerxes_Model_DataMap_Data_Category( );
 			$objCategory->load( $arrResult );
 			
 			array_push( $arrCategories, $objCategory );
@@ -536,7 +536,7 @@ class Xerxes_Model_DataMap_Databases extends Xerxes_Framework_DataMap
 	 * 					using different tables.
 	 * @param string $username 		only used in USER_CREATE_MODE, the particular user must be specified, 
 	 * 					becuase normalized subject names are only unique within a user. 
-	 * @return Xerxes_Data_Category		a Xerxes_Data_Category object, filled out with subcategories and databases. 
+	 * @return Xerxes_Model_DataMap_Data_Category		a Xerxes_Model_DataMap_Data_Category object, filled out with subcategories and databases. 
 	 */
 	
 	public function getSubject($normalized, $lang = "", $mode = self::METALIB_MODE, $username = null )
@@ -592,7 +592,7 @@ class Xerxes_Model_DataMap_Databases extends Xerxes_Framework_DataMap
 		
 		if ( $arrResults != null )
 		{
-			$objCategory = new Xerxes_Data_Category( );
+			$objCategory = new Xerxes_Model_DataMap_Data_Category( );
 			$objCategory->id = $arrResults[0]["category_id"];
 			$objCategory->name = $arrResults[0]["category"];
 			$objCategory->normalized = $normalized;
@@ -609,12 +609,12 @@ class Xerxes_Model_DataMap_Databases extends Xerxes_Framework_DataMap
 				$objCategory->published = $arrResults[0]["published"];
 			}
 			
-			$objSubcategory = new Xerxes_Data_Subcategory( );
+			$objSubcategory = new Xerxes_Model_DataMap_Data_Subcategory( );
 			$objSubcategory->id = $arrResults[0]["subcat_id"];
 			$objSubcategory->name = $arrResults[0]["subcategory"];
 			$objSubcategory->sequence = $arrResults[0]["subcat_seq"];
 			
-			$objDatabase = new Xerxes_Data_Database( );
+			$objDatabase = new Xerxes_Model_DataMap_Data_Database( );
 			
 			foreach ( $arrResults as $arrResult )
 			{
@@ -630,7 +630,7 @@ class Xerxes_Model_DataMap_Databases extends Xerxes_Framework_DataMap
 						array_push( $objSubcategory->databases, $objDatabase );
 					}
 					
-					$objDatabase = new Xerxes_Data_Database( );
+					$objDatabase = new Xerxes_Model_DataMap_Data_Database( );
 					
 					// only add subcategory if it actually has databases, to
 					// maintain consistency with previous semantics.
@@ -641,7 +641,7 @@ class Xerxes_Model_DataMap_Databases extends Xerxes_Framework_DataMap
 						array_push( $objCategory->subcategories, $objSubcategory );
 					}
 					
-					$objSubcategory = new Xerxes_Data_Subcategory( );
+					$objSubcategory = new Xerxes_Model_DataMap_Data_Subcategory( );
 					$objSubcategory->id = $arrResult["subcat_id"];
 					$objSubcategory->name = $arrResult["subcategory"];
 					$objSubcategory->sequence = $arrResult["subcat_seq"];
@@ -659,7 +659,7 @@ class Xerxes_Model_DataMap_Databases extends Xerxes_Framework_DataMap
 						array_push( $objSubcategory->databases, $objDatabase );
 					}
 					
-					$objDatabase = new Xerxes_Data_Database( );
+					$objDatabase = new Xerxes_Model_DataMap_Data_Database( );
 					$objDatabase->load( $arrResult );
 				}
 				
@@ -737,7 +737,7 @@ class Xerxes_Model_DataMap_Databases extends Xerxes_Framework_DataMap
 	 * Get a single database from the knowledgebase
 	 *
 	 * @param string $id				metalib id
-	 * @return Xerxes_Data_Database
+	 * @return Xerxes_Model_DataMap_Data_Database
 	 */
 	
 	public function getDatabase($id)
@@ -781,7 +781,7 @@ class Xerxes_Model_DataMap_Databases extends Xerxes_Framework_DataMap
 	 * Get databases that start with a particular letter
 	 *
 	 * @param string $alpha letter to start with 
-	 * @return array of Xerxes_Data_Database objects
+	 * @return array of Xerxes_Model_DataMap_Data_Database objects
 	 */	
 
 	public function getDatabasesStartingWith($alpha)
@@ -795,7 +795,7 @@ class Xerxes_Model_DataMap_Databases extends Xerxes_Framework_DataMap
 	 * @param mixed $id			[optional] null returns all database, array returns a list of databases by id, 
 	 * 							string id returns single id
 	 * @param string $query   user-entered query to search for dbs. 
-	 * @return array			array of Xerxes_Data_Database objects
+	 * @return array			array of Xerxes_Model_DataMap_Data_Database objects
 	 */
 	
 	public function getDatabases($id = null, $query = null, $alpha = null)
@@ -987,7 +987,7 @@ class Xerxes_Model_DataMap_Databases extends Xerxes_Framework_DataMap
 		{
 			foreach ( $arrResults as $arrResult )
 			{
-				$objDatabase = new Xerxes_Data_Database();
+				$objDatabase = new Xerxes_Model_DataMap_Data_Database();
 				$objDatabase->load( $arrResult );
 				array_push($arrDatabases, $objDatabase);
 			}
@@ -1049,7 +1049,7 @@ class Xerxes_Model_DataMap_Databases extends Xerxes_Framework_DataMap
 	/**
 	 * Get the list of types
 	 *
-	 * @return array	array of Xerxes_Data_Type objects
+	 * @return array	array of Xerxes_Model_DataMap_Data_Type objects
 	 */
 	
 	public function getTypes()
@@ -1062,7 +1062,7 @@ class Xerxes_Model_DataMap_Databases extends Xerxes_Framework_DataMap
 		
 		foreach ( $arrResults as $arrResult )
 		{
-			$objType = new Xerxes_Data_Type( );
+			$objType = new Xerxes_Model_DataMap_Data_Type( );
 			$objType->load( $arrResult );
 			
 			array_push( $arrTypes, $objType );

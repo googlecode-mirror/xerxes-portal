@@ -11,26 +11,26 @@
  * @package Xerxes
  */
 
-class Xerxes_Data_RecordTag extends Xerxes_Framework_DataValue
+class Xerxes_Model_DataMap_Data_RecordTag extends Xerxes_Framework_DataValue
 {
 	public $label;
 	public $total;
 }
 
-class Xerxes_Data_RecordFormat extends Xerxes_Framework_DataValue
+class Xerxes_Model_DataMap_Data_RecordFormat extends Xerxes_Framework_DataValue
 {
 	public $format;
 	public $total;
 }
 
-class Xerxes_Data_Refereed extends Xerxes_Framework_DataValue
+class Xerxes_Model_DataMap_Data_Refereed extends Xerxes_Framework_DataValue
 {
 	public $issn;
 	public $title;
 	public $timestamp;
 }
 
-class Xerxes_Data_Fulltext extends Xerxes_Framework_DataValue
+class Xerxes_Model_DataMap_Data_Fulltext extends Xerxes_Framework_DataValue
 {
 	public $issn;
 	public $title;
@@ -41,7 +41,7 @@ class Xerxes_Data_Fulltext extends Xerxes_Framework_DataValue
 	public $live;
 }
 
-class Xerxes_Data_Category extends Xerxes_Framework_DataValue
+class Xerxes_Model_DataMap_Data_Category extends Xerxes_Framework_DataValue
 {
 	public $id;
 	public $name;
@@ -79,7 +79,7 @@ class Xerxes_Data_Category extends Xerxes_Framework_DataValue
 	}
 }
 
-class Xerxes_Data_Subcategory extends Xerxes_Framework_DataValue
+class Xerxes_Model_DataMap_Data_Subcategory extends Xerxes_Framework_DataValue
 {
 	public $metalib_id;
 	public $name;
@@ -88,7 +88,7 @@ class Xerxes_Data_Subcategory extends Xerxes_Framework_DataValue
 	public $databases = array ( );
 }
 
-class Xerxes_Data_Type extends Xerxes_Framework_DataValue
+class Xerxes_Model_DataMap_Data_Type extends Xerxes_Framework_DataValue
 {
 	public $id;
 	public $name;
@@ -96,7 +96,7 @@ class Xerxes_Data_Type extends Xerxes_Framework_DataValue
 	public $databases = array ( );
 }
 
-class Xerxes_Data_Database extends Xerxes_Framework_DataValue
+class Xerxes_Model_DataMap_Data_Database extends Xerxes_Framework_DataValue
 {
 	public $xml;
 	
@@ -144,7 +144,7 @@ class Xerxes_Data_Database extends Xerxes_Framework_DataValue
 
 }
 
-class Xerxes_Data_Record extends Xerxes_Framework_DataValue
+class Xerxes_Model_DataMap_Data_Record extends Xerxes_Framework_DataValue
 {
 	public $id;
 	public $source;
