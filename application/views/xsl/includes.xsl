@@ -486,7 +486,7 @@
 		
 		<!-- exclude javascript for ada (because it messes with screen readers) and mobile devices (makes loading faster) -->
 		
-		<!-- <xsl:call-template name="jslabels" /> -->
+		<xsl:call-template name="jslabels" />
 			
 		<!-- framework -->
 		<!-- TODO: Swap for jQuery -->
@@ -502,20 +502,20 @@
 			
 		<!-- saved records -->
 		
+		<xsl:variable name="session_saved_records" select="navbar/element[@id='saved_records']/@numSessionSavedRecords" />
+		<xsl:variable name="is_temporary_session">
+			<xsl:choose>
+				<xsl:when test="$temporarySession = 'true'">true</xsl:when>
+				<xsl:otherwise>false</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		
 		<script type="text/javascript">
 			
 			// change numSessionSavedRecords to numSavedRecords if you prefer the folder icon to change
 			// if there are any records at all in saved records. Also fix initial display in navbar.
 			
-			numSavedRecords = parseInt('0<xsl:value-of select="navbar/element[@id='saved_records']/@numSessionSavedRecords" />', 10);
-			
-			<xsl:variable name="is_temporary_session">
-				<xsl:choose>
-					<xsl:when test="$temporarySession = 'true'">true</xsl:when>
-					<xsl:otherwise>false</xsl:otherwise>
-				</xsl:choose>
-			</xsl:variable>
-			
+			numSavedRecords = parseInt('0<xsl:value-of select="$session_saved_records" />', 10);
 			isTemporarySession = <xsl:value-of select="$is_temporary_session" />;
 		</script>
 		
@@ -530,7 +530,7 @@
 	
 	<xsl:template name="jslabels">
 	
-		<script language="javascript" type="text/javascript" src="./?{$language_param}&amp;base=helper&amp;action=labels.js" /> 
+		<script language="javascript" type="text/javascript" src="./?{$language_param}&amp;base=helper&amp;action=labels" /> 
 	
 	</xsl:template>
 	

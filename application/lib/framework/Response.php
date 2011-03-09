@@ -52,6 +52,24 @@ class Xerxes_Framework_Response
 	}
 	
 	/**
+	 * Get data from the response
+	 * 
+	 * @param string $id		an identifier for this object
+	 */
+	
+	public function get($id)
+	{
+		if ( array_key_exists($id, $this->_data) )
+		{
+			return $this->_data[$id];
+		}
+		else
+		{
+			return null;
+		}
+	}
+	
+	/**
 	 * Set the URL for redirect
 	 *
 	 * @param string $url
@@ -224,10 +242,19 @@ class Xerxes_Framework_Response
 		
 		$view = $this->_view[$this->_format]; // file location
 		
+		// xslt view
+		
 		if (strstr($view, 'xsl') )
 		{
 			$html = Xerxes_Framework_Parser::transform($xml, $view);
 			return $html;
+		}
+		
+		// php view
+		
+		else
+		{
+			require_once "views/$view";
 		}
 	}
 	

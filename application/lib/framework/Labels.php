@@ -81,6 +81,11 @@ class Xerxes_Framework_Labels
 		return $this->xml;
 	}
 	
+	public function getLabels()
+	{
+		return $this->labels;
+	}
+	
 	public function getLabel($name)
 	{
 		if ( array_key_exists($name, $this->labels) )
