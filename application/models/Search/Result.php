@@ -165,6 +165,7 @@ class Xerxes_Model_Search_Result
 		}
 		
 		$holdings = new Xerxes_Model_Search_Holdings();
+		$holdings->checked = true;
 		
 		// response is (currently) an array of json objects
 		

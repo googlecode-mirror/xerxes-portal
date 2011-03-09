@@ -64,7 +64,7 @@ class Xerxes_Framework_Cache extends Xerxes_Framework_DataMap
 		
 		// now insert the new value
 
-		$arrParams[":data"] = $id;
+		$arrParams[":data"] = $data;
 		$arrParams[":timestamp"] = time();
 		$arrParams[":expiry"] = $expiry;		
 		
@@ -153,7 +153,7 @@ class Xerxes_Framework_Cache extends Xerxes_Framework_DataMap
 		
 		foreach ( $arrResults as $arrResult )
 		{
-			array_push( $arrCache, $arrResult['data'] );
+			$arrCache[$arrResult['id']] = $arrResult['data'];
 		}
 		
 		// you supply array, we return array

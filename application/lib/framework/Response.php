@@ -17,7 +17,6 @@ class Xerxes_Framework_Response
 	private $_data = array(); // data
 	private $_redirect = ""; // redirect url
 	private $_view = array(); // view file
-	private $_format = "html";
 	
 	private static $instance; // singleton pattern
 
@@ -233,7 +232,7 @@ class Xerxes_Framework_Response
 		
 		// testing
 		
-		if ( ! array_key_exists($this->_format, $this->_view) ) $this->setFormat("xerxes");
+		if ( ! array_key_exists($format, $this->_view) ) $this->setFormat("xerxes");
 		
 		// just dump the internal xml
 		
