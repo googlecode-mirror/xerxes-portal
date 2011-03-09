@@ -237,7 +237,7 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 		
 		return array ( 
 			"range" => "$start-$stop",
-			"total" => number_format( $total )
+			"total" => Xerxes_Framework_Parser::number_format( $total )
 		);
 	}
 	
@@ -519,7 +519,9 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 		{
 			foreach ( $tabs->top->tab as $tab )
 			{
-				// current?
+				// format the number
+				
+				// is this the current tab?
 
 				if ( $this->request->getParam('base') == (string) $tab["id"] 
 				     && ( $this->request->getParam('source') == (string) $tab["source"] 
@@ -552,7 +554,7 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 					{
 						// yup, so add it
 						
-						$tab->addAttribute('hits', $session_value);
+						$tab->addAttribute('hits', Xerxes_Framework_Parser::number_format($session_value));
 					}
 				}
 			}

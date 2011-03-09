@@ -23,8 +23,10 @@ class Xerxes_Model_Search_FacetGroup
 	 * @param Xerxes_Model_Search_Facet $facets
 	 */
 	
-	public function addFacet($facet)
+	public function addFacet(Xerxes_Model_Search_Facet $facet)
 	{
+		$facet->count = Xerxes_Framework_Parser::number_format($facet->count);
+		
 		array_push($this->facets, $facet);
 	}
 	
