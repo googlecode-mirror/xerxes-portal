@@ -13,6 +13,7 @@
 
 class Xerxes_Model_Search_Holdings
 {
+	public $none;
 	public $items = array();
 	public $holdings = array();
 	

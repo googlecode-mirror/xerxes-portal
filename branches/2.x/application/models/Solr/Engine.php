@@ -102,6 +102,10 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 		
 		$results = $this->doSearch($this->url);
 		
+		// find any holding we have cached
+		
+		$results->injectHoldings();
+		
 		return $results;
 	}
 	
@@ -168,15 +172,6 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 		{
 			$max = $this->config->getConfig("RECORDS_PER_PAGE", false, 10);
 		}
-		
-		// sort
-
-		if ( $sort == "" )
-		{
-			$sort = $this->config->getConfig("SORT_ORDER", false, $this->sort);
-		}		
-		
-		$sort = $this->config->swapForInternalSort($sort);
 		
 		// start
 		

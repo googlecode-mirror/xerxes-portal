@@ -50,6 +50,16 @@ abstract class Xerxes_Model_Search_Config extends Xerxes_Framework_Registry
 	}
 	
 	/**
+	 * Get the ID for this config
+	 */
+	
+	public function getID()
+	{
+		$config = explode('/', $this->config_file);
+		return array_pop($config);
+	}
+	
+	/**
 	 * Get the defined public name of a given facet
 	 * 
 	 * @param string $internal		facet internal id

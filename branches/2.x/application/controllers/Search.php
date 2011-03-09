@@ -84,6 +84,10 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 		$max = $this->request->getParam('max', false, $this->max);
 		$sort = $this->request->getParam('sort', false, $this->sort);
 		
+		// swap for internal
+		
+		$sort = $this->config->swapForInternalSort($sort);
+		
 		// make sure records per page does not exceed upper bound
 		
 		if ( $max > $this->max_allowed )
@@ -130,6 +134,23 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 		$this->addRecordLinks($results);
 		$this->response->add("results", $results);
 	}
+	
+	public function lookup()
+	{
+		$id = $this->request->getParam("id");
+		
+		// we essentially create a mock object and add holdings
+		
+		$xerxes_record = new Xerxes_Record();
+		$xerxes_record->setRecordID($id);
+		$xerxes_record->setSource($this->id);
+		
+		$result = new Xerxes_Model_Search_Result($xerxes_record, $this->config);
+		$result->addHoldings();
+		
+		$this->response->add("results", $result);
+		$this->response->setView('xsl/search/lookup.xsl');
+	}	
 
 	public function save()
 	{

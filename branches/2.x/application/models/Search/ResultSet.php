@@ -255,13 +255,25 @@ class Xerxes_Model_Search_ResultSet
 	{
 		$issns = array();
 		
-		$records = array_merge($this->records, $this->recommendations);
+		// get each result
 		
-		foreach ( $records as $record )
+		foreach ( $this->records as $record )
 		{
-			foreach ( $record->getAllISSN() as $record_issn )
+			// issn from the bib
+			
+			foreach ( $record->getXerxesRecord()->getAllISSN() as $record_issn )
 			{
 				array_push($issns, $record_issn);
+			}
+			
+			// issn from recommedations
+			
+			foreach ( $record->recommendations as $recommendation )
+			{
+				foreach ( $recommendation->getXerxesRecord()->getAllISSN() as $record_issn )
+				{
+					array_push($issns, $record_issn);
+				}
 			}
 		}
 		
@@ -341,19 +353,26 @@ class Xerxes_Model_Search_ResultSet
 		
 		if ( count($ids) > 0 )
 		{
+			// prefix the engine id
+			
+			for ( $x=0; $x < count($ids); $x++ )
+			{
+				$ids[$x] = $this->config->getID() . "." . $ids[$x];
+			}
+			
 			// look for any of our items
 			
 			$cache = new Xerxes_Framework_Cache();
 			
-			$items = $cache->get($ids);
+			$cache_array = $cache->get($ids);
 			
-			foreach ( $items as $data )
+			foreach ( $cache_array as $id => $data )
 			{
-				$item = unserialize($data);
+				$holdings = unserialize($data);
 				
-				if ( ! $item instanceof Xerxes_Model_Search_Holdings   )
+				if ( ! $holdings instanceof Xerxes_Model_Search_Holdings   )
 				{
-					throw new Exception("cached item (" . $cache->id. ") is not an instance of Xerxes_Model_Search_Holdings");
+					throw new Exception("cached item ($id) is not an instance of Xerxes_Model_Search_Holdings");
 				}
 				
 				// now associate this item with its corresponding result
@@ -362,9 +381,9 @@ class Xerxes_Model_Search_ResultSet
 				{
 					$search_result = $this->records[$x];
 					
-					if ( $search_result->xerxes_record->getRecordID() == $cache->id )
+					if ( $this->config->getID() . "." . $search_result->xerxes_record->getRecordID() == $id )
 					{
-						$search_result->addItems($item);
+						$search_result->setHoldings($holdings);
 					}
 						
 					$this->records[$x] = $search_result;

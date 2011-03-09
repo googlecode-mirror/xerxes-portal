@@ -2882,6 +2882,11 @@ class Xerxes_Record extends Xerxes_Marc_Record
 	{
 		return $this->source;
 	}
+
+	public function setSource($source)
+	{
+		$this->source = $source;
+	}	
 	
 	public function setRefereed($bool)
 	{
