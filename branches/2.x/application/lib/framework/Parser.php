@@ -515,6 +515,18 @@ class Xerxes_Framework_Parser
 		}			
 	}
 	
+	public static function number_format($number, $decimals = 0)
+	{
+		$localeconv = localeconv();
+		
+		if ( $localeconv['thousands_sep'] == "" )
+		{
+			$localeconv['thousands_sep'] = ",";
+		}
+		
+		return number_format($number, $decimals, $localeconv['decimal_point'], $localeconv['thousands_sep']);
+	}
+	
 	
 	/**
 	 * Send a request as either GET or POST
