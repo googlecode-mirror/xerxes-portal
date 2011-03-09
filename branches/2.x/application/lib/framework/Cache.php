@@ -66,7 +66,7 @@ class Xerxes_Framework_Cache extends Xerxes_Framework_DataMap
 
 		$arrParams[":data"] = $id;
 		$arrParams[":timestamp"] = time();
-		$arrParams[":expiry"] = $id;		
+		$arrParams[":expiry"] = $expiry;		
 		
 		$strSQL = "INSERT INTO xerxes_cache (id, data, timestamp, expiry) VALUES (:id, :data, :timestamp, :expiry)";
 		$this->insert($strSQL, $arrParams);
