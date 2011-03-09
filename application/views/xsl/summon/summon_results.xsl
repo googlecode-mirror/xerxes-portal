@@ -16,7 +16,7 @@
 	xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 
 	<xsl:import href="../includes.xsl" />
-	<xsl:import href="../results.xsl" />
+	<xsl:import href="../search/results.xsl" />
 
 	<xsl:output method="html" encoding="utf-8" indent="yes" doctype-public="-//W3C//DTD HTML 4.01 Transitional//EN" doctype-system="http://www.w3.org/TR/html4/loose.dtd"/>
 	
