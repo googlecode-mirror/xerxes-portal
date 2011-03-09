@@ -197,8 +197,8 @@ class Xerxes_Framework_FrontController
 			#      DISPLAY     #
 			####################			
 			
-			$response->setFormat($request->getParam('format'));				
-			echo $response->display();
+			$format = $request->getParam('format', false, 'html');
+			echo $response->display($format);
 						
 			// remove any flash message, intended for one display only.
 				 

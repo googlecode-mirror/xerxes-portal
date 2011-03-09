@@ -125,7 +125,8 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		{
 			$this->xpath->registerNamespace ( "rft", "info:ofi/fmt:xml:xsd:book" );
 		} 
-		elseif ($this->document->getElementsByTagNameNS ( "info:ofi/fmt:xml:xsd:dissertation", "dissertation" )->item ( 0 ) != null)
+		elseif ($this->document->getElementsByTagNameNS ( 
+			"info:ofi/fmt:xml:xsd:dissertation", "dissertation" )->item ( 0 ) != null)
 		{
 			$this->xpath->registerNamespace ( "rft", "info:ofi/fmt:xml:xsd:dissertation" );
 		} 		

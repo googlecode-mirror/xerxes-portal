@@ -62,7 +62,7 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 		// and tell the browser too
 		
 		$this->response->add($total, "hits");
-		$this->response->setView("xsl/hits.xsl");
+		$this->response->setView("xsl/search/hits.xsl");
 	}
 	
 	public function results()
@@ -130,6 +130,49 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 		$this->addRecordLinks($results);
 		$this->response->add($results, "results");
 	}
+
+	public function save()
+	{
+		$datamap = new Xerxes_Model_DataMap_SavedRecords();
+		
+		$username = "testing"; // $this->request->getSession("username");
+		$original_id = $this->request->getParam("id");
+
+		$inserted_id = ""; // internal database id
+		
+		// delete command
+		
+		if ( $this->isMarkedSaved( $original_id ) == true )
+		{
+			$datamap->deleteRecordBySource( $username, $this->id, $original_id );
+			$this->unmarkSaved( $original_id );
+			$this->response->add("1", "delete");
+		}
+
+		// add command
+		
+		else
+		{
+			// get record
+			
+			$record = $this->engine->getRecord($original_id)->getRecord(0)->getXerxesRecord();
+			
+			// save it
+			
+			$inserted_id = $datamap->addRecord( $username, $this->id, $original_id, $record );
+			
+			// record this in session
+				
+			$this->markSaved( $original_id, $inserted_id );
+			
+			$this->response->add($inserted_id, "savedRecordID");
+		} 
+		
+		// view
+		
+		$this->response->setView('xsl/search/save.xsl');
+		$this->response->setView('xsl/search/save-ajax.xsl', 'json');
+	}	
 	
 	
 	######################
