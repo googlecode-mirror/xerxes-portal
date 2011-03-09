@@ -213,7 +213,7 @@
 						<!-- pick display type -->
 					
 						<xsl:choose>
-	
+						
 							<xsl:when test="../holdings/holdings">
 							
 								<xsl:call-template name="availability_lookup_holdings">
@@ -221,6 +221,7 @@
 								</xsl:call-template>
 								
 							</xsl:when>
+							
 							<xsl:when test="$type = 'summary'">
 							
 								<xsl:call-template name="availability_lookup_summary">
@@ -250,7 +251,7 @@
 				</xsl:choose>
 	
 				<!-- check for full-text -->
-											
+														
 				<xsl:call-template name="availability_full_text">
 					<xsl:with-param name="element">span</xsl:with-param>
 					<xsl:with-param name="class">resultsAvailability</xsl:with-param>
@@ -274,10 +275,7 @@
 	
 	<xsl:template name="availability_lookup_none">
 		
-		<xsl:call-template name="ill_option">
-			<xsl:with-param name="element">div</xsl:with-param>
-			<xsl:with-param name="class">resultsAvailability</xsl:with-param>
-		</xsl:call-template>	
+		<xsl:call-template name="ill_option" />	
 			
 	</xsl:template>
 	
@@ -372,16 +370,12 @@
 	<xsl:template name="availability_lookup_full">
 		<xsl:param name="totalCopies" />
 	
-		
 		<xsl:if test="count(../holdings/items/item) != '0'">
 			<xsl:call-template name="availability_item_table" />
 		</xsl:if>
 		
 		<xsl:if test="$totalCopies = 0">
-			<xsl:call-template name="ill_option">
-				<xsl:with-param name="element">span</xsl:with-param>
-				<xsl:with-param name="class">resultsAvailability</xsl:with-param>
-			</xsl:call-template>
+			<xsl:call-template name="ill_option" />
 		</xsl:if>
 				
 	</xsl:template>
@@ -459,19 +453,18 @@
 	-->
 	
 	<xsl:template name="ill_option">
-		<xsl:param name="element" />
-		<xsl:param name="class" />
-	
+			
 		<xsl:variable name="source"  select="//request/source"/>	
 		
 		<xsl:if test="count(../holdings/items/item)">
 		
-			<xsl:element name="{$element}">
-				<xsl:attribute name="class"><xsl:value-of select="$class" /></xsl:attribute> 
+			<div class="resultsAvailability">
 				<a target="{$link_target}" href="{../url_open}" class="recordAction">
 					<img src="{$image_sfx}" alt="" border="0" class="miniIcon linkResolverLink "/>
+					<xsl:text> </xsl:text>
+					<xsl:copy-of select="$text_link_resolver_check" /> 
 				</a>
-			</xsl:element>
+			</div>
 			
 		</xsl:if>
 			
