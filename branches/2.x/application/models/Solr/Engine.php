@@ -49,7 +49,7 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 	{
 		// create the url
 		
-		$this->url = $this->prepareSearchURL($search, 0, 0, "relevance", false);
+		$this->url = $this->prepareSearchURL($search, 0, 0, null, false);
 		
 		// get the results
 		
