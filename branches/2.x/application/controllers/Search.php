@@ -61,7 +61,7 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 		
 		// and tell the browser too
 		
-		$this->response->add($total, "hits");
+		$this->response->add("hits", $total);
 		$this->response->setView("xsl/search/hits.xsl");
 	}
 	
@@ -118,8 +118,8 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 		
 		// response
 		
-		$this->response->add($this->query, "query");
-		$this->response->add($results, "results");
+		$this->response->add("query", $this->query);
+		$this->response->add("results", $results);
 	}
 	
 	public function record()
@@ -128,7 +128,7 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 		$results = $this->engine->getRecord($id);
 		
 		$this->addRecordLinks($results);
-		$this->response->add($results, "results");
+		$this->response->add("results", $results);
 	}
 
 	public function save()
@@ -146,7 +146,7 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 		{
 			$datamap->deleteRecordBySource( $username, $this->id, $original_id );
 			$this->unmarkSaved( $original_id );
-			$this->response->add("1", "delete");
+			$this->response->add("delete", "1");
 		}
 
 		// add command
@@ -165,7 +165,7 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 				
 			$this->markSaved( $original_id, $inserted_id );
 			
-			$this->response->add($inserted_id, "savedRecordID");
+			$this->response->add("savedRecordID", $inserted_id);
 		} 
 		
 		// view
@@ -536,7 +536,7 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 				}
 			}
 			
-			$this->response->add($tabs, "tabs");
+			$this->response->add("tabs", $tabs);
 		}
 		
 		// links to remove facets

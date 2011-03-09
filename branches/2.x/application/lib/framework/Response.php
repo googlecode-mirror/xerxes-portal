@@ -41,12 +41,12 @@ class Xerxes_Framework_Response
 	
 	/**
 	 * Add data to the response
-	 * 
-	 * @param mixed $object		any kind of object you likes
+	 *
 	 * @param string $id		an identifier for this object
+	 * @param mixed $object		any kind of object you likes
 	 */
 	
-	public function add($object, $id)
+	public function add($id, $object)
 	{
 		$this->_data[$id] = $object;
 	}

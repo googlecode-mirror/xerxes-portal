@@ -35,6 +35,7 @@
 	<xsl:template name="module-header">
 	
 		<link href="{$base_url}/css/books.css?xerxes_version={$xerxes_version}" rel="stylesheet" type="text/css" />
+		<script type="application/javascript" src="javascript/availability.js"></script>
 	
 	</xsl:template>
 
