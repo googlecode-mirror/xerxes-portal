@@ -52,10 +52,7 @@
 				
 				<!-- Umlaut stuff -->
 				
-				<div id="library_copies" class="umlaut_content" style="display:none;"></div>
-				<div id="document_delivery" class="umlaut_content" style="display:none;"></div>
-				<div id="search_inside" class="umlaut_content" style="display:none;"></div>
-				<div id="limited_preview" class="umlaut_content" style="display:none"></div>
+				<xsl:call-template name="umlaut" />
 	
 				<!-- Detailed record information (Summary, Topics, Standard numbers, ...) -->
 				
@@ -470,7 +467,18 @@
 		</xsl:if>
 	</xsl:template>
 
+	<!--
+		TEMPLATE: UMLAUT
+	-->
 
+	<xsl:template name="umlaut">	
+	
+		<div id="library_copies" class="umlaut_content" style="display:none;"></div>
+		<div id="document_delivery" class="umlaut_content" style="display:none;"></div>
+		<div id="search_inside" class="umlaut_content" style="display:none;"></div>
+		<div id="limited_preview" class="umlaut_content" style="display:none"></div>
+	
+	</xsl:template>
 
 
 

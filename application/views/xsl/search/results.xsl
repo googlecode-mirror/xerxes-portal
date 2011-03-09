@@ -266,7 +266,7 @@
 				<xsl:for-each select="config[@name='tabs']/top">
 						
 					<ul id="tabnav">
-						<xsl:call-template name="tab_options" />
+						<xsl:call-template name="tab" />
 					</ul>
 					<div style="clear:both"></div>
 				</xsl:for-each>
@@ -308,7 +308,7 @@
 		each tab
 	-->
 	
-	<xsl:template name="tab_options">
+	<xsl:template name="tab">
 	
 		<xsl:for-each select="tab">
 			
@@ -322,20 +322,13 @@
 					
 					<span class="tabsHit">
 						<xsl:choose>
-							<xsl:when test="@current = 1">
-								(<xsl:value-of select="//results/total" />)
+							<xsl:when test="@hits">
+								(<xsl:value-of select="@hits" />)
 							</xsl:when>
 							<xsl:otherwise>
-								<xsl:choose>
-									<xsl:when test="@hits">
-										(<xsl:value-of select="@hits" />)
-									</xsl:when>
-									<xsl:otherwise>
-										<span class="tabsHitNumber" id="tab:{@id}:{@source}"></span>
-									</xsl:otherwise>
-								</xsl:choose>								
+								<span class="tabsHitNumber" id="tab:{@id}:{@source}"></span>
 							</xsl:otherwise>
-						</xsl:choose>
+						</xsl:choose>								
 					</span>
 				</a>
 			</li>
