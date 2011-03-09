@@ -88,7 +88,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 	protected $alt_scripts = array (); // alternate character-scripts like cjk or hebrew, taken from 880s
 	protected $alt_script_name = ""; // the name of the alternate character-script; we'll just assume one for now, I guess
 	
-	protected $serialized_xml; // for serializing the object
+	protected $serialized; // for serializing the object
 	
 	
 	### PUBLIC FUNCTIONS ###
@@ -98,8 +98,8 @@ class Xerxes_Record extends Xerxes_Marc_Record
 	{
 		// save only the xml
 		
-		$this->serialized_xml = $this->document->saveXML();
-		return array("serialized_xml");
+		$this->serialized = $this->document->saveXML();
+		return array("serialized");
 	}
 	
 	public function __wakeup()
@@ -107,7 +107,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		// and then we recreate the object (with any new changes we've made)
 		// by just loading the saved xml back into the object
 		
-		$this->loadXML($this->serialized_xml);
+		$this->loadXML($this->serialized);
 	}		
 	
 	/**
@@ -342,11 +342,11 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		}
 		
 		$arrAbstract = $this->fieldArray("520", "a");
-		$strLanguageNote =  $this->datafield("546")->subfield("a")->__toString();
 		
 		// other notes
 		
-		$objNotes = $this->xpath("//marc:datafield[@tag >= 500 and @tag < 600 and @tag != 505 and @tag != 520 and @tag != 546]" );
+		$objNotes = $this->xpath("//marc:datafield[@tag >= 500 and @tag < 600 and " .
+			"@tag != 505 and @tag != 520 and @tag != 546]" );
 		
 		foreach ( $objNotes as $objNote )
 		{
@@ -450,31 +450,18 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		
 		### language
 		
-		$langConverter = Xerxes_Framework_Languages::getInstance();
-		
 		// take an explicit language note over 008 if available
 
+		$strLanguageNote = $this->datafield("546")->subfield("a")->__toString();
+		
 		if ( $strLanguageNote != null )
 		{
 			$strLanguageNote = $this->stripEndPunctuation( $strLanguageNote, "." );
 			
-			if ( strlen( $strLanguageNote ) == 2 )
-			{
-				$this->language = $langConverter->getNameFromCode( 'iso_639_1_code', $strLanguageNote );
-			} 
-			elseif ( strlen( $strLanguageNote ) == 3 )
-			{
-				$this->language = $langConverter->getNameFromCode( 'iso_639_2B_code', $strLanguageNote );
-			} 
-			elseif ( ! stristr( $strLanguageNote, "Undetermined" ) )
+			if ( ! stristr( $strLanguageNote, "Undetermined" ) )
 			{
 				$this->language = str_ireplace( "In ", "", $strLanguageNote );
-				$language = $langConverter->getNameFromCode( 'name', ucfirst( $this->language ) );
-				
-				if ($language != null) 
-				{
-					$this->language = $language;
-				}
+				$this->language = ucfirst( $this->language );
 			}
 		} 
 		else
@@ -489,7 +476,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 
 				if ( $strLangCode != "")
 				{
-					$this->language = $langConverter->getNameFromCode( 'iso_639_2B_code', $strLanguageNote );
+					$this->language = $strLangCode;
 				}			
 			}
 		}
@@ -602,7 +589,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 			$this->oclc_number = $strJustOclcNumber;
 		}
 		
-		### summary
+		### abstract
 		
 		// abstract
 		
@@ -612,39 +599,6 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		}
 		
 		$this->abstract = trim( strip_tags( $this->abstract ) );
-		
-		// summary
-		
-		if ( $this->abstract != "" )
-		{
-			$this->summary = $this->abstract;
-			$this->summary_type = "abstract";
-		}
-		elseif ( $this->snippet != "" )
-		{
-			$this->summary = $this->snippet;
-			$this->summary_type = "snippet";
-		} 
-		elseif ( $this->toc != "" )
-		{
-			$this->summary = $this->toc;
-			$this->summary_type = "toc";
-		} 
-		elseif ( count( $this->subjects ) > 0 )
-		{
-			$this->summary_type = "subjects";
-			
-			for ( $x = 0 ; $x < count( $this->subjects ) ; $x ++ )
-			{
-				$subject_object = $this->subjects[$x];
-				$this->summary .= $subject_object->value;
-				
-				if ( $x < count( $this->subjects ) - 1 )
-				{
-					$this->summary .= "; ";
-				}
-			}
-		}
 		
 		### journal title
 
@@ -755,26 +709,6 @@ class Xerxes_Record extends Xerxes_Marc_Record
 			}
 		}
 		
-		### isbn
-		
-		// get just the isbn minus format notes
-
-		for ( $x = 0 ; $x < count( $this->isbns ) ; $x ++ )
-		{
-			$arrIsbnExtract = array ( );
-			
-			$this->isbns[$x] = str_replace( "-", "", $this->isbns[$x] );
-			
-			if ( preg_match( "/[0-9]{12,13}X{0,1}/", $this->isbns[$x], $arrIsbnExtract ) != 0 )
-			{
-				$this->isbns[$x] = $arrIsbnExtract[0];
-			} 
-			elseif ( preg_match( "/[0-9]{9,10}X{0,1}/", $this->isbns[$x], $arrIsbnExtract ) != 0 )
-			{
-				$this->isbns[$x] = $arrIsbnExtract[0];
-			}
-		}
-		
 		### thesis
 
 		// most 502 fields follow the following pattern, which we will use to
@@ -821,57 +755,6 @@ class Xerxes_Record extends Xerxes_Marc_Record
 			$this->year = $this->extractYear( $strThesis );
 		}
 		
-		### title
-
-		$this->non_sort = strip_tags( $this->non_sort );
-		$this->title = strip_tags( $this->title );
-		$this->sub_title = strip_tags( $this->sub_title );
-		
-		// make sure subtitle is properly parsed out
-
-		$iColon = strpos( $this->title, ":" );
-		
-		if ( $this->sub_title == "" && $iColon !== false )
-		{
-			$this->sub_title = trim( substr( $this->title, $iColon + 1 ) );
-			$this->title = trim( substr( $this->title, 0, $iColon ) );
-		}
-		
-		// make sure nonSort portion of the title is extracted
-
-		// punctuation; we'll also *add* the definite/indefinite article below should 
-		// the quote be followed by one of those -- this is all in english, yo!
-
-		if ( strlen( $this->title ) > 0 )
-		{
-			if ( substr( $this->title, 0, 1 ) == "\"" || substr( $this->title, 0, 1 ) == "'" )
-			{
-				$this->non_sort = substr( $this->title, 0, 1 );
-				$this->title = substr( $this->title, 1 );
-			}
-		}
-		
-		// common definite and indefinite articles
-
-		if ( strlen( $this->title ) > 4 )
-		{
-			if ( Xerxes_Framework_Parser::strtolower( substr( $this->title, 0, 4 ) ) == "the " )
-			{
-				$this->non_sort .= substr( $this->title, 0, 4 );
-				$this->title = substr( $this->title, 4 );
-			} 
-			elseif ( Xerxes_Framework_Parser::strtolower( substr( $this->title, 0, 2 ) ) == "a " )
-			{
-				$this->non_sort .= substr( $this->title, 0, 2 );
-				$this->title = substr( $this->title, 2 );
-			} 
-			elseif ( Xerxes_Framework_Parser::strtolower( substr( $this->title, 0, 3 ) ) == "an " )
-			{
-				$this->non_sort .= substr( $this->title, 0, 3 );
-				$this->title = substr( $this->title, 3 );
-			}
-		}
-		
 		### year
 
 		if ( $strDate != "" )
@@ -899,7 +782,6 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		{
 			$this->year = $this->extractYear($objDate->nodeValue);
 		}
-		
 		
 		#### authors
 
@@ -1042,6 +924,121 @@ class Xerxes_Record extends Xerxes_Marc_Record
 			}
 		}
 		
+		$this->cleanup();
+	}
+	
+	/**
+	 * Property clean-up
+	 */
+	
+	protected function cleanup()
+	{
+		### title
+
+		$this->non_sort = strip_tags( $this->non_sort );
+		$this->title = strip_tags( $this->title );
+		$this->sub_title = strip_tags( $this->sub_title );
+		
+		// make sure subtitle is properly parsed out
+
+		$iColon = strpos( $this->title, ":" );
+		
+		if ( $this->sub_title == "" && $iColon !== false )
+		{
+			$this->sub_title = trim( substr( $this->title, $iColon + 1 ) );
+			$this->title = trim( substr( $this->title, 0, $iColon ) );
+		}
+		
+		// make sure nonSort portion of the title is extracted
+
+		// punctuation; we'll also *add* the definite/indefinite article below should 
+		// the quote be followed by one of those -- this is all in english, yo!
+
+		if ( strlen( $this->title ) > 0 )
+		{
+			if ( substr( $this->title, 0, 1 ) == "\"" || substr( $this->title, 0, 1 ) == "'" )
+			{
+				$this->non_sort = substr( $this->title, 0, 1 );
+				$this->title = substr( $this->title, 1 );
+			}
+		}
+		
+		// common definite and indefinite articles
+
+		if ( strlen( $this->title ) > 4 )
+		{
+			if ( Xerxes_Framework_Parser::strtolower( substr( $this->title, 0, 4 ) ) == "the " )
+			{
+				$this->non_sort .= substr( $this->title, 0, 4 );
+				$this->title = substr( $this->title, 4 );
+			} 
+			elseif ( Xerxes_Framework_Parser::strtolower( substr( $this->title, 0, 2 ) ) == "a " )
+			{
+				$this->non_sort .= substr( $this->title, 0, 2 );
+				$this->title = substr( $this->title, 2 );
+			} 
+			elseif ( Xerxes_Framework_Parser::strtolower( substr( $this->title, 0, 3 ) ) == "an " )
+			{
+				$this->non_sort .= substr( $this->title, 0, 3 );
+				$this->title = substr( $this->title, 3 );
+			}
+		}
+
+		### isbn
+		
+		// get just the isbn minus format notes
+
+		for ( $x = 0 ; $x < count( $this->isbns ) ; $x ++ )
+		{
+			$arrIsbnExtract = array ( );
+			
+			$this->isbns[$x] = str_replace( "-", "", $this->isbns[$x] );
+			
+			if ( preg_match( "/[0-9]{12,13}X{0,1}/", $this->isbns[$x], $arrIsbnExtract ) != 0 )
+			{
+				$this->isbns[$x] = $arrIsbnExtract[0];
+			} 
+			elseif ( preg_match( "/[0-9]{9,10}X{0,1}/", $this->isbns[$x], $arrIsbnExtract ) != 0 )
+			{
+				$this->isbns[$x] = $arrIsbnExtract[0];
+			}
+		}
+
+		## summary
+		
+		if ( $this->abstract != "" )
+		{
+			$this->summary = $this->abstract;
+			$this->summary_type = "abstract";
+		}
+		elseif ( $this->snippet != "" )
+		{
+			$this->summary = $this->snippet;
+			$this->summary_type = "snippet";
+		} 
+		elseif ( $this->toc != "" )
+		{
+			$this->summary = $this->toc;
+			$this->summary_type = "toc";
+		} 
+		elseif ( count( $this->subjects ) > 0 )
+		{
+			$this->summary_type = "subjects";
+			
+			for ( $x = 0 ; $x < count( $this->subjects ) ; $x ++ )
+			{
+				$subject_object = $this->subjects[$x];
+				$this->summary .= $subject_object->value;
+				
+				if ( $x < count( $this->subjects ) - 1 )
+				{
+					$this->summary .= "; ";
+				}
+			}
+		}		
+		
+		## journals
+		
 		// construct a readable journal field if none supplied
 		
 		if ( $this->journal == "" )
@@ -1066,7 +1063,30 @@ class Xerxes_Record extends Xerxes_Marc_Record
 				}
 			}
 		}
+
+		### language
 		
+		// normalize and translate language names
+		
+		$langConverter = Xerxes_Framework_Languages::getInstance();
+		
+		if ( strlen( $this->language ) == 2 )
+		{
+			$this->language = $langConverter->getNameFromCode( 'iso_639_1_code', $this->language );
+		} 
+		elseif ( strlen( $this->language ) == 3 )
+		{
+			$this->language = $langConverter->getNameFromCode( 'iso_639_2B_code', $this->language );
+		} 
+		else
+		{
+			$language = $langConverter->getNameFromCode( 'name', $this->language );
+			
+			if ( $language != "" )
+			{
+				$this->language = $language;
+			}
+		}
 		
 		## de-duping
 		
@@ -1690,7 +1710,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 				$key == "xpath" || 
 				$key == "node" ||
 				$key == "format_array" ||
-				$key == "serialized_xml")
+				$key == "serialized")
 			{
 				continue;
 			}
