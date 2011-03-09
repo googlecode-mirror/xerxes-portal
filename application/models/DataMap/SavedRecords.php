@@ -177,7 +177,8 @@ class Xerxes_Model_DataMap_SavedRecords extends Xerxes_Framework_DataMap
 	 * @return array					array of Xerxes_Data_Record objects
 	 */
 	
-	private function returnRecords($strUsername = null, $strView = "full", $arrID = null, $strOrder = null, $iStart = 1, $iCount = null, $strFormat = null, $strLabel = null)
+	private function returnRecords($strUsername = null, $strView = "full", $arrID = null, 
+		$strOrder = null, $iStart = 1, $iCount = null, $strFormat = null, $strLabel = null)
 	{
 		// esnure that we don't just end-up with a big database dump
 
@@ -520,13 +521,12 @@ class Xerxes_Model_DataMap_SavedRecords extends Xerxes_Framework_DataMap
 	 * @param string $source					name of the source database
 	 * @param string $id						identifier for the record
 	 * @param Xerxes_Record $objXerxesRecord	xerxes record object to save
-	 * @return int  status
+	 * @return int  inserted id
 	 */
 	
 	public function addRecord($username, $source, $id, Xerxes_Record $objXerxesRecord)
 	{
 		$arrValues = array ( );
-		$iRefereed = 0;
 		
 		$iYear = ( int ) $objXerxesRecord->getYear();
 		$strTitle = $objXerxesRecord->getMainTitle();
@@ -534,22 +534,10 @@ class Xerxes_Model_DataMap_SavedRecords extends Xerxes_Framework_DataMap
 		
 		if ( $strSubTitle != "" ) $strTitle .= ": " . $strSubTitle;
 			
-		// peer-reviwed look-up
-
-		if ( $objXerxesRecord->getISSN() != null )
-		{
-			$arrResults = $this->getRefereed( $objXerxesRecord->getISSN() );
-			
-			if ( count( $arrResults ) > 0 )
-			{
-				$iRefereed = 1;
-			}
-		}
-		
 		$strSQL = "INSERT INTO xerxes_records 
-			( source, original_id, timestamp, username, nonsort, title, author, year, format, refereed, record_type, marc )
+			( source, original_id, timestamp, username, nonsort, title, author, year, format, record_type, marc )
 			VALUES 
-			( :source, :original_id, :timestamp, :username, :nonsort, :title, :author, :year, :format, :refereed, :record_type, :marc)";
+			( :source, :original_id, :timestamp, :username, :nonsort, :title, :author, :year, :format, :record_type, :marc)";
 		
 		$arrValues[":source"] = $source;
 		$arrValues[":original_id"] = $id;
@@ -560,12 +548,11 @@ class Xerxes_Model_DataMap_SavedRecords extends Xerxes_Framework_DataMap
 		$arrValues[":author"] = $objXerxesRecord->getPrimaryAuthor( true );
 		$arrValues[":year"] = $iYear;
 		$arrValues[":format"] = $objXerxesRecord->getFormat();
-		$arrValues[":refereed"] = $iRefereed;
 		
 		$arrValues[":marc"] = serialize($objXerxesRecord);
 		$arrValues[":record_type"] = "xerxes_record"; 			
 		
-		$status = $this->insert( $strSQL, $arrValues );
+		$this->insert( $strSQL, $arrValues );
 		
 		// get the internal xerxes record id for the saved record, and fill record
 		// with it, so caller can use. 
@@ -577,7 +564,7 @@ class Xerxes_Model_DataMap_SavedRecords extends Xerxes_Framework_DataMap
 		
 		$objXerxesRecord->original_id = $id;
 		
-		return $status;
+		return $objXerxesRecord->id;
 	}
 	
 	/**

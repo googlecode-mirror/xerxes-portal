@@ -693,13 +693,13 @@
 		<div id="saveRecordOption_{$source}_{$record_id}" class="recordAction saveRecord">
 			
 			<xsl:call-template name="img_save_record">
-				<xsl:with-param name="id" select="concat('folder_', $source, $record_id)" />
+				<xsl:with-param name="id" select="concat('folder_', $source, '_', $record_id)" />
 				<xsl:with-param name="class">miniIcon saveRecordLink</xsl:with-param>
 				<xsl:with-param name="test" select="//request/session/resultssaved[@key = $record_id]" />
 			</xsl:call-template>
 			<xsl:text> </xsl:text>
 			
-			<a id="link_{$source}:{$record_id}" href="{../url_save_delete}">				
+			<a id="link_{$source}_{$record_id}" href="{../url_save_delete}">				
 				<!-- 'saved' class used as a tag by ajaxy stuff -->
 				<xsl:attribute name="class">
 					 saveRecord <xsl:if test="//request/session/resultssaved[@key = $record_id]">saved</xsl:if>
@@ -733,7 +733,7 @@
 		<!-- label/tag input for saved records, if record is saved and it's not a temporary session -->
 		
 		<xsl:if test="//request/session/resultssaved[@key = $record_id] and $temporarySession != 'true'">
-			<div id="label_{$source}:{$record_id}" > 
+			<div id="label_{$source}_{$record_id}"> 
 				<xsl:call-template name="tag_input">
 					<xsl:with-param name="record" select="//saved_records/saved[@id = $record_id]" />
 					<xsl:with-param name="context">the results page</xsl:with-param>
