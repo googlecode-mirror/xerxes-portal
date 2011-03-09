@@ -21,7 +21,7 @@ global $xerxes_pdo;
 
 abstract class Xerxes_Framework_DataMap
 {
-	private $pdo = null;	// pdo data object
+	private $pdo; // pdo data object
 	
 	private $connection; // database connection info
 	private $username; // username to connect with
@@ -61,7 +61,7 @@ abstract class Xerxes_Framework_DataMap
 		
 		$this->connection = $connection;
 		$this->username = $username;
-		$this->password = $password;		
+		$this->password = $password;
 	}	
 	
 	/**
@@ -74,10 +74,12 @@ abstract class Xerxes_Framework_DataMap
 	
 	protected function init()
 	{
-		global $xerxes_pdo; // grab the global variable so we don't create multiple connections
+		global $xerxes_pdo;
 		
 		if ( ! $xerxes_pdo instanceof PDO )
 		{
+			echo "initialize\n";
+			
 			// options to ensure utf-8
 			
 			$arrDriverOptions = array();
@@ -106,6 +108,11 @@ abstract class Xerxes_Framework_DataMap
 			
 			$xerxes_pdo->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
 			
+			$this->pdo = $xerxes_pdo;
+		}
+		
+		if ( ! $this->pdo instanceof PDO )
+		{
 			$this->pdo = $xerxes_pdo;
 		}
 	}
