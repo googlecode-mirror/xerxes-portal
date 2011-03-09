@@ -78,8 +78,6 @@ abstract class Xerxes_Framework_DataMap
 		
 		if ( ! $xerxes_pdo instanceof PDO )
 		{
-			echo "initialize\n";
-			
 			// options to ensure utf-8
 			
 			$arrDriverOptions = array();
