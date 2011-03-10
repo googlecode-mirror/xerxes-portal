@@ -117,13 +117,13 @@ class Summon
 	 * @param   int  $page       	The page to start with
 	 * @param   int  $limit      	The amount of records to return
 	 * @param   string  $sortBy     The value to be used by for sorting
-	 * @param   string  $facets     An array of facets to return.  Default list is used if null.
+	 * @param   array  $facets      An array of facets to return.  Default list is used if null.
 	 * @access  public
 	 * @throws  object              PEAR Error
 	 * @return  array               An array of query results
 	 */
 	
-	public function query($query, $filter = array(), $page = 1, $limit = 20, $sortBy = null, $facets = null)
+	public function query($query, $filter = array(), $page = 1, $limit = 20, $sortBy = null, $facets = array())
 	{
 		if ( $this->debug )
 		{
@@ -157,16 +157,14 @@ class Summon
 		
 		// Define facets to be polled
 		
-		if ( ! $facets )
+		if ( count($facets) == 0 )
 		{
 			// Set Default Facets
 			
 			$facets = array(
 				'IsScholarly,or,1,2' , 
-				'Library,or,1,30' , 
 				'ContentType,or,1,30' , 
-				'SubjectTerms,or,1,30' , 
-				'Language,or,1,30'
+				'SubjectTerms,or,1,30'
 			);
 			
 			$options['s.ff'] = $facets;
@@ -174,7 +172,7 @@ class Summon
 		
 		// Define filters to be applied
 		
-		if ( isset($filter) )
+		if ( count($filter) > 0 )
 		{
 			foreach ( $filter as $filterItem )
 			{
