@@ -36,7 +36,13 @@ class Xerxes_Model_Ebsco_Engine extends Xerxes_Model_Search_Engine
 	
 	public function getHits( Xerxes_Model_Search_Query $search )
 	{
+		// get the results
 		
+		$results = $this->searchRetrieve( $search, 1, 1 );
+
+		// return total
+		
+		return $results->getTotal();		
 	}
 
 	/**
@@ -88,6 +94,11 @@ class Xerxes_Model_Ebsco_Engine extends Xerxes_Model_Search_Engine
 	
 	protected function doSearch($query, $databases, $start, $max, $sort = "relevance")
 	{
+		if ( $sort == "" )
+		{
+			$sort = "relevance";
+		}
+		
 		$username = $this->username;
 		$password = $this->password;
 
@@ -129,6 +140,9 @@ class Xerxes_Model_Ebsco_Engine extends Xerxes_Model_Search_Engine
 		// get the xml from ebsco
 		
 		$response = Xerxes_Framework_Parser::request($this->url);
+		
+		// testing
+		// echo "<pre>$this->url<hr>$response</pre>";
 		
 		if ( $response == null )
 		{
