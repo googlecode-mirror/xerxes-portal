@@ -85,6 +85,30 @@
 	</xsl:template>
 
 	<!--
+		TEMPLATE: RECORD ACTIONS
+	-->	
+	
+	<xsl:template name="record-actions">
+		<div id="recordFullText" class="raisedBox recordActions">
+			<xsl:call-template name="record-action-fulltext" />
+			<xsl:call-template name="save_record" />
+		</div>
+	</xsl:template>
+
+	<!--
+		TEMPLATE: UMLAUT
+	-->
+
+	<xsl:template name="umlaut">	
+	
+		<div id="library_copies" class="umlaut_content" style="display:none;"></div>
+		<div id="document_delivery" class="umlaut_content" style="display:none;"></div>
+		<div id="search_inside" class="umlaut_content" style="display:none;"></div>
+		<div id="limited_preview" class="umlaut_content" style="display:none"></div>
+	
+	</xsl:template>
+
+	<!--
 		TEMPLATE: RECORD DETAILS
 	-->
 	
@@ -286,16 +310,9 @@
 		
 	</xsl:template>
 
-	<!--
-		TEMPLATE: RECORD ACTIONS
-	-->	
-	
-	<xsl:template name="record-actions">
-		<div id="recordFullText" class="raisedBox recordActions">
-			<xsl:call-template name="record-action-fulltext" />
-			<xsl:call-template name="record-action-save" />
-		</div>
-	</xsl:template>
+	<!-- 
+		TEMPLATE: RECORD ACTION FULL TEXT
+	-->
 	
 	<xsl:template name="record-action-fulltext">
 	
@@ -465,19 +482,6 @@
 				</xsl:for-each>
 			</ul>
 		</xsl:if>
-	</xsl:template>
-
-	<!--
-		TEMPLATE: UMLAUT
-	-->
-
-	<xsl:template name="umlaut">	
-	
-		<div id="library_copies" class="umlaut_content" style="display:none;"></div>
-		<div id="document_delivery" class="umlaut_content" style="display:none;"></div>
-		<div id="search_inside" class="umlaut_content" style="display:none;"></div>
-		<div id="limited_preview" class="umlaut_content" style="display:none"></div>
-	
 	</xsl:template>
 
 
