@@ -474,7 +474,7 @@ class Xerxes_Model_Search_Query
 	 * @return string 				altereted phrase, or original as supplied if field has no definitions
 	 */
 
-	protected function alterQuery($phrase, $field)
+	public function alterQuery($phrase, $field)
 	{
 		$phrase = trim($phrase);
 		
@@ -515,7 +515,7 @@ class Xerxes_Model_Search_Query
 	 * @return array				query normalized
 	 */
 		
-	protected function normalizeArray($strQuery, $toLower = true)
+	public function normalizeArray($strQuery, $toLower = true)
 	{
 		$bolQuote = false; // flags the start and end of a quoted phrase
 		$arrWords = array(); // the query broken into a word array
