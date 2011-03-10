@@ -38,7 +38,7 @@ class Xerxes_Model_Ebsco_Engine extends Xerxes_Model_Search_Engine
 	{
 		// get the results
 		
-		$results = $this->searchRetrieve( $search, 1, 1 );
+		$results = $this->doSearch($search, array(), 1, 1 );
 
 		// return total
 		
@@ -78,30 +78,29 @@ class Xerxes_Model_Ebsco_Engine extends Xerxes_Model_Search_Engine
 	
 	public function searchRetrieve( Xerxes_Model_Search_Query $search, $start = 1, $max = 10, $sort = "")
 	{
-		// prepare the query
-		
-		$terms = $search->getQueryTerms();
-		$term = $terms[0];
-		
 		// get the results
 		
-		$results = $this->doSearch($term->field_internal . " " . $term->phrase, array(), $start, $max, $sort);
+		$results = $this->doSearch($search, array(), $start, $max, $sort);
 		
-		
+		// do some stuff
 		
 		return $results;
 	}
 	
-	protected function doSearch($query, $databases, $start, $max, $sort = "relevance")
+	protected function doSearch( Xerxes_Model_Search_Query $search, $databases, $start, $max, $sort = "relevance")
 	{
 		if ( $sort == "" )
 		{
 			$sort = "relevance";
 		}
-		
-		$username = $this->username;
-		$password = $this->password;
 
+		// prepare the query
+		
+		$terms = $search->getQueryTerms();
+		$term = $terms[0];
+		
+		$query = $term->field_internal . " " . $term->phrase;
+		
 		// no database selected, so get 'em from config
 		
 		if ( count($databases) == 0 )
@@ -118,12 +117,12 @@ class Xerxes_Model_Ebsco_Engine extends Xerxes_Model_Search_Engine
 				array_push($databases, (string) $database["id"]);
 			}
 		}
-		
+
 		// construct url
 		
 		$this->url = "http://eit.ebscohost.com/Services/SearchService.asmx/Search?" . 
-			"prof=$username" . 
-			"&pwd=$password" . 
+			"prof=" . $this->username . 
+			"&pwd=" . $this->password . 
 			"&authType=&ipprof=" . // empty params are necessary because ebsco is stupid
 			"&query=" . urlencode($query) .		
 			"&startrec=$start&numrec=$max" . 
