@@ -56,6 +56,7 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 			// and cache the hit total
 			
 			$total = $this->engine->getHits($this->query);
+			$total = Xerxes_Framework_Parser::number_format($total);
 			$this->request->setSession($id, (string) $total);
 		}
 		
