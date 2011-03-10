@@ -310,7 +310,7 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 		
 		// facets selected
 		
-		foreach ( $search->getLimits()as $facet_chosen )
+		foreach ( $search->getLimits(true) as $facet_chosen )
 		{
 			// put quotes around non-keyed terms
 			
