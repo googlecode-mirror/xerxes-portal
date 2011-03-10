@@ -239,12 +239,11 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 				$phrase = $term->phrase;
 				$phrase = strtolower($phrase);
 				$phrase = str_replace(':', '', $phrase);
-				$phrase = $this->alterQuery($phrase, $term->field_internal, $this->config);
+				$phrase = $search->alterQuery($phrase, $term->field_internal, $this->config);
 				
 				// break up the query into words
 				
-				$objQuery = new Xerxes_QueryParser();
-				$arrQuery = $objQuery->normalizeArray( $phrase, false );
+				$arrQuery = $search->normalizeArray( $phrase, false );
 				
 				// we'll now search for this term across multiple fields
 				// specified in the config
