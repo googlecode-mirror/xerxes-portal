@@ -517,6 +517,8 @@ class Xerxes_Framework_Parser
 	
 	public static function number_format($number, $decimals = 0)
 	{
+		$number = preg_replace('/\D/', '', $number);
+		
 		$localeconv = localeconv();
 		
 		if ( $localeconv['thousands_sep'] == "" )
