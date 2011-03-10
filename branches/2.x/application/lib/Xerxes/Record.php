@@ -1642,7 +1642,16 @@ class Xerxes_Record extends Xerxes_Marc_Record
 			foreach ( $this->links as $arrLink )
 			{
 				$objLink = $objXml->createElement("link");
-				$objLink->setAttribute("type", $arrLink[2]);
+				
+				if ( $this->isFullText($arrLink) )
+				{
+					$objLink->setAttribute("type", "full");
+					$objLink->setAttribute("format", $arrLink[2]);
+				}
+				else
+				{
+					$objLink->setAttribute("type", $arrLink[2]);
+				}
 				
 				$objDisplay = $objXml->createElement("display", Xerxes_Framework_Parser::escapeXml($arrLink[0]));
 				$objLink->appendChild($objDisplay);
