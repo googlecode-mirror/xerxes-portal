@@ -77,9 +77,49 @@ class Xerxes_Model_Search_Query
 	 * @return array
 	 */
 
-	public function getLimits()
+	public function getLimits($facets_to_field = false)
 	{
-		return $this->limits;
+		if ( $facets_to_field == false )
+		{
+			return $this->limits;
+		}
+		else
+		{
+			$final = array();
+			
+			foreach ( $this->limits as $limit )
+			{
+				$new_limit = clone $limit; // make a copy
+				
+				// take the field name out of our facet.* param
+				
+				if ( strstr($new_limit->field,"facet.") )
+				{
+					$parts = explode('.', $new_limit->field);
+					
+					// if it has 3 parts, it's our special 'key' convention
+					
+					if ( count($parts) == 3 )
+					{
+						$new_limit->value = array_pop($parts);
+						$new_limit->field = array_pop($parts);
+						$new_limit->key = true;
+					}
+					else
+					{
+						// the field name is 
+						
+						$new_limit->field = array_pop($parts);
+					}
+				}
+				
+				// put it into the return array
+				
+				array_push($final, $new_limit);
+			}
+
+			return $final;
+		}
 	}
 	
 	/**
@@ -128,34 +168,9 @@ class Xerxes_Model_Search_Query
 			$phrase = array($phrase);
 		}
 		
-		$key = null;
-		
 		foreach ( $phrase as $value )
 		{
-			// take the field name out of our facet.* param
-			
-			if ( strstr($field,"facet.") )
-			{
-				$parts = explode('.', $field);
-				
-				// if it has 3 parts, it's our special 'key' convention
-				
-				if ( count($parts) == 3 )
-				{
-					$value = array_pop($parts);
-					$field = array_pop($parts);
-					$key = true;
-				}
-				else
-				{
-					// the field name is 
-					
-					$field = array_pop($parts);
-				}
-			}
-			
-			$term = new Xerxes_Model_Search_LimitTerm($field, $relation, $value, $key);
-			
+			$term = new Xerxes_Model_Search_LimitTerm($field, $relation, $value);
 			array_push($this->limits , $term);
 		}
 	}
