@@ -14,16 +14,4 @@ class Xerxes_Controller_Solr extends Xerxes_Controller_Search
 		
 		$this->response->add("config_local", $this->config->toXML());
 	}
-	
-	public function results()
-	{
-		parent::results();
-		$this->response->setView("xsl/solr/solr_results.xsl");
-	}
-	
-	public function record()
-	{
-		parent::record();
-		$this->response->setView("xsl/solr/solr_record.xsl");
-	}	
 }

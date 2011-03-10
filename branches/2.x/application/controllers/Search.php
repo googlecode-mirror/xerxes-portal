@@ -2,7 +2,7 @@
 
 abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 {
-	protected $id;
+	protected $id = "search";
 	
 	protected $config; // local config
 	protected $query; // query object
@@ -22,7 +22,7 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 		
 		// check spelling
 		
-		if ( $this->request->getProperty("spell") != "none" )
+		if ( $this->request->getParam("spell") != "none" )
 		{
 			$spelling = $this->query->checkSpelling();
 			
@@ -124,15 +124,31 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 		
 		$this->response->add("query", $this->query);
 		$this->response->add("results", $results);
+		
+		// set view
+		
+		$this->response->setView("xsl/" . $this->id . "/" . $this->id . "_results.xsl");
 	}
 	
 	public function record()
 	{
 		$id = $this->request->getParam('id');
+
+		// get the record
+
 		$results = $this->engine->getRecord($id);
 		
+		// set links
+		
 		$this->addRecordLinks($results);
+		
+		// add to response
+		
 		$this->response->add("results", $results);
+
+		// set view
+		
+		$this->response->setView("xsl/" . $this->id . "/" . $this->id . "_record.xsl");	
 	}
 	
 	public function lookup()
@@ -148,7 +164,12 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 		$result = new Xerxes_Model_Search_Result($xerxes_record, $this->config);
 		$result->addHoldings();
 		
+		// add to response
+		
 		$this->response->add("results", $result);
+		
+		// set view
+		
 		$this->response->setView('xsl/search/lookup.xsl');
 	}	
 
