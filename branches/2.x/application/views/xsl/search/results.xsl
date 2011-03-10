@@ -852,7 +852,51 @@
 		
 	</xsl:template>
 
-
+	<!--
+		TEMPLATE: FULL TEXT LINKS
+	-->
+	
+	<xsl:template name="full_text_links">
+		<xsl:param name="class" />
+				
+		<xsl:for-each select="links/link[@type = 'full']">
+			
+			<div class="{$class}">
+			
+				<a href="{url}">
+					<xsl:attribute name="class">recordAction <xsl:value-of select="@type"/></xsl:attribute>
+					<xsl:attribute name="target"><xsl:value-of select="$link_target" /></xsl:attribute>
+				
+					<xsl:choose>
+						<xsl:when test="@format = 'pdf'">
+							<xsl:call-template name="img_format_pdf">
+								<xsl:with-param name="class">miniIcon fullTextLink pdf</xsl:with-param>
+							</xsl:call-template>
+							<xsl:text> </xsl:text>
+							<xsl:copy-of select="$text_records_fulltext_pdf" />
+						</xsl:when>
+						<xsl:when test="@format = 'html'">
+							<xsl:call-template name="img_format_html">
+								<xsl:with-param name="class">miniIcon fullTextLink html</xsl:with-param>
+							</xsl:call-template>
+							<xsl:text> </xsl:text>
+							<xsl:copy-of select="$text_records_fulltext_html" />
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:call-template name="img_format_unknown">
+								<xsl:with-param name="class">miniIcon fullTextLink unknown</xsl:with-param>
+							</xsl:call-template>
+							<xsl:text> </xsl:text>
+							<xsl:copy-of select="$text_records_fulltext_available" />
+						</xsl:otherwise>
+					</xsl:choose>
+				</a>
+			
+			</div>
+			
+		</xsl:for-each>
+		
+	</xsl:template>
 
 
 
@@ -874,18 +918,5 @@
 	<xsl:template name="additional_brief_record_data" />
 	<xsl:template name="additional_full_record_data_main" />
 	<xsl:template name="additional_full_record_data_supplemental" />
-	
-	
-
-	
-	
-	
-	
-	
-	
-	
-	<!-- TODO: DO THIS! -->
-
-	<xsl:template name="full_text_links" />
 	
 </xsl:stylesheet>
