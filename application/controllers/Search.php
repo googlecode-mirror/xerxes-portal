@@ -86,7 +86,7 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 		
 		// swap for internal
 		
-		$sort = $this->config->swapForInternalSort($sort);
+		$internal_sort = $this->config->swapForInternalSort($sort);
 		
 		// make sure records per page does not exceed upper bound
 		
@@ -97,7 +97,7 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 		
 		// search
 				
-		$results = $this->engine->searchRetrieve($this->query, $start, $max, $sort);
+		$results = $this->engine->searchRetrieve($this->query, $start, $max, $internal_sort);
 		
 		// total
 		
