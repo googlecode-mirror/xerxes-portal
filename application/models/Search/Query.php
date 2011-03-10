@@ -128,9 +128,34 @@ class Xerxes_Model_Search_Query
 			$phrase = array($phrase);
 		}
 		
+		$key = null;
+		
 		foreach ( $phrase as $value )
 		{
-			$term = new Xerxes_Model_Search_LimitTerm($field, $relation, $value);
+			// take the field name out of our facet.* param
+			
+			if ( strstr($field,"facet.") )
+			{
+				$parts = explode('.', $field);
+				
+				// if it has 3 parts, it's our special 'key' convention
+				
+				if ( count($parts) == 3 )
+				{
+					$value = array_pop($parts);
+					$field = array_pop($parts);
+					$key = true;
+				}
+				else
+				{
+					// the field name is 
+					
+					$field = array_pop($parts);
+				}
+			}
+			
+			$term = new Xerxes_Model_Search_LimitTerm($field, $relation, $value, $key);
+			
 			array_push($this->limits , $term);
 		}
 	}

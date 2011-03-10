@@ -497,9 +497,12 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 							
 					// now add the new one
 							
-					if ( $facet->is_date == true ) // dates are different 
+					if ( $facet->key != "" ) 
 					{
-						$url["facet.date." . $group->name . "." . 
+						// key defines a way to pass the (internal) value
+						// in the param, while the name is the display value
+						
+						$url["facet." . $group->name . "." . 
 							urlencode($facet->key)] = $facet->name;
 					}
 					else

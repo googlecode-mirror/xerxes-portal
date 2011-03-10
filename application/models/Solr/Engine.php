@@ -310,22 +310,19 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 		
 		// facets selected
 		
-		foreach ( $search->getLimits() as $limit )
+		foreach ( $search->getLimits()as $facet_chosen )
 		{
-			if ( strstr($limit->field,"facet.date") ) // dates are an exception
+			// put quotes around non-keyed terms
+			
+			if ( $facet_chosen->key != true )
 			{
-				$field = str_replace("facet.date.", "", $limit->field);
-				$index = Xerxes_Framework_Parser::removeRight($field,".");
-				$value = Xerxes_Framework_Parser::removeLeft($field,".");
-			}
-			elseif ( strstr($limit->field,"facet") )
-			{
-				$index = str_replace("facet.", "", $limit->field);
-				$value = '"' . $limit->value . '"';
+				$facet_chosen->value = '"' . $facet_chosen->value . '"';
 			}
 			
-			$query .= "&fq=" . urlencode( "$index:$value");
+			$query .= "&fq=" . urlencode( $facet_chosen->field . ":" . $facet_chosen->value);
 		}
+		
+		// limits set in config
 		
 		$auto_limit = $this->config->getConfig("LIMIT", false);
 		
