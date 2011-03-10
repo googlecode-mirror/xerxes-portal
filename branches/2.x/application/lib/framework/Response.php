@@ -140,8 +140,18 @@ class Xerxes_Framework_Response
 		
 		elseif ( $object instanceof SimpleXMLElement )
 		{
-			$object_xml = new DOMDocument();
-			$object_xml->loadXML($object->asXML());
+			$simple_xml = $object->asXML();
+			
+			if ( $simple_xml != "" )
+			{
+				if ( ! strstr($simple_xml, "<") )
+				{
+					throw new Exception("SimpleXMLElement was malformed");
+				}				
+				
+				$object_xml = new DOMDocument();
+				$object_xml->loadXML($simple_xml);
+			}
 		}
 		
 		// object
