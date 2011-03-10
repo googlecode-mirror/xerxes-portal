@@ -16,6 +16,7 @@ class Xerxes_Model_Search_LimitTerm
 	public $field;
 	public $relation;
 	public $value;
+	public $key;
 	
 	/**
 	 * Constructor
@@ -25,10 +26,11 @@ class Xerxes_Model_Search_LimitTerm
 	 * @param string $value			value
 	 */
 	
-	public function __construct($field, $relation, $value)
+	public function __construct($field, $relation, $value, $key = null)
 	{
 		$this->field = $field;
 		$this->relation = $relation;
 		$this->value = $value;		
+		$this->key = $key;
 	}
 }
