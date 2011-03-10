@@ -466,4 +466,122 @@ class Xerxes_Model_Search_Query
 		
 		return $phrase;
 	}
+
+	/**
+	 * Converts the query to AND all terms, while preserving boolean operators
+	 * and quoted phrases; return as array
+	 *
+	 * @param string $strQuery		original query
+	 * @return array				query normalized
+	 */
+		
+	protected function normalizeArray($strQuery, $toLower = true)
+	{
+		$bolQuote = false; // flags the start and end of a quoted phrase
+		$arrWords = array(); // the query broken into a word array
+		$arrFinal = array(); // final array of words
+		$strQuote = ""; // quoted phrase
+		
+		// normalize it
+		
+		if ( $toLower == true )
+		{
+			$strQuery = Xerxes_Framework_Parser::strtolower($strQuery);
+		}
+		
+		// strip extra spaces
+		
+		while ( strstr($strQuery, "  ") )
+		{
+			$strQuery = str_replace("  ", " ", $strQuery);
+		}
+		
+		// split words into an array			
+		
+		$arrWords = explode(" ", $strQuery);
+		
+		// cycle thru each word in the query
+		
+		for ( $x = 0; $x < count($arrWords); $x ++ )
+		{
+			if ( $bolQuote == true )
+			{
+				// we are inside of a quoted phrase
+				
+				$strQuote .= " " . $arrWords[$x];
+				if ( strpos($arrWords[$x], "\"") !== false )
+				{
+					// the end of a quoted phrase
+					
+					$bolQuote = false;
+					
+					if ( $x + 1 < count($arrWords) )
+					{
+						if ( $arrWords[$x + 1] != "and" && $arrWords[$x + 1] != "or" && $arrWords[$x + 1] != "not" )
+						{
+							// the next word is not a boolean operator,
+							// so AND the current one
+							
+							array_push($arrFinal, $strQuote);
+							array_push($arrFinal, "AND");
+						}
+						else
+						{
+							array_push($arrFinal, $strQuote);
+						}
+					}
+					else
+					{
+						array_push($arrFinal, $strQuote);
+					}
+					
+					$strQuote = "";
+				}
+			}
+			elseif ( $bolQuote == false && strpos($arrWords[$x], "\"") !== false )
+			{
+				// this is the start of a quoted phrase
+				
+				$strQuote .= " " . $arrWords[$x];
+				$bolQuote = true;
+			}
+			elseif ( $arrWords[$x] == "and" || $arrWords[$x] == "or" || $arrWords[$x] == "not" )
+			{
+				// the current word is a boolean operator
+				
+				array_push($arrFinal, Xerxes_Framework_Parser::strtoupper($arrWords[$x]));
+			}
+			else
+			{
+				if ( $x + 1 < count($arrWords) )
+				{
+					if ( $arrWords[$x + 1] != "and" && $arrWords[$x + 1] != "or" && $arrWords[$x + 1] != "not" )
+					{
+						// the next word is not a boolean operator,
+						// so AND the current one
+						
+						array_push($arrFinal, $arrWords[$x]);
+						array_push($arrFinal, "AND");
+					}
+					else
+					{
+						array_push($arrFinal, $arrWords[$x]);
+					}
+				}
+				else
+				{
+					array_push($arrFinal, $arrWords[$x]);
+				}
+			}
+		}
+		
+		// single quoted phrase
+		
+		if ( count($arrFinal) == 0 && $strQuote != "" )
+		{
+			array_push($arrFinal, $strQuote);
+		}
+		
+		return $arrFinal;
+	}
 }
