@@ -24,7 +24,9 @@
 
 	<xsl:for-each select="//xerxes_record">
 
-		<xsl:call-template name="availability" />
+		<xsl:call-template name="availability">
+			<xsl:with-param name="type" select="//config/lookup_display" />
+		</xsl:call-template>
 		
 	</xsl:for-each>
 		
