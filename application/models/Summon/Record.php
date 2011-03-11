@@ -17,17 +17,12 @@ class Xerxes_Model_Summon_Record extends Xerxes_Record
 
 	public function __sleep()
 	{
-		// save only the xml
-		
 		$this->serialized = $this->original_array;
 		return array("serialized");
 	}
 	
 	public function __wakeup()
 	{
-		// and then we recreate the object (with any new changes we've made)
-		// by just loading the saved xml back into the object
-		
 		$this->load($this->serialized);
 	}	
 	
@@ -44,13 +39,19 @@ class Xerxes_Model_Summon_Record extends Xerxes_Record
 		
 		$this->record_id = $this->extractValue($document, "ID/0");
 		
+		// title
+		
 		$this->title = $this->extractValue($document, "Title/0");
 		$this->sub_title = $this->extractValue($document, "Subtitle/0");
+		
+		// basic info
 		
 		$this->language = $this->extractValue($document, "Language/0");
 		$this->year = $this->extractValue($document, "PublicationDate_xml/0/year");
 		$this->extent = $this->extractValue($document, "PageCount/0");
 		$this->format = $this->extractValue($document, "ContentType/0");		
+		
+		// summary
 		
 		$this->snippet = $this->extractValue($document, "Snippet/0");
 		$this->abstract = $this->extractValue($document, "Abstract/0");
@@ -68,38 +69,6 @@ class Xerxes_Model_Summon_Record extends Xerxes_Record
 		$this->volume = $this->extractValue($document, "Volume/0");
 		$this->start_page = $this->extractValue($document, "StartPage/0");
 		$this->doi = $this->extractValue($document, "DOI/0");
-		
-		// journal
-
-		if ( $this->journal_title != "" )
-		{
-			$this->journal = $this->journal_title;
-		}
-		
-		if ( $this->volume != "") 
-		{
-			$this->journal .= ", volume " . $this->volume;
-		}
-		
-		if ( $this->issue != "" )
-		{
-			$this->journal .= " issue " . $this->issue;
-		}
-		
-		if ( $this->start_page != "" )
-		{
-			if ( $this->extent != "" && is_int($this->start_page) )
-			{
-				$end = $this->start_page + $this->extent - 1;
-				$this->end_page = $end;
-				
-				$this->journal .= " pages " . $this->start_page . "-$end";
-			}
-			else
-			{
-				$this->journal .= " page " . $this->start_page;
-			}
-		}
 		
 		// subjects
 		
