@@ -153,7 +153,9 @@
 						
 						<!-- availability -->
 						
-						<xsl:call-template name="availability" />
+						<xsl:call-template name="availability">
+							<xsl:with-param name="type" select="//config/lookup_display" />
+						</xsl:call-template>
 						
 						<!-- save record -->
 		
@@ -174,10 +176,12 @@
 	
 	<xsl:template name="availability">
 		<xsl:param name="context">results</xsl:param>
+		<xsl:param name="type" />
 		
 		<xsl:call-template name="availability_lookup">
 			<xsl:with-param name="record_id" select="record_id" />
 			<xsl:with-param name="context" select="$context" />
+			<xsl:with-param name="type" select="$type" />
 		</xsl:call-template>
 	
 	</xsl:template>	
@@ -288,28 +292,46 @@
 		<xsl:param name="totalCopies" />
 		<xsl:param name="printAvailable" />	
 		
-		<ul class="booksAvailabilitySummary">
-		
 		<xsl:choose>
 			<xsl:when test="../holdings/items/item and $printAvailable = '0'">
 			
-				<li class="booksAvailabilityMissing"><xsl:call-template name="img_book_not_available" />&#160; No Copies Available</li>
-	
-				<xsl:call-template name="ill_option">
-					<xsl:with-param name="element">li</xsl:with-param>
-					<xsl:with-param name="class">resultsHoldings</xsl:with-param>
-				</xsl:call-template>
+				<div class="recordAction booksAvailabilityMissing">
+					<xsl:call-template name="img_book_not_available">
+						<xsl:with-param name="class">miniIcon</xsl:with-param>
+					</xsl:call-template>
+					No Copies Available
+				</div>
+				
+				<div class="recordAction">
+					<xsl:call-template name="ill_option" />
+				</div>
 	
 			</xsl:when>
-			<xsl:when test="$printAvailable = '1'">
-				<li><xsl:call-template name="img_holdings" />&#160; 1 copy available</li>
-			</xsl:when>
-			<xsl:when test="$printAvailable &gt; '1'">
-				<li><xsl:call-template name="img_holdings" />&#160; <xsl:value-of select="$printAvailable" /> copies available</li>
-			</xsl:when>			
+			<xsl:otherwise>
+			
+				<div class="recordAction">
+				
+					<xsl:choose>
+						<xsl:when test="$printAvailable = '1'">
+							<xsl:call-template name="img_holdings">
+								<xsl:with-param name="class">miniIcon</xsl:with-param>
+							</xsl:call-template> 
+							<xsl:text> </xsl:text>
+							1 copy available
+						</xsl:when>
+						<xsl:when test="$printAvailable &gt; '1'">
+							<xsl:call-template name="img_holdings">
+									<xsl:with-param name="class">miniIcon</xsl:with-param>
+							</xsl:call-template> 
+							<xsl:text> </xsl:text>
+							<xsl:value-of select="$printAvailable" /> copies available
+						</xsl:when>	
+					</xsl:choose>
+				
+				</div>
+				
+			</xsl:otherwise>		
 		</xsl:choose>
-		
-		</ul>
 		
 	</xsl:template>
 	
