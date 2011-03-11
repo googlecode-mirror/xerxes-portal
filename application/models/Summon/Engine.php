@@ -60,12 +60,16 @@ class Xerxes_Model_Summon_Engine extends Xerxes_Model_Search_Engine
 	
 	public function getRecord( $id )
 	{
+		// get result
+		
 		$summon_results = $this->client->getRecord($id);
-
 		$results = $this->parseResponse($summon_results);
 		
-		// $results->markRefereed();
-		$results->getRecord(0)->addRecommendations(); // bx
+		// enhance
+		
+		$results->getRecord(0)->addRecommendations();
+		$results->markFullText();
+		$results->markRefereed();
 		
 		return $results;
 		

@@ -179,5 +179,7 @@ class Xerxes_Model_Ebsco_Record extends Xerxes_Record
 			
 			$this->language = (string)$article->language;
 		}
+		
+		$this->cleanup();
 	}
 }
