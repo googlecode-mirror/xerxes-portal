@@ -243,7 +243,7 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 				
 				// break up the query into words
 				
-				$arrQuery = $search->normalizeArray( $phrase, false );
+				$arrQuery = $term->normalizedArray( $phrase );
 				
 				// we'll now search for this term across multiple fields
 				// specified in the config
