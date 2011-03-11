@@ -178,7 +178,7 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 	{
 		$datamap = new Xerxes_Model_DataMap_SavedRecords();
 		
-		$username = "testing"; // $this->request->getSession("username");
+		$username = "testing"; // $this->request->getSession("username"); // TODO: with authentication framework
 		$original_id = $this->request->getParam("id");
 
 		$inserted_id = ""; // internal database id
