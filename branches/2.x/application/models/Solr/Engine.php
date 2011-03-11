@@ -47,14 +47,10 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 	
 	public function getHits( Xerxes_Model_Search_Query $search )
 	{
-		// create the url
+		// get the results, just the hit count, no facets
 		
-		$this->url = $this->prepareSearchURL($search, 0, 0, null, false);
+		$results = $this->doSearch($search, 0, 0, null, false);
 		
-		// get the results
-		
-		$results = $this->doSearch($this->url);
-
 		// return total
 		
 		return $results->getTotal();
@@ -69,16 +65,15 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 	
 	public function getRecord( $id )
 	{
-		$this->url = $this->server .= "&q=" . urlencode("id:$id");
-		$results = $this->doSearch($this->url);
-
+		// get the record
+		
+		$results = $this->doSearch("id:$id", 1, 1);
 		$record = $results->getRecord(0);
 		
 		$record->addHoldings(); // item availability
 		$record->addReviews(); // good read reviews
 		
 		return $results;
-		
 	}	
 
 	/**
@@ -94,13 +89,9 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 	
 	public function searchRetrieve( Xerxes_Model_Search_Query $search, $start = 1, $max = 10, $sort = "")
 	{
-		// create the url
-		
-		$this->url = $this->prepareSearchURL($search, $start, $max, $sort, true);
-		
 		// get the results
 		
-		$results = $this->doSearch($this->url);
+		$results = $this->doSearch($search, $start, $max, $sort, true);
 		
 		// find any holding we have cached
 		
@@ -110,69 +101,19 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 	}
 	
 	/**
-	 * Actually send the url to Solr and parse the response
+	 * Do the actual search
 	 * 
-	 * @param string $url 
-	 * @return Xerxes_Model_Search_ResultSet
-	 */
-
-	private function doSearch($url)
-	{
-		// get the data
-		
-		$response = Xerxes_Framework_Parser::request($url, 10);
-		$xml = simplexml_load_string($response);
-		
-		if ( $response == null || $xml === false )
-		{
-			throw new Exception("Could not connect to search engine.");
-		}
-		
-		// parse the results
-		
-		$results = new Xerxes_Model_Search_ResultSet($this->config);
-		
-		// extract total
-		
-		$results->total = (int) $xml->result["numFound"]; 
-		
-		// extract records
-		
-		foreach ( $this->extractRecords($xml) as $record )
-		{
-			$results->addRecord($record);
-		}
-		
-		// extract facets
-		
-		$results->setFacets($this->extractFacets($xml));
-		
-		return $results;
-	}
-	
-	/**
-	 * Prepare search URL
-	 * 
-	 * @param Xerxes_Model_Search_Query $search		search object
+	 * @param mixed $search							search object or string
 	 * @param int $start							[optional] starting record number
 	 * @param int $max								[optional] max records
 	 * @param string $sort							[optional] sort order
+	 * @param bool $include_facets					[optional] whether to include facets or not
 	 * 
 	 * @return string
 	 */		
 	
-	protected function prepareSearchURL( Xerxes_Model_Search_Query $search, $start, $max = null, 
-		$sort = null, $include_facets = true)
+	protected function doSearch( $search, $start, $max = 10, $sort = null, $include_facets = true)
 	{
-		### defaults
-
-		// max
-		
-		if ( $max == "" )
-		{
-			$max = $this->config->getConfig("RECORDS_PER_PAGE", false, 10);
-		}
-		
 		// start
 		
 		if ( $start > 0)
@@ -182,157 +123,168 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 		
 		### parse the query
 		
-		$query = ""; // query, these are url params, not just the query itself
+		$query = ""; // query
 		$type = ""; // dismax or standard
-	
-		$terms = $search->getQueryTerms();
 		
-		// check if a query was supplied
+		// passed in a query object, so handle this
 		
-		if ( count($terms) == 0 )
+		if ( $search instanceof Xerxes_Model_Search_Query )
 		{
-			throw new Exception("No search terms supplied");
-		}
-		
-		// get just the first term for now
-		
-		$term = $terms[0];
-		
-		// decide between basic and dismax handler
-		
-		$trunc_test = $this->config->getFieldAttribute($term->field_internal, "truncate");
-		
-		// use dismax if this is a simple search, that is:
-		// only if there is one phrase (i.e., not advanced), no boolean OR and no wildcard
-
-		if ( count($terms) == 1 && 
-			! strstr($term->phrase, " OR ") && 
-			! strstr($term->phrase, "*") && 
-			$trunc_test == null )
-		{
-			# dismax
+			$terms = $search->getQueryTerms();
 			
-			$type = "&defType=dismax";
-
-			$term = $terms[0];
+			// check if a query was supplied
 			
-			$phrase = $term->phrase;
-			$phrase = strtolower($phrase);
-			$phrase = str_replace(" NOT ", " -", $phrase);
-			
-			if ( $term->field_internal != "" )
+			if ( count($terms) == 0 )
 			{
-				$query .= "&qf=" . urlencode($term->field_internal);
-				$query .= "&pf=" . urlencode($term->field_internal);
+				throw new Exception("No search terms supplied");
 			}
+			
+			// get just the first term for now
+			
+			$term = $terms[0];
+		
+			// decide between basic and dismax handler
+			
+			$trunc_test = $this->config->getFieldAttribute($term->field_internal, "truncate");
+			
+			// use dismax if this is a simple search, that is:
+			// only if there is one phrase (i.e., not advanced), no boolean OR and no wildcard
 	
-			$query .= "&q=" . urlencode($phrase);
-		}
-		else
-		{
-			# standard
-			
-			$query = "";
-			
-			foreach ( $terms as $term )
+			if ( count($terms) == 1 && 
+				! strstr($term->phrase, " OR ") && 
+				! strstr($term->phrase, "*") && 
+				$trunc_test == null )
 			{
+				# dismax
+				
+				$type = "&defType=dismax";
+	
+				$term = $terms[0];
+				
 				$phrase = $term->phrase;
 				$phrase = strtolower($phrase);
-				$phrase = str_replace(':', '', $phrase);
-				$phrase = $search->alterQuery($phrase, $term->field_internal, $this->config);
+				$phrase = str_replace(" NOT ", " -", $phrase);
 				
-				// break up the query into words
-				
-				$arrQuery = $term->normalizedArray( $phrase );
-				
-				// we'll now search for this term across multiple fields
-				// specified in the config
-	
 				if ( $term->field_internal != "" )
 				{
-					// we'll use this to get the phrase as a whole, but minus
-					// the boolean operators in order to boost this
+					$query .= "&qf=" . urlencode($term->field_internal);
+					$query .= "&pf=" . urlencode($term->field_internal);
+				}
+		
+				$query .= "&q=" . urlencode($phrase);
+			}
+			else
+			{
+				# standard
+				
+				$query = "";
+				
+				foreach ( $terms as $term )
+				{
+					$phrase = $term->phrase;
+					$phrase = strtolower($phrase);
+					$phrase = str_replace(':', '', $phrase);
+					$phrase = $search->alterQuery($phrase, $term->field_internal, $this->config);
 					
-					$boost_phrase = ""; 
+					// break up the query into words
 					
-					foreach ( $arrQuery as $strPiece )
+					$arrQuery = $term->normalizedArray( $phrase );
+					
+					// we'll now search for this term across multiple fields
+					// specified in the config
+		
+					if ( $term->field_internal != "" )
 					{
-						// just add the booelan value straight-up
+						// we'll use this to get the phrase as a whole, but minus
+						// the boolean operators in order to boost this
 						
-						if ( $strPiece == "AND" || $strPiece == "OR" || $strPiece == "NOT" )
+						$boost_phrase = ""; 
+						
+						foreach ( $arrQuery as $strPiece )
 						{
-							$query .= " $strPiece ";
-							continue;			
-						}
-						
-						$boost_phrase .= " " . $strPiece;
-						
-						// try to mimick dismax query handler as much as possible
-						
-						$query .= " (";
-						$local = array();
-						
-						// take the fields we're searching on,
-						
-						foreach ( explode(" ", $term->field_internal) as $field )
-						{
-							// split them out into index and boost score
-						
-							$parts = explode("^",$field);
-							$field_name = $parts[0];
-							$boost = "";
+							// just add the booelan value straight-up
 							
-							// make sure there really was a  boost score
-							
-							if ( array_key_exists(1,$parts) )
+							if ( $strPiece == "AND" || $strPiece == "OR" || $strPiece == "NOT" )
 							{
-								$boost = "^" . $parts[1];
+								$query .= " $strPiece ";
+								continue;			
 							}
 							
-							// put them together 
+							$boost_phrase .= " " . $strPiece;
 							
-							array_push($local, $field_name . ":" . $strPiece . $boost);
+							// try to mimick dismax query handler as much as possible
+							
+							$query .= " (";
+							$local = array();
+							
+							// take the fields we're searching on,
+							
+							foreach ( explode(" ", $term->field_internal) as $field )
+							{
+								// split them out into index and boost score
+							
+								$parts = explode("^",$field);
+								$field_name = $parts[0];
+								$boost = "";
+								
+								// make sure there really was a  boost score
+								
+								if ( array_key_exists(1,$parts) )
+								{
+									$boost = "^" . $parts[1];
+								}
+								
+								// put them together 
+								
+								array_push($local, $field_name . ":" . $strPiece . $boost);
+							}
+							
+							$query .= implode(" OR ", $local);
+								
+							$query .= " )";
 						}
 						
-						$query .= implode(" OR ", $local);
-							
-						$query .= " )";
+						// $boost_phrase = trim($boost_phrase);
+						// $query = "($query) OR \"" . $boost_phrase . '"';
 					}
-					
-					// $boost_phrase = trim($boost_phrase);
-					// $query = "($query) OR \"" . $boost_phrase . '"';
 				}
+				
+				$query = "&q=" . urlencode($query);
 			}
 			
-			$query = "&q=" . urlencode($query);
-		}
-		
-		// facets selected
-		
-		foreach ( $search->getLimits(true) as $facet_chosen )
-		{
-			// put quotes around non-keyed terms
+			// facets selected
 			
-			if ( $facet_chosen->key != true )
+			foreach ( $search->getLimits(true) as $facet_chosen )
 			{
-				$facet_chosen->value = '"' . $facet_chosen->value . '"';
+				// put quotes around non-keyed terms
+				
+				if ( $facet_chosen->key != true )
+				{
+					$facet_chosen->value = '"' . $facet_chosen->value . '"';
+				}
+				
+				$query .= "&fq=" . urlencode( $facet_chosen->field . ":" . $facet_chosen->value);
 			}
 			
-			$query .= "&fq=" . urlencode( $facet_chosen->field . ":" . $facet_chosen->value);
+			// limits set in config
+			
+			$auto_limit = $this->config->getConfig("LIMIT", false);
+			
+			if ( $auto_limit != null )
+			{
+				$query .= "&fq=" . urlencode($auto_limit);
+			}
 		}
 		
-		// limits set in config
+		// was just a string, so just take it straight-up
 		
-		$auto_limit = $this->config->getConfig("LIMIT", false);
-		
-		if ( $auto_limit != null )
+		else
 		{
-			$query .= "&fq=" . urlencode($auto_limit);
+			$query = "&q=" . urlencode($search);
 		}
 		
 		
 		### now the url
-		
 		
 		$this->url = $this->server . $type . $query;
 
@@ -360,8 +312,40 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 				}					
 			}
 		}
+		
+		
+		## get and parse the response
 
-		return $this->url;
+		// get the data
+		
+		$response = Xerxes_Framework_Parser::request($this->url, 10);
+		$xml = simplexml_load_string($response);
+		
+		if ( $response == null || $xml === false )
+		{
+			throw new Exception("Could not connect to search engine.");
+		}
+		
+		// parse the results
+		
+		$results = new Xerxes_Model_Search_ResultSet($this->config);
+		
+		// extract total
+		
+		$results->total = (int) $xml->result["numFound"]; 
+		
+		// extract records
+		
+		foreach ( $this->extractRecords($xml) as $record )
+		{
+			$results->addRecord($record);
+		}
+		
+		// extract facets
+		
+		$results->setFacets($this->extractFacets($xml));
+		
+		return $results;
 	}
 	
 	/**
