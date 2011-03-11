@@ -164,21 +164,19 @@ class Xerxes_Model_Search_ResultSet
 			// we'll now go back over the results, looking to see 
 			// if also the years match, marking records as being in our list
 			
-			for ( $x = 0; $x < count($this->records); $x++ )
+			foreach ( $this->records as $result )
 			{
-				$xerxes_record = $this->records[$x];
+				$xerxes_record = $result->getXerxesRecord();
 				$this->determineFullText($xerxes_record, $arrResults);
-				$this->records[$x] = $xerxes_record;
-			}
 
-			// do the same for recommendations
-			
-			for ( $x = 0; $x < count($this->recommendations); $x++ )
-			{
-				$xerxes_record = $this->recommendations[$x];
-				$this->determineFullText($xerxes_record, $arrResults);
-				$this->recommendations[$x] = $xerxes_record;
-			}		
+				// do the same for recommendations
+				
+				foreach ($result->recommendations as $recommend )
+				{
+					$xerxes_record = $recommend->getXerxesRecord();
+					$this->determineFullText($xerxes_record, $arrResults);
+				}
+			}
 		}		
 	}
 	
@@ -192,7 +190,7 @@ class Xerxes_Model_Search_ResultSet
 	
 	protected function determineFullText( &$xerxes_record, $arrResults )
 	{
-		$strRecordIssn = $xerxes_record->getIssn();
+		$strRecordIssn = $xerxes_record->getISSN();
 		$strRecordYear = $xerxes_record->getYear();
 
 		foreach ( $arrResults as $objFulltext )
