@@ -58,19 +58,7 @@ class Xerxes_Model_Ebsco_Engine extends Xerxes_Model_Search_Engine
 	
 	public function getRecord( $id )
 	{
-		if ( ! strstr($id, "-") )
-		{
-			throw new Exception("could not find record");
-		}
-		
-		// database and id come in on same value, so split 'em
-		
-		$database = Xerxes_Framework_Parser::removeRight($id,"-");
-		$id = Xerxes_Framework_Parser::removeLeft($id,"-");
-		
-		// get results
-		
-		$results = $this->doSearch("AN $id", array($database), 1, 1);
+		$results = $this->doGetRecord($id);
 		
 		// enhance
 		
@@ -102,6 +90,32 @@ class Xerxes_Model_Ebsco_Engine extends Xerxes_Model_Search_Engine
 		
 		$results->markRefereed();
 		$results->markFullText();
+		
+		return $results;
+	}
+	
+	/**
+	 * Do the actual fetch of an individual record
+	 * 
+	 * @param string	record identifier
+	 * @return Xerxes_Model_Solr_Results
+	 */	
+	
+	protected function doGetRecord($id)
+	{
+		if ( ! strstr($id, "-") )
+		{
+			throw new Exception("could not find record");
+		}
+		
+		// database and id come in on same value, so split 'em
+		
+		$database = Xerxes_Framework_Parser::removeRight($id,"-");
+		$id = Xerxes_Framework_Parser::removeLeft($id,"-");
+		
+		// get results
+		
+		$results = $this->doSearch("AN $id", array($database), 1, 1);
 		
 		return $results;
 	}
