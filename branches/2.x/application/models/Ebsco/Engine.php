@@ -63,10 +63,20 @@ class Xerxes_Model_Ebsco_Engine extends Xerxes_Model_Search_Engine
 			throw new Exception("could not find record");
 		}
 		
+		// database and id come in on same value, so split 'em
+		
 		$database = Xerxes_Framework_Parser::removeRight($id,"-");
 		$id = Xerxes_Framework_Parser::removeLeft($id,"-");
 		
+		// get results
+		
 		$results = $this->doSearch("AN $id", array($database), 1, 1);
+		
+		// enhance
+		
+		$results->getRecord(0)->addRecommendations();
+		$results->markFullText();
+		$results->markRefereed();
 		
 		return $results;
 	}	
