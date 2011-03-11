@@ -163,7 +163,7 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 		$xerxes_record->setSource($this->id);
 		
 		$result = new Xerxes_Model_Search_Result($xerxes_record, $this->config);
-		$result->addHoldings();
+		$result->fetchHoldings();
 		
 		// add to response
 		

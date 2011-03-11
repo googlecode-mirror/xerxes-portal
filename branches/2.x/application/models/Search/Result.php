@@ -135,7 +135,7 @@ class Xerxes_Model_Search_Result
 	 * Fetch item and holding records from an ILS for this record
 	 */
 	
-	public function addHoldings()
+	public function fetchHoldings()
 	{
 		$xerxes_record = $this->getXerxesRecord();
 		

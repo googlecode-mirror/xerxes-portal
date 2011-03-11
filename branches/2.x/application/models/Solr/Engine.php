@@ -70,7 +70,7 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 		$results = $this->doSearch("id:$id", 1, 1);
 		$record = $results->getRecord(0);
 		
-		$record->addHoldings(); // item availability
+		$record->fetchHoldings(); // item availability
 		$record->addReviews(); // good read reviews
 		
 		return $results;
