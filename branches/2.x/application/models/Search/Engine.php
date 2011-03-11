@@ -39,25 +39,40 @@ abstract class Xerxes_Model_Search_Engine
 	 * Return the total number of hits for the search
 	 * 
 	 * @return int
-	 */
+	 */	
 	
-	abstract function getHits( Xerxes_Model_Search_Query $search );
+	abstract public function getHits( Xerxes_Model_Search_Query $search );
 	
 	/**
 	 * Return an individual record
 	 * 
-	 * @return Xerxes_Model_Search_ResultSet
+	 * @param string	record identifier
+	 * @return Xerxes_Model_Solr_Results
 	 */
 	
-	abstract function getRecord( $id );
+	abstract public function getRecord( $id );
+
+	/**
+	 * Do the actual fetch of an individual record
+	 * 
+	 * @param string	record identifier
+	 * @return Xerxes_Model_Solr_Results
+	 */	
+	
+	abstract protected function doGetRecord( $id );
 	
 	/**
 	 * Search and return results
 	 * 
-	 * @return Xerxes_Model_Search_ResultSet
-	 */
+	 * @param Xerxes_Model_Search_Query $search		search object
+	 * @param int $start							[optional] starting record number
+	 * @param int $max								[optional] max records
+	 * @param string $sort							[optional] sort order
+	 * 
+	 * @return Xerxes_Model_Search_Results
+	 */	
 	
-	abstract function searchRetrieve( Xerxes_Model_Search_Query $search, $start = 1, $max = 10, $sort = "" );
+	abstract public function searchRetrieve( Xerxes_Model_Search_Query $search, $start = 1, $max = 10, $sort = "" );
 	
 	/**
 	 * Return the URL sent ot the web service
