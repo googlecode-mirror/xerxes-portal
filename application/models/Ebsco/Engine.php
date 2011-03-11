@@ -94,7 +94,7 @@ class Xerxes_Model_Ebsco_Engine extends Xerxes_Model_Search_Engine
 	/**
 	 * Do the actual search
 	 * 
-	 * @param Xerxes_Model_Search_Query $search		search object
+	 * @param mixed $search							search object or string
 	 * @param int $start							[optional] starting record number
 	 * @param int $max								[optional] max records
 	 * @param string $sort							[optional] sort order
@@ -102,19 +102,30 @@ class Xerxes_Model_Ebsco_Engine extends Xerxes_Model_Search_Engine
 	 * @return Xerxes_Model_Search_Results
 	 */		
 	
-	protected function doSearch( Xerxes_Model_Search_Query $search, $databases, $start, $max, $sort = "relevance")
+	protected function doSearch( $search, $databases, $start, $max, $sort = "relevance")
 	{
+		// default for sort
+		
 		if ( $sort == "" )
 		{
 			$sort = "relevance";
 		}
-
+		
 		// prepare the query
 		
-		$terms = $search->getQueryTerms();
-		$term = $terms[0];
+		$query = "";
 		
-		$query = $term->field_internal . " " . $term->phrase;
+		if ( $search instanceof Xerxes_Model_Search_Query )
+		{
+			$terms = $search->getQueryTerms();
+			$term = $terms[0];
+			
+			$query = $term->field_internal . " " . $term->phrase;
+		}
+		else
+		{
+			$query = $search;
+		}
 		
 		// no database selected, so get 'em from config
 		
@@ -231,14 +242,14 @@ class Xerxes_Model_Ebsco_Engine extends Xerxes_Model_Search_Engine
 		
 		// add records
 		
-		foreach ( $this->parseRecords($xml) as $record )
+		foreach ( $this->extractRecords($xml) as $record )
 		{
 			$results->addRecord($record);
 		}
 		
 		// add clusters
 		
-		$facets = $this->parseFacets($xml);
+		$facets = $this->extractFacets($xml);
 		$results->setFacets($facets);
 		
 		return $results;
@@ -251,14 +262,13 @@ class Xerxes_Model_Ebsco_Engine extends Xerxes_Model_Search_Engine
 	 * @return array of Xerxes_Model_Ebsco_Record's
 	 */
 	
-	protected function parseRecords(DOMDocument $xml)
+	protected function extractRecords(DOMDocument $xml)
 	{
 		$records = array();
 
 		$xpath = new DOMXPath($xml);
-		 // $xpath->registerNamespace("ebsco", "http://epnet.com/webservices/SearchService/Response/2007/07/");
 		
-		$records_object = $xpath->query("//rec"); // records actually have null namespace, silly ebsco
+		$records_object = $xpath->query("//rec");
 		
 		foreach ( $records_object as $record )
 		{
@@ -276,7 +286,8 @@ class Xerxes_Model_Ebsco_Engine extends Xerxes_Model_Search_Engine
 	 * @param DOMDocument $dom
 	 * @return Xerxes_Model_Search_Facets
 	 */
-	protected function parseFacets(DOMDocument $dom)
+	
+	protected function extractFacets(DOMDocument $dom)
 	{
 		$facets = new Xerxes_Model_Search_Facets();
 
