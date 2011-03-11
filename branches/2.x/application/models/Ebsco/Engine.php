@@ -16,9 +16,13 @@ class Xerxes_Model_Ebsco_Engine extends Xerxes_Model_Search_Engine
 	protected $username; // ebsco username
 	protected $password; // ebsco password
 	
-	private $deincrementing = 0; // ebsco hacks
-	public $new_start = null; // ebsco hacks
-	private $total = 0; // ebsco hacks
+	private $deincrementing = 0; // ebsco hack
+	
+	/**
+	 * Constructor
+	 *
+	 * @param Xerxes_Model_Ebsco_Config $config
+	 */
 	
 	public function __construct(Xerxes_Model_Ebsco_Config $config)
 	{
@@ -86,6 +90,17 @@ class Xerxes_Model_Ebsco_Engine extends Xerxes_Model_Search_Engine
 		
 		return $results;
 	}
+
+	/**
+	 * Do the actual search
+	 * 
+	 * @param Xerxes_Model_Search_Query $search		search object
+	 * @param int $start							[optional] starting record number
+	 * @param int $max								[optional] max records
+	 * @param string $sort							[optional] sort order
+	 * 
+	 * @return Xerxes_Model_Search_Results
+	 */		
 	
 	protected function doSearch( Xerxes_Model_Search_Query $search, $databases, $start, $max, $sort = "relevance")
 	{
@@ -154,17 +169,17 @@ class Xerxes_Model_Ebsco_Engine extends Xerxes_Model_Search_Engine
 		$xml->recover = true;
 		$xml->loadXML($response);
 		
+		// result set
+		
 		$results = new Xerxes_Model_Search_ResultSet($this->config);
 		
-		// get hit total
-		
-		$total = 0;
+		// get total
 		
 		$hits = $xml->getElementsByTagName("Hits")->item(0);
 		
 		if ( $hits != null )
 		{
-			$this->total = (int) $hits->nodeValue;
+			$total = (int) $hits->nodeValue;
 		}
 		
 		
@@ -188,16 +203,9 @@ class Xerxes_Model_Ebsco_Engine extends Xerxes_Model_Search_Engine
 			if ( $this->deincrementing <= 8 )
 			{
 				$this->deincrementing++;
-				$this->new_start = $start - $max;
+				$new_start = $start - $max;
 				
-				// register the change back up the stack
-				// TODO: figure this crap out
-				/*
-				$this->request->setProperty("startRecord", $this->new_start, false, true );
-				$this->request->setProperty("newStart", true, false, true );
-				*/
-				
-				return $this->doSearch($query, $databases, $this->new_start, $max, $sort);
+				return $this->doSearch($query, $databases, $new_start, $max, $sort);
 			}
 		}
 		
@@ -207,7 +215,7 @@ class Xerxes_Model_Ebsco_Engine extends Xerxes_Model_Search_Engine
 		
 		if ( $check < $max )
 		{
-			if ( $check_end	< $this->total )
+			if ( $check_end	< $total )
 			{
 				$total = $check_end;
 			}
@@ -219,7 +227,7 @@ class Xerxes_Model_Ebsco_Engine extends Xerxes_Model_Search_Engine
 		
 		// set total
 		
-		$results->total = $this->total;
+		$results->total = $total;
 		
 		// add records
 		
@@ -235,6 +243,13 @@ class Xerxes_Model_Ebsco_Engine extends Xerxes_Model_Search_Engine
 		
 		return $results;
 	}
+	
+	/**
+	 * Parse records out of the response
+	 *
+	 * @param DOMDocument $xml
+	 * @return array of Xerxes_Model_Ebsco_Record's
+	 */
 	
 	protected function parseRecords(DOMDocument $xml)
 	{
@@ -255,6 +270,12 @@ class Xerxes_Model_Ebsco_Engine extends Xerxes_Model_Search_Engine
 		return $records;
 	}
 	
+	/**
+	 * Parse facets out of the response
+	 *
+	 * @param DOMDocument $dom
+	 * @return Xerxes_Model_Search_Facets
+	 */
 	protected function parseFacets(DOMDocument $dom)
 	{
 		$facets = new Xerxes_Model_Search_Facets();
@@ -309,22 +330,3 @@ class Xerxes_Model_Ebsco_Engine extends Xerxes_Model_Search_Engine
 		return $facets;
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
