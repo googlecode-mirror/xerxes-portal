@@ -67,7 +67,7 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 	{
 		// get the record
 		
-		$results = $this->doSearch("id:$id", 1, 1);
+		$results = $this->doGetRecord($id);
 		$record = $results->getRecord(0);
 		
 		$record->fetchHoldings(); // item availability
@@ -97,6 +97,19 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 		
 		$results->injectHoldings();
 		
+		return $results;
+	}
+
+	/**
+	 * Do the actual fetch of an individual record
+	 * 
+	 * @param string	record identifier
+	 * @return Xerxes_Model_Solr_Results
+	 */		
+	
+	protected function doGetRecord($id)
+	{
+		$results = $this->doSearch("id:$id", 1, 1);
 		return $results;
 	}
 	

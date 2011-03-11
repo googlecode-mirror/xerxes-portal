@@ -62,8 +62,7 @@ class Xerxes_Model_Summon_Engine extends Xerxes_Model_Search_Engine
 	{
 		// get result
 		
-		$summon_results = $this->client->getRecord($id);
-		$results = $this->parseResponse($summon_results);
+		$results = $this->doGetRecord( $id );
 		
 		// enhance
 		
@@ -88,15 +87,32 @@ class Xerxes_Model_Summon_Engine extends Xerxes_Model_Search_Engine
 	
 	public function searchRetrieve( Xerxes_Model_Search_Query $search, $start = 1, $max = 10, $sort = "")
 	{
-		
 		$results = $this->doSearch( $search, $start, $max, $sort);
 		
 		// $results->markRefereed();
-		// $results->markFullText();
+		
+		$results->markFullText();
 		
 		return $results;
 	}
 
+	/**
+	 * Do the actual fetch of an individual record
+	 * 
+	 * @param string	record identifier
+	 * @return Xerxes_Model_Solr_Results
+	 */	
+	
+	public function doGetRecord( $id )
+	{
+		// get result
+		
+		$summon_results = $this->client->getRecord($id);
+		$results = $this->parseResponse($summon_results);
+		
+		return $results;
+	}		
+	
 	/**
 	 * Internal function that 
 	 * 
