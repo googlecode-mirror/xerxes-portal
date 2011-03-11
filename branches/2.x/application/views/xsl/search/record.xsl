@@ -350,11 +350,11 @@
 	-->
 	
 	<xsl:template name="record-recommendations">
-		<xsl:if test="//recommendations/record">
+		<xsl:if test="//recommendations/recommendation">
 		
 			<h2><xsl:call-template name="text_recommendation_header" />:</h2>
 			<ul id="recommendations">
-				<xsl:for-each select="//recommendations/record/xerxes_record">
+				<xsl:for-each select="//recommendations/recommendation/xerxes_record">
 					<li class="result">
 						<div class="resultsTitle">
 							<a href="{../url_open}"><xsl:value-of select="title_normalized" /></a>
