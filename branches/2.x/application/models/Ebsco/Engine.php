@@ -66,7 +66,9 @@ class Xerxes_Model_Ebsco_Engine extends Xerxes_Model_Search_Engine
 		$database = Xerxes_Framework_Parser::removeRight($id,"-");
 		$id = Xerxes_Framework_Parser::removeLeft($id,"-");
 		
-		return $this->doSearch("AN $id", array($database), 1, 1);
+		$results = $this->doSearch("AN $id", array($database), 1, 1);
+		
+		return $results;
 	}	
 	
 	/**
@@ -87,6 +89,9 @@ class Xerxes_Model_Ebsco_Engine extends Xerxes_Model_Search_Engine
 		$results = $this->doSearch($search, array(), $start, $max, $sort);
 		
 		// do some stuff
+		
+		$results->markRefereed();
+		$results->markFullText();
 		
 		return $results;
 	}
@@ -117,8 +122,13 @@ class Xerxes_Model_Ebsco_Engine extends Xerxes_Model_Search_Engine
 		
 		if ( $search instanceof Xerxes_Model_Search_Query )
 		{
+			// just one term for now
+			
 			$terms = $search->getQueryTerms();
 			$term = $terms[0];
+			
+			$term->toLower()
+			     ->andAllTerms();
 			
 			$query = $term->field_internal . " " . $term->phrase;
 		}
