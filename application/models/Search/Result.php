@@ -99,10 +99,24 @@ class Xerxes_Model_Search_Result
 					array_push($records, $record);
 				}
 				
+			
+				
 				if ( count($records) > 0 ) // and only if there are any records
 				{
+					$x = 0;
+										
 					foreach ( $records as $bx_record )
 					{
+						$x++;
+						
+						// first one is the record we want to find recommendations for
+						// so skip it; any others are actual recommendations
+						
+						if ( $x == 1 )
+						{
+							continue;	
+						}						
+						
 						$result = new Xerxes_Model_Search_Result($bx_record, $this->config);
 						array_push($this->recommendations, $result);
 					} 
