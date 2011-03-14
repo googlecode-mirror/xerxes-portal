@@ -57,26 +57,6 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 	}
 
 	/**
-	 * Return an individual record
-	 * 
-	 * @param string	record identifier
-	 * @return Xerxes_Model_Solr_Results
-	 */
-	
-	public function getRecord( $id )
-	{
-		// get the record
-		
-		$results = $this->doGetRecord($id);
-		$record = $results->getRecord(0);
-		
-		$record->fetchHoldings(); // item availability
-		$record->addReviews(); // good read reviews
-		
-		return $results;
-	}	
-
-	/**
 	 * Search and return results
 	 * 
 	 * @param Xerxes_Model_Search_Query $search		search object
@@ -97,6 +77,42 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 		
 		$results->injectHoldings();
 		
+		return $results;
+	}	
+	
+	/**
+	 * Return an individual record
+	 * 
+	 * @param string	record identifier
+	 * @return Xerxes_Model_Solr_Results
+	 */
+	
+	public function getRecord( $id )
+	{
+		// get the record
+		
+		$results = $this->doGetRecord($id);
+		$record = $results->getRecord(0);
+		
+		$record->fetchHoldings(); // item availability
+		$record->addReviews(); // good read reviews
+		
+		return $results;
+	}
+	
+	/**
+	 * Get record to save
+	 * 
+	 * @param string	record identifier
+	 * @return int		internal saved id
+	 */	
+	
+	public function getRecordForSave( $id )
+	{
+		$results = $this->doGetRecord($id);
+		$record = $results->getRecord(0);
+		
+		$record->fetchHoldings(); // item availability
 		return $results;
 	}
 

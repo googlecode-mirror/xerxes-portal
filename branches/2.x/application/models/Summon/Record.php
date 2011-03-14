@@ -49,7 +49,12 @@ class Xerxes_Model_Summon_Record extends Xerxes_Record
 		$this->language = $this->extractValue($document, "Language/0");
 		$this->year = $this->extractValue($document, "PublicationDate_xml/0/year");
 		$this->extent = $this->extractValue($document, "PageCount/0");
-		$this->format = $this->extractValue($document, "ContentType/0");		
+		
+		// format
+		
+		$this->format = $this->extractValue($document, "ContentType/0");
+
+		if ( $this->format == "Journal Article") $this->format = "Article";
 		
 		// summary
 		

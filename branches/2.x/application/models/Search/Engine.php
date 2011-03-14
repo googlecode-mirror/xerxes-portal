@@ -44,6 +44,19 @@ abstract class Xerxes_Model_Search_Engine
 	abstract public function getHits( Xerxes_Model_Search_Query $search );
 	
 	/**
+	 * Search and return results
+	 * 
+	 * @param Xerxes_Model_Search_Query $search		search object
+	 * @param int $start							[optional] starting record number
+	 * @param int $max								[optional] max records
+	 * @param string $sort							[optional] sort order
+	 * 
+	 * @return Xerxes_Model_Search_Results
+	 */	
+	
+	abstract public function searchRetrieve( Xerxes_Model_Search_Query $search, $start = 1, $max = 10, $sort = "" );
+	
+	/**
 	 * Return an individual record
 	 * 
 	 * @param string	record identifier
@@ -60,19 +73,6 @@ abstract class Xerxes_Model_Search_Engine
 	 */	
 	
 	abstract public function getRecordForSave( $id );
-	
-	/**
-	 * Search and return results
-	 * 
-	 * @param Xerxes_Model_Search_Query $search		search object
-	 * @param int $start							[optional] starting record number
-	 * @param int $max								[optional] max records
-	 * @param string $sort							[optional] sort order
-	 * 
-	 * @return Xerxes_Model_Search_Results
-	 */	
-	
-	abstract public function searchRetrieve( Xerxes_Model_Search_Query $search, $start = 1, $max = 10, $sort = "" );
 	
 	/**
 	 * Return the URL sent ot the web service
