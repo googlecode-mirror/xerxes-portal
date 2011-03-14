@@ -50,26 +50,6 @@ class Xerxes_Model_Ebsco_Engine extends Xerxes_Model_Search_Engine
 	}
 
 	/**
-	 * Return an individual record
-	 * 
-	 * @param string	record identifier
-	 * @return Xerxes_Model_Solr_Results
-	 */
-	
-	public function getRecord( $id )
-	{
-		$results = $this->doGetRecord($id);
-		
-		// enhance
-		
-		$results->getRecord(0)->addRecommendations();
-		$results->markFullText();
-		$results->markRefereed();
-		
-		return $results;
-	}	
-	
-	/**
 	 * Search and return results
 	 * 
 	 * @param Xerxes_Model_Search_Query $search		search object
@@ -92,7 +72,39 @@ class Xerxes_Model_Ebsco_Engine extends Xerxes_Model_Search_Engine
 		$results->markFullText();
 		
 		return $results;
+	}	
+	
+	/**
+	 * Return an individual record
+	 * 
+	 * @param string	record identifier
+	 * @return Xerxes_Model_Solr_Results
+	 */
+	
+	public function getRecord( $id )
+	{
+		$results = $this->doGetRecord($id);
+		
+		// enhance
+		
+		$results->getRecord(0)->addRecommendations();
+		$results->markFullText();
+		$results->markRefereed();
+		
+		return $results;
 	}
+
+	/**
+	 * Get record to save
+	 * 
+	 * @param string	record identifier
+	 * @return int		internal saved id
+	 */	
+	
+	public function getRecordForSave( $id )
+	{
+		return $this->doGetRecord($id);
+	}	
 	
 	/**
 	 * Do the actual fetch of an individual record
