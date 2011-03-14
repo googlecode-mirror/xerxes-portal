@@ -53,13 +53,13 @@ abstract class Xerxes_Model_Search_Engine
 	abstract public function getRecord( $id );
 
 	/**
-	 * Do the actual fetch of an individual record
+	 * Get record to save
 	 * 
 	 * @param string	record identifier
-	 * @return Xerxes_Model_Solr_Results
+	 * @return int		internal saved id
 	 */	
 	
-	abstract protected function doGetRecord( $id );
+	abstract public function getRecordForSave( $id );
 	
 	/**
 	 * Search and return results
