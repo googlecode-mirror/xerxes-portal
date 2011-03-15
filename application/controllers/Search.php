@@ -11,6 +11,11 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 	protected $max_allowed; // upper-limit per page
 	protected $sort; // default sort
 	
+	public function index()
+	{
+		$this->response->setView("xsl/search/index.xsl");
+	}
+	
 	public function search()
 	{
 		// set the url params for where are gong to redirect,
