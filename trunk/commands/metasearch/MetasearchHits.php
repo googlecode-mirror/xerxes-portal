@@ -190,7 +190,7 @@ class Xerxes_Command_MetasearchHits extends Xerxes_Command_Metasearch
 					
 					if ( $strMergeSet == "" )
 					{
-						throw new Exception( "Result from Metalib returned no set number" );
+						//throw new Exception( "Result from Metalib returned no set number" );
 					}
 					
 					// cache the facets response, but only if there are more results than a single page
@@ -227,13 +227,14 @@ class Xerxes_Command_MetasearchHits extends Xerxes_Command_Metasearch
 						{
 							foreach ( $objDb->getElementsByTagName( "no_of_documents" ) as $objDocs )
 							{
-								if ( $objDocs->nodeValue == "888888888" )
+								if ( (int) $objDocs->nodeValue > 0 )
 								{
 									$bolIndividual = true;
 									
 									if ( $objDb->getElementsByTagName( "set_number" )->item( 0 ) != null )
 									{
 										$strIndividualSet = $objDb->getElementsByTagName( "set_number" )->item( 0 )->nodeValue;
+										break(2);
 									}
 								}
 							}
