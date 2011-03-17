@@ -123,7 +123,7 @@ class Xerxes_Model_Summon_Engine extends Xerxes_Model_Search_Engine
 	}		
 	
 	/**
-	 * Internal function that 
+	 * Do the actual search
 	 * 
 	 * @param Xerxes_Model_Search_Query $search		search object
 	 * @param int $start							[optional] starting record number
