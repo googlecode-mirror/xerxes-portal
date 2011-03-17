@@ -20,36 +20,42 @@ class Xerxes_Model_Solr_Record extends Xerxes_Record
 	{
 		parent::map();
 		
-		// see if there are any item records
+		// we assume that all records have items
+		// ... unless told otherwise
 		
-		$registry = Xerxes_Model_Solr_Config::getInstance();
-		$item_field = $registry->getConfig("ITEM_FIELD", false);
-		$item_query = $registry->getConfig("ITEM_FIELD_QUERY", false);
+		// here we've defined marc fields that contain the physical holdings
+		// if the record doesn't have these, then it doesn't have items
+		
+		$config = Xerxes_Model_Solr_Config::getInstance();
+		
+		$item_field = $config->getConfig("ITEM_FIELD", false);
+		$item_query = $config->getConfig("ITEM_FIELD_QUERY", false);
+		
+		// simple field value
 		
 		if ( $item_field != null ) 
 		{
-			// simple field value
-			
 			$items = $this->datafield($item_field);
 			
 			// print_r($items);
 			
 			if ( $items->length() == 0 )
 			{
-				$this->no_items = true;
+				$this->physical_holdings = false;
 			}
 		}
+		
+		// expressed as an xpath query
+		
 		elseif ( $item_query != null )
 		{
-			// expressed as an xpath query
-			
 			$items = $this->xpath->query($item_query);
 			
-			$this->no_items = true;
+			// print_r($items);
 			
-			if ( $items->length > 0 )
+			if ( $items->length == 0 )
 			{
-				$this->no_items = false;
+				$this->physical_holdings = false;
 			}
 		}
 	}

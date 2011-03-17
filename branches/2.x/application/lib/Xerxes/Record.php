@@ -83,12 +83,12 @@ class Xerxes_Record extends Xerxes_Marc_Record
 	protected $subscription = false; // whether the item is available in library subscription
 	
 	protected $links = array (); // all supplied links in the record both full text and non
-	protected $embedded_text = array (); // full text embedded in document
 	
 	protected $alt_scripts = array (); // alternate character-scripts like cjk or hebrew, taken from 880s
 	protected $alt_script_name = ""; // the name of the alternate character-script; we'll just assume one for now, I guess
 	
 	protected $serialized; // for serializing the object
+	protected $physical_holdings = true;
 	
 	
 	### PUBLIC FUNCTIONS ###
@@ -2141,49 +2141,6 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		return "Unknown";
 	}
 	
-	protected function formatFromDataFields($arrFormat)
-	{
-		// we'll combine all of the datafields that explicitly declare the
-		// format of the record into a single string
-
-		$strDataFields = "";
-		
-		foreach ( $arrFormat as $strFormat )
-		{
-			$strDataFields .= " " . Xerxes_Framework_Parser::strtolower( $strFormat );
-		}
-		
-		// format made explicit
-
-		if ( strstr( $strDataFields, 'dissertation' ) ) return  "Dissertation"; 
-		if (  $this->datafield("502")->__toString() != "" ) return  "Thesis"; 
-		if (  $this->controlfield("002")->__toString() == "DS" ) return  "Thesis";
-		if ( strstr( $strDataFields, 'proceeding' ) ) return  "ConferenceProceeding"; 
-		if ( strstr( $strDataFields, 'conference' ) ) return  "ConferencePaper"; 
-		if ( strstr( $strDataFields, 'hearing' ) ) return  "Hearing"; 
-		if ( strstr( $strDataFields, 'working' ) ) return  "WorkingPaper"; 
-		if ( strstr( $strDataFields, 'book review' ) || strstr( $strDataFields, 'review-book' ) ) return  "BookReview"; 
-		if ( strstr( $strDataFields, 'film review' ) || strstr( $strDataFields, 'film-book' ) ) return  "FilmReview";
-		if ( strstr( "$strDataFields ", 'review ' ) ) return  "Review";
-		if ( strstr( $strDataFields, 'book art' ) || strstr( $strDataFields, 'book ch' ) || strstr( $strDataFields, 'chapter' ) ) return  "BookChapter"; 
-		if ( strstr( $strDataFields, 'journal' ) ) return  "Article"; 
-		if ( strstr( $strDataFields, 'periodical' ) || strstr( $strDataFields, 'serial' ) ) return  "Article"; 
-		if ( strstr( $strDataFields, 'book' ) ) return  "Book";
-        if ( strstr( $strDataFields, 'pamphlet' ) ) return  "Pamphlet";  
-        // if ( strstr( $strDataFields, 'essay' ) ) return  "Essay";
-		if ( strstr( $strDataFields, 'article' ) ) return  "Article";
-
-		// format from other sources
-
-		if ( $this->journal != "" ) return  "Article"; 
-		if ( count( $this->isbns ) > 0 ) return "Book"; 
-		if ( count( $this->issns ) > 0 ) return "Article";
-		
-		// if we got this far, just return unknown
-		
-		return "Unknown";
-	}
-	
 	/**
 	 * Best-guess regular expression for extracting volume, issue, pagination,
 	 * broken out here for clarity 
@@ -2813,11 +2770,6 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		return $this->description;
 	}
 	
-	public function getEmbeddedText()
-	{
-		return $this->embedded_text;
-	}
-	
 	public function getLanguage()
 	{
 		return $this->language;
@@ -2963,7 +2915,12 @@ class Xerxes_Record extends Xerxes_Marc_Record
 	public function setRecordID($id)
 	{
 		return $this->record_id = $id;
-	}	
+	}
+	
+	public function hasPhysicalHoldings()
+	{
+		return $this->physical_holdings;
+	}
 }
 
 class Xerxes_Record_Subject
