@@ -151,13 +151,11 @@ class Xerxes_Framework_FrontController
 			#       DATA       #
 			####################
 			
+			if ( $base == "" ) $base = "solr"; $request->setParam("base", "solr");
+			if ( $action == "" ) $action = "index"; $request->setParam("action", "index");
+			
 			$controller_name = "Xerxes_Controller_" . strtoupper(substr($base, 0, 1)) . substr($base,1); 
 			$controller = new $controller_name();
-			
-			if ( $action == "" )
-			{
-				$action = "index";
-			}
 
 			$controller->$action();
 
