@@ -29,7 +29,7 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 
 		// server address
 		
-		$this->server = $this->config->getConfig('solr', true);
+		$this->server = $this->config->getConfig('SOLR', true);
 		
 		if ( substr($this->server,-1,1) != "/" )
 		{
@@ -84,7 +84,7 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 	 * Return an individual record
 	 * 
 	 * @param string	record identifier
-	 * @return Xerxes_Model_Solr_Results
+	 * @return Xerxes_Model_Search_Results
 	 */
 	
 	public function getRecord( $id )
@@ -120,7 +120,7 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 	 * Do the actual fetch of an individual record
 	 * 
 	 * @param string	record identifier
-	 * @return Xerxes_Model_Solr_Results
+	 * @return Xerxes_Model_Search_Results
 	 */		
 	
 	protected function doGetRecord($id)
@@ -381,7 +381,7 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 	 * Extract records from the Solr response
 	 * 
 	 * @param simplexml	$xml	solr response
-	 * @return array of Xerxes_Model_Search_Records
+	 * @return array of Xerxes_Model_Search_Record's
 	 */	
 	
 	protected function extractRecords($xml)
@@ -442,7 +442,7 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 					}
 				}
 				
-				$record = new Xerxes_Record();
+				$record = new Xerxes_Model_Solr_Record();
 				$record->loadXML($xml_data);
 				
 				$record->setRecordID($id);
