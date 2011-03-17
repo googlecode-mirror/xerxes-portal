@@ -151,6 +151,11 @@ class Xerxes_Marc_Record
 	protected $xpath;
 	protected $node;
 	
+	public function __construct()
+	{
+		$this->leader = new Xerxes_Marc_Leader();
+	}
+	
 	/**
 	 * Create an object for a MARC-XML Record
 	 *
