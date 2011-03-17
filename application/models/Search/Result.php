@@ -38,7 +38,7 @@ class Xerxes_Model_Search_Result
 		$this->registry = Xerxes_Framework_Registry::getInstance();
 		$this->config = $config;
 		
-		// pop
+		// link resolver stuff
 		
 		$link_resolver = $this->registry->getConfig("LINK_RESOLVER_ADDRESS", true);
 		$this->sid = $this->registry->getConfig("APPLICATION_SID", false, "calstate.edu:xerxes");
@@ -46,7 +46,14 @@ class Xerxes_Model_Search_Result
 		$this->url_open = $record->getOpenURL($link_resolver, $this->sid);
 		$this->openurl_kev_co = $record->getOpenURL(null, $this->sid);
 		
+		// holdings
+		
 		$this->holdings = new Xerxes_Model_Search_Holdings();
+		
+		if ( $record->hasPhysicalHoldings() == false )
+		{
+			$this->holdings->checked = true;
+		}
 	}
 	
 	/**
@@ -157,13 +164,17 @@ class Xerxes_Model_Search_Result
 		$cache_id = $xerxes_record->getSource() . "." . $id; // to identify this in the cache
 		$url = $this->config->getConfig("LOOKUP"); // url to availability server
 		
+		// mark that we've checked holdigns either way
+		
+		$this->holdings->checked = true;
+		
 		// no holdings source defined or somehow id's are blank
 		
-		if ( $url == "" || $id == "" )
+		if ( $xerxes_record->hasPhysicalHoldings() == false || $url == "" || $id == "" )
 		{
-			return null; // empty holdings
-		}
-		
+			return null;
+		}		
+
 		// get the data
 		
 		$url .= "?action=status&id=" . urlencode($id);
@@ -176,10 +187,8 @@ class Xerxes_Model_Search_Result
 		if ( $data == "" )
 		{
 			throw new Exception("could not connect to availability server");
-		}
+		}		
 		
-		$holdings = new Xerxes_Model_Search_Holdings();
-		$holdings->checked = true;
 		
 		// response is (currently) an array of json objects
 		
@@ -200,12 +209,12 @@ class Xerxes_Model_Search_Result
 					if ( $is_holding == true )
 					{
 						$item = new Xerxes_Model_Search_Holding();
-						$holdings->addHolding($item);
+						$this->holdings->addHolding($item);
 					}
 					else
 					{
 						$item = new Xerxes_Model_Search_Item();
-						$holdings->addItem($item);
+						$this->holdings->addItem($item);
 					}
 					
 					foreach ( $holding as $property => $value )
@@ -223,11 +232,7 @@ class Xerxes_Model_Search_Result
 		$expiry = $this->config->getConfig("HOLDINGS_CACHE_EXPIRY", false, 2 * 60 * 60); // expiry set for two hours
 		$expiry += time(); 
 		
-		$cache->set($cache_id, serialize($holdings), $expiry);
-		
-		// add it to the record
-		
-		$this->holdings = $holdings;
+		$cache->set($cache_id, serialize($this->holdings), $expiry);
 		
 		return null;
 	}
