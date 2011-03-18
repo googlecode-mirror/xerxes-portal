@@ -335,9 +335,7 @@
 				
 			</xsl:otherwise>
 		</xsl:choose>
-	
-		<link href="css/xerxes-print.css?xerxes_version={$xerxes_version}" rel="stylesheet" type="text/css" media="print" />
-	
+		
 	</xsl:template>
 	
 	<!-- 
