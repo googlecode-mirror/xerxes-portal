@@ -134,7 +134,12 @@ class Xerxes_Model_Search_ResultSet
 				{
 					if ( in_array($refereed->issn,$xerxes_record->getAllISSN()))
 					{
-						$xerxes_record->setRefereed(true);
+						// not if it is a review
+						
+						if ( stripos($xerxes_record->getFormat(),'review') === false )
+						{
+							$xerxes_record->setRefereed(true);
+						}
 					}
 				}
 			}
