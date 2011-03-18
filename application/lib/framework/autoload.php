@@ -6,17 +6,20 @@ spl_autoload_register('xerxes_autoload');
 
 // and path to application root
 
-$xerxes_application_path = realpath(__FILE__);
+$xerxes_application_path = realpath(dirname(__FILE__));
 
 $xerxes_application_path = explode(DIRECTORY_SEPARATOR, $xerxes_application_path);
-array_pop($xerxes_application_path); // autoload.php
 array_pop($xerxes_application_path); // framework
 array_pop($xerxes_application_path); // lib
 $xerxes_application_path = implode(DIRECTORY_SEPARATOR, $xerxes_application_path). DIRECTORY_SEPARATOR;
 
 define('XERXES_APPLICATION_PATH', $xerxes_application_path); // application
 
-set_include_path( get_include_path() . PATH_SEPARATOR . $xerxes_application_path );
+set_include_path( 
+	get_include_path() . PATH_SEPARATOR . 
+	$xerxes_application_path . PATH_SEPARATOR . 
+	$xerxes_application_path . "lib"
+);
 
 /**
  * The global namespace array
