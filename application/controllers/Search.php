@@ -409,6 +409,11 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 	{
 		$sort_options = $this->config->sortOptions();
 		
+		if ( count($sort_options) == 0 )
+		{
+			return null;
+		}
+		
 		$xml = new DOMDocument();
 		$xml->loadXML( "<sort_display />" );
 		
