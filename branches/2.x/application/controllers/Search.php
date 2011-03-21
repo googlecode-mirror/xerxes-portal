@@ -11,12 +11,12 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 	protected $max_allowed; // upper-limit per page
 	protected $sort; // default sort
 	
-	public function indexAction()
+	public function index()
 	{
 		$this->response->setView("xsl/search/index.xsl");
 	}
 	
-	public function searchAction()
+	public function search()
 	{
 		// set the url params for where are gong to redirect,
 		// usually to the results action, but can be overriden
@@ -43,7 +43,7 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 		$this->response->setRedirect($url);
 	}
 	
-	public function hitsAction()
+	public function hits()
 	{
 		// create an identifier for this search
 		
@@ -71,7 +71,7 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 		$this->response->setView("xsl/search/hits.xsl");
 	}
 	
-	public function resultsAction()
+	public function results()
 	{
 		// defaults
 		
@@ -136,7 +136,7 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 		$this->response->setView("xsl/" . $this->id . "/" . $this->id . "_results.xsl");
 	}
 	
-	public function recordAction()
+	public function record()
 	{
 		$id = $this->request->getParam('id');
 
@@ -157,7 +157,7 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 		$this->response->setView("xsl/" . $this->id . "/" . $this->id . "_record.xsl");	
 	}
 	
-	public function lookupAction()
+	public function lookup()
 	{
 		$id = $this->request->getParam("id");
 		
@@ -179,7 +179,7 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 		$this->response->setView('xsl/search/lookup.xsl');
 	}	
 
-	public function saveAction()
+	public function save()
 	{
 		$datamap = new Xerxes_Model_DataMap_SavedRecords();
 		
