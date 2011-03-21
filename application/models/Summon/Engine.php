@@ -1,6 +1,6 @@
 <?php
 
-import("Summon", "library/Summon/Summon.class.php");
+require_once 'Summon/Summon.class.php';
 
 /**
  * Summon Search Engine

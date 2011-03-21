@@ -4,22 +4,14 @@
 
 spl_autoload_register('xerxes_autoload');
 
-// and path to application root
+// paths
 
-$xerxes_application_path = realpath(dirname(__FILE__));
+$xerxes_root = realpath(dirname(__FILE__) . "../../../../");
 
-$xerxes_application_path = explode(DIRECTORY_SEPARATOR, $xerxes_application_path);
-array_pop($xerxes_application_path); // framework
-array_pop($xerxes_application_path); // lib
-$xerxes_application_path = implode(DIRECTORY_SEPARATOR, $xerxes_application_path). DIRECTORY_SEPARATOR;
+define('XERXES_APPLICATION_PATH', $xerxes_root . DIRECTORY_SEPARATOR . "application" . DIRECTORY_SEPARATOR);
+define('XERXES_LIBRARY_PATH', $xerxes_root . DIRECTORY_SEPARATOR . "library" . DIRECTORY_SEPARATOR);
 
-define('XERXES_APPLICATION_PATH', $xerxes_application_path); // application
-
-set_include_path( 
-	get_include_path() . PATH_SEPARATOR . 
-	$xerxes_application_path . PATH_SEPARATOR . 
-	$xerxes_application_path . "lib"
-);
+set_include_path( XERXES_LIBRARY_PATH . PATH_SEPARATOR . XERXES_APPLICATION_PATH . PATH_SEPARATOR . get_include_path() );
 
 /**
  * The global namespace array
@@ -86,7 +78,7 @@ function xerxes_autoload($class_name)
 	
 	if ( $found == false )
 	{
-		throw new Exception("The class '$class_name' does not appear to be part of any registered namespaces.");
+		$file_location = $class_name;
 	}
 	
 	// now everthing after the prefix should map to the file system
@@ -100,8 +92,6 @@ function xerxes_autoload($class_name)
 	{
 		$file_location .= '.php';
 	}
-	
-	// try to include it
 	
 	@include_once $file_location;
 	
