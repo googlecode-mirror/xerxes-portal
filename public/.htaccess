@@ -1,0 +1,28 @@
+# @author David Walker
+# @copyright 2009 California State University
+# @link http://xerxes.calstate.edu
+# @license http://www.gnu.org/licenses/
+# @version $Id$
+# @package Xerxes
+
+# block access to config files
+
+<FilesMatch "\.xml">
+
+	Order allow,deny
+	Deny from all
+
+</FilesMatch>
+
+# pretty urls
+
+<IfModule rewrite_module>
+	
+	RewriteEngine On
+	RewriteCond %{REQUEST_FILENAME} -s [OR]
+	RewriteCond %{REQUEST_FILENAME} -l [OR]
+	RewriteCond %{REQUEST_FILENAME} -d
+	RewriteRule ^.*$ - [NC,L]
+	RewriteRule ^.*$ index.php [NC,L]
+	
+</IfModule>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xerxes>
+	<configuration>
+		<config name="ebsco_databases" xml="true" pass="true">
+			<database id="aph" name="Academic Search Premier" />
+			<database id="ahl" name="America: History &amp; Life" />
+			<database id="chh" name="Cochrane Database of Systematic Reviews" />
+			<database id="buh" name="Business Source Premier" />
+			<database id="rzh" name="CINAHL Plus with Full Text" />
+			<database id="ufh" name="Communication &amp; Mass Media Complete" />
+			<database id="ecn" name="EconLit" />
+			<database id="qeh" name="Education Abstracts (H.W. Wilson)" />
+			<database id="eoah" name="E-Journals" />
+			<database id="eric" name="ERIC" />
+			<database id="geh" name="GeoRef" />
+			<database id="hia" name="Historical Abstracts" />
+			<database id="dah" name="Database of Abstracts of Reviews of Effects" />
+			<database id="cgh" name="Cochrane Central Register of Controlled Trials" />
+			<database id="lxh" name="Library, Information Science &amp; Technology Abstracts" />
+			<database id="mth" name="Military &amp; Government Collection" />		
+			<database id="kah" name="MLA Directory of Periodicals" />
+			<database id="mzh" name="MLA International Bibliography" />
+			<database id="pdh" name="PsycARTICLES" />
+			<database id="psyh" name="PsycINFO" />
+			<database id="bwh" name="Regional Business News" />
+			<database id="rih" name="RILM  Abstracts of Music Literature" />
+			<database id="sph" name="SPORTDiscus" />
+			<database id="guh" name="GeoRef In Process" />
+			<database id="8gh" name="GreenFILE" />
+			<database id="cja" name="Criminal Justice Abstracts" />
+		</config>	
+		<config name="ebsco_username">s7451176.main.eit</config>
+		<config name="ebsco_password">ebsco</config>
+
+		<config name="sort_options" xml="true" pass="true">
+			<option id="relevance" public="relevance" internal="relevance" />
+			<option id="date" public="date" internal="date" />
+			<option id="author" public="author" internal="author" />
+			<option id="title" public="title" internal="title" />
+		</config>
+		
+		<config name="basic_search_fields" xml="true" pass="true">
+			<field id="keyword" public="keyword" internal="" />
+			<field id="title" public="title" internal="TI" />
+			<field id="author" public="author" internal="AU" />
+			<field id="subject"  public="subject" internal="SU" />
+		</config>
+		
+	</configuration>
+	
+</xerxes>
