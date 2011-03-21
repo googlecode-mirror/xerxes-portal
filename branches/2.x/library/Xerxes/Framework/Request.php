@@ -274,7 +274,7 @@ class Xerxes_Framework_Request
 	
 	public function isMobileDevice()
 	{
-		require_once('lib/mobile/mobile_device_detect.php');		
+		require_once('library/mobile/mobile_device_detect.php');		
 		$is_mobile = @mobile_device_detect(true, false); // supress errors because this library is goofy
 		return $is_mobile[0];
 	}
