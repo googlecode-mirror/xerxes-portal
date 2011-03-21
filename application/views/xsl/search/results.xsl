@@ -112,7 +112,7 @@
 										</xsl:for-each>
 									</div>
 								</xsl:when>
-								<xsl:otherwise>&#160;</xsl:otherwise>
+								<xsl:otherwise>&nbsp;</xsl:otherwise>
 							</xsl:choose>
 						</div>
 					</div>
@@ -402,9 +402,7 @@
 					
 					<ul>
 					<xsl:for-each select="facets/facet[position() &lt;= 10 or count(../facet) &lt;= 12]">
-						<li>
-							<a href="{url}"><xsl:value-of select="name" /></a>&#160;(<xsl:value-of select="count" />)
-						</li>
+						<xsl:call-template name="facet_option" />
 					</xsl:for-each>
 					</ul>
 					
@@ -418,9 +416,7 @@
 						
 						<ul id="facet-list-{id}" class="facetListMore">
 							<xsl:for-each select="facets/facet[position() &gt; 10]">
-								<li>
-									<a href="{url}"><xsl:value-of select="name" /></a>&#160;(<xsl:value-of select="count" />) 
-								</li>
+								<xsl:call-template name="facet_option" />
 							</xsl:for-each>
 						</ul>
 						
@@ -438,6 +434,25 @@
 			<xsl:call-template name="sidebar_additional" />
 		
 		</xsl:if>
+	
+	</xsl:template>
+	
+	<xsl:template name="facet_option">
+	
+		<li>
+			<xsl:choose>
+				<xsl:when test="url">
+					<a href="{url}"><xsl:value-of select="name" /></a>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="name" />
+				</xsl:otherwise>
+			</xsl:choose>
+						
+			<xsl:if test="count">			
+				&nbsp;(<xsl:value-of select="count" />)
+			</xsl:if>
+		</li>
 	
 	</xsl:template>
 
