@@ -13,7 +13,5 @@
 
 chdir(dirname(__FILE__));
 
-require_once("../application/lib/framework/FrontController.php");
+require_once '../library/Xerxes/Framework/FrontController.php';
 Xerxes_Framework_FrontController::execute();
-
-?>

@@ -1,6 +1,6 @@
 <?php
 
-import("Summon", "lib/Summon/Summon.class.php");
+import("Summon", "library/Summon/Summon.class.php");
 
 /**
  * Summon Search Engine
