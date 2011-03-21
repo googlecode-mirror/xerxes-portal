@@ -1,0 +1,112 @@
+
+	
+	addEvent(window, 'load', addAjaxToFacetMoreLinks);
+	addEvent(window, 'load', minimizeFacets);
+
+	function addAjaxToFacetMoreLinks()
+	{		
+		var links = document.getElementsByTagName('a');
+		
+		for ( i = 0; i < links.length; i++)
+		{		
+			if ( /facetMoreOption/.test(links[i].className) )
+			{				
+				links[i].onclick = function () {
+					return showFacetMore(this.id)
+				}
+			}
+			else if ( /facetLessOption/.test(links[i].className) )
+			{				
+				links[i].onclick = function () {
+					return showFacetLess(this.id)
+				}
+			}
+		}
+	}
+	
+	function minimizeFacets()
+	{	
+		var lists = document.getElementsByTagName('ul');
+		
+		for ( i = 0; i < lists.length; i++)
+		{		
+			if ( /facetListMore/.test(lists[i].className) )
+			{				
+				$(lists[i]).hide();
+				
+				id = lists[i].id.replace("facet-list-", "");
+				$('facet-more-' + id).show();
+			}
+		}
+
+	}
+	
+	
+	function showFacetMore(id)
+	{
+		id = id.replace("facet-more-link-", "");
+		
+		$('facet-more-' + id).hide();
+		$('facet-list-' + id).show();
+		$('facet-less-' + id).show();
+		
+		return false;
+	}
+	
+	function showFacetLess(id)
+	{
+		id = id.replace("facet-less-link-", "");
+		
+		$('facet-more-' + id).show();
+		$('facet-list-' + id).hide();
+		$('facet-less-' + id).hide();
+		
+		return false;
+	}
+	
+	
+
+	addEvent(window, 'load', showHitCounts);
+	
+	function showHitCounts()
+	{
+		if ( $('query') )
+		{		
+			var links = document.getElementsByTagName('span');
+			
+			var query = $('query').value;
+			var field = $('field').value;
+			
+			for ( i = 0; i < links.length; i++)
+			{		
+				if ( /tabsHitNumber/.test(links[i].className) )
+				{
+					hitID = links[i].id;
+					arrElements = links[i].id.split(":");
+					base = arrElements[1];
+					source = arrElements[2];
+										
+					url = ".?base=" + base + "&action=hits&query=" + query + "&field=" + field;
+					
+					if ( source != '' )
+					{
+						url += "&source=" +  source;
+					}
+					
+					updateHitCount(url, hitID)
+				}
+			}
+		}
+	}
+	
+	function updateHitCount(url, hitID)
+	{
+		// only update on success
+		
+		new Ajax.Request(url, {
+			"onSuccess": function (ajaxRequest) {
+				$(hitID).update(ajaxRequest.responseText);
+			}
+		});	
+	}
+	

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xerxes>
+	<configuration>
+		<config name="link_resolver_address">http://localhost/sfx</config>
+		<config name="bx_token">not_a_real_token</config>
+		<config name="bx_service_url">http://localhost/bx</config>
+		<config name="rewrite" pass="true">true</config>
+		<config name="rdbms">mysql</config>
+		<config name="database_connection">mysql:host=localhost;dbname=xerxes</config>
+		<config name="database_username">xerxes</config>
+		<config name="database_password">password</config>
+	</configuration>
+</xerxes>
