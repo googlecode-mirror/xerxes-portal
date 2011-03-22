@@ -42,7 +42,7 @@ class Xerxes_Model_Ebsco_Engine extends Xerxes_Model_Search_Engine
 	{
 		// get the results
 		
-		$results = $this->doSearch($search, array(), 1, 1 );
+		$results = $this->doSearch($search, null, 1, 1 );
 
 		// return total
 		
@@ -64,7 +64,7 @@ class Xerxes_Model_Ebsco_Engine extends Xerxes_Model_Search_Engine
 	{
 		// get the results
 		
-		$results = $this->doSearch($search, array(), $start, $max, $sort);
+		$results = $this->doSearch($search, null, $start, $max, $sort);
 		
 		// do some stuff
 		
@@ -127,7 +127,7 @@ class Xerxes_Model_Ebsco_Engine extends Xerxes_Model_Search_Engine
 		
 		// get results
 		
-		$results = $this->doSearch("AN $id", array($database), 1, 1);
+		$results = $this->doSearch("AN $id", $database, 1, 1);
 		
 		return $results;
 	}
@@ -136,6 +136,7 @@ class Xerxes_Model_Ebsco_Engine extends Xerxes_Model_Search_Engine
 	 * Do the actual search
 	 * 
 	 * @param mixed $search							search object or string
+	 * @param string $database						[optional] database id
 	 * @param int $start							[optional] starting record number
 	 * @param int $max								[optional] max records
 	 * @param string $sort							[optional] sort order
@@ -143,7 +144,7 @@ class Xerxes_Model_Ebsco_Engine extends Xerxes_Model_Search_Engine
 	 * @return Xerxes_Model_Search_Results
 	 */		
 	
-	protected function doSearch( $search, $databases, $start, $max, $sort = "relevance")
+	protected function doSearch( $search, $database, $start, $max, $sort = "relevance")
 	{
 		// default for sort
 		
@@ -173,23 +174,48 @@ class Xerxes_Model_Ebsco_Engine extends Xerxes_Model_Search_Engine
 			$query = $search;
 		}
 		
-		// no database selected, so get 'em from config
+		// databases
 		
-		if ( count($databases) == 0 )
+		$databases = array();
+		
+		// we asked for this database specifically
+		
+		if ( $database != "" )
 		{
-			$databases_xml = $this->config->getConfig("EBSCO_DATABASES");
-			
-			if ( $databases_xml == "" )
-			{
-				throw new Exception("No databases defined");
-			}
-			
-			foreach ( $databases_xml->database as $database )
-			{
-				array_push($databases, (string) $database["id"]);
-			}
+			$databases = array($database);
 		}
 
+		// no database specifically defined, so ...
+		
+		else
+		{
+			// see if any supplied as facet limit
+			
+			foreach ( $search->getLimits(true) as $limit )
+			{
+				array_push($databases, $limit->value);
+			}
+			
+			// nope
+			
+			if ( count($databases) == 0)
+			{
+				// get 'em from config
+				
+				$databases_xml = $this->config->getConfig("EBSCO_DATABASES");
+				
+				if ( $databases_xml == "" )
+				{
+					throw new Exception("No databases defined");
+				}
+				
+				foreach ( $databases_xml->database as $database )
+				{
+					array_push($databases, (string) $database["id"]);
+				}
+			}
+		}
+		
 		// construct url
 		
 		$this->url = "http://eit.ebscohost.com/Services/SearchService.asmx/Search?" . 
@@ -231,6 +257,8 @@ class Xerxes_Model_Ebsco_Engine extends Xerxes_Model_Search_Engine
 		$results = new Xerxes_Model_Search_ResultSet($this->config);
 		
 		// get total
+		
+		$total = 0;
 		
 		$hits = $xml->getElementsByTagName("Hits")->item(0);
 		
@@ -377,6 +405,7 @@ class Xerxes_Model_Ebsco_Engine extends Xerxes_Model_Search_Engine
 				$facet = new Xerxes_Model_Search_Facet();
 				$facet->name = $this->config->getDatabaseName($database_id);
 				$facet->count = Xerxes_Framework_Parser::number_format( $database_hits );
+				$facet->key = $database_id;
 					
 				$group->addFacet($facet);
 			}
