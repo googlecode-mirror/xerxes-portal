@@ -64,7 +64,7 @@
 	
 			</div>
 			<div class="yui-u">
-				<div class="sidebar">
+				<div id="search-sidebar" class="sidebar">
 					<xsl:call-template name="search_sidebar" />
 				</div>
 			</div>
