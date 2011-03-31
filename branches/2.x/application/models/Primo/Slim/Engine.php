@@ -102,7 +102,7 @@ class Xerxes_Model_Primo_Slim_Engine extends Xerxes_Model_Primo_Engine
 			
 			// pci query manipulation
 			
-			$query = "($query) NOT (book review)";			
+			$query = "($query) OR title:($query) OR title:($query) NOT (book review)";			
 			
 			// pseudo-limits
 			

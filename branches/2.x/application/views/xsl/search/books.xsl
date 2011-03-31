@@ -32,12 +32,63 @@
 		add the book css and javascript to the header
 	-->	
 	
-	<xsl:template name="module-header">
-	
-		<link href="{$base_url}/css/books.css?xerxes_version={$xerxes_version}" rel="stylesheet" type="text/css" />
+	<xsl:template name="module-header"><link href="{$base_url}/css/books.css?xerxes_version={$xerxes_version}" rel="stylesheet" type="text/css" />
+		
 		<script type="application/javascript" src="javascript/availability.js"></script>
 	
 	</xsl:template>
+
+	<!-- 
+		TEMPLATE: RECORD
+		This one customized for a book-like display
+	-->
+
+	<xsl:template name="record">
+	
+		<div id="record">
+		
+			<xsl:for-each select="/*/results/records/record/xerxes_record">
+			
+				<div id="bookRecordBookCover" style="display:none">
+					<xsl:call-template name="book_jacket_full">
+						<xsl:with-param name="isbn" select="standard_numbers/isbn[string-length(text()) = 10]" />
+					</xsl:call-template>
+				</div>
+				
+				<div id="bookRecord">
+					
+					<!-- Title -->
+					
+					<h1><xsl:value-of select="title_normalized" /></h1>
+					
+					<!-- Basic record information (Author, Year, Format, Database, ...) -->
+					
+					<xsl:call-template name="record-summary" />
+					
+				</div>
+					
+				<div style="clear:both"></div>
+									
+					<!-- A box with actions for current record (get full-text, link to holdings, save record) -->
+					
+					<xsl:call-template name="record-actions" />
+					
+					<!-- Umlaut stuff -->
+					
+					<xsl:call-template name="umlaut" />
+		
+					<!-- Detailed record information (Summary, Topics, Standard numbers, ...) -->
+					
+					<xsl:call-template name="record-details" />
+				
+			</xsl:for-each>
+				
+			<!-- tag input -->
+			
+			<xsl:call-template name="hidden_tag_layers" />
+		</div>
+	</xsl:template>	
+
 
 	<!-- 
 		TEMPLATE: BRIEF RESULTS
@@ -74,7 +125,9 @@
 		<li class="result">
 		
 			<div class="bookCover">
-				<img src="http://images.amazon.com/images/P/{$isbn}.01.THUMBZZZ.jpg" alt="" class="book-jacket" />
+				<xsl:call-template name="book_jacket_brief">
+					<xsl:with-param name="isbn" select="$isbn" />
+				</xsl:call-template>
 			</div>
 		
 			<div class="bookResult">
@@ -168,6 +221,24 @@
 			</div>
 		</li>
 	
+	</xsl:template>
+
+	<!-- 
+		TEMPLATE: BOOK JACKET FULL
+	-->
+	
+	<xsl:template name="book_jacket_full">
+		<xsl:param name="isbn" />
+		<img src="http://images.amazon.com/images/P/{$isbn}.01.jpg" alt="" class="book-jacket-large" />
+	</xsl:template>
+
+	<!-- 
+		TEMPLATE: BOOK JACKET BRIEF
+	-->
+	
+	<xsl:template name="book_jacket_brief">
+		<xsl:param name="isbn" />
+		<img src="http://images.amazon.com/images/P/{$isbn}.01.THUMBZZZ.jpg" alt="" class="book-jacket" />
 	</xsl:template>
 	
 	<!-- 

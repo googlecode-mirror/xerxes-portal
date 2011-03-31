@@ -105,8 +105,8 @@
 			{			
 				if ( imgs[i].width != 1 )
 				{
-					$("worldcatRecordBookCover").show();
-					$("worldcatRecord").setStyle({'marginLeft': (imgs[i].width + 20) + 'px'});
+					$("bookRecordBookCover").show();
+					$("bookRecord").setStyle({'marginLeft': (imgs[i].width + 20) + 'px'});
 				}
 			}
 			else ( /book-jacket/.test(imgs[i].className) )
