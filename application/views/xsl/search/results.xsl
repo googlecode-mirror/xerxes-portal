@@ -147,8 +147,8 @@
 			
 			<xsl:call-template name="searchbox_hidden_fields_local" />
 	
-			<xsl:if test="request/sortkeys">
-				<input type="hidden" name="sortKeys" value="{request/sortkeys}" />
+			<xsl:if test="request/sort">
+				<input type="hidden" name="sort" value="{request/sort}" />
 			</xsl:if>
 	
 		<xsl:choose>
