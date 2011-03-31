@@ -22,6 +22,7 @@ class Xerxes_Record extends Xerxes_Marc_Record
 	protected $source = "";	// source database id
 	protected $database_name; // source database name
 	protected $record_id; // canonical record id
+	protected $score; // relevenace score
 
 	protected $format = ""; // format
 	protected $format_array = array(); // possible formats
@@ -2920,6 +2921,11 @@ class Xerxes_Record extends Xerxes_Marc_Record
 	public function hasPhysicalHoldings()
 	{
 		return $this->physical_holdings;
+	}
+	
+	public function setScore($score)
+	{
+		$this->score = $score;
 	}
 }
 

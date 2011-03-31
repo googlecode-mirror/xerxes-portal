@@ -38,6 +38,7 @@ class Xerxes_Model_Summon_Record extends Xerxes_Record
 		$this->database_name = "TBD";
 		
 		$this->record_id = $this->extractValue($document, "ID/0");
+		$this->score = $this->extractValue($document, "Score/0");
 		
 		// title
 		
