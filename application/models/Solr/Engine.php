@@ -342,6 +342,10 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 			}
 		}
 		
+		// make sure we get the score
+		
+		$this->url .= "&fl=*+score";
+		
 		
 		## get and parse the response
 
@@ -395,6 +399,7 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 			{
 				$id = null;
 				$format = null;
+				$score = null;
 				$xml_data = "";
 				
 				foreach ( $doc->str as $str )
@@ -442,11 +447,23 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 					}
 				}
 				
+				// score
+				
+				foreach ( $doc->float as $float )
+				{
+					if ( $float["name"] == "score" )
+					{
+						$score = (string) $float;
+					}
+				}
+				
+				
 				$record = new Xerxes_Model_Solr_Record();
 				$record->loadXML($xml_data);
 				
 				$record->setRecordID($id);
 				$record->setFormat($format);
+				$record->setScore($score);
 				
 				array_push($records, $record);
 			}
