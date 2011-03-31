@@ -370,7 +370,7 @@ class Xerxes_Helper
 		if ($escape_behavior == "strip")
 		{
 			$allow_tag_list = $objRegistry->getConfig ( "db_description_allow_tags", false, '' );
-			$arr_allow_tags = split ( ',', $allow_tag_list );
+			$arr_allow_tags = explode( ',', $allow_tag_list );
 			$param_allow_tags = '';
 			
 			foreach ( $arr_allow_tags as $tag )
