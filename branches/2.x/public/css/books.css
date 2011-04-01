@@ -1,9 +1,5 @@
 /** RESULTS **/
 
-li.result {
-	border-bottom: 1px dotted #ccc;
-}
-
 .bookCover {
 	width: 80px;
 	float: left; 
