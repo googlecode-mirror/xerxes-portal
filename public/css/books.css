@@ -1,14 +1,14 @@
 /** RESULTS **/
 
 .bookCover {
-	width: 70px;
+	width: 80px;
 	float: left; 
 	text-align: right;
 }
 
 .bookResult {
   border-left: 2px solid #CCCCCC;
-  margin-left: 69px;
+  margin-left: 79px;
   padding-left: 20px;
 }
 
