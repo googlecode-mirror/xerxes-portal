@@ -318,6 +318,7 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 			// harvard business: these links in business source premiere are not part of your subscription (5/26/10)
 			// proquest (umi): these links are not full-text (thanks jerry @ uni) (5/26/10)
 			// proquest (gateway): there doesn't appear to be a general rule to this, so only doing it for fiaf (5/26/10)
+			// primo central: no actual links here
 
 			if ( stristr ( $this->source, "METAPRESS_XML" ) || 
 				stristr ( $this->source, "EBSCO_RZH" ) || 
@@ -336,7 +337,8 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 				stristr ($this->source, "ELSEVIER_SCIRUS") ||
 				( stristr ($this->source,"EBSCO_BUSINESS") && strstr ($strUrl, "harvardbusinessonline")) ||
 				( strstr($strUrl, "proquest.umi.com") && strstr($strUrl, "Fmt=2") ) || 
-				( strstr($strUrl, "gateway.proquest.com") && strstr($strUrl, "xri:fiaf:article") )
+				( strstr($strUrl, "gateway.proquest.com") && strstr($strUrl, "xri:fiaf:article") ) ||
+				stristr ( $this->source, "NEWPC" )
 				)
 			{
 				// take it out so the parent class doesn't treat it as full-text
