@@ -88,6 +88,7 @@ class Xerxes_Model_Primo_Slim_Engine extends Xerxes_Model_Primo_Engine
 			
 			$term->phrase = str_replace('(', '', $term->phrase);
 			$term->phrase = str_replace(')', '', $term->phrase);
+			$term->phrase = str_replace('-', ' ', $term->phrase);
 			
 			if ( $term->field_internal != "" )
 			{
