@@ -931,7 +931,5 @@
 	
 	<xsl:template name="additional_record_links" />
 	<xsl:template name="additional_brief_record_data" />
-	<xsl:template name="additional_full_record_data_main" />
-	<xsl:template name="additional_full_record_data_supplemental" />
 	
 </xsl:stylesheet>

@@ -65,8 +65,11 @@
 					
 					<xsl:call-template name="record-summary" />
 					
-				</div>
+					<!-- google javascript lookup -->
 					
+					<xsl:call-template name="google_preview" />
+				</div>
+				
 				<div style="clear:both"></div>
 									
 					<!-- A box with actions for current record (get full-text, link to holdings, save record) -->
@@ -89,6 +92,21 @@
 		</div>
 	</xsl:template>	
 
+	<!--
+		TEMPLATE: RECORD ACTIONS
+	-->	
+	
+	<xsl:template name="record-actions">
+		<div id="recordFullText" class="raisedBox recordActions">
+			
+			<xsl:call-template name="availability">
+				<xsl:with-param name="context">record</xsl:with-param>
+			</xsl:call-template>			
+
+			<xsl:call-template name="save_record" />
+			
+		</div>
+	</xsl:template>
 
 	<!-- 
 		TEMPLATE: BRIEF RESULTS

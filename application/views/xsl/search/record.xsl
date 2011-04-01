@@ -81,6 +81,7 @@
 			<xsl:call-template name="record-degree" /> <!-- Degree -->
 			<xsl:call-template name="record-source" /> <!-- Source -->
 			<xsl:call-template name="record-database" /> <!-- Database -->
+			<xsl:call-template name="additional_full_record_data_main" />
 		</dl>
 	</xsl:template>
 
@@ -495,7 +496,7 @@
 	<xsl:template name="record-action-save" />
 	<xsl:template name="record-action-fulltext-catalog" />
 	<xsl:template name="record-action-fulltext-option" />
-
+	<xsl:template name="additional_full_record_data_main" />
 
 
 </xsl:stylesheet>
