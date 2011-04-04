@@ -86,9 +86,9 @@ class Xerxes_Model_Primo_Slim_Engine extends Xerxes_Model_Primo_Engine
 			$terms = $search->getQueryTerms();
 			$term = $terms[0];
 			
-			$term->phrase = str_replace('(', '', $term->phrase);
-			$term->phrase = str_replace(')', '', $term->phrase);
-			$term->phrase = str_replace('-', ' ', $term->phrase);
+			$term->phrase = str_replace(' ', '_', $term->phrase);
+			$term->phrase = preg_replace('/\W/', ' ', $term->phrase);
+			$term->phrase = str_replace('_', ' ', $term->phrase);			
 			
 			if ( $term->field_internal != "" )
 			{
