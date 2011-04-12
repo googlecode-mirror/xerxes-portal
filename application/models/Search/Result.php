@@ -18,7 +18,7 @@ class Xerxes_Model_Search_Result
 	public $xerxes_record; // record
 	public $original_record; // original xml
 	public $holdings; // holdings from an ils
-	public $recommendations = array(); // recommendations object	
+	public $recommendations = array(); // recommendation objects	
 	public $reviews; // reviews
 	
 	protected $registry; // global config

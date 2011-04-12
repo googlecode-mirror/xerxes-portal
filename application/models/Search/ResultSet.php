@@ -68,8 +68,19 @@ class Xerxes_Model_Search_ResultSet
 
 	public function addRecord( Xerxes_Record $record )
 	{
-		$record = new Xerxes_Model_Search_Result($record, $this->config);
-		array_push($this->records, $record);
+		$result = new Xerxes_Model_Search_Result($record, $this->config);
+		array_push($this->records, $result);
+	}
+
+	/**
+	 * Add a Xerxes Search Result to this result set
+	 * 
+	 * @param Xerxes_Model_Search_Result $result
+	 */	
+	
+	public function addResult( Xerxes_Model_Search_Result $result )
+	{
+		array_push($this->records, $result);
 	}
 	
 	/**

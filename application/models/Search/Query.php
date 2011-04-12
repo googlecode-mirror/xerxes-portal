@@ -61,6 +61,23 @@ class Xerxes_Model_Search_Query
 	}
 	
 	/**
+	 * Get a specific qury term
+	 *
+	 * @param int $id		the position of the term in the list of terms
+	 * @return Xerxes_Model_Search_QueryTerm
+	 */
+	
+	public function getQueryTerm($id)
+	{
+		if ( ! array_key_exists($id, $this->terms) )
+		{
+			throw new Exception("No query term with id '$id'");
+		}
+		
+		return $this->terms[$id];
+	}
+	
+	/**
 	 * Return the query terms
 	 * 
 	 * @return array
@@ -72,11 +89,34 @@ class Xerxes_Model_Search_Query
 	}
 	
 	/**
-	 * Return the limits
-	 * 
+	 * Get a specific limit
+	 *
+	 * @param string $id		the limit name
+	 * @return Xerxes_Model_Search_LimitTerm
+	 */
+	
+	public function getLimit($id)
+	{
+		foreach ( $this->limits as $limit )
+		{
+			if ( $limit->field == $id )
+			{
+				return $limit;
+			}
+		}
+		
+		// we didn't find it?
+		
+		return null;
+	}	
+	
+	/**
+	 * Return all limits
+	 *
+	 * @param bool $facets_to_field		whether to return facets with key convention as limits
 	 * @return array
 	 */
-
+	
 	public function getLimits($facets_to_field = false)
 	{
 		if ( $facets_to_field == false )
@@ -97,7 +137,8 @@ class Xerxes_Model_Search_Query
 				{
 					$parts = explode('.', $new_limit->field);
 					
-					// if it has 3 parts, it's our special 'key' convention
+					// if it has 3 parts, it's our special 'key' convention, where
+					// the third part is the value, so swap it in for the value
 					
 					if ( count($parts) == 3 )
 					{
@@ -107,7 +148,8 @@ class Xerxes_Model_Search_Query
 					}
 					else
 					{
-						// the field name is 
+						// the field name is the only thing there, value is already
+						// populated in the value of the limit object
 						
 						$new_limit->field = array_pop($parts);
 					}
