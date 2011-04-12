@@ -1096,8 +1096,8 @@ class csl_label extends csl_format {
           $plural = 'multiple';
         }
     }
-    if (isset($data['variable'])) {
-      $text = $this->citeproc->get_locale('term', $data['variable'], $form, $plural);
+    if (isset($data->variable)) {
+      $text = $this->citeproc->get_locale('term', $data->variable, $form, $plural);
     }
     if (empty($text)) {
     foreach ($variables as $variable) {
