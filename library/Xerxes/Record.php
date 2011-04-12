@@ -1744,6 +1744,42 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		return $objXml;
 	}
 	
+	public function toCslArray()
+	{
+		$citation = array();
+
+		$citation["title"] = $this->getTitle(true);
+		$citation["type"] = "book";
+		
+		// authors
+		
+		if ( count($this->authors) > 0 )
+		{
+			$citation["author"] = array();
+			
+			foreach ( $this->authors as $author )
+			{
+				$author_array = array(
+					"family" => $author->last_name, 
+					"given" => $author->first_name, 
+					"static-ordering" => "false"
+				);
+				
+				array_push($citation["author"], $author_array);
+			}
+		}
+		
+		if ( $this->getYear() != "" )
+		{
+			$citation["issued"]["date-parts"] = array(array($this->getYear()));
+		}
+		
+		$citation["publisher"] = $this->getPublisher(); 
+		$citation["publisher-place"] = $this->getPlace();
+		
+		return $citation;
+	}
+	
 	### PRIVATE FUNCTIONS ###	
 
 	private function createNode($key, $value, $objDocument, $objParent)
