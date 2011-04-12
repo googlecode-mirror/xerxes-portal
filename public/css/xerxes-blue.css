@@ -472,23 +472,14 @@ a.recordAction {
 	margin-left: 3em;
 }
 
-#folder_output_results li {
-	display: block;
-	margin-bottom: 1em;
-	clear: left;
-	padding: 1em;
-	border-bottom: 1px dashed #ccc;
+#folder_output_results thead td {
+	background-color: #efefef;
+	font-weight: bold;
 }
 
-#folder_output_results input {
-	display: block;
-	float: left;
-	width: 5em;
-}
-
-#folder_output_results label {
-	display: block;
-	margin-left: 5em;
+#folder_output_results td {
+	padding: .7em;
+	border: 1px solid #ccc;
 }
 
 .folderEmailSuccess {
