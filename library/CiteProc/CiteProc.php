@@ -1366,7 +1366,7 @@ class csl_locale  {
   private   $module_path;
 
   function __construct($lang = 'en') {
-    $this->module_path = '.';
+    $this->module_path = realpath(dirname(__FILE__));
     $this->locale = new SimpleXMLElement($this->get_locales_file_name($lang));
     if ($this->locale) {
       $this->locale->registerXPathNamespace('cs', 'http://purl.org/net/xbiblio/csl');
