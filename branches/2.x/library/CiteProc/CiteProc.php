@@ -315,7 +315,6 @@ class csl_format extends csl_rendering_element
 	}
 	function format($text)
 	{
-		echo "<br>data:$text|";
 		if ( empty($text) || $this->no_op )
 			return $text;
 		if ( isset($this->{'text-case'}) )
@@ -337,8 +336,6 @@ class csl_format extends csl_rendering_element
 					break;
 			}
 		}
-		if ( $text != "" )
-			echo "$text";
 		$prefix = $this->prefix . $this->quotes['open-quote'];
 		$suffix = $this->suffix;
 		if ( $this->quotes['close-quote'] && ! empty($suffix) && $this->quotes['punctuation-in-quote'] )
