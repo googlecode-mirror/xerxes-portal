@@ -1744,13 +1744,39 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		return $objXml;
 	}
 	
-	public function toCslArray()
+	/**
+	 * Return record in CSL array
+	 * 
+	 * @return array
+	 */
+	
+	public function toCSL()
 	{
 		$citation = array();
+		
+		// title
 
 		$citation["title"] = $this->getTitle(true);
-		$citation["type"] = "book";
 		
+		// format
+		
+		if ( $this->format == "Book" )
+		{
+			$citation["type"] = "book";
+			$citation["publisher"] = $this->getPublisher(); 
+			$citation["publisher-place"] = $this->getPlace();
+		}
+		else
+		{
+			// journal info
+			
+			$citation["type"] = "article-journal";
+			$citation["container-title"] = $this->getJournalTitle(true);
+			$citation["volume"] = $this->getVolume(); 
+			$citation["issue"] = $this->getIssue(); 
+			$citation["page"] = $this->getPages(); 
+		}
+			
 		// authors
 		
 		if ( count($this->authors) > 0 )
@@ -1762,20 +1788,18 @@ class Xerxes_Record extends Xerxes_Marc_Record
 				$author_array = array(
 					"family" => $author->last_name, 
 					"given" => $author->first_name, 
-					"static-ordering" => "false"
 				);
 				
 				array_push($citation["author"], $author_array);
 			}
 		}
 		
+		 // year
+		
 		if ( $this->getYear() != "" )
 		{
 			$citation["issued"]["date-parts"] = array(array($this->getYear()));
 		}
-		
-		$citation["publisher"] = $this->getPublisher(); 
-		$citation["publisher-place"] = $this->getPlace();
 		
 		return $citation;
 	}
@@ -2855,6 +2879,18 @@ class Xerxes_Record extends Xerxes_Marc_Record
 	public function getEndPage()
 	{
 		return $this->end_page;
+	}
+	
+	public function getPages()
+	{
+		$pages = $this->start_page;
+		
+		if ( $this->getEndPage() != "" )
+		{
+			$pages .= "-" . $this->getEndPage();
+		}
+		
+		return $pages;
 	}
 	
 	public function getExtent()
