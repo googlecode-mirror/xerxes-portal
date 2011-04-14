@@ -20,6 +20,48 @@ class Xerxes_Controller_Folder extends Xerxes_Controller_Search
 		
 		$this->response->add("config_local", $this->config->toXML());
 	}
+	
+	public function citation()
+	{
+		parent::results();
+		
+		$style = $this->request->getParam("style", false, "mla");
+
+		$items = array();
+		
+		$results = $this->response->get("results");
+		
+		// header("Content-type: application/json");
+		
+		$x = 1;
+		
+		foreach ( $results->getRecords() as $result )
+		{
+			$id = "ITEM=$x";
+			
+			$record = $result->getXerxesRecord()->toCSL();
+			$record["id"] = $id;
+			
+			$items[$id] = $record;
+			$x++;
+		}
+		
+		$json = json_encode(array("items" => $items));
+		
+		// header("Content-type: application/json"); echo $json; exit;
+		
+		$url = "http://127.0.0.1:8085?responseformat=html&style=$style";
+		
+		$client = new Zend_Http_Client();
+		$client->setUri($url);
+		$client->setHeaders("Content-type: application/json");
+		$client->setRawData($json)->setEncType('application/json');
+		
+		$response = $client->request('POST')->getBody();;
+		
+		echo $response;
+		exit;
+	}
 
 	protected function currentParams()
 	{
