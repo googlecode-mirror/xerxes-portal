@@ -6,7 +6,13 @@ spl_autoload_register('xerxes_autoload');
 
 // paths
 
-$xerxes_root = realpath(dirname(__FILE__) . "../../../../");
+$xerxes_root = realpath(dirname(__FILE__));
+
+$xerxes_root = explode(DIRECTORY_SEPARATOR, $xerxes_root);
+array_pop($xerxes_root);
+array_pop($xerxes_root);
+array_pop($xerxes_root);
+$xerxes_root = implode(DIRECTORY_SEPARATOR, $xerxes_root);
 
 define('XERXES_APPLICATION_PATH', $xerxes_root . DIRECTORY_SEPARATOR . "application" . DIRECTORY_SEPARATOR);
 define('XERXES_LIBRARY_PATH', $xerxes_root . DIRECTORY_SEPARATOR . "library" . DIRECTORY_SEPARATOR);
