@@ -93,7 +93,7 @@ class Xerxes_Framework_Parser
 	
 		// the 'local' xsl lives here
 		
-		$local_xsl_dir = $objRegistry->getConfig("LOCAL_DIRECTORY", true) . "/";
+		$local_xsl_dir = $objRegistry->getConfig("LOCAL_DIRECTORY", true) . "/views/";
 		$local_path =  $local_xsl_dir . $strXsltRelPath;
 		      
 		// the 'distro' xsl lives here
