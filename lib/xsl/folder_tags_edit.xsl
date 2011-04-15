@@ -33,13 +33,12 @@
 			<xsl:when test="/*/request/context and /*/request/context != ''">
 				<xsl:value-of select="/*/request/context" />
 			</xsl:when>
-			<xsl:otherwise>the saved records page</xsl:otherwise>
+			<xsl:otherwise><xsl:value-of select="text_folder_tags_edit_return_to_records" /></xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
 	
-	<h1>Your labels have been updated</h1>
-	<p>Return to <a href="{$back}"><xsl:value-of select="$context" /></a></p>	
-
+	<h1><xsl:value-of select="text_folder_tags_edit_updated" /></h1>
+	<p><xsl:value-of select="text_folder_tags_edit_return" /><a href="{$back}"><xsl:value-of select="$context" /></a></p>
 	
 </xsl:template>
 </xsl:stylesheet>
