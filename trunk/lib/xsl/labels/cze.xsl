@@ -179,7 +179,11 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	<xsl:variable name="text_folder_records_export">Exportovat záznamy</xsl:variable>
 	<xsl:variable name="text_folder_refworks_pagename">Exportovat do Refworks</xsl:variable>
 	<xsl:variable name="text_folder_return">Zpět na výsledky vyhledávání</xsl:variable>
-
+	
+	<xsl:variable name="text_folder_tags_edit_updated">Vaše štítky byli aktualizovány</xsl:variable>
+	<xsl:variable name="text_folder_tags_edit_return">Zpět na </xsl:variable>
+	<xsl:variable name="text_folder_tags_edit_return_to_records">stránku uložených záznamů</xsl:variable>
+	
 	<xsl:variable name="text_header_collections">Moje uložené databáze</xsl:variable>
 	<xsl:variable name="text_header_collections_subcat">Databáze</xsl:variable>
 	<xsl:variable name="text_header_embed">Vložit</xsl:variable>

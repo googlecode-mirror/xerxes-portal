@@ -179,7 +179,11 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	<xsl:variable name="text_folder_records_export">Records to export</xsl:variable>
 	<xsl:variable name="text_folder_refworks_pagename">Export to Refworks</xsl:variable>
 	<xsl:variable name="text_folder_return">Return to search results</xsl:variable>
-
+	
+	<xsl:variable name="text_folder_tags_edit_updated">Your labels have been updated</xsl:variable>
+	<xsl:variable name="text_folder_tags_edit_return">Return to </xsl:variable>
+	<xsl:variable name="text_folder_tags_edit_return_to_records">the saved records page</xsl:variable>
+	
 	<xsl:variable name="text_header_collections">My Saved Databases</xsl:variable>
 	<xsl:variable name="text_header_collections_subcat">Databases</xsl:variable>
 	<xsl:variable name="text_header_embed">Embed</xsl:variable>
