@@ -68,7 +68,10 @@
 								$strUrl .= "&url=" . urlencode($arrLink[1]);	
 							}
 							
-							$strUrl .= "&database=" .  $objRecord->getMetalibID();								
+							if ( method_exists($objRecord, "getMetalibID") )
+							{
+								$strUrl .= "&database=" .  $objRecord->getMetalibID();
+							}
 						}
 					}
 				}
