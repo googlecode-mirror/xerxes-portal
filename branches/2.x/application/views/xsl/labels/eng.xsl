@@ -4,7 +4,7 @@
 
  author: David Walker
  copyright: 2009 California State University
- version: $Id: eng.xsl 1623 2011-01-21 23:23:59Z dwalker@calstate.edu $
+ version: $Id: eng.xsl 1898 2011-04-15 11:26:15Z helix84@centrum.sk $
  package: Xerxes
  link: http://xerxes.calstate.edu
  license: http://www.gnu.org/licenses/
@@ -179,7 +179,11 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	<xsl:variable name="text_folder_records_export">Records to export</xsl:variable>
 	<xsl:variable name="text_folder_refworks_pagename">Export to Refworks</xsl:variable>
 	<xsl:variable name="text_folder_return">Return to search results</xsl:variable>
-
+	
+	<xsl:variable name="text_folder_tags_edit_updated">Your labels have been updated</xsl:variable>
+	<xsl:variable name="text_folder_tags_edit_return">Return to </xsl:variable>
+	<xsl:variable name="text_folder_tags_edit_return_to_records">the saved records page</xsl:variable>
+	
 	<xsl:variable name="text_header_collections">My Saved Databases</xsl:variable>
 	<xsl:variable name="text_header_collections_subcat">Databases</xsl:variable>
 	<xsl:variable name="text_header_embed">Embed</xsl:variable>
