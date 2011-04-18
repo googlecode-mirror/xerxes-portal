@@ -258,7 +258,7 @@
 	<xsl:call-template name="css_include" />
 	<xsl:call-template name="header" />
 	<xsl:call-template name="surround-google-analytics" />
-	<xsl:if test="request/base='folder' and request/action = 'home'">
+	<xsl:if test="(request/base='folder' and request/action = 'home') or (request/base='metasearch' and request/action = 'results')">
 		<xsl:call-template name="surround-tags-combo" />
 	</xsl:if>
 	</head>
