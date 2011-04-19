@@ -1,7 +1,5 @@
 <?php
 
-require_once 'Summon/Summon.class.php';
-
 /**
  * Summon Search Engine
  * 
@@ -31,7 +29,7 @@ class Xerxes_Model_Summon_Engine extends Xerxes_Model_Search_Engine
 		$id = $config->getConfig("SUMMON_ID", true);
 		$key = $config->getConfig("SUMMON_KEY", true);		
 				
-		$this->client = new Summon($id, $key);
+		$this->client = new Xerxes_Summon($id, $key);
 	}
 	
 	/**

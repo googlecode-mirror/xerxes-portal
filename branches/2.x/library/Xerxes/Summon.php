@@ -1,31 +1,6 @@
 <?php
-/**
- *
- * Copyright (C) Serials Solutions 2009.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License version 2,
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- */
-require_once 'HTTP/Request.php';
-/**
- * Summon REST API Interface
- *
- * @version     $Revision$
- * @author      Andrew S. Nagy <asnagy@gmail.com>
- * @access      public
- */
-class Summon
+
+class Xerxes_Summon
 {
 	/**
 	 * A boolean value determining whether to print debug information
@@ -77,14 +52,13 @@ class Summon
 		$this->host = 'http://api.summon.serialssolutions.com';
 		$this->apiId = $apiId;
 		$this->apiKey = $apiKey;
-		$this->client = new HTTP_Request(null, array('useBrackets' => false));
+		$this->client = new Zend_Http_Client();
 	}
 	
 	/**
 	 * Retrieves a document specified by the ID.
 	 *
 	 * @param   string  $id         The document to retrieve from the Summon API
-	 * @access  public
 	 * @throws  object              PEAR Error
 	 * @return  string              The requested resource
 	 */
@@ -96,17 +70,8 @@ class Summon
 			echo "<pre>Get Record: $id</pre>\n";
 		}
 		
-		// Query String Parameters
-		
 		$options = array('s.st' => "id,$id");
-		$result = $this->call($options);
-		
-		if ( PEAR::isError($result) )
-		{
-			PEAR::raiseError($result);
-		}
-		
-		return $result;
+		return $this->call($options);
 	}
 	
 	/**
@@ -196,33 +161,20 @@ class Summon
 		
 		// $options['s.ho'] = 'true';
 		
-		$result = $this->call($options);
-		
-		if ( PEAR::isError($result) )
-		{
-			PEAR::raiseError($result);
-		}
-		
-		return $result;
+		return $this->call($options);
 	}
 	
 	/**
-	 * Submit REST Request
+	 * Submit request
 	 *
 	 * @param   array       $params     An array of parameters for the request
 	 * @param   string      $service    The API Service to call
-	 * @param   string      $method     The HTTP Method to use
+	 * 
 	 * @return  string                  The response from the Summon API
-	 * @access  private
 	 */
 	
-	private function call($params = array(), $service = 'search', $method = 'POST')
+	private function call($params = array(), $service = 'search')
 	{
-		$this->client->setURL($this->host . '/' . $service);
-		//$this->client->setMethod($method);
-		
-		$this->client->setMethod('GET');
-		
 		// Build Query String
 		
 		$query = array();
@@ -246,11 +198,12 @@ class Summon
 		
 		asort($query);
 		$queryString = implode('&', $query);
-		$this->client->addRawQueryString($queryString);
+
+		$this->client->setUri($this->host . "/$service?" . $queryString);		
 		
 		if ( $this->debug )
 		{
-			echo "<pre>$method: ";
+			echo "<pre>";
 			print_r($this->host . "/$service?" . $queryString);
 			echo "</pre>\n";
 		}
@@ -268,47 +221,20 @@ class Summon
 		
 		foreach ( $headers as $key => $value )
 		{
-			$this->client->addHeader($key, $value);
+			$this->client->setHeaders($key, $value);
 		}
-		
-		$this->client->addHeader('Authorization', "Summon $this->apiId;$hmacHash");
+
+		$this->client->setHeaders("Authorization: Summon $this->apiId;$hmacHash");
 		
 		if ( $this->sessionId )
 		{
-			$this->client->addHeader('x-summon-session-id', $this->sessionId);
+			$this->client->setHeaders('x-summon-session-id', $this->sessionId);
 		}
 		
 		// Send Request
 		
-		$result = $this->client->sendRequest($service . '?');
-		
-		if ( ! PEAR::isError($result) )
-		{
-			return $this->_process($this->client->getResponseBody());
-		}
-		else
-		{
-			return $result;
-		}
-	}
-	
-	private function _process($result)
-	{
-		// Unpack JSON Data
-		if ( $result = json_decode($result, true) )
-		{
-			// Catch errors from Summon
-			if ( ! $result )
-			{
-				PEAR::raiseError(new PEAR_Error('Unable to process query<br>Server Returned:' . $errorMsg));
-			}
-		}
-		else
-		{
-			return null;
-		}
-		
-		return $result;
+		$response = $this->client->request()->getBody();
+		return json_decode($response, true);
 	}
 	
 	private function hmacsha1($key, $data)
