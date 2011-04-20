@@ -2702,6 +2702,48 @@
 		<script src="{$base_include}/javascript/onload.js" language="javascript" type="text/javascript"></script>
 		<script src="{$base_include}/javascript/prototype.js" language="javascript" type="text/javascript"></script>
 		<script src="{$base_include}/javascript/scriptaculous/scriptaculous.js" language="javascript" type="text/javascript"></script>
+		<script src="{$base_include}/javascript/jquery-1.5.2.min.js" language="javascript" type="text/javascript"></script>
+		<!--script src="{$base_include}/javascript/jquery.highlight-3.yui.js" language="javascript" type="text/javascript"></script-->
+		<script src="{$base_include}/javascript/jquery.highlight-3.js" language="javascript" type="text/javascript"></script>
+		<script type="text/javascript">
+			jQuery.noConflict(); <!-- don't use the $() abbreviation to avoid conflict with prototype.js -->
+		<xsl:if test="request/base='metasearch' and request/action = 'results'">
+			
+			addEvent(window, 'load', highlightSearchTerms );
+			
+			var highlighting = true;
+			 
+			function highlightTerms(terms)
+			{
+				for (var i=0; i &lt; terms.length; i++)
+					jQuery('div').highlight(terms[i]);
+			}
+			
+			function highlightSearchTerms()
+			{
+				// add this link if javascript is on
+				jQuery("#toggleHighlightingDiv").html('<a href="javascript:toggleHighlighting()" id="toggleHighlighting"><xsl:copy-of select="$text_results_highlighting_turn_off" /></a>');
+				
+				if (jQuery('#query').length) { // if such element exists
+					terms = jQuery('#query').val().split(' ');
+					highlightTerms(terms);
+				}
+			}
+			
+			function toggleHighlighting()
+			{
+				if (highlighting) {
+					jQuery('#toggleHighlighting').html('<xsl:copy-of select="$text_results_highlighting_turn_on" />');
+					jQuery('div').removeHighlight();
+					highlighting = false;
+				} else {
+					jQuery('#toggleHighlighting').html('<xsl:copy-of select="$text_results_highlighting_turn_off" />');
+					highlightSearchTerms();
+					highlighting = true;
+				}
+			}
+		</xsl:if>
+		</script>
 		
 		<!-- fancy message display -->
 		
