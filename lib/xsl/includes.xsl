@@ -483,7 +483,10 @@
 	function textSet(idEdit, text)
 	{
 		oEdit = document.getElementById(idEdit);
-		var s = oEdit.value += ',' + text;
+		var s = '';
+		if (oEdit.value != '')
+			s = oEdit.value + ',';
+		s += text;
 		oEdit.value = s.split(',').trim(' ').dedup().join(', ');
 		oOverMenu = false;
 		mouseSelect(0);
