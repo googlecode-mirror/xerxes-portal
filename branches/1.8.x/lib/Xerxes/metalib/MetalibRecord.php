@@ -295,7 +295,6 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 		{
 			$strDisplay = $link->subfield("z")->__toString();
 			$strUrl = $link->subfield( "u" )->__toString();
-			$strEbscoFullText = $link->subfield( "i" )->__toString();
 			
 			// bad links
 			
@@ -347,34 +346,52 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 				array_push ( $this->links, array ($strDisplay, $strUrl, "original_record" ) );
 			}
 			
-			// ebsco html
-			
-			// there is (a) an indicator from ebsco that the record has full-text, or 
-			// (b) an abberant 856 link that doesn't work, but the construct link will work, 
-			// so we take that as something of a full-text indicator
+			// ebsco 
 
-			elseif (strstr ( $this->source, "EBSCO" ) && (strstr ( $strEbscoFullText, "T" ) || strstr ( $strDisplay, "View Full Text" )))
+			elseif ( stristr ( $this->source, "EBSCO" ) )
 			{
-				$str001 = $this->controlfield("001")->__toString();
-				$str016 = $this->datafield("016")->subfield("a")->__toString();
+				$strEbscoFullText = $link->subfield( "i" )->__toString();
+				$ebsco_fulltext_type = "";
 				
-				// see if there are any non-alphanumeric[A-Za-z00-9_] characters in the 001
+				// html
 				
-				$bolAlpha001 = preg_match('/\W/', $str001);
-				
-				// if so, and there is a 016, use that instead, if not go ahead and use 
-				// the 001; if neither do nothing
-				
-				if ( $bolAlpha001 == true && $str016 != "" )
+				// there is (a) an indicator from ebsco that the record has full-text, or 
+				// (b) an abberant 856 link that doesn't work, but the construct link will work, 
+				// so we take that as something of a full-text indicator
+							
+				if ( strstr($strEbscoFullText, "T") || strstr($strDisplay, "View Full Text" ) )
 				{
-					array_push ( $this->links, array ($strDisplay, array ("016" => $str016 ), "html" ) );
+					$ebsco_fulltext_type = "html";
 				}
-				elseif ( $bolAlpha001 == false )
+				elseif ( strstr($link->subfield( "az" )->__toString(), "PDF") )
 				{
-					array_push ( $this->links, array ($strDisplay, array ("001" => $str001 ), "html" ) );
+					$ebsco_fulltext_type = "pdf";
 				}
-
-				unset($link);
+				
+				if ( $ebsco_fulltext_type != "" )
+				{
+					$str001 = $this->controlfield("001")->__toString();
+					$str016 = $this->datafield("016")->subfield("a")->__toString();
+					
+					// see if there are any non-alphanumeric[A-Za-z00-9_] characters in the 001
+					
+					$bolAlpha001 = preg_match('/\W/', $str001);
+					
+					// if so, and there is a 016, use that instead, if not go ahead and use 
+					// the 001; if neither do nothing
+					
+					if ( $bolAlpha001 == true && $str016 != "" )
+					{
+						array_push ( $this->links, array ($strDisplay, array ("016" => $str016 ), $ebsco_fulltext_type ) );
+					}
+					elseif ( $bolAlpha001 == false )
+					{
+						array_push ( $this->links, array ($strDisplay, array ("001" => $str001 ), $ebsco_fulltext_type ) );
+					}
+	
+					$link->tag = "XXX";
+					array_push ( $this->links, array ($strDisplay, $strUrl, "original_record" ) );
+				}
 			} 
 		}
 
