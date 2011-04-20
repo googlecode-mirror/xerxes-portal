@@ -373,9 +373,9 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 					$str001 = $this->controlfield("001")->__toString();
 					$str016 = $this->datafield("016")->subfield("a")->__toString();
 					
-					// see if there are any non-alphanumeric[A-Za-z00-9_] characters in the 001
+					// see if the id number is 'dirty'
 					
-					$bolAlpha001 = preg_match('/\W/', $str001);
+					$bolAlpha001 = preg_match('/^\W/', $str001);
 					
 					// if so, and there is a 016, use that instead, if not go ahead and use 
 					// the 001; if neither do nothing
