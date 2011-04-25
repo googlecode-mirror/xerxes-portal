@@ -335,9 +335,9 @@ Suppress full-text links in the specified databases.
   * default value: none
   * available since: 1.7
 
-Enter the "source" (the parser name) or metalib ID of the databases that should not show their full-text link.  Separate multiple entries with a comma.  
+Enter the configuration code or metalib ID of the databases that should not show full-text links.  Separate multiple entries with a comma.  
 
-For example: `JSTOR_XML, CAL10458`.  In this example, `JSTOR_XML` would cover all JSTOR databases.  While `CAL10458` would cover one specific database in our Metalib KB (this one happens to be Project Muse in our test instance).  So you can mix and match source names and IDs. 
+For example: `JSTOR_XML, CAL10458`.  In this example, `JSTOR_XML` would cover all JSTOR databases.  While `CAL10458` would cover one specific database (this one happens to be Project Muse in our test instance).  So you can mix and match source names and IDs. 
 
 ==group==
 
