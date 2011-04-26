@@ -330,7 +330,8 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 				stristr ( $this->source, "EVII" ) || 
 				stristr ( $this->source, "WILEY_IS" ) || 
 				(stristr ( $this->source, "OXFORD_JOU" ) && ! strstr ( $strUrl, "content/full/" )) || 
-				(strstr ( $this->source, "GALE" ) && ! strstr( $this->source, "GALE_GVRL") && ! in_array ( "Text available", $notes )) || 
+				(strstr ( $this->source, "GALE" ) && ! strstr( $this->source, "GALE_GVRL") 
+					&& ! strstr( $this->source, "GALE_OPP_VIEW") && ! in_array ( "Text available", $notes )) || 
 				stristr ( $this->source, "IEEE_XPLORE" ) || 
 				stristr ($this->source, "ELSEVIER_SCOPUS") ||
 				stristr ($this->source, "ELSEVIER_SCIRUS") ||
