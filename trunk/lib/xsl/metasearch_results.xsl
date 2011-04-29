@@ -128,9 +128,6 @@
 						</xsl:when>
 						<xsl:otherwise>&#160;</xsl:otherwise>
 					</xsl:choose>
-					<div id='toggleHighlightingDiv'>
-						<!-- the link here will be added by javascript -->
-					</div>
 				</div>
 			</div>
 		</div>
