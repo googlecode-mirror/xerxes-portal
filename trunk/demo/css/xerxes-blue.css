@@ -257,7 +257,7 @@ a:hover {
 
 .raisedBox {
 	padding: 1.8em;
-	background-image: url(../images/bg.png);
+	background-image: url(../images/bg.gif);
 	background-repeat: repeat-x;
 	background-position: bottom;
 	border-top-width: 1px;
@@ -583,10 +583,14 @@ ul.addDatabasesMatches li {
 	margin-bottom: 2.6em;
 }
 
-
 #sortOptions {
 	text-align: right;
 }	
+
+.highlight {
+	font-weight: bold;
+	font-style: italic;
+}
 
 .result {
 	margin-bottom: 3em;
@@ -991,21 +995,3 @@ div.autocomplete ul li {
 .embedInfo {
 	border: 0px none;
 }
-
-/* combo box for selecting tags */
-.combo-button {
-	height:23px;
-	width:22px;
-	font-family:helvetica;
-}
-.combo-div {
-	position:absolute;
-	display:none;
-	top:0px;
-	left:0px;
-	z-index:10000;
-}
-.combo-select {
-	width:180px;
-}
-

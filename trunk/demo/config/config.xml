@@ -450,6 +450,10 @@
 		<!-- whether to show a search box in the database detail page -->
 		
 		<config name="show_db_detail_search" pass="true">true</config>
+
+		<!-- highlight search terms in search results -->
+		
+		<config name="highlighting" pass="true">false</config>
 		
 		<!-- open window for full text and sfx links.
 		
