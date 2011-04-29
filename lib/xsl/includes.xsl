@@ -258,9 +258,6 @@
 	<xsl:call-template name="css_include" />
 	<xsl:call-template name="header" />
 	<xsl:call-template name="surround-google-analytics" />
-	<xsl:if test="(request/base='folder' and request/action = 'home') or (request/base='metasearch' and request/action = 'results')">
-		<xsl:call-template name="surround-tags-combo" />
-	</xsl:if>
 	</head>
 </xsl:template>
 
@@ -338,7 +335,7 @@
 			var _gaq = _gaq || [];
 			_gaq.push(['_setAccount', '<xsl:value-of select="//config/google_analytics"/>']);
 			_gaq.push(['_trackPageview']);
-			
+
 			(function() {
 			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
 			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
@@ -346,165 +343,6 @@
 			})();
 		</script>
 	</xsl:if>
-</xsl:template>
-
-<!-- 
-	TEMPLATE: surround-tags-combo
-	Script to display combo boxes for selecting tags
--->
-<xsl:template name="surround-tags-combo">
-	<script type="text/javascript">
-	
-	var menuitems = Array (
-		<xsl:for-each select="//tags/tag">
-			'<xsl:value-of select="@label" />',
-		</xsl:for-each>
-		false
-	);
-	menuitems.pop(menuitems.length);
-	
-	String.prototype.ltrim = function(chars) {
-		return(this.replace(new RegExp("^[" + chars + "]+", "g"), ""));
-	}
-	
-	String.prototype.rtrim = function(chars) {
-		return(this.replace(new RegExp("[" + chars + "]+$", "g"), ""));
-	}
-	
-	String.prototype.trim = function(chars) {
-		return(this.ltrim(chars).rtrim(chars));
-	}
-	
-	Array.prototype.trim = function(chars)
-	{
-		return this.map(function(i) { return i.trim(chars); });
-	};
-	
-	Array.prototype.clean = function(a)
-	{
-		return this.filter(function(i) { return i !== null &amp;&amp; i !== ',' &amp;&amp; i !== ''; });
-	}
-	
-	// source: http://stackoverflow.com/questions/1187518/javascript-array-difference
-	
-	Array.prototype.diff = function(a)
-	{
-		return this.filter(function(i) {return !(a.indexOf(i) > -1); });
-	};
-	
-	// source: http://feather.elektrum.org/appendix/array-ext.html
-	
-	Array.prototype.dedup = function()
-	{
-		var newArray = new Array();
-		var seen = new Object();
-		for (var i = 0; i &lt; this.length; i++) {
-			if ( seen[ this[i] ] ) continue;
-			newArray.push(this[i]);
-			seen[this[i]] = 1;
-		}
-		return newArray;
-	}
-	
-	function checkNewItems(idSel)
-	{
-		// retrieve all tags from all editfields
-		var aoTags = document.getElementsByName("tags");
-		var arr = Array();
-		
-		for (i = 0; i &lt; aoTags.length; i++)
-		{
-			arr = arr.concat(aoTags[i].value.split(',').trim(' '));
-		}
-		
-		// merge saved tags and tags from editboxes and deduplicate
-		arr = menuitems.concat(arr).dedup().clean();
-		
-		var oSel = document.getElementById(idSel);
-		
-		// remove all options
-		while (oSel.hasChildNodes()) {
-			oSel.removeChild(oSel.lastChild);
-		}
-		
-		// add all current tags back as options
-		for (var i=0; i &lt; arr.length; i++)
-		{
-				oOption = document.createElement('option'); 
-				oOption.text = arr[i];
-				oOption.value = arr[i]; 
-				oSel.options.add(oOption);
-		}
-	}
-	
-	// source: http://www.vttoth.com/htmcombo.htm
-	
-	var fActiveMenu = false;
-	var oOverMenu = false;
-	
-	function mouseSelect(e)
-	{
-		if (fActiveMenu)
-		{
-			if (oOverMenu == false)
-			{
-				document.getElementById(fActiveMenu).style.display = "none";
-				fActiveMenu = false;
-			}
-		}
-	}
-	
-	function menuActivate(idEdit, idMenu, idSel)
-	{
-		checkNewItems(idSel);
-		if (fActiveMenu) return mouseSelect(0);
-		
-		var oMenu = document.getElementById(idMenu);
-		var oEdit = document.getElementById(idEdit);
-		var nTop = oEdit.offsetTop + oEdit.offsetHeight;
-		var nLeft = oEdit.offsetLeft;
-/*
-		while (oEdit.offsetParent != document.body)
-		{
-			oEdit = oEdit.offsetParent;
-			nTop += oEdit.offsetTop;
-			nLeft += oEdit.offsetLeft;
-		}
-*/
-		oMenu.style.left = nLeft;
-		oMenu.style.top = nTop;
-		
-		oMenu.style.display = "block";
-		fActiveMenu = idMenu;
-		document.getElementById(idSel).focus();
-		return false;
-	}
-	
-	function textSet(idEdit, text)
-	{
-		oEdit = document.getElementById(idEdit);
-		var s = '';
-		if (oEdit.value != '')
-			s = oEdit.value + ',';
-		s += text;
-		oEdit.value = s.split(',').trim(' ').dedup().join(', ');
-		oOverMenu = false;
-		mouseSelect(0);
-		document.getElementById(idEdit).focus();
-	}
-	
-	function comboKey(idEdit, idSel)
-	{
-		if (window.event.keyCode == 13 || window.event.keyCode == 32)
-			textSet(idEdit,idSel.value);
-		else if (window.event.keyCode == 27)
-		{
-			mouseSelect(0);
-			document.getElementById(idEdit).focus();
-		}
-	}
-	document.onmousedown = mouseSelect;
-	</script>
 </xsl:template>
 
 <!-- 
@@ -937,8 +775,8 @@
 <xsl:template name="tag_input">
 	<xsl:param name="record" select="." />
 	<xsl:param name="id" select="$record/id" /> 
-	<xsl:param name="context"><xsl:value-of select="text_folder_tags_edit_return_to_records" /></xsl:param>
-	
+	<xsl:param name="context">the saved records page</xsl:param>
+
 	<div class="folderLabels recordAction" id="tag_input_div-{$id}">
 		<form action="./" method="get" class="tags">
 		
@@ -965,27 +803,7 @@
 			
 			<label for="tags-{$id}"><xsl:copy-of select="$text_records_tags" /></label>
 			
-			<input type="text" name="tags" id="tags-{$id}" class="tagsInput" value="{$tag_list}" />
-			
-			<xsl:if test="count(//tags/tag) != 0">
-				<input type="button" hidefocus="1" value="&#9660;" class="combo-button"
-					onclick="javascript:menuActivate('tags-{$id}', 'combodiv-{$id}', 'combosel-{$id}')" />
-				
-				<div id="combodiv-{$id}" class="combo-div"
-					onmouseover="javascript:oOverMenu='combodiv';"
-					onmouseout="javascript:oOverMenu=false;">
-					
-					<select size="10" id="combosel-{$id}" class="combo-select"
-						onclick="javascript:textSet('tags-{$id}', this.value);"
-						onkeypress="javascript:comboKey('tags-{$id}', this);">
-						
-						<xsl:for-each select="//tags/tag">
-							<option value="{@label}"><xsl:value-of select="@label" /></option>
-						</xsl:for-each>
-					</select>
-				</div>
-			</xsl:if>
-			
+			<input type="text" name="tags" id="tags-{$id}" class="tagsInput" value="{$tag_list}" />			
 			<xsl:text> </xsl:text>
 			<input id="submit-{$id}" type="submit" name="submitButton" value="Update" class="tagsSubmit{$language_suffix}" />
 		</form>
@@ -2702,48 +2520,16 @@
 		<script src="{$base_include}/javascript/onload.js" language="javascript" type="text/javascript"></script>
 		<script src="{$base_include}/javascript/prototype.js" language="javascript" type="text/javascript"></script>
 		<script src="{$base_include}/javascript/scriptaculous/scriptaculous.js" language="javascript" type="text/javascript"></script>
-		<script src="{$base_include}/javascript/jquery-1.5.2.min.js" language="javascript" type="text/javascript"></script>
-		<!--script src="{$base_include}/javascript/jquery.highlight-3.yui.js" language="javascript" type="text/javascript"></script-->
-		<script src="{$base_include}/javascript/jquery.highlight-3.js" language="javascript" type="text/javascript"></script>
-		<script type="text/javascript">
-			jQuery.noConflict(); <!-- don't use the $() abbreviation to avoid conflict with prototype.js -->
-		<xsl:if test="request/base='metasearch' and request/action = 'results'">
-			
-			addEvent(window, 'load', highlightSearchTerms );
-			
-			var highlighting = true;
-			 
-			function highlightTerms(terms)
-			{
-				for (var i=0; i &lt; terms.length; i++)
-					jQuery('div').highlight(terms[i]);
-			}
-			
-			function highlightSearchTerms()
-			{
-				// add this link if javascript is on
-				jQuery("#toggleHighlightingDiv").html('<a href="javascript:toggleHighlighting()" id="toggleHighlighting"><xsl:copy-of select="$text_results_highlighting_turn_off" /></a>');
-				
-				if (jQuery('#query').length) { // if such element exists
-					terms = jQuery('#query').val().split(' ');
-					highlightTerms(terms);
-				}
-			}
-			
-			function toggleHighlighting()
-			{
-				if (highlighting) {
-					jQuery('#toggleHighlighting').html('<xsl:copy-of select="$text_results_highlighting_turn_on" />');
-					jQuery('div').removeHighlight();
-					highlighting = false;
-				} else {
-					jQuery('#toggleHighlighting').html('<xsl:copy-of select="$text_results_highlighting_turn_off" />');
-					highlightSearchTerms();
-					highlighting = true;
-				}
-			}
+
+		<!-- highlighting -->
+
+		<xsl:if test="request/base='metasearch' and request/action = 'results' and config/highlighting = 'true'">
+		
+			<script src="{$base_include}/javascript/jquery-1.5.2.min.js" language="javascript" type="text/javascript"></script>
+			<script src="{$base_include}/javascript/jquery.highlight-3.js" language="javascript" type="text/javascript"></script>
+			<script src="{$base_include}/javascript/highlight.js" language="javascript" type="text/javascript"></script>
+		
 		</xsl:if>
-		</script>
 		
 		<!-- fancy message display -->
 		
