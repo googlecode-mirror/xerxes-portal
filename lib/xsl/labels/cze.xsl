@@ -314,8 +314,6 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	<xsl:variable name="text_results_sort_by">řadit dle</xsl:variable>
 	<xsl:variable name="text_results_year">Rok</xsl:variable>
 	<xsl:variable name="text_results_next">Další</xsl:variable>
-	<xsl:variable name="text_results_highlighting_turn_off">Vypnout zvýraznění</xsl:variable>
-	<xsl:variable name="text_results_highlighting_turn_on">Zapnout zvýraznění</xsl:variable>
 	
 	<xsl:variable name="text_searchbox_ada_boolean">Booleovský operátor: </xsl:variable>
 	<xsl:variable name="text_searchbox_boolean_and">a</xsl:variable>
