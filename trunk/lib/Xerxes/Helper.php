@@ -124,7 +124,7 @@ class Xerxes_Helper
 				
 				$note_field = self::embedNoteField($note_field);
 				
-				$xml->$note_field_name = Xerxes_Framework_Parser::escapeXml ( $note_field );
+				$xml->$note_field_name = $note_field;
 				$xml->$note_field_name->addAttribute('lang', 'ALL');
 			}
 
