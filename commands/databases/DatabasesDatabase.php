@@ -55,7 +55,8 @@ class Xerxes_Command_DatabasesDatabase extends Xerxes_Command_Databases
 			
 			// only show single letters, please
 
-			if ( $this->registry->getConfig("DATABASE_LIST_SINGLE_LETTER_DISPAY", false, false) )
+			if ( $this->registry->getConfig("DATABASE_LIST_SINGLE_LETTER_DISPAY", false, false) &&
+			     $this->request->getProperty("action") == "alphabetical" )
 			{
 				$params = array(
 					"base" => "databases",
