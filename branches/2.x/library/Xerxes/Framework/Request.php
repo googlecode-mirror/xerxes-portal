@@ -88,11 +88,23 @@ class Xerxes_Framework_Request
 				// instances of xerxes on one server.  use base_path (preferably) or
 				// application_name config directives.
 				
-				$path_key = preg_replace( '/\W/', '_', $this->registry->getConfig( "BASE_WEB_PATH", false ) );
+				$path_base = $this->registry->getConfig( "base_web_path", false );
+				
+				$path_key = preg_replace( '/\W/', '_', $path_base );
+				
 				$session_name = "xerxessession_" . $path_key;
 				
-				session_name( $session_name );
-				session_start();
+				if ( $path_base == "" )
+				{
+					$path_base = "/";
+				}
+		
+				$session_path = $this->registry->getConfig( "session_path", false, $path_base );
+				$session_domain = $this->registry->getConfig( "session_domain", false, null );
+		 		
+		 		session_name( $session_name );
+				session_set_cookie_params( 0, $session_path, $session_domain );
+		 		session_start();		
 			}
 			
 			// extract params
