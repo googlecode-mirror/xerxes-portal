@@ -47,7 +47,8 @@ class Xerxes_Record extends Xerxes_Marc_Record
 	protected $sub_title = ""; // subtitle	
 	protected $series_title = ""; // series title
 	protected $trans_title = false; // whether title is translated
-	protected $additional_titles = array(); // uniform and related titles
+	protected $uniform_title = ""; // uniform title
+	protected $additional_titles = array(); // related titles
 	
 	protected $place = ""; // place of publication	
 	protected $publisher = ""; // publisher	
@@ -252,9 +253,10 @@ class Xerxes_Record extends Xerxes_Marc_Record
 		
 		### title
 		
-		$this->title =  $this->datafield("245")->subfield("a")->__toString();
+		$this->title =  $this->datafield("245")->subfield("an")->__toString();
 		$this->sub_title =  $this->datafield("245")->subfield("b")->__toString();
-		$this->series_title =  $this->datafield("440")->subfield("a" )->__toString();
+		$this->series_title = $this->datafield("440")->subfield("a" )->__toString();
+		$this->uniform_title = $this->datafield("130|240")->__toString();
 		
 		// sometimes title is in subfield p
 		
