@@ -72,6 +72,7 @@
 	
 	<xsl:template name="record-summary">
 		<dl>
+			<xsl:call-template name="record-uniform-title" /> <!-- uniform title -->
 			<xsl:call-template name="record-authors" /> <!-- Authors -->
 			<xsl:call-template name="record-corp-authors" /> <!-- Corp. Authors -->
 			<xsl:call-template name="record-conference" /> <!-- Conference -->
@@ -121,6 +122,21 @@
 		<xsl:call-template name="record-subjects" />
 		<xsl:call-template name="record-standard_numbers" />
 		<xsl:call-template name="record-notes" />
+	</xsl:template>
+
+	<!--
+		TEMPLATE: RECORD UNIFORM TITLE
+	-->	
+
+	<xsl:template name="record-uniform-title">
+		<xsl:if test="uniform_title">
+			<div>
+			<dt>Uniform title:</dt>
+			<dd>
+				<xsl:value-of select="uniform_title" />
+			</dd>
+			</div>
+		</xsl:if>
 	</xsl:template>
 
 	<!--
