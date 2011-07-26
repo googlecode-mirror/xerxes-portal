@@ -289,6 +289,36 @@
 				<command>FolderTags</command>
 				<view>xsl/folder_output_refworks.xsl</view>
 			</action>
+			<action name="refworks-bounce">
+				<request name="view">brief</request>
+				<command>FolderResults</command>
+				<command>FolderRefworksBounce</command>
+				<view />
+			</action>
+			<action name="output_bb">
+				<request name="view">brief</request>
+				<command>FolderResults</command>
+				<command>FolderTags</command>
+				<view>xsl/folder_output_bb.xsl</view>
+			</action>
+			<action name="bb-bounce" nothome="true">
+				<request name="view">brief</request>
+				<command>FolderResults</command>
+				<command>FolderBlackBoardBounce</command>
+				<view />
+			</action>
+			<action name="output_export_endnote_web">
+				<request name="view">brief</request>
+				<command>FolderResults</command>
+				<command>FolderTags</command>
+				<view>xsl/folder_output_endnote_web.xsl</view>
+			</action>
+			<action name="endnote-web-bounce" nothome="true">
+				<request name="view">brief</request>
+				<command>FolderResults</command>
+				<command>FolderEndnoteBounce</command>
+				<view />
+			</action>
 			<action name="export">
 				<command>FolderResults</command>
 				<view format="text-file">xsl/citation/basic.xsl</view>
@@ -298,12 +328,6 @@
 			<action name="email">
 				<command>FolderResults</command>
 				<command>FolderEmail</command>
-				<view />
-			</action>
-			<action name="refworks-bounce">
-				<request name="view">brief</request>
-				<command>FolderResults</command>
-				<command>FolderRefworksBounce</command>
 				<view />
 			</action>
 			<action name="fetch" restricted="false" login="false">
