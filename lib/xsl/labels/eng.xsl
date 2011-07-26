@@ -157,6 +157,7 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	<xsl:variable name="text_folder_endnote_direct">directly into Endnote, Zotero, or other citation management application</xsl:variable>
 	<xsl:variable name="text_folder_endnote_file">to a file I will import myself</xsl:variable>
 	<xsl:variable name="text_folder_endnote_pagename">Download to Endnote, Zotero, etc.</xsl:variable>
+	<xsl:variable name="text_folder_endnote_web_pagename">Export to Endnote Web</xsl:variable>
 	
 	<xsl:variable name="text_folder_error_email_not_sent">Could not send email</xsl:variable>
 	<xsl:variable name="text_folder_error_no_email">Please enter an email address</xsl:variable>
