@@ -7,7 +7,7 @@
 	 * @copyright 2008 California State University
 	 * @link http://xerxes.calstate.edu
 	 * @license http://www.gnu.org/licenses/
-	 * @version $Id$
+	 * @version $Id: FolderSMS.php 1392 2010-09-17 18:42:34Z dwalker@calstate.edu $
 	 * @package Xerxes
 	 */
 	
@@ -88,9 +88,24 @@
 			}
 
 			// send the user back out, so they don't step on this again
+
+			require($this->registry->getConfig("PATH_PARENT_DIRECTORY") . "/lib/PHPMailer/class.phpmailer.php");
 			
-			if ( mail( $strEmail, $strSubject, $strBody, $headers) )
-			{
+			$mail = new PHPMailer();
+			
+			$mail->IsSMTP();  // telling the class to use SMTP
+			$mail->Host = "coweumx01.calstate.edu:25"; // SMTP server
+			
+			$mail->From = $this->registry->getConfig("EMAIL_FROM", true);
+			$mail->FromName = "Your saved records";
+			$mail->AddAddress($strEmail);
+			
+			$mail->Subject = $strSubject;
+			$mail->Body = $strBody;
+			$mail->WordWrap = 50;
+			
+			if ( $mail->Send() )
+			{			
 				$this->request->setSession( "flash_message", "Message successfully sent" );
 				$this->request->setRedirect($this->request->getSession('last_page'));
 			}
