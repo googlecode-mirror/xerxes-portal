@@ -200,10 +200,9 @@
 						"id" => $objDataRecord->id,
 					);
 					
-					$url = $this->request->url_for( $arrParams);
-					$objUrlOpen = $objXml->createElement("url_open", $url);
-			 		$objRecord->appendChild( $objUrlOpen ); 
-			 		
+					$configLinkResolver = $this->registry->getConfig("LINK_RESOLVER_ADDRESS", true);
+					$configSID = $this->registry->getConfig("APPLICATION_SID", false, "calstate.edu:xerxes");
+					
 					foreach ( $objDataRecord->properties() as $key => $value )
 					{
 						
@@ -227,11 +226,16 @@
 							
 							// and openurl kev context object from record
 							
-							$configSID = $this->registry->getConfig ( "APPLICATION_SID", false, "calstate.edu:xerxes" );
 							$kev = Xerxes_Framework_Parser::escapeXml ( $objXerxesRecord->getOpenURL ( null, $configSID ) );
 							$objOpenUrl = $objXml->createElement ( "openurl_kev_co", $kev );
 							$objRecord->appendChild ( $objOpenUrl );
+							
+							// full open url
 
+							$url = Xerxes_Framework_Parser::escapeXml ( $objXerxesRecord->getOpenURL ( $configLinkResolver, $configSID ) );
+							$objUrlOpen = $objXml->createElement("url_open", $url);
+		 					$objRecord->appendChild( $objUrlOpen ); 							
+							
 							// import the marc record, but only if configured to do so; since both brief
 							// and full record display come in on the same command, we'll use the record count 
 							// here as an approximate for the brief versus full view -- hacky, hacky
