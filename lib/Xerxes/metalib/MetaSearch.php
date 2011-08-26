@@ -666,8 +666,6 @@
 			
 			// error in response
 			
-			$errors = array();
-			
 			if ( $objXml->getElementsByTagName("error_code") != null )
 			{
 				// for easier handling
