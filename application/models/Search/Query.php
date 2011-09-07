@@ -225,43 +225,37 @@ class Xerxes_Model_Search_Query
 	{
 		$registry = Xerxes_Framework_Registry::getInstance();
 		
-		$strAltYahoo = $registry->getConfig("ALTERNATE_YAHOO_LOCATION", false);
-		$configYahooID = $registry->getConfig( "YAHOO_ID", false, "calstate" );
+		$configYahooID = $registry->getConfig( "YAHOO_ID", false );
 		
 		$spell_return = array(); // we'll return this one
 		
-		for ( $x = 0; $x < count($this->terms); $x++ )
+		if ( $configYahooID != null )
 		{
-			$term = $this->terms[$x];
-			$url = "";
-			
-			if ( $strAltYahoo != "" )
+			for ( $x = 0; $x < count($this->terms); $x++ )
 			{
-				$url = $strAltYahoo;
-			}
-			else
-			{
-				$url = "http://api.search.yahoo.com/WebSearchService/V1/spellingSuggestion";
-			}
-			
-			$url .= "?appid=" . $configYahooID . "&query=" . urlencode($term->phrase);
-			
-			$strResponse = Xerxes_Framework_Parser::request($url);
-			
-			if ( $strResponse != "" )
-			{
-				$objSpelling = new DOMDocument();
-				$objSpelling->loadXML($strResponse);
-					
-				if ( $objSpelling->getElementsByTagName("Result")->item(0) != null )
+				$term = $this->terms[$x];
+				
+				$query = "select * from search.spelling where query=\"" . $term->phrase . "\" and appid=\"$configYahooID\"";
+				$url = "http://query.yahooapis.com/v1/public/yql?q=" . urlencode($query);
+				$response = Xerxes_Framework_Parser::request($url);
+				
+				if ( $response != "" )
 				{
-					$term->spell_correct = $objSpelling->getElementsByTagName("Result")->item(0)->nodeValue;
-					$spell_return[$term->id] = $term->spell_correct;
+					$objSpelling = new DOMDocument();
+					$objSpelling->loadXML($response);
+					
+					if ( $objSpelling->getElementsByTagName("suggestion")->item(0) != null )
+					{
+						$suggestion = $objSpelling->getElementsByTagName("suggestion")->item(0)->nodeValue;
+		
+						$term->spell_correct = $suggestion;
+						$spell_return[$term->id] = $term->spell_correct;
+					}				
+					
+					// also put it here so we can return it
+					
+					$this->terms[$x] = $term;
 				}
-				
-				// also put it here so we can return it
-				
-				$this->terms[$x] = $term;
 			}
 		}
 		
