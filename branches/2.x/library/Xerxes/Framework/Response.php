@@ -64,7 +64,7 @@ class Xerxes_Framework_Response
 		}
 		else
 		{
-			return null;
+			throw new Exception("no data with id '$id'");
 		}
 	}
 	
