@@ -41,107 +41,12 @@ class Xerxes_Model_DataMap_Data_Fulltext extends Xerxes_Framework_DataValue
 	public $live;
 }
 
-class Xerxes_Model_DataMap_Data_Category extends Xerxes_Framework_DataValue
-{
-	public $id;
-	public $name;
-	public $normalized;
-	public $old;
-	public $lang;
-	public $subcategories = array ( );
-	
-	/**
-	 * Converts a sting to a normalized (no-spaces, non-letters) string
-	 *
-	 * @param string $strSubject	original string
-	 * @return string				normalized string
-	 */
-	public static function normalize($strSubject)
-	{
-		// this is influenced by the setlocale() call with category LC_CTYPE; see PopulateDatabases.php
-		
-		$strNormalized = iconv( 'UTF-8', 'ASCII//TRANSLIT', $strSubject ); 
-		$strNormalized = Xerxes_Framework_Parser::strtolower( $strNormalized );
-		
-		$strNormalized = str_replace( "&amp;", "", $strNormalized );
-		$strNormalized = str_replace( "'", "", $strNormalized );
-		$strNormalized = str_replace( "+", "-", $strNormalized );
-		$strNormalized = str_replace( " ", "-", $strNormalized );
-		
-		$strNormalized = Xerxes_Framework_Parser::preg_replace( '/\W/', "-", $strNormalized );
-		
-		while ( strstr( $strNormalized, "--" ) )
-		{
-			$strNormalized = str_replace( "--", "-", $strNormalized );
-		}
-		
-		return $strNormalized;
-	}
-}
-
-class Xerxes_Model_DataMap_Data_Subcategory extends Xerxes_Framework_DataValue
-{
-	public $metalib_id;
-	public $name;
-	public $sequence;
-	public $category_id;
-	public $databases = array ( );
-}
-
 class Xerxes_Model_DataMap_Data_Type extends Xerxes_Framework_DataValue
 {
 	public $id;
 	public $name;
 	public $normalized;
-	public $databases = array ( );
-}
-
-class Xerxes_Model_DataMap_Data_Database extends Xerxes_Framework_DataValue
-{
-	public $xml;
-	
-	public $metalib_id;
-	public $title_display;
-	public $type;
-	public $data;
-	
-	public function load($arrResult)
-	{
-		parent::load($arrResult);
-		
-		if ( $this->data != "" )
-		{
-			$this->xml = simplexml_load_string($this->data);
-		}
-	}
-	
-	public function __get($name)
-	{
-		if ( $this->xml instanceof SimpleXMLElement )
-		{
-			return (string) $this->xml->$name;
-		}
-		else
-		{
-			return null;
-		}
-	}
-	
-	public function get($field)
-	{
-		$values = array();
-		
-		if ( $this->xml instanceof SimpleXMLElement )
-		{
-			foreach ($this->xml->$field as $value)
-			{
-				array_push($values, $value);
-			}
-		}
-		
-		return $values;
-	}
-
+	public $databases = array();
 }
 
 class Xerxes_Model_DataMap_Data_Record extends Xerxes_Framework_DataValue
@@ -160,5 +65,5 @@ class Xerxes_Model_DataMap_Data_Record extends Xerxes_Framework_DataValue
 	public $marc;
 	public $xerxes_record; // not part of table!
 
-	public $tags = array ( );
+	public $tags = array();
 }
