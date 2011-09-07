@@ -702,6 +702,8 @@
 					  || $error_code == 6039 // primary and secondary sort keys are identical
 					  || $error_code == 6033 // results have been retrieved only from "search & link" resources
 					  || $error_code == 6034 // results have been retrieved only from "Link to" resources
+					  || $error_code == 6023 // category has no resources
+					  || $error_code == 134 // The merged set has more records than the merge limit
 					  ) 
 					{
 							trigger_error("Metalib warning ($error_code): $error_text", E_USER_WARNING);	
