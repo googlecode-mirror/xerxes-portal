@@ -570,7 +570,7 @@
 			
 			// trying to catch unterminated entity references
 			
-			$string = preg_replace('/&#[a-hA-H0-9]{2,5}\s/', "$0; ", $string);
+			$string = preg_replace('/(&#[a-hA-H0-9]{2,5})\s/', "$1; ", $string);
 			
 			return $string;
 		}
