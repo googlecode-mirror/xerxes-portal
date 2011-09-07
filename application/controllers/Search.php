@@ -546,36 +546,38 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 			$this->query->spelling_url = $spell;
 		}
 		
-		// tab links
+		// search option links
 		
-		$tabs = $this->registry->getConfig('tabs');
+		$config = $this->response->get('config');
 		
-		if ( $tabs instanceof SimpleXMLElement )
+		$search = $config->getConfig('search');
+		
+		if ( $search instanceof SimpleXMLElement )
 		{
-			foreach ( $tabs->top->tab as $tab )
+			foreach ( $search->xpath("//option") as $option )
 			{
 				// format the number
 				
 				// is this the current tab?
 
-				if ( $this->request->getParam('base') == (string) $tab["id"] 
-				     && ( $this->request->getParam('source') == (string) $tab["source"] 
-				     	|| (string) $tab["source"] == '') )
+				if ( $this->request->getParam('base') == (string) $option["id"] 
+				     && ( $this->request->getParam('source') == (string) $option["source"] 
+				     	|| (string) $option["source"] == '') )
 				    {
-				    	$tab->addAttribute('current', "1");	
+				    	$option->addAttribute('current', "1");	
 				    }
 				
 				// url
 				
 				$params = $this->query->extractSearchParams();
 				
-				$params['base'] = (string) $tab["id"];
+				$params['base'] = (string) $option["id"];
 				$params['action'] = "results";
-				$params['source'] = (string) $tab["source"];
+				$params['source'] = (string) $option["source"];
 				
 				$url = $this->request->url_for($params);
 				
-				$tab->addAttribute('url', $url);
+				$option->addAttribute('url', $url);
 				
 				// cached search hit count?
 		
@@ -585,16 +587,17 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 					
 					$id = str_replace("_" . $this->query->getHash(), "", $session_id);
 					
-					if ( $id == (string) $tab["id"] )
+					if ( $id == (string) $option["id"] )
 					{
 						// yup, so add it
 						
-						$tab->addAttribute('hits', Xerxes_Framework_Parser::number_format($session_value));
+						$option->addAttribute('hits', Xerxes_Framework_Parser::number_format($session_value));
 					}
 				}
 			}
 			
-			$this->response->add("tabs", $tabs);
+			$config->setConfig('search', $search);
+			$this->response->add('config', $config);
 		}
 		
 		// links to remove facets

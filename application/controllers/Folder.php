@@ -55,6 +55,7 @@ class Xerxes_Controller_Folder extends Xerxes_Controller_Search
 		$client = new Zend_Http_Client();
 		$client->setUri($url);
 		$client->setHeaders("Content-type: application/json");
+		$client->setHeaders("Expect: nothing");
 		$client->setRawData($json)->setEncType('application/json');
 		
 		$response = $client->request('POST')->getBody();;
