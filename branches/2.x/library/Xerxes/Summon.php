@@ -70,7 +70,7 @@ class Xerxes_Summon
 			echo "<pre>Get Record: $id</pre>\n";
 		}
 		
-		$options = array('s.st' => "id,$id");
+		$options = array('s.q' => "id:$id");
 		return $this->call($options);
 	}
 	
