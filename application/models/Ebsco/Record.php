@@ -126,7 +126,13 @@ class Xerxes_Model_Ebsco_Record extends Xerxes_Record
 			$this->start_page = $article->ppf;
 			
 			// end page 
-			$this->end_page = $this->start_page + $article->ppct - 1;
+			
+			$pages = explode('-',(string) $article->pages);
+			
+			if ( count($pages) > 1 )
+			{
+				$this->end_page = $pages[1];
+			}
 
 			// title
 			$this->title = (string) $article->tig->atl;
