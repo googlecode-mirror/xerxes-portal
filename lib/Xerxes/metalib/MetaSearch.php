@@ -704,6 +704,7 @@
 					  || $error_code == 6034 // results have been retrieved only from "Link to" resources
 					  || $error_code == 6023 // category has no resources
 					  || $error_code == 134 // The merged set has more records than the merge limit
+					  || $error_code == 6022 // all the resources are not authorized
 					  ) 
 					{
 							trigger_error("Metalib warning ($error_code): $error_text", E_USER_WARNING);	
