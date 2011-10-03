@@ -230,16 +230,25 @@ class Xerxes_Marc_Record
 			$this->xpath = new DOMXPath($this->document);
 			$this->xpath->registerNamespace("marc", $this->namespace);
 			
-			// sub-class implements this
+			// sub-class implements these
 			
+			$this->preload();
 			$this->map();
+			$this->cleanup();
 		}
+	}
+	
+	protected function preload()
+	{
 	}
 	
 	protected function map()
 	{
-		
 	}
+	
+	protected function cleanup()
+	{
+	}	
 	
 	/**
 	 * Leader
