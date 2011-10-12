@@ -21,11 +21,16 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	Variable names should follow the pattern of: text_{location}_{unique-name}
 	Keep them in alphabetical order!!
 -->
+
+	<!-- these two are used by umlaut integration javascript only at the moment. -->
+	<xsl:variable name="link_resolver_load_message">Loading additional links from</xsl:variable>
+	<xsl:variable name="link_resolver_name">Find It</xsl:variable>
 	
 	<xsl:variable name="text_ada_version">For best results, click this link for accessible version</xsl:variable>
 	<xsl:variable name="text_ada_table_for_display">for display only</xsl:variable>
 	
 	<xsl:variable name="text_app_name"	select="//config/application_name" />
+	
 	
 	<xsl:variable name="text_authentication_error_not_authorized">Sorry, our records show you are not authorized to use this service</xsl:variable>
 	<xsl:variable name="text_authentication_login_explain"></xsl:variable>
