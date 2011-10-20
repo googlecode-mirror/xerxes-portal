@@ -11,11 +11,11 @@
  * @package Xerxes
  */
 
-class Xerxes_BxRecord extends Xerxes_Record
+class Xerxes_BxRecord extends Xerxes_Record_Bibliographic
 {
 	protected $database_name = "bX";
 	
-	public function map()
+	protected function map()
 	{
 		parent::map();
 	}

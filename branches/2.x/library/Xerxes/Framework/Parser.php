@@ -547,6 +547,49 @@ class Xerxes_Framework_Parser
 	{
 		return Xerxes_Framework_HTTP::request($url, $timeout, $data, $headers, $bolEncode);
 	}
+	
+	/**
+	 * Convert string, DOMNode to DOMDocument
+	 */
+	
+	public static function convertToDOMDocument($xml)
+	{
+		if ( $xml instanceof DOMDocument )
+		{
+			return $xml;
+		}
+		elseif ( is_string($xml) )
+		{
+			$document = new DOMDocument();
+			$document->loadXML($xml);
+			
+			return $document;
+		}
+		elseif ( $xml instanceof DOMNode )
+		{
+			// we'll convert this node to a DOMDocument
+				
+			// first import it into an intermediate doc, 
+			// so we can also import namespace definitions as well as nodes
+				
+			$intermediate = new DOMDocument();
+			$intermediate->loadXML("<wrapper />");
+				
+			$import = $intermediate->importNode($xml, true);
+			$our_node = $intermediate->documentElement->appendChild($import);
+				
+			// now get just our xml, minus the wrapper
+				
+			$document = new DOMDocument();
+			$document->loadXML($intermediate->saveXML($our_node));
+			
+			return $document;
+		}	
+		else
+		{
+			throw new Exception("param 1 must be of type string, DOMNode, or DOMDocument");
+		}
+	}
 }
 
 /**
