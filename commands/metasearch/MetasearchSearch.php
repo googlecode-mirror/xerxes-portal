@@ -67,7 +67,7 @@ class Xerxes_Command_MetasearchSearch extends Xerxes_Command_Metasearch
 			
 			$arrDatabases = array ( );
         
-			$objSubject = $objData->getSubject( $strSubject, null, "metalib", null, $this->request->getProperty("lang"));
+			$objSubject = $objData->getSubject( strtolower($strSubject), null, "metalib", null, $this->request->getProperty("lang"));
 			
 			// did we find a subject that has subcategories?
 			

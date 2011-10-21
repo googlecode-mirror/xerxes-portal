@@ -49,7 +49,8 @@ abstract class Xerxes_Command_Folder extends Xerxes_Framework_Command
 			array("id" => "email", "action" => "output_email"),
 			array("id" => "endnote", "action" => "output_export_endnote" ),
 			array( "id" => "text", "action" => "output_export_text"),
-			array( "id" => "refworks", "action" => "output_refworks")
+			array( "id" => "refworks", "action" => "output_refworks"),
+			array( "id" => "endnote-web", "action" => "output_export_endnote_web")
 		);
 		
 		foreach ( $all_params as $params )

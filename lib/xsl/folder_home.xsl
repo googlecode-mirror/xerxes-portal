@@ -42,12 +42,8 @@
 	
 		<div id="exports" class="box">
 			<h2><xsl:copy-of select="$text_folder_header_export" /></h2>
-			<ul>
-				<li id="export-email"><a href="{export_functions/export_option[@id='email']/url}"><xsl:copy-of select="$text_folder_email_pagename" /></a></li>
-				<li id="export-refworks"><a href="{export_functions/export_option[@id='refworks']/url}"><xsl:copy-of select="$text_folder_refworks_pagename" /></a></li>
-				<li id="export-text"><a href="{export_functions/export_option[@id='text']/url}"><xsl:copy-of select="$text_folder_file_pagename" /></a></li>
-				<li id="export-endnote"><a href="{export_functions/export_option[@id='endnote']/url}"><xsl:copy-of select="$text_folder_endnote_pagename" /></a></li>
-			</ul>
+			<xsl:call-template name="export_options" />
+
 		</div>
 		
 		<div id="format_limit" class="box">
@@ -82,6 +78,16 @@
 
 </xsl:template>
 
+<xsl:template name="export_options">
+	<ul>
+		<li id="export-email"><a href="{export_functions/export_option[@id='email']/url}"><xsl:copy-of select="$text_folder_email_pagename" /></a></li>
+		<li id="export-refworks"><a href="{export_functions/export_option[@id='refworks']/url}"><xsl:copy-of select="$text_folder_refworks_pagename" /></a></li>
+		<li id="export-text"><a href="{export_functions/export_option[@id='text']/url}"><xsl:copy-of select="$text_folder_file_pagename" /></a></li>
+		<li id="export-endnote"><a href="{export_functions/export_option[@id='endnote']/url}"><xsl:copy-of select="$text_folder_endnote_pagename" /></a></li>
+		<li id="export-endnote-web"><a href="{export_functions/export_option[@id='endnote-web']/url}"><xsl:copy-of select="$text_folder_endnote_web_pagename" /></a></li>
+	</ul>
+
+</xsl:template>
 
 <xsl:template name="main">
 
