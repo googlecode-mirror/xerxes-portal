@@ -64,6 +64,17 @@
 				<h1><xsl:call-template name="page_name" /></h1>
 				
 				<dl>
+
+				<!-- Uniform Title -->
+				
+				<xsl:if test="uniform_title">
+					<div>
+					<dt>Uniform title:</dt>
+					<dd>
+						<xsl:value-of select="uniform_title" />
+					</dd>
+					</div>
+				</xsl:if>
 				
 				<!-- Primary Author -->
 				

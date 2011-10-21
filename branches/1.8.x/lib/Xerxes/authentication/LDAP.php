@@ -161,7 +161,7 @@
 					
 					$this->user->username = $strUsername;
 					
-					if (preg_match($strGroupFilter, $strBindDN, $matches) > 0)
+					if (@preg_match($strGroupFilter, $strBindDN, $matches) > 0)
 					{
 						$this->user->usergroups = Array($matches[$strGroupFilterMatch]);
 					}

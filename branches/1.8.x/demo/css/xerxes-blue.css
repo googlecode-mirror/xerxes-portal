@@ -583,10 +583,14 @@ ul.addDatabasesMatches li {
 	margin-bottom: 2.6em;
 }
 
-
 #sortOptions {
 	text-align: right;
 }	
+
+.highlight {
+	font-weight: bold;
+	font-style: italic;
+}
 
 .result {
 	margin-bottom: 3em;

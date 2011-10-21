@@ -32,6 +32,8 @@
 		
 		public function checkSpelling( $strQuery, $strYahooId, $strAltLocation = "" )
 		{
+			return "";
+		
 			if ( $strAltLocation != "" )
 			{
 				$this->url = $strAltLocation . "?appid=" . $strYahooId . "&query=" . urlencode($strQuery);

@@ -445,7 +445,7 @@
 					
 					<xsl:if test="authors/author[@type='conference' or @type='corporate' and not(@additional)]">
 					<xsl:text> / </xsl:text>
-					<xsl:value-of select="authors/author[@type='conference' or @type='corporate' and not(@additional)]" />
+					<xsl:value-of select="authors/author[@type='conference' or @type='corporate' and not(@additional)]/aucorp" />
 					</xsl:if>
 					
 				</a>
@@ -596,6 +596,11 @@
 				<xsl:call-template name="sms_input_option">
 					<xsl:with-param name="email">tmomail.net</xsl:with-param>
 					<xsl:with-param name="text">T-Mobile</xsl:with-param>
+				</xsl:call-template>
+
+				<xsl:call-template name="sms_input_option">
+					<xsl:with-param name="email">email.uscc.net</xsl:with-param>
+					<xsl:with-param name="text">U.S. Cellular</xsl:with-param>
 				</xsl:call-template>
 
 				<xsl:call-template name="sms_input_option">

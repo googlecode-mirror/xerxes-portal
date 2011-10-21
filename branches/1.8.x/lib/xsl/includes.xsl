@@ -2520,6 +2520,16 @@
 		<script src="{$base_include}/javascript/onload.js" language="javascript" type="text/javascript"></script>
 		<script src="{$base_include}/javascript/prototype.js" language="javascript" type="text/javascript"></script>
 		<script src="{$base_include}/javascript/scriptaculous/scriptaculous.js" language="javascript" type="text/javascript"></script>
+
+		<!-- highlighting -->
+
+		<xsl:if test="request/base='metasearch' and request/action = 'results' and config/highlighting = 'true'">
+		
+			<script src="{$base_include}/javascript/jquery-1.5.2.min.js" language="javascript" type="text/javascript"></script>
+			<script src="{$base_include}/javascript/jquery.highlight-3.js" language="javascript" type="text/javascript"></script>
+			<script src="{$base_include}/javascript/highlight.js" language="javascript" type="text/javascript"></script>
+		
+		</xsl:if>
 		
 		<!-- fancy message display -->
 		

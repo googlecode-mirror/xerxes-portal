@@ -637,7 +637,7 @@
 		 * @param string $url		url of the request
 		 */
 		
-		private function getResponse( $url, $timeout = null)
+		private function getResponse( $url, $timeout = null, $retry = 0)
 		{
 			// metalib takes little care to ensure propper encoding of its xml, so we will set 
 			// recover to true here in order to allow libxml to recover from errors and continue 
@@ -664,45 +664,55 @@
 				throw new Exception("cannot connect to metalib server");
 			}
 			
-			// global errors will stop the application as exception?
+			// error in response
 			
-			if ( $objXml->getElementsByTagName("global_error") != null )
+			if ( $objXml->getElementsByTagName("error_code") != null )
 			{
-				$strError = "";		// error text
-				$iCode = 0;			// error code
+				// for easier handling
 				
-				foreach ( $objXml->getElementsByTagName("global_error") as $objError )
+				$xml = simplexml_import_dom($objXml->documentElement);
+				
+				foreach ( $xml->xpath("//global_error|//local_error") as $error )
 				{
-					foreach ( $objError->getElementsByTagName("error_code") as $objErrorCode ) 
+					$error_code = (int) $error->error_code;
+					$error_text = (string) $error->error_text;
+					
+					// now examine them
+
+					// metalib session has timed out!
+					
+					if ( $error_code == 0151 ) 
 					{
-						$iCode = (int) $objErrorCode->nodeValue;
+						// this particular metalib error message is confusing to end-users, so make it more clear
+						
+						$error_text = "The Metalib session has expired";
+						
+						// also try to re-up the session in the event metalib was restarted or something
+						
+						if ( $retry == 0 ) // but not more than once
+						{
+							$this->session = $this->session();
+							return $this->getResponse( $url, $timeout, 1);
+						}
 					}
-					foreach ( $objError->getElementsByTagName("error_text") as $objErrorText ) 
+					
+					// these are just warnings
+					
+					if ( $error_code == 2114 // x-server license will expire in 10 days
+					  || $error_code == 6039 // primary and secondary sort keys are identical
+					  || $error_code == 6033 // results have been retrieved only from "search & link" resources
+					  || $error_code == 6034 // results have been retrieved only from "Link to" resources
+					  || $error_code == 6023 // category has no resources
+					  || $error_code == 134 // The merged set has more records than the merge limit
+					  || $error_code == 6022 // all the resources are not authorized
+					  ) 
 					{
-						$strError .= " " . $objErrorText->nodeValue;
+							trigger_error("Metalib warning ($error_code): $error_text", E_USER_WARNING);	
 					}
-				}
-				
-				if ( $strError != "" && $iCode != 0 )
-				{
-					throw new Exception( $strError, $iCode );
-				}
-			}
-			
-			// local error is equal to a warning?
-			
-			if ( $objXml->getElementsByTagName("local_error") != null )
-			{
-				if ( ! $this->warning instanceof DOMDocument )
-				{
-					$this->warning = new DOMDocument();
-					$this->warning->loadXML("<warnings />");
-				}
-				
-				foreach ( $objXml->getElementsByTagName("local_error") as $objError )
-				{
-					$objImport = $this->warning->importNode($objError, true);
-					$this->warning->documentElement->appendChild($objImport);
+					else
+					{			
+						throw new Exception("Metalib exception ($error_code): $error_text");
+					}
 				}
 			}
 			

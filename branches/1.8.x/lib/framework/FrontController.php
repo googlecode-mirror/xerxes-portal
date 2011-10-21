@@ -77,12 +77,23 @@ class Xerxes_Framework_FrontController
 		// instances of xerxes on one server.  use base_path (preferably) or
 		// application_name config directives.
 		
-		$path_key = preg_replace( '/\W/', '_', $objRegistry->getConfig( "base_web_path", false ) );
+		$path_base = $objRegistry->getConfig( "base_web_path", false );
+		
+		$path_key = preg_replace( '/\W/', '_', $path_base );
 		
 		$session_name = "xerxessession_" . $path_key;
 		
-		session_name( $session_name );
-		session_start();
+		if ( $path_base == "" )
+		{
+			$path_base = "/";
+		}
+
+		$session_path = $objRegistry->getConfig( "session_path", false, $path_base );
+		$session_domain = $objRegistry->getConfig( "session_domain", false, null );
+ 		
+ 		session_name( $session_name );
+		session_set_cookie_params( 0, $session_path, $session_domain );
+ 		session_start();		
 		
 		// processes the incoming request
 		
