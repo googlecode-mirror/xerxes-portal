@@ -17,11 +17,11 @@ class Xerxes_Record_Link
 	protected $display;
 	protected $url;
 	
-	const PDF = 1; // link is to full-text pdf document
-	const HTML = 2; // link is to full-text in HTML
-	const ONLINE = 3; // link is to the online full-text, but we're unsure of exact format
-	const INFORMATIONAL = 4; // this is merely an informational link about the item, e.g., TOC or publisher info
-	const ORIGINAL_RECORD = 5; // link to the original record in the system of origin, no indication of full-text
+	const PDF = "pdf"; // link is to full-text pdf document
+	const HTML = "html"; // link is to full-text in HTML
+	const ONLINE = "online"; // link is to the online full-text, but we're unsure of exact format
+	const INFORMATIONAL = "none"; // this is merely an informational link about the item, e.g., TOC or publisher desc.
+	const ORIGINAL_RECORD = "original"; // link to the original record in the system of origin, no indication of full-text
 	
 	public function __construct($url, $type = null, $display = null)
 	{

@@ -11,82 +11,88 @@
  * @package Xerxes
  */
 
-class Xerxes_Record_ContextObject
+class Xerxes_Record_ContextObject extends Xerxes_Record
 {
-	private $values = array();
-	private $referrant = array();
-	private $authors = array();
-	
-	public function __get($name)
-	{
-		if ( array_key_exists($name, $this->values))
-		{
-			return $this->values[$name];
-		}
-		elseif ( ! in_array($name, $this->referrant) )
-		{
-			throw new Exception("'$name' is not a valid Xerxes_Record_ContextObject property");
-		}
-		else
-		{
-			return null;
-		}
-	}
+	protected $xpath;
 	
 	public function __construct()
 	{
-		$this->referrant = array(
-			"title","atitle","btitle","stitle","jtitle",
-			"volume","issue","spage","epage",
-			"genre","date","issn","isbn"
-		);
-	}
-	
-	public function getAuthors()
-	{
-		return $this->authors;
-	}
-	
+		parent::__construct();
+		$this->utility[] = "xpath";
+		$this->utility[] = "document";
+	}	
+
 	public function loadXML($xml)
 	{
-		$document = Xerxes_Framework_Parser::convertToDOMDocument($xml);
-		$xpath = new DOMXPath($document);
+		$this->document = Xerxes_Framework_Parser::convertToDOMDocument($xml);
+		$this->xpath = new DOMXPath($this->document);
 		
 		// test to see what profile the context object is using
 		// set namespace accordingly
 
-		if ($document->getElementsByTagNameNS( "info:ofi/fmt:xml:xsd:book", "book" )->item(0) != null)
+		if ($this->document->getElementsByTagNameNS( "info:ofi/fmt:xml:xsd:book", "book" )->item(0) != null)
 		{
-			$xpath->registerNamespace( "rft", "info:ofi/fmt:xml:xsd:book" );
+			$this->xpath->registerNamespace( "rft", "info:ofi/fmt:xml:xsd:book" );
 		} 
-		elseif ($document->getElementsByTagNameNS( "info:ofi/fmt:xml:xsd:dissertation", "dissertation" )->item(0) != null)
+		elseif ($this->document->getElementsByTagNameNS( "info:ofi/fmt:xml:xsd:dissertation", "dissertation" )->item(0) != null)
 		{
-			$xpath->registerNamespace( "rft", "info:ofi/fmt:xml:xsd:dissertation" );
+			$this->xpath->registerNamespace( "rft", "info:ofi/fmt:xml:xsd:dissertation" );
 		} 		
-		elseif ($document->getElementsByTagNameNS( "info:ofi/fmt:xml:xsd", "journal" )->item(0) != null)
+		elseif ($this->document->getElementsByTagNameNS( "info:ofi/fmt:xml:xsd", "journal" )->item(0) != null)
 		{
-			$xpath->registerNamespace( "rft", "info:ofi/fmt:xml:xsd" );
+			$this->xpath->registerNamespace( "rft", "info:ofi/fmt:xml:xsd" );
 		}
 		else
 		{
-			$xpath->registerNamespace( "rft", "info:ofi/fmt:xml:xsd:journal" );
+			$this->xpath->registerNamespace( "rft", "info:ofi/fmt:xml:xsd:journal" );
 		}
 		
+		$this->map();
+		$this->cleanup();
+	}
+	
+	protected function map()
+	{
 		// extract values
 		
-		foreach ( $this->referrant as $ref )
+		$title = $this->extractValue("rft:title");
+		$atitle = $this->extractValue("rft:atitle");
+		$btitle = $this->extractValue("rft:btitle");
+		
+		if ( $atitle != null )
 		{
-			$node = $xpath->query( "//rft:$ref" )->item(0);
+			$this->title = $atitle;
 			
-			if ( $node != null )
+			if ( $btitle != null )
 			{
-				$this->values[$ref] = $node->nodeValue;
+				$this->book_title = $btitle;
 			}
 		}
+		elseif ( $btitle != null )
+		{
+			$this->title = $btitle;
+		}
+		elseif ( $title != null )
+		{
+			$this->title = $title;
+		}
+		
+		$this->journal_title = $this->extractValue("rft:jtitle");
+		$this->short_title = $this->extractValue("rft:sitle");
+		
+		$this->volume = $this->extractValue("rft:volume");
+		$this->issue = $this->extractValue("rft:issue");
+		$this->start_page = $this->extractValue("rft:spage");
+		$this->end_page = $this->extractValue("rft:epage");
+		
+		$this->format->determineFormat( $this->extractValue("rft:genre") );
+		$this->year = $this->extractValue("rft:date");
+		$this->issns[] = $this->extractValue("rft:issn");
+		$this->isbns[] = $this->extractValue("rft:isbn");
 		
 		// authors
 
-		$authors = $xpath->query( "//rft:author[rft:aulast != '' or rft:aucorp != '']" );
+		$authors = $this->xpath->query( "//rft:author[rft:aulast != '' or rft:aucorp != '']" );
 		
 		foreach ( $authors as $objAuthor )
 		{
@@ -117,6 +123,20 @@ class Xerxes_Record_ContextObject
 				
 				array_push($this->authors, $author_object);
 			}
+		}
+	}
+	
+	protected function extractValue($ref)
+	{
+		$node = $this->xpath->query( "//$ref" )->item(0);
+			
+		if ( $node != null )
+		{
+			return $node->nodeValue;
+		}
+		else
+		{
+			return null;
 		}
 	}
 }
