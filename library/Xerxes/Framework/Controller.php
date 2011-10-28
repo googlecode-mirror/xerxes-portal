@@ -29,6 +29,13 @@ abstract class Xerxes_Framework_Controller
 		
 		$this->response->add("request", $this->request);
 		$this->response->add("config", $this->registry);
+		
+		$this->init();
+	}
+	
+	protected function init()
+	{
+		
 	}
 	
 	/**
