@@ -14,7 +14,8 @@
 require_once realpath(dirname(__FILE__) . '/autoload.php');
 
 import("Xerxes_Controller", XERXES_APPLICATION_PATH . "/controllers");
-import("Xerxes_Model", XERXES_APPLICATION_PATH . "models");
+import("Xerxes_Model", XERXES_APPLICATION_PATH . "/models");
+import("Xerxes_View", XERXES_APPLICATION_PATH . "/views");
 
 class Xerxes_Framework_FrontController
 {
