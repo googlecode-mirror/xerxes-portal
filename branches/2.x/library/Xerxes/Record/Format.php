@@ -13,9 +13,9 @@
 
 class Xerxes_Record_Format
 {
-	protected $internal;
-	protected $normalized;
-	protected $public;
+	protected $internal = "";
+	protected $normalized = "";
+	protected $public = "";
 	
 	// marc content types
 
@@ -106,16 +106,16 @@ class Xerxes_Record_Format
 	
 	const Unknown = "Unkown";
 	
-	public function setFormat($format = null)
+	public function determineFormat($data_fields)
 	{
-		if ( is_array($format) )
-		{
-			$format = $this->extractFormat($format);
-		}
-		
+		$this->setFormat($this->extractFormat($data_fields));
+	}
+	
+	public function setFormat($format)
+	{
 		$this->internal = $format;
-		$this->normalized = $this->normalizeFormat($format);
-		$this->public = $this->normalizeFormat($format, true);
+		$this->normalized = $format;
+		$this->public = $format;
 	}
 	
 	public function getInternalFormat()
@@ -140,7 +140,7 @@ class Xerxes_Record_Format
 	 * @return string				OpenURL genre value
 	 */
 	
-	private function getOpenURLGenre()
+	public function getOpenURLGenre()
 	{
 		switch ( $this->internal )
 		{
@@ -216,19 +216,17 @@ class Xerxes_Record_Format
 				return "unknown";
 		}
 	}
-		
 	
-	protected function extractFormat($format_array)
+	public function extractFormat($data_fields)
 	{
-		// we'll combine all of the datafields that explicitly declare the
-		// format of the record into a single string
+		// combine them into a string and lowercase it
 
-		$data_fields = "";
-		
-		foreach ( $format_array as $format )
+		if ( is_array($data_fields) )
 		{
-			$data_fields .= " " . Xerxes_Framework_Parser::strtolower( $format );
-		}		
+			$data_fields = implode(" ", $data_fields);
+		}
+		
+		$data_fields = Xerxes_Framework_Parser::strtolower( $data_fields );
 		
 		if ( strstr( $data_fields, 'dissertation' ) ) return  Xerxes_Record_Format::Dissertation; 
 		if ( strstr( $data_fields, 'proceeding' ) ) return  Xerxes_Record_Format::ConferenceProceeding; 
@@ -251,5 +249,8 @@ class Xerxes_Record_Format
 		return Xerxes_Record_Format::Unknown;		
 	}
 	
-	
+	public function __toString()
+	{
+		return $this->public;
+	}
 }

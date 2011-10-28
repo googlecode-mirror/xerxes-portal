@@ -65,7 +65,7 @@ class Xerxes_Record
 	protected $snippet = ""; // snippet
 	protected $summary_type = ""; // the type of summary
 	protected $language = ""; // primary language of the record
-	protected $notes = array (); // notes that are not the abstract, language, or table of contents
+	protected $notes = array(); // notes that are not the abstract, language, or table of contents
 	protected $toc = ""; // table of contents note
 
 	protected $degree = ""; // thesis degree conferred
@@ -74,11 +74,11 @@ class Xerxes_Record
 	protected $format = ""; // format
 	protected $technology = ""; // technology/system format
 	
-	protected $subjects = array (); // subjects
+	protected $subjects = array(); // subjects
 	
-	protected $links = array (); // all supplied links in the record both full text and non
+	protected $links = array(); // all supplied links in the record both full text and non
 	
-	protected $alt_scripts = array (); // alternate character-scripts like cjk or hebrew, taken from 880s
+	protected $alt_scripts = array(); // alternate character-scripts like cjk or hebrew, taken from 880s
 	protected $alt_script_name = ""; // the name of the alternate character-script; we'll just assume one for now, I guess
 	
 	protected $refereed = false; // whether the item is peer-reviewed
@@ -94,6 +94,7 @@ class Xerxes_Record
 	public function __construct()
 	{
 		$this->document = new DOMDocument();
+		$this->format = new Xerxes_Record_Format();
 		
 		$this->utility[] = "document";
 		$this->utility[] = "serialized";
@@ -947,7 +948,7 @@ class Xerxes_Record
 		
 		// format
 		
-		if ( $this->format == "Book" )
+		if ( (string) $this->format == "Book" )
 		{
 			$citation["type"] = "book";
 			$citation["publisher"] = $this->getPublisher(); 
@@ -1037,7 +1038,7 @@ class Xerxes_Record
 		
 		### simple values
 
-		$arrReferant["rft.genre"] = $this->convertGenreOpenURL( $this->format );
+		$arrReferant["rft.genre"] = $this->format->getOpenURLGenre();
 		
 		switch($arrReferant["rft.genre"])
 		{
@@ -1633,12 +1634,12 @@ class Xerxes_Record
 	
 	public function getFormat()
 	{
-		return $this->format;
+		return $this->format->getPublicFormat();
 	}
 	
 	public function setFormat($format)
 	{
-		$this->format = $format;
+		$this->format->setFormat($format);
 	}
 	
 	public function getTechnology()

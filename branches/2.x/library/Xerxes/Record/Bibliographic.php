@@ -6,7 +6,7 @@ class Xerxes_Record_Bibliographic_Document extends Xerxes_Marc_Document
 }
 
 /**
- * Extract properties for books, articles, and dissertations from MARC-XML & OpenURL context object
+ * Extract properties for books, articles, and dissertations from MARC-XML
  * 
  * @author David Walker
  * @copyright 2011 California State University
@@ -19,13 +19,11 @@ class Xerxes_Record_Bibliographic_Document extends Xerxes_Marc_Document
 class Xerxes_Record_Bibliographic extends Xerxes_Record
 {
 	protected $marc; // marc object	
-	protected $context_object; // openurl context object
 	
 	public function __construct()
 	{
 		parent::__construct();
 		$this->utility[] = "marc";
-		$this->utility[] = "context_object";
 	}	
 	
 	public function loadXML($xml)
@@ -33,9 +31,6 @@ class Xerxes_Record_Bibliographic extends Xerxes_Record
 		$this->marc = new Xerxes_Marc_Record();
 		$this->marc->loadXML($xml);
 
-		$this->context_object = new Xerxes_Record_ContextObject();
-		$this->context_object->loadXML($xml);		
-		
 		parent::loadXML($xml);
 	}
 	
@@ -378,16 +373,6 @@ class Xerxes_Record_Bibliographic extends Xerxes_Record
 				array_push( $this->authors, $objXerxesAuthor );
 			}
 		}
-		
-		// last-chance from context-object
-		
-		if ( count($this->authors) == 0 )
-		{
-			foreach ( $this->context_object->getAuthors() as $objAuthor )
-			{
-				array_push($this->authors, $objAuthor);
-			}
-		}		
 	}
 	
 	protected function makeAuthor($author, $subfields, $strType, $bolAdditional = false)
@@ -456,17 +441,6 @@ class Xerxes_Record_Bibliographic extends Xerxes_Record
 			$this->sub_title = $varying_subtitle;
 			$this->trans_title = true;
 		}
-		
-		// last chance, check the context object
-		
-		if ( $this->title == "" && $this->context_object->atitle != null )
-		{
-			$this->title = $this->context_object->atitle;
-		}
-		elseif ( $this->title == "" && $this->context_object->btitle != null )
-		{
-			$this->title = $this->context_object->btitle;
-		}		
 	}
 
 	protected function parsePublisher()
@@ -507,13 +481,6 @@ class Xerxes_Record_Bibliographic extends Xerxes_Record
 
 			$this->year = $this->extractYear( $this->journal );
 		}
-		
-		// last chance grab from context object
-		
-		if ( $this->year == "" && $this->context_object->date != null )
-		{
-			$this->year = $this->extractYear($this->context_object->date);
-		}		
 	}	
 	
 	protected function parseSeriesTitle()
@@ -567,7 +534,7 @@ class Xerxes_Record_Bibliographic extends Xerxes_Record
 	protected function parseFormat()
 	{
 		$this->technology = (string) $this->marc->datafield("538")->subfield("a");
-		$this->format = $this->extractFormat();
+		$this->format->setFormat($this->extractFormat());
 	}
 	
 	/**
@@ -586,28 +553,7 @@ class Xerxes_Record_Bibliographic extends Xerxes_Record
 		{
 			return Xerxes_Record_Format::ConferencePaper;
 		}
-		
-		
-		else
-		{
-			$format_array = $this->marc->fieldArray("513", "a");
-		
-			if ( $this->context_object->genre != null )
-			{
-				array_push($format_array, $this->context_object->genre );
-			}
-	
-			$title_format = (string) $this->marc->datafield("245")->subfield("k");
-			
-			if ( $title_format != null )
-			{
-				array_push( $this->format_array, $title_format );
-			}
-
-		}
-		
-		
-		if ( $this->journal != "" )
+		elseif ( $this->journal != "" )
 		{
 			return  Xerxes_Record_Format::Article; 
 		}
@@ -646,6 +592,7 @@ class Xerxes_Record_Bibliographic extends Xerxes_Record
 		}
 
 		// if we got this far, just return unknown
+		
 		return Xerxes_Record_Format::Unknown;	
 	}	
 	
@@ -702,20 +649,9 @@ class Xerxes_Record_Bibliographic extends Xerxes_Record
 
 		if ( $this->journal_title == "" )
 		{
-			// otherwise see if context object has one
-					
-			if ( $this->context_object->jtitle != null )
-			{
-				$this->journal_title = $this->context_object->jtitle;
-			}
-			elseif ( $this->context_object->title != null )
-			{
-				$this->journal_title = $this->context_object->jtitle;
-			}
+			// see if a short title exists
 			
-			// or see if a short title exists
-			
-			elseif ( $this->short_title != "" && 
+			if ( $this->short_title != "" && 
 				($this->format == "Article" || $this->format == "Journal" || $this->format == "Newspaper")  )
 			{
 				$this->journal_title = $this->short_title;
@@ -724,13 +660,6 @@ class Xerxes_Record_Bibliographic extends Xerxes_Record
 		
 		
 		### volume, issue, pagination
-		
-		// context object is the best
-		
-		$this->volume = $this->context_object->volume;
-		$this->issue = $this->context_object->issue;
-		$this->start_page = $this->context_object->spage;
-		$this->end_page = $this->context_object->epage;
 		
 		$strExtentHost = (string) $this->marc->datafield("773")->subfield("h");
 		$strJournal = (string) $this->marc->datafield("773")->subfield("agpqt");
@@ -744,71 +673,57 @@ class Xerxes_Record_Bibliographic extends Xerxes_Record
 
 		### volume
 
-		if ( $this->volume == "" )
+		if ( array_key_exists( "volume", $arrRegExJournal ) )
 		{
-			if ( array_key_exists( "volume", $arrRegExJournal ) )
-			{
-				$this->volume = $arrRegExJournal["volume"];
-			}
+			$this->volume = $arrRegExJournal["volume"];
 		}
 		
 		### issue
 		
-		if ( $this->issue == "" )
+		if ( array_key_exists( "issue", $arrRegExJournal ) )
 		{
-			if ( array_key_exists( "issue", $arrRegExJournal ) )
-			{
-				$this->issue = $arrRegExJournal["issue"];
-			}
+			$this->issue = $arrRegExJournal["issue"];
 		}
 		
 		### pages
 
 		// start page
 
-		if ( $this->start_page == "" )
+		if ( array_key_exists( "spage", $arrRegExJournal ) )
 		{
-			if ( array_key_exists( "spage", $arrRegExJournal ) )
-			{
-				$this->start_page = $arrRegExJournal["spage"];
-			}
+			$this->start_page = $arrRegExJournal["spage"];
 		}
 		
 		// end page
 		
-		if ( $this->end_page == "" )
+		if ( array_key_exists( "epage", $arrRegExJournal ) )
 		{
-			if ( array_key_exists( "epage", $arrRegExJournal ) )
-			{
-				// found an end page from our generic regular expression parser
+			// found an end page from our generic regular expression parser
 
-				$this->end_page = $arrRegExJournal["epage"];
-			} 
-			elseif ( $strExtentHost != "" && $this->start_page != "" )
-			{
-				// there is an extent note, indicating the number of pages,
-				// calculate end page based on that
+			$this->end_page = $arrRegExJournal["epage"];
+		} 
+		elseif ( $strExtentHost != "" && $this->start_page != "" )
+		{
+			// there is an extent note, indicating the number of pages,
+			// calculate end page based on that
 
-				$arrExtent = array();
+			$arrExtent = array();
 				
-				if ( preg_match( '/([0-9]{1})\/([0-9]{1})/', $strExtentHost, $arrExtent ) != 0 )
-				{
-					// if extent expressed as a fraction of a page, just take
-					// the start page as the end page
-					
-					$this->end_page = $this->start_page;
-				} 
-				elseif ( preg_match( "/[0-9]{1,}/", $strExtentHost, $arrExtent ) != 0 )
-				{
-					// otherwise take whole number
-
+			if ( preg_match( '/([0-9]{1})\/([0-9]{1})/', $strExtentHost, $arrExtent ) != 0 )
+			{
+				// if extent expressed as a fraction of a page, just take
+				// the start page as the end page
+				
+				$this->end_page = $this->start_page;
+			} 
+			elseif ( preg_match( "/[0-9]{1,}/", $strExtentHost, $arrExtent ) != 0 )
+			{
+				// otherwise take whole number
 					$iStart = ( int ) $this->start_page;
-					$iEnd = ( int ) $arrExtent[0];
-					
-					$this->end_page = $iStart + ($iEnd - 1);
-				}
+				$iEnd = ( int ) $arrExtent[0];
+				
+				$this->end_page = $iStart + ($iEnd - 1);
 			}
-		
 		}
 		
 		// page normalization
@@ -1013,13 +928,13 @@ class Xerxes_Record_Bibliographic extends Xerxes_Record
 				$link_html_check = $display . "" . $link_format_type . " " . $link_text;
 				$link_pdf_check = $link_html_check . " " . $url;
 				
-				if ( $link_object->extractFormat($link_pdf_check) == Xerxes_Record_Link::PDF )
+				if ( $link_object->extractType($link_pdf_check) == Xerxes_Record_Link::PDF )
 				{
-					$link_object->setFormat(Xerxes_Record_Link::PDF);
+					$link_object->setType(Xerxes_Record_Link::PDF);
 				}
-				elseif ( $link_object->extractFormat($link_html_check) == Xerxes_Record_Link::HTML )
+				elseif ( $link_object->extractType($link_html_check) == Xerxes_Record_Link::HTML )
 				{
-					$link_object->setFormat(Xerxes_Record_Link::HTML);
+					$link_object->setType(Xerxes_Record_Link::HTML);
 				}
 				
 				$this->links[] = $link_object;
