@@ -14,20 +14,24 @@
 class Xerxes_Model_Metalib_KnowledgeBase
 {
 	private $user;
+	private $lang;
 	
-	public function __construct($user)
+	public function __construct($user, $lang)
 	{
-		$this->user = $user;	
+		$this->user = $user;
+		$this->lang = $lang;
 	}
 	
 	public function getCategories()
 	{
-		
+		$databases = new Xerxes_Model_DataMap_Databases();
+		return $databases->getCategories($this->lang);
 	}
 	
 	public function getSubject($subject)
 	{
-		
+		$databases = new Xerxes_Model_DataMap_Databases();
+		return $databases->getSubject($subject, $this->lang);		
 	}
 	
 	public function getDatabases($query = "")
