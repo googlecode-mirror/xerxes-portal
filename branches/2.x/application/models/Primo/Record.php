@@ -83,7 +83,7 @@ class Xerxes_Model_Primo_Record extends Xerxes_Record
 			
 			foreach ( $authors as $author )
 			{
-				array_push($this->authors, $this->splitAuthor($author, null, "personal"));
+				array_push($this->authors, new Xerxes_Record_Author($author, null, "personal"));
 			}
 		}		
 		
@@ -174,11 +174,7 @@ class Xerxes_Model_Primo_Record extends Xerxes_Record
 		
 		// format
 
-		$this->format = $this->parseFormat($format);	
-
-		// clean-up
-		
-		$this->cleanup();
+		$this->format->determineFormat($format);	
 	}
 	
 	protected function getElement($node, $name)

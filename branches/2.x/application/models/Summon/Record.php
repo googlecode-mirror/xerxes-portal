@@ -30,6 +30,7 @@ class Xerxes_Model_Summon_Record extends Xerxes_Record
 	{
 		$this->original_array = $document;
 		$this->map($document);
+		$this->cleanup();
 	}	
 	
 	protected function map($document)
@@ -53,9 +54,10 @@ class Xerxes_Model_Summon_Record extends Xerxes_Record
 		
 		// format
 		
-		$this->format = $this->extractValue($document, "ContentType/0");
-
-		if ( $this->format == "Journal Article") $this->format = "Article";
+		$format = $this->extractValue($document, "ContentType/0");
+		if ( $format == "Journal Article") $format = "Article";
+		
+		$this->format->setFormat($format);
 		
 		// summary
 		
@@ -133,14 +135,12 @@ class Xerxes_Model_Summon_Record extends Xerxes_Record
 				elseif ( array_key_exists('fullname', $author) )
 				{
 					
-					$author_object = $this->splitAuthor($author['fullname'], null, 'personal');
+					$author_object = new Xerxes_Record_Author($author['fullname'], null, 'personal');
 				}
 				
 				array_push($this->authors, $author_object);
 			}
 		}
-		
-		$this->cleanup();
 	}
 	
 	/**
