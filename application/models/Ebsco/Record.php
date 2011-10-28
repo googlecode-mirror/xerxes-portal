@@ -27,7 +27,7 @@ class Xerxes_Model_Ebsco_Record extends Xerxes_Record
 				{
 					foreach ( $book->aug->au as $auth )
 					{
-						$author = $this->splitAuthor((string) $auth, "", "personal");
+						$author = new Xerxes_Record_Author((string) $auth, "", "personal");
 						
 						if ( (string) $auth["type"] == "editor" )
 						{
@@ -102,8 +102,7 @@ class Xerxes_Model_Ebsco_Record extends Xerxes_Record
 				{
 					if ( (string) $fmt["type"] == "T" )
 					{
-						$fulltext_html = array(null, (string) $xml->plink, "html");
-						array_push($this->links, $fulltext_html);
+						$this->links[] = new Xerxes_Record_Link($xml->plink, Xerxes_Record_Link::HTML);
 					}
 					if ( (string) $fmt["type"] == "P" )
 					{
@@ -116,8 +115,7 @@ class Xerxes_Model_Ebsco_Record extends Xerxes_Record
 							$pdf_link = $xml->plink;
 						}
 						
-						$fulltext_html = array(null, (string) $xml->plink, "pdf");
-						array_push($this->links, $fulltext_html);
+						$this->links[] = new Xerxes_Record_Link($xml->plink, Xerxes_Record_Link::PDF);
 					}
 				}
 			}
@@ -143,7 +141,7 @@ class Xerxes_Model_Ebsco_Record extends Xerxes_Record
 			{
 				foreach ( $article->aug->au as $auth )
 				{
-					$author = $this->splitAuthor((string) $auth, "", "personal");
+					$author = new Xerxes_Record_Author((string) $auth, "", "personal");
 					array_push($this->authors, $author);
 				}
 			}
@@ -179,13 +177,13 @@ class Xerxes_Model_Ebsco_Record extends Xerxes_Record
 				array_push($formats, (string) $pubtype);
 			}			
 			
-			$this->format = $this->parseFormat($formats);
+			// format 
+			
+			$this->format->determineFormat($formats);
 			
 			//language
 			
 			$this->language = (string)$article->language;
 		}
-		
-		$this->cleanup();
 	}
 }

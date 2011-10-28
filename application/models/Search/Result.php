@@ -40,7 +40,7 @@ class Xerxes_Model_Search_Result
 		
 		// link resolver stuff
 		
-		$link_resolver = $this->registry->getConfig("LINK_RESOLVER_ADDRESS", true);
+		$link_resolver = $this->config->getConfig("LINK_RESOLVER_ADDRESS", false, $this->registry->getConfig("LINK_RESOLVER_ADDRESS", true));
 		$this->sid = $this->registry->getConfig("APPLICATION_SID", false, "calstate.edu:xerxes");
 		
 		$this->url_open = $record->getOpenURL($link_resolver, $this->sid);
@@ -76,6 +76,7 @@ class Xerxes_Model_Search_Result
 			// now get the open url
 				
 			$open_url = $this->xerxes_record->getOpenURL(null, $this->sid);
+			$open_url = str_replace('genre=unknown', 'genre=article', $open_url);
 			
 			// send it to bx service
 			
@@ -101,7 +102,7 @@ class Xerxes_Model_Search_Result
 				
 				foreach ( $objRecords as $objRecord )
 				{
-					$record = new Xerxes_BxRecord();
+					$record = new Xerxes_Model_Bx_Record();
 					$record->loadXML($objRecord);
 					array_push($records, $record);
 				}

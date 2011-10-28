@@ -11,7 +11,7 @@
  * @package Xerxes
  */
 
-class Xerxes_Model_Solr_Record extends Xerxes_Record
+class Xerxes_Model_Solr_Record extends Xerxes_Record_Bibliographic
 {
 	protected $source = "solr";
 	protected $record_id;
@@ -49,7 +49,7 @@ class Xerxes_Model_Solr_Record extends Xerxes_Record
 		
 		elseif ( $item_query != null )
 		{
-			$items = $this->xpath->query($item_query);
+			$items = $this->marc->xpath($item_query);
 			
 			// print_r($items);
 			
