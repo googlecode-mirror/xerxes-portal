@@ -161,7 +161,7 @@
 						
 						<xsl:if test="authors/author[@type='conference' or @type='corporate' and not(@additional)]">
 							<xsl:text> / </xsl:text>
-							<xsl:value-of select="authors/author[@type='conference' or @type='corporate' and not(@additional)]" />
+							<xsl:value-of select="authors/author[@type='conference' or @type='corporate' and not(@additional)]/aucorp" />
 						</xsl:if>
 						
 					</a>
