@@ -379,6 +379,8 @@ class Xerxes_Helper
 			}
 			
 			$note_field = strip_tags ( $note_field, $param_allow_tags );
+			# escape ampersand literals too. 
+			$note_field = str_replace("&", "&amp;", $note_field);
 		}
 		
 		if ($escape_behavior == "escape")
