@@ -26,9 +26,9 @@ class Xerxes_Model_Primo_Engine extends Xerxes_Model_Search_Engine
 	 * @param Xerxes_Model_Primo_Config $config
 	 */
 	
-	public function __construct( Xerxes_Model_Primo_Config $config, $on_campus = true, $scope = "" )
+	public function __construct( $on_campus = true, $scope = "" )
 	{
-		parent::__construct($config);
+		parent::__construct();
 
 		// server info
 		
@@ -131,6 +131,17 @@ class Xerxes_Model_Primo_Engine extends Xerxes_Model_Search_Engine
 	{
 		return $this->doGetRecord($id);
 	}
+	
+	/**
+	 * Return the search engine config
+	 * 
+	 * @return Xerxes_Model_Primo_Config
+	 */			
+	
+	public function getConfig()
+	{
+		return Xerxes_Model_Primo_Config::getInstance();
+	}	
 
 	/**
 	 * Do the actual fetch of an individual record

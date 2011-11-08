@@ -15,6 +15,16 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 	
 	protected function init()
 	{
+		if ( ! $this->engine instanceof Xerxes_Model_Search_Engine )
+		{
+			throw new Exception("subclass of of search controller must instantiate engine");
+		}
+		
+		$this->config = $this->engine->getConfig();
+		$this->response->add("config_local", $this->config->toXML());
+		
+		$this->query = $this->engine->getQuery($this->request);
+		
 		$this->helper = new Xerxes_View_Helper_Search($this->id, $this->query, $this->config);
 	}
 	

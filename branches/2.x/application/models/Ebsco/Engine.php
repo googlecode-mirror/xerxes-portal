@@ -24,12 +24,12 @@ class Xerxes_Model_Ebsco_Engine extends Xerxes_Model_Search_Engine
 	 * @param Xerxes_Model_Ebsco_Config $config
 	 */
 	
-	public function __construct(Xerxes_Model_Ebsco_Config $config)
+	public function __construct()
 	{
-		parent::__construct($config);
+		parent::__construct();
 		
-		$this->username = $config->getConfig("EBSCO_USERNAME");
-		$this->password = $config->getConfig("EBSCO_PASSWORD");	
+		$this->username = $this->config->getConfig("EBSCO_USERNAME");
+		$this->password = $this->config->getConfig("EBSCO_PASSWORD");	
 	}
 	
 	/**
@@ -104,7 +104,18 @@ class Xerxes_Model_Ebsco_Engine extends Xerxes_Model_Search_Engine
 	public function getRecordForSave( $id )
 	{
 		return $this->doGetRecord($id);
-	}	
+	}
+	
+	/**
+	 * Return the search engine config
+	 * 
+	 * @return Xerxes_Model_Ebsco_Config
+	 */		
+	
+	public function getConfig()
+	{
+		return Xerxes_Model_Ebsco_Config::getInstance();
+	}		
 	
 	/**
 	 * Do the actual fetch of an individual record
