@@ -13,7 +13,6 @@
 
 class Xerxes_Model_Summon_Engine extends Xerxes_Model_Search_Engine 
 {
-	protected $config; // local config
 	protected $client; // summon client, for now
 
 	/**
@@ -22,12 +21,12 @@ class Xerxes_Model_Summon_Engine extends Xerxes_Model_Search_Engine
 	 * @param Xerxes_Model_Solr_Config $config
 	 */
 	
-	public function __construct( Xerxes_Model_Summon_Config $config )
+	public function __construct()
 	{
-		parent::__construct($config);
+		parent::__construct();
 
-		$id = $config->getConfig("SUMMON_ID", true);
-		$key = $config->getConfig("SUMMON_KEY", true);		
+		$id = $this->config->getConfig("SUMMON_ID", true);
+		$key = $this->config->getConfig("SUMMON_KEY", true);		
 				
 		$this->client = new Xerxes_Summon($id, $key);
 	}
@@ -101,7 +100,18 @@ class Xerxes_Model_Summon_Engine extends Xerxes_Model_Search_Engine
 	public function getRecordForSave( $id )
 	{
 		return $this->doGetRecord($id);
-	}	
+	}
+	
+	/**
+	 * Return the search engine config
+	 * 
+	 * @return Xerxes_Model_Summon_Config
+	 */		
+	
+	public function getConfig()
+	{
+		return Xerxes_Model_Summon_Config::getInstance();
+	}
 	
 	/**
 	 * Do the actual fetch of an individual record
@@ -110,7 +120,7 @@ class Xerxes_Model_Summon_Engine extends Xerxes_Model_Search_Engine
 	 * @return Xerxes_Model_Solr_Results
 	 */	
 	
-	public function doGetRecord( $id )
+	protected function doGetRecord( $id )
 	{
 		// get result
 		

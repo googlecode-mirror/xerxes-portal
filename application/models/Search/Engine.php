@@ -17,6 +17,9 @@ abstract class Xerxes_Model_Search_Engine
 	
 	protected $url; // url to the search service
 	protected $registry; // xerxes application config
+	protected $config; // local search engine config
+	
+	protected $query; // search query
 	
 	/**
 	 * Constructor
@@ -24,7 +27,7 @@ abstract class Xerxes_Model_Search_Engine
 	 * @param Xerxes_Model_Solr_Config $config
 	 */
 	
-	public function __construct( Xerxes_Model_Search_Config $config )
+	public function __construct()
 	{
 		// application config
 		
@@ -32,7 +35,8 @@ abstract class Xerxes_Model_Search_Engine
 		
 		// local config
 		
-		$this->config = $config;
+		$this->config = $this->getConfig();
+		
 	}
 	
 	/**
@@ -60,7 +64,7 @@ abstract class Xerxes_Model_Search_Engine
 	 * Return an individual record
 	 * 
 	 * @param string	record identifier
-	 * @return Xerxes_Model_Solr_Results
+	 * @return Xerxes_Model_Search_Results
 	 */
 	
 	abstract public function getRecord( $id );
@@ -75,11 +79,39 @@ abstract class Xerxes_Model_Search_Engine
 	abstract public function getRecordForSave( $id );
 	
 	/**
+	 * Return the search engine config
+	 * 
+	 * @return Xerxes_Model_Search_Config
+	 */
+	
+	abstract public function getConfig();
+	
+	/**
 	 * Return the URL sent ot the web service
+	 * 
+	 * @return string
 	 */
 	
 	public function getURL()
 	{
 		return $this->url;
+	}
+	
+	/**
+	 * Return a search query object
+	 * 
+	 * @return Xerxes_Model_Search_Query
+	 */	
+	
+	public function getQuery(Xerxes_Framework_Request $request )
+	{
+		if ( $this->query instanceof Xerxes_Model_Search_Query )
+		{
+			return $this->query;
+		}
+		else
+		{
+			return new Xerxes_Model_Search_Query($request, $this->getConfig());
+		}
 	}
 }

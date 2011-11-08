@@ -8,13 +8,13 @@ class Xerxes_View_Helper_Search
 	protected $config;
 	protected $registry;
 	
-	public function __construct($id, Xerxes_Model_Search_Query $query, Xerxes_Model_Search_Config $config)
+	public function __construct($id, Xerxes_Model_Search_Engine $engine)
 	{
+		$this->id = $id;
 		$this->request = Xerxes_Framework_Request::getInstance();
 		$this->registry = Xerxes_Framework_Registry::getInstance();
-		$this->query = $query;
-		$this->id = $id;
-		$this->config = $config;
+		$this->query = $engine->getQuery($this->request);
+		$this->config = $engine->getConfig();
 	}
 	
 	/**

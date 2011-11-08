@@ -14,7 +14,6 @@
 class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine 
 {
 	protected $server; // solr server address
-	protected $config; // local config
 	protected $url; // track the url
 
 	/**
@@ -23,9 +22,9 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 	 * @param Xerxes_Model_Solr_Config $config
 	 */
 	
-	public function __construct( Xerxes_Model_Solr_Config $config )
+	public function __construct()
 	{
-		parent::__construct($config);
+		parent::__construct();
 
 		// server address
 		
@@ -115,6 +114,17 @@ class Xerxes_Model_Solr_Engine extends Xerxes_Model_Search_Engine
 		$record->fetchHoldings(); // item availability
 		return $results;
 	}
+	
+	/**
+	 * Return the search engine config
+	 * 
+	 * @return Xerxes_Model_Solr_Config
+	 */	
+	
+	public function getConfig()
+	{
+		return Xerxes_Model_Solr_Config::getInstance();
+	}	
 
 	/**
 	 * Do the actual fetch of an individual record
