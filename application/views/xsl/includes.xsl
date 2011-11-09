@@ -481,44 +481,13 @@
 	-->
 	
 	<xsl:template name="javascript_include">
-		
-		<!-- exclude javascript for ada (because it messes with screen readers) and mobile devices (makes loading faster) -->
-		
+			
 		<xsl:call-template name="jslabels" />
-			
-		<!-- framework -->
-		<!-- TODO: Swap for jQuery -->
 	
-		<script src="javascript/onload.js" language="javascript" type="text/javascript"></script>
-		<script src="javascript/prototype.js" language="javascript" type="text/javascript"></script>
-		<script src="javascript/scriptaculous/scriptaculous.js" language="javascript" type="text/javascript"></script>
-				
-		<!-- controls the adding and editing of tags -->
+		<script src="javascript/jquery/jquery-1.6.2.min.js" language="javascript" type="text/javascript"></script>
 		
-		<script src="javascript/tags.js" language="javascript" type="text/javascript"></script>
-		<script src="javascript/facet-tabs.js" language="javascript" type="text/javascript"></script>
-			
-		<!-- saved records -->
-		
-		<xsl:variable name="session_saved_records" select="navbar/element[@id='saved_records']/@numSessionSavedRecords" />
-		<xsl:variable name="is_temporary_session">
-			<xsl:choose>
-				<xsl:when test="$temporarySession = 'true'">true</xsl:when>
-				<xsl:otherwise>false</xsl:otherwise>
-			</xsl:choose>
-		</xsl:variable>
-		
-		<script type="text/javascript">
-			
-			// change numSessionSavedRecords to numSavedRecords if you prefer the folder icon to change
-			// if there are any records at all in saved records. Also fix initial display in navbar.
-			
-			numSavedRecords = parseInt('0<xsl:value-of select="$session_saved_records" />', 10);
-			isTemporarySession = <xsl:value-of select="$is_temporary_session" />;
-		</script>
-		
-		<script src="javascript/save.js" language="javascript" type="text/javascript"></script>
-		
+		<script src="javascript/results.js" language="javascript" type="text/javascript"></script>
+
 	</xsl:template>
 		
 	<!-- 	
@@ -528,10 +497,9 @@
 	
 	<xsl:template name="jslabels">
 	
-		<script language="javascript" type="text/javascript" src="./?{$language_param}&amp;base=helper&amp;action=labels" /> 
+		<!-- <script language="javascript" type="text/javascript" src="./?{$language_param}&amp;base=helper&amp;action=labels"></script>  -->
 	
 	</xsl:template>
-	
 	
 	
 	
