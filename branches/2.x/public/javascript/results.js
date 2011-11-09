@@ -13,7 +13,7 @@ $(document).ready(addAjaxToFacetMoreLinks);
 $(document).ready(minimizeFacets);
 $(document).ready(showHitCounts);
 $(document).ready(setNoImage);
-$(document).ready(fillAvailability);
+$(document).load(fillAvailability);
 
 function addAjaxToFacetMoreLinks()
 {
@@ -125,8 +125,8 @@ function setNoImage()
 		{			
 			if ( imgs[i].width != 1 )
 			{
-				$(".worldcatRecordBookCover").show();
-				$(".worldcatRecord").css('marginLeft', (imgs[i].width + 20) + 'px');
+				$(".bookRecordBookCover").show();
+				$(".bookRecord").css('marginLeft', (imgs[i].width + 20) + 'px');
 			}
 		}
 		else ( /book-jacket/.test(imgs[i].className) )
