@@ -4,9 +4,8 @@ class Xerxes_Controller_Primo extends Xerxes_Controller_Search
 {
 	protected $id = "primo";
 	
-	public function init()
+	protected function getEngine()
 	{
-		$this->engine = new Xerxes_Model_Primo_Engine();
-		parent::init();
+		return new Xerxes_Model_Primo_Engine();
 	}
 }
