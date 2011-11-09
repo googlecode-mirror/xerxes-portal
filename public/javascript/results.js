@@ -12,8 +12,8 @@
 $(document).ready(addAjaxToFacetMoreLinks);
 $(document).ready(minimizeFacets);
 $(document).ready(showHitCounts);
-$(document).ready(setNoImage);
-$(document).load(fillAvailability);
+$(window).load(setNoImage);
+$(document).ready(fillAvailability);
 
 function addAjaxToFacetMoreLinks()
 {
