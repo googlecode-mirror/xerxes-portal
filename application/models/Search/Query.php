@@ -223,42 +223,7 @@ class Xerxes_Model_Search_Query
 	
 	public function checkSpelling()
 	{
-		$registry = Xerxes_Framework_Registry::getInstance();
-		
-		$configYahooID = $registry->getConfig( "YAHOO_ID", false );
-		
 		$spell_return = array(); // we'll return this one
-		
-		if ( $configYahooID != null )
-		{
-			for ( $x = 0; $x < count($this->terms); $x++ )
-			{
-				$term = $this->terms[$x];
-				
-				$query = "select * from search.spelling where query=\"" . $term->phrase . "\" and appid=\"$configYahooID\"";
-				$url = "http://query.yahooapis.com/v1/public/yql?q=" . urlencode($query);
-				$response = Xerxes_Framework_Parser::request($url);
-				
-				if ( $response != "" )
-				{
-					$objSpelling = new DOMDocument();
-					$objSpelling->loadXML($response);
-					
-					if ( $objSpelling->getElementsByTagName("suggestion")->item(0) != null )
-					{
-						$suggestion = $objSpelling->getElementsByTagName("suggestion")->item(0)->nodeValue;
-		
-						$term->spell_correct = $suggestion;
-						$spell_return[$term->id] = $term->spell_correct;
-					}				
-					
-					// also put it here so we can return it
-					
-					$this->terms[$x] = $term;
-				}
-			}
-		}
-		
 		return $spell_return;
 	}
 	
