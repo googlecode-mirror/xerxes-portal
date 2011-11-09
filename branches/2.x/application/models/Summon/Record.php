@@ -36,7 +36,7 @@ class Xerxes_Model_Summon_Record extends Xerxes_Record
 	protected function map($document)
 	{
 		$this->source = "Summon";
-		$this->database_name = "TBD";
+		$this->database_name = $this->extractValue($document, "Source/0");;
 		
 		$this->record_id = $this->extractValue($document, "ID/0");
 		$this->score = $this->extractValue($document, "Score/0");
