@@ -135,14 +135,11 @@ class Xerxes_Summon
 			$options['s.ff'] = $facets;
 		}
 		
-		// Define filters to be applied
+		// add filters to be applied
 		
 		if ( count($filter) > 0 )
 		{
-			foreach ( $filter as $filterItem )
-			{
-				$options['s.fvf'] = $filterItem;
-			}
+			$options['s.fvf'] = $filter;
 		}
 		
 		// Define which sorting to use
