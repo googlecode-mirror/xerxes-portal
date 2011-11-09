@@ -17,10 +17,11 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 	{
 		if ( ! $this->engine instanceof Xerxes_Model_Search_Engine )
 		{
-			throw new Exception("subclass of of search controller must instantiate engine");
+			throw new Exception("subclass of search controller must instantiate engine");
 		}
 		
 		$this->config = $this->engine->getConfig();
+		
 		$this->response->add("config_local", $this->config->toXML());
 		
 		$this->query = $this->engine->getQuery($this->request);
@@ -35,7 +36,7 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 	
 	public function search()
 	{
-		// set the url params for where are gong to redirect,
+		// set the url params for where we are gong to redirect,
 		// usually to the results action, but can be overriden
 		
 		$base = $this->helper->searchRedirectParams();
