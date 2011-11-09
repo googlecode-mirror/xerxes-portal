@@ -4,9 +4,8 @@ class Xerxes_Controller_Ebsco extends Xerxes_Controller_Search
 {
 	protected $id = "ebsco";
 	
-	public function init()
+	protected function getEngine()
 	{
-		$this->engine = new Xerxes_Model_Ebsco_Engine();
-		parent::init();
+		return new Xerxes_Model_Ebsco_Engine();
 	}
 }
