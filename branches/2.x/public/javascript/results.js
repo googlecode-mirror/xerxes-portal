@@ -14,6 +14,8 @@ $(document).ready(minimizeFacets);
 $(document).ready(showHitCounts);
 $(window).load(setNoImage);
 $(document).ready(fillAvailability);
+$(document).ready(addAjaxToSaveLinks);
+
 
 function addAjaxToFacetMoreLinks()
 {
@@ -138,6 +140,168 @@ function setNoImage()
 		}
 	}
 }
+
+function addAjaxToSaveLinks()
+{	
+	$(".saveRecord").click(function() {
+		return updateRecord(this);
+	});
+}
+	
+function updateRecord( record )
+{
+	var id = record.id;
+	var id_array = id.split(/_/); id_array.shift();
+	var record_number = id_array.join("_");
+	
+	
+	if ( $(record).hasClass("disabled")) {
+		return false;
+	}
+	
+	// should be set by main page in global js variable, if not we set.
+	
+	if (typeof(window["numSavedRecords"]) == "undefined") {
+		numSavedRecords = 0;
+	}
+	
+	if (typeof(window["isTemporarySession"]) == "undefined") {
+		 isTemporarySession = true;
+	}
+	
+	// do it! update our icons only after success please! then we're only
+	// telling them they have saved a record if they really have! hooray
+	// for javascript closures.
+
+	var workingText = xerxes_labels['text_results_record_saving'];
+	
+	if ( $(record).hasClass("saved") ) {
+		workingText = xerxes_labels['text_results_record_removing'];
+	}
+
+	// alert(xerxes_labels['text_results_record_save_err']);
+	
+	$(record).html(workingText);
+	$(record).addClass("disabled");
+	
+	// get it
+	
+	var url = $(record).attr('href');
+	url += "&format=json";
+	
+	$.getJSON(url, function(json) {
+		
+		var savedID = json.savedRecordID;
+
+		if ( $(record).hasClass("saved") )
+		{
+			numSavedRecords--;
+
+			$('#saveRecordOption_' + record_number + ' .temporary_login_note').remove();
+			
+			$('#folder_' + record_number).attr('src',"images/folder.gif");
+			$(record).html( xerxes_labels['text_results_record_save_it'] );
+			$(record).removeClass("saved");
+			
+			// remove label input
+			
+			var label_input = $('#label_' + record_number);
+			if (label_input) label_input.remove();
+		}		
+		else
+		{
+			numSavedRecords++;
+			
+			$('#folder_' + record_number).attr('src',"images/folder_on.gif");
+			
+			// different label depending on whether they are logged in or not. 
+			// we tell if they are logged in or not, as well as find the login
+			// url, based on looking for 'login' link in the dom.
+			
+			if ($('#login'))
+			{
+				var temporary_login_note = ' <span class="temporary_login_note"> ( <a  href="' + $('login').href +'">' + xerxes_labels['text_results_record_saved_perm'] + ' </a> ) </span>';
+			
+				// Put the login link back please 
+				
+				$(record).html( xerxes_labels['text_results_record_saved_temp'] ); 
+				
+				// $(record).insert({after: temporary_login_note  });
+			}
+			else
+			{
+				$(record).html( xerxes_labels['text_results_record_saved'] );
+			}
+			
+			$(record).addClass("saved");
+			
+			// add tag input
+			
+			if ( ! isTemporarySession && savedID )
+			{
+				/*
+				
+				var input_div = $('template_tag_input').cloneNode(true);
+				var new_form = input_div.down('form');
+				
+				// take the template for a tag input and set it up for this particular
+				// record
+				
+				input_div.id = "label_" + source + ":" + record_number; 
+				new_form.record.value = savedID;
+				new_form.tagsShaddow.id = 'shadow-' + savedID; 
+				new_form.tags.id = 'tags-' + savedID;
+				
+				new_form.tags.onfocus = function () {
+					activateButton(this)
+				}
+				new_form.tags.onkeypress = function () {
+					activateButton(this)
+				}
+				new_form.tags.onblur = function () {
+					deactivateButton(this)
+				}
+				
+				new_form.submitButton.id = 'submit-' + savedID;
+				new_form.submitButton.disabled = true;
+				new_form.onsubmit = function () {
+					return updateTags(this);
+				}
+			
+				// add it to the page, now that it's all set up.
+				
+				var parentBlock = $(id).up('.recordActions');
+				
+				if (parentBlock) 
+				{
+					parentBlock.insert(input_div);
+					
+					// and add the autocompleter
+					
+					addAutoCompleterToID(new_form.tags.id);
+					input_div.show();
+				}
+				
+				*/
+			}
+		}
+		
+		$(record).removeClass("disabled");
+		
+		// change master folder image
+		
+		if ( numSavedRecords > 0 ) {
+			$('#folder').src = 'images/folder_on.gif';
+		}
+		else {
+			$('#folder').src = 'images/folder.gif';
+		}
+
+	});	
+		
+	return false;
+}
+	
 
 function updateElement(url, element)
 {
