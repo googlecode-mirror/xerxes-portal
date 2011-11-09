@@ -12,6 +12,8 @@
 $(document).ready(addAjaxToFacetMoreLinks);
 $(document).ready(minimizeFacets);
 $(document).ready(showHitCounts);
+$(document).ready(setNoImage);
+$(document).ready(fillAvailability);
 
 function addAjaxToFacetMoreLinks()
 {
@@ -78,17 +80,69 @@ function showHitCounts()
 					url += "&source=" +  source;
 				}
 				
-				updateHitCount(url, links[i].id);
+				updateElement(url, links[i]);
 			}
 		}
 	}
 }
 
-function updateHitCount(url, hitID)
+function fillAvailability()
+{		
+	var divs = document.getElementsByTagName('div');
+	
+	// fill each div with look-up information
+	// will be either based on isbn or oclc number
+	
+	for ( i = 0; i < divs.length; i++ )
+	{
+		if ( /availabilityLoad/.test(divs[i].className) )
+		{
+			$(divs[i]).html("<img src=\"images/loading.gif\" alt=\"loading\" /> Checking availability . . .");
+		
+			var url = "";		// final url to send to server
+			
+			arrElements = divs[i].id.split(":");
+			requester = arrElements[0];
+			id = arrElements[1];
+			isbn = arrElements[2];
+			oclc = arrElements[3];
+			view = arrElements[4];
+			base = arrElements[5];
+			
+			url = ".?base=" + base + "&action=lookup&id=" + id + "&isbn=" + isbn + "&oclc=" + oclc + "&source=" + requester + "&display=" + view;			
+			updateElement(url, divs[i])
+		}
+	}
+}
+
+function setNoImage()
+{
+	var imgs = document.getElementsByTagName('img');
+	
+	for ( i = 0; i < imgs.length; i++ )
+	{
+		if ( /book-jacket-large/.test(imgs[i].className) )
+		{			
+			if ( imgs[i].width != 1 )
+			{
+				$(".worldcatRecordBookCover").show();
+				$(".worldcatRecord").css('marginLeft', (imgs[i].width + 20) + 'px');
+			}
+		}
+		else ( /book-jacket/.test(imgs[i].className) )
+		{
+			if ( imgs[i].width == 1 )
+			{
+				imgs[i].src = "images/no-image.gif";
+			}
+		}
+	}
+}
+
+function updateElement(url, element)
 {
 	$.get(url, function(data) {
-		$('#' + hitID).html(data);
+		$(element).html(data);
 	});
 	//.error(function() { $(hitID).html("error") });
 }
-	
