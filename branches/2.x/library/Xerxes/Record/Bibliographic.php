@@ -1,10 +1,5 @@
 <?php
 
-class Xerxes_Record_Bibliographic_Document extends Xerxes_Marc_Document 
-{
-	protected $record_type = "Xerxes_Record_Bibliographic";
-}
-
 /**
  * Extract properties for books, articles, and dissertations from MARC-XML
  * 
@@ -18,7 +13,10 @@ class Xerxes_Record_Bibliographic_Document extends Xerxes_Marc_Document
 
 class Xerxes_Record_Bibliographic extends Xerxes_Record
 {
-	protected $marc; // marc object	
+	protected $alt_scripts = array(); // alternate character-scripts like cjk or hebrew, taken from 880s
+	protected $alt_script_name = ""; // the name of the alternate character-script; we'll just assume one for now, I guess
+
+	protected $marc; // marc object
 	
 	public function __construct()
 	{
@@ -32,6 +30,11 @@ class Xerxes_Record_Bibliographic extends Xerxes_Record
 		$this->marc->loadXML($xml);
 
 		parent::loadXML($xml);
+	}
+	
+	public function loadMarc( Xerxes_Marc_Record $marc )
+	{
+		$this->marc = $marc;
 	}
 	
 	/**
@@ -485,7 +488,7 @@ class Xerxes_Record_Bibliographic extends Xerxes_Record
 	
 	protected function parseSeriesTitle()
 	{
-		$this->series_title = (string) $this->marc->datafield("440")->subfield("a" );
+		$this->series_title = (string) $this->marc->datafield("440")->subfield("a");
 	}
 	
 	protected function parseAdditionalTitles()
@@ -658,6 +661,10 @@ class Xerxes_Record_Bibliographic extends Xerxes_Record
 			}
 		}
 		
+		// continues and continued by
+		
+		$this->journal_title_continues = (string) $this->marc->datafield("780")->subfield('t');
+		$this->journal_title_continued_by = (string) $this->marc->datafield("785")->subfield('t');
 		
 		### volume, issue, pagination
 		
@@ -800,13 +807,26 @@ class Xerxes_Record_Bibliographic extends Xerxes_Record
 	
 	protected function parseAltScript()
 	{	
-		// the 880 represents an alternative character-script, like Hebrew or CJK;
-		// for simplicity's sake, we just dump them all here in an array, with the 
-		// intent of displaying them in paragraphs together in the interface or something?
+		// the 880 represents an alternative character-script, like hebrew or cjk
 		
-		// we get every field except for the $6 which is a linking field
-		
-		$this->alt_scripts = $this->marc->fieldArray("880", "abcdefghijklmnopqrstuvwxyz12345789" );
+		if ( $this->marc->datafield("880")->length() > 0 )
+		{
+			// we create a new marc record from the 880, using subfield 6 as the 
+			// name of each new tag
+			
+			$marc = new Xerxes_Marc_Record();
+			
+			foreach ( $this->marc->datafield("880") as $datafield )
+			{
+				$datafield->tag = (string) $datafield->subfield("6");
+				$marc->addDataField($datafield);
+			}
+			
+			$bibliogaphic = new Xerxes_Record_Bibliographic();
+			$bibliogaphic->loadMarc($marc);
+			
+			array_push($this->alt_scripts, $bibliogaphic);
+		}
 		
 		// now use the $6 to figure out which character-script this is
 		// assume just one for now

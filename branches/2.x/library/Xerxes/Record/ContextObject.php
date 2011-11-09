@@ -19,7 +19,6 @@ class Xerxes_Record_ContextObject extends Xerxes_Record
 	{
 		parent::__construct();
 		$this->utility[] = "xpath";
-		$this->utility[] = "document";
 	}	
 
 	public function loadXML($xml)

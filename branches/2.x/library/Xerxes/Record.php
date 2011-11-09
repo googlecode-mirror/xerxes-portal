@@ -49,9 +49,13 @@ class Xerxes_Record
 	protected $price = ""; // price
 
 	protected $book_title = ""; // book title (for book chapters)
+	
 	protected $journal_title = ""; // journal title
 	protected $journal = ""; // journal source information
 	protected $short_title = ""; // journal short title
+	protected $journal_title_continued_by = ""; // journal continued by title
+	protected $journal_title_continues = ""; // journal continues a title
+	
 	protected $volume = ""; // volume
 	protected $issue = ""; // issue
 	protected $start_page = ""; // start page
@@ -77,10 +81,7 @@ class Xerxes_Record
 	protected $subjects = array(); // subjects
 	
 	protected $links = array(); // all supplied links in the record both full text and non
-	
-	protected $alt_scripts = array(); // alternate character-scripts like cjk or hebrew, taken from 880s
-	protected $alt_script_name = ""; // the name of the alternate character-script; we'll just assume one for now, I guess
-	
+		
 	protected $refereed = false; // whether the item is peer-reviewed
 	protected $subscription = false; // whether the item is available in library subscription
 	protected $physical_holdings = true; // whether record has physical holdings
@@ -110,6 +111,8 @@ class Xerxes_Record
 	
 	public function __wakeup()
 	{
+		$this->__construct();
+		
 		// and then we recreate the object (with any new changes we've made)
 		// by just loading the saved xml back into the object
 		

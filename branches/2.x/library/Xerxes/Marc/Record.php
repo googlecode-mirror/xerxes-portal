@@ -11,10 +11,6 @@
  * @package Xerxes
  */
 
-/**
- * Parse single MARC-XML record
- */
-
 class Xerxes_Marc_Record
 {
 	private $leader;
