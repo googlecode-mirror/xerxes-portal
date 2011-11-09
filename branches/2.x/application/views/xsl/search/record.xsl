@@ -122,6 +122,7 @@
 		<xsl:call-template name="record-subjects" />
 		<xsl:call-template name="record-standard_numbers" />
 		<xsl:call-template name="record-notes" />
+		<xsl:call-template name="additional-titles" />
 	</xsl:template>
 
 	<!--
@@ -501,7 +502,46 @@
 		</xsl:if>
 	</xsl:template>
 
+	<!--
+		TEMPLATE: ADDITIONAL TITLES
+	-->
+	
+	<xsl:template name="additional-titles">
+		
+		<xsl:if test="additional_titles or journal_title_continues or journal_title_continued_by">
 
+			<h2>Additional title information</h2>
+			
+			<ul>
+				<xsl:for-each select="additional_titles/additional_title">
+					<li><xsl:value-of select="text()" /></li>
+				</xsl:for-each>
+			
+				<xsl:if test="journal_title_continues">	
+					<li>Continues: <xsl:value-of select="journal_title_continues" /></li>
+				</xsl:if>
+	
+				<xsl:if test="journal_title_continued_by">
+					<li>Continued by: <xsl:value-of select="journal_title_continued_by" /></li>
+				</xsl:if>
+				
+			</ul>
+
+		</xsl:if>
+
+		<xsl:if test="series">
+
+			<h2>Series</h2>
+			
+			<ul>
+			<xsl:for-each select="series/serie">
+				<li><xsl:value-of select="text()" /></li>
+			</xsl:for-each>
+			</ul>
+			
+		</xsl:if>		
+
+	</xsl:template>	
 
 
 
