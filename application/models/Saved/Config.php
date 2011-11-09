@@ -11,7 +11,7 @@
  * @package Xerxes
  */
 
-class Xerxes_Model_SavedRecords_Config extends Xerxes_Model_Search_Config
+class Xerxes_Model_Saved_Config extends Xerxes_Model_Search_Config
 {
 	protected $config_file = "config/folder";
 	private static $instance; // singleton pattern
@@ -20,7 +20,7 @@ class Xerxes_Model_SavedRecords_Config extends Xerxes_Model_Search_Config
 	{
 		if ( empty( self::$instance ) )
 		{
-			self::$instance = new Xerxes_Model_SavedRecords_Config();
+			self::$instance = new Xerxes_Model_Saved_Config();
 			$object = self::$instance;
 			$object->init();			
 		}

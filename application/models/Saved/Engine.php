@@ -11,7 +11,7 @@
  * @package Xerxes
  */
 
-class Xerxes_Model_SavedRecords_Engine extends Xerxes_Model_Search_Engine 
+class Xerxes_Model_Saved_Engine extends Xerxes_Model_Search_Engine 
 {
 	private $datamap; // data map
 	
@@ -21,9 +21,9 @@ class Xerxes_Model_SavedRecords_Engine extends Xerxes_Model_Search_Engine
 	 * @param Xerxes_Model_Solr_Config $config
 	 */
 	
-	public function __construct( Xerxes_Model_Search_Config $config )
+	public function __construct()
 	{
-		parent::__construct($config);
+		parent::__construct();
 		
 		$this->datamap = new Xerxes_Model_DataMap_SavedRecords();
 	}
@@ -74,6 +74,11 @@ class Xerxes_Model_SavedRecords_Engine extends Xerxes_Model_Search_Engine
 	
 	public function getRecordForSave( $id )
 	{
+	}
+	
+	public function getConfig()
+	{
+		return Xerxes_Model_Saved_Config::getInstance();
 	}
 	
 	protected function doSearch(Xerxes_Model_Search_Query $search, $start = 1, $max = 10, $sort = "")
