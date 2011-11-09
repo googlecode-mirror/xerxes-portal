@@ -89,38 +89,5 @@ function xerxes_autoload($class_name)
 	
 	// now everthing after the prefix should map to the file system
 	
-	$pieces = explode("_", $file_location);
-	$file_location = implode("/", $pieces);
-	
-	// and add .php if not specifically defined in location
-	
-	if ( ! strpos($file_location, '.php') )
-	{
-		$file_location .= '.php';
-	}
-	
-	@include_once $file_location;
-	
-	// nope, so try the stub
-	
-	if ( ! class_exists($class_name) )
-	{
-		// could be a secondary class in the file, so check the stub
-		// form of the name
-		
-		array_pop($pieces);
-		$stub_file_location = implode("/", $pieces) . ".php";
-		
-		// now try that
-		
-		@include_once $stub_file_location;
-		
-		// double-nopes!!
-		
-		if ( ! class_exists($class_name) )
-		{
-			throw new Exception("Could not find a file for the class '$class_name'");
-		}
-	}
+	require_once( str_replace('_', '/', "$file_location.php") );
 }
-
