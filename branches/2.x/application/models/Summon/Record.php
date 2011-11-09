@@ -23,6 +23,7 @@ class Xerxes_Model_Summon_Record extends Xerxes_Record
 	
 	public function __wakeup()
 	{
+		parent::__construct();
 		$this->load($this->serialized);
 	}	
 	
