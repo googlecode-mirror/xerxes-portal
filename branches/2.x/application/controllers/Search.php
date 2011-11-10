@@ -135,7 +135,7 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 		
 		$this->helper->addRecordLinks($results);
 		$this->helper->addFacetLinks($results);
-		$this->helper->addQueryLinks();
+		$this->helper->addQueryLinks($this->query);
 		
 		// summary, sort & paging elements
 		

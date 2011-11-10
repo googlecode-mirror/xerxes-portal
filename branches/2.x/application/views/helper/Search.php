@@ -10,9 +10,10 @@ class Xerxes_View_Helper_Search
 	
 	public function __construct($id, Xerxes_Model_Search_Engine $engine)
 	{
-		$this->id = $id;
 		$this->request = Xerxes_Framework_Request::getInstance();
-		$this->registry = Xerxes_Framework_Registry::getInstance();
+		$this->registry = Xerxes_Framework_Registry::getInstance();		
+		
+		$this->id = $id;
 		$this->query = $engine->getQuery($this->request);
 		$this->config = $engine->getConfig();
 	}
@@ -318,10 +319,17 @@ class Xerxes_View_Helper_Search
 	
 	/**
 	 * Add links to the query object limits
+	 * 
+	 * @param Xerxes_Model_Search_Query $query
 	 */
 	
-	public function addQueryLinks()
+	public function addQueryLinks(Xerxes_Model_Search_Query $query)
 	{
+		// we have to pass in the query object here rather than take
+		// the property above because adding the links doesn't seem
+		// to reflect back in the main object, even though they should 
+		// be references, maybe because limit objects are in an array?  
+		
 		// link to corrected spelling
 		
 		$spelling_corrected = $this->request->getParam("spelling_query");
@@ -332,7 +340,7 @@ class Xerxes_View_Helper_Search
 			$spell["url"] = $this->linkSpelling();
 			$spell["text"] = $spelling_corrected;
 			
-			$this->query->spelling_url = $spell;
+			$query->spelling_url = $spell;
 		}
 		
 		// search option links
@@ -356,7 +364,7 @@ class Xerxes_View_Helper_Search
 				
 				// url
 				
-				$params = $this->query->extractSearchParams();
+				$params = $query->extractSearchParams();
 				
 				$params['base'] = (string) $option["id"];
 				$params['action'] = "results";
@@ -372,7 +380,7 @@ class Xerxes_View_Helper_Search
 				{
 					// does this value in the cache have the save id as our tab?
 					
-					$id = str_replace("_" . $this->query->getHash(), "", $session_id);
+					$id = str_replace("_" . $query->getHash(), "", $session_id);
 					
 					if ( $id == (string) $option["id"] )
 					{
@@ -388,12 +396,12 @@ class Xerxes_View_Helper_Search
 		
 		// links to remove facets
 		
-		foreach ( $this->query->getLimits() as $limit )
+		foreach ( $query->getLimits() as $limit )
 		{
 			$url = new Xerxes_Framework_URL($this->currentParams());
 			$url->removeParam($limit->field, $limit->value);
 			$limit->remove_url = $this->request->url_for($url);
-		}		
+		}
 	}
 	
 	/**
