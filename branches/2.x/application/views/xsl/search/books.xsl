@@ -34,7 +34,7 @@
 	
 	<xsl:template name="module-header">
 	
-		<link href="{$base_url}/css/books.css?xerxes_version={$xerxes_version}" rel="stylesheet" type="text/css" />
+		<link href="css/books.css?xerxes_version={$xerxes_version}" rel="stylesheet" type="text/css" />
 	
 	</xsl:template>
 
