@@ -116,8 +116,11 @@ class Xerxes_Model_Saved_Engine extends Xerxes_Model_Search_Engine
 		
 		foreach ( $records as $record )
 		{
-			$result = new Xerxes_Model_Search_Result($record->xerxes_record, $this->config);
+			// set the internal id as the record id, not the original
 			
+			$record->xerxes_record->setRecordID($record->id);
+			
+			$result = new Xerxes_Model_Search_Result($record->xerxes_record, $this->config);
 			
 			$results->addResult($result);
 		}
