@@ -170,7 +170,7 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	<xsl:variable name="text_folder_limit_format">Formát</xsl:variable>
 	<xsl:variable name="text_folder_limit_tag">Štítek</xsl:variable>
 	<xsl:variable name="text_folder_login_temp">
-		( <a href="{//navbar/element[@id='login']/url}">Přihlaste se</a>, abyste mohli své výsledky uložit a použít i po ukončení této relace. )
+		( <a href="{//navbar/login_link}">Přihlaste se</a>, abyste mohli své výsledky uložit a použít i po ukončení této relace. )
 	</xsl:variable>
 	<xsl:variable name="text_folder_no_records">Momentálně nemáte uložené žádné záznamy</xsl:variable>
 	<xsl:variable name="text_folder_no_records_for">z</xsl:variable>
