@@ -25,10 +25,10 @@ class Xerxes_Model_DataMap_Refereed extends Xerxes_Framework_DataMap
 	/**
 	 * Add a refereed title
 	 * 
-	 * @param Xerxes_Model_DataMap_Data_Refereed $objTitle peer reviewed journal object
+	 * @param Xerxes_Model_Search_Refereed $objTitle peer reviewed journal object
 	 */
 	
-	public function addRefereed(Xerxes_Model_DataMap_Data_Refereed $objTitle)
+	public function addRefereed(Xerxes_Model_Search_Refereed $objTitle)
 	{
 		$objTitle->issn = str_replace("-", "", $objTitle->issn);
 		$this->doSimpleInsert("xerxes_refereed", $objTitle);
@@ -37,7 +37,7 @@ class Xerxes_Model_DataMap_Refereed extends Xerxes_Framework_DataMap
 	/**
 	 * Get all refereed data
 	 * 
-	 * @return array of Xerxes_Model_DataMap_Data_Refereed objects
+	 * @return array of Xerxes_Model_Search_Refereed objects
 	 */
 	
 	public function getAllRefereed()
@@ -47,7 +47,7 @@ class Xerxes_Model_DataMap_Refereed extends Xerxes_Framework_DataMap
 		
 		foreach ( $arrResults as $arrResult )
 		{
-			$objPeer = new Xerxes_Model_DataMap_Data_Refereed();
+			$objPeer = new Xerxes_Model_Search_Refereed();
 			$objPeer->load( $arrResult );
 			
 			array_push( $arrPeer, $objPeer );
@@ -60,7 +60,7 @@ class Xerxes_Model_DataMap_Refereed extends Xerxes_Framework_DataMap
 	 * Get a list of journals from the refereed table
 	 *
 	 * @param mixed $issn		[string or array] ISSN or multiple ISSNs
-	 * @return array			array of Xerxes_Model_DataMap_Data_Refereed objects
+	 * @return array			array of Xerxes_Model_Search_Refereed objects
 	 */
 	
 	public function getRefereed($issn)
@@ -105,7 +105,7 @@ class Xerxes_Model_DataMap_Refereed extends Xerxes_Framework_DataMap
 		
 		foreach ( $arrResults as $arrResult )
 		{
-			$objPeer = new Xerxes_Model_DataMap_Data_Refereed( );
+			$objPeer = new Xerxes_Model_Search_Refereed( );
 			$objPeer->load( $arrResult );
 			
 			array_push( $arrPeer, $objPeer );

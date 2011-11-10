@@ -175,11 +175,11 @@ class Xerxes_Model_DataMap_Databases extends Xerxes_Framework_DataMap
 	/**
 	 * Add a type to the local knowledgebase
 	 *
-	 * @param Xerxes_Model_DataMap_Data_Type $objType
+	 * @param Xerxes_Model_Metalib_Type $objType
 	 * @return int status
 	 */
 	
-	public function addType(Xerxes_Model_DataMap_Data_Type $objType)
+	public function addType(Xerxes_Model_Metalib_Type $objType)
 	{
 		return $this->doSimpleInsert( "xerxes_types", $objType );
 	}
@@ -1049,7 +1049,7 @@ class Xerxes_Model_DataMap_Databases extends Xerxes_Framework_DataMap
 	/**
 	 * Get the list of types
 	 *
-	 * @return array	array of Xerxes_Model_DataMap_Data_Type objects
+	 * @return array	array of Xerxes_Model_Metalib_Type objects
 	 */
 	
 	public function getTypes()
@@ -1062,7 +1062,7 @@ class Xerxes_Model_DataMap_Databases extends Xerxes_Framework_DataMap
 		
 		foreach ( $arrResults as $arrResult )
 		{
-			$objType = new Xerxes_Model_DataMap_Data_Type( );
+			$objType = new Xerxes_Model_Metalib_Type( );
 			$objType->load( $arrResult );
 			
 			array_push( $arrTypes, $objType );
