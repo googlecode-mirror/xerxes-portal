@@ -170,7 +170,7 @@ xmlns:php="http://php.net/xsl" exclude-result-prefixes="php">
 	<xsl:variable name="text_folder_limit_format">Format</xsl:variable>
 	<xsl:variable name="text_folder_limit_tag">Label</xsl:variable>
 	<xsl:variable name="text_folder_login_temp">
-		( <a href="{//navbar/element[@id='login']/url}">Log-in</a> to save records beyond this session. )
+		( <a href="{//navbar/login_link}">Log-in</a> to save records beyond this session. )
 	</xsl:variable>
 	<xsl:variable name="text_folder_no_records">There are currently no saved records</xsl:variable>
 	<xsl:variable name="text_folder_no_records_for">of</xsl:variable>
