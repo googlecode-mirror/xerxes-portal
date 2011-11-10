@@ -32,8 +32,8 @@
 	-->
 
 	<xsl:template name="search_page">
-	
-		<div class="yui-ge">
+
+		<div class="yui-gc">
 			<div class="yui-u first">
 				<h1>Testing</h1>
 				<xsl:call-template name="searchbox" />
@@ -44,11 +44,12 @@
 				</div>
 			</div>
 		</div>
+
 		
-		<xsl:call-template name="tabs" />
+		<!-- <xsl:call-template name="tabs" /> -->
 		
-		<div class="yui-ge">
-			<div class="yui-u first">	
+		<div class="yui-gf">
+			<div class="yui-u">	
 			
 				<xsl:call-template name="facets_applied" />
 		
@@ -63,8 +64,42 @@
 				<xsl:call-template name="hidden_tag_layers" />
 	
 			</div>
-			<div class="yui-u">
+			<div class="yui-u first">
 				<div id="search-sidebar" class="sidebar">
+				
+					<div class="box" style="font-size: 120%">
+					
+						<h2 style="font-size: inherit">Search Results</h2>
+						
+						<ul>
+						
+						<xsl:for-each select="config/search//option">
+							
+							<li>
+								<xsl:choose>
+									<xsl:when test="@current = 1">
+										<strong><xsl:value-of select="@public" /></strong>
+									</xsl:when>
+									<xsl:otherwise>
+									
+										<a href="{@url}">
+											
+											<xsl:value-of select="@public" /> 
+										</a>
+									</xsl:otherwise>
+								</xsl:choose>
+				
+								<xsl:text> </xsl:text>
+								
+								<xsl:call-template name="tab_hit" />
+								
+							</li>
+							
+						</xsl:for-each>
+						
+						</ul>
+					</div>
+				
 					<xsl:call-template name="search_sidebar" />
 				</div>
 			</div>
@@ -85,7 +120,7 @@
 			<xsl:otherwise>
 	
 				<div id="sort">
-					<div class="yui-gd">
+					<div class="yui-g" style="width: 100%">
 						<div class="yui-u first">
 							<xsl:copy-of select="$text_metasearch_results_summary" />
 						</div>
@@ -304,7 +339,7 @@
 	</xsl:template>
 
 	<!-- 
-		TEMPLATE: TAB OPTIONS
+		TEMPLATE: TAB
 		each tab
 	-->
 	
@@ -313,29 +348,47 @@
 		<xsl:for-each select="tab">
 			
 			<li>
-				<xsl:if test="@current = 1">
-					<xsl:attribute name="class">here</xsl:attribute>
-				</xsl:if>
-				
-				<a href="{@url}">
-					<xsl:value-of select="@public" /> 
+				<xsl:choose>
+					<xsl:when test="@current = 1">
+						<strong><xsl:value-of select="@public" /></strong>
+					</xsl:when>
+					<xsl:otherwise>
 					
-					<span class="tabsHit">
-						<xsl:choose>
-							<xsl:when test="@hits">
-								(<xsl:value-of select="@hits" />)
-							</xsl:when>
-							<xsl:otherwise>
-								<span class="tabsHitNumber" id="tab:{@id}:{@source}"></span>
-							</xsl:otherwise>
-						</xsl:choose>								
-					</span>
-				</a>
+						<a href="{@url}">
+							
+							<xsl:value-of select="@public" /> 
+						</a>
+					</xsl:otherwise>
+				</xsl:choose>
+
+				<xsl:text> </xsl:text>
+				
+				<xsl:call-template name="tab_hit" />
+				
 			</li>
 		</xsl:for-each>
 		
 	</xsl:template>
 
+	<!-- 
+		TEMPLATE: TAB HIT
+	-->
+	
+	<xsl:template name="tab_hit">
+	
+		<span class="tabsHit">
+			<xsl:choose>
+				<xsl:when test="@hits">
+					(<xsl:value-of select="@hits" />)
+				</xsl:when>
+				<xsl:otherwise>
+					<span class="tabsHitNumber" id="tab_{@id}_{@source}"></span>
+				</xsl:otherwise>
+			</xsl:choose>								
+		</span>
+	
+	</xsl:template>
+	
 	<!-- 
 		TEMPLATE: PAGING NAVIGATION
 		Provides the visual display for moving through a set of results
@@ -408,20 +461,20 @@
 					
 					<xsl:if test="count(facets/facet) &gt; 12">
 						
-						<p id="facet-more-{id}"  style="padding: 1.3em; padding-top: .7em; display:none"> 
-							[ <a id="facet-more-link-{id}" href="#" class="facetMoreOption"> 
+						<p id="facet-more-{name}" class="facetOptionMore" style="padding: 1.3em; padding-top: .7em; display:none"> 
+							[ <a id="facet-more-link-{name}" href="#" class="facetMoreOption"> 
 								<xsl:value-of select="count(facets/facet[position() &gt; 10])" /> more
 							</a> ] 
 						</p>
 						
-						<ul id="facet-list-{id}" class="facetListMore">
+						<ul id="facet-list-{name}" class="facetListMore">
 							<xsl:for-each select="facets/facet[position() &gt; 10]">
 								<xsl:call-template name="facet_option" />
 							</xsl:for-each>
 						</ul>
 						
-						<p id="facet-less-{@id}"  style="padding: 1.3em; padding-top: .7em; display:none"> 
-							[ <a id="facet-less-link-{@id}" href="#" class="facetLessOption"> 
+						<p id="facet-less-{name}" class="facetOptionLess" style="padding: 1.3em; padding-top: .7em; display:none"> 
+							[ <a id="facet-less-link-{name}" href="#" class="facetLessOption"> 
 								show less
 							</a> ] 
 						</p>
@@ -698,7 +751,7 @@
 		<xsl:param name="source" select="source" />
 		<xsl:param name="record_id" select="record_id" />
 	
-		<div id="saveRecordOption_{$source}_{$record_id}" class="recordAction saveRecord">
+		<div id="saveRecordOption_{$source}_{$record_id}" class="recordAction">
 			
 			<xsl:call-template name="img_save_record">
 				<xsl:with-param name="id" select="concat('folder_', $source, '_', $record_id)" />

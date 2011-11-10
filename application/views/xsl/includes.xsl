@@ -39,10 +39,10 @@
 		Configuration values used throughout the application
 	-->
 	
-	<xsl:variable name="xerxes_version" select="//config/xerxes_version" />
+	<xsl:variable name="base_url" select="//config/base_url" />
 	
-	<xsl:variable name="base_url" select="//base_url" />
-	<xsl:variable name="rewrite" select="//config/rewrite" />
+	<xsl:variable name="xerxes_version" select="//config/xerxes_version" />
+
 	<xsl:variable name="link_target" select="//config/link_target" />
 
 	<xsl:variable name="is_mobile">
@@ -161,8 +161,7 @@
 		
 		<div class="ada">
 			<xsl:if test="not(request/session/ada)">
-				<xsl:variable name="return_url" select="php:function('urlencode', string(request/server/request_uri))" />
-				<a href="{$base_url}/?{$language_param}&amp;base=databases&amp;action=accessible&amp;return={$return_url}">
+				<a href="{navbar/accessible_link}">
 					<xsl:copy-of select="$text_ada_version" /> 
 				</a>
 			</xsl:if>
@@ -438,13 +437,13 @@
 					<xsl:choose>
 						<xsl:when test="//request/session/role and //request/session/role != 'local'">
 							<a id="logout">
-							<xsl:attribute name="href"><xsl:value-of select="//navbar/element[@id = 'logout']/url" /></xsl:attribute>
+							<xsl:attribute name="href"><xsl:value-of select="//navbar/logout_link" /></xsl:attribute>
 								<xsl:copy-of select="$text_header_logout" />
 							</a>
 						</xsl:when>
 						<xsl:otherwise>
 							<a id="login">
-							<xsl:attribute name="href"><xsl:value-of select="//navbar/element[@id = 'login']/url" /></xsl:attribute>
+							<xsl:attribute name="href"><xsl:value-of select="//navbar/login_link" /></xsl:attribute>
 								<xsl:copy-of select="$text_header_login" />
 							</a>
 						</xsl:otherwise>
@@ -458,20 +457,11 @@
 					</xsl:call-template>
 					<xsl:text> </xsl:text>
 					<a>
-					<xsl:attribute name="href"><xsl:value-of select="//navbar/element[@id='saved_records']/url" /></xsl:attribute>
+					<xsl:attribute name="href"><xsl:value-of select="//navbar/my_account_link" /></xsl:attribute>
 						<xsl:copy-of select="$text_header_savedrecords" />
 					</a>
 				</li>
 				
-				<xsl:if test="//navbar/element[@id='saved_collections']">
-					<li id="my_databases" class="sidebarFolder">
-						<xsl:call-template name="img_save_record">
-							<xsl:with-param name="test" select="0" />
-						</xsl:call-template>
-						<xsl:text> </xsl:text>
-						<a href="{//navbar/element[@id='saved_collections']/url}"><xsl:copy-of select="$text_header_collections"/></a>
-					</li>
-				</xsl:if>
 			</ul>
 		</div>
 	</xsl:template>
@@ -497,7 +487,9 @@
 	
 	<xsl:template name="jslabels">
 	
-		<!-- <script language="javascript" type="text/javascript" src="./?{$language_param}&amp;base=helper&amp;action=labels"></script>  -->
+		<!-- <script language="javascript" type="text/javascript" src="{navbar/labels_link}"></script>  -->
+		
+		<script language="javascript" type="text/javascript" src="javascript/labels.js"></script>
 	
 	</xsl:template>
 	
@@ -544,7 +536,6 @@
 
 <xsl:template name="img_databases_az_hint_info">
 	<img alt="{$text_databases_az_hint_info}" title="{$text_databases_az_hint_info}" src="images/info.gif" class="iconInfo miniIcon">
-		<xsl:attribute name="src"><xsl:value-of select="/knowledge_base/config/base_url" />/images/info.gif</xsl:attribute>
 	</img>
 </xsl:template>
 
