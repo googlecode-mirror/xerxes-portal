@@ -141,7 +141,7 @@ class Xerxes_Framework_FrontController
 			// based on the url parameters 'base' and 'action'
 			
 			$base = $request->getParam("base");
-			$action = $request->getParam("action");
+			$action = $request->getParam("action", null, "index");
 			
 			$controller_map->setAction( $base, $action, $request );
 
@@ -149,6 +149,13 @@ class Xerxes_Framework_FrontController
 			####################
 			#       DATA       #
 			####################
+			
+			// global action
+			
+			$global_controller = new Xerxes_Controller_Navigation();
+			$global_controller->navbar();
+			
+			// specified action
 			
 			if ( $base == "" ) $base = "solr"; $request->setParam("base", "solr");
 			if ( $action == "" ) $action = "index"; $request->setParam("action", "index");
