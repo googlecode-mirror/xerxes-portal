@@ -834,6 +834,10 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		$where = false;
 		$sql_server_clean = null;
 		
+		// lowercase the query
+		
+		$query = strtolower($query);
+		
 		$strSQL = "SELECT * from xerxes_databases";
 
 		// single database
