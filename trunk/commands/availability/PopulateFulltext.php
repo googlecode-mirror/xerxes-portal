@@ -72,7 +72,7 @@
 			echo "done.\n";
 			echo "  Processing file . . . ";
 			
-			$objItems = $objXml->xpath("//item");
+			$objItems = $objXml->xpath("//item[@type != 'other']");
 			
 			if ( $objItems == false ) throw new Exception("could not find items in inst holding file.");
 			
