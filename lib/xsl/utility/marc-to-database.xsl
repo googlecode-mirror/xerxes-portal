@@ -174,7 +174,9 @@
 		<!-- subjects -->
 		<xsl:comment>subjects</xsl:comment>
 		
-		<type><xsl:value-of select="marc:datafield[@tag=655]/marc:subfield[@code='a']" /></type>
+		<xsl:for-each select="marc:datafield[@tag=655]">
+			<type><xsl:value-of select="marc:subfield[@code='a']" /></type>
+		</xsl:for-each>
 		
 		<xsl:for-each select="marc:datafield[@tag=653]">
 			<keyword><xsl:value-of select="marc:subfield[@code='a']"/></keyword>

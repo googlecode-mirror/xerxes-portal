@@ -334,7 +334,7 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 				stristr ( $this->source, "IEEE_XPLORE" ) || 
 				stristr ($this->source, "ELSEVIER_SCOPUS") ||
 				stristr ($this->source, "ELSEVIER_SCIRUS") ||
-				( stristr ($this->source,"EBSCO_BUSINESS") && strstr ($strUrl, "harvardbusinessonline")) ||
+				( stristr ($this->source,"EBSCO") && $strUrl != "" && ! strstr ($strUrl, "epnet") ) ||
 				( strstr($strUrl, "proquest.umi.com") && strstr($strUrl, "Fmt=2") ) || 
 				( strstr($strUrl, "gateway.proquest.com") && strstr($strUrl, "xri:fiaf:article") ) ||
 				stristr ( $this->source, "NEWPC" )
