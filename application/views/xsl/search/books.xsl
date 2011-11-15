@@ -72,17 +72,17 @@
 				
 				<div style="clear:both"></div>
 									
-					<!-- A box with actions for current record (get full-text, link to holdings, save record) -->
-					
-					<xsl:call-template name="record-actions" />
-					
-					<!-- Umlaut stuff -->
-					
-					<xsl:call-template name="umlaut" />
-		
-					<!-- Detailed record information (Summary, Topics, Standard numbers, ...) -->
-					
-					<xsl:call-template name="record-details" />
+				<!-- A box with actions for current record (get full-text, link to holdings, save record) -->
+				
+				<xsl:call-template name="record-actions" />
+				
+				<!-- Umlaut stuff -->
+				
+				<xsl:call-template name="umlaut" />
+	
+				<!-- Detailed record information (Summary, Topics, Standard numbers, ...) -->
+				
+				<xsl:call-template name="record-details" />
 				
 			</xsl:for-each>
 				

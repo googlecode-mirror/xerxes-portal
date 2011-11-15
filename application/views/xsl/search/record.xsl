@@ -342,17 +342,9 @@
 	
 		<div id="umlaut_fulltext" class="umlaut_content" style="display:none;"></div>
 		
-		<xsl:if test="full_text_bool != ''">
-			<xsl:call-template name="full_text_links">
-				<xsl:with-param name="class">recordFullTextOption fullTextLink</xsl:with-param>
-			</xsl:call-template>
-		</xsl:if>
-		
-		<!-- lings to catalog -->
-		<xsl:call-template name="record-action-fulltext-catalog"/>
-		
 		<!-- other fulltext links -->
-		<xsl:call-template name="record-action-fulltext-option"/>
+		
+		<xsl:call-template name="full_text_options" />
 		
 	</xsl:template>
 
@@ -549,7 +541,9 @@
 
 	</xsl:template>	
 
+<!-- OVERRIDE BY LOCAL -->
 
+<xsl:template name="additional_full_record_data_main" />
 
 
 
@@ -620,14 +614,6 @@
 		</xsl:for-each>
 	</div>
 </xsl:template>
-
-
-	<!-- TODO: DO THIS! -->
-
-	<xsl:template name="record-action-save" />
-	<xsl:template name="record-action-fulltext-catalog" />
-	<xsl:template name="record-action-fulltext-option" />
-	<xsl:template name="additional_full_record_data_main" />
 
 
 </xsl:stylesheet>

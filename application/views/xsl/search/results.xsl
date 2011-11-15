@@ -728,6 +728,7 @@
 			</xsl:when>
 			
 			<!-- if no direct link or link resolver, do we have an original record link? -->
+			<!-- @todo: un-metalib-ize this -->
 			
 			<xsl:when test="links/link[@type='original_record'] and (//config/show_all_original_record_links = 'true' or //config/original_record_links/database[@metalib_id = $metalib_db_id])">
 				<xsl:call-template name="record_link">
@@ -925,11 +926,10 @@
 	-->
 	
 	<xsl:template name="full_text_links">
-		<xsl:param name="class" />
 				
 		<xsl:for-each select="links/link[@type = 'full']">
 			
-			<div class="{$class}">
+			<div>
 			
 				<a href="{url}">
 					<xsl:attribute name="class">recordAction <xsl:value-of select="@type"/></xsl:attribute>
