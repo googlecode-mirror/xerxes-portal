@@ -155,7 +155,17 @@ class Xerxes_Model_Summon_Engine extends Xerxes_Model_Search_Engine
 		foreach ( $search->getLimits(true) as $limit )
 		{
 			array_push($facets, $limit->field . "," . str_replace(',', '\,', $limit->value) . ",false");
-		}		
+		}
+
+		
+		############## HACK
+		
+		// filter out formats
+		
+		array_push($facets, 'ContentType,Newspaper Article,true');
+		array_push($facets, 'ContentType,Book / eBook,true');
+		array_push($facets, 'ContentType,Reference,true');
+		array_push($facets, 'ContentType,Research Guide,true');
 		
 		// summon deals in pages, not start record number
 		
@@ -210,7 +220,7 @@ class Xerxes_Model_Summon_Engine extends Xerxes_Model_Search_Engine
 		
 		// extract facets
 		
-		$facets = $this->extractFacets($summon_results);		
+		$facets = $this->extractFacets($summon_results, $total);	 ############## HACK	
 		$result_set->setFacets($facets);
 		
 		return $result_set;
@@ -247,7 +257,7 @@ class Xerxes_Model_Summon_Engine extends Xerxes_Model_Search_Engine
 	 * @return Xerxes_Model_Search_Facets
 	 */	
 	
-	protected function extractFacets($summon_results)
+	protected function extractFacets($summon_results, $total)
 	{
 		$facets = new Xerxes_Model_Search_Facets();
 		
@@ -269,6 +279,13 @@ class Xerxes_Model_Summon_Engine extends Xerxes_Model_Search_Engine
 							
 						foreach ( $facetFields["counts"] as $counts )
 						{
+							############## HACK
+							
+							if ( $counts["count"] == $total)
+							{
+								continue;
+							}
+							
 							$facet = new Xerxes_Model_Search_Facet();
 							$facet->name = $counts["value"];
 							$facet->count = $counts["count"];

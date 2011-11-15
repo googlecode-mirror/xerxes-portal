@@ -668,7 +668,7 @@ class Xerxes_Record_Bibliographic extends Xerxes_Record
 		
 		### volume, issue, pagination
 		
-		$strExtentHost = (string) $this->marc->datafield("773")->subfield("h");
+		$this->extent = (string) $this->marc->datafield("773")->subfield("h");
 		$strJournal = (string) $this->marc->datafield("773")->subfield("agpqt");
 		
 		// a best guess extraction of volume, issue, pages from 773
@@ -708,44 +708,7 @@ class Xerxes_Record_Bibliographic extends Xerxes_Record
 			// found an end page from our generic regular expression parser
 
 			$this->end_page = $arrRegExJournal["epage"];
-		} 
-		elseif ( $strExtentHost != "" && $this->start_page != "" )
-		{
-			// there is an extent note, indicating the number of pages,
-			// calculate end page based on that
-
-			$arrExtent = array();
-				
-			if ( preg_match( '/([0-9]{1})\/([0-9]{1})/', $strExtentHost, $arrExtent ) != 0 )
-			{
-				// if extent expressed as a fraction of a page, just take
-				// the start page as the end page
-				
-				$this->end_page = $this->start_page;
-			} 
-			elseif ( preg_match( "/[0-9]{1,}/", $strExtentHost, $arrExtent ) != 0 )
-			{
-				// otherwise take whole number
-					$iStart = ( int ) $this->start_page;
-				$iEnd = ( int ) $arrExtent[0];
-				
-				$this->end_page = $iStart + ($iEnd - 1);
-			}
 		}
-		
-		// page normalization
-		
-		if ( $this->end_page != "" && $this->start_page != "" )
-		{
-			// pages were input as 197-8 or 197-82, or similar, so convert
-			// the last number to the actual page number
-			
-			if ( strlen( $this->end_page ) < strlen( $this->start_page ) )
-			{
-				$strMissing = substr( $this->start_page, 0, strlen( $this->start_page ) - strlen( $this->end_page ) );
-				$this->end_page = $strMissing . $this->end_page;
-			}
-		}		
 	}
 
 	/**
