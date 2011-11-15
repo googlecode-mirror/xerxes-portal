@@ -63,8 +63,6 @@ class Xerxes_Model_Summon_Engine extends Xerxes_Model_Search_Engine
 	{
 		$results = $this->doSearch( $search, $start, $max, $sort);
 		
-		// $results->markRefereed();
-		
 		$results->markFullText();
 		
 		return $results;
