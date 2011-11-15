@@ -33,7 +33,7 @@
 
 	<xsl:template name="search_page">
 
-		<div class="yui-gc">
+		<div class="yui-ge">
 			<div class="yui-u first">
 				<h1>Testing</h1>
 				<xsl:call-template name="searchbox" />
@@ -83,7 +83,6 @@
 									<xsl:otherwise>
 									
 										<a href="{@url}">
-											
 											<xsl:value-of select="@public" /> 
 										</a>
 									</xsl:otherwise>
@@ -691,23 +690,34 @@
 	-->
 	
 	<xsl:template name="full_text_options">
+		<xsl:param name="show_full_text_and_link_resolver">false</xsl:param> 
+					
+		<xsl:variable name="link_resolver_allowed">
+			<xsl:choose>
+				<xsl:when test="../dont_show_link_resolver or (full_text_bool and $show_full_text_and_link_resolver = 'false')">
+					<xsl:text>false</xsl:text>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:text>true</xsl:text>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+				
+		<!-- native full-text -->
+	
+		<xsl:if test="full_text_bool">
 			
-		<!-- TODO: figure this out for metalib -->
-		<xsl:variable name="link_resolver_allowed">true</xsl:variable>
+			<xsl:call-template name="full_text_links"/>							
+				
+		</xsl:if>
+		
+		<!-- link resolver -->
 		
 		<xsl:choose>
-		
-			<!-- native full-text -->
-		
-			<xsl:when test="full_text_bool">
-				
-				<xsl:call-template name="full_text_links"/>							
-					
-			</xsl:when>
 			
 			<!-- link resolver, full-text predetermined -->
 			
-			<xsl:when test="$link_resolver_allowed and subscription = 1">
+			<xsl:when test="$link_resolver_allowed = 'true' and subscription = 1">
 					<a href="{../url_open}&amp;fulltext=1" target="{$link_target}" class="recordAction linkResolverLink">
 						<xsl:call-template name="img_format_html">
 							<xsl:with-param name="class">miniIcon linkResolverLink</xsl:with-param>
@@ -719,7 +729,7 @@
 			
 			<!-- link resolver, no full-text predetermined -->
 			
-			<xsl:when test="$link_resolver_allowed">
+			<xsl:when test="$link_resolver_allowed = 'true'">
 					<a href="{../url_open}" target="{$link_target}" class="recordAction linkResoverLink">
 						<img src="{$image_sfx}" alt="" class="miniIcon linkResolverLink "/>
 						<xsl:text> </xsl:text>
@@ -728,13 +738,12 @@
 			</xsl:when>
 			
 			<!-- if no direct link or link resolver, do we have an original record link? -->
-			<!-- @todo: un-metalib-ize this -->
 			
-			<xsl:when test="links/link[@type='original_record'] and (//config/show_all_original_record_links = 'true' or //config/original_record_links/database[@metalib_id = $metalib_db_id])">
+			<xsl:when test="links/link[@type='original_record'] and ../show_original_record_link">
 				<xsl:call-template name="record_link">
-				<xsl:with-param name="type">original_record</xsl:with-param>
-				<xsl:with-param name="text" select="$text_link_original_record"/>
-				<xsl:with-param name="img_src" select="$img_src_chain"/>
+					<xsl:with-param name="type">original_record</xsl:with-param>
+					<xsl:with-param name="text" select="$text_link_original_record"/>
+					<xsl:with-param name="img_src" select="$img_src_chain"/>
 				</xsl:call-template>
 			</xsl:when>
 			
@@ -966,14 +975,6 @@
 		
 	</xsl:template>
 
-
-
-
-
-
-
-
-	
 	<!-- search box fields overriden in templates -->
 	
 	<xsl:template name="advanced_search_option" />
