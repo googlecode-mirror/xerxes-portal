@@ -4,10 +4,11 @@
  * Utility class for XSLT to allow distro/local overriding
  * 
  * @author David Walker
- * @copyright 2008 California State University
+ * @author Jonathan Rochkind
+ * @copyright 2011 California State University
  * @link http://xerxes.calstate.edu
  * @license http://www.gnu.org/licenses/
- * @version $Id: Parser.php 1821 2011-03-10 19:16:26Z dwalker@calstate.edu $
+ * @version $Id$
  * @package  Xerxes_Framework
  */ 
 
