@@ -79,6 +79,13 @@ class Xerxes_Model_Summon_Record extends Xerxes_Record
 		$this->start_page = $this->extractValue($document, "StartPage/0");
 		$this->doi = $this->extractValue($document, "DOI/0");
 		
+		// peer reviewed
+		
+		if ( $this->extractValue($document, "IsPeerReviewed/0") == "true" )
+		{
+			$this->refereed = true;
+		}
+		
 		// subjects
 		
 		if ( array_key_exists('SubjectTerms', $document) )
