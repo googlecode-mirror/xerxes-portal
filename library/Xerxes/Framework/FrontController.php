@@ -29,13 +29,9 @@ class Xerxes_Framework_FrontController
 		
 		$registry = Xerxes_Framework_Registry::getInstance();
 		
-		// controller map
-		
-		$controller_map = Xerxes_Framework_ControllerMap::getInstance();
-			
 		// set the version number, for interface or other places
 		
-		$registry->setConfig("XERXES_VERSION", $controller_map->getVersion(), true);
+		$registry->setConfig("XERXES_VERSION", "2.0-alpha", true);
 		
 		// dynamically set the web path, if config says so, doesn't work on all webserver/php 
 		// set-ups, so an explicit web path from config is preferred
@@ -137,49 +133,35 @@ class Xerxes_Framework_FrontController
 			#   INSTRUCTIONS   #
 			####################
 			
-			// ControllerMap contains instructions for commands and views
-			// based on the url parameters 'base' and 'action'
+			// params for controller
 			
 			$base = $request->getParam("base");
 			$action = $request->getParam("action", null, "index");
 			
-			$controller_map->setAction( $base, $action, $request );
-
-
-			####################
-			#       DATA       #
-			####################
+			if ( $base == "" )
+			{
+				$base = "solr"; $request->setParam("base", "solr");
+			}
+			
+			if ( $action == "" )
+			{
+				$action = "index"; $request->setParam("action", "index");
+			}			
 			
 			// global action
 			
 			$global_controller = new Xerxes_Controller_Navigation();
 			$global_controller->navbar();
 			
-			// specified action
+			$authentication_controller = new Xerxes_Controller_Authenticate();
+			$authentication_controller->check();
 			
-			if ( $base == "" ) $base = "solr"; $request->setParam("base", "solr");
-			if ( $action == "" ) $action = "index"; $request->setParam("action", "index");
+			// specified action
 			
 			$controller_name = "Xerxes_Controller_" . strtoupper(substr($base, 0, 1)) . substr($base,1); 
 			$controller = new $controller_name();
-
 			$controller->$action();
 
-			####################
-			#     COOKIES      #
-			####################
-
-			// any cookies specified in the reuqest object? if so, set em now.
-
-			$cookieSetParams = $request->cookieSetParams();
-			
-			foreach ( $cookieSetParams as $cookieParams )
-			{
-				set_cookie( $cookieParams[0], $cookieParams[1], $cookieParams[2], $cookieParams[3], 
-					$cookieParams[4], $cookieParams[5] 
-				);
-			}
-      
 			####################
 			#     REDIRECT     #
 			####################
