@@ -260,9 +260,8 @@ class Xerxes_Framework_Response
 			
 			if (strstr($view, '.xsl') )
 			{
-				$xsl = new Xerxes_Framework_XSL();
 				$xml = $this->toXML();
-				$html = $xsl->transformToXml($xml, $view);
+				$html = $this->transform($xml, $view);
 				return $html;
 			}
 			
@@ -273,6 +272,48 @@ class Xerxes_Framework_Response
 				require_once "views/$view";
 			}
 		}
+	}
+	
+	protected function transform($xml, $path_to_xsl, $params = array())
+	{
+		$registry = Xerxes_Framework_Registry::getInstance();	
+
+		$import_array = array();
+		
+		// the xsl lives here
+
+		$distro_xsl_dir = XERXES_APPLICATION_PATH . "views/";
+		$local_xsl_dir = $registry->getConfig("LOCAL_DIRECTORY", true) . "/views/";
+		
+		### language file
+		
+		$request = Xerxes_Framework_Request::getInstance();
+		$language = $request->getProperty("lang");
+		
+		if ( $language == "" )
+		{
+			$language = $registry->defaultLanguage();
+		}
+		
+		// english file is included by default (as a fallback)
+		
+		array_push($import_array, "xsl/labels/eng.xsl");
+		
+		// if language is set to something other than english
+		// then include that file to override the english labels
+		
+		if ( $language != "eng" ) 
+		{
+			array_push($import_array, "xsl/labels/$language.xsl");
+		}		
+		
+		### make sure we've got a reference to the local includes too
+		
+		array_push($import_array, $local_xsl_dir . "xsl/includes.xsl");
+		
+		$xsl = new Xerxes_Framework_XSL($distro_xsl_dir, $local_xsl_dir);
+		
+		return $xsl->transformToXml($xml, $path_to_xsl, $params, $import_array);
 	}
 	
 	/**
