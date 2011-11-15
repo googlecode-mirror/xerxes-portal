@@ -250,7 +250,7 @@ class Xerxes_Model_Ebsco_Engine extends Xerxes_Model_Search_Engine
 		$response = Xerxes_Framework_Parser::request($this->url);
 		
 		// testing
-		// echo "<pre>$this->url<hr>$response</pre>";
+		// echo "<pre>$this->url<hr>$response</pre>"; exit;
 		
 		if ( $response == null )
 		{
