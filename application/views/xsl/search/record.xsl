@@ -30,6 +30,10 @@
 	<xsl:include href="results.xsl" />
 	<xsl:include href="../citation/styles.xsl" />
 	
+	<!--
+		TEMPLATE: SIDEBAR
+	-->		
+	
 	<xsl:template name="sidebar">
 		<xsl:call-template name="account_sidebar" />
 		<xsl:call-template name="citation" />
@@ -342,9 +346,9 @@
 	
 		<div id="umlaut_fulltext" class="umlaut_content" style="display:none;"></div>
 		
-		<!-- other fulltext links -->
-		
-		<xsl:call-template name="full_text_options" />
+		<xsl:call-template name="full_text_options">
+			<xsl:with-param name="show_full_text_and_link_resolver">true</xsl:with-param> 
+		</xsl:call-template>
 		
 	</xsl:template>
 
@@ -541,7 +545,7 @@
 
 	</xsl:template>	
 
-<!-- OVERRIDE BY LOCAL -->
+<!-- additional record data overriden in templates -->
 
 <xsl:template name="additional_full_record_data_main" />
 
