@@ -16,16 +16,16 @@ class Xerxes_Model_DataMap_Users extends Xerxes_Framework_DataMap
 	/**
 	 * Update the user table to include the last date of login and any other
 	 * specified attributes. Creates new user if neccesary.
-	 * If any attributes in Xerxes_Framework_Authenticate_User are set other than
+	 * If any attributes in Xerxes_Model_Authentication_User are set other than
 	 * username, those will also be written to db over-riding anything that may
-	 * have been there.  Returns Xerxes_Framework_Authenticate_User filled out with information matching
+	 * have been there.  Returns Xerxes_Model_Authentication_User filled out with information matching
 	 * db. 
 	 *
-	 * @param Xerxes_Framework_Authenticate_User $user
-	 * @return Xerxes_Framework_Authenticate_User $user
+	 * @param Xerxes_Model_Authentication_User $user
+	 * @return Xerxes_Model_Authentication_User $user
 	 */
 	
-	public function touchUser(Xerxes_Framework_Authenticate_User $user)
+	public function touchUser(Xerxes_Model_Authentication_User $user)
 	{
 		// array to pass to db updating routines. Make an array out of our
 		// properties. 
@@ -52,9 +52,9 @@ class Xerxes_Model_DataMap_Users extends Xerxes_Framework_DataMap
 		if ( count( $arrResults ) == 1 )
 		{
 			// user already exists in database, so update the last_login time and
-			// use any data specified in our Xerxes_Framework_Authenticate_User record to overwrite. Start
+			// use any data specified in our Xerxes_Model_Authentication_User record to overwrite. Start
 			// with what's already there, overwrite with anything provided in
-			// the Xerxes_Framework_Authenticate_User object. 
+			// the Xerxes_Model_Authentication_User object. 
 			
 			$db_values = $arrResults[0];
 			

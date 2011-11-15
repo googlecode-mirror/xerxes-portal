@@ -242,7 +242,49 @@ class Xerxes_Record
 			}
 		}		
 		
-		## journals
+		## pages
+		
+		// no end page specified, but there is an extent 
+		
+		if ( $this->end_page == "" && $this->extent != "" && $this->start_page != "" )
+		{
+			// there is an extent note, indicating the number of pages,
+			// calculate end page based on that
+
+			$arrExtent = array();
+				
+			if ( preg_match( '/([0-9]{1})\/([0-9]{1})/', $this->extent, $arrExtent ) != 0 )
+			{
+				// if extent expressed as a fraction of a page, just take
+				// the start page as the end page
+				
+				$this->end_page = $this->start_page;
+			} 
+			elseif ( preg_match( "/[0-9]{1,}/", $this->extent, $arrExtent ) != 0 )
+			{
+				// otherwise take whole number
+				$start = ( int ) $this->start_page;
+				$end = ( int ) $arrExtent[0];
+				
+				$this->end_page = $start + ($end - 1);
+			}
+		}		
+		
+		// page normalization
+		
+		if ( $this->end_page != "" && $this->start_page != "" )
+		{
+			// pages were input as 197-8 or 197-82, or similar, so convert
+			// the last number to the actual page number
+			
+			if ( strlen( $this->end_page ) < strlen( $this->start_page ) )
+			{
+				$strMissing = substr( $this->start_page, 0, strlen( $this->start_page ) - strlen( $this->end_page ) );
+				$this->end_page = $strMissing . $this->end_page;
+			}
+		}
+
+		## journal
 		
 		// construct a readable journal field if none supplied
 		
@@ -267,8 +309,8 @@ class Xerxes_Record
 					$this->journal .= " (" . $this->year . ")";
 				}
 			}
-		}
-
+		}		
+		
 		### language
 		
 		// normalize and translate language names

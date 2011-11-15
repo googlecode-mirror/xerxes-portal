@@ -4,16 +4,16 @@
  * An event-based authentication framework
  *
  * @author David Walker
- * @copyright 2009 California State University
+ * @copyright 2011 California State University
  * @link http://xerxes.calstate.edu
  * @license http://www.gnu.org/licenses/
- * @version $Id: Authenticate.php 1688 2011-02-24 22:42:36Z dwalker@calstate.edu $
+ * @version $Id$
  * @package Xerxes
  */
 
-abstract class Xerxes_Framework_Authenticate
+abstract class Xerxes_Model_Authentication_Abstract
 {
-	protected $user; // user objec
+	protected $user; // user object
 	public $id; // the id of this auth scheme, set by the factory method invoking it
 	protected $role = "named"; // users role as named or guest
 	protected $registry; // config object
@@ -21,16 +21,16 @@ abstract class Xerxes_Framework_Authenticate
 	protected $return; // the return url to get the user back to where they are in Xerxes
 	protected $validate_url; // the url to return for a validate request, for external auths
 	
-	public function __construct()
+	public function __construct(Xerxes_Framework_Request $request, Xerxes_Framework_Registry $registry)
 	{
-		$this->request = Xerxes_Framework_Request::getInstance();
-		$this->registry = Xerxes_Framework_Registry::getInstance();
+		$this->request = $request;
+		$this->registry = $registry;
 		
-		$this->user = new Xerxes_Framework_Authenticate_User();
-		$this->return = $this->request->getProperty( "return" );
+		$this->user = new Xerxes_Model_Authentication_User();
+		$this->return = $this->request->getProperty("return");
 		
-		$base = $this->registry->getConfig( "BASE_URL", true);
-		$server = $this->registry->getConfig( "SERVER_URL", true);
+		$base = $this->registry->getConfig("BASE_URL", true);
+		$server = $this->registry->getConfig("SERVER_URL", true);
 		
 		// if no return supplied, then send them home!
 		
@@ -117,30 +117,36 @@ abstract class Xerxes_Framework_Authenticate
 	{
 		// data map
 		
-		$objData = new Xerxes_DataMap();
+		$datamap_users = new Xerxes_Model_DataMap_Users();
+		$datamap_records = new Xerxes_Model_DataMap_SavedRecords();
 		
 		// if the user was previously active under a local username 
 		// then reassign any saved records to the new username
 		
-		$oldUsername = $this->request->getSession("username");
-		$oldRole = $this->request->getSession("role");
+		$old_username = $this->request->getSession("username");
+		$old_role = $this->request->getSession("role");
 		
-		if ( $oldRole == "local" )
+		if ( $old_role == "local" )
 		{
-			$objData->reassignRecords( $oldUsername, $this->user->username );
+			$datamap_records->reassignRecords( $old_username, $this->user->username );
 		}
 		
 		// add or update user in the database, get any values in the db not
 		// specified here.
 		 
-		$this->user = $objData->touchUser( $this->user );
+		$this->user = $datamap_users->touchUser( $this->user );
+		
+		
+		// @todo: just save user in session? move all this to controller?
+		
+		
 		
 		// set main properties in session
 		
 		$this->request->setSession("username", $this->user->username);
 		$this->request->setSession("role", $this->role);
 		
-		$configApplication = $this->registry->getConfig( "BASE_WEB_PATH", false, "" );
+		$configApplication = $this->registry->getConfig("BASE_WEB_PATH", false, "");
 		$this->request->setSession("application", $configApplication);
 		
 		// store user's additional properties in session, so they can be used by
@@ -159,21 +165,5 @@ abstract class Xerxes_Framework_Authenticate
 		// now forward them to the return url
 		
 		$this->request->setRedirect($this->return);
-	}
-}
-
-class Xerxes_Framework_Authenticate_User extends Xerxes_Framework_DataValue
-{
-	public $username;
-	public $last_login;
-	public $suspended;
-	public $first_name;
-	public $last_name;
-	public $email_addr;
-	public $usergroups = array ( );
-	
-	function __construct($username = null)
-	{
-		$this->username = $username;
 	}
 }
