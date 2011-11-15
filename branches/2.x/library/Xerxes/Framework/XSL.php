@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Utility class for XSLT
+ * Utility class for XSLT to allow distro/local overriding
  * 
  * @author David Walker
  * @copyright 2008 California State University
@@ -13,29 +13,38 @@
 
 class Xerxes_Framework_XSL
 {
+	private $distro_xsl_dir;
+	private $local_xsl_dir;
+	
+	public function __construct($distro_xsl_dir, $local_xsl_dir )
+	{
+		$this->distro_xsl_dir = $distro_xsl_dir;
+		$this->local_xsl_dir = $local_xsl_dir;		
+	}
+	
 	/**
 	 * Alias for transform
 	 */
 	
-	public function transformToDoc( $xml, $path_to_xsl, $params = null, $include_array = array() )
+	public function transformToDoc( $xml, $path_to_xsl, $params = null, $import_array = array() )
 	{
-		return $this->transform($xml, $path_to_xsl, $params, $include_array, false);
+		return $this->transform($xml, $path_to_xsl, $params, $import_array, false);
 	}
 	
 	/**
 	 * Transform to string
 	 */	
 	
-	public function transformToXml( $xml, $path_to_xsl, $params = null, $include_array = array() )
+	public function transformToXml( $xml, $path_to_xsl, $params = null, $import_array = array() )
 	{
-		return $this->transform($xml, $path_to_xsl, $params, $include_array);
+		return $this->transform($xml, $path_to_xsl, $params, $import_array);
 	}
 	
 	/**
 	 * Simple, dynamic xsl transform
 	 */	
 				
-	private function transform ( $xml, $path_to_xsl, $params = null, $include_array = array(), $to_string = true )
+	protected function transform ( $xml, $path_to_xsl, $params = null, $import_array = array(), $to_string = true )
 	{
 		if ( $path_to_xsl == "") throw new Exception("no stylesheet supplied");
 		
@@ -51,7 +60,7 @@ class Xerxes_Framework_XSL
 		$processor = new XsltProcessor();
 		$processor->registerPhpFunctions();
 
-		// add in parameters
+		// add parameters
 		
 		if ($params != null)
 		{
@@ -63,7 +72,7 @@ class Xerxes_Framework_XSL
 			
 		// add stylesheet
 		
-		$xsl = $this->generateBaseXsl($path_to_xsl, $include_array);
+		$xsl = $this->generateBaseXsl($path_to_xsl, $import_array);
 		
 		$processor->importStylesheet($xsl);
 		
@@ -84,33 +93,21 @@ class Xerxes_Framework_XSL
 	 * stylesheets, as available, using includes and imports into our
 	 * 'base'.  Base uses the dynamic_skeleton.xsl to begin with. 
 	 * 
-	 * @param string $strXsltRelPath 	Relative path to a stylesheet, generally beginning with "xsl/". 
-	 * 									Stylesheet may exist in library location, app location, or both. 
-	 * @param array $arrInclude			[optional] additional stylesheets that should be included in the request
-	 * @return DomDocument 		A DomDocument holding the generated XSLT stylesheet.
+	 * @param string $path_to_file 		Relative path to a stylesheet
+	 * @param array $import_array		[optional] additional stylesheets that should be imported in the request
+	 * @return DomDocument 				A DomDocument holding the generated XSLT stylesheet.
 	 * @static
 	*/
 	
-	private function generateBaseXsl( $strXsltRelPath, $arrInclude = array() )
+	private function generateBaseXsl( $path_to_file, $import_array = array() )
 	{
-		$arrImports = array(); // files to be imported
-		
-		$objRegistry = Xerxes_Framework_Registry::getInstance();
-		
+		$files_to_import = array();
 		
 		### first, set up the paths to the distro and local directories
-	
-		// the 'local' xsl lives here
-		
-		$local_xsl_dir = $objRegistry->getConfig("LOCAL_DIRECTORY", true) . "/views/";
-		$local_path =  $local_xsl_dir . $strXsltRelPath;
+
+		$distro_path =  $this->distro_xsl_dir . $path_to_file;
+		$local_path =  $this->local_xsl_dir . $path_to_file;
 		      
-		// the 'distro' xsl lives here
-	
-		$distro_xsl_dir = XERXES_APPLICATION_PATH . "views/";
-		$distro_path =  $distro_xsl_dir . $strXsltRelPath;
-		
-		
 
 		### check to make sure at least one of the files exists
 		
@@ -122,10 +119,9 @@ class Xerxes_Framework_XSL
 		if (! ( $local_exists || $distro_exists) )
 		{
 			// throw new Exception("No xsl stylesheet found: $local_path || $distro_path");
-			throw new Exception("No xsl stylesheet found: $strXsltRelPath");
+			throw new Exception("No xsl stylesheet found: $path_to_file");
 		}			
 		
-
 		
 		### now create the skeleton XSLT file that will hold references to both
 		### the distro and the local files
@@ -142,56 +138,27 @@ class Xerxes_Framework_XSL
 
 		if ( $distro_exists == true )
 		{	
-			array_push($arrImports, $distro_path);
+			array_push($files_to_import, $distro_path);
 		}
-		else
+		
+		### add a refence for files programatically added
+		
+		if ( $import_array != null )
 		{
-			// if no distro, need to directly import (distro) includes.xsl, since we're not
-			// importing a file that will reference it
-			
-			array_push($arrImports, $distro_xsl_dir . "xsl/includes.xsl");
-		}
-
-		
-		### language file
-		
-		$request = Xerxes_Framework_Request::getInstance();
-		$language = $request->getProperty("lang");
-		
-		if ( $language == "" )
-		{
-			$language = $objRegistry->defaultLanguage();
-		}
-		
-		// english file is included by default (as a fallback)
-		
-		array_push($arrInclude, "xsl/labels/eng.xsl");
-		
-		// if language is set to something other than english
-		// then include that file to override the english labels
-		
-		if ( $language != "eng" ) {
-			array_push($arrInclude, "xsl/labels/$language.xsl");
-		}
-		
-		### add a refence for files programatically added (including the language file above)
-		
-		if ( $arrInclude != null )
-		{
-			foreach ( $arrInclude as $strInclude )
+			foreach ( $import_array as $strInclude )
 			{
 				// but only if a distro copy exists
 				
-				if ( file_exists($distro_xsl_dir . $strInclude) )
+				if ( file_exists($this->distro_xsl_dir . $strInclude) )
 				{
-					array_push($arrImports, $distro_xsl_dir . $strInclude);
+					array_push($files_to_import, $this->distro_xsl_dir . $strInclude);
 				}
 				
 				// see if there is a local version, and include it too
 				
-				if ( file_exists($local_xsl_dir . $strInclude) )
+				if ( file_exists($this->local_xsl_dir . $strInclude) )
 				{
-					array_push($arrImports, $local_xsl_dir . $strInclude);
+					array_push($files_to_import, $this->local_xsl_dir . $strInclude);
 				}
 			}
 		}
@@ -226,33 +193,29 @@ class Xerxes_Framework_XSL
 			{
 				// path to local copy
 				
-				$local_candidate = $local_xsl_dir . dirname ( $strXsltRelPath ) . '/' . $extra['href'];
+				$local_candidate = $this->local_xsl_dir . dirname ( $path_to_file ) . '/' . $extra['href'];
 				
 				// path to distro copy as a check
 				
-				$distro_check = $distro_xsl_dir . dirname ( $strXsltRelPath ) . '/' . $extra['href'];
+				$distro_check = $this->distro_xsl_dir . dirname ( $path_to_file ) . '/' . $extra['href'];
 				
 				// make sure local copy exists, and they are both not pointing at the same file 
 				
 				if ( file_exists ( $local_candidate ) && realpath($distro_check) != realpath($local_candidate) )
 				{
-					array_push($arrImports, $local_candidate);
+					array_push($files_to_import, $local_candidate);
 				}
 			}
 		}
 		
-		### make sure we've got a reference to the local includes too
-		
-		array_push($arrImports, $local_xsl_dir . "xsl/includes.xsl");
-		
 		// now make sure no dupes
 		
-		$arrImports = array_unique($arrImports);
+		$files_to_import = array_unique($files_to_import);
 		
 		
 		### now the actual mechanics of the import
 		
-		foreach ( $arrImports as $import )
+		foreach ( $files_to_import as $import )
 		{
 			$this->addImportReference ( $generated_xsl, $import, $importInsertionPoint );
 		}
