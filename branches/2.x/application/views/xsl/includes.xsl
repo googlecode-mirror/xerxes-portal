@@ -53,9 +53,14 @@
 	</xsl:variable>
 
 	<xsl:variable name="temporarySession">
-		<xsl:if test="//request/session/role = 'guest' or //request/session/role = 'local'">
-			<xsl:text>true</xsl:text>
-		</xsl:if>	
+		<xsl:choose>
+			<xsl:when test="//request/session/role = 'named'">
+				<xsl:text>false</xsl:text>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:text>true</xsl:text>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:variable>
 	
 	<!-- extra content to include in the HTML 'head' section -->
