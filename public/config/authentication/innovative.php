@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * custom authentication for iii patron api
  * 
@@ -12,7 +11,7 @@
  * @package Xerxes
  */
 
-class Xerxes_InnovativePatron_Local extends Xerxes_InnovativePatron
+class Xerxes_CustomAuth_Innovative extends Xerxes_Model_Authentication_Abstract
 { 
 	/**
 	 * Implement code in this function to authorize the user and/or map
@@ -39,4 +38,3 @@ class Xerxes_InnovativePatron_Local extends Xerxes_InnovativePatron
 		
 	}
 }
-?>

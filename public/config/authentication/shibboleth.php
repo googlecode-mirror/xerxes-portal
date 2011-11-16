@@ -11,7 +11,7 @@
  * @package Xerxes
  */
 
-class Xerxes_Shibboleth_Local extends Xerxes_Shibboleth
+class Xerxes_CustomAuth_Shibboleth extends Xerxes_Model_Authentication_Abstract
 { 
 	/**
 	 * Implement code in this function to authorize the user and/or map
@@ -42,4 +42,3 @@ class Xerxes_Shibboleth_Local extends Xerxes_Shibboleth
 
 	}
 }
-?>
