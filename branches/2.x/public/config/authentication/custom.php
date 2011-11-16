@@ -11,8 +11,7 @@
  * @package Xerxes
  */
 
-
-class Xerxes_CustomAuth extends Xerxes_Framework_Authenticate
+class Xerxes_CustomAuth_Custom extends Xerxes_Model_Authentication_Abstract
 {
 	public function onLogin()
 	{
@@ -66,6 +65,3 @@ class Xerxes_CustomAuth extends Xerxes_Framework_Authenticate
 		return $bolSuccess;
 	}
 }
-
-
-?>
