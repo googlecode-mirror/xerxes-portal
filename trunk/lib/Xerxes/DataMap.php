@@ -36,7 +36,7 @@ class Xerxes_DataMap extends Xerxes_Framework_DataMap
 		// searchable fields
 		
 		$this->searchable_fields = explode(",", $this->registry->getConfig("DATABASE_SEARCHABLE_FIELDS", false, 
-			"title_display,title_full,description,keyword,alt_title"));
+			"title_display,title_full,description,keyword,title_alternate"));
 		
 		// pdo can't tell us which rdbms we're using exactly, especially for 
 		// ms sql server, since we'll be using odbc driver, so we make this
