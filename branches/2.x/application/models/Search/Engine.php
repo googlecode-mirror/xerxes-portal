@@ -23,8 +23,6 @@ abstract class Xerxes_Model_Search_Engine
 	
 	/**
 	 * Constructor
-	 * 
-	 * @param Xerxes_Model_Solr_Config $config
 	 */
 	
 	public function __construct()
