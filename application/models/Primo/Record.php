@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Extract properties for books, articles, and dissertations from Primo
+ * Primo Record
  * 
  * @author David Walker
  * @copyright 2011 California State University

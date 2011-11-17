@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Primo
+ * Primo Search Engine
  * 
  * @author David Walker
  * @copyright 2010 California State University
@@ -22,8 +22,6 @@ class Xerxes_Model_Primo_Engine extends Xerxes_Model_Search_Engine
 
 	/**
 	 * Constructor
-	 * 
-	 * @param Xerxes_Model_Primo_Config $config
 	 */
 	
 	public function __construct( $on_campus = true, $scope = "" )

@@ -20,8 +20,6 @@ class Xerxes_Model_Ebsco_Engine extends Xerxes_Model_Search_Engine
 	
 	/**
 	 * Constructor
-	 *
-	 * @param Xerxes_Model_Ebsco_Config $config
 	 */
 	
 	public function __construct()
