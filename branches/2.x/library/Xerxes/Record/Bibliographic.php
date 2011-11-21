@@ -414,38 +414,9 @@ class Xerxes_Record_Bibliographic extends Xerxes_Record
 			$this->alternate_titles[] = (string) $alternate_title;
 		}
 		
+		// for those that really, really want it
 		
-		### exception: 245|c is remainder of title, not statement of responsibility
-
-		$statement_of_responsiblity = (string) $this->marc->datafield("245")->subfield("c");
-		$title_parts = explode(" ", $statement_of_responsiblity);
-		
-		$found = false;
-		
-		foreach ( $this->authors as $author )
-		{
-			$author_parts = explode(" ", $author->getAllFields());
-		
-			foreach ( $author_parts as $author_part )
-			{
-				if ( in_array($author_part, $title_parts) )
-				{
-					$found = true;
-				}
-			}
-		}
-		
-		// if the 245|c doesn't include *any* terms from any of the author fields, then this is likely
-		// the continuation of the title, rather than the statement of responsibility, and
-		// so we need to include it in the title proper
-		
-		if ( $found == false )
-		{
-			$this->title = (string) $this->marc->datafield("245")->subfield("acnp"); // added 'c'
-		}		
-		
-		
-		### exception: no 245
+		$this->title_statement = (string) $this->marc->datafield("245");
 		
 		// sometimes the only title that appears is in a 242 or even a 246 
 		// we will make this the main title if 245 is blank; take 242 over 246
