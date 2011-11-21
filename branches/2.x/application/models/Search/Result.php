@@ -66,70 +66,21 @@ class Xerxes_Model_Search_Result
 						
 		if ( $configToken != null )
 		{
-			$configBX = $this->registry->getConfig("BX_SERVICE_URL", false, 
-				"http://recommender.service.exlibrisgroup.com/service");
+			$configBX = $this->registry->getConfig("BX_SERVICE_URL", false);
+			$configMinRelevance	= (int) $this->registry->getConfig("BX_MIN_RELEVANCE", false, 0);
+			$configMaxRecords = (int) $this->registry->getConfig("BX_MAX_RECORDS", false, 10);
+			
+			$bx_engine = new Xerxes_Model_Bx_Engine($configToken, $this->sid, $configBX);
+			$bx_records = $bx_engine->getRecommendations($this->xerxes_record, $configMinRelevance, $configMaxRecords);
 
-			$configMaxRecords = $this->registry->getConfig("BX_MAX_RECORDS", false, "10");
-			$configMinRelevance	= $this->registry->getConfig("BX_MIN_RELEVANCE", false, "0");
-			
-			
-			// now get the open url
-				
-			$open_url = $this->xerxes_record->getOpenURL(null, $this->sid);
-			$open_url = str_replace('genre=unknown', 'genre=article', $open_url);
-			
-			// send it to bx service
-			
-			$url = $configBX . "/recommender/openurl?token=$configToken&$open_url" .
-				"&res_dat=source=global&threshold=$configMinRelevance&maxRecords=$configMaxRecords";
-				
-			$xml = Xerxes_Framework_Parser::request($url, 10);
-
-			// header("Content-type: text/xml"); echo $xml; exit;
-			
-			if ( $xml != "" ) // only if we got a response
+			if ( count($bx_records) > 0 ) // only if there are any records
 			{
-				$records = array();
-				
-				$objDocument = new DOMDocument();
-				$objDocument->recover = true;
-				$objDocument->loadXML($xml);				
-
-				$objXPath = new DOMXPath($objDocument);
-				$objXPath->registerNamespace("ctx", "info:ofi/fmt:xml:xsd:ctx");
-				
-				$objRecords = $objXPath->query("//ctx:context-object");
-				
-				foreach ( $objRecords as $objRecord )
+				foreach ( $bx_records as $bx_record )
 				{
-					$record = new Xerxes_Model_Bx_Record();
-					$record->loadXML($objRecord);
-					array_push($records, $record);
+					$result = new Xerxes_Model_Search_Result($bx_record, $this->config);
+					array_push($this->recommendations, $result);
 				}
-				
-			
-				
-				if ( count($records) > 0 ) // and only if there are any records
-				{
-					$x = 0;
-										
-					foreach ( $records as $bx_record )
-					{
-						$x++;
-						
-						// first one is the record we want to find recommendations for
-						// so skip it; any others are actual recommendations
-						
-						if ( $x == 1 )
-						{
-							continue;	
-						}						
-						
-						$result = new Xerxes_Model_Search_Result($bx_record, $this->config);
-						array_push($this->recommendations, $result);
-					} 
-				}
-			}
+			}			
 		}
 	}
 	
