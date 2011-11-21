@@ -29,7 +29,6 @@ class Xerxes_Record
 	protected $doi = ""; // doi
 
 	protected $authors = array(); // authors
-	protected $author_from_title = ""; // author from title statement
 	protected $editor = false; // whether primary author is an editor
 	
 	protected $non_sort = ""; // non-sort portion of title
@@ -39,6 +38,7 @@ class Xerxes_Record
 	protected $trans_title = false; // whether title is translated
 	protected $uniform_title = ""; // uniform title
 	protected $additional_titles = array(); // related titles
+	protected $alternate_titles = array(); // alternate versions of the title
 	
 	protected $place = ""; // place of publication	
 	protected $publisher = ""; // publisher	
@@ -348,7 +348,7 @@ class Xerxes_Record
 			
 			if ( $objXerxesAuthor instanceof Xerxes_Record_Author  ) // skip those set to null (i.e., was a dupe)
 			{
-				$this_author = $objXerxesAuthor->allFields();
+				$this_author = $objXerxesAuthor->getAllFields();
 				
 				for ( $a = 0; $a < count($author_other); $a++ )
 				{
@@ -358,7 +358,7 @@ class Xerxes_Record
 						
 						if ( $objThatAuthor instanceof Xerxes_Record_Author ) // just in case
 						{
-							$that_author = $objThatAuthor->allFields();
+							$that_author = $objThatAuthor->getAllFields();
 							
 							if ( $this_author == $that_author)
 							{
@@ -1483,10 +1483,6 @@ class Xerxes_Record
 		if ( count( $arrPrimaryAuthor ) > 0 )
 		{
 			return $arrPrimaryAuthor[0];
-		} 
-		elseif ( $this->author_from_title != "" )
-		{
-			return trim( $this->author_from_title );
 		} 
 		else
 		{
