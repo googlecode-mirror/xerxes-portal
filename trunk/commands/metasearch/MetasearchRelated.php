@@ -29,7 +29,20 @@
 				
 				$url = $configBX . "/recommender/openurl?token=$configToken&$open_url&res_dat=source=global&threshold=$configMinRelevance&maxRecords=$configMaxRecords";
 				
-				$xml = Xerxes_Framework_Parser::request($url);
+				try 
+				{
+					$xml = Xerxes_Framework_Parser::request($url, 4);
+					
+					if ( $xml == "" )
+					{
+						throw new Exception("No response from bx service");
+					}
+				}
+				catch ( Exception $e )
+				{
+					trigger_error("Could not get result from bX service: " . $e->getTraceAsString(), E_USER_WARNING);
+					return 1;
+				}
 
 				// header("Content-type: text/xml"); echo $xml; exit;
 				
