@@ -14,7 +14,8 @@
 class Xerxes_Record_Bibliographic extends Xerxes_Record
 {
 	protected $alt_scripts = array(); // alternate character-scripts like cjk or hebrew, taken from 880s
-	protected $alt_script_name = ""; // the name of the alternate character-script; we'll just assume one for now, I guess
+	protected $alt_script_name; // the name of the alternate character-script; we'll just assume one for now, I guess
+	protected $title_statement; // the whole 245, for the sadistic
 
 	protected $marc; // marc object
 	
@@ -60,6 +61,7 @@ class Xerxes_Record_Bibliographic extends Xerxes_Record
 		// title
 		
 		$this->parseTitle();
+		$this->parseRemainderTitleStatement();
 		$this->parseSeriesTitle();
 		$this->parseAdditionalTitles();
 		
@@ -279,10 +281,6 @@ class Xerxes_Record_Bibliographic extends Xerxes_Record
 	
 	protected function parseAuthors()
 	{
-		// authors
-
-		$this->author_from_title = (string) $this->marc->datafield("245")->subfield("c" );
-		
 		$objConfName =  $this->marc->datafield("111"); // "anc"
 		$objAddAuthor = $this->marc->datafield("700"); // "a"
 		$objAddCorp = $this->marc->datafield("710"); // "ab"
@@ -400,22 +398,57 @@ class Xerxes_Record_Bibliographic extends Xerxes_Record
 
 	protected function parseTitle()
 	{
+		// main title
+		
 		$this->title = (string) $this->marc->datafield("245")->subfield("anp");
 		$this->sub_title = (string) $this->marc->datafield("245")->subfield("b");
+		
+		// uniform title
+		
 		$this->uniform_title = (string) $this->marc->datafield("130|240");
 		
-		// sometimes title is solely in subfield p
+		// alternate title info
 		
-		$title_part =  (string) $this->marc->datafield("245")->subfield("p" );
-		
-		if ( $this->title == "" && $title_part != "" )
+		foreach ( $this->marc->datafield("246") as $alternate_title )
 		{
-			$this->title = $title_part;
+			$this->alternate_titles[] = (string) $alternate_title;
 		}
 		
-		// sometimes the title appears in a 242 or even a 246 if it is translated from another
-		// language, although the latter is probably bad practice.  We will only take these
-		// if the title in the 245 is blank, and take a 242 over the 246
+		
+		### exception: 245|c is remainder of title, not statement of responsibility
+
+		$statement_of_responsiblity = (string) $this->marc->datafield("245")->subfield("c");
+		$title_parts = explode(" ", $statement_of_responsiblity);
+		
+		$found = false;
+		
+		foreach ( $this->authors as $author )
+		{
+			$author_parts = explode(" ", $author->getAllFields());
+		
+			foreach ( $author_parts as $author_part )
+			{
+				if ( in_array($author_part, $title_parts) )
+				{
+					$found = true;
+				}
+			}
+		}
+		
+		// if the 245|c doesn't include *any* terms from any of the author fields, then this is likely
+		// the continuation of the title, rather than the statement of responsibility, and
+		// so we need to include it in the title proper
+		
+		if ( $found == false )
+		{
+			$this->title = (string) $this->marc->datafield("245")->subfield("acnp"); // added 'c'
+		}		
+		
+		
+		### exception: no 245
+		
+		// sometimes the only title that appears is in a 242 or even a 246 
+		// we will make this the main title if 245 is blank; take 242 over 246
 
 		$translated_title = (string) $this->marc->datafield("242")->subfield("a");
 		$translated_subtitle = (string) $this->marc->datafield("242")->subfield("b");
@@ -444,6 +477,11 @@ class Xerxes_Record_Bibliographic extends Xerxes_Record
 			$this->sub_title = $varying_subtitle;
 			$this->trans_title = true;
 		}
+	}
+	
+	protected function parseRemainderTitleStatement()
+	{
+
 	}
 
 	protected function parsePublisher()
@@ -663,8 +701,8 @@ class Xerxes_Record_Bibliographic extends Xerxes_Record
 		
 		// continues and continued by
 		
-		$this->journal_title_continues = (string) $this->marc->datafield("780")->subfield('t');
-		$this->journal_title_continued_by = (string) $this->marc->datafield("785")->subfield('t');
+		$this->journal_title_continues = (string) $this->marc->datafield("780");
+		$this->journal_title_continued_by = (string) $this->marc->datafield("785");
 		
 		### volume, issue, pagination
 		

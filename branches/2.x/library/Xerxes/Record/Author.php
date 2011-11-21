@@ -87,7 +87,7 @@ class Xerxes_Record_Author
 		}
 	}			
 	
-	public function allFields()
+	public function getAllFields()
 	{
 		$values = "";
 		
