@@ -13,7 +13,7 @@
 
 class Xerxes_Model_Authentication_Factory
 {
-	public function getAuthenticationObject($name, Xerxes_Framework_Request $request, Xerxes_Framework_Registry $registry)
+	public function getAuthenticationObject($name, Xerxes_Framework_Request $request, Xerxes_Framework_Registry $registry, Xerxes_Framework_Response $response)
 	{
 		// sanitize
 		
@@ -41,7 +41,7 @@ class Xerxes_Model_Authentication_Factory
 
 		// make it
 
-		$authentication = new $class_name($request, $registry);
+		$authentication = new $class_name($request, $registry, $response);
 		
 		if ( ! $authentication instanceof Xerxes_Model_Authentication_Abstract)
 		{

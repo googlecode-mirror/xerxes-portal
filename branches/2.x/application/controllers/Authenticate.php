@@ -42,14 +42,13 @@ class Xerxes_Controller_Authenticate extends Xerxes_Framework_Controller
 		
 		$factory = new Xerxes_Model_Authentication_Factory();
 		
-		$this->authentication = $factory->getAuthenticationObject($configAuth, $this->request, $this->registry);
+		$this->authentication = $factory->getAuthenticationObject($configAuth, $this->request, $this->registry, $this->response);
 		$this->authentication->id = $configAuth;
 	}
 	
 	public function check()
 	{
 		$this->authentication->onEveryRequest();
-		return 1;
 	}	
 	
 	public function login()
@@ -92,16 +91,8 @@ class Xerxes_Controller_Authenticate extends Xerxes_Framework_Controller
 		{
 			// failed the login, so present a message to the user
 	
-			$objXml = new DOMDocument( );
-			$objXml->loadXML( "<error />" );
-	
-			$objFail = $objXml->createElement( "message", "authentication" );
-			$objXml->documentElement->appendChild( $objFail );
-	
-			$this->request->addDocument( $objXml );
+			$this->response->add("error", "authentication");
 		}
-	
-		return 1;
 	}
 	
 	public function logout()
@@ -136,9 +127,7 @@ class Xerxes_Controller_Authenticate extends Xerxes_Framework_Controller
 	
 		// redirect to specified logout location
 	
-		$this->request->setRedirect($configLogoutUrl);
-	
-		return 1;
+		$this->response->setRedirect($configLogoutUrl);
 	}
 	
 	public function validate()
