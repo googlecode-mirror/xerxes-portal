@@ -16,15 +16,18 @@ abstract class Xerxes_Model_Authentication_Abstract
 	protected $user; // user object
 	public $id; // the id of this auth scheme, set by the factory method invoking it
 	protected $role = "named"; // users role as named or guest
-	protected $registry; // config object
-	protected $request; // request object
 	protected $return; // the return url to get the user back to where they are in Xerxes
 	protected $validate_url; // the url to return for a validate request, for external auths
 	
-	public function __construct(Xerxes_Framework_Request $request, Xerxes_Framework_Registry $registry)
+	protected $registry; // config object
+	protected $request; // request object
+	protected $response; // response object	
+	
+	public function __construct(Xerxes_Framework_Request $request, Xerxes_Framework_Registry $registry, Xerxes_Framework_Response $response)
 	{
 		$this->request = $request;
 		$this->registry = $registry;
+		$this->response = $response;
 		
 		$this->user = new Xerxes_Model_Authentication_User();
 		$this->return = $this->request->getProperty("return");
@@ -164,6 +167,6 @@ abstract class Xerxes_Model_Authentication_Abstract
 		
 		// now forward them to the return url
 		
-		$this->request->setRedirect($this->return);
+		$this->response->setRedirect($this->return);
 	}
 }
