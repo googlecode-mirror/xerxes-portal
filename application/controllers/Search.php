@@ -150,7 +150,7 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 		
 		// set view
 		
-		$this->response->setView("xsl/" . $this->id . "/" . $this->id . "_results.xsl");
+		$this->response->setView("xsl/" . $this->id . "/results.xsl");
 	}
 	
 	public function record()
@@ -171,7 +171,7 @@ abstract class Xerxes_Controller_Search extends Xerxes_Framework_Controller
 
 		// set view
 		
-		$this->response->setView("xsl/" . $this->id . "/" . $this->id . "_record.xsl");	
+		$this->response->setView("xsl/" . $this->id . "/record.xsl");	
 	}
 	
 	public function lookup()
