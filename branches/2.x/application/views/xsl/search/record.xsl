@@ -82,6 +82,7 @@
 	
 	<xsl:template name="record-summary">
 		<dl>
+			<xsl:call-template name="additional_full_record_data_main_top" />
 			<xsl:call-template name="record-uniform-title" /> <!-- uniform title -->
 			<xsl:call-template name="record-authors" /> <!-- Authors -->
 			<xsl:call-template name="record-corp-authors" /> <!-- Corp. Authors -->
@@ -92,7 +93,7 @@
 			<xsl:call-template name="record-degree" /> <!-- Degree -->
 			<xsl:call-template name="record-source" /> <!-- Source -->
 			<xsl:call-template name="record-database" /> <!-- Database -->
-			<xsl:call-template name="additional_full_record_data_main" />
+			<xsl:call-template name="additional_full_record_data_main_bottom" />
 		</dl>
 	</xsl:template>
 
@@ -118,21 +119,6 @@
 		<div id="search_inside" class="umlaut_content" style="display:none;"></div>
 		<div id="limited_preview" class="umlaut_content" style="display:none"></div>
 	
-	</xsl:template>
-
-	<!--
-		TEMPLATE: RECORD DETAILS
-	-->
-	
-	<xsl:template name="record-details">
-		<xsl:call-template name="record-abstract" />
-		<xsl:call-template name="record-recommendations" />
-		<xsl:call-template name="record-toc" />
-		<xsl:call-template name="record-language" />
-		<xsl:call-template name="record-subjects" />
-		<xsl:call-template name="record-standard_numbers" />
-		<xsl:call-template name="record-notes" />
-		<xsl:call-template name="additional-titles" />
 	</xsl:template>
 
 	<!--
@@ -351,6 +337,33 @@
 		</xsl:call-template>
 		
 	</xsl:template>
+	
+	<!--
+		TEMPLATE: RECORD DETAILS
+	-->
+	
+	<xsl:template name="record-details">
+	
+		<xsl:call-template name="record-abstract" />
+		<xsl:call-template name="record-recommendations" />
+		<xsl:call-template name="record-toc" />
+		<xsl:call-template name="record-subjects" />
+		
+		<div id="record-additional-info">
+		
+			<h2>Additional details</h2>
+			
+			<dl>
+				<xsl:call-template name="record-language" />
+				<xsl:call-template name="record-standard_numbers" />
+				<xsl:call-template name="record-notes" />
+				<xsl:call-template name="description" />
+				<xsl:call-template name="additional-title-info" />
+			</dl>
+			
+		</div>
+		
+	</xsl:template>	
 
 	<!--
 		TEMPLATE: RECORD ABSTRACT
@@ -434,19 +447,6 @@
 	</xsl:template>
 
 	<!--
-		TEMPLATE: RECORD LANGUAGE
-	-->
-	
-	<xsl:template name="record-language">
-		<xsl:if test="language">
-			<h2><xsl:copy-of select="$text_record_language_label" /></h2>
-			<ul>
-				<li><xsl:value-of select="language" /></li>
-			</ul>
-		</xsl:if>
-	</xsl:template>
-
-	<!--
 		TEMPLATE: RECORD SUBJECTS
 	-->
 	
@@ -460,33 +460,142 @@
 			</ul>
 		</xsl:if>
 	</xsl:template>
-
+	
 	<!--
-		TEMPLATE: RECORD STANDARD NUMBERS
+		TEMPLATE: RECORD LANGUAGE
 	-->
 	
-	<xsl:template name="record-standard_numbers">
-		<xsl:if test="standard_numbers">
-			<h2><xsl:copy-of select="$text_record_standard_nos" />:</h2>
-			<ul>
-			<xsl:for-each select="standard_numbers/issn">
-				<li><strong>ISSN</strong>: <xsl:value-of select="text()" /></li>
-			</xsl:for-each>
-			<xsl:for-each select="standard_numbers/isbn">
-				<li><strong>ISBN</strong>: <xsl:value-of select="text()" /></li>
-			</xsl:for-each>
-			<xsl:for-each select="standard_numbers/gpo">
-				<li><strong>GPO Item Number</strong>: <xsl:value-of select="text()" /></li>
-			</xsl:for-each>
-			<xsl:for-each select="standard_numbers/govdoc">
-				<li><strong>Gov Doc Number</strong>: <xsl:value-of select="text()" /></li>
-			</xsl:for-each>
+	<xsl:template name="record-language">
+		<xsl:if test="language">
+		
+			<div>
+				<dt><xsl:copy-of select="$text_record_language_label" />:</dt>
+				<dd><xsl:value-of select="language" /></dd>
+			</div>
 			
-			<xsl:for-each select="standard_numbers/oclc">
-				<li><strong>OCLC number</strong>: <xsl:value-of select="text()" /></li>
-			</xsl:for-each>
-			</ul>
 		</xsl:if>
+	</xsl:template>	
+	
+	<!--
+		TEMPLATE: RECORD STANDARD NUMBERS
+	-->	
+	
+	<xsl:template name="record-standard_numbers">
+		<xsl:call-template name="issn" />
+		<xsl:call-template name="isbn" />
+		<xsl:call-template name="gpo" />
+		<xsl:call-template name="govdoc" />
+		<xsl:call-template name="oclc-number" />	
+	</xsl:template>
+	
+	<!--
+		TEMPLATE: ISSN
+	-->
+	
+	<xsl:template name="issn">
+	
+		<xsl:if test="standard_numbers/issn">
+			<div>
+				<dt>ISSN:</dt>
+				<dd>
+					<xsl:for-each select="standard_numbers/issn">
+						<xsl:value-of select="text()" />
+						<xsl:if test="following-sibling::issn">
+							<br />
+						</xsl:if>
+					</xsl:for-each>
+				</dd>
+			</div>
+		</xsl:if>
+		
+	</xsl:template>
+	
+	<!--
+		TEMPLATE: ISBN
+	-->
+	
+	<xsl:template name="isbn">
+
+		<xsl:if test="standard_numbers/isbn">
+			<div>
+				<dt>ISBN:</dt>
+				<dd>
+					<xsl:for-each select="standard_numbers/isbn">
+						<xsl:value-of select="text()" />
+						<xsl:if test="following-sibling::isbn">
+							<br />
+						</xsl:if>
+					</xsl:for-each>
+				</dd>
+			</div>
+		</xsl:if>
+		
+	</xsl:template>
+	
+	<!--
+		TEMPLATE: GPO
+	-->
+	
+	<xsl:template name="gpo">			
+
+		<xsl:if test="standard_numbers/gpo">
+			<div>
+				<dt>GPO Item Number:</dt>
+				<dd>
+					<xsl:for-each select="standard_numbers/gpo">
+						<xsl:value-of select="text()" />
+						<xsl:if test="following-sibling::gpo">
+							<br />
+						</xsl:if>
+					</xsl:for-each>
+				</dd>
+			</div>
+		</xsl:if>
+		
+	</xsl:template>
+	
+	<!--
+		TEMPLATE: GOV DOC
+	-->
+	
+	<xsl:template name="govdoc">
+		
+		<xsl:if test="standard_numbers/govdoc">
+			<div>
+				<dt>Gov Doc Number:</dt>
+				<dd>
+					<xsl:for-each select="standard_numbers/govdoc">
+						<xsl:value-of select="text()" />
+						<xsl:if test="following-sibling::govdoc">
+							<br />
+						</xsl:if>
+					</xsl:for-each>
+				</dd>
+			</div>
+		</xsl:if>
+		
+	</xsl:template>
+	
+	<!--
+		TEMPLATE: OCLC NUMBER
+	-->
+	
+	<xsl:template name="oclc-number">
+		
+		<xsl:if test="standard_numbers/govdoc">
+			<div>
+				<dt>OCLC number:</dt>
+				<dd>
+					<xsl:for-each select="standard_numbers/oclc">
+						<xsl:value-of select="text()" />
+						<xsl:if test="following-sibling::oclc">
+							<br />
+						</xsl:if>
+					</xsl:for-each>
+				</dd>
+			</div>
+		</xsl:if>				
+			
 	</xsl:template>
 
 	<!--
@@ -495,51 +604,152 @@
 
 	<xsl:template name="record-notes">
 		<xsl:if test="notes">
-			<h2><xsl:copy-of select="$text_record_notes" />:</h2>
-			<ul>
-				<xsl:for-each select="notes/note">
-					<li><xsl:value-of select="text()" /></li>
-				</xsl:for-each>
-			</ul>
+			<div>
+				<dt><xsl:copy-of select="$text_record_notes" />:</dt>
+				<dd>
+					<xsl:for-each select="notes/note">
+						<xsl:value-of select="text()" />
+						<xsl:if test="following-sibling::oclc">
+							<br />
+						</xsl:if>
+					</xsl:for-each>
+				</dd>
+			</div>
 		</xsl:if>
 	</xsl:template>
 
+	<!--
+		TEMPLATE: RECORD NOTES
+	-->
+
+	<xsl:template name="description">
+		<xsl:if test="description">
+			<div>
+				<dt>Description:</dt>
+				<dd><xsl:value-of select="description" /></dd>
+			</div>
+		</xsl:if>
+	</xsl:template>
+	
+	<!--
+		TEMPLATE: ADDITIONAL TITLE INFO
+	-->	
+	
+	<xsl:template name="additional-title-info">
+		<xsl:call-template name="alternate-titles" />
+		<xsl:call-template name="additional-titles" />
+		<xsl:call-template name="related-journal-titles" />
+		<xsl:call-template name="series" />
+	</xsl:template>
+
+	<!--
+		TEMPLATE: ALTERNATE TITLES
+	-->
+	
+	<xsl:template name="alternate-titles">
+		
+		<xsl:if test="alternate_titles">
+
+			<div>
+				<dt>Alternate titles:</dt>
+				<dd>
+					<xsl:for-each select="alternate_titles/alternate_title">
+						<xsl:value-of select="text()" />
+						<xsl:if test="following-sibling::alternate_title">
+							<br />
+						</xsl:if>
+					</xsl:for-each>
+				</dd>
+			</div>
+			
+		</xsl:if>
+		
+	</xsl:template>
+			
 	<!--
 		TEMPLATE: ADDITIONAL TITLES
 	-->
 	
 	<xsl:template name="additional-titles">
 		
-		<xsl:if test="additional_titles or journal_title_continues or journal_title_continued_by">
+		<xsl:if test="additional_titles">
 
-			<h2>Additional title information</h2>
+			<div>
+				<dt>Additional titles:</dt>
+				<dd>
+					<xsl:for-each select="additional_titles/additional_title">
+						<xsl:value-of select="text()" />
+						<xsl:if test="following-sibling::additional_title">
+							<br />
+						</xsl:if>
+					</xsl:for-each>
+				</dd>
+			</div>
 			
-			<ul>
-				<xsl:for-each select="additional_titles/additional_title">
-					<li><xsl:value-of select="text()" /></li>
-				</xsl:for-each>
-			
-				<xsl:if test="journal_title_continues">	
-					<li>Continues: <xsl:value-of select="journal_title_continues" /></li>
-				</xsl:if>
-	
-				<xsl:if test="journal_title_continued_by">
-					<li>Continued by: <xsl:value-of select="journal_title_continued_by" /></li>
-				</xsl:if>
-				
-			</ul>
-
 		</xsl:if>
+		
+	</xsl:template>
+
+
+	<!--
+		TEMPLATE: RELATED JOURNAL TITLES
+	-->
+	
+	<xsl:template name="related-journal-titles">
+		
+		<xsl:if test="journal_title_continues">
+
+			<div>
+				<dt>Continues:</dt>
+				<dd>
+					<xsl:for-each select="journal_title_continues">
+						<xsl:value-of select="journal_title_continue" />
+						<xsl:if test="following-sibling::journal_title_continue">
+							<br />
+						</xsl:if>
+					</xsl:for-each>
+				</dd>
+			</div>
+			
+		</xsl:if>
+
+		<xsl:if test="journal_title_continued_by">
+
+			<div>
+				<dt>Continued by:</dt>
+				<dd>
+					<xsl:for-each select="journal_title_continued_by/journal_title_continued_by">
+						<xsl:value-of select="text()" />
+						<xsl:if test="following-sibling::journal_title_continued_by">
+							<br />
+						</xsl:if>
+					</xsl:for-each>
+				</dd>
+			</div>
+			
+		</xsl:if>
+		
+	</xsl:template>
+
+	<!--
+		TEMPLATE: SERIES
+	-->		
+
+	<xsl:template name="series">
 
 		<xsl:if test="series">
 
-			<h2>Series</h2>
-			
-			<ul>
-			<xsl:for-each select="series/serie">
-				<li><xsl:value-of select="text()" /></li>
-			</xsl:for-each>
-			</ul>
+			<div>
+				<dt>Series:</dt>
+				<dd>
+					<xsl:for-each select="series/serie">
+						<xsl:value-of select="text()" />
+						<xsl:if test="following-sibling::serie">
+							<br />
+						</xsl:if>
+					</xsl:for-each>
+				</dd>
+			</div>
 			
 		</xsl:if>		
 
@@ -547,9 +757,8 @@
 
 <!-- additional record data overriden in templates -->
 
-<xsl:template name="additional_full_record_data_main" />
-
-
+<xsl:template name="additional_full_record_data_main_top" />
+<xsl:template name="additional_full_record_data_main_bottom" />
 
 
 
