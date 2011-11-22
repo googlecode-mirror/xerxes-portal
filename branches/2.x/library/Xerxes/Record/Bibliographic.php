@@ -672,8 +672,16 @@ class Xerxes_Record_Bibliographic extends Xerxes_Record
 		
 		// continues and continued by
 		
-		$this->journal_title_continues = (string) $this->marc->datafield("780");
-		$this->journal_title_continued_by = (string) $this->marc->datafield("785");
+		foreach ( $this->marc->fieldArray("780") as $continues )
+		{
+			$this->journal_title_continues[] = (string) $continues;
+		}
+		
+		foreach ( $this->marc->datafield("785") as $continued )
+		{
+			$this->journal_title_continued_by = (string) $continued;
+		}
+		
 		
 		### volume, issue, pagination
 		

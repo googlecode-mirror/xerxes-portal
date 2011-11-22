@@ -53,8 +53,8 @@ class Xerxes_Record
 	protected $journal_title = ""; // journal title
 	protected $journal = ""; // journal source information
 	protected $short_title = ""; // journal short title
-	protected $journal_title_continued_by = ""; // journal continued by title
-	protected $journal_title_continues = ""; // journal continues a title
+	protected $journal_title_continued_by = array(); // journal continued by title
+	protected $journal_title_continues = array(); // journal continues a title
 	
 	protected $volume = ""; // volume
 	protected $issue = ""; // issue
