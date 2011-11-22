@@ -15,7 +15,7 @@
 class Xerxes_Framework_Response
 {
 	private $_data = array(); // data
-	private $_redirect = ""; // redirect url
+	private $_redirect; // redirect url
 	private $_view = array(); // view file
 	
 	private static $instance; // singleton pattern
@@ -240,9 +240,14 @@ class Xerxes_Framework_Response
 	{
 		$this->setFormat($format);
 		
-		// testing
+		$request = Xerxes_Framework_Request::getInstance();
 		
-		if ( ! array_key_exists($format, $this->_view) ) $this->setFormat("xerxes");
+		// default
+		
+		if ( ! array_key_exists($format, $this->_view) ) 
+		{
+			$this->_view['html'] = "xsl/" . $request->getParam("base") . "/" . $request->getParam("action") . ".xsl";
+		}
 		
 		// just dump the internal xml
 		
