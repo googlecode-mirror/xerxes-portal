@@ -186,7 +186,7 @@ class Xerxes_Marc_Record
 		{
 			foreach ( $field->subfield($subfield_code) as $subfield )
 			{
-				array_push($return, $subfield->__toString() );
+				array_push($return, (string) $subfield );
 			}
 		}
 		
