@@ -2,64 +2,36 @@
 
 class Xerxes_Summon
 {
-	/**
-	 * A boolean value determining whether to print debug information
-	 * @var bool
-	 */
-	public $debug = false;
-	
-	/**
-	 * The HTTP_Request object used for API transactions
-	 * @var object HTTP_Request
-	 */
-	public $client;
-	
-	/**
-	 * The HTTP_Request object used for API transactions
-	 * @var object HTTP_Request
-	 */
-	public $host;
-	
-	/**
-	 * The secret Key used for authentication
-	 * @var string
-	 */
-	public $apiKey;
-	
-	/**
-	 * The Client ID used for authentication
-	 * @var string
-	 */
-	public $apiId;
-	
-	/**
-	 * The session for the current transaction
-	 * @var string
-	 */
-	public $sessionId;
+	protected $client;
+	protected $host;
+	protected $api_key;
+	protected $app_id;
+	protected $session_id;
 	
 	/**
 	 * Constructor
-	 *
-	 * Sets up the Summon API Client
-	 *
-	 * @access  public
 	 */
 	
-	function __construct($apiId, $apiKey, $debug = false)
+	function __construct($app_id, $api_key, Zend_Http_Client $client = null)
 	{
-		$this->debug = $debug;
 		$this->host = 'http://api.summon.serialssolutions.com';
-		$this->apiId = $apiId;
-		$this->apiKey = $apiKey;
-		$this->client = new Zend_Http_Client();
+		$this->app_id = $app_id;
+		$this->api_key = $api_key;
+		
+		if ( $client != null )
+		{
+			$this->client = $client;
+		}
+		else 
+		{
+			$this->client = new Zend_Http_Client();
+		}
 	}
 	
 	/**
 	 * Retrieves a document specified by the ID.
 	 *
 	 * @param   string  $id         The document to retrieve from the Summon API
-	 * @throws  object              PEAR Error
 	 * @return  string              The requested resource
 	 */
 	
@@ -84,7 +56,6 @@ class Xerxes_Summon
 	 * @param   string  $sortBy     The value to be used by for sorting
 	 * @param   array  $facets      An array of facets to return.  Default list is used if null.
 	 * @access  public
-	 * @throws  object              PEAR Error
 	 * @return  array               An array of query results
 	 */
 	
@@ -214,18 +185,18 @@ class Xerxes_Summon
 		);
 		
 		$data = implode($headers, "\n") . "\n/$service\n" . urldecode($queryString) . "\n";
-		$hmacHash = $this->hmacsha1($this->apiKey, $data);
+		$hmacHash = $this->hmacsha1($this->api_key, $data);
 		
 		foreach ( $headers as $key => $value )
 		{
 			$this->client->setHeaders($key, $value);
 		}
 
-		$this->client->setHeaders("Authorization: Summon $this->apiId;$hmacHash");
+		$this->client->setHeaders("Authorization: Summon $this->app_id;$hmacHash");
 		
-		if ( $this->sessionId )
+		if ( $this->session_id )
 		{
-			$this->client->setHeaders('x-summon-session-id', $this->sessionId);
+			$this->client->setHeaders('x-summon-session-id', $this->session_id);
 		}
 		
 		// Send Request
