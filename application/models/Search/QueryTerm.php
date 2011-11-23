@@ -113,8 +113,13 @@ class Xerxes_Model_Search_QueryTerm
 	 * @return array
 	 */
 		
-	public function normalizedArray($phrase)
+	public function normalizedArray($phrase = "")
 	{
+		if ( $phrase == "" )
+		{
+			$phrase = $this->phrase;
+		}
+		
 		$bolQuote = false; // flags the start and end of a quoted phrase
 		$arrWords = array(); // the query broken into a word array
 		$arrFinal = array(); // final array of words
