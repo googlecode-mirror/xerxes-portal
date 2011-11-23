@@ -47,26 +47,12 @@
 		<div id="record">
 		
 			<xsl:for-each select="/*/results/records/record/xerxes_record">
-				
-				<!-- Title -->
-				
-				<h1><xsl:value-of select="title_normalized" /></h1>
-				
-				<!-- Basic record information (Author, Year, Format, Database, ...) -->
-				
-				<xsl:call-template name="record-summary" />
-							
-				<!-- A box with actions for current record (get full-text, link to holdings, save record) -->
-				
-				<xsl:call-template name="record-actions" />
-				
-				<!-- Umlaut stuff -->
-				
-				<xsl:call-template name="umlaut" />
-	
-				<!-- Detailed record information (Summary, Topics, Standard numbers, ...) -->
-				
-				<xsl:call-template name="record-details" />
+			
+				<xsl:choose>
+					<xsl:otherwise>
+						<xsl:call-template name="record-basic" />
+					</xsl:otherwise>
+				</xsl:choose>
 				
 			</xsl:for-each>
 				
@@ -74,6 +60,42 @@
 			
 			<xsl:call-template name="hidden_tag_layers" />
 		</div>
+	</xsl:template>
+	
+	<!--
+		TEMPLATE: RECORD BASIC
+	-->			
+	
+	<xsl:template name="record-basic">
+	
+		<!-- Title -->
+		
+		<h1><xsl:call-template name="record-title" /></h1>
+		
+		<!-- Basic record information (Author, Year, Format, Database, ...) -->
+		
+		<xsl:call-template name="record-summary" />
+					
+		<!-- A box with actions for current record (get full-text, link to holdings, save record) -->
+		
+		<xsl:call-template name="record-actions" />
+		
+		<!-- Umlaut stuff -->
+		
+		<xsl:call-template name="umlaut" />
+
+		<!-- Detailed record information (Summary, Topics, Standard numbers, ...) -->
+		
+		<xsl:call-template name="record-details" />	
+	
+	</xsl:template>
+	
+	<!--
+		TEMPLATE: RECORD TITLE
+	-->		
+	
+	<xsl:template name="record-title">
+		<xsl:value-of select="title_normalized" />
 	</xsl:template>
 
 	<!--
