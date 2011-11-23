@@ -49,6 +49,9 @@
 			<xsl:for-each select="/*/results/records/record/xerxes_record">
 			
 				<xsl:choose>
+					<xsl:when test="dothis = 'later'">
+					
+					</xsl:when>
 					<xsl:otherwise>
 						<xsl:call-template name="record-basic" />
 					</xsl:otherwise>
