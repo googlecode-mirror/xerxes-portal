@@ -76,7 +76,7 @@ a:hover {
 /** BASIC ELEMENTS ( but not for header, footer )**/
 
 #bd dt, #bd dd {
-	margin-bottom: .3em;
+	margin-bottom: .5em;
 	display: block;
 }
 
