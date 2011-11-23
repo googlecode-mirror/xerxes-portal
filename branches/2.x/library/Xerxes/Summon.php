@@ -7,6 +7,7 @@ class Xerxes_Summon
 	protected $api_key;
 	protected $app_id;
 	protected $session_id;
+	protected $debug = false;
 	
 	/**
 	 * Constructor
@@ -26,6 +27,11 @@ class Xerxes_Summon
 		{
 			$this->client = new Zend_Http_Client();
 		}
+	}
+	
+	public function setDebugging($value)
+	{
+		$this->debug = (bool) $vaue;
 	}
 	
 	/**
