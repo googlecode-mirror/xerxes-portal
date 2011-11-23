@@ -39,57 +39,47 @@
 	</xsl:template>
 
 	<!-- 
-		TEMPLATE: RECORD
+		TEMPLATE: RECORD BASIC
 		This one customized for a book-like display
 	-->
 
-	<xsl:template name="record">
+	<xsl:template name="record-basic">
 	
-		<div id="record">
-		
-			<xsl:for-each select="/*/results/records/record/xerxes_record">
-			
-				<div id="bookRecordBookCover" style="display:none">
-					<xsl:call-template name="book_jacket_full">
-						<xsl:with-param name="isbn" select="standard_numbers/isbn[string-length(text()) = 10]" />
-					</xsl:call-template>
-				</div>
-				
-				<div id="bookRecord">
-					
-					<!-- Title -->
-					
-					<h1><xsl:value-of select="title_normalized" /></h1>
-					
-					<!-- Basic record information (Author, Year, Format, Database, ...) -->
-					
-					<xsl:call-template name="record-summary" />
-					
-					<!-- google javascript lookup -->
-					
-					<xsl:call-template name="google_preview" />
-				</div>
-				
-				<div style="clear:both"></div>
-									
-				<!-- A box with actions for current record (get full-text, link to holdings, save record) -->
-				
-				<xsl:call-template name="record-actions" />
-				
-				<!-- Umlaut stuff -->
-				
-				<xsl:call-template name="umlaut" />
-	
-				<!-- Detailed record information (Summary, Topics, Standard numbers, ...) -->
-				
-				<xsl:call-template name="record-details" />
-				
-			</xsl:for-each>
-				
-			<!-- tag input -->
-			
-			<xsl:call-template name="hidden_tag_layers" />
+		<div id="bookRecordBookCover" style="display:none">
+			<xsl:call-template name="book_jacket_full">
+				<xsl:with-param name="isbn" select="standard_numbers/isbn[string-length(text()) = 10]" />
+			</xsl:call-template>
 		</div>
+		
+		<div id="bookRecord">
+			
+			<!-- Title -->
+			
+			<h1><xsl:call-template name="record-title" /></h1>
+			
+			<!-- Basic record information (Author, Year, Format, Database, ...) -->
+			
+			<xsl:call-template name="record-summary" />
+			
+			<!-- google javascript lookup -->
+			
+			<xsl:call-template name="google_preview" />
+		</div>
+		
+		<div style="clear:both"></div>
+							
+		<!-- A box with actions for current record (get full-text, link to holdings, save record) -->
+		
+		<xsl:call-template name="record-actions" />
+		
+		<!-- Umlaut stuff -->
+		
+		<xsl:call-template name="umlaut" />
+	
+		<!-- Detailed record information (Summary, Topics, Standard numbers, ...) -->
+		
+		<xsl:call-template name="record-details" />
+				
 	</xsl:template>	
 
 	<!--
