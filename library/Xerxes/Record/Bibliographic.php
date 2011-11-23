@@ -82,6 +82,7 @@ class Xerxes_Record_Bibliographic extends Xerxes_Record
 		$this->parseNotes();
 		$this->parseAbstract();
 		$this->parseLanguage();
+		$this->parseFormat();
 		
 		// thesis: degree, institution, date awarded
 				
@@ -614,10 +615,10 @@ class Xerxes_Record_Bibliographic extends Xerxes_Record
 			$chrLeader7 = "";
 			$obj008 = $this->marc->controlfield("008");
 			
-			if ( strlen( (string) $this->leader() ) >= 8 )
+			if ( strlen( (string) $this->marc->leader() ) >= 8 )
 			{
-				$chrLeader6 = substr( (string) $this->leader(), 6, 1 );
-				$chrLeader7 = substr( (string) $this->leader(), 7, 1 );
+				$chrLeader6 = substr( (string) $this->marc->leader(), 6, 1 );
+				$chrLeader7 = substr( (string) $this->marc->leader(), 7, 1 );
 			}		
 			
 			if ( $chrLeader6 == 'a' && $chrLeader7 == 'm' ) return Xerxes_Record_Format::Book;
