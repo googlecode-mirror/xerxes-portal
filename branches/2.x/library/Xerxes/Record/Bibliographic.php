@@ -36,6 +36,9 @@ class Xerxes_Record_Bibliographic extends Xerxes_Record
 	public function loadMarc( Xerxes_Marc_Record $marc )
 	{
 		$this->marc = $marc;
+		
+		$this->map();
+		$this->cleanup();		
 	}
 	
 	/**
