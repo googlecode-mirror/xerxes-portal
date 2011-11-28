@@ -50,7 +50,7 @@ class Xerxes_Model_Worldcat_Engine extends Xerxes_Model_Search_Engine
 			{
 				$this->client->setWorksetGroupings(false);
 			}
-		
+
 			// limit to certain libraries
 		
 			if ( $group->libraries_include != null )
