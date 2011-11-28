@@ -220,13 +220,14 @@ function updateRecord( record )
 			
 			if ($('#login'))
 			{
-				var temporary_login_note = ' <span class="temporary_login_note"> ( <a  href="' + $('login').href +'">' + xerxes_labels['text_results_record_saved_perm'] + ' </a> ) </span>';
+				var temporary_login_note = ' <span class="temporary_login_note"> ( <a  href="' + 
+					$('#login').attr('href') +'">' + xerxes_labels['text_results_record_saved_perm'] + 
+					' </a> ) </span>';
 			
 				// Put the login link back please 
 				
-				$(record).html( xerxes_labels['text_results_record_saved_temp'] ); 
-				
-				// $(record).insert({after: temporary_login_note  });
+				$(record).html( xerxes_labels['text_results_record_saved_temp'] );
+				$(record).after(temporary_login_note);
 			}
 			else
 			{
