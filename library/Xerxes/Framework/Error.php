@@ -5,7 +5,7 @@
  *
  * @author David Walker
  * @copyright 2008 California State University
- * @version $Id: Error.php 1734 2011-02-28 16:59:10Z dwalker@calstate.edu $
+ * @version $Id$
  * @package  Xerxes_Framework
  * @link http://xerxes.calstate.edu
  * @license http://www.gnu.org/licenses/

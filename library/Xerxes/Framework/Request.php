@@ -7,7 +7,7 @@
  * @copyright 2008 California State University
  * @link http://xerxes.calstate.edu
  * @license http://www.gnu.org/licenses/
- * @version $Id: Request.php 1776 2011-03-07 13:53:03Z dwalker@calstate.edu $
+ * @version $Id$
  * @package Xerxes_Framework
  */
 

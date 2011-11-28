@@ -5,7 +5,7 @@
  * 
  * @author David Walker
  * @copyright 2011 California State University
- * @version $Id: GuestAuthentication.php 1145 2010-04-30 22:22:23Z dwalker@calstate.edu $
+ * @version $Id$
  * @package Xerxes
  * @link http://xerxes.calstate.edu
  * @license http://www.gnu.org/licenses/
