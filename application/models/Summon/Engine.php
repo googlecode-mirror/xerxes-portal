@@ -158,10 +158,11 @@ class Xerxes_Model_Summon_Engine extends Xerxes_Model_Search_Engine
 		
 		// filter out formats
 		
-		array_push($facets, 'ContentType,Newspaper Article,true');
-		array_push($facets, 'ContentType,Book / eBook,true');
-		array_push($facets, 'ContentType,Reference,true');
-		array_push($facets, 'ContentType,Research Guide,true');
+		array_push($facets, 'ContentType,Newspaper Article,true'); // newspaper
+		array_push($facets, 'ContentType,Book / eBook,true'); // catalog
+		array_push($facets, 'ContentType,Reference,true'); // catalog
+		array_push($facets, 'ContentType,Web Resource,true'); // catalog
+		array_push($facets, 'ContentType,Research Guide,true'); // just random gudies
 		
 		// summon deals in pages, not start record number
 		

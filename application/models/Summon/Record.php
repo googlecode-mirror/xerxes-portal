@@ -79,6 +79,26 @@ class Xerxes_Model_Summon_Record extends Xerxes_Record
 		$this->start_page = $this->extractValue($document, "StartPage/0");
 		$this->doi = $this->extractValue($document, "DOI/0");
 		
+		$openurl = $this->extractValue($document, "openUrl");
+		$direct_link = $this->extractValue($document, "url/0");
+		$uri = $this->extractValue($document, "URI/0");
+		
+		/*
+		echo " <a href='$direct_link'>direct</a>: " . strlen($direct_link) .
+			" openurl: " . strlen($openurl) .
+			" id: " . strlen($this->record_id) . 
+			" uri: " . strlen($uri) . 
+			"<br />";
+		*/
+		
+		// the length of the fields gives an indication if the direct link field
+		// goes directly to an external link, or simply the link resolver
+		
+		if ( 100 + strlen($openurl) - strlen($direct_link) > 0 )
+		{
+			$this->links[] = new Xerxes_Record_Link($direct_link, Xerxes_Record_Link::ONLINE);
+		}
+		
 		// peer reviewed
 		
 		if ( $this->extractValue($document, "IsPeerReviewed/0") == "true" )
