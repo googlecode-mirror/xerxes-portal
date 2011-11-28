@@ -7,7 +7,7 @@ class Xerxes_Controller_Folder extends Xerxes_Controller_Search
 	public function init()
 	{
 		// make the username the query
-		$this->request->setParam("query", $this->request->getParam("username"));
+		$this->request->setParam("query", 'testing');
 		parent::init();
 	}
 	
@@ -15,6 +15,38 @@ class Xerxes_Controller_Folder extends Xerxes_Controller_Search
 	{
 		return new Xerxes_Model_Saved_Engine();
 	}
+	
+	public function index()
+	{
+		$this->request->setSession("return", $this->request->getParam("return"));
+		
+		$params = array (
+			'base' => 'folder',
+			'action' => 'results',
+			'username' => 'testing'
+		);
+		
+		$url = $this->request->url_for($params);
+		
+		$this->response->setRedirect($url);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	public function citation()
 	{
