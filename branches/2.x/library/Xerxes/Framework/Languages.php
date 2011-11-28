@@ -7,7 +7,7 @@
  * @copyright 2010 Ivan Masar
  * @link http://xerxes.calstate.edu
  * @license http://www.gnu.org/licenses/
- * @version $Id: Languages.php 1779 2011-03-07 16:34:27Z dwalker@calstate.edu $
+ * @version $Id$
  * @package  Xerxes_Framework
  */
 

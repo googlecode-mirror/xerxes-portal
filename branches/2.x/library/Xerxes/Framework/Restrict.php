@@ -5,7 +5,7 @@
  * 
  * @author David Walker
  * @copyright 2008 California State University
- * @version $Id: Restrict.php 1748 2011-03-03 12:32:47Z dwalker@calstate.edu $
+ * @version $Id$
  * @package Xerxes
  * @link http://xerxes.calstate.edu
  * @license http://www.gnu.org/licenses/

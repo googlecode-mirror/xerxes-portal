@@ -11,7 +11,7 @@
  * 
  * @author Jonathan Rochkind
  * @copyright 2008 Johns Hopkins University
- * @version $Id: PathMap.php 1768 2011-03-05 21:23:20Z dwalker@calstate.edu $
+ * @version $Id$
  * @package  Xerxes_Framework
  * @license http://www.gnu.org/licenses/
  *

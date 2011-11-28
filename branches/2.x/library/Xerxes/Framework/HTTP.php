@@ -5,7 +5,7 @@
  *
  * @author David Walker
  * @copyright 2011 California State University
- * @version $Id: HTTP.php 1743 2011-03-02 20:27:12Z dwalker@calstate.edu $
+ * @version $Id$
  * @package  Xerxes_Framework
  * @link http://xerxes.calstate.edu
  * @license http://www.gnu.org/licenses/

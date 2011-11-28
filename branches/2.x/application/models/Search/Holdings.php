@@ -7,7 +7,7 @@
  * @copyright 2011 California State University
  * @link http://xerxes.calstate.edu
  * @license http://www.gnu.org/licenses/
- * @version $Id: Items.php 1717 2011-02-25 21:47:55Z dwalker@calstate.edu $
+ * @version $Id$
  * @package Xerxes
  */
 

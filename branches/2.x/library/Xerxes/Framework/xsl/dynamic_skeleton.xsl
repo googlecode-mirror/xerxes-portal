@@ -4,7 +4,7 @@
 
  author: Jonathan Rochkind
  copyright: 2008 Johns Hopkins University
- version: $Id: dynamic_skeleton.xsl 976 2009-11-02 14:22:56Z dwalker@calstate.edu $
+ version: $Id$
  package: Xerxes
  link: http://xerxes.calstate.edu
  license: http://www.gnu.org/licenses/

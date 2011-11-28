@@ -13,7 +13,7 @@ global $xerxes_pdo;
  * @abstract
  * @author David Walker
  * @copyright 2008 California State University
- * @version $Id: DataMap.php 1809 2011-03-09 23:53:45Z dwalker@calstate.edu $
+ * @version $Id$
  * @package  Xerxes_Framework
  * @link http://xerxes.calstate.edu
  * @license http://www.gnu.org/licenses/

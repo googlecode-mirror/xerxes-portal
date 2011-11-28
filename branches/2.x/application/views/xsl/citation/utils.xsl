@@ -4,7 +4,7 @@
 
  author: David Walker
  copyright: 2009 California State University
- version: $Id: utils.xsl 1513 2010-11-23 22:35:35Z dwalker@calstate.edu $
+ version: $Id$
  package: Xerxes
  link: http://xerxes.calstate.edu
  license: http://www.gnu.org/licenses/
