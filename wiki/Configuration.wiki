@@ -341,11 +341,16 @@ For example: `JSTOR_XML, CAL10458`.  In this example, `JSTOR_XML` would cover al
 
 ==google_analytics==
 
-A google analytics [http://www.google.com/analytics] id, which looks like "UA-xxxxxxx-x". 
+A google analytics [http://www.google.com/analytics] id, which looks like "UA-xxxxxxx-xx". 
 
   * default value: none
 
-If configured, then Xerxes will output javascript to track user's on google analytics under your account. 
+If configured, then Xerxes will output javascript to track user's on google analytics under your account. Requires 'pass=true' in config:
+
+{{{
+<config name="google_analytics" pass="true">UA-xxxxxx-xx</config>
+}}}
+
 
 ==group==
 
