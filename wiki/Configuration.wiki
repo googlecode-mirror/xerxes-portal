@@ -339,6 +339,14 @@ Enter the configuration code or metalib ID of the databases that should not show
 
 For example: `JSTOR_XML, CAL10458`.  In this example, `JSTOR_XML` would cover all JSTOR databases.  While `CAL10458` would cover one specific database (this one happens to be Project Muse in our test instance).  So you can mix and match source names and IDs. 
 
+==google_analytics==
+
+A google analytics [http://www.google.com/analytics] id, which looks like "UA-xxxxxxx-x". 
+
+  * default value: none
+
+If configured, then Xerxes will output javascript to track user's on google analytics under your account. 
+
 ==group==
 
 Metalib user groups (aka 'secondary affiliations').
