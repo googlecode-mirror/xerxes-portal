@@ -2,6 +2,8 @@
 
 ==PHP 5.1 or higher==
 
+We recommend you use the latest, stable release of PHP 5.3.
+
 Xerxes also requires these PHP extensions:
 
  * pdo – for communication with the database
