@@ -263,17 +263,20 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 		// eric -- document is recent enough to likely contain full-text;
 		// 340000 being a rough approximation of the document number after which they 
 		// started digitizing
+		// EBSCO provides an indication of Full text available in 037 (jdwyn 01/12/2012)
 
 		if (strstr ( $this->source, "ERIC" ) && strlen ( $this->eric_number ) > 3)
 		{
 			$strEricType = substr ( $this->eric_number, 0, 2 );
 			$strEricNumber = ( int ) substr ( $this->eric_number, 2 );
-			
-			if ($strEricType == "ED" && $strEricNumber >= 340000)
+			$strEricAvailabilityNote = $this->datafield("037")->subfield("a")->__toString();
+			if ($strEricType == "ED")
 			{
-				$strFullTextPdf = "http://www.eric.ed.gov/ERICWebPortal/contentdelivery/servlet/ERICServlet?accno=" . $this->eric_number;
-				
-				array_push ( $this->links, array ("Full-text at ERIC.gov", $strFullTextPdf, "pdf" ) );
+				if ($strEricNumber >= 340000 || (stristr ( $this->source, "EBSCO_ERIC" ) && $strEricAvailabilityNote != "Not available from ERIC" && $strEricAvailabilityNote != "Available on microfiche only")) 
+				{
+					$strFullTextPdf = "http://www.eric.ed.gov/ERICWebPortal/contentdelivery/servlet/ERICServlet?accno=" . $this->eric_number;
+				 	array_push ( $this->links, array ("Full-text at ERIC.gov", $strFullTextPdf, "pdf" ) );
+				}
 			}
 		}
 		
