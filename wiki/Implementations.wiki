@@ -25,7 +25,6 @@
   * [http://metasearch.kib.ki.se/ Karolinska Institutet] (Sweden)
   * [http://xet.bibl.liu.se/liubsearch/ Linköping University] (Sweden)
   * [http://arch.library.nyu.edu/ New York University]
-  * [http://xerxes.rhul.ac.uk/ Royal Holloway University of London]
   * [http://library.rit.edu/databases/ Rochester Institute of Technology]
   * [http://library.calstate.edu/sandiego/ San Diego State University]
   * [http://library.calstate.edu/sanfrancisco/books San Francisco State University]
