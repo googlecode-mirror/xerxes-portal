@@ -1,107 +1,137 @@
-/* Add umlaut data directly to a record detail page
- *
- *  Expects global js variables to be defined:
- * openurl_kev_co  :   an OpenURL KEV context object representing this record
- * umlaut_base     :   The Umlaut base URL. Not the OpenURL base including /resolve, but just eg "http://findit.library.jhu.edu/"
+/* Add umlaut data directly to a record detail page using Umlaut 3.x jquery
+ * content utility helpers.
+ * 
+ *  Expects global js variables to be defined: 
+ *  Umlaut.umlaut_base     :   The Umlaut base URL. Not the OpenURL base including /resolve, but just eg "http://findit.library.jhu.edu/"
+ *  Umlaut.openurl_kev_co  :   an OpenURL KEV context object representing this record
  *
  * @author Jonathan Rochkind
- * @copyright 2009 Johns Hopkins University
+ * @copyright 2012 Johns Hopkins University
  * @link http://xerxes.calstate.edu
  * @license http://www.gnu.org/licenses/
  * @version $Id$
  * @package Xerxes
  */
  
- document.observe("dom:loaded",  function() {
-     // Add a spinner please, and preserve original content.
-     spinner = '<div class="recordAction linkResolverLink umlautLoad"><img src="' + umlaut_base + '/images/spinner.gif" alt=""/> '+xerxes_labels['link_resolver_load_message']+' <a href="' + umlaut_base + '/resolve?' + openurl_kev_co + '">'+xerxes_labels['link_resolver_name']+'</a></div>';
-     $$('.recordAction.linkResolverLink').each ( function(item) {
-        
-         item.hide();
-         item.insert({'after': spinner});       
-      });
- });
-   
- 
-   
-   
-   function show_umlaut_content(count, div_id) {
-     if (count > 0 && $(div_id) && ! $(div_id).visible()) {
-       // tried sciptaculous SlideDown, but did weird things in IE. 
-       $(div_id).show();
+ jQuery(document).ready(function($){
+     // Hide original link resolver link, and add a spinner from Umlaut in it's place. 
+     spinner = '<div class="recordAction linkResolverLink umlautLoad"><img src="' + Umlaut.umlaut_base + '/images/spinner.gif" alt=""/> '+xerxes_labels['link_resolver_load_message']+' <a href="' + Umlaut.umlaut_base + '/resolve?' + Umlaut.openurl_kev_co + '">'+xerxes_labels['link_resolver_name']+'</a></div>';
+     $('.recordAction.linkResolverLink').hide().after(spinner);
+     
+     
+     var updater = new Umlaut.HtmlUpdater(Umlaut.umlaut_base,  Umlaut.openurl_kev_co  );
+
+     // Now we need to map Umlaut sections to divs on our page.
+     // Keys are umlaut section names, values are div's on the Xerxes page.
+     // Some elements use Umlaut js callbacks to only show them if 
+     // there are items to show.
+     
+     // Got to work around umlaut 2.x bug that puts &umlaut.format=json
+     // links erroneously in expand/contract toggle non-JS links, sorry!
+     // This function will be used in every before_update, since umlaut 2.x
+     // doesn't support global before_update. 
+     function umlaut2x_link_fix(html) {       
+        $(html).find("a.expand_contract_toggle").attr("href", function(i, href) {
+          return href.replace(/[&?]?umlaut\.response_format\=json/, "")
+        }); 
      }
-   }
-   
-   
-   // Umlaut needs this global js variable. 
-   umlaut_openurl_kev_co = openurl_kev_co;
-
-
-   
-   
-   // Now we need to map Umlaut sections to divs on our page.
-   // Keys are umlaut section names, values are div's on the Xerxes page.
-   // Some elements use Umlaut js callbacks to only show them if 
-   // there are items to show. 
-   umlaut_section_map = {
-     'fulltext': {
-       'host_div_id': 'umlaut_fulltext',
-       'after_update': function(count) {
-         // only show if we don't have any xerxes-native fulltext
-         if ( count > 0 &&
-             $$('#recordFullText .fullTextLink').length == 0) {
+     
+     
+     //when all update is complete, hide the progress message etc
+     updater.complete = function() {
+        $('.recordAction.linkResolverLink').show();
+        $('.recordAction.umlautLoad').remove();                           
+    };
+     
+     updater.add_section_target({
+         umlaut_section_id: 'fulltext',
+         selector: "#umlaut_fulltext",
+         before_update: umlaut2x_link_fix,
+         after_update: function(html, count) {
+           // only show if we don't have any xerxes-native fulltext
+           if ( count > 0 &&
+             $('#recordFullText .fullTextLink').length == 0) {
              // Hide section heading 
-             $('umlaut_fulltext').down('.section_heading').hide();
+             $(html).find('.section_heading').first().hide();
              // Make the links more like Xerxes's patterns
-             $$('#umlaut_fulltext .response_item a').each( function(link) {
-                 link.insert({'top': xerxes_labels['link_resolver_direct_link_prefix']}); 
-             });
+             $(html).append(xerxes_labels['link_resolver_direct_link_prefix']);
+             
              // No spinner please
-             $$('#umlaut_fulltext .background_progress_spinner').each(    
-               function(spinner) { spinner.hide();}
-               );
-             show_umlaut_content(count, 'umlaut_fulltext');
+             $(html).find('.background_progress_spinner').remove();
+             
+             $('#umlaut_fulltext').show();             
          }
-       }
-     },
-     'highlighted_link' : { 
-        'host_div_id': 'see_also',
-        'after_update': function(count) { show_umlaut_content(count, 'see_also');}
-     },     
-     'excerpts' : {
-        'host_div_id': 'limited_preview',
-        'after_update': function(count) {  show_umlaut_content(count, 'limited_preview');}
-        
-     },     
-     'search_inside': {
-        'host_div_id': 'search_inside',
-        'after_update': function(count) {  show_umlaut_content(count, 'search_inside');}
-     },
-     'related_items': {
-       'host_div_id': 'similar_items',
-       'after_update': function(count) {  show_umlaut_content(count, 'similar_items');}
-     },
-     'holding' : {
-       'host_div_id': 'library_copies',
-       'after_update': function(count) {  show_umlaut_content(count, 'library_copies');}
-     },
-     'document_delivery': {
-       'host_div_id': 'document_delivery',
-       'after_update': function(count) {
-          if ($$('#recordFullText .fullTextLink').length == 0) show_umlaut_content(count, 'document_delivery');
-       }
-     }
-   };
-   
-   umlaut_options = {
-     'all-complete-callback': function() {
-            $$('.recordAction.linkResolverLink').each ( function(item) {            
-                item.show();     
-            });
-            $$('.recordAction.umlautLoad').each ( function(item) {            
-                item.remove();     
-            });            
-    }
-   };
-   
-   embedUmlaut(umlaut_base, openurl_kev_co, umlaut_section_map, umlaut_options);
+       }         
+     });
+     
+     updater.add_section_target({
+         umlaut_section_id: 'highlighted_link', 
+         selector: '#see_also',
+         before_update: umlaut2x_link_fix,
+         after_update: function(html, count) { 
+           if (count > 0 ) {
+             $('#see_also').show();
+           }
+         }       
+     });
+     
+     updater.add_section_target({
+         umlaut_section_id: 'excerpts',
+         selector: '#limited_preview',
+         before_update: umlaut2x_link_fix,
+         after_update: function(html, count) {
+           if (count > 0) {
+             $('#limited_preview').show();
+           }
+         }
+     });
+         
+     updater.add_section_target({
+         umlaut_section_id: 'related_items',
+         selector: '#similar_items',
+         before_update: umlaut2x_link_fix,
+         after_update: function(html, count) {
+           if (count > 0) {
+             $("#similar_items").show();
+           }
+         }
+     });
+     
+     updater.add_section_target({
+         umlaut_section_id: 'search_inside',
+         selector: '#search_inside',
+         before_update: umlaut2x_link_fix,
+         after_update: function(html, count) {  
+           if (count > 0) {
+              $("#search_inside").show();   
+           }
+         }      
+     });
+     
+     updater.add_section_target({
+         umlaut_section_id: 'holding',
+         selector: '#library_copies',
+         before_update: umlaut2x_link_fix,
+         after_update: function(html, count) {  
+           if (count > 0) {
+              $("#library_copies").show();   
+           }
+         } 
+     });
+     
+     updater.add_section_target({
+       umlaut_section_id: 'document_delivery', 
+       selector: '#document_delivery',
+       before_update: umlaut2x_link_fix,
+       after_update: function(html, count) {  
+           if (count > 0) {
+              $("#document_delivery").show();   
+           }
+         }
+     });
+     
+     
+     
+     updater.update();
+     
+ });
