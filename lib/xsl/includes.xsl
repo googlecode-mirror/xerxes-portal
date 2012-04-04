@@ -920,6 +920,7 @@
 				</span>
 					
 				<span class="subjectDatabaseInfo">
+				  <xsl:text> </xsl:text>
 					<a  title="{$text_databases_subject_hint_more_info_about} {title_display}">
 					<xsl:attribute name="href"><xsl:value-of select="url" /></xsl:attribute>
 					<xsl:call-template name="img_info_about">
@@ -2577,7 +2578,7 @@
 	
 		<!-- umlaut content on record detail page, when so configured -->
 		
-		<xsl:if test="//config/umlaut_base and (( request/base='metasearch' and request/action = 'record' ) or (request/base='folder' and request/action = 'full'))">
+		<xsl:if test="(//config/umlaut_base) and (( request/base='metasearch' and request/action = 'record' ) or (request/base='folder' and request/action = 'full'))">
 		
 			<!-- only if this database does NOT have openurl link generation
 			suppressed. If it does, we can do nothing. This duplicates
@@ -2585,23 +2586,44 @@
 
 			<xsl:variable name="db_metalib_id" select="//records/record[1]/xerxes_record/metalib_id" />
 			<xsl:variable name="link_resolver_allowed" select="not(//database_links/database[@metalib_id = $db_metalib_id]/sfx_suppress) or //database_links/database[@metalib_id = $db_metalib_id]/sfx_suppress != '1'" />
-			
+						
 			<xsl:if test="$link_resolver_allowed">
-			
-				<!-- have umlaut set up up functions for js magic -->
-				
-				<script type="text/javascript" src="{//config/umlaut_base}/javascripts/embed/umlaut-embed-func.js"></script>
-				
-				<!-- Now call our script that will call umlaut magic with local
-				xerxes display logic. First need to set a couple of dynamically
-				generated parameters in js global vars, so xerxes js can get it.-->    
-				
-				<script language="javascript" type="text/javascript">
-				openurl_kev_co = '<xsl:value-of select="//records/record[1]/openurl_kev_co"/>'; 
-				umlaut_base = '<xsl:value-of select="//config/umlaut_base"/>';          
-				</script>
-				<script language="javascript" type="text/javascript" src="{$base_include}/javascript/umlaut_record_detail.js"/>
-				
+			  <!-- umlaut 3.x, requires jquery -->
+			  
+			  <!-- load JQuery from Google CDN, first being sure to preserve Prototype in $, if it's there -->
+			  <script language="javascript" type="text/javascript">
+			    if (typeof $ !== "undefined") {
+			      _savedPrototype = $;
+			    }
+			  </script>
+			  <!-- make sure we link with no protocol, so it will be https if
+			       page is https or not if not, and avoid browser sec warning -->
+			  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" language="javascript" type="text/javascript" />
+			  <script language="javascript" type="text/javascript">
+			    jQuery.noConflict();
+			  
+			    if (typeof _savedPrototype !== "undefined") {
+			      $ = _savedPrototype;
+			      delete _savedPrototype;
+          }			    
+          <!-- xerxes umlaut_record_detail.js will need this global var -->
+          if (typeof Umlaut === "undefined") {
+            Umlaut = {};
+          }
+          Umlaut.umlaut_base = '<xsl:value-of select="//config/umlaut_base"/>';  
+          Umlaut.openurl_kev_co = '<xsl:value-of select="//records/record[1]/openurl_kev_co"/>'; 
+			  </script>			  
+			  <!-- load Umlaut JQuery utility. We use URLs that will work with Umlaut 2.x or 3.x -->
+			  <script type="text/javascript" src="{//config/umlaut_base}/javascripts/jquery/umlaut/update_html.js"></script>
+			  <!-- this one 404's on umlaut 2.x, oh well, we didn't have umlaut JS UI
+			       in previous umlaut 2.x Xerxes code anyway. -->
+			  <script type="text/javascript" src="{//config/umlaut_base}/assets/umlaut_ui.js"></script>
+
+			  <!-- and local Xerxes script for embedding umlaut on page using utilities
+			       loaded above -->
+			  <script language="javascript" type="text/javascript" src="{$base_include}/javascript/umlaut_record_detail.js"/>										
+
+
 			</xsl:if>
 		</xsl:if>
 		
