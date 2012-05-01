@@ -447,11 +447,13 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 			}
 		}
 		
-		// psycinfo and related databases include a 502 that is not a thesis note -- bonkers!
-		// need to make this a basic note, otherwise xerxes will assume this is a thesis
+		// psycinfo and related databases 
 		
 		if ( strstr($this->source, "EBSCO_PDH") || strstr($this->source, "EBSCO_PSYH") || strstr($this->source, "EBSCO_LOH") )
 		{
+			// includes a 502 that is not a thesis note -- bonkers!
+			// need to make this a basic note, otherwise xerxes will assume this is a thesis
+			
 			foreach ( $this->datafield("502") as $thesis )
 			{
 				$thesis->tag = "500";
@@ -487,7 +489,43 @@ class Xerxes_MetalibRecord extends Xerxes_Record
 		if ( $this->volume == null )
 		{
 			$this->volume = $this->datafield("VOL")->subfield("a")->__toString();
-		}			
+		}
+		
+		
+		// book chapters
+		
+		if ( $this->journal_title != "" && count($this->isbns) > 0 && count($this->issns) == 0 )
+		{
+			$this->book_title = $this->journal_title;
+			$this->journal_title = "";
+			$this->format = "Book Chapter";
+		}
+		
+		
+		## ebsco 77X weirdness
+		
+		if ( strstr($this->source, "EBSCO") )
+		{
+			// pages in $p (abbreviated title)
+		
+			$pages = $this->datafield("773")->subfield('p')->__toString();
+
+			if ( $pages != "" )
+			{
+				$this->short_title = "";
+			}			
+			
+			// book chapter
+		
+			$btitle = $this->datafield("771")->subfield('a')->__toString();
+		
+			if ( $btitle != "" )
+			{
+				$this->book_title = $btitle;
+				$this->format = "Book Chapter";
+			}
+		}		
+		
 		
 		## oclc dissertation abstracts
 
